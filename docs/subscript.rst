@@ -1,0 +1,4 @@
+subscript
+=========
+
+.. automodule:: subscript

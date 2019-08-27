@@ -1,0 +1,36 @@
+version: '{branch}-{build}'
+
+cache:
+  - '%LOCALAPPDATA%\pip\Cache'
+
+environment:
+  matrix:
+    - PYTHON_HOME: C:\Python35
+      PYTHON_VERSION: 3.5
+      PYTHON_ARCH: 32
+    - PYTHON_HOME: C:\Python35-x64
+      PYTHON_VERSION: 3.5
+      PYTHON_ARCH: 64
+    - PYTHON_HOME: C:\Python36
+      PYTHON_VERSION: 3.6
+      PYTHON_ARCH: 32
+    - PYTHON_HOME: C:\Python36-x64
+      PYTHON_VERSION: 3.6
+      PYTHON_ARCH: 64
+    - PYTHON_HOME: C:\Python37
+      PYTHON_VERSION: 3.7
+      PYTHON_ARCH: 32
+    - PYTHON_HOME: C:\Python37-x64
+      PYTHON_VERSION: 3.7
+      PYTHON_ARCH: 64
+
+matrix:
+  fast_finish: true
+
+install:
+  - python -m pip install --upgrade -r requirements-dev.txt
+
+build: off
+
+test_script:
+  - python setup.py test
