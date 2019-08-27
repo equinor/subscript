@@ -1,4 +1,3 @@
-#!/bin/env python
 #
 # NPV calculation of oil and gas production income
 #
