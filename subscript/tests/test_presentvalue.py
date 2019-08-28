@@ -1,8 +1,10 @@
+from __future__ import absolute_import
+
 import pytest  # noqa: F401
 import os
 import sys
 
-import presentvalue
+from .. import presentvalue
 
 
 def test_main():
