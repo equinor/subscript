@@ -6,6 +6,12 @@ matrix:
     - python: '3.6'
     - python: '3.7'
 
+env:
+  global:
+    - INSTALL_DIR="${TRAVIS_BUILD_DIR}/venv"
+    - LD_LIBRARY_PATH="${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}"
+
+sudo: required
 
 before_script:
   # For now we have to make install libecl.
