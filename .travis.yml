@@ -2,16 +2,23 @@ language: python
 dist: xenial
 matrix:
   include:
+    - python: '2.7'
     - python: '3.5'
     - python: '3.6'
     - python: '3.7'
 
-env:
-  global:
-    - INSTALL_DIR="${TRAVIS_BUILD_DIR}/venv"
-    - LD_LIBRARY_PATH="${INSTALL_DIR}/lib:${INSTALL_DIR}/lib64:${LD_LIBRARY_PATH}"
+before_install:
+  - python --version
+  - export INSTALL_DIR=`pwd`/../install
+  - export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
+  - export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$INSTALL_DIR/lib64:$LD_LIBRARY_PATH
+  - echo $INSTALL_DIR
+  - echo $PYTHONPATH
+  - echo $LD_LIBRARY_PATH
 
-sudo: required
+install:
+  - python -m pip install --upgrade pip
+  - python -m pip install --upgrade -r requirements-dev.txt
 
 before_script:
   # For now we have to make install libecl.
@@ -27,24 +34,17 @@ before_script:
   - pushd build
   - cmake .. -DENABLE_PYTHON=ON
              -DBUILD_APPLICATIONS=ON
-             -DINSTALL_CWRAP=OFF
              -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
              -DCMAKE_PREFIX_PATH=$INSTALL_DIR
+             -DINSTALL_ERT_LEGACY=ON
              -DCMAKE_C_FLAGS='-Werror=all'
              -DCMAKE_CXX_FLAGS='-Werror -Wno-unused-result'
   - make
   - make install
   - popd;popd
-
-before_install:
-  - python3 --version
-
-install:
-  - python3 -m pip install --upgrade pip
-  - python3 -m pip install --upgrade -r requirements-dev.txt
+  - rm -rf libecl
+  - python -c "import ecl; print(ecl.__file__)"
 
 script:
-  - python3 setup.py test
-  - python3 -m flake8 subscript
-
-
+  - python setup.py test
+  - python -m flake8 subscript

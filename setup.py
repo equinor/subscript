@@ -16,7 +16,7 @@ setuptools.setup(
     license="Not open source (violating TR1621)",
     packages=["subscript"],
     platforms="any",
-    install_requires=["click"],
+    install_requires=[],
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
     entry_points={
@@ -26,4 +26,5 @@ setuptools.setup(
         ]
     },
     use_scm_version={"write_to": "subscript/version.py"},
+    test_suite="subscript/tests",
 )
