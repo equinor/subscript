@@ -6,6 +6,30 @@ matrix:
     - python: '3.6'
     - python: '3.7'
 
+
+before_script:
+  # For now we have to make install libecl.
+  # Remove when it's possible to pip install
+
+  - source .libecl_version
+  - git clone https://github.com/equinor/libecl
+  - pushd libecl
+  - git fetch
+  - git checkout tags/$LIBECL_VERSION
+  - pip install -r requirements.txt
+  - mkdir build
+  - pushd build
+  - cmake .. -DENABLE_PYTHON=ON
+             -DBUILD_APPLICATIONS=ON
+             -DINSTALL_CWRAP=OFF
+             -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR
+             -DCMAKE_PREFIX_PATH=$INSTALL_DIR
+             -DCMAKE_C_FLAGS='-Werror=all'
+             -DCMAKE_CXX_FLAGS='-Werror -Wno-unused-result'
+  - make
+  - make install
+  - popd;popd
+
 before_install:
   - python3 --version
 
