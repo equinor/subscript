@@ -1,8 +1,9 @@
+pandas
+scipy
 setuptools >=28
 setuptools_scm
 pytest
 pytest-runner
 sphinx
 click
-
 flake8
