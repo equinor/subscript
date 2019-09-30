@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """Tool for merging Schedule files.
 
@@ -17,9 +16,9 @@ YAML-file components:
 
  output - filename for output. stdout if omitted
 
- startdate - YYYY-MM-DD for the initial date in the simulation. This
-             date is not outputted and anything occuring before that
-             will be clipped (TODO)
+ startdate - YYYY-MM-DD for the initial date in the simulation. There
+             should not be any events before this date in merged-in files.
+             TODO: Clip any events before startdate
 
  refdate - if supplied, will work as a reference date for relative
            inserts. If not supplied startdate will be used.
@@ -57,11 +56,11 @@ import argparse
 import yaml
 from sunbeam.tools import TimeVector
 
-import resscript.header as header
-
 
 def datetime_from_date(date):
+    """Set time to 00:00:00 in a date"""
     return datetime.datetime.combine(date, datetime.datetime.min.time())
+
 
 def process_sch_config(sunschconf, quiet=True):
     """Process a Schedule configuration into a sunbeam TimeVector
@@ -71,54 +70,56 @@ def process_sch_config(sunschconf, quiet=True):
     :param quiet: Whether status messages should be printed during processing
     :type quiet: bool
     """
-    if 'startdate' in sunschconf:
-        schedule = TimeVector(sunschconf['startdate'])
-    elif 'refdate' in sunschconf:
-        schedule = TimeVector(sunschconf['refdate'])
+    if "startdate" in sunschconf:
+        schedule = TimeVector(sunschconf["startdate"])
+    elif "refdate" in sunschconf:
+        schedule = TimeVector(sunschconf["refdate"])
     else:
         raise Exception("No startdate or refdate given")
 
-    if 'refdate' not in sunschconf and 'startdate' in sunschconf:
-        sunschconf['refdate'] = sunschconf['startdate']
+    if "refdate" not in sunschconf and "startdate" in sunschconf:
+        sunschconf["refdate"] = sunschconf["startdate"]
 
-    if 'init' in sunschconf:
+    if "init" in sunschconf:
         if not quiet:
-            print("Loading " + sunschconf['init'] + " at startdate")
-        schedule.load(sunschconf['init'],
-                      date=datetime.datetime.combine(sunschconf['startdate'],
-                                                     datetime.datetime.min.time()))
+            print("Loading " + sunschconf["init"] + " at startdate")
+        schedule.load(
+            sunschconf["init"],
+            date=datetime.datetime.combine(
+                sunschconf["startdate"], datetime.datetime.min.time()
+            ),
+        )
 
-    if 'merge' in sunschconf:
-        for file in sunschconf['merge']:
+    if "merge" in sunschconf:
+        for filename in sunschconf["merge"]:
             try:
                 if not quiet:
-                    print("Loading " + file)
-                schedule.load(file)
+                    print("Loading " + filename)
+                schedule.load(filename)
             except ValueError as exception:
-                raise Exception("Error in " + file + ": " + str(exception))
+                raise Exception("Error in " + filename + ": " + str(exception))
 
-    if 'insert' in sunschconf: # inserts should be list of dicts of dicts
-        for file in sunschconf['insert']:
-            # file is now a dict with only one key
-            fileid = file.keys()[0]
-            filedata = file[fileid].keys()
-
+    if "insert" in sunschconf:  # inserts should be list of dicts of dicts
+        for filedict in sunschconf["insert"]:
+            # filedict is now a dict with only one key
+            fileid = list(filedict.keys())[0]
+            filedata = list(filedict[fileid].keys())
 
             # Figure out the correct filename, only needed when we
             # have a string.
-            if 'string' not in filedata:
-                if 'filename' not in filedata:
+            if "string" not in filedata:
+                if "filename" not in filedata:
                     filename = fileid
                 else:
-                    filename = file[fileid]['filename']
+                    filename = filedict[fileid]["filename"]
 
-            resultfile = tempfile.NamedTemporaryFile(delete=False)
+            resultfile = tempfile.NamedTemporaryFile(mode='w', delete=False)
             resultfilename = resultfile.name
-            if 'substitute' in filedata:
-                templatelines = open(filename, 'r').readlines()
+            if "substitute" in filedata:
+                templatelines = open(filename, "r").readlines()
 
                 # Parse substitution list:
-                substdict = file[fileid]['substitute']
+                substdict = filedict[fileid]["substitute"]
                 # Perform substitution and put into a tmp file
                 for line in templatelines:
                     for key in substdict:
@@ -130,53 +131,60 @@ def process_sch_config(sunschconf, quiet=True):
                 filename = resultfilename
 
             # Figure out the correct date:
-            if 'date' in file[fileid]:
-                date = datetime.datetime.combine(file[fileid]['date'],
-                                                 datetime.datetime.min.time())
-            if 'days' in file[fileid]:
-                if not 'refdate' in sunschconf:
-                    raise Exception("ERROR: When using days in insert " + \
-                                    "statements, you must provide refdate")
-                date = datetime.datetime.combine(sunschconf['refdate'],
-                                datetime.datetime.min.time()) + \
-                                datetime.timedelta(days=file[fileid]['days'])
-            if 'string' not in filedata:
+            if "date" in filedict[fileid]:
+                date = datetime.datetime.combine(
+                    filedict[fileid]["date"], datetime.datetime.min.time()
+                )
+            if "days" in filedict[fileid]:
+                if "refdate" not in sunschconf:
+                    raise Exception(
+                        "ERROR: When using days in insert "
+                        + "statements, you must provide refdate"
+                    )
+                date = datetime.datetime.combine(
+                    sunschconf["refdate"], datetime.datetime.min.time()
+                ) + datetime.timedelta(days=filedict[fileid]["days"])
+            if "string" not in filedata:
                 schedule.load(filename, date=date)
             else:
-                schedule.add_keywords(datetime_from_date(date),
-                                      [file[fileid]['string']])
+                schedule.add_keywords(
+                    datetime_from_date(date), [filedict[fileid]["string"]]
+                )
 
-    if 'enddate' not in sunschconf:
+    if "enddate" not in sunschconf:
         if not quiet:
-            print("Warning: Implicit end date. " +\
-                  "Any content at last date is ignored")
+            print(
+                ("Warning: Implicit end date. " + "Any content at last date is ignored")
+            )
             # Whether we include it in the output does not matter,
             # Eclipse will ignore it
         enddate = schedule.dates[-1].date()
     else:
-        enddate = sunschconf['enddate'] # datetime.date
-        if type(enddate) != datetime.date:
-            raise Exception("ERROR: end-date not in ISO-8601 format, must be YYYY-MM-DD")
-        
+        enddate = sunschconf["enddate"]  # datetime.date
+        if not isinstance(enddate, datetime.date):
+            raise Exception(
+                "ERROR: end-date not in ISO-8601 format, must be YYYY-MM-DD"
+            )
+
     # Clip anything that is beyond the enddate
     for date in schedule.dates:
         if date.date() > enddate:
             schedule.delete(date)
-            
+
     # Ensure that the end-date is actually mentioned in the Schedule
     # so that we know Eclipse will actually simulate until this date
     if enddate not in [x.date() for x in schedule.dates]:
-        schedule.add_keywords(datetime_from_date(enddate), [''])
-            
+        schedule.add_keywords(datetime_from_date(enddate), [""])
+
     # Dategrid is added at the end, in order to support
     # an implicit end-date
-    if 'dategrid' in sunschconf:
-        dates = dategrid(sunschconf['startdate'], enddate,
-                         sunschconf['dategrid'])
+    if "dategrid" in sunschconf:
+        dates = dategrid(sunschconf["startdate"], enddate, sunschconf["dategrid"])
         for date in dates:
             schedule.add_keywords(datetime_from_date(date), [""])
 
     return schedule
+
 
 def dategrid(startdate, enddate, interval):
     """Return a list of datetimes at given interval
@@ -196,12 +204,14 @@ def dategrid(startdate, enddate, interval):
     list of datetime.date. Includes start-date, might not include end-date
     """
 
-    supportedintervals = ['monthly', 'yearly', 'weekly', 'biweekly',
-                          'bimonthly']
+    supportedintervals = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
     if interval not in supportedintervals:
-        raise Exception("Unsupported dategrid interval \"" + interval + \
-                        "\". Pick among " + \
-                        ", ".join(supportedintervals))
+        raise Exception(
+            'Unsupported dategrid interval "'
+            + interval
+            + '". Pick among '
+            + ", ".join(supportedintervals)
+        )
     dates = [startdate]
     date = startdate + datetime.timedelta(days=1)
     startdateweekday = startdate.weekday()
@@ -210,67 +220,77 @@ def dategrid(startdate, enddate, interval):
     # days. This is robust with respect to all possible date oddities,
     # but makes it difficult to support more interval types.
     while date <= enddate:
-        if interval == 'monthly':
+        if interval == "monthly":
             if date.day == 1:
                 dates.append(date)
-        elif interval == 'bimonthly':
+        elif interval == "bimonthly":
             if date.day == 1 and date.month % 2 == 1:
                 dates.append(date)
-        elif interval == 'weekly':
+        elif interval == "weekly":
             if date.weekday() == startdateweekday:
                 dates.append(date)
-        elif interval == 'biweekly':
+        elif interval == "biweekly":
             weeknumber = date.isocalendar()[1]
             if date.weekday() == startdateweekday and weeknumber % 2 == 1:
                 dates.append(date)
-        elif interval == 'yearly':
+        elif interval == "yearly":
             if date.day == 1 and date.month == 1:
                 dates.append(date)
-        elif interval == 'daily':
+        elif interval == "daily":
             dates.append(date)
         date += datetime.timedelta(days=1)
     return dates
 
 
-
 # If we are called from command line:
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("config",
-                        help="Config file in YAML format for Schedule merging")
-    parser.add_argument("-o", "--output", type=str, default="",
-                        help="Override output in yaml config. Use - for stdout")
-    parser.add_argument("-q", "--quiet", action='store_true',
-                        help="Mute output from script")
+def get_parser():
+    """Set up parser for command line utility"""
+    parser = argparse.ArgumentParser(
+        description="Generate Eclipse Schedule file from merges and insertions"
+    )
+    parser.add_argument(
+        "config", help="Config file in YAML format for Schedule merging"
+    )
+    parser.add_argument(
+        "-o",
+        "--output",
+        type=str,
+        default="",
+        help="Override output in yaml config. Use - for stdout",
+    )
+    parser.add_argument(
+        "-q", "--quiet", action="store_true", help="Mute output from script"
+    )
+    return parser
+
+
+def main():
+    """Entry point from command line"""
+    parser = get_parser()
     args = parser.parse_args()
 
-    if not args.quiet and args.output != "-":
-        header.compose("sunsch",
-                       "May 2018",
-                       ["Håvard Berland"], ["havb@equinor.com"],
-                       ["Access help with -h"],
-                       "Generate Schedule files for Eclipse " + \
-                       "from snippets (merging and insertions)")
-
-
     # Load YAML file:
-    config = yaml.load(open(args.config))
+    config = yaml.safe_load(open(args.config))
 
     # Overrides:
     if args.output != "":
-        config['output'] = args.output
+        config["output"] = args.output
 
-    if 'output' not in config:
-        config['output'] = "-"  # Write to stdout
+    if "output" not in config:
+        config["output"] = "-"  # Write to stdout
 
     if args.output == "-":
         args.quiet = True
 
     schedule = process_sch_config(config, args.quiet)
 
-    if config['output'] == "-" or 'output' not in config:
-        print str(schedule)
+    if config["output"] == "-" or "output" not in config:
+        print(str(schedule))
     else:
         if not args.quiet:
-            print("Writing Eclipse deck to " + config['output'])
-        open(config['output'], 'w').write(str(schedule))
+            print("Writing Eclipse deck to " + config["output"])
+        open(config["output"], "w").write(str(schedule))
+
+
+if __name__ == "__main__":
+    main()
