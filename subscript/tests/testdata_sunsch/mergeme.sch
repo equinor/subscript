@@ -1,0 +1,14 @@
+DATES
+  9 'FEB' 2019 /
+/
+
+WCONHIST
+ 'A-2' 'OPEN' 'ORAT'  4000 /
+/
+DATES
+  1 'OCT' 2020 /
+/
+
+WRFTPLT
+ 'NO' /
+/
