@@ -21,8 +21,8 @@ setuptools.setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
-            "subscript = subscript.cli:main",
             "presentvalue = subscript.presentvalue:main",
+            "sunsch = subscript.sunsch:main",
         ]
     },
     use_scm_version={"write_to": "subscript/version.py"},

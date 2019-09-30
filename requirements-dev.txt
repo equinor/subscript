@@ -1,5 +1,6 @@
 pandas
 scipy
+pyyaml>=5.1
 setuptools >=28
 setuptools_scm
 pytest
