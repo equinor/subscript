@@ -1,53 +1,6 @@
 # -*- coding: utf-8 -*-
-"""Tool for merging Schedule files.
-
-Reads a YAML-file specifying how a Eclipse Schedule section is to be
-produced given certain input files.
-
-Output will not be generated unless the produced data is valid in
-Eclipse, checking provided by sunbeam/opm-parser.
-
-YAML-file components:
-
- init - filename for the initial file. If omitted, defaults to an
-        empty file. If you need something to happen between the
-        Eclipse start date and the first DATES keyword, it must
-        be present in this file.
-
- output - filename for output. stdout if omitted
-
- startdate - YYYY-MM-DD for the initial date in the simulation. There
-             should not be any events before this date in merged-in files.
-             TODO: Clip any events before startdate
-
- refdate - if supplied, will work as a reference date for relative
-           inserts. If not supplied startdate will be used.
-
- enddate - YYYY-MM-DD, anything after that date will be clipped (TODO).
-
- dategrid - a string being either 'weekly', 'biweekly', 'monthly',
-            'bimonthly' stating how often a DATES keyword is wanted
-            (independent of inserts/merges).  '(bi)monthly' and
-            'yearly' will be rounded to first in every month.
-
- merge - list of filenames to be merged in. DATES must be the first
-         keyword in these files.
-
- insert - list of components to be inserted into the final Schedule
-          file. Each list elemen can contain the elemens:
-
-            date - Fixed date for the insertion
-
-            days - relative date for insertion relative to refdate/startdate
-
-            filename - filename to override the yaml-component element name.
-
-            string - instead of filename, you can write the contents inline
-
-            substitute - key-value pairs that will subsitute <key> in
-                         incoming files (or inline string) with
-                         associated values.
-
+"""
+Tool for generating Eclipse Schedule files
 """
 
 import datetime
@@ -113,7 +66,7 @@ def process_sch_config(sunschconf, quiet=True):
                 else:
                     filename = filedict[fileid]["filename"]
 
-            resultfile = tempfile.NamedTemporaryFile(mode='w', delete=False)
+            resultfile = tempfile.NamedTemporaryFile(mode="w", delete=False)
             resultfilename = resultfile.name
             if "substitute" in filedata:
                 templatelines = open(filename, "r").readlines()
@@ -246,7 +199,55 @@ def dategrid(startdate, enddate, interval):
 def get_parser():
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
-        description="Generate Eclipse Schedule file from merges and insertions"
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="""Generate Eclipse Schedule file from merges and insertions.
+
+Reads a YAML-file specifying how a Eclipse Schedule section is to be
+produced given certain input files.
+
+Output will not be generated unless the produced data is valid in
+        Eclipse, checking provided by sunbeam/opm-parser.""",
+        epilog="""YAML-file components:
+
+ init - filename for the initial file. If omitted, defaults to an
+        empty file. If you need something to happen between the
+        Eclipse start date and the first DATES keyword, it must
+        be present in this file.
+
+ output - filename for output. stdout if omitted
+
+ startdate - YYYY-MM-DD for the initial date in the simulation. There
+             should not be any events before this date in merged-in files.
+             TODO: Clip any events before startdate
+
+ refdate - if supplied, will work as a reference date for relative
+           inserts. If not supplied startdate will be used.
+
+ enddate - YYYY-MM-DD, anything after that date will be clipped (TODO).
+
+ dategrid - a string being either 'weekly', 'biweekly', 'monthly',
+            'bimonthly' stating how often a DATES keyword is wanted
+            (independent of inserts/merges).  '(bi)monthly' and
+            'yearly' will be rounded to first in every month.
+
+ merge - list of filenames to be merged in. DATES must be the first
+         keyword in these files.
+
+ insert - list of components to be inserted into the final Schedule
+          file. Each list elemen can contain the elemens:
+
+            date - Fixed date for the insertion
+
+            days - relative date for insertion relative to refdate/startdate
+
+            filename - filename to override the yaml-component element name.
+
+            string - instead of filename, you can write the contents inline
+
+            substitute - key-value pairs that will subsitute <key> in
+                         incoming files (or inline string) with
+                         associated values.
+        """,
     )
     parser.add_argument(
         "config", help="Config file in YAML format for Schedule merging"
