@@ -21,6 +21,7 @@ setuptools.setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
+            "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "presentvalue = subscript.presentvalue:main",
             "sunsch = subscript.sunsch:main",
         ]
