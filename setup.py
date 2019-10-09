@@ -23,6 +23,7 @@ setuptools.setup(
         "console_scripts": [
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "presentvalue = subscript.presentvalue:main",
+            "merge_schedule = subscript.merge_schedule:main",
             "sunsch = subscript.sunsch:main",
         ]
     },
