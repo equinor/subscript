@@ -100,3 +100,81 @@ def test_dateclip():
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2000, 1, 1, 0, 0) not in sch.dates
+
+
+def test_dategrid():
+    # Yearly
+    sch = sunsch.process_sch_config(
+        {
+            "startdate": datetime.date(2020, 1, 1),
+            "enddate": datetime.date(2021, 1, 1),
+            "dategrid": "yearly",
+        }
+    )
+    assert len(sch) == 2
+    assert datetime.datetime(2020, 1, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
+
+    # Monthly
+    sch = sunsch.process_sch_config(
+        {
+            "startdate": datetime.date(2020, 1, 1),
+            "enddate": datetime.date(2021, 1, 1),
+            "dategrid": "monthly",
+        }
+    )
+    assert datetime.datetime(2020, 1, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 2, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 12, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
+    assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
+    assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
+
+    # Bi-Monthly
+    sch = sunsch.process_sch_config(
+        {
+            "startdate": datetime.date(2020, 1, 1),
+            "enddate": datetime.date(2021, 1, 1),
+            "dategrid": "bimonthly",
+        }
+    )
+    assert datetime.datetime(2020, 1, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 2, 1, 0, 0) not in sch.dates
+    assert datetime.datetime(2020, 3, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 11, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 12, 1, 0, 0) not in sch.dates
+    assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
+    assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
+    assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
+
+    # Weekly
+    sch = sunsch.process_sch_config(
+        {
+            "startdate": datetime.date(2020, 1, 1),
+            "enddate": datetime.date(2021, 1, 1),
+            "dategrid": "weekly",
+        }
+    )
+    assert len(sch) == 54
+    assert datetime.datetime(2020, 1, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 1, 8, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 12, 30, 0, 0) in sch.dates
+    assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
+    assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
+    assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
+
+    # Bi-Weekly
+    sch = sunsch.process_sch_config(
+        {
+            "startdate": datetime.date(2020, 1, 1),
+            "enddate": datetime.date(2021, 1, 1),
+            "dategrid": "biweekly",
+        }
+    )
+    assert len(sch) == 28
+    assert datetime.datetime(2020, 1, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 1, 15, 0, 0) in sch.dates
+    assert datetime.datetime(2020, 12, 16, 0, 0) in sch.dates
+    assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
+    assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
+    assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
