@@ -28,7 +28,7 @@ def process_sch_config(sunschconf, quiet=True):
     elif "refdate" in sunschconf:
         schedule = TimeVector(sunschconf["refdate"])
     else:
-        raise Exception("No startdate or refdate given")
+        raise ValueError("No startdate or refdate given")
 
     if "refdate" not in sunschconf and "startdate" in sunschconf:
         sunschconf["refdate"] = sunschconf["startdate"]
@@ -48,7 +48,14 @@ def process_sch_config(sunschconf, quiet=True):
             try:
                 if not quiet:
                     print("Loading " + filename)
-                schedule.load(filename)
+                tmpschedule = TimeVector(datetime.date(1900, 1, 1))
+                tmpschedule.load(filename)
+                # Clip dates prior to startdate
+                for date in tmpschedule.dates:
+                    if date.date() < sunschconf["startdate"]:
+                        tmpschedule.delete(date)
+                        # logging.info("removed at date...")
+                schedule.load_string(str(tmpschedule))
             except ValueError as exception:
                 raise Exception("Error in " + filename + ": " + str(exception))
 
@@ -90,19 +97,24 @@ def process_sch_config(sunschconf, quiet=True):
                 )
             if "days" in filedict[fileid]:
                 if "refdate" not in sunschconf:
-                    raise Exception(
+                    raise ValueError(
                         "ERROR: When using days in insert "
                         + "statements, you must provide refdate"
                     )
                 date = datetime.datetime.combine(
                     sunschconf["refdate"], datetime.datetime.min.time()
                 ) + datetime.timedelta(days=filedict[fileid]["days"])
-            if "string" not in filedata:
-                schedule.load(filename, date=date)
+            if date >= datetime.datetime.combine(
+                sunschconf["startdate"], datetime.datetime.min.time()
+            ):
+                if "string" not in filedata:
+                    schedule.load(filename, date=date)
+                else:
+                    schedule.add_keywords(
+                        datetime_from_date(date), [filedict[fileid]["string"]]
+                    )
             else:
-                schedule.add_keywords(
-                    datetime_from_date(date), [filedict[fileid]["string"]]
-                )
+                print("Ignoring inserts before startdate")
 
     if "enddate" not in sunschconf:
         if not quiet:
@@ -115,7 +127,7 @@ def process_sch_config(sunschconf, quiet=True):
     else:
         enddate = sunschconf["enddate"]  # datetime.date
         if not isinstance(enddate, datetime.date):
-            raise Exception(
+            raise ValueError(
                 "ERROR: end-date not in ISO-8601 format, must be YYYY-MM-DD"
             )
 
@@ -159,7 +171,7 @@ def dategrid(startdate, enddate, interval):
 
     supportedintervals = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
     if interval not in supportedintervals:
-        raise Exception(
+        raise ValueError(
             'Unsupported dategrid interval "'
             + interval
             + '". Pick among '
@@ -216,14 +228,12 @@ Output will not be generated unless the produced data is valid in
 
  output - filename for output. stdout if omitted
 
- startdate - YYYY-MM-DD for the initial date in the simulation. There
-             should not be any events before this date in merged-in files.
-             TODO: Clip any events before startdate
+ startdate - YYYY-MM-DD for the initial date in the simulation.
 
  refdate - if supplied, will work as a reference date for relative
-           inserts. If not supplied startdate will be used.
+           inserts. If not supplied, startdate will be used.
 
- enddate - YYYY-MM-DD, anything after that date will be clipped (TODO).
+ enddate - YYYY-MM-DD. DATES after this date will be removed.
 
  dategrid - a string being either 'weekly', 'biweekly', 'monthly',
             'bimonthly' stating how often a DATES keyword is wanted
@@ -231,7 +241,8 @@ Output will not be generated unless the produced data is valid in
             'yearly' will be rounded to first in every month.
 
  merge - list of filenames to be merged in. DATES must be the first
-         keyword in these files.
+         keyword in these files. Events prior to startdate will
+         be removed.
 
  insert - list of components to be inserted into the final Schedule
           file. Each list elemen can contain the elemens:
