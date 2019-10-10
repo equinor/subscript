@@ -27,6 +27,7 @@ setuptools.setup(
             "params2csv = subscript.params2csv:main",
             "presentvalue = subscript.presentvalue:main",
             "sunsch = subscript.sunsch:main",
+            "summaryplot = subscript.summaryplot:main",
         ]
     },
     use_scm_version={"write_to": "subscript/version.py"},

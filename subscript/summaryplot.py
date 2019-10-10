@@ -1,4 +1,3 @@
-#!/bin/env python
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -21,36 +20,7 @@
 # The source code is a part of the subscript repository:
 #  https://github.com/equinor/subscript
 #
-# Syntax:
-#  summaryplot.py [<options>] <vectorstoplot> <datafilestoread>
-#
-# vectorstoplot is a list of vectors to be plotted in the syntax
-#  <vector>[:<wellname>]
-# For more vector possibilities, issue 'summary.x --list ECLFILE.DATA'
-#
-# datafilestoread is a list of Eclipse *.DATA files to be read
-#
-# Command line arguments are assumed to be Eclipse DATA-files as long
-# as the command line argument is an existing file. If not, it is assumed
-# to be a vector to plot. Thus, vectors and datafiles can be mixed, but beware..#
-#
-# Options:
-#  -h Include historic data (only looks in the first
-#     Eclipse deck given on the command line!)
-#  -nl No label; to avoid the plot to be filled with labels
-#  -s Single plot, all vectors are put into the same plot.
-#     Axes will not be adjusted.
-#  -n Normalize each vector to maximum 1.
-#  -e Ensemble mode: Colour by vector instead of by DATA-file, and adapt legend
-#  -d Dump images to files instead of displaying on screen
-#  -c PARAMNAME colour curves based on the value associatd to PARAMNAME as found
-#     in a textfile called parameters.txt alongside the Eclipse runs.
-#
-#
-# Copyright: Equinor ASA, 2019
-#
-# $Id: summaryplot 555 2019-10-09 11:20:14Z eism $
-#
+
 
 from __future__ import division, absolute_import
 from __future__ import print_function, unicode_literals
@@ -62,11 +32,52 @@ import numpy as np
 import sys, os, time
 import re
 import difflib
+import argparse
 from multiprocessing import Process
 
+# Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
-
 register_matplotlib_converters()
+
+
+DESCRIPTION = """Syntax:
+
+summaryplot [<options>] <vectorstoplot> <datafilestoread>
+
+vectorstoplot is a list of vectors to be plotted in the syntax
+<vector>[:<wellname>]
+
+For more vector possibilities, issue 'summary.x --list ECLFILE.DATA'
+datafilestoread is a list of Eclipse *.DATA files to be read
+
+Command line arguments are assumed to be Eclipse DATA-files as long
+as the command line argument is an existing file. If not, it is assumed
+to be a vector to plot. Thus, vectors and datafiles can be mixed.
+
+Options:
+ -hist Include historical vector
+ -nl No label; to avoid the plot to be filled with labels
+ -s Single plot, all vectors are put into the same plot.
+    Axes will not be adjusted.
+ -n Normalize each vector to maximum 1.
+ -e Ensemble mode: Colour by vector instead of by DATA-file, and adapt legend
+ -d Dump images to files instead of displaying on screen
+ -c PARAMNAME colour curves based on the value associatd to PARAMNAME as found
+   in a textfile called parameters.txt alongside the Eclipse runs.
+"""
+
+EPILOG = ''
+
+def get_parser():
+    """Setup mock parser to be improved at later stage"""
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=DESCRIPTION,
+        epilog=EPILOG
+    )
+    parser.add_argument("-hist", help="Plot historical vector", action="store_true")
+    return parser
+
 
 # Entire functionality is wrapped in a function
 # to allow running the plotter in a subprocess.
@@ -91,7 +102,7 @@ def summaryplotter(*args):
     paramnameforcolouring = ""
     parametervalues = []  # Vector of values pr. realization for colouring
 
-    for arg in args[1:]:
+    for arg in args:
         if takeparamname:  #
             paramnameforcolouring = arg
             takeparamname = False
@@ -526,11 +537,19 @@ def summaryplotter(*args):
 
 
 def main():
-    plotprocess = Process(target=summaryplotter, args=sys.argv)
+
+    parser = get_parser()
+    parsed_args, args = parser.parse_known_args()
+
+    # we are mocking argparse so, this will need to be fixed at some point
+    if parsed_args.hist:
+        args.append('-hist')
+
+    plotprocess = Process(target=summaryplotter, args=args)
     plotprocess.start()
 
     # If user only wants to dump image to file, then do only that:
-    for arg in sys.argv[1:]:
+    for arg in args:
         if arg == "-d":
             print("Dumping plot to summaryplotdump.png and summaryplotdump.pdf")
             plotprocess.join()
@@ -555,7 +574,7 @@ def main():
                         "Reloading plot...\r"
                     )  # Must use \r instead of \n since we have messed up terminal
                     plotprocess.terminate()
-                    plotprocess = Process(target=summaryplotter, args=sys.argv)
+                    plotprocess = Process(target=summaryplotter, args=args)
                     plotprocess.start()
         except KeyboardInterrupt:
             pass
