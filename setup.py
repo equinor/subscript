@@ -22,6 +22,7 @@ setuptools.setup(
     entry_points={
         "console_scripts": [
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
+            "params2csv = subscript.params2csv:main",
             "presentvalue = subscript.presentvalue:main",
             "sunsch = subscript.sunsch:main",
         ]
