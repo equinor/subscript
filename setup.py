@@ -23,6 +23,7 @@ setuptools.setup(
         "console_scripts": [
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "csvStack = subscript.csvStack:main",
+            "gen_satfunc = subscript.gen_satfunc:main",
             "params2csv = subscript.params2csv:main",
             "presentvalue = subscript.presentvalue:main",
             "sunsch = subscript.sunsch:main",

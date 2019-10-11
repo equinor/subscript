@@ -5,5 +5,6 @@ setuptools >=28
 setuptools_scm
 pytest
 pytest-runner
+pyscal
 sphinx
 flake8
