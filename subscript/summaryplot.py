@@ -55,14 +55,14 @@ as the command line argument is an existing file. If not, it is assumed
 to be a vector to plot. Thus, vectors and datafiles can be mixed.
 
 Options:
- -hist Include historical vector
+ -hi (--hist) Include historical vector
  -nl No label; to avoid the plot to be filled with labels
  -s Single plot, all vectors are put into the same plot.
     Axes will not be adjusted.
  -n Normalize each vector to maximum 1.
  -e Ensemble mode: Colour by vector instead of by DATA-file, and adapt legend
  -d Dump images to files instead of displaying on screen
- -c PARAMNAME colour curves based on the value associatd to PARAMNAME as found
+ -c PARAMNAME colour curves based on the value associated to PARAMNAME as found
    in a textfile called parameters.txt alongside the Eclipse runs.
 """
 
@@ -75,7 +75,7 @@ def get_parser():
         description=DESCRIPTION,
         epilog=EPILOG
     )
-    parser.add_argument("-hist", help="Plot historical vector", action="store_true")
+    parser.add_argument("-hi", "--hist", help="Plot historical vector", action="store_true")
     return parser
 
 
