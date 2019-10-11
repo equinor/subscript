@@ -5,58 +5,119 @@ import re
 import subprocess
 import argparse
 
-import pandas
+import pandas as pd
 
 DESCRIPTION = """
-Print list of users running on cluster, sorted by
-number of jobs.
+Print list of users running on cluster, sorted by number of jobs.
+
+This is statistics derived from the system command `bjobs` and `finger`.
 """
 
 
-def get_jobs(status="RUN"):
+def call_bjobs(status="RUN"):
+    """Call the system bjobs utility
+
+    Filter on a specific status, and to only the username
+    and the nodecount
+
+    Args:
+        status (str): A string that the bjobs output will be grepped to
+            should typically be RUN or PEND
+
+    Returns:
+        Multiline string in ascii, looking like
+            foobart 4*computenode1
+            foobarter 2*computenode4
+            foober computenode1
+
+        where the optional number in front a compute node name denotes
+        the number of allocated cores to the job.
+    """
     cmd = "bjobs -u all | grep %s | awk '{print $2,$6;}'" % (status)
     cmdoutput = subprocess.check_output(cmd, shell=True).decode("ascii")
+    return cmdoutput
+
+
+def get_jobs(status, bjobs_function):
+    """Make a Pandas dataframe out of the bjobs output
+
+    Sums the cpu/core usage pr. user.
+
+    Args:
+        status (str): Type of job to list, RUN or PEND
+        bjobs_function: Function handle to a function that can return a string
+             with bjobs output.
+
+    Returns:
+        pd.DataFrame with the columns user and ncpu. Only one row pr username.
+            Sorted descending by ncpu.
+    """
+    cmdoutput = bjobs_function(status)
     rex = re.compile(r".*(\d+)\*.*")
     slines = [line.split() for line in str.splitlines(str(cmdoutput))]
     if len(slines[0]) < 1:
-        data = pandas.DataFrame(columns=("user", "ncpu"))
+        data = pd.DataFrame(columns=("user", "ncpu"))
     else:
         data = [
             [uname, 1 if rex.match(hname) is None else int(rex.match(hname).group(1))]
             for (uname, hname) in slines
         ]
     return (
-        pandas.DataFrame(data, columns=("user", "ncpu"))
+        pd.DataFrame(data, columns=("user", "ncpu"))
         .groupby("user")
         .sum()
         .sort_values("ncpu", ascending=False)
     )
 
 
-def userinfo(u):
-    cmd = "finger %s | head -n 1" % (u)
-    retval = "?? (%s)" % u
+def call_finger(username):
+    """Call the system utility 'finger' on a specific username
+
+    Returns:
+        UTF-8 encoded string with the first line of output from 'finger'
+        Example return value: "Login: foobert      Name: Foo Barrer (FOO BAR COM)"
+    """
+    cmd = "finger %s | head -n 1" % (username)
     try:
         with open(os.devnull, "w") as devnull:
-            line = (
+            finger_output = (
                 subprocess.check_output(cmd, shell=True, stderr=devnull)
                 .decode("utf-8")
                 .strip()
             )
-        rex = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
-        [u2, uname, org] = [x.strip() for x in rex.match(line).groups()]
-        retval = "%s (%s) (%s)" % (uname, org, u)
     except AttributeError:
         pass
-    return retval
+    if finger_output:
+        return finger_output
+    else:
+        # When finger fails, return something similar and usable
+        return "Login: %s  Name: ?? ()" % (username)
+
+
+def userinfo(username, finger_function):
+    """Get information on a user based on the username
+
+    Args:
+        username: user shortname/loginname
+        finger_function: Function handle that can provide output
+            from the system finger program (/usr/bin/finger)
+
+    Returns:
+        string with full user name, organization from finger output and
+            the shortname
+    """
+    finger_output = finger_function(username)
+    rex = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
+    [u2, fullname, org] = [x.strip() for x in rex.match(finger_output).groups()]
+    return "%s (%s) (%s)" % (fullname, org, username)
 
 
 def show_status(status="RUN", title="Running", umax=10):
-    df = get_jobs(status).iloc[:umax]
+    df = get_jobs(status, call_bjobs).iloc[:umax]
     print("%s jobs:" % (title))
     print("--------------")
     for u, n in df.iterrows():
-        print(n[0], userinfo(u))
+        print(n[0], userinfo(u, call_finger))
     print("- - - - - - - - - - -")
     print("Total: %d" % (df["ncpu"].sum()))
 
