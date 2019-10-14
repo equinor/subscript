@@ -1,4 +1,4 @@
 pandas
 scipy
 pyyaml>=5.1
-pyscal
+pyscal>0.1.4

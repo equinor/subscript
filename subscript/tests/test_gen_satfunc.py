@@ -33,5 +33,20 @@ def test_gen_satfunc():
     gen_satfunc.main()
 
     assert os.path.exists("swof.inc")
-
     assert len(open("swof.inc").readlines()) > 50
+
+    with open("relpermpc.conf", "w") as fh:
+        fh.write(
+            """
+SWOF
+RELPERM 4 2 1   3 2 1   0.15 0.10 0.5 20 100 0.2 0.22 -0.5 30
+"""
+        )
+    if os.path.exists("swofpc.inc"):
+        os.unlink("swofpc.inc")
+    sys.argv = ["gen_satfunc", "relpermpc.conf", "swofpc.inc"]
+    gen_satfunc.main()
+    assert os.path.exists("swofpc.inc")
+    swofpclines = open("swofpc.inc").readlines()
+    assert len(swofpclines) > 20
+    assert any(["sigma_costau=30" in x for x in swofpclines])

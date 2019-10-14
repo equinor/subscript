@@ -40,26 +40,32 @@ def main():
                 relperm_input = tuple(tmp[8:].split("--")[0].split())
                 relperm_input = [float(i) for i in relperm_input]
 
+                if len(relperm_input) < 9:
+                    print("ERROR: Too few relperm parameters in line:")
+                    print("  " + line)
+                    raise ValueError("Erroneous relperm parameters")
+
                 # Unpack parameter list to explicitly named parameters:
-                (Lw, Ew, Tw, Lo, Eo, To, Sorw, Swirr, Krwo) = relperm_input[0:9]
+                (Lw, Ew, Tw, Lo, Eo, To, Sorw, Swl, Krwo) = relperm_input[0:9]
 
                 if len(relperm_input) > 9:
                     num_sw_steps = relperm_input[9]
                 else:
                     num_sw_steps = 20
 
-                wo = pyscal.WaterOil(h=1.0 / (num_sw_steps + 2), sorw=Sorw, swirr=Swirr)
+                wo = pyscal.WaterOil(h=1.0 / (num_sw_steps + 2), sorw=Sorw, swl=Swl)
                 wo.add_LET_oil(Lo, Eo, To, kroend=1)
                 wo.add_LET_water(Lw, Ew, Tw, krwend=Krwo)
 
-                if len(relperm_input) == 13:
-                    (PERM, PORO, a, b, sigma_costau) = relperm_input[10:14]
-                    wo.add_pc(
-                        a=a,
-                        b=b,
-                        poro_ref=PORO,
-                        perm_ref=PERM,
-                        sigma_costau=sigma_costau,
+                if 10 < len(relperm_input) < 15:
+                    print("ERROR: Too few parameter for pc in line")
+                    print("  " + line)
+                    raise ValueError("Erroneous pc parameters")
+
+                if len(relperm_input) == 15:
+                    (PERM, PORO, a, b, sigma_costau) = relperm_input[10:15]
+                    wo.add_petrophysical_pc(
+                        a=a, b=b, poro=PORO, perm=PERM, sigma_costau=sigma_costau
                     )
 
                 output += wo.SWOF(header=False)
@@ -75,7 +81,7 @@ def main():
                 print("Generating SGOF table")
                 output = output + "SGOF\n"
             else:
-                sys.exit('Error while interpreting line: "%s"' % line.strip())
+                raise ValueError('Error while interpreting line: "%s"' % line.strip())
 
     print("Writing output file...")
     with open(args.output_file, "w") as fh:
