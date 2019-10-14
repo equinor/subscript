@@ -3,12 +3,9 @@
 from __future__ import absolute_import
 from .. import summaryplot
 import os
-#import unittest
 
 
-#class TestSummaryplot(unittest.TestCase):
 def test_summaryploter():
-
     datafn = os.path.join(
         os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.DATA"
     )
@@ -25,5 +22,3 @@ def test_summaryploter():
 
     if os.path.exists(pdffn):
         os.unlink(pdffn)
-
-
