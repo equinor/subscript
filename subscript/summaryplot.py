@@ -303,14 +303,13 @@ def summaryplotter(*args):
         print("Getting data for " + v + "...")
         match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", v)
         dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
-        i = int(match.group(2))  # Remember that these indices start on 1, not on zero!
-        j = int(match.group(3))
-        k = int(match.group(4))
+        (ijk) = (int(match.group(2)), int(match.group(3)), int(match.group(4)))
+        # Remember that these indices start on 1, not on zero!
 
         restartvectordata[v] = {}
         restartvectordates[v] = {}
         for datafile_idx in range(0, len(datafiles)):
-            active_index = gridfiles[datafile_idx].get_active_index(ijk=(i, j, k))
+            active_index = gridfiles[datafile_idx].get_active_index(ijk=ijk)
             restartvectordata[v][datafiles[datafile_idx]] = []
             restartvectordates[v][datafiles[datafile_idx]] = []
 
