@@ -21,7 +21,8 @@ before_install:
   - echo $INSTALL_DIR
   - echo $PYTHONPATH
   - echo $LD_LIBRARY_PATH
-  - echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
+  - export MPLBACKEND="Agg"
+
 
 addons:
   apt:
