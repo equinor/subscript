@@ -26,10 +26,10 @@ from __future__ import division, absolute_import
 from __future__ import print_function, unicode_literals
 
 import ert.ecl as ecl
-import itertools  # for manual color cycling
 import matplotlib.pyplot
 import numpy as np
-import sys, os, time
+import sys
+import os
 import re
 import difflib
 import argparse
@@ -37,8 +37,8 @@ from multiprocessing import Process
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
-register_matplotlib_converters()
 
+register_matplotlib_converters()
 
 DESCRIPTION = """Syntax:
 
@@ -66,16 +66,19 @@ Options:
    in a textfile called parameters.txt alongside the Eclipse runs.
 """
 
-EPILOG = ''
+EPILOG = ""
+
 
 def get_parser():
     """Setup mock parser to be improved at later stage"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=DESCRIPTION,
-        epilog=EPILOG
+        epilog=EPILOG,
     )
-    parser.add_argument("-hi", "--hist", help="Plot historical vector", action="store_true")
+    parser.add_argument(
+        "-hi", "--hist", help="Plot historical vector", action="store_true"
+    )
     return parser
 
 
@@ -107,7 +110,7 @@ def summaryplotter(*args):
             paramnameforcolouring = arg
             takeparamname = False
             continue
-        if arg == "-h":
+        if arg == "-hist":
             includehistory = True
             continue
         if arg == "-n":
@@ -166,10 +169,10 @@ def summaryplotter(*args):
                 parameterfiles.append("")
             # (we don't care yet if it exists or not)
 
-        except:
+        except Exception:
             vectors.append(arg)
 
-    if (parametercolouring or logparametercolouring) and nolabel == False:
+    if (parametercolouring or logparametercolouring) and nolabel is False:
         print("Hint: Use -nl to skip legend")
 
     if (parametercolouring or logparametercolouring) and len(summaryfiles) < 2:
@@ -181,8 +184,8 @@ def summaryplotter(*args):
     maxvalue = 0.0
     parameternames = []
     if parametercolouring or logparametercolouring:
-        # Try to load parameters.txt for each datafile, and put the associated values in a vector
-        # print len(parameterfiles)
+        # Try to load parameters.txt for each datafile,
+        # and put the associated values in a vector
         for parameterfile in parameterfiles:
             valuefound = False
             if os.path.isfile(parameterfile):
@@ -194,7 +197,7 @@ def summaryplotter(*args):
                         parametervalues.append(float(linecontents[1]))
                         valuefound = True
                         break
-            if valuefound == False:
+            if not valuefound:
                 print(
                     "Warning: "
                     + paramnameforcolouring
@@ -234,7 +237,8 @@ def summaryplotter(*args):
                 )
             else:
                 print(
-                    "Warning: Log(zero) encountered, reverting to non-logarithmic values"
+                    "Warning: Log(zero) encountered, "
+                    "reverting to non-logarithmic values"
                 )
                 minvalue = np.min(parametervalues)
                 maxvalue = np.max(parametervalues)
@@ -249,7 +253,8 @@ def summaryplotter(*args):
         # Build a colour map from all the values, from min to max.
 
     if normalize and includehistory:
-        print("Warning: Historical data is not normalized equal to simulated data")
+        print("Warning: Historical data is not "
+              "normalized equal to simulated data")
 
     if len(summaryfiles) == 0:
         print("Error: No summary files found")
@@ -262,7 +267,8 @@ def summaryplotter(*args):
     restartvectors = []
     for v in vectors:
         if not summaryfiles[0].keys(v):
-            # Check if it is a restart vector with syntax <vector>:<i>,<j>,<k> aka SOIL:40,31,33
+            # Check if it is a restart vector with syntax
+            # <vector>:<i>,<j>,<k> aka SOIL:40,31,33
             if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", v):
                 print("Found restart vector " + v)
                 restartvectors.append(v)
@@ -291,7 +297,8 @@ def summaryplotter(*args):
         sys.exit(1)
 
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
-    # Remember that SOIL should also be supported, but must be calculated on demand from SWAT and SGAS
+    # Remember that SOIL should also be supported, but must be calculated on
+    # demand from SWAT and SGAS
     restartvectordata = {}
     restartvectordates = {}
     for v in restartvectors:
@@ -336,7 +343,8 @@ def summaryplotter(*args):
             # print restartvectordates[v][datafiles[datafile_idx]]
     # Data structure examples
     # restartvectordata["SOIL:1,1,1"]["datafile"] = [0.89, 0.70, 0.60, 0.55, 0.54]
-    # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"] (NB dates are in format "datetime")
+    # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"]
+    # (NB dates are in format "datetime")
     # TODO: Fill restartvectordata with NaN's if restart data is missing
 
     # Make the plots
@@ -379,7 +387,7 @@ def summaryplotter(*args):
     for v_idx in range(0, len(matchedsummaryvectors)):
         v = matchedsummaryvectors[v_idx]
 
-        if singleplot == False or v == matchedsummaryvectors[0]:
+        if (not singleplot) or v == matchedsummaryvectors[0]:
             fig = pyplot.figure()
             if parametercolouring or logparametercolouring:
                 pyplot.colorbar(invisiblecontourplot)
@@ -391,7 +399,7 @@ def summaryplotter(*args):
         # Add grey major gridlines:
         pyplot.grid(b=True, which="both", color="0.65", linestyle="-")
 
-        if singleplot == False:
+        if not singleplot:
             if parametercolouring:
                 pyplot.title(v + ", colouring: " + paramnameforcolouring)
             elif logparametercolouring:
@@ -408,7 +416,7 @@ def summaryplotter(*args):
             histvec = toks[0] + "H"
             if len(toks) > 1:
                 histvec = histvec + ":" + toks[1]
-            if s.has_key(histvec):
+            if histvec in s.keys():
                 values = s.numpy_vector(histvec)
                 sumlabel = "_nolegend_"
                 if normalize:
@@ -421,7 +429,7 @@ def summaryplotter(*args):
 
         for s_idx in range(0, len(summaryfiles)):
             s = summaryfiles[s_idx]
-            if s.has_key(v):
+            if v in s.keys():
                 if s_idx >= maxlegends:  # Truncate legend if too many
                     sumlabel = "_nolegend_"
                 else:
@@ -466,7 +474,7 @@ def summaryplotter(*args):
             pyplot.legend(loc="best", fancybox=True, framealpha=0.5)
     for v in restartvectors:
 
-        if singleplot == False or (
+        if not singleplot or (
             v == restartvectors[0] and len(matchedsummaryvectors) == 0
         ):
             fig = pyplot.figure()
@@ -474,7 +482,7 @@ def summaryplotter(*args):
                 pyplot.colorbar(invisiblecontourplot)
             pyplot.xlabel("Date")
 
-        if singleplot == False:
+        if not singleplot:
             if parametercolouring:
                 pyplot.title(v + ", colouring: " + paramnameforcolouring)
             elif logparametercolouring:
@@ -543,7 +551,7 @@ def main():
 
     # we are mocking argparse so, this will need to be fixed at some point
     if parsed_args.hist:
-        args.append('-hist')
+        args.append("-hist")
 
     plotprocess = Process(target=summaryplotter, args=args)
     plotprocess.start()
@@ -558,13 +566,15 @@ def main():
 
     # Give out a "menu" (text-based) only if we are running in foreground:
     if os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):
-        import tty, termios
+        import tty
+        import termios
 
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
         print("Menu: 'q' = quit, 'r' = reload plots")
         try:
-            # change terminal settings to allow keyboard input without user pressing 'enter'
+            # change terminal settings to allow keyboard
+            # input without user pressing 'enter'
             tty.setcbreak(sys.stdin.fileno())
             ch = ""
             while ch != "q" and plotprocess.is_alive():
