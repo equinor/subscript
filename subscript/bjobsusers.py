@@ -54,9 +54,13 @@ def get_jobs(status, bjobs_function):
     """
     cmdoutput = bjobs_function(status)
     rex = re.compile(r".*(\d+)\*.*")
+    # Split bjobs output into a list of list:
     slines = [line.split() for line in str.splitlines(str(cmdoutput))]
-    if len(slines[0]) < 1:
-        data = pd.DataFrame(columns=("user", "ncpu"))
+    # We only accept lines with two components:
+    slines = filter(lambda x: len(x) == 2, slines)
+    if not slines:
+        # Empty bjobs-output should just return empty dataframe.
+        return pd.DataFrame(columns=("user", "ncpu"))
     else:
         data = [
             [uname, 1 if rex.match(hname) is None else int(rex.match(hname).group(1))]
