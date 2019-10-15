@@ -33,7 +33,7 @@ def call_bjobs(status="RUN"):
         where the optional number in front a compute node name denotes
         the number of allocated cores to the job.
     """
-    cmd = "bjobs -u all | grep %s | awk '{print $2,$6;}'" % (status)
+    cmd = "bjobs -u all | grep {} | awk '{{print $2,$6;}}'".format(status)
     cmdoutput = subprocess.check_output(cmd, shell=True).decode("ascii")
     return cmdoutput
 
@@ -77,7 +77,7 @@ def call_finger(username):
         UTF-8 encoded string with the first line of output from 'finger'
         Example return value: "Login: foobert      Name: Foo Barrer (FOO BAR COM)"
     """
-    cmd = "finger %s | head -n 1" % (username)
+    cmd = "finger {} | head -n 1".format(username)
     try:
         with open(os.devnull, "w") as devnull:
             finger_output = (
@@ -91,7 +91,7 @@ def call_finger(username):
         return finger_output
     else:
         # When finger fails, return something similar and usable
-        return "Login: %s  Name: ?? ()" % (username)
+        return "Login: {}  Name: ?? ()".format(username)
 
 
 def userinfo(username, finger_function):
@@ -109,17 +109,17 @@ def userinfo(username, finger_function):
     finger_output = finger_function(username)
     rex = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
     [u2, fullname, org] = [x.strip() for x in rex.match(finger_output).groups()]
-    return "%s (%s) (%s)" % (fullname, org, username)
+    return "{} ({}) ({})".format(fullname, org, username)
 
 
 def show_status(status="RUN", title="Running", umax=10):
     df = get_jobs(status, call_bjobs).iloc[:umax]
-    print("%s jobs:" % (title))
+    print("{} jobs:".format(title))
     print("--------------")
     for u, n in df.iterrows():
         print(n[0], userinfo(u, call_finger))
     print("- - - - - - - - - - -")
-    print("Total: %d" % (df["ncpu"].sum()))
+    print("Total: {}".format(df["ncpu"].sum()))
 
 
 def get_parser():

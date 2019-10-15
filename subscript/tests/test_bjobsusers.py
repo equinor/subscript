@@ -6,6 +6,9 @@ from .. import bjobsusers
 def fake_bjobs(status):
     return "foobar 3*computenode1\nfoobert 1*computenode2\nfoobar 8*computenode3"
 
+def bjobs_errors(status):
+    # Example error message from bjobs
+    return "LIM not responding"
 
 def fake_finger(username):
     return "Login: {}          Name: Foo Barrer (foo.bar.com)"
@@ -19,6 +22,10 @@ def test_get_jobs():
     assert not jobs_df.empty
     assert len(jobs_df.index.unique()) == len(jobs_df)
     assert jobs_df["ncpu"].sum() > 0
+
+    jobs_df = bjobsusers.get_jobs("RUN", bjobs_errors)
+    assert isinstance(jobs_df, pd.DataFrame)
+    assert jobs_df.empty
 
 
 def test_userinfo():
