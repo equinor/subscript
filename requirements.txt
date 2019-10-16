@@ -1,3 +1,5 @@
 pandas
 scipy
 pyyaml>=5.1
+matplotlib
+numpy

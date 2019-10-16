@@ -29,6 +29,7 @@ setuptools.setup(
             "presentvalue = subscript.presentvalue:main",
             "merge_schedule = subscript.merge_schedule:main",
             "sunsch = subscript.sunsch:main",
+            "summaryplot = subscript.summaryplot:main",
         ]
     },
     use_scm_version={"write_to": "subscript/version.py"},
