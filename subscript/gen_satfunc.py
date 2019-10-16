@@ -64,7 +64,7 @@ def main():
 
                 if len(relperm_input) == 15:
                     (PERM, PORO, a, b, sigma_costau) = relperm_input[10:15]
-                    wo.add_petrophysical_pc(
+                    wo.add_normalized_J(
                         a=a, b=b, poro=PORO, perm=PERM, sigma_costau=sigma_costau
                     )
 
