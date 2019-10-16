@@ -21,6 +21,7 @@ setuptools.setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
+            "bjobsusers = subscript.bjobsusers:main",
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "csvStack = subscript.csvStack:main",
             "eclcompress = subscript.eclcompress:main",
