@@ -21,13 +21,16 @@ setuptools.setup(
     tests_require=["pytest"],
     entry_points={
         "console_scripts": [
+            "bjobsusers = subscript.bjobsusers:main",
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "csvStack = subscript.csvStack:main",
             "eclcompress = subscript.eclcompress:main",
             "gen_satfunc = subscript.gen_satfunc:main",
             "params2csv = subscript.params2csv:main",
             "presentvalue = subscript.presentvalue:main",
+            "merge_schedule = subscript.merge_schedule:main",
             "sunsch = subscript.sunsch:main",
+            "summaryplot = subscript.summaryplot:main",
         ]
     },
     use_scm_version={"write_to": "subscript/version.py"},

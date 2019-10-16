@@ -21,6 +21,8 @@ before_install:
   - echo $INSTALL_DIR
   - echo $PYTHONPATH
   - echo $LD_LIBRARY_PATH
+  - export MPLBACKEND="Agg"
+
 
 addons:
   apt:

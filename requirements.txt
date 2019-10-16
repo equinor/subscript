@@ -2,3 +2,5 @@ pandas
 scipy
 pyyaml>=5.1
 pyscal>=0.1.5
+matplotlib
+numpy
