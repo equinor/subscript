@@ -25,6 +25,7 @@ setuptools.setup(
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "csvStack = subscript.csvStack:main",
             "eclcompress = subscript.eclcompress:main",
+            "gen_satfunc = subscript.gen_satfunc:main",
             "params2csv = subscript.params2csv:main",
             "presentvalue = subscript.presentvalue:main",
             "merge_schedule = subscript.merge_schedule:main",
