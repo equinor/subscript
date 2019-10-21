@@ -1,3 +1,8 @@
+# encoding: utf-8
+
+import os
+import sys
+
 import pandas as pd
 
 import pytest
@@ -15,7 +20,19 @@ def bjobs_errors(status):
 
 
 def fake_finger(username):
-    return "Login: {}          Name: Foo Barrer (foo.bar.com)"
+    fing = "Login: {}          Name: Foo Barrer (foo.bar.com)"
+    if sys.version_info[0] > 2:
+        return fing
+    else:
+        return fing.decode("utf-8")
+
+
+def fake_finger_unicode(username):
+    fing = "Login: {}       Name: Føø Bårrær (foo.latin1.utf8.com)"
+    if sys.version_info[0] > 2:
+        return fing
+    else:
+        return fing.decode("utf-8")
 
 
 def test_real_bjobs():
@@ -49,7 +66,23 @@ def test_get_jobs():
 
 
 def test_userinfo():
+    # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
     usersummary = bjobsusers.userinfo("foobar", fake_finger)
     assert isinstance(usersummary, str)
+    assert "Login" not in usersummary
+
+    # assert isinstance(fake_finger_unicode(''), unicode)  # only relevant for Python 2
+    usersummary = bjobsusers.userinfo("foobar", fake_finger_unicode)
+    assert isinstance(usersummary, str)
     assert usersummary
+    assert "Login" not in usersummary
+
+
+def test_systemfinger():
+    currentuser = os.getlogin()
+    if not currentuser:
+        return
+    usersummary = bjobsusers.userinfo(currentuser, bjobsusers.call_finger)
+    assert isinstance(usersummary, str)
+    print("Myself is: " + usersummary)
     assert "Login" not in usersummary
