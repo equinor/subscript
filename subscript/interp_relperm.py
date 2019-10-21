@@ -70,6 +70,7 @@ import yaml
 import argparse
 from ecl2df import satfunc2df
 
+
 def tables_to_dataframe(filenames):
     """
     Routine to gather scal tables (SWOF and SGOF) from ecl include files.
@@ -83,8 +84,7 @@ def tables_to_dataframe(filenames):
 
     dataframes = []
     for filename in filenames:
-        filecontents_df = satfunc2df.deck2df(
-            "\n".join(open(filename).readlines()))
+        filecontents_df = satfunc2df.deck2df("\n".join(open(filename).readlines()))
         dataframes.append(filecontents_df)
 
     return pd.concat(dataframes, sort=True)
@@ -226,12 +226,7 @@ def make_interpolant(
             pccolname="PCOG",
         )
 
-    rec = pyscal.SCALrecommendation(
-        low,
-        base,
-        high,
-        "SATNUM " + str(satnum),
-        h=h)
+    rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=h)
 
     # Sett interpolation parameter. Default to 0 (base) if nothing specified
     swof_param = 0
@@ -328,8 +323,7 @@ if __name__ == "__main__":
     if "SGOF" in low_df.KEYWORD.unique():
         has_low_SGOF = True
     if not has_low_SWOF and not has_low_SGOF:
-        sys.exit(
-            "ERROR: No tables provided for low; provide SWOF and/or SGOF")
+        sys.exit("ERROR: No tables provided for low; provide SWOF and/or SGOF")
 
     # high
     if "SWOF" in high_df.KEYWORD.unique():
@@ -337,8 +331,7 @@ if __name__ == "__main__":
     if "SGOF" in high_df.KEYWORD.unique():
         has_high_SGOF = True
     if not has_high_SWOF and not has_high_SGOF:
-        sys.exit(
-            "ERROR: No tables provided for high; provide SWOF and/or SGOF")
+        sys.exit("ERROR: No tables provided for high; provide SWOF and/or SGOF")
 
     # This is how we want to navigate the dataframes:
     base_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
@@ -352,9 +345,7 @@ if __name__ == "__main__":
 
     # Loop over satnum and interpolate according to defaul and cfg values
     interpolants = []
-    satnums = range(
-        1, base_df.reset_index("SATNUM")["SATNUM"].unique().max()+1
-        )
+    satnums = range(1, base_df.reset_index("SATNUM")["SATNUM"].unique().max() + 1)
 
     for satnum in satnums:
         interp_values = {"param_w": 0, "param_g": 0}
