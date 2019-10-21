@@ -16,6 +16,7 @@ setuptools.setup(
     license="Not open source (violating TR1621)",
     packages=["subscript"],
     platforms="any",
+    include_package_data=True,
     install_requires=[],
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
