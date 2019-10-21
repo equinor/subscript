@@ -24,6 +24,7 @@ setuptools.setup(
             "bjobsusers = subscript.bjobsusers:main",
             "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
             "csvStack = subscript.csvStack:main",
+            "csv2ofmvol = subscript.csv2ofmvol:main",
             "eclcompress = subscript.eclcompress:main",
             "gen_satfunc = subscript.gen_satfunc:main",
             "params2csv = subscript.params2csv:main",
