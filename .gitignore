@@ -1,0 +1,11 @@
+.cache
+.coverage
+subscript.egg-info
+*~
+*.swp
+*.pyc
+.tox
+__pycache__
+subscript/version.py
+*py.bak
+.eggs
