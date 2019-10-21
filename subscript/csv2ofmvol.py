@@ -1,25 +1,35 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-Convert CSV files with production data to OFM vol-format
-
-The indented usage is to process CSV files outputted from
-the pyPDM library (possibly from the script 'export_production_data')
-and then convert this back to OFM (OilField Manager) "vol"-format, which
-gives the easiest route into Roxar's RMS, through a
-Production Profile Import job.
-"""
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
 import sys
 import datetime
-from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 import argparse
-import numpy as np
 import pandas as pd
+
+DESCRIPTION = "Convert CSV files with production data to OFM vol-format"
+
+EPILOG = """The indented usage is to process CSV files outputted from the pyPDM
+library (possibly from the script 'export_production_data') and then
+convert this back to OFM (OilField Manager) "vol"-format, which gives
+the easiest route into Roxar's RMS, through a Production Profile
+Import job.
+
+Example input csv data:
+    DATE,WELL,WOPR
+    2010-01-01,A-3,1000
+    2011-01-01,A-3,2000
+    2012-01-01,A-3,3000
+which will produce the following vol-file output:
+    *METRIC
+    *DAILY
+    *DATE   *OIL
+    *NAME A-3
+    2010-01-01  1000
+    2011-01-01  2000
+    2012-01-01  3000
+"""
 
 # Translation table from what vectors are called in PDM to
 # what the OFM vol-fileformat expects.
@@ -170,27 +180,39 @@ def df2vol(data):
     return volstr
 
 
-def parse_args():
+class CustomFormatter(
+    argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
+):
+    """
+    Multiple inheritance used for argparse to get both
+    defaults and raw description formatter
+    """
+
+    pass
+
+
+def get_parser():
     """Parse command line arguments, return a Namespace with arguments"""
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=DESCRIPTION, epilog=EPILOG, formatter_class=CustomFormatter
+    )
     parser.add_argument("csvfiles", nargs="+", help="CSV files with data")
     parser.add_argument("-o", "--output", type=str, default="pdm_data.vol")
-    return parser.parse_args()
+    return parser
 
 
 def main():
-
-    import resscript.header
-    resscript.header.compose("csv2ofmvol", "", ["H. Berland"],["havb@equinor.com"], ["Yammer/source code"], "Convert CSV files to OFM vol-format")
     """Entry point if called from command line"""
-    args = parse_args()
+    args = get_parser().parse_args()
 
-    print("Input files: " + " ".join(args.csvfiles))
+    print("Input files: {}".format(" ".join(args.csvfiles)))
     data = read_pdm_csv_files(args.csvfiles)
 
     if not check_consecutive_dates(data):
+        # The called subroutine will print relevant error messages
         sys.exit(1)
 
+    # Convert dataframes to a multiline string:
     volstr = df2vol(data)
 
     with open(args.output, "w") as outfile:
