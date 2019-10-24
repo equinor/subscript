@@ -1,6 +1,20 @@
 import pandas as pd
 import os
+import yaml
+import configsuite
 from .. import interp_relperm
+
+
+def test_get_cfg_schema():
+    interpolant = interp_relperm.get_cfg_schema()
+    test_cfg = os.path.join(os.path.dirname(__file__), "data/relperm/cfg.yml")
+    with open(test_cfg, "r") as ymlfile:
+        cfg = yaml.safe_load(ymlfile)
+
+    # validate cfg according to schema
+    schema = interp_relperm.get_cfg_schema()
+    suite = configsuite.ConfigSuite(cfg, schema)
+    assert suite.valid
 
 
 def test_tables_to_dataframe():
@@ -52,16 +66,7 @@ def test_make_interpolant():
     high_df.sort_index(inplace=True)
 
     interpolant = interp_relperm.make_interpolant(
-        base_df,
-        low_df,
-        high_df,
-        {"param_w": 0.1, "param_g": -0.5},
-        1,
-        True,
-        True,
-        True,
-        True,
-        0.1,
+        base_df, low_df, high_df, {"param_w": 0.1, "param_g": -0.5}, 1, 0.1
     )
 
     assert "SWOF" in interpolant.wateroil.SWOF()

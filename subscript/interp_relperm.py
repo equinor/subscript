@@ -3,10 +3,12 @@ Interpolation script for relperm tables defined by ecl include files.
 Candidate script to replace InterpRelperm. Script reads base/high/low
 SWOF and SGOF from ecl include files and interpolates inbetween,
 using interpolation parameter(s) in range [-1,1], so that 0 returns
-base, -1 returns low, and 1 returns high.
+base, -1 returns low, and 1 returns high. If either base, low or high
+is missing, one can set two of the inputs (low/base/high) to read the
+same file and interpolate in half the range.
 
 Created:  2019.03.21
-Modified: 2019.10.18
+Modified: 2019.10.23
 
 Autors:
 - Eivind Smoergrav, eism
@@ -16,40 +18,40 @@ Config file syntax (yaml):
 #********************************************************************
 # Example config file
 
-base:  # One unified file with SWOF and SGOF or two separate files.
-       # Both SWOF and SGOF are required for base
+base:  # Required: SWOF and SGOF in one unified file or two separate files.
   - swof_base.inc
   - sgof_base.inc
 
-high:  # Nothing required; can be omitted if only to interpolate
-       # between base and low.
-       # Can drop SGOF if interolating SWOF only and vice verca
+high:  # Required: the phases to be interpoalted must be present.
+       # Ie can drop SWOF or SGOF if these are not to be used
   - swof_opt.inc
   - sgof_opt.inc
 
-low:   # Nothing required; can be omitted if only to interpolate
-       # between base and high.
-       # Can drop SGOF if interolating SWOF only and vice verca
+low:   # Required: the phases to be interpoalted must be present.
+       # Ie can drop SWOF or SGOF if these are not to be used
   - swof_pes.inc
   - sgof_pes.inc
 
-result_file  : outfilen.inc  # Name of output file with interpolated tables
+result_file  : outfilen.inc  # Required: Name of output file with interpolated tables
 
-delta_s      : 0.02          # optional: resolution of Sw/Sg, defaulted to 0.01
+delta_s      : 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
 
-interpolations:
-  - param_w  : -0.23  # not listing tables explicitly defaults to all satnums
-    param_g  :  0.44
-
-  - tables   : [all]  # exact same as above
+interpolations: #  Required: applied in order of appearance so that
+                #  one can define something for all and overwrite later
+  - tables   : []     # Optional: list of satnums to be interpolated,
+                      # defaults to empty list which is interpreted
+                      # to mean all entries
     param_w  : -0.23
     param_g  :  0.44
 
-  - tables : [1]      # will only apply to satnum 1, for SWOF and SGOF
+  - tables : [1]      # will only apply to satnum nr. 1, for SWOF and SGOF
     param_w  : -0.23
     param_g  :  0.44
 
-  - tables : [2,5,75] # applies to satnum 2, 5, and 75, for SWOF (not SGOF)
+  - tables : [2,5,75] # applies to satnum 2, 5, and 75, for SWOF
+                      # (not SGOF which is defaulted to 0.44, from before)
+                      # if a parameter is not set, no interpolation will
+                      # be applied ie base table is returned
     param_w  :  0.5
 
 
@@ -69,6 +71,110 @@ import os
 import yaml
 import argparse
 from ecl2df import satfunc2df
+
+import configsuite
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+
+@configsuite.validator_msg("Is valid file name")
+def _is_filename(fname):
+    return os.path.isfile(fname)
+
+
+@configsuite.validator_msg("Is valid interpolator")
+def _is_valid_interpolator(interp):
+
+    valid = False
+    try:
+        if interp["param_w"]:
+            valid = True
+    except:
+        pass
+    try:
+        if interp["param_g"]:
+            valid = True
+    except:
+        pass
+
+    return valid
+
+
+@configsuite.validator_msg("Is valid table entries")
+def _is_valid_table_entries(schema):
+
+    valid = False
+    try:
+        if schema["low"]:
+            valid = True
+    except:
+        pass
+
+    try:
+        if schema["high"]:
+            valid = True
+    except:
+        pass
+
+    return valid
+
+
+def get_cfg_schema():
+
+    schema = {
+        MK.Type: types.NamedDict,
+        MK.Content: {
+            "base": {
+                MK.Type: types.List,
+                MK.Content: {
+                    MK.Item: {
+                        MK.Type: types.String,
+                        MK.ElementValidators: (_is_filename,),
+                    }
+                },
+            },
+            "low": {
+                MK.Type: types.List,
+                MK.Content: {
+                    MK.Item: {
+                        MK.Type: types.String,
+                        MK.ElementValidators: (_is_filename,),
+                    }
+                },
+            },
+            "high": {
+                MK.Type: types.List,
+                MK.Content: {
+                    MK.Item: {
+                        MK.Type: types.String,
+                        MK.ElementValidators: (_is_filename,),
+                    }
+                },
+            },
+            "result_file": {MK.Type: types.String},
+            "delta_s": {MK.Type: types.Number, MK.Required: False},
+            "interpolations": {
+                MK.Type: types.List,
+                MK.Content: {
+                    MK.Item: {
+                        MK.Type: types.NamedDict,
+                        MK.ElementValidators: (_is_valid_interpolator,),
+                        MK.Content: {
+                            "tables": {
+                                MK.Type: types.List,
+                                MK.Required: False,
+                                MK.Content: {MK.Item: {MK.Type: types.Integer}},
+                            },
+                            "param_w": {MK.Type: types.Number, MK.Required: False},
+                            "param_g": {MK.Type: types.Number, MK.Required: False},
+                        },
+                    }
+                },
+            },
+        },
+    }
+
+    return schema
 
 
 def tables_to_dataframe(filenames):
@@ -90,55 +196,25 @@ def tables_to_dataframe(filenames):
     return pd.concat(dataframes, sort=True)
 
 
-def make_interpolant(
-    base_df,
-    low_df,
-    high_df,
-    interp_param,
-    satnum,
-    has_high_SWOF,
-    has_low_SWOF,
-    has_high_SGOF,
-    has_low_SGOF,
-    h,
-):
+def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     """
     Routine to define a relperm.interpolant instance and perform interpolation.
 
     Parameters:
-        base_df (pandas DF): containting the base tables
-        low_df  (pandas DF): containting the low tables
-        high_df (pandas DF): containting the high tables
+        base_df (pandas DF): containing the base tables
+        low_df  (pandas DF): containing the low tables
+        high_df (pandas DF): containing the high tables
         interp_param (dict('param_w', 'param_g')): the interp parameter values
         satnum (int) : the satuation number index
-        has_high_SWOF : (bool) if user has provided a high table for SWOF
-        has_low_SWOF  : (bool) if user has provided a low  table for SWOF
-        has_high_SGOF : (bool) if user has provided a high table for SGOF
-        has_low_SWOF  : (bool) if user has provided a low  table for SGOF
         h   : (float) the saturation spcaing to be used in out tables
 
     Returns:
         relperm.interpolant : (relperm.recommendation) tables for a satnum
     """
 
-    # Define base/high/low tables
-    swllow = base_df.loc["SWOF", satnum]["SW"].min()
+    # Define base tables
     swlbase = base_df.loc["SWOF", satnum]["SW"].min()
-    swlhigh = base_df.loc["SWOF", satnum]["SW"].min()
-
-    if has_low_SWOF:
-        swllow = low_df.loc["SWOF", satnum]["SW"].min()
-    if has_high_SWOF:
-        swlhigh = high_df.loc["SWOF", satnum]["SW"].min()
-
-    low = pyscal.WaterOilGas(swl=float(swllow), h=h)
     base = pyscal.WaterOilGas(swl=float(swlbase), h=h)
-    high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
-
-    print(base_df.head())
-    print(base_df.loc["SWOF", satnum].head())
-    # sys.exit()
-
     base.wateroil.add_oilwater_fromtable(
         base_df.loc["SWOF", satnum],
         swcolname="SW",
@@ -146,7 +222,11 @@ def make_interpolant(
         krowcolname="KROW",
         pccolname="PCOW",
     )
-    if has_low_SWOF:
+
+    # Define low tables
+    if "SWOF" in low_df.index.unique():
+        swllow = low_df.loc["SWOF", satnum]["SW"].min()
+        low = pyscal.WaterOilGas(swl=float(swllow), h=h)
         low.wateroil.add_oilwater_fromtable(
             low_df.loc["SWOF", satnum],
             swcolname="SW",
@@ -155,6 +235,8 @@ def make_interpolant(
             pccolname="PCOW",
         )
     else:
+        swllow = base_df.loc["SWOF", satnum]["SW"].min()
+        low = pyscal.WaterOilGas(swl=float(swllow), h=h)
         low.wateroil.add_oilwater_fromtable(
             base_df.loc["SWOF", satnum],
             swcolname="SW",
@@ -163,7 +245,10 @@ def make_interpolant(
             pccolname="PCOW",
         )
 
-    if has_high_SWOF:
+    # Define high tables
+    if "SWOF" in high_df.index.unique():
+        swlhigh = high_df.loc["SWOF", satnum]["SW"].min()
+        high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
         high.wateroil.add_oilwater_fromtable(
             high_df.loc["SWOF", satnum],
             swcolname="SW",
@@ -172,6 +257,8 @@ def make_interpolant(
             pccolname="PCOW",
         )
     else:
+        swlhigh = base_df.loc["SWOF", satnum]["SW"].min()
+        high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
         high.wateroil.add_oilwater_fromtable(
             base_df.loc["SWOF", satnum],
             swcolname="SW",
@@ -182,6 +269,7 @@ def make_interpolant(
 
     # Correct types for Sg (sometimes incorrecly set to str)
     base_df["SG"] = base_df["SG"].astype("float64")
+
     base.gasoil.add_gasoil_fromtable(
         base_df.loc["SGOF", satnum],
         sgcolname="SG",
@@ -190,7 +278,7 @@ def make_interpolant(
         pccolname="PCOG",
     )
 
-    if has_low_SGOF:
+    if "SGOF" in low_df.index.unique():
         low_df["SG"] = low_df["SG"].astype("float64")
         low.gasoil.add_gasoil_fromtable(
             low_df.loc["SGOF", satnum],
@@ -208,7 +296,7 @@ def make_interpolant(
             pccolname="PCOG",
         )
 
-    if has_high_SGOF:
+    if "SGOF" in high_df.index.unique():
         high_df["SG"] = high_df["SG"].astype("float64")
         high.gasoil.add_gasoil_fromtable(
             high_df.loc["SGOF", satnum],
@@ -228,53 +316,46 @@ def make_interpolant(
 
     rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=h)
 
-    # Sett interpolation parameter. Default to 0 (base) if nothing specified
-    swof_param = 0
-    if "param_w" in interp_param.keys():
-        swof_param = interp_param["param_w"]
-        if not has_low_SWOF and interp_param["param_w"] < 0:
-            sys.exit(
-                "Error: interpolation parameter for SWOF, satnum:"
-                + str(satnum)
-                + " set to "
-                + str(interp_param["param_w"])
-                + " but no low table is provided. Values cannot be negative"
-            )
+    if not "SWOF" in low_df.index.unique() and interp_param["param_w"] < 0:
+        sys.exit(
+            "Error: interpolation parameter for SWOF, satnum:"
+            + str(satnum)
+            + " set to "
+            + str(interp_param["param_w"])
+            + " but no low table is provided. Values cannot be negative"
+        )
 
-        if not has_high_SWOF and interp_param["param_w"] > 0:
-            sys.exit(
-                "Error: interpolation parameter for SWOF, satnum:"
-                + str(satnum)
-                + " set to "
-                + str(interp_param["param_w"])
-                + " but no high table is provided. Values cannot be positive"
-            )
+    if not "SWOF" in high_df.index.unique() and interp_param["param_w"] > 0:
+        sys.exit(
+            "Error: interpolation parameter for SWOF, satnum:"
+            + str(satnum)
+            + " set to "
+            + str(interp_param["param_w"])
+            + " but no high table is provided. Values cannot be positive"
+        )
 
-    sgof_param = 0
-    if "param_g" in interp_param.keys():
-        sgof_param = interp_param["param_g"]
-        if not has_low_SGOF and interp_param["param_g"] < 0:
-            sys.exit(
-                "Error: interpolation parameter for SGOF, satnum:"
-                + str(satnum)
-                + " set to "
-                + str(interp_param["param_g"])
-                + " but no low table is provided. Values cannot be negative"
-            )
+    if not "SGOF" in low_df.index.unique() and interp_param["param_g"] < 0:
+        sys.exit(
+            "Error: interpolation parameter for SGOF, satnum:"
+            + str(satnum)
+            + " set to "
+            + str(interp_param["param_g"])
+            + " but no low table is provided. Values cannot be negative"
+        )
 
-        if not has_high_SGOF and interp_param["param_g"] > 0:
-            sys.exit(
-                "Error: interpolation parameter for SGOF, satnum:"
-                + str(satnum)
-                + " set to "
-                + str(interp_param["param_g"])
-                + " but no high table is provided. Values cannot be positive"
-            )
+    if not "SGOF" in high_df.index.unique() and interp_param["param_g"] > 0:
+        sys.exit(
+            "Error: interpolation parameter for SGOF, satnum:"
+            + str(satnum)
+            + " set to "
+            + str(interp_param["param_g"])
+            + " but no high table is provided. Values cannot be positive"
+        )
 
-    return rec.interpolate(swof_param, sgof_param)
+    return rec.interpolate(interp_param["param_w"], interp_param["param_g"])
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(
         epilog=__doc__, formatter_class=argparse.RawTextHelpFormatter
     )
@@ -296,41 +377,41 @@ if __name__ == "__main__":
         with open(args.configfile, "r") as ymlfile:
             cfg = yaml.safe_load(ymlfile)
 
-    relperm_delta_s = 0.01
-    if "delta_s" in cfg.keys():
-        relperm_delta_s = cfg["delta_s"]
+    # validate cfg according to schema
+    cfg_schema = get_cfg_schema()
+    cfg_suite = configsuite.ConfigSuite(cfg, cfg_schema)
 
-    has_low_SGOF = False
-    has_low_SWOF = False
-    has_high_SGOF = False
-    has_high_SWOF = False
+    if not cfg_suite.valid:
+        print("Sorry, the configuration is invalid.")
+        sys.exit(cfg_suite.errors)
+
+    # set default values
+    relperm_delta_s = 0.01
+    if cfg_suite.snapshot.delta_s:
+        relperm_delta_s = cfg_suite.snapshot.delta_s
 
     # Parse tables from files
-    base_df = tables_to_dataframe(cfg["base"])
-    low_df = tables_to_dataframe(cfg["low"])
-    high_df = tables_to_dataframe(cfg["high"])
+    base_df = tables_to_dataframe(cfg_suite.snapshot.base)
+    low_df = tables_to_dataframe(cfg_suite.snapshot.low)
+    high_df = tables_to_dataframe(cfg_suite.snapshot.high)
 
     # Check what we have been provided; SWOF/SGOF/HIGH/LOW/BASE
     # base must contain SWOF and SGOF, high and low can be missing
-    if "SWOF" not in base_df.KEYWORD.unique():
+    if "SWOF" not in base_df["KEYWORD"].unique():
         sys.exit("ERROR: No SWOF table provided for base")
-    if "SGOF" not in base_df.KEYWORD.unique():
+    if "SGOF" not in base_df["KEYWORD"].unique():
         sys.exit("ERROR: No SGOF table provided for base")
 
     # low
-    if "SWOF" in low_df.KEYWORD.unique():
-        has_low_SWOF = True
-    if "SGOF" in low_df.KEYWORD.unique():
-        has_low_SGOF = True
-    if not has_low_SWOF and not has_low_SGOF:
+    if (not "SWOF" in low_df["KEYWORD"].unique()) and (
+        not "SGOF" in low_df["KEYWORD"].unique()
+    ):
         sys.exit("ERROR: No tables provided for low; provide SWOF and/or SGOF")
 
     # high
-    if "SWOF" in high_df.KEYWORD.unique():
-        has_high_SWOF = True
-    if "SGOF" in high_df.KEYWORD.unique():
-        has_high_SGOF = True
-    if not has_high_SWOF and not has_high_SGOF:
+    if (not "SWOF" in high_df["KEYWORD"].unique()) and (
+        not "SGOF" in high_df["KEYWORD"].unique()
+    ):
         sys.exit("ERROR: No tables provided for high; provide SWOF and/or SGOF")
 
     # This is how we want to navigate the dataframes:
@@ -343,35 +424,22 @@ if __name__ == "__main__":
     low_df.sort_index(inplace=True)
     high_df.sort_index(inplace=True)
 
-    # Loop over satnum and interpolate according to defaul and cfg values
+    # Loop over satnum and interpolate according to default and cfg values
     interpolants = []
     satnums = range(1, base_df.reset_index("SATNUM")["SATNUM"].unique().max() + 1)
 
     for satnum in satnums:
         interp_values = {"param_w": 0, "param_g": 0}
-
-        for interp in cfg["interpolations"]:
-            for key in ["param_w", "param_g"]:
-                if "tables" not in interp.keys():
-                    if key in interp.keys():
-                        interp_values[key] = interp[key]
-                elif satnum in interp["tables"] and key in interp.keys():
-                    interp_values[key] = interp[key]
-                elif "all" in interp["tables"] and key in interp.keys():
-                    interp_values[key] = interp[key]
+        for interp in cfg_suite.snapshot.interpolations:
+            if not interp.tables or satnum in interp.tables or "all" in interp.tables:
+                if interp.param_w:
+                    interp_values["param_w"] = interp.param_w
+                if interp.param_g:
+                    interp_values["param_g"] = interp.param_g
 
         interpolants.append(
             make_interpolant(
-                base_df,
-                low_df,
-                high_df,
-                interp_values,
-                satnum,
-                has_high_SWOF,
-                has_low_SWOF,
-                has_high_SGOF,
-                has_low_SGOF,
-                relperm_delta_s,
+                base_df, low_df, high_df, interp_values, satnum, relperm_delta_s
             )
         )
 
@@ -383,3 +451,7 @@ if __name__ == "__main__":
         f.write("\nSGOF\n")
         for interpolant in interpolants:
             f.write(interpolant.gasoil.SGOF(header=False))
+
+
+if __name__ == "__main__":
+    main()
