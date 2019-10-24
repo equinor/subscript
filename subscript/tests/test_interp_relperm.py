@@ -21,7 +21,6 @@ def correct_relpaths(newfn, oldfn, new_path, old_path):
 def test_get_cfg_schema():
 
     new_path = os.path.join(os.path.dirname(__file__), TESTDATA)
-    print(new_path)
     test_cfg = new_path + "/cfg.yml"
 
     tmpfn = "delete_me.yml"
@@ -32,9 +31,7 @@ def test_get_cfg_schema():
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema)
-    print(suite.valid)
-    print(suite.errors)
-    # os.unlink(tmpfn)
+    os.unlink(tmpfn)
 
     assert suite.valid
 
@@ -114,6 +111,5 @@ def test_main():
 
 
 if __name__ == "__main__":
-    print("One more test")
     test_get_cfg_schema()
     test_main()
