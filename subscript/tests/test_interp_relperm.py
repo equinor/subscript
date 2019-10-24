@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 import os
 import yaml
 import sys
@@ -96,17 +97,30 @@ def test_main():
     new_path = os.path.join(os.path.dirname(__file__), TESTDATA)
     test_cfg = new_path + "/cfg.yml"
 
-    tmpfn = "delete_me.yml"
+    tmpfn = os.path.join(os.path.dirname(__file__), "delete_me.yml")
     correct_relpaths(tmpfn, test_cfg, new_path, "data/relperm")
 
-    sys.argv = [__file__, "-c", tmpfn]
+    tmp2fn = os.path.join(os.path.dirname(__file__), "delete_me2.yml")
+    fileh = open(tmp2fn, "w")
+    for l in open(tmpfn, "r"):
+        if re.search("result_file", l):
+            fileh.write(
+                "result_file : "
+                + os.path.join(os.path.dirname(__file__), "outfilen.inc")
+            )
+        else:
+            fileh.write(l)
+    fileh.close()
+
+    sys.argv = [__file__, "-c", tmp2fn]
 
     interp_relperm.main()
-
     result_file = os.path.join(os.path.dirname(__file__), "outfilen.inc")
+
     assert os.path.exists(result_file)
 
     os.unlink(tmpfn)
+    os.unlink(tmp2fn)
     os.unlink(result_file)
 
 
