@@ -6,7 +6,7 @@ import configsuite
 from .. import interp_relperm
 
 
-def correct_relpaths (newfn, oldfn, new_path, old_path):
+def correct_relpaths(newfn, oldfn, new_path, old_path):
     newfh = open(newfn, "w")
     for line in open(oldfn, "r"):
         newfh.write(line.replace(old_path, new_path))
@@ -19,7 +19,7 @@ def test_get_cfg_schema():
     test_cfg = new_path + "/cfg.yml"
 
     tmpfn = "delete_me.yml"
-    correct_relpaths(tmpfn, test_cfg, new_path, 'data/relperm')
+    correct_relpaths(tmpfn, test_cfg, new_path, "data/relperm")
 
     with open(tmpfn, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
@@ -93,10 +93,9 @@ def test_main():
     test_cfg = new_path + "/cfg.yml"
 
     tmpfn = "delete_me.yml"
-    correct_relpaths(tmpfn, test_cfg, new_path, 'data/relperm')
+    correct_relpaths(tmpfn, test_cfg, new_path, "data/relperm")
 
-    sys.argv = [__file__, '-c', test_cfg]
-    schema = interp_relperm.main()
+    sys.argv = [__file__, "-c", test_cfg]
     result_file = os.path.join(os.path.dirname(__file__), "outfilen.inc")
 
     assert os.path.exists(result_file)
