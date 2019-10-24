@@ -1,8 +1,16 @@
 import pandas as pd
 import os
 import yaml
+import sys
 import configsuite
 from .. import interp_relperm
+
+
+def correct_relpaths (newfn, oldfn, new_path, old_path):
+    newfh = open(newfn, "w")
+    for line in open(oldfn, "r"):
+        newfh.write(line.replace(old_path, new_path))
+    newfh.close()
 
 
 def test_get_cfg_schema():
@@ -10,12 +18,8 @@ def test_get_cfg_schema():
     new_path = os.path.join(os.path.dirname(__file__), "data/relperm")
     test_cfg = new_path + "/cfg.yml"
 
-    # correct the paths ... Jesus C!!!
     tmpfn = "delete_me.yml"
-    tmpfh = open(tmpfn, "w")
-    for line in open(test_cfg, "r"):
-        tmpfh.write(line.replace("data/relperm", new_path))
-    tmpfh.close()
+    correct_relpaths(tmpfn, test_cfg, new_path, 'data/relperm')
 
     with open(tmpfn, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
@@ -82,6 +86,23 @@ def test_make_interpolant():
 
     assert "SWOF" in interpolant.wateroil.SWOF()
     assert "SGOF" in interpolant.gasoil.SGOF()
+
+
+def test_main():
+    new_path = os.path.join(os.path.dirname(__file__), "data/relperm")
+    test_cfg = new_path + "/cfg.yml"
+
+    tmpfn = "delete_me.yml"
+    correct_relpaths(tmpfn, test_cfg, new_path, 'data/relperm')
+
+    sys.argv = [__file__, '-c', test_cfg]
+    schema = interp_relperm.main()
+    result_file = os.path.join(os.path.dirname(__file__), "outfilen.inc")
+
+    assert os.path.exists(result_file)
+
+    os.unlink(tmpfn)
+    os.unlink(result_file)
 
 
 if __name__ == "__main__":
