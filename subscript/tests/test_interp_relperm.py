@@ -6,12 +6,10 @@ from .. import interp_relperm
 
 
 def test_get_cfg_schema():
-    interpolant = interp_relperm.get_cfg_schema()
     test_cfg = os.path.join(os.path.dirname(__file__), "data/relperm/cfg.yml")
     with open(test_cfg, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
 
-    # validate cfg according to schema
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema)
     assert suite.valid

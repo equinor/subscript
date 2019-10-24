@@ -89,12 +89,13 @@ def _is_valid_interpolator(interp):
     try:
         if interp["param_w"]:
             valid = True
-    except:
+    except BaseException:
         pass
+
     try:
         if interp["param_g"]:
             valid = True
-    except:
+    except BaseException:
         pass
 
     return valid
@@ -107,13 +108,13 @@ def _is_valid_table_entries(schema):
     try:
         if schema["low"]:
             valid = True
-    except:
+    except BaseException:
         pass
 
     try:
         if schema["high"]:
             valid = True
-    except:
+    except BaseException:
         pass
 
     return valid
@@ -316,7 +317,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
 
     rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=h)
 
-    if not "SWOF" in low_df.index.unique() and interp_param["param_w"] < 0:
+    if "SWOF" not in low_df.index.unique() and interp_param["param_w"] < 0:
         sys.exit(
             "Error: interpolation parameter for SWOF, satnum:"
             + str(satnum)
@@ -325,7 +326,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
             + " but no low table is provided. Values cannot be negative"
         )
 
-    if not "SWOF" in high_df.index.unique() and interp_param["param_w"] > 0:
+    if "SWOF" not in high_df.index.unique() and interp_param["param_w"] > 0:
         sys.exit(
             "Error: interpolation parameter for SWOF, satnum:"
             + str(satnum)
@@ -334,7 +335,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
             + " but no high table is provided. Values cannot be positive"
         )
 
-    if not "SGOF" in low_df.index.unique() and interp_param["param_g"] < 0:
+    if "SGOF" not in low_df.index.unique() and interp_param["param_g"] < 0:
         sys.exit(
             "Error: interpolation parameter for SGOF, satnum:"
             + str(satnum)
@@ -343,7 +344,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
             + " but no low table is provided. Values cannot be negative"
         )
 
-    if not "SGOF" in high_df.index.unique() and interp_param["param_g"] > 0:
+    if "SGOF" not in high_df.index.unique() and interp_param["param_g"] > 0:
         sys.exit(
             "Error: interpolation parameter for SGOF, satnum:"
             + str(satnum)
@@ -403,14 +404,14 @@ def main():
         sys.exit("ERROR: No SGOF table provided for base")
 
     # low
-    if (not "SWOF" in low_df["KEYWORD"].unique()) and (
-        not "SGOF" in low_df["KEYWORD"].unique()
+    if ("SWOF" not in low_df["KEYWORD"].unique()) and (
+        "SGOF" not in low_df["KEYWORD"].unique()
     ):
         sys.exit("ERROR: No tables provided for low; provide SWOF and/or SGOF")
 
     # high
-    if (not "SWOF" in high_df["KEYWORD"].unique()) and (
-        not "SGOF" in high_df["KEYWORD"].unique()
+    if ("SWOF" not in high_df["KEYWORD"].unique()) and (
+        "SGOF" not in high_df["KEYWORD"].unique()
     ):
         sys.exit("ERROR: No tables provided for high; provide SWOF and/or SGOF")
 
