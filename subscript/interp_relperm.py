@@ -4,7 +4,7 @@ Candidate script to replace InterpRelperm. Script reads base/high/low
 SWOF and SGOF from ecl include files and interpolates inbetween,
 using interpolation parameter(s) in range [-1,1], so that 0 returns
 base, -1 returns low, and 1 returns high. If either base, low or high
-is missing, one can set two of the inputs (low/base/high) to read the
+is missing, set two of the inputs (low/base/high) to the
 same file and interpolate in half the range.
 
 Created:  2019.03.21

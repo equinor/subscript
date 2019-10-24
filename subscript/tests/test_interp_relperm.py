@@ -2,16 +2,31 @@ import pandas as pd
 import os
 import yaml
 import configsuite
-from .. import interp_relperm
+import interp_relperm
+
+# from .. import interp_relperm
 
 
 def test_get_cfg_schema():
-    test_cfg = os.path.join(os.path.dirname(__file__), "data/relperm/cfg.yml")
-    with open(test_cfg, "r") as ymlfile:
+
+    new_path = os.path.join(os.path.dirname(__file__), "data/relperm")
+    test_cfg = new_path + "/cfg.yml"
+
+    # correct the paths ... Jesus C!!!
+    tmpfn = "delete_me.yml"
+    tmpfh = open(tmpfn, "w")
+    for line in open(test_cfg, "r"):
+        tmpfh.write(line.replace("data/relperm", new_path))
+    tmpfh.close()
+
+    with open(tmpfn, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema)
+
+    os.unlink(tmpfn)
+
     assert suite.valid
 
 
@@ -69,3 +84,7 @@ def test_make_interpolant():
 
     assert "SWOF" in interpolant.wateroil.SWOF()
     assert "SGOF" in interpolant.gasoil.SGOF()
+
+
+if __name__ == "__main__":
+    test_get_cfg_schema()
