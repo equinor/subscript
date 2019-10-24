@@ -6,8 +6,13 @@ import configsuite
 from .. import interp_relperm
 
 
+TESTDATA = "data/relperm/"
+
+
 def correct_relpaths(newfn, oldfn, new_path, old_path):
     newfh = open(newfn, "w")
+    print("New:" + new_path)
+    print("Old:" + old_path)
     for line in open(oldfn, "r"):
         newfh.write(line.replace(old_path, new_path))
     newfh.close()
@@ -15,7 +20,8 @@ def correct_relpaths(newfn, oldfn, new_path, old_path):
 
 def test_get_cfg_schema():
 
-    new_path = os.path.join(os.path.dirname(__file__), "data/relperm")
+    new_path = os.path.join(os.path.dirname(__file__), TESTDATA)
+    print(new_path)
     test_cfg = new_path + "/cfg.yml"
 
     tmpfn = "delete_me.yml"
@@ -26,15 +32,16 @@ def test_get_cfg_schema():
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema)
-
-    os.unlink(tmpfn)
+    print(suite.valid)
+    print(suite.errors)
+    # os.unlink(tmpfn)
 
     assert suite.valid
 
 
 def test_tables_to_dataframe():
-    swoffn = os.path.join(os.path.dirname(__file__), "data/relperm/swof_base.inc")
-    sgoffn = os.path.join(os.path.dirname(__file__), "data/relperm/sgof_base.inc")
+    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "swof_base.inc")
+    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "sgof_base.inc")
 
     tables_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -56,19 +63,19 @@ def test_tables_to_dataframe():
 
 
 def test_make_interpolant():
-    swoffn = os.path.join(os.path.dirname(__file__), "data/relperm/swof_base.inc")
+    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/swof_base.inc")
 
-    sgoffn = os.path.join(os.path.dirname(__file__), "data/relperm/sgof_base.inc")
+    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/sgof_base.inc")
 
     base_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(os.path.dirname(__file__), "data/relperm/swof_pes.inc")
-    sgoffn = os.path.join(os.path.dirname(__file__), "data/relperm/sgof_pes.inc")
+    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/swof_pes.inc")
+    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/sgof_pes.inc")
 
     low_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(os.path.dirname(__file__), "data/relperm/swof_opt.inc")
-    sgoffn = os.path.join(os.path.dirname(__file__), "data/relperm/sgof_opt.inc")
+    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/swof_opt.inc")
+    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/sgof_opt.inc")
 
     high_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -89,15 +96,17 @@ def test_make_interpolant():
 
 
 def test_main():
-    new_path = os.path.join(os.path.dirname(__file__), "data/relperm")
+    new_path = os.path.join(os.path.dirname(__file__), TESTDATA)
     test_cfg = new_path + "/cfg.yml"
 
     tmpfn = "delete_me.yml"
     correct_relpaths(tmpfn, test_cfg, new_path, "data/relperm")
 
-    sys.argv = [__file__, "-c", test_cfg]
-    result_file = os.path.join(os.path.dirname(__file__), "outfilen.inc")
+    sys.argv = [__file__, "-c", tmpfn]
 
+    interp_relperm.main()
+
+    result_file = os.path.join(os.path.dirname(__file__), "outfilen.inc")
     assert os.path.exists(result_file)
 
     os.unlink(tmpfn)
@@ -105,4 +114,6 @@ def test_main():
 
 
 if __name__ == "__main__":
+    print("One more test")
     test_get_cfg_schema()
+    test_main()

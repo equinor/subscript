@@ -1,18 +1,11 @@
 """
 Interpolation script for relperm tables defined by ecl include files.
 Candidate script to replace InterpRelperm. Script reads base/high/low
-SWOF and SGOF from ecl include files and interpolates inbetween,
+SWOF and SGOF from files and interpolates inbetween,
 using interpolation parameter(s) in range [-1,1], so that 0 returns
 base, -1 returns low, and 1 returns high. If either base, low or high
 is missing, set two of the inputs (low/base/high) to the
 same file and interpolate in half the range.
-
-Created:  2019.03.21
-Modified: 2019.10.23
-
-Autors:
-- Eivind Smoergrav, eism
-- Havard Berland
 
 Config file syntax (yaml):
 #********************************************************************
@@ -217,6 +210,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     swlbase = base_df.loc["SWOF", satnum]["SW"].min()
     base = pyscal.WaterOilGas(swl=float(swlbase), h=h)
     base.wateroil.add_oilwater_fromtable(
+        # base.wateroil.add_fromtable(
         base_df.loc["SWOF", satnum],
         swcolname="SW",
         krwcolname="KRW",
@@ -229,6 +223,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         swllow = low_df.loc["SWOF", satnum]["SW"].min()
         low = pyscal.WaterOilGas(swl=float(swllow), h=h)
         low.wateroil.add_oilwater_fromtable(
+            # low.wateroil.add_fromtable(
             low_df.loc["SWOF", satnum],
             swcolname="SW",
             krwcolname="KRW",
@@ -239,6 +234,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         swllow = base_df.loc["SWOF", satnum]["SW"].min()
         low = pyscal.WaterOilGas(swl=float(swllow), h=h)
         low.wateroil.add_oilwater_fromtable(
+            # low.wateroil.add__fromtable(
             base_df.loc["SWOF", satnum],
             swcolname="SW",
             krwcolname="KRW",
@@ -353,7 +349,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
             + " but no high table is provided. Values cannot be positive"
         )
 
-    return rec.interpolate(interp_param["param_w"], interp_param["param_g"])
+    return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=h)
 
 
 def main():
@@ -445,13 +441,18 @@ def main():
         )
 
     # Dump to Eclipse include file:
-    with open(cfg["result_file"], "w") as f:
+    with open(cfg_suite.snapshot.result_file, "w") as f:
         f.write("SWOF\n")
         for interpolant in interpolants:
             f.write(interpolant.wateroil.SWOF(header=False))
         f.write("\nSGOF\n")
         for interpolant in interpolants:
             f.write(interpolant.gasoil.SGOF(header=False))
+
+    print(
+        "Done; interpolated relperm curves written to file: ",
+        cfg_suite.snapshot.result_file,
+    )
 
 
 if __name__ == "__main__":
