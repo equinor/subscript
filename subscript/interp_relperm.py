@@ -207,7 +207,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         high_df (pandas DF): containing the high tables
         interp_param (dict('param_w', 'param_g')): the interp parameter values
         satnum (int) : the satuation number index
-        h   : (float) the saturation spcaing to be used in out tables
+        h   : (float) the saturation spacing to be used in out tables
 
     Returns:
         relperm.interpolant : (relperm.recommendation) tables for a satnum

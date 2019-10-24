@@ -2,9 +2,7 @@ import pandas as pd
 import os
 import yaml
 import configsuite
-import interp_relperm
-
-# from .. import interp_relperm
+from .. import interp_relperm
 
 
 def test_get_cfg_schema():
