@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 import os
-import sys
+import subprocess
 
 import pandas as pd
 
@@ -19,20 +19,13 @@ def bjobs_errors(status):
     return "LIM not responding"
 
 
-def fake_finger(username):
-    fing = "Login: {}          Name: Foo Barrer (foo.bar.com)"
-    if sys.version_info[0] > 2:
-        return fing
-    else:
-        return fing.decode("utf-8")
+class FakeFinger(object):
+    def __init__(self, name):
+        self._name = name
 
-
-def fake_finger_unicode(username):
-    fing = "Login: {}       Name: Føø Bårrær (foo.latin1.utf8.com)"
-    if sys.version_info[0] > 2:
-        return fing
-    else:
-        return fing.decode("utf-8")
+    def __call__(self, username):
+        result = "Login: {}          Name: " + self._name
+        return subprocess.check_output(("echo", result)).decode("utf-8")
 
 
 def test_real_bjobs():
@@ -66,16 +59,17 @@ def test_get_jobs():
 
 
 def test_userinfo():
-    # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
-    usersummary = bjobsusers.userinfo("foobar", fake_finger)
-    assert isinstance(usersummary, str)
-    assert "Login" not in usersummary
+    names = (
+        "Foo Barrer (foo.bar.com)",
+        "Føø Bårrær (foo.latin1.utf8.com)",
+    )
 
-    # assert isinstance(fake_finger_unicode(''), unicode)  # only relevant for Python 2
-    usersummary = bjobsusers.userinfo("foobar", fake_finger_unicode)
-    assert isinstance(usersummary, str)
-    assert usersummary
-    assert "Login" not in usersummary
+    # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
+    for name in names:
+        usersummary = bjobsusers.userinfo("foobar", FakeFinger(name))
+        assert isinstance(usersummary, str)
+        assert "Login" not in usersummary
+        assert name in usersummary
 
 
 def test_systemfinger():

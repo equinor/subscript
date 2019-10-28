@@ -35,7 +35,7 @@ def call_bjobs(status="RUN"):
         the number of allocated cores to the job.
     """
     cmd = "bjobs -u all | grep {} | awk '{{print $2,$6;}}'".format(status)
-    return subprocess.check_output(cmd, shell=True).decode("ascii")
+    return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
 def get_jobs(status, bjobs_function):
@@ -82,15 +82,16 @@ def call_finger(username):
         Example return value: "Login: foobert      Name: Foo Barrer (FOO BAR COM)"
     """
     cmd = "finger -m {} | head -n 1".format(username)
+    finger_output = None
     try:
         with open(os.devnull, "w") as devnull:
             finger_output = subprocess.check_output(
                 cmd, shell=True, stderr=devnull
-            ).strip()
+            ).strip().decode("utf-8")
     except AttributeError:
         pass
     if finger_output:
-        return finger_output.decode("utf-8")
+        return finger_output
     else:
         # When finger fails, return something similar and usable
         return "Login: {}  Name: ?? ()".format(username)
