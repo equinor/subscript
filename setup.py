@@ -2,6 +2,24 @@
 
 import setuptools
 
+
+sscripts = [
+    "bjobsusers = subscript.bjobsusers.bjobsusers:main",
+    "csvMergeEnsembles = subscript.csv_merge_ensembles.csv_merge_ensembles:main",
+    "csv_merge_ensembles = subscript.csv_merge_ensembles.csv_merge_ensembles:main",
+    "csvStack = subscript.csv_stack:main",
+    "csv_stack = subscript.csv_stack:main",
+    "csv2ofmvol = subscript.csv2ofmvol:main",
+    "eclcompress = subscript.eclcompress:main",
+    "gen_satfunc = subscript.gen_satfunc:main",
+    "params2csv = subscript.params2csv:main",
+    "presentvalue = subscript.presentvalue:main",
+    "merge_schedule = subscript.merge_schedule:main",
+    "sunsch = subscript.sunsch:main",
+    "summaryplot = subscript.summaryplot:main",
+    "interp_relperm = subscript.interp_relperm:main",
+]
+
 setuptools.setup(
     name="subscript",
     description="Next-gen resscript",
@@ -19,22 +37,7 @@ setuptools.setup(
     install_requires=[],
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
-    entry_points={
-        "console_scripts": [
-            "bjobsusers = subscript.bjobsusers:main",
-            "csvMergeEnsembles = subscript.csvMergeEnsembles:main",
-            "csvStack = subscript.csvStack:main",
-            "csv2ofmvol = subscript.csv2ofmvol:main",
-            "eclcompress = subscript.eclcompress:main",
-            "gen_satfunc = subscript.gen_satfunc:main",
-            "params2csv = subscript.params2csv:main",
-            "presentvalue = subscript.presentvalue:main",
-            "merge_schedule = subscript.merge_schedule:main",
-            "sunsch = subscript.sunsch:main",
-            "summaryplot = subscript.summaryplot:main",
-            "interp_relperm = subscript.interp_relperm:main",
-        ]
-    },
+    entry_points={"console_scripts": sscripts},
     use_scm_version={"write_to": "subscript/version.py"},
-    test_suite="subscript/tests",
+    test_suite="tests",
 )
