@@ -23,7 +23,6 @@
 from __future__ import division, absolute_import
 from __future__ import print_function, unicode_literals
 
-import ert.ecl as ecl
 import matplotlib.pyplot
 import numpy as np
 import sys
@@ -35,6 +34,17 @@ from multiprocessing import Process
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
+
+try:
+    import ert.ecl as ecl
+except ImportError:
+    import ecl
+
+try:
+    from ert.ecl import EclSum
+except ImportError:
+    from ecl.summary import EclSum
+
 
 register_matplotlib_converters()
 
@@ -147,7 +157,7 @@ def summaryplotter(*args):
         # Try to parse command line arg as a summary file,
         # try as a vector if not.
         try:
-            sumfn = ecl.EclSum(arg)
+            sumfn = EclSum(arg)
             datafiles.append(arg)
 
             summaryfiles.append(sumfn)
@@ -251,8 +261,7 @@ def summaryplotter(*args):
         # Build a colour map from all the values, from min to max.
 
     if normalize and includehistory:
-        print("Warning: Historical data is not "
-              "normalized equal to simulated data")
+        print("Warning: Historical data is not " "normalized equal to simulated data")
 
     if len(summaryfiles) == 0:
         print("Error: No summary files found")

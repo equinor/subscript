@@ -6,7 +6,7 @@ import sys
 
 import pytest  # noqa: F401
 
-from .. import merge_schedule
+from subscript.merge_schedule import merge_schedule
 
 
 def test_main():

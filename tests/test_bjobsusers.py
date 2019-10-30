@@ -7,7 +7,7 @@ import pandas as pd
 
 import pytest
 
-from .. import bjobsusers
+from subscript.bjobsusers import bjobsusers
 
 
 def fake_bjobs(status):

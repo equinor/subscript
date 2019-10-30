@@ -3,7 +3,7 @@ import datetime
 import dateutil.parser
 import argparse
 
-from . import sunsch
+from subscript.sunsch import sunsch
 
 
 def get_parser():

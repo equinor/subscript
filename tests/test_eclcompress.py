@@ -5,8 +5,8 @@ import os
 
 import sunbeam.deck
 
-from .. import eclcompress
-from ..eclcompress import cleanlines, find_keyword_sets, compress_multiple_keywordsets
+from subscript.eclcompress import eclcompress as eclc
+
 
 FILELINES = [
     "GRIDUNIT",
@@ -37,23 +37,23 @@ FILELINES = [
 
 
 def test_cleanlines():
-    assert cleanlines([" PORO"]) == ["PORO"]
-    assert cleanlines(["PORO 3"]) == ["PORO", "3"]
-    assert cleanlines(["PORO 1 2 3 /"]) == ["PORO", "1 2 3 ", "/"]
-    assert cleanlines([" PORO/"]) == ["PORO", "/"]
-    assert cleanlines([" PORO/  foo"]) == ["PORO", "/", "  -- foo"]
-    assert cleanlines(["-- PORO 4"]) == ["-- PORO 4"]
-    assert cleanlines(["POROFOOBARCOM  4"]) == ["POROFOOBARCOM  4"]
+    assert eclc.cleanlines([" PORO"]) == ["PORO"]
+    assert eclc.cleanlines(["PORO 3"]) == ["PORO", "3"]
+    assert eclc.cleanlines(["PORO 1 2 3 /"]) == ["PORO", "1 2 3 ", "/"]
+    assert eclc.cleanlines([" PORO/"]) == ["PORO", "/"]
+    assert eclc.cleanlines([" PORO/  foo"]) == ["PORO", "/", "  -- foo"]
+    assert eclc.cleanlines(["-- PORO 4"]) == ["-- PORO 4"]
+    assert eclc.cleanlines(["POROFOOBARCOM  4"]) == ["POROFOOBARCOM  4"]
 
 
 def test_find_keyword_sets():
-    assert find_keyword_sets(["PORO", "0 1 2 3", "4 5 6", "/"]) == [(0, 3)]
+    assert eclc.find_keyword_sets(["PORO", "0 1 2 3", "4 5 6", "/"]) == [(0, 3)]
 
 
 def test_compress_multiple_keywordsets():
     filelines = ["PORO", "0 0 0 3", "4 5 6", "/"]
-    kwsets = find_keyword_sets(filelines)
-    assert compress_multiple_keywordsets(kwsets, filelines) == [
+    kwsets = eclc.find_keyword_sets(filelines)
+    assert eclc.compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
         "3*0 3 4 5 6",
         "/",
@@ -61,9 +61,9 @@ def test_compress_multiple_keywordsets():
 
 
 def test_eclcompress():
-    cleaned = cleanlines(FILELINES)
-    kwsets = find_keyword_sets(cleaned)
-    compressed = compress_multiple_keywordsets(kwsets, cleaned)
+    cleaned = eclc.cleanlines(FILELINES)
+    kwsets = eclc.find_keyword_sets(cleaned)
+    compressed = eclc.compress_multiple_keywordsets(kwsets, cleaned)
     compressedstr = "\n".join(compressed)
 
     # Feed the compressed string into sunbeam. Sunbeam hopefully chokes on whatever
@@ -87,7 +87,7 @@ def test_main():
         os.unlink("testdeck.inc.orig")
 
     sys.argv = ["eclcompress", "--keeporiginal", "testdeck.inc"]  # noqa
-    eclcompress.main()
+    eclc.main()
 
     assert os.path.exists("testdeck.inc.orig")
     assert os.path.exists("testdeck.inc")

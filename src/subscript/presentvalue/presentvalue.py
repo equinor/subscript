@@ -19,16 +19,22 @@ from __future__ import absolute_import
 from __future__ import division
 
 import datetime
-import ecl.ecl as ecl
 import sys
 import numpy
 import argparse
 import os
+import warnings
+
 import pandas
 
 # import resscript.header as header
 from scipy.optimize import newton
-import warnings
+
+
+try:
+    from ert.ecl import EclSum
+except ImportError:
+    from ecl.summary import EclSum
 
 
 def get_parser():
@@ -222,7 +228,7 @@ def main():
                 devnull = os.open(os.devnull, os.O_RDWR)
                 stderr_saved = os.dup(2)
                 os.dup2(devnull, 2)
-            summ = ecl.EclSum(eclcase)
+            summ = EclSum(eclcase)
             if args.quiet:
                 os.dup2(stderr_saved, 2)
                 os.close(devnull)
@@ -249,7 +255,7 @@ def main():
                     devnull = os.open(os.devnull, os.O_RDWR)
                     stderr_saved = os.dup(2)
                     os.dup2(devnull, 2)
-                basesumm = ecl.EclSum(baseeclcase)
+                basesumm = EclSum(baseeclcase)
                 if args.quiet:
                     os.dup2(stderr_saved, 2)
                     os.close(devnull)
