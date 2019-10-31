@@ -1,3 +1,8 @@
+# encoding: utf-8
+
+import os
+import subprocess
+
 import pandas as pd
 
 import pytest
@@ -14,8 +19,13 @@ def bjobs_errors(status):
     return "LIM not responding"
 
 
-def fake_finger(username):
-    return "Login: {}          Name: Foo Barrer (foo.bar.com)"
+class FakeFinger(object):
+    def __init__(self, name):
+        self._name = name
+
+    def __call__(self, username):
+        result = "Login: {}          Name: " + self._name
+        return subprocess.check_output(("echo", result)).decode("utf-8")
 
 
 def test_real_bjobs():
@@ -49,7 +59,24 @@ def test_get_jobs():
 
 
 def test_userinfo():
-    usersummary = bjobsusers.userinfo("foobar", fake_finger)
+    names = (
+        "Foo Barrer (foo.bar.com)",
+        "Føø Bårrær (foo.latin1.utf8.com)",
+    )
+
+    # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
+    for name in names:
+        usersummary = bjobsusers.userinfo("foobar", FakeFinger(name))
+        assert isinstance(usersummary, str)
+        assert "Login" not in usersummary
+        assert name in usersummary
+
+
+def test_systemfinger():
+    currentuser = os.getlogin()
+    if not currentuser:
+        return
+    usersummary = bjobsusers.userinfo(currentuser, bjobsusers.call_finger)
     assert isinstance(usersummary, str)
-    assert usersummary
+    print("Myself is: " + usersummary)
     assert "Login" not in usersummary
