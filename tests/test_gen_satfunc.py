@@ -5,7 +5,7 @@ from __future__ import absolute_import
 import os
 import sys
 
-from .. import gen_satfunc
+from subscript.gen_satfunc import gen_satfunc
 
 EXAMPLE = """ --Example Configuration file for gen_satfunc.py
 

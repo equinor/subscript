@@ -1,4 +1,4 @@
-"""Test csvMergeEnsembles"""
+"""Test csvMergeEnsembles aka csv_merge_ensembles"""
 from __future__ import absolute_import
 
 import os
@@ -6,11 +6,11 @@ import sys
 
 import pandas as pd
 
-from .. import csvMergeEnsembles
+from subscript.csv_merge_ensembles import csv_merge_ensembles
 
 
 def test_main_merge():
-    """Test command line interface for csvMergeEnsembles"""
+    """Test command line interface for csvMergeEnsembles/csv_merge_ensembles"""
 
     test_csv_1 = "foo.csv"
     test_csv_2 = "bar.csv"
@@ -25,7 +25,7 @@ def test_main_merge():
     ).to_csv(test_csv_2, index=False)
 
     sys.argv = ["csvMergeEnsembles", test_csv_1, test_csv_2, "-q", "-o", merged_csv]
-    csvMergeEnsembles.main()
+    csv_merge_ensembles.main()
     merged = pd.read_csv(merged_csv)
 
     assert len(merged) == 4
@@ -44,7 +44,7 @@ def test_main_merge():
         "-o",
         merged_csv,
     ]
-    csvMergeEnsembles.main()
+    csv_merge_ensembles.main()
     merged = pd.read_csv(merged_csv)
 
     assert len(merged) == 4

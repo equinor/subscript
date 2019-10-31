@@ -4,7 +4,7 @@ import pytest  # noqa: F401
 import os
 import sys
 
-from .. import presentvalue
+from subscript.presentvalue import presentvalue
 
 
 def test_main():

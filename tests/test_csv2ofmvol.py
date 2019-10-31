@@ -7,7 +7,7 @@ import os
 import pandas as pd
 import pytest
 
-from .. import csv2ofmvol
+from subscript.csv2ofmvol import csv2ofmvol
 
 PRODDATA_A3 = pd.DataFrame(
     data={

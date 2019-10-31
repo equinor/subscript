@@ -5,8 +5,8 @@ import os
 
 import sunbeam.deck
 
-from .. import eclcompress
-from ..eclcompress import cleanlines, find_keyword_sets, compress_multiple_keywordsets
+from subscript.eclcompress import eclcompress
+from eclcompress import cleanlines, find_keyword_sets, compress_multiple_keywordsets
 
 FILELINES = [
     "GRIDUNIT",

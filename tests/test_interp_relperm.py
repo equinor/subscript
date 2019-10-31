@@ -4,7 +4,7 @@ import os
 import yaml
 import sys
 import configsuite
-from .. import interp_relperm
+from subscript.interp_relperm import interp_relperm
 
 
 TESTDATA = "data/relperm/"
