@@ -16,7 +16,7 @@ sscripts = [
     "presentvalue = subscript.presentvalue.presentvalue:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "sunsch = subscript.sunsch.sunch:main",
-    "summaryplot = subscript.summaryplot.summaryplot.:main",
+    "summaryplot = subscript.summaryplot.summaryplot:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
 ]
 
