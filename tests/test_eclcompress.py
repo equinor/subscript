@@ -87,7 +87,7 @@ def test_main():
         os.unlink("testdeck.inc.orig")
 
     sys.argv = ["eclcompress", "--keeporiginal", "testdeck.inc"]  # noqa
-    eclc.eclcompress.main()
+    eclc.main()
 
     assert os.path.exists("testdeck.inc.orig")
     assert os.path.exists("testdeck.inc")
