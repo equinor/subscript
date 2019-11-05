@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import sys
 import re
 import subprocess
 import argparse
@@ -34,8 +35,7 @@ def call_bjobs(status="RUN"):
         the number of allocated cores to the job.
     """
     cmd = "bjobs -u all | grep {} | awk '{{print $2,$6;}}'".format(status)
-    cmdoutput = subprocess.check_output(cmd, shell=True).decode("ascii")
-    return cmdoutput
+    return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
 def get_jobs(status, bjobs_function):
@@ -78,17 +78,16 @@ def call_finger(username):
     """Call the system utility 'finger' on a specific username
 
     Returns:
-        UTF-8 encoded string with the first line of output from 'finger'
+        Unicode string with the first line of output from 'finger'
         Example return value: "Login: foobert      Name: Foo Barrer (FOO BAR COM)"
     """
-    cmd = "finger {} | head -n 1".format(username)
+    cmd = "finger -m {} | head -n 1".format(username)
+    finger_output = None
     try:
         with open(os.devnull, "w") as devnull:
-            finger_output = (
-                subprocess.check_output(cmd, shell=True, stderr=devnull)
-                .decode("utf-8")
-                .strip()
-            )
+            finger_output = subprocess.check_output(
+                cmd, shell=True, stderr=devnull
+            ).strip().decode("utf-8")
     except AttributeError:
         pass
     if finger_output:
@@ -104,7 +103,8 @@ def userinfo(username, finger_function):
     Args:
         username: user shortname/loginname
         finger_function: Function handle that can provide output
-            from the system finger program (/usr/bin/finger)
+            from the system finger program (/usr/bin/finger).
+            The output must be a Unicode string
 
     Returns:
         string with full user name, organization from finger output and
@@ -113,6 +113,8 @@ def userinfo(username, finger_function):
     finger_output = finger_function(username)
     rex = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
     [u2, fullname, org] = [x.strip() for x in rex.match(finger_output).groups()]
+    if sys.version_info[0] < 3:
+        fullname = fullname.encode("utf-8")
     return "{} ({}) ({})".format(fullname, org, username)
 
 

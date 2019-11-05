@@ -1,7 +1,7 @@
 #!/bin/env python
 
 from __future__ import absolute_import
-from .. import summaryplot
+from subscript.summaryplot import summaryplot
 import os
 
 
