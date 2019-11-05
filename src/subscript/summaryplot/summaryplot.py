@@ -35,15 +35,8 @@ from multiprocessing import Process
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
 
-try:
-    import ert.ecl as ecl
-except ImportError:
-    import ecl
-
-try:
-    from ert.ecl import EclSum
-except ImportError:
-    from ecl.summary import EclSum
+import ecl
+from ecl.summary import EclSum
 
 
 register_matplotlib_converters()

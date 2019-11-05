@@ -30,11 +30,7 @@ import pandas
 # import resscript.header as header
 from scipy.optimize import newton
 
-
-try:
-    from ert.ecl import EclSum
-except ImportError:
-    from ecl.summary import EclSum
+from ecl.summary import EclSum
 
 
 def get_parser():
