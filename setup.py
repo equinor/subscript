@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Setup for subscript packages"""
+from glob import glob
+from os.path import splitext, basename
+
 import setuptools
+from setuptools import find_packages
 
 
 SSCRIPTS = [
@@ -32,8 +36,10 @@ setuptools.setup(
     },
     keywords=[],
     license="Not open source (violating TR1621)",
-    # py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
     platforms="any",
+    packages=find_packages("src"),
+    package_dir={"": "src"},
+    py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
     install_requires=[],
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
