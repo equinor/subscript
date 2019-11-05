@@ -7,7 +7,7 @@ import shutil
 import pandas as pd
 import yaml
 
-from .. import prtvol2csv
+from subscript.prtvol2csv import prtvol2csv
 
 
 def test_prtvol2csv():

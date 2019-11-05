@@ -18,6 +18,7 @@ SSCRIPTS = [
     "gen_satfunc = subscript.gen_satfunc.get_satfunc:main",
     "params2csv = subscript.params2csv.params2csv:main",
     "presentvalue = subscript.presentvalue.presentvalue:main",
+    "prtvol2csv = subscript.prtvol2csv.prtvol2csv:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "sunsch = subscript.sunsch.sunch:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
