@@ -7,7 +7,7 @@ import datetime
 
 import pytest  # noqa: F401
 
-from .. import sunsch
+from subscript.sunsch import sunsch
 
 
 def test_main():
