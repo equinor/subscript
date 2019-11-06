@@ -6,3 +6,4 @@ matplotlib
 numpy
 ecl2df
 configsuite
+six>=1.12.0
