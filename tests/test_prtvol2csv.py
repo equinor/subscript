@@ -10,16 +10,14 @@ import yaml
 from subscript.prtvol2csv import prtvol2csv
 
 
-def test_prtvol2csv():
-    testdir = os.path.join(os.path.dirname(__file__), "testdata_prtvol2csv")
-    if not os.path.exists(testdir):
-        os.mkdir(testdir)
-    else:
-        shutil.rmtree(testdir)  # Total cleanup
-        os.mkdir(testdir)
-    os.chdir(testdir)
+def test_prtvol2csv(tmpdir):
+    testdatadir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
+    )
+    prtfile = os.path.join(testdatadir, "2_R001_REEK-0.PRT")
 
-    sys.argv = ["prtvol2csv", "../data/reek/eclipse/model/2_R001_REEK-0.PRT"]
+    tmpdir.chdir()
+    sys.argv = ["prtvol2csv", prtfile]
     prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
     assert "FIPNUM" in dframe
@@ -30,7 +28,12 @@ def test_prtvol2csv():
     assert len(dframe) == 6
 
 
-def test_prtvol2csv_regions():
+def test_prtvol2csv_regions(tmpdir):
+    testdatadir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
+    )
+    prtfile = os.path.join(testdatadir, "2_R001_REEK-0.PRT")
+
     yamlexample = {
         "region2fipnum": {
             "RegionA": [1, 4, 6],
@@ -38,21 +41,11 @@ def test_prtvol2csv_regions():
             "Totals": [1, 2, 3, 4, 5, 6],
         }
     }
-    testdir = os.path.join(os.path.dirname(__file__), "testdata_prtvol2csv")
-    if not os.path.exists(testdir):
-        os.mkdir(testdir)
-    else:
-        shutil.rmtree(testdir)  # Total cleanup
-        os.mkdir(testdir)
-    os.chdir(testdir)
+
+    tmpdir.chdir()
     with open("regions.yml", "w") as reg_fh:
         reg_fh.write(yaml.dump(yamlexample))
-    sys.argv = [
-        "prtvol2csv",
-        "../data/reek/eclipse/model/2_R001_REEK-0.PRT",
-        "--regions",
-        "regions.yml",
-    ]
+    sys.argv = ["prtvol2csv", prtfile, "--regions", "regions.yml"]
     prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_region.csv")
     assert not dframe.empty
@@ -63,23 +56,18 @@ def test_prtvol2csv_regions():
     assert len(dframe) == 3
 
 
-def test_prtvol2csv_noresvol():
+def test_prtvol2csv_noresvol(tmpdir):
     """Test when FIPRESV is not included
 
     Perform the test by just fiddling with the test PRT file
     """
-    testdir = os.path.join(os.path.dirname(__file__), "testdata_prtvol2csv")
-    if not os.path.exists(testdir):
-        os.mkdir(testdir)
-    else:
-        shutil.rmtree(testdir)  # Total cleanup
-        os.mkdir(testdir)
-    os.chdir(testdir)
-    prtlines = (
-        open("../data/reek/eclipse/model/2_R001_REEK-0.PRT")
-        .read()
-        .replace("RESERVOIR VOLUMES", "foobar volumes")
+    testdatadir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
     )
+    prtfile = os.path.join(testdatadir, "2_R001_REEK-0.PRT")
+
+    tmpdir.chdir()
+    prtlines = open(prtfile).read().replace("RESERVOIR VOLUMES", "foobar volumes")
     with open("MODIFIED.PRT", "w") as mod_fh:
         mod_fh.write(prtlines)
     sys.argv = ["prtvol2csv", "MODIFIED.PRT"]
