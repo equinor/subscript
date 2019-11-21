@@ -23,185 +23,181 @@
 from __future__ import division, absolute_import
 from __future__ import print_function, unicode_literals
 
-import matplotlib.pyplot
-import numpy as np
 import sys
 import os
 import re
 import difflib
+import logging
 import argparse
 from multiprocessing import Process
+
+import matplotlib.pyplot
+import numpy as np
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
 
-import ecl
 from ecl.summary import EclSum
-
+from ecl.eclfile import EclFile
+from ecl.grid import EclGrid
 
 register_matplotlib_converters()
 
-DESCRIPTION = """Syntax:
+DESCRIPTION = """
+Summaryplot will plot summary vectors from your Eclipse output files.
 
-summaryplot [<options>] <vectorstoplot> <datafilestoread>
+To list summary vectors for a specific Eclipse output set, try
+ > summary.x --list ECLFILE.DATA
 
-vectorstoplot is a list of vectors to be plotted in the syntax
-<vector>[:<wellname>]
-
-For more vector possibilities, issue 'summary.x --list ECLFILE.DATA'
-datafilestoread is a list of Eclipse *.DATA files to be read
-
-Command line arguments are assumed to be Eclipse DATA-files as long
+Command line argument VECTORSDATAFILES are assumed to be Eclipse DATA-files as long
 as the command line argument is an existing file. If not, it is assumed
 to be a vector to plot. Thus, vectors and datafiles can be mixed.
-
-Options:
- -hi (--hist) Include historical vector
- -nl No label; to avoid the plot to be filled with labels
- -s Single plot, all vectors are put into the same plot.
-    Axes will not be adjusted.
- -n Normalize each vector to maximum 1.
- -e Ensemble mode: Colour by vector instead of by DATA-file, and adapt legend
- -d Dump images to files instead of displaying on screen
- -c PARAMNAME colour curves based on the value associated to PARAMNAME as found
-   in a textfile called parameters.txt alongside the Eclipse runs.
 """
 
 EPILOG = ""
 
 
 def get_parser():
-    """Setup mock parser to be improved at later stage"""
+    """Setup parser for command line options"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=DESCRIPTION,
         epilog=EPILOG,
     )
     parser.add_argument(
-        "-hi", "--hist", help="Plot historical vector", action="store_true"
+        "-H", "--hist", help="Add historical vectors", action="store_true"
+    )
+    parser.add_argument(
+        "-n",
+        "--normalize",
+        help="Normalize the values pr. vector to (0,1)",
+        action="store_true",
+    )
+    parser.add_argument(
+        "--nolegend", "--nolabels", help="Drop legend", action="store_true"
+    )
+    parser.add_argument(
+        "--maxlabels", type=int, help="Max number of vector names in legend", default=5
+    )
+    parser.add_argument(
+        "-e",
+        "--ensemblemode",
+        help="Colour by vector instead of by DATA-file",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-d",
+        "--dumpimages",
+        help="Dump images to files instead of displaying on screen",
+        action="store_true",
+    )
+    parser.add_argument(
+        "-c",
+        "--colourby",
+        type=str,
+        help="Colourize curves by the a value found in parameters.txt",
+    )
+    parser.add_argument(
+        "--logcolourby",
+        type=str,
+        help="Colourize curves by the logarithm of a value found in parameters.txt",
+    )
+    parser.add_argument(
+        "--singleplot",
+        "-s",
+        action="store_true",
+        help="All vectors are put into one single plot",
+    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument(
+        "VECTORSDATAFILES",
+        nargs="+",
+        type=str,
+        help="List of vectors to plot and/or DATA-files to include",
     )
     return parser
 
 
-# Entire functionality is wrapped in a function
-# to allow running the plotter in a subprocess.
-# (again needed in order to support ctrl-c)
-def summaryplotter(*args):
-    vectors = []  # strings
-    datafiles = []  # strings
-    summaryfiles = []  # EclSum objects
+def summaryplotter(
+    summaryfiles=None,
+    datafiles=None,
+    vectors=None,
+    parameterfiles=None,
+    histvectors=False,
+    normalize=False,
+    singleplot=False,
+    nolegend=False,
+    maxlabels=5,
+    ensemblemode=False,
+    dumpimages=False,
+    colourby="",
+    logcolourby="",
+):
+    """
+    Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
+
+    Args:
+        eclsums (list of EclSum)
+        vectors (list of str)
+        histvectors (bool),
+        normalize (bool)
+        singleplot (bool)
+        nolegend (bool)
+        maxlabels (int)
+        ensemblemode (bool)
+        dumpimages (bool)
+        colourby (str):
+        logcolourby (str):
+    """
     rstfiles = []  # EclRst objects
     gridfiles = []  # EclGrid objects
-    parameterfiles = []  # Vector of parameterfiles, from ERT or Basra
-    includehistory = False  # default behaviour
-    nolabel = False  # default behaviour
-    singleplot = False  # default behaviour
-    ensemblemode = False  # default behaviour
-    normalize = False
-    dumpimages = False
-    maxlegends = 10  # Do not show more than the first 10 simulations in the legend
-    parametercolouring = False
-    logparametercolouring = False
-    takeparamname = False
-    paramnameforcolouring = ""
     parametervalues = []  # Vector of values pr. realization for colouring
 
-    for arg in args:
-        if takeparamname:  #
-            paramnameforcolouring = arg
-            takeparamname = False
-            continue
-        if arg == "-hist":
-            includehistory = True
-            continue
-        if arg == "-n":
-            normalize = True
-            continue
-        if arg == "-nl":
-            nolabel = True
-            continue
-        if arg == "-s":
-            singleplot = True
-            continue
-        if arg == "-e":
-            ensemblemode = True
-            continue
-        if arg == "-l":
-            maxlegends = 99999  # Don't truncate legend before this number is reached
-            continue
-        if arg == "-d":
-            dumpimages = True
-            continue
-        if arg == "-c":
-            takeparamname = (
-                True
-            )  # Process the parameter name for coloruing in next loop.
-            parametercolouring = True
-            logparametercolouring = False
-            nolabel = True
-            continue
-        if arg == "-cl":
-            takeparamname = True
-            logparametercolouring = True
-            parametercolouring = False
-            nolabel = True
-            continue
+    if maxlabels == 0:
+        nolegend = True
 
-        # Try to parse command line arg as a summary file,
-        # try as a vector if not.
-        try:
-            sumfn = EclSum(arg)
-            datafiles.append(arg)
+    if colourby and logcolourby:
+        logging.error("Can't colour non-log and log at the same time")
+        sys.exit(1)
 
-            summaryfiles.append(sumfn)
+    if (colourby or logcolourby) and ensemblemode:
+        logging.error("Can't colour by ensemble and by parameter at the same time")
+        sys.exit(1)
 
-            # Try to load a corresponding parameter-file for colouring data
-            parameterfileERT = (
-                os.path.dirname(os.path.realpath(arg)) + "/../../parameters.txt"
-            )  # ERT files
-            parameterfileBasra = (
-                os.path.dirname(os.path.realpath(arg)) + "/ParameterValues"
-            )  # Basra files
-            if os.path.isfile(parameterfileERT):
-                parameterfiles.append(parameterfileERT)
-            elif os.path.isfile(parameterfileBasra):
-                parameterfiles.append(parameterfileBasra)
-            else:
-                parameterfiles.append("")
-            # (we don't care yet if it exists or not)
+    if (colourby or logcolourby) and not nolegend:
+        print("Hint: Use --nolegend to skip legend")
 
-        except Exception:
-            vectors.append(arg)
-
-    if (parametercolouring or logparametercolouring) and nolabel is False:
-        print("Hint: Use -nl to skip legend")
-
-    if (parametercolouring or logparametercolouring) and len(summaryfiles) < 2:
-        parametercolouring = False
-        logparametercolouring = False
-        print("Info: Not colouring by parameter when only one DATA file is loaded")
+    if (colourby or logcolourby) and len(summaryfiles) < 2:
+        colourby = False
+        logcolourby = False
+        logging.warning("Not colouring by parameter when only one DATA file is loaded")
 
     minvalue = 0.0
     maxvalue = 0.0
     parameternames = []
-    if parametercolouring or logparametercolouring:
+    if colourby or logcolourby:
+        if colourby:
+            colourbyparametername = colourby
+            logging.info("Colouring by parameter %s", colourby)
+        if logcolourby:
+            colourbyparametername = logcolourby
+            logging.info("Colouring logarithmically by parameter %s", logcolourby)
         # Try to load parameters.txt for each datafile,
         # and put the associated values in a vector
         for parameterfile in parameterfiles:
             valuefound = False
             if os.path.isfile(parameterfile):
-                file = open(parameterfile)
-                for line in file:
+                filename = open(parameterfile)
+                for line in filename:
                     linecontents = line.split()
                     parameternames.append(linecontents[0])
-                    if linecontents[0] == paramnameforcolouring:
+                    if linecontents[0] == colourbyparametername:
                         parametervalues.append(float(linecontents[1]))
                         valuefound = True
                         break
             if not valuefound:
-                print(
-                    "Warning: "
-                    + paramnameforcolouring
+                logging.warning(
+                    str(colourbyparametername)
                     + " was not found in parameter-file "
                     + parameterfile
                 )
@@ -212,24 +208,24 @@ def summaryplotter(*args):
         minvalue = np.min(parametervalues)
         maxvalue = np.max(parametervalues)
         if (maxvalue - minvalue) < 0.000001:
-            print(
-                "Warning: No data found to colour by, are you sure you typed "
-                + paramnameforcolouring
+            logging.warning(
+                "No data found to colour by, are you sure you typed "
+                + colourbyparametername
                 + " correctly?"
             )
             suggestion = difflib.get_close_matches(
-                paramnameforcolouring, parameternames, 1
+                colourbyparametername, parameternames, 1
             )
-            if len(suggestion) > 0:
+            if suggestion:
                 print("         Maybe you meant " + suggestion[0])
-            logparametercolouring = False
-            parametercolouring = False
+            colourby = False
+            logcolourby = False
         else:
             normalizedparametervalues = (parametervalues - minvalue) / (
                 maxvalue - minvalue
             )
 
-        if logparametercolouring:
+        if logcolourby:
             minvalue = np.min(np.log10(parametervalues))
             maxvalue = np.max(np.log10(parametervalues))
             if maxvalue - minvalue > 0:
@@ -246,17 +242,17 @@ def summaryplotter(*args):
                 normalizedparametervalues = (parametervalues - minvalue) / (
                     maxvalue - minvalue
                 )
-                parametercolouring = True
-                logparametercolouring = False
+                colourby = None
+                logcolourby = None
 
         # print normalizedparametervalues
 
         # Build a colour map from all the values, from min to max.
 
-    if normalize and includehistory:
-        print("Warning: Historical data is not " "normalized equal to simulated data")
+    if normalize and histvectors:
+        logging.warning("Historical data is not normalized equally to simulated data")
 
-    if len(summaryfiles) == 0:
+    if not summaryfiles:
         print("Error: No summary files found")
         sys.exit(1)
 
@@ -265,16 +261,16 @@ def summaryplotter(*args):
     # line
     matchedsummaryvectors = []
     restartvectors = []
-    for v in vectors:
-        if not summaryfiles[0].keys(v):
+    for vector in vectors:
+        if vector not in summaryfiles[0].keys():
             # Check if it is a restart vector with syntax
             # <vector>:<i>,<j>,<k> aka SOIL:40,31,33
-            if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", v):
-                print("Found restart vector " + v)
-                restartvectors.append(v)
+            if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", vector):
+                logging.info("Found restart vector %s", vector)
+                restartvectors.append(vector)
             else:
-                print("Warning: No summary or restart vectors matched " + v)
-        matchedsummaryvectors.extend(summaryfiles[0].keys(v))
+                logging.warning("No summary or restart vectors matched %s", vector)
+        matchedsummaryvectors.extend(summaryfiles[0].keys(vector))
 
     # If we have any restart vectors defined, we must also load the restart files
     if restartvectors:
@@ -283,17 +279,17 @@ def summaryplotter(*args):
             rstfile = rstfile + ".UNRST"
             gridfile = datafile.replace(".DATA", "")
             gridfile = gridfile + ".EGRID"  # What about .GRID??
-            print("Loading grid and restart file " + rstfile)
+            logging.info("Loading grid and restart file %s", rstfile)
             # TODO: Allow some of the rstfiles to be missing
             # TODO: Handle missing rstfiles gracefully
-            rst = ecl.EclFile(rstfile)
-            grid = ecl.EclGrid(gridfile)
+            rst = EclFile(rstfile)
+            grid = EclGrid(gridfile)
             rstfiles.append(rst)
             gridfiles.append(grid)
-            print("done")
+            logging.info("RST loading done")
 
     if (len(matchedsummaryvectors) + len(restartvectors)) == 0:
-        print("Error: No vectors to plot")
+        logging.error("Error: No vectors to plot")
         sys.exit(1)
 
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
@@ -301,28 +297,28 @@ def summaryplotter(*args):
     # demand from SWAT and SGAS
     restartvectordata = {}
     restartvectordates = {}
-    for v in restartvectors:
-        print("Getting data for " + v + "...")
-        match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", v)
+    for rstvec in restartvectors:
+        logging.info("Getting data for %s...", rstvec)
+        match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", rstvec)
         dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
         (ijk) = (int(match.group(2)), int(match.group(3)), int(match.group(4)))
         # Remember that these indices start on 1, not on zero!
 
-        restartvectordata[v] = {}
-        restartvectordates[v] = {}
+        restartvectordata[rstvec] = {}
+        restartvectordates[rstvec] = {}
         for datafile_idx in range(0, len(datafiles)):
             active_index = gridfiles[datafile_idx].get_active_index(ijk=ijk)
-            restartvectordata[v][datafiles[datafile_idx]] = []
-            restartvectordates[v][datafiles[datafile_idx]] = []
+            restartvectordata[rstvec][datafiles[datafile_idx]] = []
+            restartvectordates[rstvec][datafiles[datafile_idx]] = []
 
             # Loop over all restart steps
             last_step = range(rstfiles[datafile_idx].num_named_kw("SWAT"))[-1]
             for report_step in range(0, last_step + 1):
-                restartvectordates[v][datafiles[datafile_idx]].append(
+                restartvectordates[rstvec][datafiles[datafile_idx]].append(
                     rstfiles[datafile_idx].iget_restart_sim_time(report_step)
                 )
                 if dataname != "SOIL":
-                    restartvectordata[v][datafiles[datafile_idx]].append(
+                    restartvectordata[rstvec][datafiles[datafile_idx]].append(
                         rstfiles[datafile_idx].iget_named_kw(dataname, report_step)[
                             active_index
                         ]
@@ -334,12 +330,10 @@ def summaryplotter(*args):
                     sgasvalue = rstfiles[datafile_idx].iget_named_kw(
                         "SGAS", report_step
                     )[active_index]
-                    restartvectordata[v][datafiles[datafile_idx]].append(
+                    restartvectordata[rstvec][datafiles[datafile_idx]].append(
                         1 - swatvalue - sgasvalue
                     )
 
-            # print restartvectordata[v][datafiles[datafile_idx]]
-            # print restartvectordates[v][datafiles[datafile_idx]]
     # Data structure examples
     # restartvectordata["SOIL:1,1,1"]["datafile"] = [0.89, 0.70, 0.60, 0.55, 0.54]
     # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"]
@@ -365,7 +359,7 @@ def summaryplotter(*args):
         map(tuple, pyplot.get_cmap("jet")(np.linspace(0, 1.0, numberofcolours)))
     )
 
-    if parametercolouring or logparametercolouring:
+    if colourby or logcolourby:
         colourmap = matplotlib.colors.LinearSegmentedColormap.from_list(
             "GreenBlackRed", [(0, 0.6, 0), (0, 0, 0), (0.8, 0, 0)]
         )
@@ -374,8 +368,8 @@ def summaryplotter(*args):
             map(tuple, pyplot.get_cmap("GreenBlackRedMap")(normalizedparametervalues))
         )
 
-    if parametercolouring or logparametercolouring:
-        # Using contourf to provide my colorbar info, then clearing the figure
+    if colourby or logcolourby:
+        # Using contourf to provide the colorbar info, then clearing the figure
         Z = [[0, 0], [0, 0]]
         step = (maxvalue - minvalue) / 100
         levels = np.arange(minvalue, maxvalue + step, step)
@@ -383,12 +377,11 @@ def summaryplotter(*args):
         pyplot.clf()
         pyplot.close()
 
-    for v_idx in range(0, len(matchedsummaryvectors)):
-        v = matchedsummaryvectors[v_idx]
+    for vector_idx, vector in enumerate(matchedsummaryvectors):
 
-        if (not singleplot) or v == matchedsummaryvectors[0]:
+        if (not singleplot) or vector == matchedsummaryvectors[0]:
             fig = pyplot.figure()
-            if parametercolouring or logparametercolouring:
+            if colourby or logcolourby:
                 pyplot.colorbar(invisiblecontourplot)
             pyplot.xlabel("Date")
 
@@ -399,19 +392,19 @@ def summaryplotter(*args):
         pyplot.grid(b=True, which="both", color="0.65", linestyle="-")
 
         if not singleplot:
-            if parametercolouring:
-                pyplot.title(v + ", colouring: " + paramnameforcolouring)
-            elif logparametercolouring:
-                pyplot.title(v + ", colouring: Log10(" + paramnameforcolouring + ")")
+            if colourby:
+                pyplot.title(vector + ", colouring: " + colourby)
+            elif logcolourby:
+                pyplot.title(vector + ", colouring: Log10(" + logcolourby + ")")
             else:
-                pyplot.title(v)
+                pyplot.title(vector)
         else:
             pyplot.title("")
 
         # Look for historic vectors in first summaryfile
-        if includehistory:
+        if histvectors:
             s = summaryfiles[0]
-            toks = v.split(":", 1)
+            toks = vector.split(":", 1)
             histvec = toks[0] + "H"
             if len(toks) > 1:
                 histvec = histvec + ":" + toks[1]
@@ -428,25 +421,25 @@ def summaryplotter(*args):
 
         for s_idx in range(0, len(summaryfiles)):
             s = summaryfiles[s_idx]
-            if v in s.keys():
-                if s_idx >= maxlegends:  # Truncate legend if too many
+            if vector in s.keys():
+                if s_idx >= maxlabels:  # Truncate legend if too many
                     sumlabel = "_nolegend_"
                 else:
                     if singleplot:
-                        sumlabel = v + " " + s.case.lower()
+                        sumlabel = vector + " " + s.case.lower()
                     else:
                         sumlabel = s.case.lower()
 
-                values = s.numpy_vector(v)
+                values = s.numpy_vector(vector)
 
                 if ensemblemode:
-                    cycledcolor = colours[v_idx]
+                    cycledcolor = colours[vector_idx]
                     if s_idx == 0:
-                        sumlabel = v
+                        sumlabel = vector
                     else:
                         sumlabel = "_nolegend_"
                 elif singleplot:
-                    cycledcolor = colours[v_idx]
+                    cycledcolor = colours[vector_idx]
                 else:
                     cycledcolor = colours[s_idx]
 
@@ -469,25 +462,25 @@ def summaryplotter(*args):
                 )
                 fig.autofmt_xdate()
 
-        if not nolabel:
+        if not nolegend:
             pyplot.legend(loc="best", fancybox=True, framealpha=0.5)
-    for v in restartvectors:
+    for rstvec_idx, rstvec in enumerate(restartvectors):
 
         if not singleplot or (
-            v == restartvectors[0] and len(matchedsummaryvectors) == 0
+            rstvec == restartvectors[0] and not matchedsummaryvectors
         ):
             fig = pyplot.figure()
-            if parametercolouring or logparametercolouring:
+            if colourby or logcolourby:
                 pyplot.colorbar(invisiblecontourplot)
             pyplot.xlabel("Date")
 
         if not singleplot:
-            if parametercolouring:
-                pyplot.title(v + ", colouring: " + paramnameforcolouring)
-            elif logparametercolouring:
-                pyplot.title(v + ", colouring: Log10(" + paramnameforcolouring + ")")
+            if colourby:
+                pyplot.title(rstvec + ", colouring: " + colourby)
+            elif logcolourby:
+                pyplot.title(rstvec + ", colouring: Log10(" + logcolourby + ")")
             else:
-                pyplot.title(v)
+                pyplot.title(rstvec)
         else:
             pyplot.title("")
 
@@ -497,30 +490,30 @@ def summaryplotter(*args):
         # Add grey major gridlines:
         pyplot.grid(b=True, which="both", color="0.65", linestyle="-")
 
-        for datafile_idx in range(0, len(datafiles)):
+        for datafile_idx, _ in enumerate(datafiles):
 
             if singleplot:
-                rstlabel = v + " " + datafiles[datafile_idx].lower()
+                rstlabel = rstvec + " " + datafiles[datafile_idx].lower()
             else:
                 rstlabel = datafiles[datafile_idx].lower()
 
             if ensemblemode:
-                cycledcolor = colours[len(matchedsummaryvectors) + v_idx]
+                cycledcolor = colours[len(matchedsummaryvectors) + rstvec_idx]
                 if datafile_idx == 0:
-                    rstlabel = v
+                    rstlabel = rstvec
                 else:
                     rstlabel = "_nolegend_"
             else:
                 cycledcolor = colours[datafile_idx]
 
-            values = np.array(restartvectordata[v][datafiles[datafile_idx]])
+            values = np.array(restartvectordata[rstvec][datafiles[datafile_idx]])
             if normalize:
                 maxvalue = values.max()
                 values = [i * 1 / maxvalue for i in values]
                 rstlabel = rstlabel + " " + str(maxvalue)
 
             pyplot.plot_date(
-                restartvectordates[v][datafiles[datafile_idx]],
+                restartvectordates[rstvec][datafiles[datafile_idx]],
                 values,
                 xdate=True,
                 ydate=False,
@@ -532,36 +525,92 @@ def summaryplotter(*args):
                 alpha=alpha,
             )
 
-        if not nolabel:
+        if not nolegend:
             pyplot.legend(loc="best")
 
     if dumpimages:
         pyplot.savefig("summaryplotdump.png", bbox_inches="tight")
         pyplot.savefig("summaryplotdump.pdf", bbox_inches="tight")
-
-    if not dumpimages:
+    else:
         pyplot.show()
 
 
+def split_vectorsdatafiles(vectorsdatafiles):
+    """
+    Args:
+        vectorsdatafiles (list of str)
+    Returns:
+        4-tuple of lists, with EclSum, str, str, str
+    """
+    vectors = []  # strings
+    datafiles = []  # strings
+    summaryfiles = []  # EclSum objects
+    parameterfiles = []  # strings
+
+    for vecdata in vectorsdatafiles:
+        try:
+            sumfn = EclSum(vecdata)
+            datafiles.append(vecdata)
+
+            summaryfiles.append(sumfn)
+
+            # Try to load a corresponding parameter-file for colouring data
+            parameterfile = (
+                os.path.dirname(os.path.realpath(vecdata)) + "/../../parameters.txt"
+            )
+            if os.path.isfile(parameterfile):
+                parameterfiles.append(parameterfile)
+            else:
+                parameterfiles.append("")
+            # (we don't care yet if it exists or not)
+
+        except IOError:
+            vectors.append(vecdata)
+    return (summaryfiles, datafiles, vectors, parameterfiles)
+
+
 def main():
+    """Parse command line, and control user interface."""
 
     parser = get_parser()
-    parsed_args, args = parser.parse_known_args()
 
-    # we are mocking argparse so, this will need to be fixed at some point
-    if parsed_args.hist:
-        args.append("-hist")
+    args = parser.parse_args()
 
-    plotprocess = Process(target=summaryplotter, args=args)
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
+
+    (summaryfiles, datafiles, vectors, parameterfiles) = split_vectorsdatafiles(
+        args.VECTORSDATAFILES
+    )
+    logging.info("Summaryfiles: %s", str(summaryfiles))
+    logging.info("Vectors: %s", str(vectors))
+
+    plotprocess = Process(
+        target=summaryplotter,
+        kwargs=dict(
+            summaryfiles=summaryfiles,
+            datafiles=datafiles,
+            vectors=vectors,
+            colourby=args.colourby,
+            maxlabels=args.maxlabels,
+            logcolourby=args.logcolourby,
+            parameterfiles=parameterfiles,
+            histvectors=args.hist,
+            normalize=args.normalize,
+            singleplot=args.singleplot,
+            nolegend=args.nolegend,
+            dumpimages=args.dumpimages,
+            ensemblemode=args.ensemblemode,
+        ),
+    )
     plotprocess.start()
 
     # If user only wants to dump image to file, then do only that:
-    for arg in args:
-        if arg == "-d":
-            print("Dumping plot to summaryplotdump.png and summaryplotdump.pdf")
-            plotprocess.join()
-            plotprocess.terminate()
-            sys.exit(0)
+    if args.dumpimages:
+        print("Dumping plot to summaryplotdump.png and summaryplotdump.pdf")
+        plotprocess.join()
+        plotprocess.terminate()
+        return
 
     # Give out a "menu" (text-based) only if we are running in foreground:
     if os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):
