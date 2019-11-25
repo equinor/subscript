@@ -1,66 +1,86 @@
-#!/usr/bin/env python
-#
-# pvt22csv
-#
-# Usage:
-#   pvt2csv <pvtfile1> [<pvtfile2>] ...
-#
-# Parses Eclipse 100 PVT input files into CSV files suitable
-# for analysis in Pandas and/or Spotfire
-#
-# Haavard Berland, DPN OTE PTC MOD MW, April 2017, havb@statoil.com
+"""
+Parses Eclipse 100 PVT input files into CSV files suitable
+for analysis in Pandas and/or Spotfire
 
-import pandas
+This script is doing Python-only text parsing of the Eclipse 100 file
+and is very UNLIKELY to support all PVT files that E100 actually would
+accept.
+"""
+from __future__ import print_function
+
 import re
 import argparse
 
-import resscript.header as header
+import pandas
 
-header.compose(
-    "pvt2csv.py",
-    "April 2017",
-    ["Havard Berland"],
-    ["havb@statoil.com"],
-    ["Access help with -h"],
-    "Convert Eclipse 100 PVT files into CSV files",
-)
-
-parser = argparse.ArgumentParser()
-parser.add_argument("pvtfiles", nargs="+", help="PVT files containing PVT keywords")
-parser.add_argument(
-    "-o", "--output", type=str, help="name of output csv file", default="pvt.csv"
-)
-args = parser.parse_args()
-
-columnnames = {
-    "DENSITY": ["pvtnum", "oildensity", "waterdensity", "gasdensity"],
+COLUMNNAMES = {
+    "DENSITY": ["PVTNUM", "OILDENSITY", "WATERDENSITY", "GASDENSITY"],
     "PVTW": [
-        "pvtnum",
-        "pressure",
-        "volumefactor",
-        "compressibility",
-        "viscosity",
-        "viscosibility",
+        "PVTNUM",
+        "PRESSURE",
+        "VOLUMEFACTOR",
+        "COMPRESSIBILITY",
+        "VISCOSITY",
+        "VISCOSIBILITY",
     ],
-    "PVTO": ["pvtnum", "GOR", "pressure", "volumefactor", "viscosity"],
-    "PVTG": ["pvtnum", "pressure", "Rv", "volumefactor", "viscosity"],
-    "PVDG": ["pvtnum", "pressure", "volumefactor", "viscosity"],
-    "ROCK": ["pvtnum", "pressure", "compressibility"],
+    "PVTO": ["PVTNUM", "GOR", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"],
+    "PVTG": ["PVTNUM", "PRESSURE", "RV", "VOLUMEFACTOR", "VISCOSITY"],
+    "PVDG": ["PVTNUM", "PRESSURE", "VOLUMEFACTOR", "VISCOSITY"],
+    "ROCK": ["PVTNUM", "PRESSURE", "COMPRESSIBILITY"],
 }
 
+
+def get_parser():
+    """Set up parser for command line utility"""
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument("PVTFILES", nargs="+", help="PVT files containing PVT keywords")
+    parser.add_argument(
+        "-o", "--output", type=str, help="name of output csv file", default="pvt.csv"
+    )
+    return parser
+
+
 # Used for parsing, to check if a string can be parsed as a floating point number
-def is_number(s):
+def is_number(numberstring):
+    """Determine if a string can be parsed as a floating point number
+
+    Returns:
+       bool - true if float(numberstring) would not throw an exception
+    """
     try:
-        float(s)
+        float(numberstring)
         return True
     except ValueError:
         return False
 
 
-tables_each_file = []
-for filename in args.pvtfiles:
-    print(" ** Parsing", filename)
+def main():
+    """Process command line arguments"""
+    parser = get_parser()
+    args = parser.parse_args()
 
+    tables_each_file = []
+    for filename in args.PVTFILES:
+        print(" ** Parsing {}".format(filename))
+        tables_each_file.append(pvtfile2df(filename))
+    allfiles_df = pandas.concat(tables_each_file)
+    allfiles_df.to_csv(args.output, index=False)
+
+
+def pvtfile2df(filename):
+    """Convert a text file into a dataframe with PVT information
+
+    Multiple PVT keywords are merged into one dataframe, with padding for
+    not-applicable cells.
+
+    Args:
+        filename (string) - filename to be opened and parsed.
+
+    Returns:
+        pd.DataFrame
+    """
     lines = open(filename).readlines()
 
     # Strip newlines, comments and empty lines:
@@ -71,25 +91,23 @@ for filename in args.pvtfiles:
     # Now we go through the file with a state machine holding which keyword is active
 
     active_ecl_keyword = ""
-    current_GOR = 0
-    current_Pg = 0
+    current_gor = 0
+    current_pg = 0
 
-    density_df = pandas.DataFrame(columns=columnnames["DENSITY"])
-    pvtw_df = pandas.DataFrame(columns=columnnames["PVTW"])
-    pvto_df = pandas.DataFrame(columns=columnnames["PVTO"])
-    pvtg_df = pandas.DataFrame(columns=columnnames["PVTG"])
-    pvdg_df = pandas.DataFrame(columns=columnnames["PVDG"])
-    rock_df = pandas.DataFrame(columns=columnnames["ROCK"])
+    density_df = pandas.DataFrame(columns=COLUMNNAMES["DENSITY"])
+    pvtw_df = pandas.DataFrame(columns=COLUMNNAMES["PVTW"])
+    pvto_df = pandas.DataFrame(columns=COLUMNNAMES["PVTO"])
+    pvtg_df = pandas.DataFrame(columns=COLUMNNAMES["PVTG"])
+    pvdg_df = pandas.DataFrame(columns=COLUMNNAMES["PVDG"])
+    rock_df = pandas.DataFrame(columns=COLUMNNAMES["ROCK"])
 
-    ecl_keyword_re = re.compile("^[A-Z]+\s*.*")
-    unknownkeywordwarning = False
+    ecl_keyword_re = re.compile(r"^[A-Z]+\s*.*")
     for line in lines:
 
         # Changing to next keyword?
         if ecl_keyword_re.match(line):
             active_ecl_keyword = line.split(" ")[0]
             current_pvtnum = 1
-            unknownkeywordwarning = False
             continue  # Hope user has not written more data on the keyword line.
 
         if active_ecl_keyword == "DENSITY":
@@ -102,7 +120,9 @@ for filename in args.pvtfiles:
                     map(float, line.split()[0:3])
                 )
                 current_pvtnum += 1
-                continue  # If we forget this continue, the script will think we did not understand the keyword
+                # If we forget this continue, the script will think we
+                # did not understand the keyword
+                continue
 
         if active_ecl_keyword == "PVTW":
             if (
@@ -116,7 +136,8 @@ for filename in args.pvtfiles:
                 current_pvtnum += 1
                 continue
 
-            # Item 5 (dCw - viscosibility) is sometimes skipped, then it is defaulted to zero.
+            # Item 5 (dCw - viscosibility) is sometimes skipped, then
+            # it is defaulted to zero.
             if (
                 list(map(is_number, line.split()[0:4])) == [True, True, True, True]
                 and line.split()[4] == "/"
@@ -132,15 +153,16 @@ for filename in args.pvtfiles:
 
             # 4 numbers on a line is a new GOR.
             if list(map(is_number, line.split()[0:4])) == [True, True, True, True]:
-                current_GOR = float(line.split()[0])
+                current_gor = float(line.split()[0])
                 pvto_df.loc[len(pvto_df) + 1] = [current_pvtnum] + list(
                     map(float, line.split()[0:4])
                 )
                 continue
 
-            # 3 numbers and trailing slash or not means to use the current_GOR (undersaturated line)
+            # 3 numbers and trailing slash or not means to use the
+            # current_gor (undersaturated line)
             if list(map(is_number, line.split()[0:3])) == [True, True, True]:
-                pvto_df.loc[len(pvto_df) + 1] = [current_pvtnum, current_GOR] + list(
+                pvto_df.loc[len(pvto_df) + 1] = [current_pvtnum, current_gor] + list(
                     map(float, line.split()[0:3])
                 )
                 continue
@@ -155,15 +177,16 @@ for filename in args.pvtfiles:
 
             # 4 numbers is a new GOR
             if list(map(is_number, line.split()[0:4])) == [True, True, True, True]:
-                current_Pg = float(line.split()[0])
+                current_pg = float(line.split()[0])
                 pvtg_df.loc[len(pvtg_df) + 1] = [current_pvtnum] + list(
                     map(float, line.split()[0:4])
                 )
                 continue
 
-            # 3 numbers and trailing slash or not means to use the current_GOR (undersaturated line)
+            # 3 numbers and trailing slash or not means to use the
+            # current_gor (undersaturated line)
             if list(map(is_number, line.split()[0:3])) == [True, True, True]:
-                pvtg_df.loc[len(pvtg_df) + 1] = [current_pvtnum, current_Pg] + list(
+                pvtg_df.loc[len(pvtg_df) + 1] = [current_pvtnum, current_pg] + list(
                     map(float, line.split()[0:3])
                 )
                 continue
@@ -193,22 +216,17 @@ for filename in args.pvtfiles:
             + active_ecl_keyword
             + " ignored. Unknown or unsupported syntax."
         )
-        unknownkeywordwarningprinted = True
 
-    density_df["keyword"] = "DENSITY"
-    pvto_df["keyword"] = "PVTO"
-    pvtg_df["keyword"] = "PVTG"
-    pvtw_df["keyword"] = "PVTW"
-    pvdg_df["keyword"] = "PVDG"
-    rock_df["keyword"] = "ROCK"
+    density_df["KEYWORD"] = "DENSITY"
+    pvto_df["KEYWORD"] = "PVTO"
+    pvtg_df["KEYWORD"] = "PVTG"
+    pvtw_df["KEYWORD"] = "PVTW"
+    pvdg_df["KEYWORD"] = "PVDG"
+    rock_df["KEYWORD"] = "ROCK"
 
     file_df = pandas.concat(
         [density_df, pvto_df, pvtg_df, pvtw_df, pvdg_df, rock_df], sort=False
     )
 
-    file_df["filename"] = filename
-
-    tables_each_file.append(file_df)
-
-allfiles_df = pandas.concat(tables_each_file)
-allfiles_df.to_csv(args.output, index=False)
+    file_df["FILENAME"] = filename
+    return file_df
