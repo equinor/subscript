@@ -38,7 +38,7 @@ vfpframes = []
 
 for filename in args.vfpfiles:
 
-    print "Processing file " + filename
+    print("Processing file " + filename)
 
     lines = [l.strip() for l in open(filename).readlines()
              if not l.strip().startswith('--')]
@@ -51,7 +51,7 @@ for filename in args.vfpfiles:
     vfpstartindices = [x for x in range(0, len(vfptabledata))
                        if vfptabledata[x].startswith("VFP")]
 
-    print " - found " + str(len(vfpstartindices)) + " vfp keywords"
+    print(" - found " + str(len(vfpstartindices)) + " vfp keywords")
     for vfptableidx in vfpstartindices:
         vfptype = vfptabledata[vfptableidx].split()[0]
         tableno = vfptabledata[vfptableidx].split()[1]
@@ -104,7 +104,7 @@ for filename in args.vfpfiles:
 
 
         bhp_values = pandas.DataFrame(
-            [map(float, x.split())\
+            [list(map(float, x.split()))\
              for x in vfptabledata[vfptableidx+shift:vfptableidx+shift+rows]])
 
         # Replace the indices in the first four columns with
@@ -169,5 +169,5 @@ for filename in args.vfpfiles:
         vfpframes.append(bhp_values_stacked)
 
 allvfpdata = pandas.concat(vfpframes, sort=False)
-print "Exporting to " + args.output
+print("Exporting to " + args.output)
 allvfpdata.to_csv(args.output, index=False)
