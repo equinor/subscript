@@ -19,6 +19,7 @@ SSCRIPTS = [
     "params2csv = subscript.params2csv.params2csv:main",
     "presentvalue = subscript.presentvalue.presentvalue:main",
     "prtvol2csv = subscript.prtvol2csv.prtvol2csv:main",
+    "pvt2csv = subscript.pvt2csv.pvt2csv:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "sunsch = subscript.sunsch.sunch:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
