@@ -47,7 +47,23 @@ def main():
 
 def vfpfile2df(filename):
     """Process a VFP file (typically outputted from Prosper or similar)
-    and organize the data into a dataframe"""
+    and organize the data into a dataframe
+
+    The dataframe will always contain the columns FILENAME, VFPTYPE,
+    TABLENUMBER and DATUM. Depending on the VFPTYPE (possible values:
+    VFPINJ or VFPPROD) you will get different columns with data:
+    BHP, THP, ALQ, WGR, OGR, WCT, GOR, LIQ
+
+    Do not depend on column order. TABLENUMBER is not enforced unique, it
+    is taken from whatever the data indicates, which can conflict.
+    FILENAME is absolute or relative, depending on the input.
+
+    Args:
+        filename (str): Filename, absolute or relative path to
+            an ascii file (utf-8 or iso-8859) containing VFP* data
+    Returns:
+        pd.DataFrame.
+    """
     try:
         lines = [
             l.strip()
