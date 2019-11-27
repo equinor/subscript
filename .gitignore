@@ -67,6 +67,7 @@ src/subscript/version.py
 .projectile
 .dir-locals.el
 '.'/
+*.swp
 
 # testdata output
 tests/testdata_*
