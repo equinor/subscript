@@ -15,6 +15,7 @@ SSCRIPTS = [
     "csv_stack = subscript.csv_stack.csv_stack:main",
     "csv2ofmvol = subscript.csv2ofmvol.csv2ofmvol:main",
     "eclcompress = subscript.eclcompress.eclcompress:main",
+    "fmudesign = subscript.fmudesign.fmudesignrunner:main",
     "gen_satfunc = subscript.gen_satfunc.get_satfunc:main",
     "params2csv = subscript.params2csv.params2csv:main",
     "presentvalue = subscript.presentvalue.presentvalue:main",

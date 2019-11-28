@@ -68,6 +68,7 @@ src/subscript/version.py
 .dir-locals.el
 '.'/
 *.swp
+.nfs*
 
 # testdata output
 tests/testdata_*
