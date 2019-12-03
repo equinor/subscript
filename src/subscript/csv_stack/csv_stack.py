@@ -27,7 +27,7 @@ be split such that the string after the colon will become
 a column value instead of its own column. Thus all
 columns called WOPT:A-1, WOPT:A-2, WOPT:A-3 etc will be merged
 into one column called WOPT, and you will have a column name
-called "Well" that contains A-1, A-2, or A-3 as values.
+called "WELL" that contains A-1, A-2, or A-3 as values.
 
 If importing the produced stackedversion.csv into Spotfire,
 you may then view and filter WOPT and friends by wellname, instead
@@ -63,7 +63,7 @@ of selecting individual columns.""",
     parser.add_argument(
         "--keepminimal",
         action="store_true",
-        help="Keep only Realization, Iteration, Date and unpivoted columns",
+        help="Keep only REAL, ENSEMBLE, DATE and unpivoted columns",
         default=False,
     )
     return parser
@@ -77,17 +77,17 @@ def main():
 
     # Maybe too much usage()-noise to have these as options (?)
     # Case does not matter in these lists, they will be lower()ed.
-    realization_names = ["Realization", "Realisation", "RunName"]
-    iteration_names = ["Iteration", "Iter"]
+    realization_names = ["Realization", "Realisation", "RunName", "Real"]
+    iteration_names = ["Iteration", "Iter", "Ensemble"]
     date_names = ["date"]
 
     # Library of columns that we are able to split.
     unpivottypes = {
-        "well": ["W[A-Z]*:.*", ":", "Well"],
-        "region": ["R[A-Z_]*:.*", ":", "Region"],
-        "group": ["G[A-Z]*:.*", ":", "Group"],
-        "block": ["B[A-Z]*:.*", ":", "Block"],
-        "all": [".*:.*", ":", "Identifier"],
+        "well": ["W[A-Z]*:.*", ":", "WELL"],
+        "region": ["R[A-Z_]*:.*", ":", "REGION"],
+        "group": ["G[A-Z]*:.*", ":", "GROUP"],
+        "block": ["B[A-Z]*:.*", ":", "BLOCK"],
+        "all": [".*:.*", ":", "IDENTIFIER"],
     }
 
     if args.csvfile == "stdin" or args.csvfile == "-":
