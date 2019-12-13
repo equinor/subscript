@@ -32,6 +32,7 @@ SSCRIPTS = [
     "ri_wellmod = subscript.ri_wellmod.ri_wellmod:main",
     "rmsecl_volumetrics = subscript.rmsecl_volumetrics.rmsecl_volumetrics:main",
     "runrms = subscript.runrms.runrms:main",
+    "sector2fluxnum = subscript.sector2fluxnum.sector2fluxnum:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "sw_model_utilities = subscript.sw_model_utilities.sw_model_utilities:main",
     "sunsch = subscript.sunsch.sunsch:main",
