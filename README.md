@@ -1,32 +1,42 @@
 # subscript #
 
-Next-gen resscript
+Subscript takes over where ResScript left. ResScript worked as the repository for sharing
+scripts between subsurface people from its inception in ~2013 to end of Python2 in 2020. 
+For the Python 2 to Python 3 transition, code quality and requirements have been elevated
+in order to increase maintainability.
 
-## Index ##
+* https://wiki.equinor.com/wiki/index.php/ResScript
 
-* [Introduction](#introduction)
-* [Features](#features)
-* [Getting started](#getting-started)
-* [Tutorial](#tutorial)
-* [Examples](#examples)
-* [Code style](#codestyle)
+## Tools in subscript ##
 
-## Features ##
+* eclcompress
+* summaryplot
+* bjobsusers
+* csv2ofmvol
+* csv_merge_ensembles
+* csv_stack
+* gen_satfunc
+* interp_relperm
+* merge_schedule
+* params2csv
+* presentvalue
+* prtvol2csv
+* pvt2csv
+* sunsch
+* vfp2csv
 
-* Prints hello world
+For help, run `<toolname> --help` on your terminal.
 
-## Getting started ##
+## Contributing to subscript ##
 
+* Each tool has its own subdirectory under `src/subscript`. 
+* Use `setup.py` for installing endpoints that users should have in their `$PATH`
+* Use `argparse`, and with a specific `fill_parser()` function to facilitate `sphinx-argparse`
+* Always use the `if __name__ = "__main__"` idiom. Scripts should not start if they are `import`ed, this is to facilitate testing++
+* There must be at least test code that directly test that the endpoint is installed and that it does at least something to a standard input. Preferably unit test code for isolated parts of the code as well.
+* Docstrings on all functions.
 
-
-## Tutorial ##
-
-
-## Examples ##
-
-### Example 1 ###
-
-## Code style ##
+### Code style ###
 
 This section is dedicated to code contributors to subscript.
 
@@ -35,10 +45,9 @@ This section is dedicated to code contributors to subscript.
 * PEP8 is the rule for naming of files, functions, classes, etc.
   * Convert old code from camelCase style to snake_style unless "impossible"...
   * Keep old script names were camelCase as both camelCase (for backward compatibility) and snake_case
-
   * The latter will be done by entry points pointing to same script, see e.g. csvStack/csv_stack in setup.py
   * Be compliant
-  * Excpetion is maximum width 88 instead of PEP8's 79; as 88 is the black default
+  * Exception is maximum width 88 instead of PEP8's 79; as 88 is the `black` default
 
 * Use the black formatter to format your code
   * `pip install black`
