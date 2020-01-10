@@ -21,7 +21,7 @@ SSCRIPTS = [
     "prtvol2csv = subscript.prtvol2csv.prtvol2csv:main",
     "pvt2csv = subscript.pvt2csv.pvt2csv:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
-    "sunsch = subscript.sunsch.sunch:main",
+    "sunsch = subscript.sunsch.sunsch:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
 ]
