@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import sys
 import os
 
-import sunbeam.deck
+import opm.io
 
 from subscript.eclcompress import eclcompress as eclc
 
@@ -66,11 +66,12 @@ def test_eclcompress():
     compressed = eclc.compress_multiple_keywordsets(kwsets, cleaned)
     compressedstr = "\n".join(compressed)
 
-    # Feed the compressed string into sunbeam. Sunbeam hopefully chokes on whatever
+    # Feed the compressed string into opm.io. OPM hopefully chokes on whatever
     # Eclipse would choke on (and hopefully not on more..)
-    recovery = [("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore)]
-
-    assert sunbeam.deck.parse_string(compressedstr, recovery=recovery)
+    parsecontext = opm.io.ParseContext(
+        [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
+    )
+    assert opm.io.Parser().parse_string(compressedstr, parsecontext)
 
 
 def test_main():
@@ -98,5 +99,7 @@ def test_main():
     assert compressedbytes < origbytes
 
     compressedstr = "\n".join(compressedlines)
-    recovery = [("PARSE_MISSING_DIMS_KEYWORD", sunbeam.action.ignore)]
-    assert sunbeam.deck.parse_string(compressedstr, recovery=recovery)
+    parsecontext = opm.io.ParseContext(
+        [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
+    )
+    assert opm.io.Parser().parse_string(compressedstr, parsecontext)
