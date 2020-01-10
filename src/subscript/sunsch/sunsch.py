@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 """
 Tool for generating Eclipse Schedule files
+
+This script was originally based on a library named sunbeam,
+hence the name. Later, this library has been merged into opm-common
 """
 
 import datetime
 import tempfile
 import argparse
 import yaml
-from sunbeam.tools import TimeVector
+from opm.tools import TimeVector
 
 
 def datetime_from_date(date):
@@ -16,7 +19,7 @@ def datetime_from_date(date):
 
 
 def process_sch_config(sunschconf, quiet=True):
-    """Process a Schedule configuration into a sunbeam TimeVector
+    """Process a Schedule configuration into a opm.tools TimeVector
 
     :param sunschconf : configuration for the schedule merges and inserts
     :type sunschconf: dict
@@ -218,7 +221,7 @@ Reads a YAML-file specifying how a Eclipse Schedule section is to be
 produced given certain input files.
 
 Output will not be generated unless the produced data is valid in
-        Eclipse, checking provided by sunbeam/opm-parser.""",
+        Eclipse, checking provided by OPM.""",
         epilog="""YAML-file components:
 
  init - filename for the initial file. If omitted, defaults to an
