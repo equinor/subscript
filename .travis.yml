@@ -16,8 +16,10 @@ before_install:
   - python --version
   - export CXX="g++-4.9" CC="gcc-4.9"
   - export INSTALL_DIR=`pwd`/../install
+  - export PATH=$PATH:$INSTALL_DIR/bin
   - export PYTHONPATH=$INSTALL_DIR/lib/python$TRAVIS_PYTHON_VERSION/dist-packages:$PYTHONPATH
   - export LD_LIBRARY_PATH=$INSTALL_DIR/lib:$INSTALL_DIR/lib64:$LD_LIBRARY_PATH
+  - export LIBECL_VERSION="2.6.0"
   - echo $INSTALL_DIR
   - echo $PYTHONPATH
   - echo $LD_LIBRARY_PATH
