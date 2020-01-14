@@ -6,11 +6,21 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import os
 import sys
 import argparse
 import re
+import logging
 
-import pandas
+import pandas as pd
+
+logging.basicConfig()
+logger = logging.getLogger(__name__.split(".")[-1])
+
+REAL_REGEXP = r".*realization-(\d+)/.*"
+ITER_REGEXP = r".*/iter-(\d+).*"
+ENSEMBLE_REGEXP = r".*realization-\d+/(.*?)/.*"
+ENSEMBLESET_REGEXP = r".*/(.*?)/realization.*"
 
 
 class CustomFormatter(
@@ -29,17 +39,18 @@ def get_parser():
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter,
         description="""
-Merge multiple CSV files into one. Each row will be tagged by the filename
-it came from in the column 'ensemble'.
+Merge multiple CSV files into one. Each row will be tagged at least with
+the original filename in the FILENAME column.
+
+Additionally, if realization, iteration and ensemble name can be inferred
+from the paths, it will be added to the REAL, ITER and ENSEMBLE and ENSEMBLESET
+columns.
 
 The columns in the ensembles need not be the same. Similar column names
 will be merged, differing column names will be padded (with NaN) in the
-ensemble where they don't exist.
+resulting dataset where they don't exist.
 
-Note that the ordering of all columns becomes alphabetical after this merging.
-""",
-        epilog="""If realization-*/iter-* is present in the filename, that numerical information
-is attempted extracted and put into the columns Realization and Iteration
+Do not assume anything on the ordering of columns after merging.
 """,
     )
     parser.add_argument("csvfiles", nargs="+", help="input csv files")
@@ -51,111 +62,166 @@ is attempted extracted and put into the columns Realization and Iteration
         default="merged.csv",
     )
     parser.add_argument(
-        "--keepconstantcolumns",
+        "--memoryconservative",
+        "-m",
         action="store_true",
-        help="Keep constant columns",
+        help=(
+            "Conserve memory while merging at the expense of speed. "
+            "Default is to use up to twice as much memory "
+            "as the size of the final CSV. Do not use unless normal mode fails."
+        ),
+        default=False,
+    )
+    parser.add_argument(
+        "--keepconstantcolumns",
+        help=argparse.SUPPRESS,
+        # Deprecated and default. Use --dropconstantcolumns to drop
+    )
+    parser.add_argument(
+        "--dropconstantcolumns",
+        action="store_true",
+        help="Drop (delete) constant columns in the merged dataset",
         default=False,
     )
     parser.add_argument(
         "--filecolumn",
         type=str,
         help="Name of column containing original filename",
-        default="ensemble",
+        default="FILENAME",
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="More verbose output"
     )
     parser.add_argument(
         "-q",
         "--quiet",
-        action="store_true",
-        help="Suppress non-critical output",
-        default=False,
+        help=argparse.SUPPRESS,
+        # Deprecated (and default). Use --verbose if more output is wanted.
     )
     return parser
+
+
+def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
+    """
+    Load CSV files from disk, tag them and return DataFrame
+
+    Args:
+        csvfiles (list of str): Pathnames to CSV files
+        tags (dict of lists): Each key will become a column name
+            in the returned dataframe, with values from the list
+            corresponding to the csvfiles.
+        memoryconservative (bool): If true, one dataframe will
+            be read from disk and merged at a time. Slower, but
+            requires less memory than loading every dataframe up front.
+    """
+    if not tags:
+        tags = {}
+    if memoryconservative:
+        logger.info("Memory-conservative mode, one merge for every loaded CSV")
+        merged_df = pd.DataFrame()
+        for idx, csvfname in enumerate(csvfiles):
+            logger.info(" - Loading %s", csvfname)
+            dframe = pd.read_csv(csvfname)
+            for tag in tags:
+                if len(tags[tag]) == len(csvfiles):
+                    if tag not in dframe:
+                        dframe[tag] = tags[tag][idx]
+                    else:
+                        logger.warning("Tag %s already in dataframe", str(tag))
+                else:
+                    logger.warning(
+                        "Could not use tag %s, insufficient length", str(tag)
+                    )
+            logger.info(" - Merging with previously loaded CSV files")
+            merged_df = pd.concat(
+                [merged_df, dframe], axis=0, ignore_index=True, sort=False
+            )
+    else:
+        logger.info("Loading all CSV files into memory before merging")
+        dfs = []
+        for csvfile in csvfiles:
+            logger.info(" - Loading %s", csvfile)
+            dfs.append(pd.read_csv(csvfile))
+        for idx, dframe in enumerate(dfs):
+            for tag in tags:
+                if len(tags[tag]) == len(csvfiles):
+                    if tag not in dframe:
+                        dframe[tag] = tags[tag][idx]
+                    else:
+                        logger.warning("Tag %s already in dataframe", str(tag))
+                else:
+                    logger.warning(
+                        "Could not use tag %s, insufficient length", str(tag)
+                    )
+        logger.info("Merging..")
+        merged_df = pd.concat(dfs, axis=0, ignore_index=True, sort=False)
+    return merged_df
+
+
+def taglist(strings, regexp_str):
+    """Apply a regexp string to a list of strings
+    and return a list of the matches.
+
+    The list may contain None for strings where there are no matches.
+    If there are no matches for any of the strings, an empty
+    list is returned.
+
+    If all found tags are equal, empty list is returned.
+    """
+    regexp = re.compile(regexp_str)
+    matches = map(lambda x: re.match(regexp, x), strings)
+    values = [x and x.group(1) for x in matches]
+    if any(values) and len(set(values)) > 1:
+        return values
+    return []
 
 
 def main():
     """Entry point from command line"""
     parser = get_parser()
     args = parser.parse_args()
-    quiet = args.output == "-" or args.output == "stdout" or args.quiet
 
-    ens = pandas.DataFrame()
-    for csvfile in args.csvfiles:
-        if not quiet:
-            print(" ** Loading " + csvfile + "...")
-        try:
-            ensnew = pandas.read_csv(csvfile)
-            if not quiet:
-                print(ensnew.info())
+    if args.verbose:
+        logger.setLevel(logging.INFO)
 
-            ensnew[args.filecolumn] = pandas.Series(
-                csvfile.replace(".csv", ""), index=ensnew.index
-            )
-            realregex = r".*realization-(\d*)/"
-            iterregex = r".*iter-(\d*)/"
+    csvfiles = list(filter(os.path.exists, args.csvfiles))
 
-            if re.match(realregex, csvfile):
-                # We don't use the column name "Realization" yet,
-                # because it might exist in some of the
-                # input files, but later on, we will copy it to "Realization"
-                # if it doesn't exist in the end
-                ensnew[args.filecolumn + "-realization"] = re.match(
-                    realregex, csvfile
-                ).group(1)
-            if re.match(iterregex, csvfile):
-                ensnew[args.filecolumn + "-iter"] = re.match(iterregex, csvfile).group(
-                    1
-                )
+    tags = {}
+    tags["REAL"] = taglist(csvfiles, REAL_REGEXP)
+    tags["ITER"] = taglist(csvfiles, ITER_REGEXP)
+    tags["ENSEMBLE"] = taglist(csvfiles, ENSEMBLE_REGEXP)
+    tags["ENSEMBLESET"] = taglist(csvfiles, ENSEMBLESET_REGEXP)
+    tags[args.filecolumn] = csvfiles
+    tags = {tag: tags[tag] for tag in tags if len(tags[tag])}
 
-            # Concatenation is done one frame at at a time.
-            # This makes concatenation slower, but more memory efficient.
-            ens = pandas.concat([ens, ensnew], ignore_index=True, sort=True)
-            # (the indices in these csv files are just the row number,
-            # which doesn't mean anything
-            # in our data, therefore we should "ignore_index".)
-            if not quiet:
-                print("         ------------------  ")
-        except IOError:
-            if not quiet:
-                print("WARNING: " + csvfile + " not found.")
-        except pandas.errors.EmptyDataError:
-            if not quiet:
-                print("WARNING: " + csvfile + " seems empty, no data found.")
+    logger.info("Tags: %s", str(tags))
 
-    if not args.keepconstantcolumns:
+    merged_df = merge_csvfiles(
+        csvfiles, tags, memoryconservative=args.memoryconservative
+    )
+
+    if args.dropconstantcolumns:
         columnstodelete = []
-        for col in ens.columns:
-            if len(ens[col].unique()) == 1:
+        for col in merged_df.columns:
+            if len(merged_df[col].unique()) == 1:
                 columnstodelete.append(col)
-        if not quiet:
-            print("  Dropping constant columns " + str(columnstodelete))
-        ens.drop(columnstodelete, inplace=True, axis=1)
+        logger.info("Dropping constant columns " + str(columnstodelete))
+        merged_df.drop(columnstodelete, inplace=True, axis=1)
 
-    # Copy realization column if its only source is the filename.
-    if (
-        "Realization" not in ens.columns
-        and args.filecolumn + "-realization" in ens.columns
-    ):
-        ens["Realization"] = ens[args.filecolumn + "-realization"]
-    # Ditto for iteration
-    if "Iter" not in ens.columns and args.filecolumn + "-iter" in ens.columns:
-        ens["Iter"] = ens[args.filecolumn + "-iter"]
-
-    if ens.empty:
+    if merged_df.empty:
         print("ERROR: No data to output.")
         sys.exit(1)
 
-    if not quiet:
-        print(" ** Merged ensemble data:")
-        print(ens.info())
+    logger.info("Final column list: %s", str(merged_df.columns))
 
-        print(" ** Exporting csv data to " + args.output)
+    logger.info("Exporting CSV data to " + args.output)
 
     if args.output == "-" or args.output == "stdout":
-        ens.to_csv(sys.stdout, index=False)
+        merged_df.to_csv(sys.stdout, index=False)
     else:
-        ens.to_csv(path_or_buf=args.output, index=False)
+        merged_df.to_csv(path_or_buf=args.output, index=False)
 
-    if not quiet:
+    if args.verbose:
         print(" - Finished writing to " + args.output)
 
 
