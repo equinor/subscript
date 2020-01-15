@@ -9,8 +9,8 @@ from setuptools import find_packages
 
 SSCRIPTS = [
     "bjobsusers = subscript.bjobsusers.bjobsusers:main",
-    "csvMergeEnsembles = subscript.csv_merge_ensembles.csv_merge_ensembles:main",
-    "csv_merge_ensembles = subscript.csv_merge_ensembles.csv_merge_ensembles:main",
+    "csvMergeEnsembles = subscript.csv_merge.csv_merge:main",
+    "csv_merge = subscript.csv_merge.csv_merge:main",
     "csvStack = subscript.csv_stack.csv_stack:main",
     "csv_stack = subscript.csv_stack.csv_stack:main",
     "csv2ofmvol = subscript.csv2ofmvol.csv2ofmvol:main",

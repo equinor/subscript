@@ -1,11 +1,11 @@
-"""Test csvMergeEnsembles aka csv_merge_ensembles"""
+"""Test csvMergeEnsembles aka csv_merge"""
 from __future__ import absolute_import
 
 import sys
 
 import pandas as pd
 
-from subscript.csv_merge_ensembles import csv_merge_ensembles
+from subscript.csv_merge import csv_merge
 
 
 def test_taglist():
@@ -15,28 +15,28 @@ def test_taglist():
         "/a/com/realization-3/",
     ]  # Trailing slash is important.
 
-    assert csv_merge_ensembles.taglist(files, csv_merge_ensembles.REAL_REGEXP) == [
+    assert csv_merge.taglist(files, csv_merge.REAL_REGEXP) == [
         "3",
         "5",
         "3",
     ]
-    assert csv_merge_ensembles.taglist(files, csv_merge_ensembles.ITER_REGEXP) == [
+    assert csv_merge.taglist(files, csv_merge.ITER_REGEXP) == [
         "0",
         "1",
         None,
     ]
-    assert csv_merge_ensembles.taglist(files, csv_merge_ensembles.ENSEMBLE_REGEXP) == [
+    assert csv_merge.taglist(files, csv_merge.ENSEMBLE_REGEXP) == [
         "iter-0",
         "iter-1",
         None,
     ]
-    assert csv_merge_ensembles.taglist(
-        files, csv_merge_ensembles.ENSEMBLESET_REGEXP
+    assert csv_merge.taglist(
+        files, csv_merge.ENSEMBLESET_REGEXP
     ) == ["boo", "boo", "com"]
 
 
 def test_main_merge(tmpdir):
-    """Test command line interface for csvMergeEnsembles/csv_merge_ensembles"""
+    """Test command line interface for csvMergeEnsembles/csv_merge"""
     tmpdir.chdir()
 
     test_csv_1 = "foo.csv"
@@ -51,8 +51,8 @@ def test_main_merge(tmpdir):
         columns=["REAL", "BAR", "CONST"], data=[[0, 30, 1], [1, 40, 1]]
     ).to_csv(test_csv_2, index=False)
 
-    sys.argv = ["csv_merge_ensembles", test_csv_1, test_csv_2, "-v", "-o", merged_csv]
-    csv_merge_ensembles.main()
+    sys.argv = ["csv_merge", test_csv_1, test_csv_2, "-v", "-o", merged_csv]
+    csv_merge.main()
     merged = pd.read_csv(merged_csv)
 
     assert len(merged) == 4
@@ -71,7 +71,7 @@ def test_main_merge(tmpdir):
         "-o",
         merged_csv,
     ]
-    csv_merge_ensembles.main()
+    csv_merge.main()
     merged = pd.read_csv(merged_csv)
 
     assert len(merged) == 4
@@ -87,7 +87,7 @@ def test_main_merge(tmpdir):
         "-o",
         merged_csv,
     ]
-    csv_merge_ensembles.main()
+    csv_merge.main()
     merged = pd.read_csv(merged_csv)
     assert len(merged) == 4
     assert len(merged.columns) == 5
