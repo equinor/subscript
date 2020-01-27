@@ -16,6 +16,7 @@ SSCRIPTS = [
     "csv2ofmvol = subscript.csv2ofmvol.csv2ofmvol:main",
     "eclcompress = subscript.eclcompress.eclcompress:main",
     "gen_satfunc = subscript.gen_satfunc.get_satfunc:main",
+    "pack_sim = subscript.pack_sim.pack_sim:main",
     "restartthinner = subscript.restartthinner.restartthinner:main",
     "params2csv = subscript.params2csv.params2csv:main",
     "presentvalue = subscript.presentvalue.presentvalue:main",
