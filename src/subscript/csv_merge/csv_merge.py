@@ -174,6 +174,12 @@ def taglist(strings, regexp_str):
     return []
 
 
+def main_deprecated():
+    """Entry point for the old command line name csvMergeEnsembles"""
+    logger.warning("csvMergeEnsembles has been renamed to csv_merge, please change")
+    main()
+
+
 def main():
     """Entry point from command line"""
     parser = get_parser()
