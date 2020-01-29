@@ -165,13 +165,11 @@ def taglist(strings, regexp_str):
     The list may contain None for strings where there are no matches.
     If there are no matches for any of the strings, an empty
     list is returned.
-
-    If all found tags are equal, empty list is returned.
     """
     regexp = re.compile(regexp_str)
     matches = map(lambda x: re.match(regexp, x), strings)
     values = [x and x.group(1) for x in matches]
-    if any(values) and len(set(values)) > 1:
+    if any(values):
         return values
     return []
 
@@ -194,7 +192,8 @@ def main():
     tags[args.filecolumn] = csvfiles
     tags = {tag: tags[tag] for tag in tags if len(tags[tag])}
 
-    logger.info("Tags: %s", str(tags))
+    logger.info("Found tags: %s", str(tags.keys()))
+    logger.debug("Tags: %s", str(tags))
 
     merged_df = merge_csvfiles(
         csvfiles, tags, memoryconservative=args.memoryconservative

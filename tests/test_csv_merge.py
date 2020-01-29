@@ -30,9 +30,34 @@ def test_taglist():
         "iter-1",
         None,
     ]
-    assert csv_merge.taglist(
-        files, csv_merge.ENSEMBLESET_REGEXP
-    ) == ["boo", "boo", "com"]
+    assert csv_merge.taglist(files, csv_merge.ENSEMBLESET_REGEXP) == [
+        "boo",
+        "boo",
+        "com",
+    ]
+
+    # We should also get the ITER tags even if it is constant
+    files2 = [
+        "/a/boo/realization-3/iter-0/",
+        "/a/boo/realization-5/iter-0/",
+        "/a/com/realization-3/",
+    ]  # Trailing slash is important.
+    assert csv_merge.taglist(files2, csv_merge.ITER_REGEXP) == ["0", "0", None]
+
+    files3 = [
+        "/a/boo/realization-3/iter-0/",
+        "/a/boo/realization-5/iter-0/",
+        "/a/com/realization-3/iter-0/",
+    ]  # Trailing slash is important.
+    assert csv_merge.taglist(files3, csv_merge.ITER_REGEXP) == ["0", "0", "0"]
+
+    files4 = [
+        "/a/boo/realization-3/",
+        "/a/boo/realization-5/",
+        "/a/com/realization-3/",
+    ]  # Trailing slash is important.
+    assert csv_merge.taglist(files4, csv_merge.ITER_REGEXP) == []
+    assert csv_merge.taglist(files4, csv_merge.ENSEMBLE_REGEXP) == []
 
 
 def test_main_merge(tmpdir):
