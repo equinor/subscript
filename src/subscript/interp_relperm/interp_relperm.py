@@ -1,27 +1,32 @@
 """
 Interpolation script for relperm tables defined by ecl include files.
 Candidate script to replace InterpRelperm. Script reads base/high/low
-SWOF and SGOF from files and interpolates inbetween,
+SWOF and SGOF tables from files and interpolates inbetween,
 using interpolation parameter(s) in range [-1,1], so that 0 returns
 base, -1 returns low, and 1 returns high. If either base, low or high
 is missing, set two of the inputs (low/base/high) to the
 same file and interpolate in half the range.
 
+Krw Krow, Pcow interpolated using parameter param_w
+Krg Krog, Pcog interpolated using parameter param_g
+
 Config file syntax (yaml):
 #********************************************************************
 # Example config file
 
-base:  # Required: SWOF and SGOF in one unified file or two separate files.
+base:  # Required: SWOF and SGOF in one unified or two separate files.
+       # Absolute or relative paths are accepted. Relative paths are
+       # interpreted with respect to command line option --root-path
   - swof_base.inc
-  - sgof_base.inc
+  - /project/snakeoil/r017f/ert/input/relperm/sgof_base.inc
 
 high:  # Required: the phases to be interpoalted must be present.
-       # Ie can drop SWOF or SGOF if these are not to be used
+       # Ie can drop either SWOF or SGOF if not relevant
   - swof_opt.inc
   - sgof_opt.inc
 
 low:   # Required: the phases to be interpoalted must be present.
-       # Ie can drop SWOF or SGOF if these are not to be used
+       # Ie can drop either SWOF or SGOF if not relevant
   - swof_pes.inc
   - sgof_pes.inc
 
