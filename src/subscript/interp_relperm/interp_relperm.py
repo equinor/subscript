@@ -210,7 +210,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     swlbase = base_df.loc["SWOF", satnum]["SW"].min()
     base = pyscal.WaterOilGas(swl=float(swlbase), h=h)
     base.wateroil.add_fromtable(
-        base_df.loc["SWOF", satnum],
+        base_df.loc["SWOF", satnum].reset_index(),
         swcolname="SW",
         krwcolname="KRW",
         krowcolname="KROW",
@@ -222,7 +222,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         swllow = low_df.loc["SWOF", satnum]["SW"].min()
         low = pyscal.WaterOilGas(swl=float(swllow), h=h)
         low.wateroil.add_fromtable(
-            low_df.loc["SWOF", satnum],
+            low_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
             krwcolname="KRW",
             krowcolname="KROW",
@@ -232,7 +232,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         swllow = base_df.loc["SWOF", satnum]["SW"].min()
         low = pyscal.WaterOilGas(swl=float(swllow), h=h)
         low.wateroil.add_fromtable(
-            base_df.loc["SWOF", satnum],
+            base_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
             krwcolname="KRW",
             krowcolname="KROW",
@@ -244,7 +244,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         swlhigh = high_df.loc["SWOF", satnum]["SW"].min()
         high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
         high.wateroil.add_fromtable(
-            high_df.loc["SWOF", satnum],
+            high_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
             krwcolname="KRW",
             krowcolname="KROW",
@@ -254,7 +254,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         swlhigh = base_df.loc["SWOF", satnum]["SW"].min()
         high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
         high.wateroil.add_fromtable(
-            base_df.loc["SWOF", satnum],
+            base_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
             krwcolname="KRW",
             krowcolname="KROW",
@@ -265,7 +265,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     base_df["SG"] = base_df["SG"].astype("float64")
 
     base.gasoil.add_fromtable(
-        base_df.loc["SGOF", satnum],
+        base_df.loc["SGOF", satnum].reset_index(),
         sgcolname="SG",
         krgcolname="KRG",
         krogcolname="KROG",
@@ -275,7 +275,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     if "SGOF" in low_df.index.unique():
         low_df["SG"] = low_df["SG"].astype("float64")
         low.gasoil.add_fromtable(
-            low_df.loc["SGOF", satnum],
+            low_df.loc["SGOF", satnum].reset_index(),
             sgcolname="SG",
             krgcolname="KRG",
             krogcolname="KROG",
@@ -283,7 +283,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         )
     else:
         low.gasoil.add_fromtable(
-            base_df.loc["SGOF", satnum],
+            base_df.loc["SGOF", satnum].reset_index(),
             sgcolname="SG",
             krgcolname="KRG",
             krogcolname="KROG",
@@ -293,7 +293,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     if "SGOF" in high_df.index.unique():
         high_df["SG"] = high_df["SG"].astype("float64")
         high.gasoil.add_fromtable(
-            high_df.loc["SGOF", satnum],
+            high_df.loc["SGOF", satnum].reset_index(),
             sgcolname="SG",
             krgcolname="KRG",
             krogcolname="KROG",
@@ -301,7 +301,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         )
     else:
         high.gasoil.add_fromtable(
-            base_df.loc["SGOF", satnum],
+            base_df.loc["SGOF", satnum].reset_index(),
             sgcolname="SG",
             krgcolname="KRG",
             krogcolname="KROG",
