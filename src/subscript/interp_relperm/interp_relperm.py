@@ -63,7 +63,7 @@ import sys
 import os
 import yaml
 import argparse
-from ecl2df import satfunc
+from ecl2df import satfunc, inferdims
 
 import configsuite
 from configsuite import types
@@ -184,7 +184,10 @@ def tables_to_dataframe(filenames):
 
     dataframes = []
     for filename in filenames:
-        filecontents_df = satfunc.deck2df("\n".join(open(filename).readlines()))
+        filecontents_str = "\n".join(open(filename).readlines())
+        # Guess the number of SATNUM in the file:
+        satnumcount = inferdims.guess_dim(filecontents_str, "TABDIMS", 0)
+        filecontents_df = satfunc.deck2df(filecontents_str, satnumcount=satnumcount)
         dataframes.append(filecontents_df)
 
     return pd.concat(dataframes, sort=True)
