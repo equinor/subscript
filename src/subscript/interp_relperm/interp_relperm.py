@@ -365,6 +365,12 @@ def main():
         help="Name of YAML config file",
         required=True,
     )
+    parser.add_argument(
+        "--root-path",
+        type=str,
+        default='',
+        help="Root path assumed for relative paths in config file.",
+    )
     args = parser.parse_args()
 
     # parse the config file
@@ -373,6 +379,17 @@ def main():
     else:
         with open(args.configfile, "r") as ymlfile:
             cfg = yaml.safe_load(ymlfile)
+
+    # add root-path to all include files
+    if 'base' in cfg.keys():
+        for i in range(len(cfg['base'])):
+            cfg['base'][i] = os.path.join(args.root_path,cfg['base'][i])
+    if 'high' in cfg.keys():
+        for i in range(len(cfg['high'])):
+            cfg['high'][i] = os.path.join(args.root_path,cfg['high'][i])
+    if 'low' in cfg.keys():
+        for i in range(len(cfg['low'])):
+            cfg['low'][i] = os.path.join(args.root_path,cfg['low'][i])
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()
