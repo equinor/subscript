@@ -1,4 +1,4 @@
-#from __future__ import absolute_import
+# from __future__ import absolute_import
 
 import pandas as pd
 import os
@@ -22,21 +22,21 @@ def correct_relpaths(newfn, oldfn, new_path, old_path):
 
 def test_get_cfg_schema():
 
-    cfg_filen = os.path.join(TESTDATA,'cfg.yml')
+    cfg_filen = os.path.join(TESTDATA, "cfg.yml")
 
     with open(cfg_filen, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
 
     # add root-path to all include files
-    if 'base' in cfg.keys():
-        for i in range(len(cfg['base'])):
-            cfg['base'][i] = os.path.join(TESTDATA,cfg['base'][i])
-    if 'high' in cfg.keys():
-        for i in range(len(cfg['high'])):
-            cfg['high'][i] = os.path.join(TESTDATA,cfg['high'][i])
-    if 'low' in cfg.keys():
-        for i in range(len(cfg['low'])):
-            cfg['low'][i] = os.path.join(TESTDATA,cfg['low'][i])
+    if "base" in cfg.keys():
+        for i in range(len(cfg["base"])):
+            cfg["base"][i] = os.path.join(TESTDATA, cfg["base"][i])
+    if "high" in cfg.keys():
+        for i in range(len(cfg["high"])):
+            cfg["high"][i] = os.path.join(TESTDATA, cfg["high"][i])
+    if "low" in cfg.keys():
+        for i in range(len(cfg["low"])):
+            cfg["low"][i] = os.path.join(TESTDATA, cfg["low"][i])
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema)
@@ -102,9 +102,9 @@ def test_make_interpolant():
 def test_main(tmpdir):
     tmpdir.chdir()
 
-    test_cfg = os.path.join(TESTDATA, 'cfg.yml')
+    test_cfg = os.path.join(TESTDATA, "cfg.yml")
 
-    sys.argv = [__file__, "-c", test_cfg, '--root-path', TESTDATA]
+    sys.argv = [__file__, "-c", test_cfg, "--root-path", TESTDATA]
 
     interp_relperm.main()
 
