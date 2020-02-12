@@ -1,13 +1,13 @@
 
 base:  # a unified file with SWOF and SGOF or two separate files. Both tables are required
-  - data/relperm/swof_base.inc
-  - data/relperm/sgof_base.inc
+  - swof_base.inc
+  - sgof_base.inc
 high:  # a unified file with SWOF and SGOF or two separate files. Nothing required
-  - data/relperm/swof_opt.inc
-  - data/relperm/sgof_opt.inc
+  - swof_opt.inc
+  - sgof_opt.inc
 low:   # a unified file with SWOF and SGOF or two separate files. Nothing required
-  - data/relperm/swof_pes.inc
-  - data/relperm/sgof_pes.inc
+  - swof_pes.inc
+  - sgof_pes.inc
 
 result_file  : outfilen.inc
 

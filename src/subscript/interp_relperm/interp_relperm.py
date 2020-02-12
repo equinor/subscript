@@ -1,59 +1,65 @@
 """
-Interpolation script for relperm tables defined by ecl include files.
-Candidate script to replace InterpRelperm. Script reads base/high/low
-SWOF and SGOF from files and interpolates inbetween,
-using interpolation parameter(s) in range [-1,1], so that 0 returns
-base, -1 returns low, and 1 returns high. If either base, low or high
-is missing, set two of the inputs (low/base/high) to the
-same file and interpolate in half the range.
+Interpolation script for relperm tables.
+Script reads base/high/low SWOF and SGOF tables from files and
+interpolates in between, using interpolation parameter(s) in range
+[-1,1], so that -1, 0, and 1 corresponds to low, base, and high tables
+respectively.
+
+The base tables must contain both SWOF and SGOF to ensure consistent
+endpoints. Files for base, low and high must be declared, however
+they may be identical. Consequently, if either base, low or high
+is missing in the scal recommendation, two of the inputs can be
+set to point to the same file and by adjusting the interpolation
+range accordingly interpolation between base and high, or low and
+high may be achieved.
+
+Krw, Krow, Pcow interpolated using parameter param_w
+Krg, Krog, Pcog interpolated using parameter param_g
 
 Config file syntax (yaml):
 #********************************************************************
 # Example config file
 
-base:  # Required: SWOF and SGOF in one unified file or two separate files.
+base:  # Required: SWOF and SGOF in one unified or two separate files.
+       # Absolute or relative paths are accepted. Relative paths are
+       # interpreted with respect to command line option --root-path
   - swof_base.inc
-  - sgof_base.inc
+  - /project/snakeoil/r017f/ert/input/relperm/sgof_base.inc
 
-high:  # Required: the phases to be interpoalted must be present.
-       # Ie can drop SWOF or SGOF if these are not to be used
+high:  # Required: the phase(s) to be interpolated must be present,
+       # ie can drop either SWOF or SGOF if not relevant.
   - swof_opt.inc
-  - sgof_opt.inc
+  - ../include/sgof_opt.inc
 
-low:   # Required: the phases to be interpoalted must be present.
-       # Ie can drop SWOF or SGOF if these are not to be used
+low:   # Required: see high
   - swof_pes.inc
-  - sgof_pes.inc
+  - /project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc
 
 result_file  : outfilen.inc  # Required: Name of output file with interpolated tables
 
 delta_s      : 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
 
-interpolations: #  Required: applied in order of appearance so that
-                #  one can define something for all and overwrite later
-  - tables   : []     # Optional: list of satnums to be interpolated,
-                      # defaults to empty list which is interpreted
-                      # to mean all entries
+interpolations: # Required: applied in order of appearance so that
+                # a default value for all tables can set and overrided
+                # for individual satnums later.
+  - tables   : [] # Required: list of satnums to be interpolated,
+                  # empty list interpreted as all entries
     param_w  : -0.23
     param_g  :  0.44
 
   - tables : [1]      # will only apply to satnum nr. 1, for SWOF and SGOF
     param_w  : -0.23
-    param_g  :  0.44
+    param_g  :  0.24
 
   - tables : [2,5,75] # applies to satnum 2, 5, and 75, for SWOF
-                      # (not SGOF which is defaulted to 0.44, from before)
-                      # if a parameter is not set, no interpolation will
+                      # (not SGOF since param_g not declared) SGOF
+                      # will be interpolated using 0.44, from above.
+                      # If a parameter not set, no interpolation will
                       # be applied ie base table is returned
     param_w  :  0.5
 
 
 #*************************************************************************
-
-Issues:
-- Script does not currently handle tables with different end points correctly;
-  it interpolates saturation by saturation, irregardless. It will ie run, and
-  preserve the extreme endpoint. This may or may not be what you want.
 """
 
 from __future__ import print_function
@@ -365,6 +371,12 @@ def main():
         help="Name of YAML config file",
         required=True,
     )
+    parser.add_argument(
+        "--root-path",
+        type=str,
+        default="",
+        help="Root path assumed for relative paths in config file.",
+    )
     args = parser.parse_args()
 
     # parse the config file
@@ -373,6 +385,17 @@ def main():
     else:
         with open(args.configfile, "r") as ymlfile:
             cfg = yaml.safe_load(ymlfile)
+
+    # add root-path to all include files
+    if "base" in cfg.keys():
+        for i in range(len(cfg["base"])):
+            cfg["base"][i] = os.path.join(args.root_path, cfg["base"][i])
+    if "high" in cfg.keys():
+        for i in range(len(cfg["high"])):
+            cfg["high"][i] = os.path.join(args.root_path, cfg["high"][i])
+    if "low" in cfg.keys():
+        for i in range(len(cfg["low"])):
+            cfg["low"][i] = os.path.join(args.root_path, cfg["low"][i])
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()

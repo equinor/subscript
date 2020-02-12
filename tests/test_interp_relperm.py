@@ -1,5 +1,6 @@
+# from __future__ import absolute_import
+
 import pandas as pd
-import re
 import os
 import yaml
 import sys
@@ -7,39 +8,36 @@ import configsuite
 from subscript.interp_relperm import interp_relperm
 
 
-TESTDATA = "data/relperm/"
-
-
-def correct_relpaths(newfn, oldfn, new_path, old_path):
-    newfh = open(newfn, "w")
-    print("New:" + new_path)
-    print("Old:" + old_path)
-    for line in open(oldfn, "r"):
-        newfh.write(line.replace(old_path, new_path))
-    newfh.close()
+TESTDATA = os.path.join(os.path.dirname(__file__), "data/relperm")
 
 
 def test_get_cfg_schema():
 
-    new_path = os.path.join(os.path.dirname(__file__), TESTDATA)
-    test_cfg = new_path + "/cfg.yml"
+    cfg_filen = os.path.join(TESTDATA, "cfg.yml")
 
-    tmpfn = "delete_me.yml"
-    correct_relpaths(tmpfn, test_cfg, new_path, "data/relperm")
-
-    with open(tmpfn, "r") as ymlfile:
+    with open(cfg_filen, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
+
+    # add root-path to all include files
+    if "base" in cfg.keys():
+        for i in range(len(cfg["base"])):
+            cfg["base"][i] = os.path.join(TESTDATA, cfg["base"][i])
+    if "high" in cfg.keys():
+        for i in range(len(cfg["high"])):
+            cfg["high"][i] = os.path.join(TESTDATA, cfg["high"][i])
+    if "low" in cfg.keys():
+        for i in range(len(cfg["low"])):
+            cfg["low"][i] = os.path.join(TESTDATA, cfg["low"][i])
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema)
-    os.unlink(tmpfn)
 
     assert suite.valid
 
 
 def test_tables_to_dataframe():
-    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "swof_base.inc")
-    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "sgof_base.inc")
+    swoffn = os.path.join(TESTDATA, "swof_base.inc")
+    sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
 
     tables_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -61,19 +59,18 @@ def test_tables_to_dataframe():
 
 
 def test_make_interpolant():
-    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/swof_base.inc")
-
-    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/sgof_base.inc")
+    swoffn = os.path.join(TESTDATA, "swof_base.inc")
+    sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
 
     base_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/swof_pes.inc")
-    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/sgof_pes.inc")
+    swoffn = os.path.join(TESTDATA, "swof_pes.inc")
+    sgoffn = os.path.join(TESTDATA, "sgof_pes.inc")
 
     low_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/swof_opt.inc")
-    sgoffn = os.path.join(os.path.dirname(__file__), TESTDATA + "/sgof_opt.inc")
+    swoffn = os.path.join(TESTDATA, "swof_opt.inc")
+    sgoffn = os.path.join(TESTDATA, "sgof_opt.inc")
 
     high_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -93,37 +90,21 @@ def test_make_interpolant():
     assert "SGOF" in interpolant.gasoil.SGOF()
 
 
-def test_main():
-    new_path = os.path.join(os.path.dirname(__file__), TESTDATA)
-    test_cfg = new_path + "/cfg.yml"
+def test_main(tmpdir):
+    tmpdir.chdir()
 
-    tmpfn = os.path.join(os.path.dirname(__file__), "delete_me.yml")
-    correct_relpaths(tmpfn, test_cfg, new_path, "data/relperm")
+    test_cfg = os.path.join(TESTDATA, "cfg.yml")
 
-    tmp2fn = os.path.join(os.path.dirname(__file__), "delete_me2.yml")
-    fileh = open(tmp2fn, "w")
-    for l in open(tmpfn, "r"):
-        if re.search("result_file", l):
-            fileh.write(
-                "result_file : "
-                + os.path.join(os.path.dirname(__file__), "outfilen.inc")
-            )
-        else:
-            fileh.write(l)
-    fileh.close()
-
-    sys.argv = [__file__, "-c", tmp2fn]
+    sys.argv = [__file__, "-c", test_cfg, "--root-path", TESTDATA]
 
     interp_relperm.main()
-    result_file = os.path.join(os.path.dirname(__file__), "outfilen.inc")
 
-    assert os.path.exists(result_file)
-
-    os.unlink(tmpfn)
-    os.unlink(tmp2fn)
-    os.unlink(result_file)
+    assert os.path.exists("outfilen.inc")
 
 
 if __name__ == "__main__":
+
     test_get_cfg_schema()
+    test_tables_to_dataframe()
+    test_make_interpolant()
     test_main()
