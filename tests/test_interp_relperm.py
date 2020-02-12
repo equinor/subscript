@@ -11,15 +11,6 @@ from subscript.interp_relperm import interp_relperm
 TESTDATA = os.path.join(os.path.dirname(__file__), "data/relperm")
 
 
-def correct_relpaths(newfn, oldfn, new_path, old_path):
-    newfh = open(newfn, "w")
-    print("New:" + new_path)
-    print("Old:" + old_path)
-    for line in open(oldfn, "r"):
-        newfh.write(line.replace(old_path, new_path))
-    newfh.close()
-
-
 def test_get_cfg_schema():
 
     cfg_filen = os.path.join(TESTDATA, "cfg.yml")

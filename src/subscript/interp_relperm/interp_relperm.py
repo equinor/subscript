@@ -1,16 +1,17 @@
 """
 Interpolation script for relperm tables.
 Script reads base/high/low SWOF and SGOF tables from files and
-interpolates inbetween, using interpolation parameter(s) in range
-[-1,1], so that 0 returns base, -1 returns low, and 1 returns high.
+interpolates in between, using interpolation parameter(s) in range
+[-1,1], so that -1, 0, and 1 corresponds to low, base, and high tables
+respectively.
 
 The base tables must contain both SWOF and SGOF to ensure consistent
 endpoints. Files for base, low and high must be declared, however
 they may be identical. Consequently, if either base, low or high
-is missing in the scal recommendartion, two of the inputs can be
+is missing in the scal recommendation, two of the inputs can be
 set to point to the same file and by adjusting the interpolation
 range accordingly interpolation between base and high, or low and
-high may be acheived.
+high may be achieved.
 
 Krw, Krow, Pcow interpolated using parameter param_w
 Krg, Krog, Pcog interpolated using parameter param_g
@@ -25,7 +26,7 @@ base:  # Required: SWOF and SGOF in one unified or two separate files.
   - swof_base.inc
   - /project/snakeoil/r017f/ert/input/relperm/sgof_base.inc
 
-high:  # Required: the phase(s) to be interpoalted must be present,
+high:  # Required: the phase(s) to be interpolated must be present,
        # ie can drop either SWOF or SGOF if not relevant.
   - swof_opt.inc
   - ../include/sgof_opt.inc
