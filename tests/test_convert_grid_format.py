@@ -13,8 +13,12 @@ xtg = XTGeoDialog()
 logger = xtg.basiclogger(__name__)
 
 
-RFILE1 = "tests/data/reek/eclipse/model/2_R001_REEK-0.EGRID"
-RFILE2 = "tests/data/reek/eclipse/model/2_R001_REEK-0.UNRST"
+RFILE1 = os.path.join(
+    os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.EGRID"
+)
+RFILE2 = os.path.join(
+    os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.UNRST"
+)
 
 
 def test_convert_grid_format_egrid(tmpdir):

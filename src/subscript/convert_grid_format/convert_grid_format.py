@@ -21,17 +21,15 @@ logger = xtg.functionlogger(__name__)
 
 try:
     from ..version import version
+
     __version__ = version
 except ImportError:
     __version__ = "0.0.0"
 
 
-def _do_parse_args(args):
-
-    if args is None:
-        args = sys.argv[1:]
-    else:
-        args = args
+def get_parser():
+    """Setup an argparse argument parser for parsing arguments
+    and making documentation"""
 
     usetxt = "convert_grid_format ... "
 
@@ -86,6 +84,18 @@ def _do_parse_args(args):
         default=False,
         help="Use standard fmu name setting of file (no args)",
     )
+    return parser
+
+
+def _do_parse_args(args):
+    """Parse command line arguments"""
+
+    if args is None:
+        args = sys.argv[1:]
+    else:
+        args = args
+
+    parser = get_parser()
 
     if len(args) < 2:
         parser.print_help()
@@ -170,6 +180,7 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
 
 
 def main(args=None):
+    """Entry-point"""
 
     XTGeoDialog.print_xtgeo_header(APPNAME, __version__)
 
