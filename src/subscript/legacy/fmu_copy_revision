@@ -18,19 +18,19 @@ use POSIX ":sys_wait_h";
 
 use Term::ANSIColor ":constants";
 
-my $opt_all="";
-my $opt_method=1;
-my $opt_nfork=1;
-our $opt_verbose=0;
+my $opt_all    = "";
+my $opt_method = 1;
+my $opt_nfork  = 1;
+our $opt_verbose = 0;
 
-GetOptions (
-	    "all" => \$opt_all,
-	    "method=i" => \$opt_method,
-	    "nfork=i" => \$opt_nfork,
-	    "verbose=i" => \$opt_verbose,
-	    )
+GetOptions(
+    "all"       => \$opt_all,
+    "method=i"  => \$opt_method,
+    "nfork=i"   => \$opt_nfork,
+    "verbose=i" => \$opt_verbose,
+  )
 
-    or die("Error in command line arguments\n");
+  or die("Error in command line arguments\n");
 
 print "Verbose level is $opt_verbose\n";
 print "NFORK is $opt_nfork\n";
@@ -67,48 +67,50 @@ See also https://wiki.statoil.no/wiki/index.php/FMU_copy_revisions
 
 EOX
 
-print (BOLD RED, '#'x79, RESET, "\n");
-print (BOLD RED "                                  NOTE", RESET, "\n");
-print (BOLD RED, '#'x79, RESET, "\n");
+print( BOLD RED, '#' x 79, RESET, "\n" );
+print( BOLD RED "                                  NOTE", RESET, "\n" );
+print( BOLD RED, '#' x 79, RESET, "\n" );
 
-print (BOLD RED,
-"2018-03-20: Partial revert in option 3 (default option):\n",
-' 'x12,
-"The rms/output folder structure will be copied, but not the files\n",
-' 'x12,
+print( BOLD RED,
+    "2018-03-20: Partial revert in option 3 (default option):\n",
+    ' ' x 12,
+    "The rms/output folder structure will be copied, but not the files\n",
+    ' ' x 12,
 "Use option 4 if you want rms/output with all files to be copied as before.\n",
-RESET, "\n\n");
+    RESET,
+    "\n\n"
+);
 
-print (CYAN, "JRIV\@statoil.com", RESET, "\n");
-print ('='x79, "\n\n");
-
+print( CYAN, "JRIV\@statoil.com", RESET, "\n" );
+print( '=' x 79, "\n\n" );
 
 # ============================== Initial guesses ===============================
 #
 
-$main=$ENV{'PWD'};
+$main = $ENV{'PWD'};
 #
 # get info on user and current date
-$user=$ENV{'USER'};
-$date=`date +%Y%m%d`; chop $date;
+$user = $ENV{'USER'};
+$date = `date +%Y%m%d`;
+chop $date;
 
 # ======================== Questions and execution =============================
 
 if ($opt_all) {
-    @allrev=glob("$main/*");
+    @allrev = glob("$main/*");
 }
-else{
-    @allrev=glob("$main/r*");
+else {
+    @allrev = glob("$main/r*");
 }
 
-my @alldirs=();
+my @alldirs = ();
 foreach my $xf (@allrev) {
-    push @alldirs, $xf if (-d $xf);
+    push @alldirs, $xf if ( -d $xf );
 }
 
-$i=1;
+$i = 1;
 print "\nREVISONS (etc) --------------------------------------------------\n\n";
-if ($#alldirs<0) {
+if ( $#alldirs < 0 ) {
     print "Current dir is $main\n\n";
     print "But I cannot find any revisions here!\n";
     print "You need to start this script on a folder above your revisions,",
@@ -117,51 +119,53 @@ if ($#alldirs<0) {
     die "STOP\n";
 }
 
-
 foreach $rev (@alldirs) {
     print "$i.   $rev\n";
     $i++;
 }
-$n=$i-1;
+$n = $i - 1;
 print "\n";
 print "Select revision to copy (Default is <$n>): ";
-$choice=<STDIN>; chop $choice;
+$choice = <STDIN>;
+chop $choice;
 
-$choice=$n if ($choice eq "");
+$choice = $n if ( $choice eq "" );
 print "<$choice> is chosen...\n";
 
 # evaluate if valid
-if ($choice >= 1 and $choice <= $n and defined $alldirs[$choice-1]) {
-    $chosen=$alldirs[$choice-1]; # since perl lists counts from 0
+if ( $choice >= 1 and $choice <= $n and defined $alldirs[ $choice - 1 ] ) {
+    $chosen = $alldirs[ $choice - 1 ];    # since perl lists counts from 0
 }
-else{
+else {
     die "Invalid choice. STOP!\n";
 }
 
 # extract revision number...
-@tmp=split("/",$chosen);
-$rev=pop(@tmp);
+@tmp = split( "/", $chosen );
+$rev = pop(@tmp);
 
-
-$default="$main/users/$user/$rev/${rev}_$date";
+$default = "$main/users/$user/$rev/${rev}_$date";
 print "\nGive full output path (default is <$default>): ";
-$opath=<STDIN>; chop $opath;
-if ($opath eq "") {
-    $opath=$default;
+$opath = <STDIN>;
+chop $opath;
+if ( $opath eq "" ) {
+    $opath = $default;
 }
 
 print "Path is <$opath>\n";
 
-if (-d $opath) {
+if ( -d $opath ) {
     print "The output already exists, overwrite? (y/n) (default is y): ";
-    $a=<STDIN>; chop $a; $a=~tr/[A-Z]/[a-z]/;
-    $a='y' if ($a eq "");
-    if ($a eq 'n') {
-	print "Will not overwrite ... I give up puuh \n";
-	die "STOP\n";
+    $a = <STDIN>;
+    chop $a;
+    $a =~ tr/[A-Z]/[a-z]/;
+    $a = 'y' if ( $a eq "" );
+    if ( $a eq 'n' ) {
+        print "Will not overwrite ... I give up puuh \n";
+        die "STOP\n";
     }
 }
-else{
+else {
     system("mkdir -p $opath");
     print "Created  $opath ...\n";
 }
@@ -169,37 +173,43 @@ else{
 # =================== Check disk space ====================================
 
 print "Wait...\n";
-$diskspace=`df -k . | tail -1`; chop $diskspace; $diskspace =~ s/^\s+//;
-@tmp=split(/\s+/,$diskspace);
-$diskspace=$tmp[2];
+$diskspace = `df -k . | tail -1`;
+chop $diskspace;
+$diskspace =~ s/^\s+//;
+@tmp = split( /\s+/, $diskspace );
+$diskspace = $tmp[2];
 print "Current free disk space (Gigabytes): ",
-  sprintf("%11.1f", $diskspace/(1024*1024)),"\n\n";
+  sprintf( "%11.1f", $diskspace / ( 1024 * 1024 ) ), "\n\n";
 
 print "Do you want to estimate size of revision, and compare with ",
   "current total free disk space? (y/n): (default is n)";
 
-$a=<STDIN>; chop $a; $a=~tr/[A-Z]/[a-z]/;
-$a='n' if ($a eq "");
+$a = <STDIN>;
+chop $a;
+$a =~ tr/[A-Z]/[a-z]/;
+$a = 'n' if ( $a eq "" );
 
-if ($a eq 'y') {
+if ( $a eq 'y' ) {
     print "Wait... computing size of revision...\n";
-    # find the space on requested revison
-    $revspace=`du -sk $chosen`; chop $revspace;
-    @tmp=split(/\s+/,$revspace);
 
-    $revspace=$tmp[0];
+    # find the space on requested revison
+    $revspace = `du -sk $chosen`;
+    chop $revspace;
+    @tmp = split( /\s+/, $revspace );
+
+    $revspace = $tmp[0];
     print "Current requested revision space (Gigabytes): ",
-      sprintf("%11.2f",$revspace/(1024*1024)),"\n\n";
-    if ($revspace > 0.9*$diskspace) {
-	print "Uuoops... the new personal revision copy will take",
-	  " more than 90% of remaining space\n";
-	print "It will be better to clean up stuff first...\n";
-	die "STOP\n";
+      sprintf( "%11.2f", $revspace / ( 1024 * 1024 ) ), "\n\n";
+    if ( $revspace > 0.9 * $diskspace ) {
+        print "Uuoops... the new personal revision copy will take",
+          " more than 90% of remaining space\n";
+        print "It will be better to clean up stuff first...\n";
+        die "STOP\n";
     }
-    else{
-	$frac= sprintf "%5.2f", 100*$revspace/$diskspace;
-	print "The new revison occupies maximum $frac % of the ",
-	  "remaining disk space\n";
+    else {
+        $frac = sprintf "%5.2f", 100 * $revspace / $diskspace;
+        print "The new revison occupies maximum $frac % of the ",
+          "remaining disk space\n";
     }
 }
 sleep 1;
@@ -259,8 +269,9 @@ some options:
 EOX
 
 print "Type your option here (default is 3 if you just press enter): ";
-$ans3=<STDIN>; chop $ans3;
-if ($ans3 eq "") {
+$ans3 = <STDIN>;
+chop $ans3;
+if ( $ans3 eq "" ) {
     $ans3 = 3;
 }
 
@@ -269,22 +280,24 @@ if ($ans3 eq "") {
 
 my $lockfile = `find $rev/rms/model -maxdepth 3 -name project_lock_file`;
 chomp($lockfile);
-if (length($lockfile) > 1 and $ans3 != 5) {
-    @mylocks = split(/\n/, $lockfile);
-    print("\n**Warning**, the RMS project(s) has lockfile and can be ".
-          "currently in a saving state...\n");
+if ( length($lockfile) > 1 and $ans3 != 5 ) {
+    @mylocks = split( /\n/, $lockfile );
+    print(  "\n**Warning**, the RMS project(s) has lockfile and can be "
+          . "currently in a saving state...\n" );
 
     foreach my $lfile (@mylocks) {
-        my $uid = (stat $lfile)[4]; my $user = (getpwuid $uid)[0];
+        my $uid  = ( stat $lfile )[4];
+        my $user = ( getpwuid $uid )[0];
         print(" -->   <$lfile> owned by <$user>\n");
     }
 
     print("Continue anyway? (default is Yes if you just press enter): ");
-    my $ans7=<STDIN>; chop $ans7;
-    if ($ans7 eq "" or $ans7 =~ /Yy/) {
+    my $ans7 = <STDIN>;
+    chop $ans7;
+    if ( $ans7 eq "" or $ans7 =~ /Yy/ ) {
         print('... will continue');
     }
-    else{
+    else {
         die "Stopped by user\n";
     }
 }
@@ -292,249 +305,250 @@ if (length($lockfile) > 1 and $ans3 != 5) {
 # now run rsync on multiple cores using fork:
 print "\nMaster process ID: $$\n";
 
-my $time1=time;
+my $time1 = time;
 
-my $qwarn=0;
-my @pidlist=();
-if ($opt_nfork==4) {
+my $qwarn   = 0;
+my @pidlist = ();
+if ( $opt_nfork == 4 ) {
     print "Run on 4 CPU's\n";
 
-    foreach my $ncpu (1..4) {
-	print "==========================================================\n";
-	print "As CPU process no. $ncpu: \n";
-	print "==========================================================\n";
-	my $chosenx = $chosen;
-	my $opathx = $opath;
-	if ($ncpu == 1) {
-	    $myexclude="";
-	    $chosenx = "$chosen/rms/model";
-	    $opathx = "$opath/rms/model";
-	}
-	elsif ($ncpu == 2) {
-	    $myexclude="--exclude='model'";
-	    $chosenx = "$chosen/rms";
-	    $opathx = "$opath/rms";
-	}
-	elsif ($ncpu == 3) {
-	    $myexclude="";
-	    $chosenx = "$chosen/eclipse";
-	    $opathx = "$opath/eclipse";
-	}
-	elsif ($ncpu == 4) {
-	    $myexclude="--exclude='rms' --exclude='eclipse'";
-	    $chosenx = "$chosen";
-	    $opathx = "$opath";
-	}
+    foreach my $ncpu ( 1 .. 4 ) {
+        print "==========================================================\n";
+        print "As CPU process no. $ncpu: \n";
+        print "==========================================================\n";
+        my $chosenx = $chosen;
+        my $opathx  = $opath;
+        if ( $ncpu == 1 ) {
+            $myexclude = "";
+            $chosenx   = "$chosen/rms/model";
+            $opathx    = "$opath/rms/model";
+        }
+        elsif ( $ncpu == 2 ) {
+            $myexclude = "--exclude='model'";
+            $chosenx   = "$chosen/rms";
+            $opathx    = "$opath/rms";
+        }
+        elsif ( $ncpu == 3 ) {
+            $myexclude = "";
+            $chosenx   = "$chosen/eclipse";
+            $opathx    = "$opath/eclipse";
+        }
+        elsif ( $ncpu == 4 ) {
+            $myexclude = "--exclude='rms' --exclude='eclipse'";
+            $chosenx   = "$chosen";
+            $opathx    = "$opath";
+        }
 
-	my $pid = fork;
-	my $forks = 0;
+        my $pid   = fork;
+        my $forks = 0;
 
-	if (! defined $pid){
-	    die "Could not fork a process!. Try with nfork=1 instead\n";
-	}
+        if ( !defined $pid ) {
+            die "Could not fork a process!. Try with nfork=1 instead\n";
+        }
 
-	if ($pid==0) {
-	    print "\nChild process running...\n";
-	    system("mkdir -p $opathx");
-	    $forks++;
-	    my $nwarn = do_copying($ncpu, $ans3, $myexclude, $chosenx, $opathx);
-	    $qwarn += $nwarn;
-	    exit(3);
-	}
-	else{
-	    print "Started child process $pid\n";
-	    push @pidlist, $pid;
-	}
+        if ( $pid == 0 ) {
+            print "\nChild process running...\n";
+            system("mkdir -p $opathx");
+            $forks++;
+            my $nwarn =
+              do_copying( $ncpu, $ans3, $myexclude, $chosenx, $opathx );
+            $qwarn += $nwarn;
+            exit(3);
+        }
+        else {
+            print "Started child process $pid\n";
+            push @pidlist, $pid;
+        }
     }
-
 
     print "\nIn parent of pids @pidlist :\n";
 
-    my %pidok=();
+    my %pidok = ();
     foreach my $p (@pidlist) {
-	$pidok{$p}=0;
+        $pidok{$p} = 0;
     }
 
     while (1) {
-	foreach my $pid (@pidlist) {
-	    if ($pidok{$pid}==1) {
-		next;
-	    }
-	    my $res = waitpid($pid, WNOHANG);
-	    print "PID $pid: Wait for Res: $res\n" if $opt_verbose;
+        foreach my $pid (@pidlist) {
+            if ( $pidok{$pid} == 1 ) {
+                next;
+            }
+            my $res = waitpid( $pid, WNOHANG );
+            print "PID $pid: Wait for Res: $res\n" if $opt_verbose;
 
-	    # check every second
-	    sleep(1);
+            # check every second
+            sleep(1);
 
-	    if ($res == -1) {
-		warn "\n\nSome error occurred!! ", $? >> 8, "\n";
-		exit();
-	    }
-	    if ($res) {
-		print "\nChild $res ended with ID ", $? >> 8, "\n";
-		$pidok{$pid}=1;
-	    }
-	}
+            if ( $res == -1 ) {
+                warn "\n\nSome error occurred!! ", $? >> 8, "\n";
+                exit();
+            }
+            if ($res) {
+                print "\nChild $res ended with ID ", $? >> 8, "\n";
+                $pidok{$pid} = 1;
+            }
+        }
 
-	# now check if all pids are finished;
-	my $psum=0;
-	foreach my $p (keys %pidok) {
-	    $psum += $pidok{$p};
-	}
-	if ($psum >= 4) {
-	    print "All child processes done!\n";
-	    last;
-	}
+        # now check if all pids are finished;
+        my $psum = 0;
+        foreach my $p ( keys %pidok ) {
+            $psum += $pidok{$p};
+        }
+        if ( $psum >= 4 ) {
+            print "All child processes done!\n";
+            last;
+        }
     }
 
     print "Processes ended!\n";
 }
 
-else{
+else {
     print "Run on 1 CPU\n";
-    $myexclude="";
-    $qwarn = do_copying(0, $ans3, $myexclude, $chosen, $opath);
+    $myexclude = "";
+    $qwarn = do_copying( 0, $ans3, $myexclude, $chosen, $opath );
 }
 
-if ($qwarn>0) {
+if ( $qwarn > 0 ) {
     warn "\n****** Note! The script reports problems/warnings!******\n\n";
 }
-else{
+else {
     print "\nOK!\n\n";
 }
 
-my $time2=time;
-my $diff=$time2-$time1;
-my $mins = sprintf("%8.3f",$diff/60.0);
+my $time2 = time;
+my $diff  = $time2 - $time1;
+my $mins  = sprintf( "%8.3f", $diff / 60.0 );
 
 print "\nOutput to $opath ...\n";
-print "\nDONE using approx ",$mins," minutes\n";
+print "\nDONE using approx ", $mins, " minutes\n";
 
 ################################################################################
 
+sub do_copying {
+    my ( $ncpu, $answer, $myexclude, $inputpath, $outputpath ) = @_;
 
-
-sub do_copying{
-    my ($ncpu, $answer, $myexclude, $inputpath, $outputpath) = @_;
-
-    if ($answer == 1) {
-	$command="rsync -av $myexclude $inputpath/ $outputpath/.";
+    if ( $answer == 1 ) {
+        $command = "rsync -av $myexclude $inputpath/ $outputpath/.";
     }
-    elsif ($answer == 2) {
-	$command  = "rsync -av $myexclude --exclude='users'";
-	$command .= " --exclude='*backup*'";
-	$command .= " --exclude='.git' --exclude='.svn'";
-	$command .= " --exclude='*~' --exclude='attic'";
-	$command .= " $inputpath/ $outputpath/.";
+    elsif ( $answer == 2 ) {
+        $command = "rsync -av $myexclude --exclude='users'";
+        $command .= " --exclude='*backup*'";
+        $command .= " --exclude='.git' --exclude='.svn'";
+        $command .= " --exclude='*~' --exclude='attic'";
+        $command .= " $inputpath/ $outputpath/.";
     }
-    elsif ($answer == 3) {
-	$command  = "rsync -av $myexclude --exclude='users'";
-	$command .= " --exclude='*backup*'";
-	$command .= " --exclude='.git' --exclude='.svn'";
- 	$command .= " --exclude='*~' --exclude='attic'";
-	$command .= " --exclude='ert/*/storage' --exclude='ert/storage'";
-	$command .= " --exclude='ert/output'";
-	$command .= " --exclude='rms/input/seismic'";
-	$command .= " --exclude='rms/model/*.log'";
+    elsif ( $answer == 3 ) {
+        $command = "rsync -av $myexclude --exclude='users'";
+        $command .= " --exclude='*backup*'";
+        $command .= " --exclude='.git' --exclude='.svn'";
+        $command .= " --exclude='*~' --exclude='attic'";
+        $command .= " --exclude='ert/*/storage' --exclude='ert/storage'";
+        $command .= " --exclude='ert/output'";
+        $command .= " --exclude='rms/input/seismic'";
+        $command .= " --exclude='rms/model/*.log'";
+
         # special treatment of rms/output; keep folders not files
-        $rdepth=10;
-        $icmd = " --include='rms/output/";
-        $ecmd = " --exclude='rms/output";
-        for ($i=1; $i<=$rdepth; $i++) {
+        $rdepth = 10;
+        $icmd   = " --include='rms/output/";
+        $ecmd   = " --exclude='rms/output";
+        for ( $i = 1 ; $i <= $rdepth ; $i++ ) {
             $iadd = "*/" x $i;
             $eadd = "/*" x $i;
             $command .= "$icmd$iadd'";
             $command .= "$ecmd$eadd'";
         }
-	$command .= " --exclude='share/results'";
-	$command .= " --exclude='share/templates'";
-	$command .= " --exclude='spotfire/input/*.csv'";
-	$command .= " --exclude='spotfire/input/*/*.csv'";
-	$command .= " --exclude='spotfire/model/*.dxp'";
-	$command .= " --exclude='spotfire/model/*/*.dxp'";
-	$command .= " $inputpath/ $outputpath/.";
+        $command .= " --exclude='share/results'";
+        $command .= " --exclude='share/templates'";
+        $command .= " --exclude='spotfire/input/*.csv'";
+        $command .= " --exclude='spotfire/input/*/*.csv'";
+        $command .= " --exclude='spotfire/model/*.dxp'";
+        $command .= " --exclude='spotfire/model/*/*.dxp'";
+        $command .= " $inputpath/ $outputpath/.";
 
     }
-    elsif ($answer == 4) {
-	$command  = "rsync -av $myexclude --exclude='users'";
-	$command .= " --exclude='*backup*'";
-	$command .= " --exclude='.git' --exclude='.svn'";
- 	$command .= " --exclude='*~' --exclude='attic'";
-	$command .= " --exclude='ert/*/storage' --exclude='ert/storage'";
-	$command .= " --exclude='ert/output'";
-	$command .= " --exclude='rms/input/seismic'";
-	$command .= " --exclude='rms/model/*.log'";
-	$command .= " --exclude='spotfire/input/*.csv'";
-	$command .= " --exclude='spotfire/input/*/*.csv'";
-	$command .= " --exclude='spotfire/model/*.dxp'";
-	$command .= " --exclude='spotfire/model/*/*.dxp'";
-	$command .= " $inputpath/ $outputpath/.";
+    elsif ( $answer == 4 ) {
+        $command = "rsync -av $myexclude --exclude='users'";
+        $command .= " --exclude='*backup*'";
+        $command .= " --exclude='.git' --exclude='.svn'";
+        $command .= " --exclude='*~' --exclude='attic'";
+        $command .= " --exclude='ert/*/storage' --exclude='ert/storage'";
+        $command .= " --exclude='ert/output'";
+        $command .= " --exclude='rms/input/seismic'";
+        $command .= " --exclude='rms/model/*.log'";
+        $command .= " --exclude='spotfire/input/*.csv'";
+        $command .= " --exclude='spotfire/input/*/*.csv'";
+        $command .= " --exclude='spotfire/model/*.dxp'";
+        $command .= " --exclude='spotfire/model/*/*.dxp'";
+        $command .= " $inputpath/ $outputpath/.";
     }
-    elsif ($answer == 5) {
-        if (-d "$inputpath/share/coviz") {
+    elsif ( $answer == 5 ) {
+        if ( -d "$inputpath/share/coviz" ) {
             system("mkdir -p $outputpath/share/");
-            $command  = "rsync -av -K";
+            $command = "rsync -av -K";
             $command .= " $inputpath/share/coviz $outputpath/share/.";
         }
-        else{
+        else {
             die "\nSTOP!\n$inputpath/share/coviz does not exist.\n";
         }
     }
-    elsif ($answer == 9) {
-	$userfile="users/$user/.my_exclude";
-	print "Looking for <$userfile> ...\n";
-	if (-r "$userfile") {
-	    print "OK\n"; sleep 1;
-	}
-	else{
-	    die "No user file <$userfile>. STOP!\n";
-	}
+    elsif ( $answer == 9 ) {
+        $userfile = "users/$user/.my_exclude";
+        print "Looking for <$userfile> ...\n";
+        if ( -r "$userfile" ) {
+            print "OK\n";
+            sleep 1;
+        }
+        else {
+            die "No user file <$userfile>. STOP!\n";
+        }
 
-	$command  =  "rsync -av $myexclude --exclude-from=\'$userfile\' ".
-	  "$inputpath/ $outputpath/.";
+        $command = "rsync -av $myexclude --exclude-from=\'$userfile\' "
+          . "$inputpath/ $outputpath/.";
     }
-    else{
-	die "Invalid option. STOP\n";
+    else {
+        die "Invalid option. STOP\n";
     }
 
-    if ($ncpu>0) {
-	print "\nAs CPU process no $ncpu:\n";
+    if ( $ncpu > 0 ) {
+        print "\nAs CPU process no $ncpu:\n";
     }
     print "\nRunning $command ...\n";
 
-    if ($ncpu<=1) {
-	print "Copying, be patient... (only WARNINGS, if any, ",
-	  "will be displayed)\n";
+    if ( $ncpu <= 1 ) {
+        print "Copying, be patient... (only WARNINGS, if any, ",
+          "will be displayed)\n";
     }
 
     my $time1 = time;
 
-    my $qwarn=0;
-    if ($opt_method){
-	# alternative...
-	my $in = '';
-	local *CATCHERR = IO::File->new_tmpfile;
-	my $pid = open3($in, \*CATCHOUT, ">&CATCHERR", "$command");
-	print "Local PID for RSYNC job is $pid\n";
-	while( <CATCHOUT> ) {
-	    print "INFO: $_" if $opt_verbose > 1;
-	    my $time2=time;
-	    if (($time2-$time1) > 60) {
-		$minute++;
-		print "Still copying, be patient...\n" if $opt_verbose;
-		$time1=$time2;
-	    }
-	}
-	waitpid($pid, 0);
-	seek CATCHERR, 0, 0;
+    my $qwarn = 0;
+    if ($opt_method) {
 
-	while( <CATCHERR> ) {
-	    $qwarn=1;
-	    warn "WARN: $_";
-	}
+        # alternative...
+        my $in = '';
+        local *CATCHERR = IO::File->new_tmpfile;
+        my $pid = open3( $in, \*CATCHOUT, ">&CATCHERR", "$command" );
+        print "Local PID for RSYNC job is $pid\n";
+        while (<CATCHOUT>) {
+            print "INFO: $_" if $opt_verbose > 1;
+            my $time2 = time;
+            if ( ( $time2 - $time1 ) > 60 ) {
+                $minute++;
+                print "Still copying, be patient...\n" if $opt_verbose;
+                $time1 = $time2;
+            }
+        }
+        waitpid( $pid, 0 );
+        seek CATCHERR, 0, 0;
+
+        while (<CATCHERR>) {
+            $qwarn = 1;
+            warn "WARN: $_";
+        }
     }
-    else{
-	system("$command");
+    else {
+        system("$command");
     }
 
     return $qwarn;
