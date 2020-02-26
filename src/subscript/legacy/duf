@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Calculates disk usage in current directory
+# 
+# Features:
+#  * Sorts by size, largest file at bottom
+#  * Converts to human readable format (megabytes, gigabytes, etc.)
+#  * Includes hidden directories/files
+#  * Prints total size
+#
+# Haavard Berland, OSE PTC RP, 2014
+
+tmpfile=.duf$$
+
+echo "Calculating disk usage (may take some time)..."
+du -sk -- * .??* 2>/dev/null | sort -n > $tmpfile
+
+cat $tmpfile | while read size fname; 
+  do for unit in k M G T P E Z Y; 
+    do if [ $size -lt 1024 ]; 
+        then echo -e "${size}${unit}\t${fname}"; 
+        break; 
+    fi; 
+    size=$(($size/1024)); 
+  done; 
+done | grep -v $tmpfile
+
+
+echo -n "Total size: " 
+cat $tmpfile | awk '{SUM+=$1} END {print SUM}' | while read size; 
+  do for unit in k M G T P E Z Y; 
+    do if [ $size -lt 1024 ]; 
+        then echo -e "${size}${unit}"; 
+        break; 
+    fi; 
+    size=$(($size/1024)); 
+  done; 
+done
+rm -f $tmpfile
+
