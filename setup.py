@@ -29,6 +29,8 @@ SSCRIPTS = [
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
 ]
 
+LEGACYSCRIPTS = ["src/subscript/legacy/fmu_copy_revision"]
+
 setuptools.setup(
     name="subscript",
     description="Next-gen resscript",
@@ -50,6 +52,7 @@ setuptools.setup(
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
     entry_points={"console_scripts": SSCRIPTS},
+    scripts=LEGACYSCRIPTS,
     use_scm_version={"write_to": "src/subscript/version.py"},
     test_suite="tests",
 )
