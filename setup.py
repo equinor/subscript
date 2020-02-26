@@ -29,7 +29,7 @@ SSCRIPTS = [
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
 ]
 
-LEGACYSCRIPTS = ["src/subscript/legacy/fmu_copy_revision"]
+LEGACYSCRIPTS = ["fmu_copy_revision", "duf", "ertwatch", "runeclipse"]
 
 setuptools.setup(
     name="subscript",
@@ -52,7 +52,7 @@ setuptools.setup(
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
     entry_points={"console_scripts": SSCRIPTS},
-    scripts=LEGACYSCRIPTS,
+    scripts=["src/subscript/legacy/" + scriptname for scriptname in LEGACYSCRIPTS],
     use_scm_version={"write_to": "src/subscript/version.py"},
     test_suite="tests",
 )

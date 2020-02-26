@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Watches the course of an ERT realization in the current directory
+# 
+# Haavard Berland, havb@statoil.com, DPN OTE PTC MOD MW
+#
+# October 2013/August 2017
+#
+
+sleeptime=5
+ertwatchtop=.ertwatch-remotetop.$$.deleteme 
+touch $ertwatchtop
+
+if [ ! -f STATUS ] ; then
+    echo "Run this script in your ERT realization directory, not here"
+    echo " (File STATUS not found)"
+    exit 1
+fi
+
+while : ; do
+        clear
+      
+        # Fetch terminal window geometry. $COLUMNS does not seem to be always set.
+        cols=`tput cols`  
+        lines=`tput lines`
+        divisor=`yes '-' | head -n $cols | tr -d '\n'`
+
+        hostname=`cat STATUS | grep "Current host" | awk '{print $4}' | cut -f1 -d/`
+        now=`date`
+
+        echo "STATUS: Last 5 lines at $now, running on $hostname" 
+        cat STATUS | sed 's/^/  /' | tail -n 5 
+        echo
+        echo $divisor 
+ 
+        laststatus=`tail -n 1 STATUS`
+	if [[ $laststatus == RMS* ]] ; then
+            logfile=`ls -tr rms/model/*.log | tail -n 1`
+            if [ -e $logfile ] ; then
+
+                echo "RMS log: $logfile"
+                cat $logfile | tail -n 10
+                echo $divisor
+            fi
+        fi
+
+        if [[ $laststatus == ECLIPSE* ]] ; then
+            PRTfile=`ls -t eclipse/model/*.PRT | tail -n 1`
+            echo "ECLIPSE PRT file: $PRTfile"
+            cat $PRTfile | tail -n 10 | sed 's/^/  /' | tail -n 10
+            echo $divisor
+            summary.x ${eclpath}/*.DATA FOPR FWCT 2>/dev/null > .summary.x-out 
+            cat .summary.x-out | head -n 2
+            cat .summary.x-out | tail -n 8
+            echo $divisor 
+        fi
+        stderrfiles=`find . -name "*stderr*" -not -empty`
+        for stderrfile in $stderrfiles ; do
+            if [ $stderrfile -nt jobs.json ] ; then
+                echo $stderrfile
+                cat $stderrfile
+                echo $divisor
+            fi
+        done
+	sleep $sleeptime
+
+done
+
+
