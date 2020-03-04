@@ -8,4 +8,5 @@ pytest
 pytest-runner
 pyscal>0.1.4
 sphinx
+xlrd
 flake8
