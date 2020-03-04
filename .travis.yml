@@ -43,10 +43,9 @@ install:
 # the Python API. Only the Python API follows from the pip-installable libecl.
 before_script:
   - source .libecl_version
-  - git clone https://github.com/equinor/libecl
+  - git clone https://github.com/equinor/libecl --branch=$LIBECL_VERSION
   - pushd libecl
   - git fetch
-  - git checkout tags/$LIBECL_VERSION
   - pip install -r requirements.txt
   - mkdir build
   - pushd build
@@ -61,11 +60,11 @@ before_script:
   - popd
   - rm -rf python/tests  # Avoid running these tests.
   - popd
-  - git clone --recursive https://github.com/OPM/opm-common.git
-  - pushd opm-common
 # Build against specific (i.e. tested) opm-common version
 # Latest release (2019.10) does not support all Python bindings
-  - git checkout 31e6f31
+  - git clone --recursive https://github.com/OPM/opm-common.git
+              --branch=testing/2020.3/rc1
+  - pushd opm-common
   - mkdir build
   - pushd build
   - cmake .. -DCMAKE_PREFIX_PATH=$INSTALL_DIR
