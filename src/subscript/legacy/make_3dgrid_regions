@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# This is a band-aid wrapper to be able to use make_3dgrid_regions from the Perl version of 
+# xtgeo for users that has not sourced /project/res. 
+#
+# NB: Separate perl-xtgeo installation for RHEL6 (perl 5.10) and RHEL7 (perl 5.16)
+
+if [[ "`cat /etc/redhat-release`" == *"release 6"* ]] ; then
+    PROJECTRES=/project/res/x86_64_RH_6
+elif [[ "`cat /etc/redhat-release`" == *"release 7"* ]] ; then
+    PROJECTRES=/project/res/x86_64_RH_7
+else
+    echo "ERROR: Was not able to determine location of xtgeo-pl installation"
+    exit 1
+fi
+
+echo "******************************************************"
+echo "WARNING: Usage of make_3dgrid_regions is deprecated."
+echo "         This script is REMOVED January 2021"
+echo "******************************************************"
+
+export PERL5LIB=${PROJECTRES}/xtgeo/pl/lib/perl5:$PERL5LIB
+export LD_LIBRARY_PATH=${PROJECTRES}/lib64:${PROJECTRES}/lib:$LD_LIBRARY_PATH
+/usr/bin/perl -X ${PROJECTRES}/xtgeo/pl/bin/make_3dgrid_regions "$@"
