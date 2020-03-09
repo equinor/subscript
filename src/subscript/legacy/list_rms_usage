@@ -1,0 +1,47 @@
+#!/usr/bin/perl
+# Small utility script for listing RMS usage, across offices
+# JRIV
+#===============================================================================
+@all = `/prog/roxar/flexlm/LINUX/lmutil lmstat -c /prog/roxar/licensing/geomaticLM.lic -f rms_base`;
+
+$debug=0;
+
+#print "@all\n";
+$cuser = $ENV{'USER'};
+
+# as some lines are blank, and some is header, I search for "start"
+$nc=0;
+@ulines=();
+foreach $line (@all) {
+    if ($line =~ /start/) {
+	$nc++;
+	push @ulines, $line
+    }
+}
+print "\nA total of $nc licenses are in use now\n\n";
+
+# look though users
+@user=();
+foreach $line (@ulines) {    
+    chomp $line;
+    $line=~s/^\s+//;
+    print "$line\n" if $debug;
+    @f=split(/\s+/,$line);
+    #print "$f[0]\n";
+    if (lc($f[0]) eq lc($cuser)) {
+	push @user, $line;
+    }
+}
+
+print "\n\nUser <$cuser>: \n";
+
+if (@user) {
+    foreach $u (@user) {
+	print "$u\n";
+    }
+
+}
+else{
+    print "You have no active RMS licenses\n";
+}
+print "\n";
