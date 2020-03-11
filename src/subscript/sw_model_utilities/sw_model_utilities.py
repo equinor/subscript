@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 #
 # Script for some useful Sw calculations
+# This is an interactive script, and is not used as a part of a FMU run
+#
+# https://wiki.equinor.com/wiki/index.php/Res:The_sw_model_utilities_script
 #
 # JRIV
+
 from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
@@ -94,6 +98,7 @@ def convert_normal2inverse(aval, bval):
 # # Plotting
 # # ==============================================================================
 
+
 def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
 
     # height array; create an array from min to max, with step:
@@ -128,8 +133,8 @@ def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
         swn = av[i] * (h * math.sqrt(perm[i] / poro[i])) ** bv[i]
         sw = swirra[i] + (1.0 - swirra[i]) * swn
         plt.plot(sw, h, label=txt)
-        if (swirra[i] > 0.0):
-            plt.plot(np.zeros(h.size) + swirra[i], h, "--", color="grey", )
+        if swirra[i] > 0.0:
+            plt.plot(np.zeros(h.size) + swirra[i], h, "--", color="grey")
 
     plt.axis([0, 1, 0, hmax])
     plt.legend(loc="upper right", shadow=True, fontsize=10)
@@ -139,7 +144,7 @@ def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
     plt.show()
 
 
-if __name__ == "__main__":
+def main():
 
     option, inverse, av, bv, poro, perm, swirra, desc, hmax = menu()
 
@@ -180,3 +185,7 @@ if __name__ == "__main__":
         plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax)
 
     print("\nThat's all folks")
+
+
+if __name__ == "__main__":
+    main()
