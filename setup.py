@@ -26,6 +26,7 @@ SSCRIPTS = [
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "sunsch = subscript.sunsch.sunsch:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
+    "sw_model_utilities = subscript.sw_model_utilities.sw_model_utilities:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
 ]
 
