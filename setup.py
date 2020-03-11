@@ -29,7 +29,14 @@ SSCRIPTS = [
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
 ]
 
-LEGACYSCRIPTS = ["fmu_copy_revision", "duf", "ertwatch", "runeclipse", "list_rms_usage"]
+LEGACYSCRIPTS = [
+    "fmu_copy_revision",
+    "duf",
+    "ertwatch",
+    "nosim",
+    "runeclipse",
+    "list_rms_usage",
+]
 
 setuptools.setup(
     name="subscript",

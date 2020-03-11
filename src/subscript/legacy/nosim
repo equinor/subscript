@@ -1,0 +1,69 @@
+#!/usr/bin/perl -w 
+#
+
+# Usage:
+#   $ nosim ECLDECK.DATA
+#
+# How it works:
+#   Makes a copy of your ECLDECK.DATA, callled .NOSIMMED.DATA
+#   Runs the modified copy using 'runeclipse'
+#
+# NB: No cleanup is performed, but the temporary file is
+# hidden so it will not clutter too much.
+#
+# First version:
+# Håvard Berland, havb@statoil.com September 2012.
+
+#
+# Current version:
+# $Id: nosim 405 2013-01-07 13:38:03Z pasl $
+#
+
+use strict ;
+
+use Getopt::Std ;
+
+#
+# Get command line options:
+#
+
+my %options = () ;
+
+getopts("v:p:",\%options) ;
+
+my $version = 0 ;
+if ($options{v}) { $version = $options{v} ; } ;
+
+my $progname = "eclipse" ;
+if ($options{p}) { $progname = $options{p} ; } ;
+if ($progname eq "e100") { $progname = "eclipse" } ;
+
+my $numargs = @ARGV ;
+if ($numargs == 0) {
+    in_error("Missing root name") ;
+} ;
+
+my ($rootname) = @ARGV ;
+$rootname =~ s/\.DATA$// ;
+my $fullname = "$rootname.DATA" ;
+
+
+if (! -f $fullname) {
+    in_error("Datafile: $fullname does not exist") ;
+} ;
+
+system("cat $fullname | sed -e 's/TITLE/NOSIM\\n\\nTITLE/' > .NOSIMMED.DATA") ;
+
+my $args = " -p $progname " ;
+if ($version) { $args .= "-v $version " ; } ;
+$args .= ".NOSIMMED.DATA" ;
+
+system("runeclipse -i $args") ;
+
+
+sub in_error 
+{
+    my ($message) = @_ ;
+    print "ERROR: $message\n" ;
+    exit ;    
+} ;
