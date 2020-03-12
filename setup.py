@@ -36,6 +36,7 @@ LEGACYSCRIPTS = [
     "nosim",
     "runeclipse",
     "list_rms_usage",
+    "eclmanual",
 ]
 
 setuptools.setup(
