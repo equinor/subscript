@@ -1,0 +1,31 @@
+#!/bin/bash
+
+eclversion="2019.1"
+export ECLPATH="/prog/ecl/grid"
+
+if [ "$1" == "-v" ] && [ "$2" != "" ] ; then
+    eclversion=$2 
+fi
+
+manualpath="$ECLPATH/$eclversion/manuals/bookshelf.pdf"
+
+if [ -f $manualpath ] ; then
+
+    if [ -x /usr/bin/acroread ] ; then
+        /usr/bin/acroread $manualpath &
+    elif  [ -x /usr/bin/kpdf ] ; then
+        /usr/bin/kpdf --caption "ECLIPSE manuals" $manualpath &
+    elif  [ -x /usr/bin/evince ] ; then
+        /usr/bin/evince $manualpath &
+    elif  [ -x /usr/bin/xpdf ] ; then
+        /usr/bin/xpdf $manualpath &
+    else
+        echo "Unable to find pdf viewer"
+    fi
+
+else
+    echo "Uanble to find manuals for version $eclversion"
+fi
+
+
+
