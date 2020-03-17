@@ -35,8 +35,6 @@ from glob import glob
 
 from os.path import join
 
-from .._theversion import version as __version__
-
 
 RMS10PY = "python3.4"
 RMS11PY = "python3.6"
@@ -524,7 +522,7 @@ class RunRMS(object):
         """Show info on RMS project"""
 
         print("=" * 132)
-        print("Script runrms version {}".format(__version__))
+        print("Script runrms from subscript")
         print("=" * 132)
         print("{0:30s}: {1}".format("Project name", self.project))
         print("{0:30s}: {1}".format("Last saved by", self.user))

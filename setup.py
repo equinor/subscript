@@ -27,6 +27,7 @@ SSCRIPTS = [
     "sunsch = subscript.sunsch.sunsch:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
+    "runrms = subscript.runrms.runrms:main",
 ]
 
 LEGACYSCRIPTS = [
@@ -37,6 +38,7 @@ LEGACYSCRIPTS = [
     "runeclipse",
     "list_rms_usage",
     "eclmanual",
+    "roxenvbash",
 ]
 
 setuptools.setup(
