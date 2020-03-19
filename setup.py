@@ -28,6 +28,7 @@ SSCRIPTS = [
     "runrms = subscript.runrms.runrms:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "sunsch = subscript.sunsch.sunsch:main",
+    "vfp2csv = subscript.vfp2csv.vfp2csv:main",
 ]
 
 LEGACYSCRIPTS = [
