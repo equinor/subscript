@@ -63,6 +63,10 @@ def test_cvs2volstr():
 
 def test_main():
     """Test command line interface"""
+
+    # Test installation
+    assert os.system("csv2ofmvol -h") == 0
+
     curdir = os.path.dirname(__file__)
     testdatadir = os.path.join(curdir, "testdata_csv2ofmvol")
     if not os.path.exists(testdatadir):

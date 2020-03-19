@@ -19,6 +19,9 @@ RELPERM 4 1 0.5 3 2 0.5 0.16 0.09 0.4 20
 
 
 def test_gen_satfunc():
+
+    os.system("gen_satfunc -h") == 0
+
     testdir = os.path.join(os.path.dirname(__file__), "testdata_gen_satfunc")
     if not os.path.exists(testdir):
         os.mkdir(testdir)

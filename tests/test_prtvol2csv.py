@@ -11,6 +11,9 @@ from subscript.prtvol2csv import prtvol2csv
 
 
 def test_prtvol2csv(tmpdir):
+
+    assert os.system("prtvol2csv -h") == 0
+
     testdatadir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
     )

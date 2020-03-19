@@ -10,6 +10,9 @@ from subscript.restartthinner import restartthinner
 
 def test_main(tmpdir):
     """Basic testing of the command line application"""
+
+    assert os.system("restartthinner -h") == 0
+
     ecldir = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
 
     unrst_fname = "2_R001_REEK-0.UNRST"

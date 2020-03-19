@@ -9,6 +9,9 @@ from subscript.params2csv import params2csv
 
 
 def test_main():
+
+    assert os.system("params2csv -h") == 0
+
     testdir = os.path.join(os.path.dirname(__file__), "testdata_params2csv")
     if not os.path.exists(testdir):
         os.mkdir(testdir)

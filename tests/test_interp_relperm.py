@@ -104,6 +104,8 @@ def test_args(tmpdir):
 def test_main(tmpdir):
     tmpdir.chdir()
 
+    assert os.system("interp_relperm -h") == 0
+
     test_cfg = os.path.join(TESTDATA, "cfg.yml")
 
     sys.argv = [__file__, "-c", test_cfg, "-r", TESTDATA]
