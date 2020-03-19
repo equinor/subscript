@@ -18,6 +18,9 @@ def test_vfp2csv(tmpdir):
 
     testdatadir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/vfp")
 
+    # Check that we have it in $PATH
+    assert os.system("vfp2csv -h") == 0
+
     vfpfile1 = os.path.join(testdatadir, "pd2.VFP")
     sys.argv = ["vfp2csv", vfpfile1, "-o", "pd2.csv"]
     vfp2csv.main()
