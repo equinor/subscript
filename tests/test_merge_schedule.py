@@ -11,6 +11,9 @@ from subscript.merge_schedule import merge_schedule
 
 def test_main():
     """Test command line merge_schedule"""
+
+    assert os.system("merge_schedule -h") == 0
+
     os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
 
     # Basic test merging two files:

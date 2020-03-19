@@ -75,6 +75,10 @@ def test_eclcompress():
 
 
 def test_main():
+    """Test installed endpoint"""
+
+    assert os.system("eclcompress -h") == 0
+
     testdir = os.path.join(os.path.dirname(__file__), "testdata_eclcompress")
     if not os.path.exists(testdir):
         os.mkdir(testdir)

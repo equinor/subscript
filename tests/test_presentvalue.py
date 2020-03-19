@@ -8,6 +8,9 @@ from subscript.presentvalue import presentvalue
 
 
 def test_main():
+
+    assert os.system("presentvalue -h") == 0
+
     ecldir = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
     parameterstxt_fname = os.path.join(ecldir, "parameters.txt")
     if os.path.exists(parameterstxt_fname):

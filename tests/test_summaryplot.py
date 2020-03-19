@@ -9,6 +9,9 @@ from subscript.summaryplot import summaryplot
 
 
 def test_summaryplotter():
+
+    assert os.system("summaryplot -h") == 0
+
     eclipsedeck = os.path.join(
         os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.DATA"
     )

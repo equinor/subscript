@@ -11,6 +11,9 @@ ECLCASE = "2_R001_REEK-0.DATA"
 
 
 def test_main(tmpdir):
+
+    assert os.system("pack_sim -h") == 0
+
     tmpdir.chdir()
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)

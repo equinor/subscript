@@ -80,3 +80,8 @@ def test_systemfinger():
     assert isinstance(usersummary, str)
     print("Myself is: " + usersummary)
     assert "Login" not in usersummary
+
+
+def test_installed():
+    """Check that the endpoint has been installed properly"""
+    assert os.system("bjobsusers") == 0

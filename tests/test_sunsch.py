@@ -12,6 +12,9 @@ from subscript.sunsch import sunsch
 
 def test_main():
     """Test command line sunsch, loading a yaml file"""
+
+    assert os.system("sunsch -h") == 0
+
     os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
 
     outfile = "schedule.sch"  # also in config.yml

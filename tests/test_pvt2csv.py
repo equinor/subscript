@@ -14,6 +14,9 @@ from subscript.pvt2csv import pvt2csv
 
 def test_pvt2csv(tmpdir):
     """Test the command line utility on a sample input file"""
+
+    assert os.system("pvt2csv -h") == 0
+
     testdatadir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/include/props"
     )
