@@ -95,7 +95,7 @@ def test_args(tmpdir):
 
     test_cfg = os.path.join(TESTDATA, "cfg.yml")
 
-    sys.argv = [__file__, "-configfile", test_cfg, "--root-path", TESTDATA]
+    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", TESTDATA]
 
     interp_relperm.main()
 
