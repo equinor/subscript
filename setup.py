@@ -25,6 +25,7 @@ SSCRIPTS = [
     "prtvol2csv = subscript.prtvol2csv.prtvol2csv:main",
     "pvt2csv = subscript.pvt2csv.pvt2csv:main",
     "restartthinner = subscript.restartthinner.restartthinner:main",
+    "runrms = subscript.runrms.runrms:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "sunsch = subscript.sunsch.sunsch:main",
 ]
@@ -37,6 +38,7 @@ LEGACYSCRIPTS = [
     "list_rms_usage",
     "make_3dgrid_regions",
     "nosim",
+    "roxenvbash",
     "runeclipse",
 ]
 
