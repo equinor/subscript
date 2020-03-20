@@ -1,5 +1,6 @@
 """Test runrms script, but manual interactive testing is also needed"""
 import os
+import pytest
 from subscript.runrms import runrms as rr
 
 TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
@@ -8,6 +9,8 @@ TESTRMS2 = "tests/data/reek/rms/reek.rms11.1.0"
 FAKE = ""
 if not "KOMODO_RELEASE" in os.environ:
     FAKE = "--fake"  # for travis or similar runs
+
+SKIPCIRUN = pytest.mark.skipif(FAKE != "", reason="Running travis or similar")
 
 
 def test_main_no_project():
@@ -36,6 +39,7 @@ def test_do_parse_args(tmpdir):
     assert "dryrun=True" in str(runner.args)
 
 
+@SKIPCIRUN
 def test_scan_rms(tmpdir):
     """Scan master files in RMS"""
     runner = rr.RunRMS()
