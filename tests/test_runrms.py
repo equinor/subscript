@@ -1,27 +1,34 @@
-"""Test runrms script"""
+"""Test runrms script, but manual interactive testing is also needed"""
+import os
+from subscript.runrms import runrms as rr
 
-from subscript.runrms import runrms
-import subscript.runrms.runrms as runrmsexe
+TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
+TESTRMS2 = "tests/data/reek/rms/reek.rms11.1.0"
+
+FAKE = ""
+if not "KOMODO_RELEASE" in os.environ:
+    FAKE = "--fake"  # for travis or similar runs
 
 
 def test_main_no_project():
-    cmd = runrmsexe.main(["--dryrun"])
-    print(cmd)
+    """Will only see effect of this when running pytest -s"""
+    print(rr.main(["--dryrun", FAKE]))
 
 
 def test_main_projects():
-    cmd = runrmsexe.main(["data/reek/rms/reek.rms10.1.3", "--dryrun"])
-    print(cmd)
+    """Will only see effect of this when running pytest -s"""
+    print(rr.main([TESTRMS2, "--dryrun", FAKE]))
 
 
 def test_do_parse_args(tmpdir):
+    """Test runrms parsing args"""
 
-    runner = runrms.RunRMS()
+    runner = rr.RunRMS()
 
     runner.runloggerfile = tmpdir.mkdir("runner1").join("runrms_usage.log")
     assert runner.args is None
 
-    args = ["--dryrun"]
+    args = ["--dryrun", FAKE]
     runner.do_parse_args(args)
 
     print(runner.args)

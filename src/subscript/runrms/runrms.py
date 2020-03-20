@@ -150,6 +150,13 @@ class RunRMS(object):
         )
 
         prs.add_argument(
+            "--fake",
+            dest="fake",
+            action="store_true",
+            help="This is for CI testing only, will not look for rms executable",
+        )
+
+        prs.add_argument(
             "--project",
             "-project",
             dest="rproject2",
@@ -295,6 +302,9 @@ class RunRMS(object):
 
     def get_rms_exe(self):
         """Get the correct RMS executable"""
+
+        if self.args.fake:
+            return None
 
         if self.args.beta:
             ok2 = self._get_rms_exe_nonstandard()
