@@ -38,23 +38,11 @@ def test_do_parse_args(tmpdir):
 
 def test_scan_rms(tmpdir):
     """Scan master files in RMS"""
-    runner = runrms.RunRMS()
+    runner = rr.RunRMS()
 
     runner.runloggerfile = tmpdir.mkdir("runner2").join("runrms_usage.log")
-    runner.project = "tests/data/reek/rms/reek.rms10.1.3"
+    runner.project = TESTRMS1
 
     runner.scan_rms()
 
     assert runner.version_fromproject == "10.1.3"
-
-
-# def test_runlogger(tmpdir):
-#     """Scan master files in RMS"""
-#     runner = runrms.RunRMS()
-
-#     runner.runloggerfile = tmpdir.mkdir("runner3").join("runrms_usage.log")
-#     runner.runlogger()
-
-#     with open(runner.runloggerfile, "r") as rlog:
-#         all = rlog.readlines()
-#         assert "rms" in all[-1]
