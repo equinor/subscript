@@ -275,9 +275,7 @@ class RunRMS(object):
                     self.lockf = line.replace("\n", "")
                     self.locked = True
                     break
-
-        except EnvironmentError as err:
-            print("Environment error: {}".format(err))
+        except EnvironmentError:
             pass
 
     def complete_version_fromproject(self):
