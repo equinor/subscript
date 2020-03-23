@@ -372,6 +372,7 @@ def main():
         required=True,
     )
     parser.add_argument(
+        "-r",
         "--root-path",
         type=str,
         default="",

@@ -90,12 +90,23 @@ def test_make_interpolant():
     assert "SGOF" in interpolant.gasoil.SGOF()
 
 
+def test_args(tmpdir):
+    tmpdir.chdir()
+
+    test_cfg = os.path.join(TESTDATA, "cfg.yml")
+
+    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", TESTDATA]
+
+    interp_relperm.main()
+
+    assert os.path.exists("outfilen.inc")
+
 def test_main(tmpdir):
     tmpdir.chdir()
 
     test_cfg = os.path.join(TESTDATA, "cfg.yml")
 
-    sys.argv = [__file__, "-c", test_cfg, "--root-path", TESTDATA]
+    sys.argv = [__file__, "-c", test_cfg, "-r", TESTDATA]
 
     interp_relperm.main()
 
@@ -107,4 +118,5 @@ if __name__ == "__main__":
     test_get_cfg_schema()
     test_tables_to_dataframe()
     test_make_interpolant()
+    test_args()
     test_main()
