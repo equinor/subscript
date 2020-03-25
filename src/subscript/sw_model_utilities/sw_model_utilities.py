@@ -18,7 +18,7 @@ def get_parser():
     epilog = """This is a simple interactive script for converting
     'a', 'b' between normal and inverse Leverett SwJ formulations. This is in
     particular useful for RMS, which uses the inverse formulation while,
-    input from petrophysiscist is usually on the normal form.
+    input from petrophysicist is usually on the normal form.
     In addition, interactive plotting of Sw vs height is provided
     (simplified Leverett).
     """
