@@ -1,3 +1,5 @@
+import pytest
+import subprocess
 
 from subscript.sw_model_utilities import sw_model_utilities as swtool
 
@@ -18,3 +20,9 @@ def test_autoconvert():
     num = swtool.autoformat(0.000000343432)
 
     assert str(num) == "3.4343e-07"
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["sw_model_utilities", "-h"])
