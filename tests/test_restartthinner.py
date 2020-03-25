@@ -49,6 +49,4 @@ def test_main(tmpdir):
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed, and the binary tools are available"""
-    assert subprocess.check_output("ecl_pack.x")
-    assert subprocess.check_output("ecl_unpack.x")
     assert subprocess.check_output(["restartthinner", "-h"])
