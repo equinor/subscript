@@ -59,10 +59,7 @@ def test_get_jobs():
 
 
 def test_userinfo():
-    names = (
-        "Foo Barrer (foo.bar.com)",
-        "Føø Bårrær (foo.latin1.utf8.com)",
-    )
+    names = ("Foo Barrer (foo.bar.com)", "Føø Bårrær (foo.latin1.utf8.com)")
 
     # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
     for name in names:
@@ -82,6 +79,7 @@ def test_systemfinger():
     assert "Login" not in usersummary
 
 
-def test_installed():
+@pytest.mark.integration
+def test_integration():
     """Check that the endpoint has been installed properly"""
-    assert os.system("bjobsusers") == 0
+    assert subprocess.check_output("bjobsusers")

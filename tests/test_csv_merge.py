@@ -16,16 +16,8 @@ def test_taglist():
         "/a/com/realization-3/",
     ]  # Trailing slash is important.
 
-    assert csv_merge.taglist(files, csv_merge.REAL_REGEXP) == [
-        "3",
-        "5",
-        "3",
-    ]
-    assert csv_merge.taglist(files, csv_merge.ITER_REGEXP) == [
-        "0",
-        "1",
-        None,
-    ]
+    assert csv_merge.taglist(files, csv_merge.REAL_REGEXP) == ["3", "5", "3"]
+    assert csv_merge.taglist(files, csv_merge.ITER_REGEXP) == ["0", "1", None]
     assert csv_merge.taglist(files, csv_merge.ENSEMBLE_REGEXP) == [
         "iter-0",
         "iter-1",

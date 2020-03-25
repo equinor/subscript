@@ -6,7 +6,7 @@ import pyscal
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(prog="gen_satfunc.py")
+    parser = argparse.ArgumentParser(prog="gen_satfunc")
     parser.add_argument(
         "config_file",
         help=(

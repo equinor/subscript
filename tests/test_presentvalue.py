@@ -4,12 +4,13 @@ import pytest  # noqa: F401
 import os
 import sys
 
+import subprocess
+import pytest
+
 from subscript.presentvalue import presentvalue
 
 
 def test_main():
-
-    assert os.system("presentvalue -h") == 0
 
     ecldir = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
     parameterstxt_fname = os.path.join(ecldir, "parameters.txt")
@@ -31,3 +32,9 @@ def test_main():
     parametersline = open(parameterstxt_fname).readlines()[0].strip()
     assert parametersline.split()[0] == "PresentValue"
     assert round(float(parametersline.split()[1]), 1) == 11653.9
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    subprocess.check_output(["presentvalue", "-h"])

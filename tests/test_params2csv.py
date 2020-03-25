@@ -3,14 +3,15 @@ from __future__ import absolute_import
 import os
 import sys
 
+import subprocess
+import pytest
+
 import pandas as pd
 
 from subscript.params2csv import params2csv
 
 
 def test_main():
-
-    assert os.system("params2csv -h") == 0
 
     testdir = os.path.join(os.path.dirname(__file__), "testdata_params2csv")
     if not os.path.exists(testdir):
@@ -71,3 +72,9 @@ def test_main():
     assert "BOGUS" not in result
     assert "filename" in result
     assert set(result["filename"].values) == set(["parameters1.txt", "parameters2.txt"])
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["params2csv", "-h"])
