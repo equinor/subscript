@@ -2,6 +2,8 @@ language: python
 
 dist: bionic
 
+if: (type = pull_request) OR (tag IS true)
+
 compiler:
   - gcc
 
