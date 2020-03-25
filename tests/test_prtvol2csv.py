@@ -4,6 +4,9 @@ import sys
 import os
 import shutil
 
+import subprocess
+import pytest
+
 import pandas as pd
 import yaml
 
@@ -11,6 +14,7 @@ from subscript.prtvol2csv import prtvol2csv
 
 
 def test_prtvol2csv(tmpdir):
+
     testdatadir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
     )
@@ -26,6 +30,12 @@ def test_prtvol2csv(tmpdir):
     assert "PORV_TOTAL" in dframe  # also
     assert not dframe.empty
     assert len(dframe) == 6
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["prtvol2csv", "-h"])
 
 
 def test_prtvol2csv_regions(tmpdir):

@@ -4,6 +4,9 @@ from __future__ import absolute_import
 
 import os
 import sys
+import subprocess
+
+import pytest
 
 from subscript.gen_satfunc import gen_satfunc
 
@@ -18,7 +21,14 @@ RELPERM 4 1 0.5 3 2 0.5 0.16 0.09 0.4 20
 """
 
 
+@pytest.mark.integration
+def test_integration():
+    """Test that endpoint is installed"""
+    assert subprocess.check_output(["gen_satfunc", "-h"])
+
+
 def test_gen_satfunc():
+    """Test the main function and its args handling"""
     testdir = os.path.join(os.path.dirname(__file__), "testdata_gen_satfunc")
     if not os.path.exists(testdir):
         os.mkdir(testdir)

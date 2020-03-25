@@ -1,6 +1,8 @@
 """Test runrms script, but manual interactive testing is also needed"""
 import os
 import pytest
+import subprocess
+
 from subscript.runrms import runrms as rr
 
 TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
@@ -37,6 +39,12 @@ def test_do_parse_args(tmpdir):
     print(runner.args)
 
     assert "dryrun=True" in str(runner.args)
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["runrms", "-h"])
 
 
 @SKIPCIRUN

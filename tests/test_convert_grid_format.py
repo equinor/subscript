@@ -59,3 +59,8 @@ def test_convert_grid_format_restart(tmpdir):
     gprop = xtgeo.GridProperty(actual_outfile)
 
     assert gprop.values.mean() == pytest.approx(0.0857, abs=0.001)
+
+
+def test_installed():
+    """Test that the endpoint is installed"""
+    assert os.system("convert_grid_format") == 0

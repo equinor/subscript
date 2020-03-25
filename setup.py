@@ -16,7 +16,7 @@ SSCRIPTS = [
     "csv_merge = subscript.csv_merge.csv_merge:main",
     "csv_stack = subscript.csv_stack.csv_stack:main",
     "eclcompress = subscript.eclcompress.eclcompress:main",
-    "gen_satfunc = subscript.gen_satfunc.get_satfunc:main",
+    "gen_satfunc = subscript.gen_satfunc.gen_satfunc:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "pack_sim = subscript.pack_sim.pack_sim:main",
@@ -28,6 +28,7 @@ SSCRIPTS = [
     "runrms = subscript.runrms.runrms:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "sunsch = subscript.sunsch.sunsch:main",
+    "vfp2csv = subscript.vfp2csv.vfp2csv:main",
 ]
 
 LEGACYSCRIPTS = [
