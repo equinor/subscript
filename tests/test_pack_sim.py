@@ -4,13 +4,23 @@ import pytest  # noqa: F401
 import os
 import sys
 
+import subprocess
+import pytest
+
 from subscript.pack_sim import pack_sim
 
 ECLDIR = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
 ECLCASE = "2_R001_REEK-0.DATA"
 
 
+@pytest.mark.integration
+def test_integration():
+    """Test that endpoint is installed"""
+    assert subprocess.check_output(["pack_sim", "-h"])
+
+
 def test_main(tmpdir):
+
     tmpdir.chdir()
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)

@@ -5,11 +5,15 @@ import sys
 import os
 import shutil
 
+import subprocess
+import pytest
+
 from subscript.restartthinner import restartthinner
 
 
 def test_main(tmpdir):
     """Basic testing of the command line application"""
+
     ecldir = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
 
     unrst_fname = "2_R001_REEK-0.UNRST"
@@ -40,3 +44,9 @@ def test_main(tmpdir):
     assert new_rstindices[0] == orig_rstindices[0]
     assert new_rstindices[-1] == orig_rstindices[-1]
     assert len(restartthinner.get_restart_indices(unrst_fname + ".orig")) == 4
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed, and the binary tools are available"""
+    assert subprocess.check_output(["restartthinner", "-h"])

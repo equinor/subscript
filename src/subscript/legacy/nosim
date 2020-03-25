@@ -1,5 +1,4 @@
 #!/usr/bin/perl -w 
-#
 
 # Usage:
 #   $ nosim ECLDECK.DATA
@@ -10,14 +9,6 @@
 #
 # NB: No cleanup is performed, but the temporary file is
 # hidden so it will not clutter too much.
-#
-# First version:
-# Håvard Berland, havb@statoil.com September 2012.
-
-#
-# Current version:
-# $Id: nosim 405 2013-01-07 13:38:03Z pasl $
-#
 
 use strict ;
 

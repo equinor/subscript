@@ -7,6 +7,9 @@ from __future__ import absolute_import
 import sys
 import os
 
+import subprocess
+import pytest
+
 import pandas as pd
 
 from subscript.pvt2csv import pvt2csv
@@ -14,6 +17,7 @@ from subscript.pvt2csv import pvt2csv
 
 def test_pvt2csv(tmpdir):
     """Test the command line utility on a sample input file"""
+
     testdatadir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/include/props"
     )
@@ -32,3 +36,9 @@ def test_pvt2csv(tmpdir):
     assert "VOLUMEFACTOR" in dframe
 
     assert not dframe.empty
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["pvt2csv", "-h"])

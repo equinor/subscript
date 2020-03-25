@@ -1,6 +1,7 @@
 """Test csvMergeEnsembles aka csv_merge"""
 from __future__ import absolute_import
 
+import os
 import sys
 
 import pandas as pd
@@ -15,16 +16,8 @@ def test_taglist():
         "/a/com/realization-3/",
     ]  # Trailing slash is important.
 
-    assert csv_merge.taglist(files, csv_merge.REAL_REGEXP) == [
-        "3",
-        "5",
-        "3",
-    ]
-    assert csv_merge.taglist(files, csv_merge.ITER_REGEXP) == [
-        "0",
-        "1",
-        None,
-    ]
+    assert csv_merge.taglist(files, csv_merge.REAL_REGEXP) == ["3", "5", "3"]
+    assert csv_merge.taglist(files, csv_merge.ITER_REGEXP) == ["0", "1", None]
     assert csv_merge.taglist(files, csv_merge.ENSEMBLE_REGEXP) == [
         "iter-0",
         "iter-1",
@@ -62,6 +55,9 @@ def test_taglist():
 
 def test_main_merge(tmpdir):
     """Test command line interface for csvMergeEnsembles/csv_merge"""
+
+    assert os.system("csv_merge -h") == 0
+
     tmpdir.chdir()
 
     test_csv_1 = "foo.csv"

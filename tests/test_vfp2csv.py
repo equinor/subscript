@@ -7,6 +7,9 @@ from __future__ import absolute_import
 import sys
 import os
 
+import subprocess
+import pytest
+
 import pandas as pd
 
 from subscript.vfp2csv import vfp2csv
@@ -36,3 +39,9 @@ def test_vfp2csv(tmpdir):
     assert "BHP" in dframe
     assert "OGR" in dframe
     assert "FILENAME" in dframe
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["vfp2csv", "-h"])

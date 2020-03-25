@@ -5,6 +5,7 @@ import os
 import sys
 import datetime
 
+import subprocess
 import pytest  # noqa: F401
 
 from subscript.sunsch import sunsch
@@ -12,6 +13,7 @@ from subscript.sunsch import sunsch
 
 def test_main():
     """Test command line sunsch, loading a yaml file"""
+
     os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
 
     outfile = "schedule.sch"  # also in config.yml
@@ -178,3 +180,9 @@ def test_dategrid():
     assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
     assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["sunsch", "-h"])

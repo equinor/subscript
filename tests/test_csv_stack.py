@@ -24,6 +24,9 @@ TESTFRAME = pd.DataFrame(
 
 def test_main_csv_stack(tmpdir):
     """Test command line interface for csvMergeEnsembles/csv_merge_ensembles"""
+
+    assert os.system("csv_stack -h") == 0
+
     tmpdir.chdir()
     TESTFRAME.to_csv("testframe.csv", index=False)
 
