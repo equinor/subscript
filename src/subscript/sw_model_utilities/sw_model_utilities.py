@@ -7,10 +7,25 @@
 #
 # JRIV
 
+import argparse
 import math
 from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
+
+
+def get_parser():
+    epilog = """This is a simple interactive script for converting
+    'a', 'b' between normal and inverse Leverett SwJ formulations. This is in
+    particular useful for RMS, which uses the inverse formulation while,
+    input from petrphysiscist is usually on the normal form.
+    In addition, interactive plotting of Sw vs height is provided
+    (simplified Leverett).
+    """
+
+    parser = argparse.ArgumentParser(epilog=epilog)
+
+    return parser
 
 
 def menu():
@@ -102,39 +117,39 @@ def convert_normal2inverse(aval, bval):
 def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
 
     # height array; create an array from min to max, with step:
-    h = np.arange(0.01, hmax, 0.1)
+    hei = np.arange(0.01, hmax, 0.1)
 
-    for i in range(0, len(av)):
+    for ix, _vec in enumerate(av):
         if option == 3:
             txt = (
-                desc[i]
+                desc[ix]
                 + "  a="
-                + str(av[i])
+                + str(av[ix])
                 + " b="
-                + str(bv[i])
+                + str(bv[ix])
                 + " $\\phi=$"
-                + str(poro[i])
+                + str(poro[ix])
                 + " $\\kappa=$"
-                + str(perm[i])
+                + str(perm[ix])
             )
         else:
             txt = (
-                desc[i]
+                desc[ix]
                 + "(inverse)  A="
-                + str(avorig[i])
+                + str(avorig[ix])
                 + " B="
-                + str(bvorig[i])
+                + str(bvorig[ix])
                 + " $\\phi=$"
-                + str(poro[i])
+                + str(poro[ix])
                 + " $\\kappa=$"
-                + str(perm[i])
+                + str(perm[ix])
             )
 
-        swn = av[i] * (h * math.sqrt(perm[i] / poro[i])) ** bv[i]
-        sw = swirra[i] + (1.0 - swirra[i]) * swn
-        plt.plot(sw, h, label=txt)
-        if swirra[i] > 0.0:
-            plt.plot(np.zeros(h.size) + swirra[i], h, "--", color="grey")
+        swn = av[ix] * (hei * math.sqrt(perm[ix] / poro[ix])) ** bv[ix]
+        sw = swirra[ix] + (1.0 - swirra[ix]) * swn
+        plt.plot(sw, hei, label=txt)
+        if swirra[ix] > 0.0:
+            plt.plot(np.zeros(hei.size) + swirra[ix], hei, "--", color="grey")
 
     plt.axis([0, 1, 0, hmax])
     plt.legend(loc="upper right", shadow=True, fontsize=10)
@@ -145,8 +160,12 @@ def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
 
 
 def main():
+    """Entry point from command line"""
 
-    option, inverse, av, bv, poro, perm, swirra, desc, hmax = menu()
+    parser = get_parser()
+    _args = parser.parse_args()
+
+    option, _inverse, av, bv, poro, perm, swirra, desc, hmax = menu()
 
     if option == 1:
         aval2, bval2 = convert_normal2inverse(av[0], bv[0])
