@@ -7,6 +7,9 @@ from __future__ import absolute_import
 import sys
 import os
 
+import subprocess
+import pytest
+
 import pandas as pd
 
 from subscript.vfp2csv import vfp2csv
@@ -17,9 +20,6 @@ def test_vfp2csv(tmpdir):
     tmpdir.chdir()
 
     testdatadir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data/vfp")
-
-    # Check that we have it in $PATH
-    assert os.system("vfp2csv -h") == 0
 
     vfpfile1 = os.path.join(testdatadir, "pd2.VFP")
     sys.argv = ["vfp2csv", vfpfile1, "-o", "pd2.csv"]
@@ -39,3 +39,9 @@ def test_vfp2csv(tmpdir):
     assert "BHP" in dframe
     assert "OGR" in dframe
     assert "FILENAME" in dframe
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["vfp2csv", "-h"])

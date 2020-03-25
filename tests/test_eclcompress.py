@@ -2,6 +2,9 @@ from __future__ import absolute_import
 
 import sys
 import os
+import subprocess
+
+import pytest
 
 import opm.io
 
@@ -74,10 +77,14 @@ def test_eclcompress():
     assert opm.io.Parser().parse_string(compressedstr, parsecontext)
 
 
+@pytest.mark.integration
+def test_integration():
+    """Test endpoint is installed"""
+    assert subprocess.check_output(["eclcompress", "-h"])
+
+
 def test_main():
     """Test installed endpoint"""
-
-    assert os.system("eclcompress -h") == 0
 
     testdir = os.path.join(os.path.dirname(__file__), "testdata_eclcompress")
     if not os.path.exists(testdir):

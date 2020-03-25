@@ -5,6 +5,10 @@ import os
 import yaml
 import sys
 import configsuite
+
+import subprocess
+import pytest
+
 from subscript.interp_relperm import interp_relperm
 
 
@@ -100,6 +104,13 @@ def test_args(tmpdir):
     interp_relperm.main()
 
     assert os.path.exists("outfilen.inc")
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that endpoint is installed"""
+    assert subprocess.check_output(["interp_relperm", "-h"])
+
 
 def test_main(tmpdir):
     tmpdir.chdir()

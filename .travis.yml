@@ -77,6 +77,6 @@ before_script:
   - popd; popd
 
 script:
-  - pip install -e .
+  - pip install .
   - python setup.py test
   - python -m flake8 subscript

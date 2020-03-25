@@ -5,12 +5,13 @@ from __future__ import absolute_import
 import os
 import sys
 
+import pytest
+import subprocess
+
 from subscript.summaryplot import summaryplot
 
 
 def test_summaryplotter():
-
-    assert os.system("summaryplot -h") == 0
 
     eclipsedeck = os.path.join(
         os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.DATA"
@@ -44,3 +45,9 @@ def test_summaryplotter():
 
         if os.path.exists(pdffn):
             os.unlink(pdffn)
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that the endpoint is installed"""
+    assert subprocess.check_output(["summaryplot", "-h"])
