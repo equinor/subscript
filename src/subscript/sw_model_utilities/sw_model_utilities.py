@@ -7,10 +7,10 @@
 #
 # JRIV
 
+import math
 from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
-import math as math
 
 
 def menu():
