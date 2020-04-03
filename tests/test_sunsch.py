@@ -1,11 +1,14 @@
+"""Test sunsch"""
 from __future__ import absolute_import
 
 
 import os
 import sys
 import datetime
-
 import subprocess
+
+import yaml
+
 import pytest  # noqa: F401
 
 from subscript.sunsch import sunsch
@@ -42,8 +45,20 @@ def test_main():
     # Check for randomid:
     assert any(["A-4" in x for x in schlines])
 
+    # Test that we can have statements in the init file
+    # before the first DATES that are kept:
+
+    sch_conf = yaml.safe_load(open("config.yml"))
+    print(sch_conf)
+    sch_conf["init"] = "initwithdates.sch"
+    sunsch.process_sch_config(sch_conf, quiet=False)
+
+    # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
+    assert "BAR-FOO" in "".join(open(outfile).readlines())
+
 
 def test_dateclip():
+    """Test dateclipping"""
     os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
 
     # Clip dates after enddate:
@@ -105,6 +120,7 @@ def test_dateclip():
 
 
 def test_dategrid():
+    """Test dategrid generation support in sunsch"""
     # Yearly
     sch = sunsch.process_sch_config(
         {
@@ -180,6 +196,16 @@ def test_dategrid():
     assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
     assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
+
+
+def test_file_startswith_dates():
+    """Test file_startswith_dates function"""
+    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+
+    assert not sunsch.file_startswith_dates("emptyinit.sch")
+    assert not sunsch.file_startswith_dates("initwithdates.sch")
+    assert sunsch.file_startswith_dates("mergeme.sch")
+    assert sunsch.file_startswith_dates("merge2.sch")
 
 
 @pytest.mark.integration

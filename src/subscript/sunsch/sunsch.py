@@ -37,14 +37,14 @@ def process_sch_config(sunschconf, quiet=True):
         sunschconf["refdate"] = sunschconf["startdate"]
 
     if "init" in sunschconf:
-        if not quiet:
-            print("Loading " + sunschconf["init"] + " at startdate")
-        schedule.load(
-            sunschconf["init"],
-            date=datetime.datetime.combine(
-                sunschconf["startdate"], datetime.datetime.min.time()
-            ),
+        starttime = datetime.datetime.combine(
+            sunschconf["startdate"], datetime.datetime.min.time()
         )
+        if not quiet:
+            print(
+                "Loading " + sunschconf["init"] + " at startdate: {}".format(starttime)
+            )
+        schedule.load(sunschconf["init"], starttime)
 
     if "merge" in sunschconf:
         for filename in sunschconf["merge"]:
@@ -60,7 +60,7 @@ def process_sch_config(sunschconf, quiet=True):
                         # logging.info("removed at date...")
                 schedule.load_string(str(tmpschedule))
             except ValueError as exception:
-                raise Exception("Error in " + filename + ": " + str(exception))
+                raise ValueError("Error in " + filename + ": " + str(exception))
 
     if "insert" in sunschconf:  # inserts should be list of dicts of dicts
         for filedict in sunschconf["insert"]:
@@ -208,6 +208,28 @@ def dategrid(startdate, enddate, interval):
             dates.append(date)
         date += datetime.timedelta(days=1)
     return dates
+
+
+def file_startswith_dates(filename):
+    """Check if a sch file starts with DATES
+
+    This information is sometimes needed to determine how to send
+    calls off to opm.io.tools.TimeVector
+
+    Args:
+        filename (str): Filename to check
+
+    Returns:
+        True if the first statement/keyword is DATES
+    """
+    tmpschedule = TimeVector(datetime.date(1900, 1, 1))
+    try:
+        # Since the date is provided in the second arg here, this will fail if the
+        # file starts with DATES
+        tmpschedule.load(filename, datetime_from_date(datetime.date(1900, 1, 1)))
+        return False
+    except ValueError:
+        return True
 
 
 # If we are called from command line:
