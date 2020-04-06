@@ -10,6 +10,7 @@ for 'rms' will be covered.
    RMS executable
  * It should be able to run test versions of RMS
  * It should be able to set the correct Equinor valid PYTHONPATH.
+ * Company wide plugin path
 
 Example of usage::
 
@@ -77,6 +78,7 @@ class RunRMS(object):
     def __init__(self):
         self.version_requested = None  # RMS version requested
         self.pythonpath = None  # RMS pythonpath
+        self.pluginpath = None  # RMS pythonpath
         self.args = None  # The cmd line arguments
         self.project = None  # The path to the RMS project
         self.version_fromproject = None  # Actual ver from the .master (number/string)
@@ -428,7 +430,7 @@ class RunRMS(object):
             self.setdpiscaling = "QT_SCALE_FACTOR={} ".format(usedpi / 100.0)
 
     def get_pythonpath(self):
-        """Get correct pythonpath for given RMS version"""
+        """Get correct pythonpath and pluginpath for the given RMS version"""
         usepy = RMS10PY
         thereleasepy = self.version_requested
         if (
@@ -462,14 +464,25 @@ class RunRMS(object):
             "site-packages",
         )
 
+        pluginspath = join("/project/res/roxapi/x86_64_RH_6", thereleasepy, "plugins")
+
         self.debug("PYTHON3 PATH: {}".format(python3path))
         self.pythonpath = python3path
         self.pythonpathtest = python3pathtest
+        self.pluginspath = pluginspath
 
         if not os.path.isdir(python3path):
             self.pythonpath = ""
             xwarn(
-                "Equinor PYTHONPATH for RMS ({}) not existing, set to None".format(
+                "Equinor PYTHONPATH for RMS ({}) not existing, set empty".format(
+                    python3path
+                )
+            )
+
+        if not os.path.isdir(pluginspath):
+            self.pluginspath = ""
+            xwarn(
+                "Equinor RMS_PLUGINS_PATH for RMS ({}) not existing, set empty".format(
                     python3path
                 )
             )
@@ -481,6 +494,10 @@ class RunRMS(object):
             self.exe = "rms -v " + self.version_requested
 
         command = self.setdpiscaling + "RMS_IPL_ARGS_TO_PYTHON=1 "
+
+        if self.pluginspath:
+            command += "RMS_PLUGINS_LIBRARY=" + self.pluginspath + " "
+
         if not self.args.nopy:
             command += "PYTHONPATH="
             if self.args.testpylib:
