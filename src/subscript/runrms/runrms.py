@@ -10,6 +10,7 @@ for 'rms' will be covered.
    RMS executable
  * It should be able to run test versions of RMS
  * It should be able to set the correct Equinor valid PYTHONPATH.
+ * Company wide plugin path
 
 Example of usage::
 
@@ -42,6 +43,8 @@ RMS12PY = "python3.6"
 THISSCRIPT = os.path.basename(sys.argv[0])
 BETA = "RMS_test_latest"
 SITE = "/prog/roxar/site/"
+ROXAPISITE = "/project/res/roxapi"
+RHEL_ID = "/etc/redhat-release"
 
 
 def touch(fname):
@@ -57,6 +60,19 @@ def xwarn(mystring):
 
 def xerror(mystring):
     print(_BColors.ERROR, mystring, _BColors.ENDC)
+
+
+def detect_os():
+    """Detect operating system string in runtime, return None if not found"""
+
+    # currently only supporting REDHAT systems
+    if os.path.exists(RHEL_ID):
+        with open(RHEL_ID, "r") as buffer:
+            major = buffer.read().split(" ")[6].split(".")[0].replace("'", "")
+            return "x86_64_RH_" + str(major)
+
+    else:
+        return None
 
 
 class _BColors:
@@ -77,6 +93,7 @@ class RunRMS(object):
     def __init__(self):
         self.version_requested = None  # RMS version requested
         self.pythonpath = None  # RMS pythonpath
+        self.pluginspath = None  # RMS pythonpath
         self.args = None  # The cmd line arguments
         self.project = None  # The path to the RMS project
         self.version_fromproject = None  # Actual ver from the .master (number/string)
@@ -428,7 +445,7 @@ class RunRMS(object):
             self.setdpiscaling = "QT_SCALE_FACTOR={} ".format(usedpi / 100.0)
 
     def get_pythonpath(self):
-        """Get correct pythonpath for given RMS version"""
+        """Get correct pythonpath and pluginspath for the given RMS version"""
         usepy = RMS10PY
         thereleasepy = self.version_requested
         if (
@@ -446,30 +463,40 @@ class RunRMS(object):
             usepy = RMS12PY
             thereleasepy = "12.0.0"
 
-        python3path = join(
-            "/project/res/roxapi/x86_64_RH_6",
-            thereleasepy,
-            "lib",
-            usepy,
-            "site-packages",
-        )
+        osver = detect_os()
+        if osver is None:
+            xwarn("Cannot find valid OS version , set to 'dummy'")
+            osver = "dummy"
+        else:
+            print("OS platform is {}\n".format(osver))
+
+        ospath = os.path.join(ROXAPISITE, osver)
+
+        python3path = join(ospath, thereleasepy, "lib", usepy, "site-packages")
 
         python3pathtest = join(
-            "/project/res/roxapi/x86_64_RH_6",
-            thereleasepy + "_test",
-            "lib",
-            usepy,
-            "site-packages",
+            ospath, thereleasepy + "_test", "lib", usepy, "site-packages"
         )
+
+        pluginspath = join(ospath, thereleasepy, "plugins")
 
         self.debug("PYTHON3 PATH: {}".format(python3path))
         self.pythonpath = python3path
         self.pythonpathtest = python3pathtest
+        self.pluginspath = pluginspath
 
         if not os.path.isdir(python3path):
             self.pythonpath = ""
             xwarn(
-                "Equinor PYTHONPATH for RMS ({}) not existing, set to None".format(
+                "Equinor PYTHONPATH for RMS ({}) not existing, set empty".format(
+                    python3path
+                )
+            )
+
+        if not os.path.isdir(pluginspath):
+            self.pluginspath = ""
+            xwarn(
+                "Equinor RMS_PLUGINS_PATH for RMS ({}) not existing, set empty".format(
                     python3path
                 )
             )
@@ -481,6 +508,10 @@ class RunRMS(object):
             self.exe = "rms -v " + self.version_requested
 
         command = self.setdpiscaling + "RMS_IPL_ARGS_TO_PYTHON=1 "
+
+        if self.pluginspath:
+            command += "RMS_PLUGINS_LIBRARY=" + self.pluginspath + " "
+
         if not self.args.nopy:
             command += "PYTHONPATH="
             if self.args.testpylib:
