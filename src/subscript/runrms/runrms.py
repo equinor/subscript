@@ -78,7 +78,7 @@ class RunRMS(object):
     def __init__(self):
         self.version_requested = None  # RMS version requested
         self.pythonpath = None  # RMS pythonpath
-        self.pluginpath = None  # RMS pythonpath
+        self.pluginspath = None  # RMS pythonpath
         self.args = None  # The cmd line arguments
         self.project = None  # The path to the RMS project
         self.version_fromproject = None  # Actual ver from the .master (number/string)
@@ -430,7 +430,7 @@ class RunRMS(object):
             self.setdpiscaling = "QT_SCALE_FACTOR={} ".format(usedpi / 100.0)
 
     def get_pythonpath(self):
-        """Get correct pythonpath and pluginpath for the given RMS version"""
+        """Get correct pythonpath and pluginspath for the given RMS version"""
         usepy = RMS10PY
         thereleasepy = self.version_requested
         if (
