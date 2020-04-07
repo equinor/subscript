@@ -43,6 +43,8 @@ RMS12PY = "python3.6"
 THISSCRIPT = os.path.basename(sys.argv[0])
 BETA = "RMS_test_latest"
 SITE = "/prog/roxar/site/"
+ROXAPISITE = "/project/res/roxapi"
+RHEL_ID = "/etc/redhat-release"
 
 
 def touch(fname):
@@ -58,6 +60,19 @@ def xwarn(mystring):
 
 def xerror(mystring):
     print(_BColors.ERROR, mystring, _BColors.ENDC)
+
+
+def detect_os():
+    """Detect operating system string in runtime, return None if not found"""
+
+    # currently only supporting REDHAT systems
+    if os.path.exists(RHEL_ID):
+        with open(RHEL_ID, "r") as buffer:
+            major = buffer.read().split(" ")[6].split(".")[0].replace("'", "")
+            return "x86_64_RH_" + str(major)
+
+    else:
+        return None
 
 
 class _BColors:
@@ -448,23 +463,22 @@ class RunRMS(object):
             usepy = RMS12PY
             thereleasepy = "12.0.0"
 
-        python3path = join(
-            "/project/res/roxapi/x86_64_RH_6",
-            thereleasepy,
-            "lib",
-            usepy,
-            "site-packages",
-        )
+        osver = detect_os()
+        if osver is None:
+            xwarn("Cannot find valid OS version , set to 'dummy'")
+            osver = "dummy"
+        else:
+            print("OS platform is {}\n".format(osver))
+
+        ospath = os.path.join(ROXAPISITE, osver)
+
+        python3path = join(ospath, thereleasepy, "lib", usepy, "site-packages")
 
         python3pathtest = join(
-            "/project/res/roxapi/x86_64_RH_6",
-            thereleasepy + "_test",
-            "lib",
-            usepy,
-            "site-packages",
+            ospath, thereleasepy + "_test", "lib", usepy, "site-packages"
         )
 
-        pluginspath = join("/project/res/roxapi/x86_64_RH_6", thereleasepy, "plugins")
+        pluginspath = join(ospath, thereleasepy, "plugins")
 
         self.debug("PYTHON3 PATH: {}".format(python3path))
         self.pythonpath = python3path
