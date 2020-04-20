@@ -27,8 +27,20 @@ def process_sch_config(sunschconf, quiet=True):
     :type quiet: bool
     """
     if "startdate" in sunschconf:
+        if not isinstance(sunschconf["startdate"], datetime.date):
+            raise TypeError(
+                "ERROR: startdate {} not (?) in ISO-8601 format, must be YYYY-MM-DD".format(
+                    sunschconf["startdate"]
+                )
+            )
         schedule = TimeVector(sunschconf["startdate"])
     elif "refdate" in sunschconf:
+        if not isinstance(sunschconf["refdate"], datetime.date):
+            raise TypeError(
+                "ERROR: refdate {} not in ISO-8601 format, must be YYYY-MM-DD".format(
+                    sunschconf["refdate"]
+                )
+            )
         schedule = TimeVector(sunschconf["refdate"])
     else:
         raise ValueError("No startdate or refdate given")
@@ -47,6 +59,8 @@ def process_sch_config(sunschconf, quiet=True):
         schedule.load(sunschconf["init"], starttime)
 
     if "merge" in sunschconf:
+        if not isinstance(sunschconf["merge"], list):
+            sunschconf["merge"] = [sunschconf["merge"]]
         for filename in sunschconf["merge"]:
             try:
                 if not quiet:
@@ -130,8 +144,10 @@ def process_sch_config(sunschconf, quiet=True):
     else:
         enddate = sunschconf["enddate"]  # datetime.date
         if not isinstance(enddate, datetime.date):
-            raise ValueError(
-                "ERROR: end-date not in ISO-8601 format, must be YYYY-MM-DD"
+            raise TypeError(
+                "ERROR: enddate {} not in ISO-8601 format, must be YYYY-MM-DD".format(
+                    sunschconf["enddate"]
+                )
             )
 
     # Clip anything that is beyond the enddate
