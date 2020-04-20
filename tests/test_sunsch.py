@@ -149,6 +149,59 @@ def test_nonisodate():
         sch = sunsch.process_sch_config(sunschconf)
 
 
+def test_merge_include_nonexist(tmpdir):
+    """If a user merges in a sch file which contains INCLUDE
+    statements, these files may not exist yet (or only for a
+    different path and so on. Can we still be able to merge this?"
+    """
+    tmpdir.chdir()
+    open("mergewithexistinginclude.sch", "w").write(
+        """
+DATES
+  1 'JAN' 2030 /
+/
+
+INCLUDE
+  'something.sch' /
+"""
+    )
+    open("something.sch", "w").write(
+        """
+WRFTPLT
+  2 /
+/
+"""
+    )
+
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "merge": "mergewithexistinginclude.sch",
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "WRFTPLT" in str(sch)
+
+    # Now if it does not exist:
+    open("mergewithnonexistinginclude.sch", "w").write(
+        """
+DATES
+  1 'JAN' 2030 /
+/
+
+INCLUDE
+  'somethingnotexistingyet.sch' /
+"""
+    )
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "merge": "mergewithnonexistinginclude.sch",
+    }
+    # This crashes in C-code and exits, can't catch it using pytest:
+    # "A fatal error has occured and the application will stop"
+    # "Could not open file: ....somethingnotexistingyet.sch"
+
+    # sch = sunsch.process_sch_config(sunschconf)
+
+
 def test_merge():
     """Test that merge can be both a list and a string, that
     allows both syntaxes in yaml:
@@ -161,16 +214,12 @@ def test_merge():
       - filename1.sch
       - filename2.sch
     """
-    sunschconf = {
-        "startdate": datetime.date(2000, 1, 1),
-        "merge": "mergeme.sch",
-    }
+    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": "mergeme.sch"}
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
-    sunschconf = {
-        "startdate": datetime.date(2000, 1, 1),
-        "merge": ["mergeme.sch"],
-    }
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": ["mergeme.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
 
