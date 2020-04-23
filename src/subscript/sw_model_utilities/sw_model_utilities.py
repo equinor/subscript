@@ -23,9 +23,7 @@ def get_parser():
     (simplified Leverett).
     """
 
-    parser = argparse.ArgumentParser(epilog=epilog)
-
-    return parser
+    return argparse.ArgumentParser(epilog=epilog)
 
 
 def menu():
@@ -162,8 +160,7 @@ def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
 def main():
     """Entry point from command line"""
 
-    parser = get_parser()
-    _args = parser.parse_args()
+    get_parser().parse_args()
 
     option, _inverse, av, bv, poro, perm, swirra, desc, hmax = menu()
 
