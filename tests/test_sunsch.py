@@ -119,6 +119,111 @@ def test_dateclip():
     assert datetime.datetime(2000, 1, 1, 0, 0) not in sch.dates
 
 
+def test_nonisodate():
+    """Test behaviour when users use non-ISO-dates"""
+    sunschconf = {
+        "startdate": "01-01-2020",
+        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+    }
+    with pytest.raises(TypeError):
+        sch = sunsch.process_sch_config(sunschconf)
+
+    sunschconf = {
+        "refdate": "01-01-2020",
+        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+    }
+    with pytest.raises(TypeError):
+        sch = sunsch.process_sch_config(sunschconf)
+
+    sunschconf = {
+        # Beware that using a ISO-string for a date in this config
+        # will give a wrong error message, since the code assumes
+        # all string dates are already parsed into datimes by the
+        # yaml loader.
+        # "startdate": "2020-01-01",
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": "01-01-2020",
+        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+    }
+    with pytest.raises(TypeError):
+        sch = sunsch.process_sch_config(sunschconf)
+
+
+def test_merge_include_nonexist(tmpdir):
+    """If a user merges in a sch file which contains INCLUDE
+    statements, these files may not exist yet (or only for a
+    different path and so on. Can we still be able to merge this?"
+    """
+    tmpdir.chdir()
+    open("mergewithexistinginclude.sch", "w").write(
+        """
+DATES
+  1 'JAN' 2030 /
+/
+
+INCLUDE
+  'something.sch' /
+"""
+    )
+    open("something.sch", "w").write(
+        """
+WRFTPLT
+  2 /
+/
+"""
+    )
+
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "merge": "mergewithexistinginclude.sch",
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "WRFTPLT" in str(sch)
+
+    # Now if it does not exist:
+    open("mergewithnonexistinginclude.sch", "w").write(
+        """
+DATES
+  1 'JAN' 2030 /
+/
+
+INCLUDE
+  'somethingnotexistingyet.sch' /
+"""
+    )
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "merge": "mergewithnonexistinginclude.sch",
+    }
+    # This crashes in C-code and exits, can't catch it using pytest:
+    # "A fatal error has occured and the application will stop"
+    # "Could not open file: ....somethingnotexistingyet.sch"
+
+    # sch = sunsch.process_sch_config(sunschconf)
+
+
+def test_merge():
+    """Test that merge can be both a list and a string, that
+    allows both syntaxes in yaml:
+
+    merge: filename.sch
+
+    and
+
+    merge:
+      - filename1.sch
+      - filename2.sch
+    """
+    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": "mergeme.sch"}
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "WRFTPLT" in str(sch)
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": ["mergeme.sch"]}
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "WRFTPLT" in str(sch)
+
+
 def test_dategrid():
     """Test dategrid generation support in sunsch"""
     # Yearly
