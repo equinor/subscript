@@ -9,7 +9,7 @@ TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
 TESTRMS2 = "tests/data/reek/rms/reek.rms11.1.0"
 
 FAKE = ""
-if not "KOMODO_RELEASE" in os.environ:
+if "KOMODO_RELEASE" not in os.environ:
     FAKE = "--fake"  # for travis or similar runs
 
 SKIPCIRUN = pytest.mark.skipif(FAKE != "", reason="Running travis or similar")
