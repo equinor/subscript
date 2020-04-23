@@ -85,9 +85,11 @@ def call_finger(username):
     finger_output = None
     try:
         with open(os.devnull, "w") as devnull:
-            finger_output = subprocess.check_output(
-                cmd, shell=True, stderr=devnull
-            ).strip().decode("utf-8")
+            finger_output = (
+                subprocess.check_output(cmd, shell=True, stderr=devnull)
+                .strip()
+                .decode("utf-8")
+            )
     except AttributeError:
         pass
     if finger_output:
