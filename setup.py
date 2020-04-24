@@ -16,7 +16,7 @@ SSCRIPTS = [
     "csv_merge = subscript.csv_merge.csv_merge:main",
     "csv_stack = subscript.csv_stack.csv_stack:main",
     "eclcompress = subscript.eclcompress.eclcompress:main",
-    "gen_satfunc = subscript.gen_satfunc.gen_satfunc:main",
+    "gen_satfunc = subscript.gen_satfunc.get_satfunc:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "pack_sim = subscript.pack_sim.pack_sim:main",
@@ -25,11 +25,10 @@ SSCRIPTS = [
     "prtvol2csv = subscript.prtvol2csv.prtvol2csv:main",
     "pvt2csv = subscript.pvt2csv.pvt2csv:main",
     "restartthinner = subscript.restartthinner.restartthinner:main",
-    "runrms = subscript.runrms.runrms:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
-    "sw_model_utilities = subscript.sw_model_utilities.sw_model_utilities:main",
     "sunsch = subscript.sunsch.sunsch:main",
-    "vfp2csv = subscript.vfp2csv.vfp2csv:main",
+    "well_builder = subscript.well_builder.well_builder:main",
+    "WellBuilder = subscript.well_builder.well_builder:main",
 ]
 
 LEGACYSCRIPTS = [
@@ -40,7 +39,6 @@ LEGACYSCRIPTS = [
     "list_rms_usage",
     "make_3dgrid_regions",
     "nosim",
-    "roxenvbash",
     "runeclipse",
 ]
 

@@ -1,0 +1,14 @@
+language: python
+dist: trusty
+
+python:
+  - 3.6
+
+os:
+  - linux
+
+script:
+  - pip install -r requirements.txt
+  - pip install .
+  - pytest
+
