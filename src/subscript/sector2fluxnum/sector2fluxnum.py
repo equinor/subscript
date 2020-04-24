@@ -71,6 +71,9 @@ def get_parser():
         )
     parser.add_argument("--fipfile", type=str, help="FIPNUM file read separately")
     parser.add_argument("--fluxfile", type=str, help="FLUXNUM file read separately")
+    parser.add_argument(
+        "--test", type=str, help="Name of predefined DUMPFLUX case for testing"
+        )
     parser.add_argument("-v", "--version", type=str, help="ECL version")
     parser.add_argument(
         "--lgr", action="store_true", help="Special feature for LGR treatment"
@@ -94,6 +97,8 @@ def sector_to_fluxnum(args):
     if not args.OUTPUT_CASE:
         print("ERROR: Specify OUTPUT_NAME of final FLUX file", " ")
         sys.exit(1)
+
+
 
     FIPNUM_no = args.fipnum
 
@@ -237,25 +242,41 @@ def sector_to_fluxnum(args):
 
     # ###########################################
 
-    print("Executing DUMPFLUX NOSIM run ...")
-    if args.version:
-        new_data_file.run_DUMPFLUX_NOSIM(args.version)
+    if args.test:
+        args.test = os.path.abspath(args.test).split(".")[0:-1]
+
+        if not os.path.isfile("%s.FLUX" % args.test[0]):
+            print("ERROR: FLUX file from DUMPFLUX run not created")
+            sys.exit(1)
+
+        # Needs the coordinates from the
+        print("Generating new FLUX file...")
+            
+        grid_coarse = EclGrid("%s.EGRID" % args.test[0])
+        grid_fine = EclGrid("%s.EGRID" % args.test[0])
+    
+        flux_coarse = EclFile("%s.FLUX" % args.test[0])
+        flux_fine = EclFile("%s.FLUX" % args.test[0])
+
     else:
-        new_data_file.run_DUMPFLUX_NOSIM()
+        print("Executing DUMPFLUX NOSIM run ...")
+        if args.version:
+            new_data_file.run_DUMPFLUX_NOSIM(args.version)
+        else:
+            new_data_file.run_DUMPFLUX_NOSIM()
 
+        if not os.path.isfile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT):
+            print("ERROR: FLUX file from DUMPFLUX run not created")
+            sys.exit(1)
 
-    if not os.path.isfile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT):
-        print("ERROR: FLUX file from DUMPFLUX run not created")
-        sys.exit(1)
+        # Needs the coordinates from the
+        print("Generating new FLUX file...")
 
-    # Needs the coordinates from the
-    print("Generating new FLUX file...")
+        grid_coarse = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
+        grid_fine = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
 
-    grid_coarse = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
-    grid_fine = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
-
-    flux_coarse = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
-    flux_fine = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
+        flux_coarse = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
+        flux_fine = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
 
     # Reads restart file
     if args.restart:
