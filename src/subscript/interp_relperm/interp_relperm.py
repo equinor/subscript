@@ -69,7 +69,7 @@ import sys
 import os
 import yaml
 import argparse
-from ecl2df import satfunc, inferdims
+from ecl2df import satfunc
 
 import configsuite
 from configsuite import types
