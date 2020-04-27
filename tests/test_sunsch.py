@@ -152,7 +152,10 @@ def test_nonisodate():
 def test_merge_include_nonexist(tmpdir):
     """If a user merges in a sch file which contains INCLUDE
     statements, these files may not exist yet (or only for a
-    different path and so on. Can we still be able to merge this?"
+    different path and so on.
+
+    The way to get around this, is to do string insertions
+    in the insert section.
     """
     tmpdir.chdir()
     open("mergewithexistinginclude.sch", "w").write(
@@ -200,6 +203,13 @@ INCLUDE
     # "Could not open file: ....somethingnotexistingyet.sch"
 
     # sch = sunsch.process_sch_config(sunschconf)
+
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "insert": [{"": {"days": 2, "string": "INCLUDE\n  'something.sch'/\n"}}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "something.sch" in str(sch)
 
 
 def test_merge():
