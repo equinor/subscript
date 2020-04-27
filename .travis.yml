@@ -22,6 +22,9 @@ matrix:
     - python: '3.8'
 
 before_install:
+  - pip install black && black --check *.py src/subscript/*/*.py tests/test*.py || echo
+  - pip install flake8
+  - flake8 src tests
   - python --version
   - export INSTALL_DIR=`pwd`/../install
   - export PATH=$PATH:$INSTALL_DIR/bin
@@ -79,4 +82,3 @@ before_script:
 script:
   - pip install .
   - python setup.py test
-  - python -m flake8 subscript

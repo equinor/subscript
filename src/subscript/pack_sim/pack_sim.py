@@ -164,7 +164,10 @@ def _get_paths(filename, org_sim_loc):
                         paths[path_info[1]] = path_info[3]
                     except IndexError:
                         print(
-                            "WARNING: Could not parse %s as a PATHS definition, skipping"
+                            (
+                                "WARNING: Could not parse %s as a "
+                                "PATHS definition, skipping"
+                            )
                             % line_strip
                         )
 
@@ -491,7 +494,8 @@ def inspect_file(
                 "** - REMOVE THE USEFLUX KEYWORD                                     **"
             )
             print(
-                "**********************************************************************"
+                "******************************************"
+                "****************************"
             )
             warnings += 1
             new_data_file += line

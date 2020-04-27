@@ -126,14 +126,14 @@ def test_nonisodate():
         "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
     }
     with pytest.raises(TypeError):
-        sch = sunsch.process_sch_config(sunschconf)
+        sunsch.process_sch_config(sunschconf)
 
     sunschconf = {
         "refdate": "01-01-2020",
         "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
     }
     with pytest.raises(TypeError):
-        sch = sunsch.process_sch_config(sunschconf)
+        sunsch.process_sch_config(sunschconf)
 
     sunschconf = {
         # Beware that using a ISO-string for a date in this config
@@ -146,7 +146,7 @@ def test_nonisodate():
         "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
     }
     with pytest.raises(TypeError):
-        sch = sunsch.process_sch_config(sunschconf)
+        sunsch.process_sch_config(sunschconf)
 
 
 def test_merge_include_nonexist(tmpdir):
