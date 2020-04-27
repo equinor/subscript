@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-"""
+
+DESCRIPTION = """
 This is a wrapper script that executes the different
 steps in the workflow for generating sector models in ECLIPSE.
 
@@ -21,18 +22,16 @@ from ecl.grid import EclGrid
 from ecl.eclfile import EclFile, FortIO
 from ecl.well import WellInfo
 import datetime
-from flux_obj import *
-from fluxfile_obj import *
-from datafile_obj import *
-from well_obj import *
-from flux_util import unpack_filter
-from completions import *
+from subscript.sector2fluxnum.flux_obj import *
+from subscript.sector2fluxnum.fluxfile_obj import *
+from subscript.sector2fluxnum.datafile_obj import *
+from subscript.sector2fluxnum.well_obj import *
+from subscript.sector2fluxnum.flux_util import unpack_filter
+from subscript.sector2fluxnum.completions import *
 
 
 def header_print():
     
-    print("\n".join(sys.path))
-
     sys.stdout.write(
         "*********************************************************************\n"
         "*********************************************************************\n"
@@ -57,7 +56,7 @@ def get_parser():
 
     """
 
-    parser = argparse.ArgumentParser(prog="sector2fluxnum.py")
+    parser = argparse.ArgumentParser(prog="sector2fluxnum.py", description=DESCRIPTION)
     parser.add_argument("ECLIPSE_CASE", type=str, help="Eclipse input case")
     parser.add_argument("OUTPUT_CASE", type=str, help="Name of output FLUX file")
     parser.add_argument("-i", type=str, help="Example: -i 5-20")
@@ -83,6 +82,21 @@ def get_parser():
 
 
 def sector_to_fluxnum(args):
+
+    """
+    Wrapper function that generates an ECL DATA file with single FLUXNUM based on
+    user Region-of-Interest.
+
+    This is a wrapper script that executes the different
+    steps in the workflow for generating sector models in ECLIPSE.
+    
+    The sector models have the same resolution as the full-field model
+    
+    Further details about usage and howto can be found here:
+    
+    @args: Input arguments. Use "sector2fluxnum --help" for more info
+
+    """
 
     now = datetime.datetime.now()
     args.ECLIPSE_CASE = os.path.abspath(args.ECLIPSE_CASE).split(".")[0:-1]
@@ -318,6 +332,9 @@ def sector_to_fluxnum(args):
     
 
 def main():
+    """
+    """
+
     header_print()
     parser = get_parser()
     input_args = parser.parse_args()

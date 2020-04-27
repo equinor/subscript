@@ -8,7 +8,7 @@ except ImportError:
     from ecl import EclTypeEnum
 
 import sys
-import flux_util as futil
+import subscript.sector2fluxnum.flux_util as futil
 import os
 
 
