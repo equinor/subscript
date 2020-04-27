@@ -152,7 +152,10 @@ def test_nonisodate():
 def test_merge_include_nonexist(tmpdir):
     """If a user merges in a sch file which contains INCLUDE
     statements, these files may not exist yet (or only for a
-    different path and so on. Can we still be able to merge this?"
+    different path and so on.
+
+    The way to get around this, is to do string insertions
+    in the insert section.
     """
     tmpdir.chdir()
     open("mergewithexistinginclude.sch", "w").write(
@@ -200,6 +203,13 @@ INCLUDE
     # "Could not open file: ....somethingnotexistingyet.sch"
 
     # sch = sunsch.process_sch_config(sunschconf)
+
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "insert": [{"": {"days": 2, "string": "INCLUDE\n  'something.sch'/\n"}}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "something.sch" in str(sch)
 
 
 def test_merge():
@@ -311,6 +321,18 @@ def test_file_startswith_dates():
     assert not sunsch.file_startswith_dates("initwithdates.sch")
     assert sunsch.file_startswith_dates("mergeme.sch")
     assert sunsch.file_startswith_dates("merge2.sch")
+
+
+def test_e300_keywords():
+    """Test a keyword newly added to opm-common"""
+    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+    sunschconf = {
+        "startdate": datetime.date(1900, 1, 1),
+        "enddate": datetime.date(2020, 1, 1),
+        "merge": ["options3.sch"],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "OPTIONS3" in str(sch)
 
 
 @pytest.mark.integration

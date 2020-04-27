@@ -66,7 +66,7 @@ before_script:
 # Build against specific (i.e. tested) opm-common version
 # Latest release (2019.10) does not support all Python bindings
   - git clone --recursive https://github.com/OPM/opm-common.git
-              --branch=testing/2020.3/rc1
+              --branch=release/2020.04/rc2
   - pushd opm-common
   - mkdir build
   - pushd build
