@@ -7,8 +7,6 @@ import shutil
 
 import subprocess
 import pytest
-import shutil
-import six
 
 from subscript.presentvalue import presentvalue
 
