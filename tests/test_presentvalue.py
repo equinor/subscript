@@ -1,8 +1,9 @@
+"""Test presentvalue"""
 from __future__ import absolute_import
 
-import pytest  # noqa: F401
 import os
 import sys
+import shutil
 
 import subprocess
 import pytest
@@ -10,12 +11,13 @@ import pytest
 from subscript.presentvalue import presentvalue
 
 
-def test_main():
-
+def test_main(tmpdir):
+    """Test the main functionality of presentvalue as endpoint script, writing
+    back results to parameters.txt in the original runpath"""
     ecldir = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
-    parameterstxt_fname = os.path.join(ecldir, "parameters.txt")
-    if os.path.exists(parameterstxt_fname):
-        os.unlink(parameterstxt_fname)
+    tmpdir.chdir()
+    shutil.copytree(ecldir, "model")
+    parameterstxt_fname = "parameters.txt"
 
     # Create an empty file called parameters.txt, otherwise
     # the presentvalue script will not write to it.
@@ -26,7 +28,7 @@ def test_main():
         "--writetoparams",
         "--discountto",
         "2001",
-        os.path.join(ecldir, "2_R001_REEK-0.DATA"),
+        os.path.join("model", "2_R001_REEK-0.DATA"),
     ]
     presentvalue.main()
     parametersline = open(parameterstxt_fname).readlines()[0].strip()
