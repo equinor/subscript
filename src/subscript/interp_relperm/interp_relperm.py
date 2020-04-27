@@ -378,17 +378,27 @@ def main():
     else:
         with open(args.configfile, "r") as ymlfile:
             cfg = yaml.safe_load(ymlfile)
+    process_config(cfg, args.root_path)
 
+
+def process_config(cfg, root_path=""):
+    """
+    Process a configuration and dumps produced Eclipse include file to disk.
+
+    Args:
+        cfg (dict): Configuration for files to parse and interpolate in
+        root_path (string): Preprended to the file paths. Defaults to empty string
+    """
     # add root-path to all include files
     if "base" in cfg.keys():
         for i in range(len(cfg["base"])):
-            cfg["base"][i] = os.path.join(args.root_path, cfg["base"][i])
+            cfg["base"][i] = os.path.join(root_path, cfg["base"][i])
     if "high" in cfg.keys():
         for i in range(len(cfg["high"])):
-            cfg["high"][i] = os.path.join(args.root_path, cfg["high"][i])
+            cfg["high"][i] = os.path.join(root_path, cfg["high"][i])
     if "low" in cfg.keys():
         for i in range(len(cfg["low"])):
-            cfg["low"][i] = os.path.join(args.root_path, cfg["low"][i])
+            cfg["low"][i] = os.path.join(root_path, cfg["low"][i])
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()
