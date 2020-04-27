@@ -29,9 +29,10 @@ def process_sch_config(sunschconf, quiet=True):
     if "startdate" in sunschconf:
         if not isinstance(sunschconf["startdate"], datetime.date):
             raise TypeError(
-                "ERROR: startdate {} not (?) in ISO-8601 format, must be YYYY-MM-DD".format(
-                    sunschconf["startdate"]
-                )
+                (
+                    "ERROR: startdate {} not (?) in ISO-8601 format, "
+                    "must be YYYY-MM-DD"
+                ).format(sunschconf["startdate"])
             )
         schedule = TimeVector(sunschconf["startdate"])
     elif "refdate" in sunschconf:

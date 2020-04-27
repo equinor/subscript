@@ -1,7 +1,6 @@
 """Test the convert_grid_format script"""
 
 import os
-import shutil
 import pytest
 
 import xtgeo
