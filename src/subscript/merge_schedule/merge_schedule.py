@@ -3,8 +3,12 @@ import datetime
 import dateutil.parser
 import argparse
 import yaml
+import logging
 
 from subscript.sunsch import sunsch
+
+logger = logging.getLogger(__name__)
+logging.basicConfig()
 
 
 def get_parser():
@@ -44,17 +48,19 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    sunsch_config = {
-        "startdate": datetime.date(1900, 1, 1),
-        "files": args.inputfiles,
-    }
+    sunsch_config = {"startdate": datetime.date(1900, 1, 1), "files": args.inputfiles}
 
     if args.verbose:
-        print("# Sending the following YAML configuration to sunsch:")
-        print(yaml.dump(sunsch_config))
-        print("# <end sunsch config>")
+        # Set the root logger to INFO, will be inherited by sunsch
+        logging.getLogger().setLevel(logging.INFO)
+
+    logger.info("# Sending the following YAML configuration to sunsch:")
+    logger.info(yaml.dump(sunsch_config))
+
     if args.end_date:
         sunsch_config["enddate"] = dateutil.parser.parse(args.end_date).date()
+
+    sunsch.validate_config(sunsch_config)
 
     sch = sunsch.process_sch_config(sunsch_config)
 

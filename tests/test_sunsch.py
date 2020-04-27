@@ -12,6 +12,7 @@ import yaml
 
 import pytest  # noqa: F401
 
+import configsuite
 from subscript.sunsch import sunsch
 
 DATADIR = os.path.join(os.path.dirname(__file__), "testdata_sunsch")
@@ -105,6 +106,34 @@ def test_main_configv1(tmpdir):
 
     # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
     assert "BAR-FOO" in "".join(open(outfile).readlines())
+
+
+def test_config_schema(tmpdir):
+    """Test the implementation of configsuite"""
+    tmpdir.chdir()
+    cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    assert not cfg_suite.valid  # file missing
+
+    with open("existingfile.sch", "w") as handle:
+        handle.write("foo")
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    assert cfg_suite.valid
+
+    cfg = {"init": "existingfile.sch"}  # missing output
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    assert cfg_suite.valid  # (missing output is allowed)
+
+    import datetime
+
+    cfg = {
+        "init": "existingfile.sch",
+        "output": "newfile.sch",
+        "startdate": datetime.date(2018, 2, 2),
+    }  # i'2018-02-02'}
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    print(cfg_suite.errors)
+    assert cfg_suite.valid
 
 
 def test_dateclip():
