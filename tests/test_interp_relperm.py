@@ -10,7 +10,8 @@ import subprocess
 import pytest
 
 from subscript.interp_relperm import interp_relperm
-
+from pyscal import PyscalFactory
+from ecl2df import satfunc
 
 TESTDATA = os.path.join(os.path.dirname(__file__), "data/relperm")
 
@@ -104,6 +105,62 @@ def test_args(tmpdir):
     interp_relperm.main()
 
     assert os.path.exists("outfilen.inc")
+
+
+def test_mock(tmpdir):
+    """Mocked pyscal-generated input files.
+
+    Note that this is using pyscal both for dumping to disk and
+    parsing from disk, and is thus not representative for how flexible
+    the code is for reading from include files not originating in pyscal.
+    """
+    tmpdir.chdir()
+    columns = [
+        "SATNUM",
+        "Nw",
+        "Now",
+        "Ng",
+        "Nog",
+        "swl",
+        "a",
+        "b",
+        "poro_ref",
+        "perm_ref",
+        "drho",
+    ]
+    dframe_pess = pd.DataFrame(
+        columns=columns, data=[[1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150]],
+    )
+    dframe_base = pd.DataFrame(
+        columns=columns, data=[[1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150]],
+    )
+    dframe_opt = pd.DataFrame(
+        columns=columns, data=[[1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150]],
+    )
+    PyscalFactory.create_pyscal_list(dframe_pess).dump_family_1("pess.inc")
+    PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")
+    PyscalFactory.create_pyscal_list(dframe_opt).dump_family_1("opt.inc")
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [{"param_w": -0.5, "param_g": 0.5}],
+        "delta_s": 0.1,
+    }
+
+    interp_relperm.process_config(config)
+
+    outfile_df = satfunc.df(open("outfile.inc").read(), ntsfun=1)
+    assert set(outfile_df["KEYWORD"].unique()) == {"SWOF", "SGOF"}
+    assert outfile_df["SW"].sum() > 0
+    assert outfile_df["SG"].sum() > 0
+    assert outfile_df["KRW"].sum() > 0
+    assert outfile_df["KROW"].sum() > 0
+    assert outfile_df["KRG"].sum() > 0
+    assert outfile_df["KROG"].sum() > 0
+    assert outfile_df["PCOW"].sum() > 0
 
 
 @pytest.mark.integration
