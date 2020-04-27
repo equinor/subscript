@@ -264,8 +264,8 @@ class RunRMS(object):
 
         mkeys = ("fileversion", "variant", "user", "date", "time")
         try:
-            with open(join(self.project, ".master"), "r") as master:
-                for line in master.readlines():
+            with open(join(self.project, ".master"), "rb") as master:
+                for line in master.read().decode("UTF-8").splitlines():
                     if line.startswith("End GEOMATIC"):
                         break
                     elif line.startswith("release"):
