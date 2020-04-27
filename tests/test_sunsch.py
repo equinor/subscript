@@ -323,6 +323,18 @@ def test_file_startswith_dates():
     assert sunsch.file_startswith_dates("merge2.sch")
 
 
+def test_e300_keywords():
+    """Test a keyword newly added to opm-common"""
+    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+    sunschconf = {
+        "startdate": datetime.date(1900, 1, 1),
+        "enddate": datetime.date(2020, 1, 1),
+        "merge": ["options3.sch"],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "OPTIONS3" in str(sch)
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
