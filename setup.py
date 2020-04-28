@@ -32,6 +32,8 @@ SSCRIPTS = [
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
 ]
 
+SHELLSCRIPTS = ["kmdwrap"]
+
 LEGACYSCRIPTS = [
     "duf",
     "eclmanual",
@@ -65,7 +67,11 @@ setuptools.setup(
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
     entry_points={"console_scripts": SSCRIPTS},
-    scripts=["src/subscript/legacy/" + scriptname for scriptname in LEGACYSCRIPTS],
+    scripts=["src/subscript/legacy/" + scriptname for scriptname in LEGACYSCRIPTS]
+    + [
+        "src/subscript/{}/{}".format(scriptname, scriptname)
+        for scriptname in SHELLSCRIPTS
+    ],
     use_scm_version={"write_to": "src/subscript/version.py"},
     test_suite="tests",
 )

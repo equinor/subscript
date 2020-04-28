@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# A shell wrapper that sets up the wanted Komodo environment
+# and runs a command inside it
+#
+# Usage:
+#    kmdwrap --bleeding somescript  
+#    kmdwrap --komodo stable-py36 somescript
+#    kmdwrap --testing somescript
+#
+# The --bleeding and --testing options always refer to Python 3
+
+komodoversion="stable-py27"
+
+if [ "$1" == "--komodo" ]; then
+    komodoversion=$2
+    shift
+    shift
+    if [ ! -f /prog/res/komodo/${komodoversion}/enable ]; then
+        echo "ERROR: ${komodoversion} is not a komodo release"
+        exit 1
+    fi
+elif [ "$1" == "--bleeding" ]; then
+    komodoversion="bleeding-py36"
+    shift
+elif [ "$1" == "--testing" ]; then
+    komodoversion="testing-py36"
+    shift
+fi
+
+# Cleanup environment:
+unset PYTHONPATH
+
+source /prog/res/komodo/${komodoversion}/enable
+
+echo "$0: Running command under komodo $KOMODO_RELEASE"
+
+# Now run the original command, assumed to be the rest
+# of the command line:
+exec "$@"
