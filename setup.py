@@ -32,7 +32,7 @@ SSCRIPTS = [
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
 ]
 
-SHELLSCRIPTS = ["kmdwrap"]
+SHELLSCRIPTS = ["kmdrun"]
 
 LEGACYSCRIPTS = [
     "duf",
