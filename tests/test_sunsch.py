@@ -5,6 +5,7 @@ from __future__ import absolute_import
 import os
 import sys
 import datetime
+import shutil
 import subprocess
 
 import yaml
@@ -13,11 +14,15 @@ import pytest  # noqa: F401
 
 from subscript.sunsch import sunsch
 
+DATADIR = os.path.join(os.path.dirname(__file__), "testdata_sunsch")
 
-def test_main():
+
+def test_main(tmpdir):
     """Test command line sunsch, loading a yaml file"""
 
-    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    tmpdir.join("testdata_sunsch").chdir()
 
     outfile = "schedule.sch"  # also in config.yml
 
@@ -59,7 +64,9 @@ def test_main():
 
 def test_dateclip():
     """Test dateclipping"""
-    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+
+    # This test function do not write to this directory:
+    os.chdir(DATADIR)
 
     # Clip dates after enddate:
     sunschconf = {
@@ -224,7 +231,7 @@ def test_merge():
       - filename1.sch
       - filename2.sch
     """
-    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+    os.chdir(DATADIR)
 
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": "mergeme.sch"}
     sch = sunsch.process_sch_config(sunschconf)
@@ -315,7 +322,7 @@ def test_dategrid():
 
 def test_file_startswith_dates():
     """Test file_startswith_dates function"""
-    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
+    os.chdir(DATADIR)
 
     assert not sunsch.file_startswith_dates("emptyinit.sch")
     assert not sunsch.file_startswith_dates("initwithdates.sch")
