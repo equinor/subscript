@@ -248,7 +248,6 @@ class Datafile:
 
         output_list = output.decode("utf8").split("\n")
 
-        index = 0
         for line in output_list:
             line_strip = line.strip()
 
@@ -296,7 +295,6 @@ class Datafile:
 
         output_list = output.split("\n")
 
-        # index = 0
         for line in output_list:
             line_strip = line.strip()
 
@@ -557,11 +555,6 @@ class Datafile:
         Input
         @args: Arguments from the intput to the wrapper scripts
         """
-
-        import datetime
-
-        today = datetime.date.today()
-        date_str = today.strftime("%d %b %Y")
 
         if self.USEFLUX_name == "Empty":
             print("ERROR: DUMPFLUX file not found or run")
