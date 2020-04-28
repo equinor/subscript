@@ -284,7 +284,6 @@ class Fluxnum:
                 print(well)
                 self.included_wells.append(well)
                 for g in temp_g:
-                    neighbor_fluxnum_kw = []
                     (i, j, k) = self.grid.get_ijk(global_index=g)
 
                     self.fluxnum_kw[g] = 1

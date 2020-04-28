@@ -336,10 +336,6 @@ def write_new_fluxfile_from_rst(destFlux, sourceGrid, sourceRST, mapping, fortio
         kw_temp = flux_fine[i].deep_copy()
         kw_temp.fwrite(fortio)  # Writes to file succesivly
 
-    # Prop elements
-    nPropElements = len(flux_fine[10])
-
-    newFluxSize = nCommonElements + len(sourceRST)
     blockSize = len(flux_fine) - nCommonElements
 
     # Manipulating existing blocks in the fine grid

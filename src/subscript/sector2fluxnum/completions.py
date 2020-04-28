@@ -9,6 +9,9 @@ import io
 
 
 def get_well_list(schedule_file_list):
+
+    """
+    """
     well_list = []
 
     return well_list
@@ -844,7 +847,7 @@ def find_alias_wells(file_list, clearcomments=False):
 
                 # print line_strip
                 # new_data_file = new_data_file + line
-                line_elements = line_strip.split()
+                # line_elements = line_strip.split()
 
                 well_alias_list.append(line_strip)
                 # well_alias_list.append(line_elements[1].strip("'"))
@@ -961,15 +964,15 @@ def replace_completions_lgr(
                                     lgr_lines += "COMPDATL\n"
                                     has_COMPDATL = True
 
-                                I = int(compdat_elements[1])
-                                J = int(compdat_elements[2])
+                                I1 = int(compdat_elements[1])
+                                J1 = int(compdat_elements[2])
                                 K1 = int(compdat_elements[3])
                                 K2 = int(compdat_elements[4])
 
                                 for K in range(K2 - K1 + 1):
                                     if (
-                                        I - 1,
-                                        J - 1,
+                                        I1 - 1,
+                                        J1 - 1,
                                         K1 + K - 1,
                                     ) not in dummy_lgr_cells:
                                         lgr_lines += "  " + compdat_elements[0]
@@ -986,7 +989,7 @@ def replace_completions_lgr(
 
                                         for index1 in range(len(dummy_lgr_cells)):
                                             if (
-                                                (I - 1, J - 1, K1 + K - 1)
+                                                (I1 - 1, J1 - 1, K1 + K - 1)
                                                 == dummy_lgr_cells[index1]
                                                 and compdat_elements[0].strip("'")
                                                 == dummy_lgr_wells[index1]
@@ -1125,16 +1128,16 @@ def replace_completions_lgr(
                                     lgr_lines += "COMPLMPL\n"
                                     has_COMPLMPL = True
 
-                                I = int(compdat_elements[1])
-                                J = int(compdat_elements[2])
+                                I1 = int(compdat_elements[1])
+                                J1 = int(compdat_elements[2])
                                 K1 = int(compdat_elements[3])
                                 K2 = int(compdat_elements[4])
 
                                 for K in range(K2 - K1 + 1):
 
                                     if (
-                                        I - 1,
-                                        J - 1,
+                                        I1 - 1,
+                                        J1 - 1,
                                         K1 + K - 1,
                                     ) not in dummy_lgr_cells:
                                         lgr_lines += (
@@ -1153,7 +1156,7 @@ def replace_completions_lgr(
 
                                         for index1 in range(len(dummy_lgr_cells)):
                                             if (
-                                                (I - 1, J - 1, K1 + K - 1)
+                                                (I1 - 1, J1 - 1, K1 + K - 1)
                                                 == dummy_lgr_cells[index1]
                                                 and compdat_elements[0].strip("'")
                                                 == dummy_lgr_wells[index1]
@@ -1288,7 +1291,7 @@ def replace_completions_lgr(
             elif "WELOPEN" in line_strip[0:7] or in_WELOPEN:
                 # WPIMULT keyword found!
                 in_WELOPEN = False
-                has_WELOPEN = False
+                # has_WELOPEN = False
                 is_lgr = False
 
                 temp_lines += line
@@ -1316,7 +1319,7 @@ def replace_completions_lgr(
                                 is_lgr = True
                                 if not has_WPIMULTL:
                                     lgr_lines += "WELOPENL\n"
-                                    has_WELOPENL = True
+                                    # has_WELOPENL = True
 
                                 # Finds index of first occurance of well name
                                 index = dummy_lgr_wells.index(
