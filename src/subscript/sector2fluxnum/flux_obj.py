@@ -38,6 +38,7 @@ class Fluxnum:
         self.dummy_lgr_well = []
         self.dummy_lgr_name = []
         self.lgr_region = None
+        self.inner_region = None
 
     def copy_actnum(self, actnum):
         """
@@ -109,29 +110,8 @@ class Fluxnum:
         self.fluxnum_kw = EclKW.read_grdecl(fileH, "FLUXNUM", ecl_type=int_type)
         fileH.close()
 
-    def set_excavate_kw(self):
-        """
-        Creates EXCAVATE keyword in a similar way as for FLUXNUM.
-
-        Non-excavated region will act as a sector with no-flow boundary conditions.
-        """
-        try:
-            int_type = EclDataType.ECL_INT
-        except NameError:
-            int_type = EclTypeEnum.ECL_INT_TYPE
-
-        self.excavate_kw = EclKW("EXCAVATE", self.grid.getGlobalSize(), int_type)
-        for g in range(self.grid.getGlobalSize()):
-            if g in self.inner_region.getGlobalList():
-                self.excavate_kw[g] = 0
-            else:
-                self.excavate_kw[g] = 1
-
     def get_fluxnum_kw(self):
         return self.fluxnum_kw
-
-    def get_excavate_kw(self):
-        return self.excavate_kw
 
     def include_nnc(self, EGRID_file):
         """
@@ -368,38 +348,6 @@ class Fluxnum:
         self.fluxnum_kw.write_grdecl(fileH)
         fileH.close()
 
-    def create_ghost_layer(self):
-        """
-        Creates ghost layer
-        Not including top and bottom k-layers
-
-        Can be used if FLUXNUM region is in contact with many in-active cells.
-        """
-
-        for g in self.inner_region.getGlobalList():
-            isGhost = False
-            (i, j, k) = self.grid.get_ijk(global_index=g)
-
-            if self.grid.active(global_index=g):
-                neighbor_index = self.grid.global_index(ijk=(i - 1, j, k))
-                if not self.grid.active(global_index=neighbor_index):
-                    isGhost = True
-
-                neighbor_index = self.grid.global_index(ijk=(i + 1, j, k))
-                if not self.grid.active(global_index=neighbor_index):
-                    isGhost = True
-
-                neighbor_index = self.grid.global_index(ijk=(i, j - 1, k))
-                if not self.grid.active(global_index=neighbor_index):
-                    isGhost = True
-
-                neighbor_index = self.grid.global_index(ijk=(i, j + 1, k))
-                if not self.grid.active(global_index=neighbor_index):
-                    isGhost = True
-
-            if isGhost:
-                self.fluxnum_kw[g] = 0
-
     def set_dummy_lgr_well_completions_region_filter(
         self, completion_list, well_list, exclude_list=()
     ):
@@ -446,7 +394,7 @@ class Fluxnum:
                         neighbor_index = self.grid.get_global_index(ijk=(i - 1, j, k))
                         neighbor_fluxnum_kw.append(self.fluxnum_kw[neighbor_index])
 
-                    if g not in self.lgr_region.global_list:
+                    if not self.lgr_region.contains_global(g):
                         if self.grid.get_ijk(global_index=g) in self.dummy_lgr_cell:
                             index1 = self.dummy_lgr_cell.index(
                                 self.grid.get_ijk(global_index=g)
@@ -458,7 +406,10 @@ class Fluxnum:
                         self.dummy_lgr_cell.append(self.grid.get_ijk(global_index=g))
                         self.dummy_lgr_well.append(well)
 
-                    elif g in self.lgr_region.global_list and 0 in neighbor_fluxnum_kw:
+                    elif (
+                        not self.lgr_region.contains_global(g)
+                        and 0 in neighbor_fluxnum_kw
+                    ):
                         if self.grid.get_ijk(global_index=g) in self.dummy_lgr_cell:
                             index1 = self.dummy_lgr_cell.index(
                                 self.grid.get_ijk(global_index=g)
