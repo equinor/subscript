@@ -257,9 +257,6 @@ def get_FLUXNUM_STOIIP(grid, init, restart):
     sgas = restart.iget_named_kw("SGAS", 0)
     poro = init.iget_named_kw("PORO", 0)
     ntg = init.iget_named_kw("NTG", 0)
-    dx = init.iget_named_kw("DX", 0)
-    dy = init.iget_named_kw("DY", 0)
-    dz = init.iget_named_kw("DZ", 0)
 
     STOIIP = 0
     for act_i in range(grid.nactive):
@@ -284,9 +281,6 @@ def get_FLUXNUM_OIP(grid, init, restart, index=0):
     sgas = restart.iget_named_kw("SGAS", index)
     poro = init.iget_named_kw("PORO", 0)
     ntg = init.iget_named_kw("NTG", 0)
-    dx = init.iget_named_kw("DX", 0)
-    dy = init.iget_named_kw("DY", 0)
-    dz = init.iget_named_kw("DZ", 0)
 
     STOIIP = 0
     for act_i in range(grid.nactive):
@@ -307,13 +301,9 @@ def get_FLUXNUM_GIIP(grid, init, restart):
     """
 
     fluxnum = init.iget_named_kw("FLUXNUM", 0)
-    swat = restart.iget_named_kw("SWAT", 0)
     sgas = restart.iget_named_kw("SGAS", 0)
     poro = init.iget_named_kw("PORO", 0)
     ntg = init.iget_named_kw("NTG", 0)
-    dx = init.iget_named_kw("DX", 0)
-    dy = init.iget_named_kw("DY", 0)
-    dz = init.iget_named_kw("DZ", 0)
 
     GIIP = 0
     for act_i in range(grid.nactive):
