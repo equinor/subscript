@@ -27,11 +27,11 @@ SSCRIPTS = [
     "pvt2csv = subscript.pvt2csv.pvt2csv:main",
     "restartthinner = subscript.restartthinner.restartthinner:main",
     "runrms = subscript.runrms.runrms:main",
+    "sector2fluxnum = subscript.sector2fluxnum.sector2fluxnum:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "sw_model_utilities = subscript.sw_model_utilities.sw_model_utilities:main",
     "sunsch = subscript.sunsch.sunsch:main",
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
-    "sector2fluxnum = subscript.sector2fluxnum.sector2fluxnum:main",
 ]
 
 LEGACYSCRIPTS = [
