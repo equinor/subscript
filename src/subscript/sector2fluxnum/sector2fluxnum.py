@@ -1,13 +1,12 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
 import argparse
 import sys
 import os
+import datetime
 from cwrap import open
 from ecl.grid import EclGrid
 from ecl.eclfile import EclFile, FortIO
 from ecl.well import WellInfo
-import datetime
 from subscript.sector2fluxnum import flux_obj
 from subscript.sector2fluxnum import fluxfile_obj as ffo
 from subscript.sector2fluxnum import datafile_obj as do
@@ -206,9 +205,8 @@ def sector_to_fluxnum(args):
 
     FLUXNUM_filename = "FLUXNUM_FIPNUM_%s_%d.grdecl" % (args.fipnum, now.microsecond)
 
-    fileH = open(FLUXNUM_filename, "w")
-    fluxnum_new_kw.write_grdecl(fileH)
-    fileH.close()
+    with open(FLUXNUM_filename, "w") as fileH:
+        fluxnum_new_kw.write_grdecl(fileH)
 
     # ###########################################
 
@@ -330,8 +328,8 @@ def sector_to_fluxnum(args):
 
 def main():
     """
+    main method
     """
-
     header_print()
     parser = get_parser()
     input_args = parser.parse_args()
