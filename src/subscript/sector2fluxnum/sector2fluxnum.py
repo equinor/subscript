@@ -265,7 +265,7 @@ def sector_to_fluxnum(args):
         grid_coarse = EclGrid("%s.EGRID" % args.test[0])
         grid_fine = EclGrid("%s.EGRID" % args.test[0])
 
-#        flux_coarse = EclFile("%s.FLUX" % args.test[0])
+        #        flux_coarse = EclFile("%s.FLUX" % args.test[0])
         flux_fine = EclFile("%s.FLUX" % args.test[0])
 
     else:
@@ -285,7 +285,7 @@ def sector_to_fluxnum(args):
         grid_coarse = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
         grid_fine = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
 
-#        flux_coarse = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
+        #        flux_coarse = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
         flux_fine = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
 
     # Reads restart file
@@ -295,7 +295,7 @@ def sector_to_fluxnum(args):
         rst_coarse = EclFile("%s.UNRST" % args.ECLIPSE_CASE[0])
 
     fluxObj_fine = ffo.Fluxfile(grid_fine, flux_fine)
-#    fluxObj_coarse = ffo.Fluxfile(grid_coarse, flux_coarse)
+    #    fluxObj_coarse = ffo.Fluxfile(grid_coarse, flux_coarse)
 
     # ######################################################
     # Creating map

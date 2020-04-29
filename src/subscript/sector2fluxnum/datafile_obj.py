@@ -518,9 +518,7 @@ class Datafile:
                 )
                 fout.write("-- DATA file created %s\n" % (date_str))
                 fout.write("--\n")
-                fout.write(
-                    "-- The sector is selected from the following region"
-                )
+                fout.write("-- The sector is selected from the following region")
                 fout.write(" in the FF model\n")
                 fout.write("-- Box dimensions i-dir =  %s\n" % (args.i))
                 fout.write("-- Box dimensions j-dir =  %s\n" % (args.j))
@@ -605,9 +603,7 @@ class Datafile:
                 else:
                     fout.write("-- Eclipse version is = 2014.2\n")
                 fout.write("--\n")
-                fout.write(
-                    "-- *********************************************\n\n\n"
-                )
+                fout.write("-- *********************************************\n\n\n")
 
                 header_flag = True
 

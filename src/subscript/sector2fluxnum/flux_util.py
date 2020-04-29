@@ -101,10 +101,7 @@ def filter_region(grid, i, j, k, fipnum, fipnum_kw, combine_operator="intersect"
         region = region1 & region2
         return region
     else:
-        sys.exit(
-            "'%s' is not a valid operator to combine regions."
-            % combine_operator
-        )
+        sys.exit("'%s' is not a valid operator to combine regions." % combine_operator)
 
 
 def filter_region_fipnum(grid, fipnum, fipnum_kw, combine_operator="intersect"):
@@ -139,10 +136,7 @@ def filter_region_fipnum(grid, fipnum, fipnum_kw, combine_operator="intersect"):
         region = region1 & region2
         return region
     else:
-        sys.exit(
-            "'%s' is not a valid operator to combine regions."
-            % combine_operator
-        )
+        sys.exit("'%s' is not a valid operator to combine regions." % combine_operator)
 
 
 def filter_region_ijk(grid, i, j, k, combine_operator="intersect"):
@@ -195,10 +189,7 @@ def filter_region_ijk(grid, i, j, k, combine_operator="intersect"):
         region = region1 & region2
         return region
     else:
-        sys.exit(
-            "'%s' is not a valid operator to combine regions."
-            % combine_operator
-        )
+        sys.exit("'%s' is not a valid operator to combine regions." % combine_operator)
 
 
 def unpack_filter(filter_list):
