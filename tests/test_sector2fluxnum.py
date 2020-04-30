@@ -1,5 +1,4 @@
 #!/bin/env python
-
 from __future__ import absolute_import
 
 import sys
@@ -8,17 +7,12 @@ import os
 from subscript.sector2fluxnum import sector2fluxnum
 
 
-def test_sector2fluxnum():
-
+def test_main(tmpdir):
     TESTDATA = os.path.join(os.path.dirname(__file__), "data/sector")
-
-    testdir = os.path.join(os.path.dirname(__file__), "testdata_sector2fluxnum")
-    if not os.path.exists(testdir):
-        os.mkdir(testdir)
-    os.chdir(testdir)
+    tmpdir.chdir()
 
     input_ECL_CASE = os.path.join(TESTDATA, "TEST.DATA")
-    input_OUTPUT_FLUX = os.path.join(TESTDATA, "OUT_COARSE.FLUX")
+    input_OUTPUT_FLUX = "OUT_COARSE.FLUX"
     input_INPUT_DUMPFLUX = os.path.join(TESTDATA, "DUMPFLUX_TEST.DATA")
     input_RESTART = os.path.join(TESTDATA, "TEST.UNRST")
 
