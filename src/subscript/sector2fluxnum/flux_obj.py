@@ -177,7 +177,7 @@ class Fluxnum:
                     self.fluxnum_kw[g] = 1
 
     def include_well_completions_extra_layer_lgr(
-        self, completion_list, well_list, exclude_list=()
+            self, completion_list, well_list, exclude_list=()
     ):
         """
         Includes well completions in FLUXNUM keyword.
@@ -272,7 +272,7 @@ class Fluxnum:
                     self.fluxnum_kw[n] = 1
 
     def set_dummy_lgr_well_completions(
-        self, completion_list, well_list, exclude_list=()
+            self, completion_list, well_list, exclude_list=()
     ):
         dummy_lgr_nr = 0
         for well in well_list:
@@ -349,7 +349,7 @@ class Fluxnum:
         fileH.close()
 
     def set_dummy_lgr_well_completions_region_filter(
-        self, completion_list, well_list, exclude_list=()
+            self, completion_list, well_list, exclude_list=()
     ):
         dummy_lgr_nr = 0
 
@@ -407,8 +407,8 @@ class Fluxnum:
                         self.dummy_lgr_well.append(well)
 
                     elif (
-                        not self.lgr_region.contains_global(g)
-                        and 0 in neighbor_fluxnum_kw
+                            not self.lgr_region.contains_global(g)
+                            and 0 in neighbor_fluxnum_kw
                     ):
                         if self.grid.get_ijk(global_index=g) in self.dummy_lgr_cell:
                             index1 = self.dummy_lgr_cell.index(
