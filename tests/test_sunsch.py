@@ -320,6 +320,80 @@ def test_dategrid():
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
 
 
+def test_comments(tmpdir):
+    """Comments in files that are parsed by opm-common
+    prior to piecing together will be lost, mentioned as
+    a caveat in the documentation.
+
+    But can we inject comments through insert statements
+
+    (we can actually inject anything using this, it will not
+    be attempted validated through opm-common)
+    """
+    mycomment = "-- A comment at a specific date"
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "insert": [{"": {"days": 1, "string": mycomment}}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert mycomment in str(sch)
+
+    # Redo the same test through a yaml string, the empty
+    # identificator "" used here probably illustrates a bad
+    # layout for the configuration file.
+    conf_str = (
+        """
+startdate: 2020-01-01
+insert:
+  - "":
+      days: 1
+      string: """
+        + mycomment
+    )
+    conf = yaml.safe_load(conf_str)
+    assert mycomment in str(sunsch.process_sch_config(conf))
+
+
+def test_weltarg_uda(tmpdir):
+    """WELTARG does not support UDA in opm-common 2020.04/rc2
+
+    It will maybe support it later
+    """
+    tmpdir.chdir()
+    weltargkeyword = """WELTARG
+  'OP-1' ORAT SOMEUDA /
+/
+"""
+    with open("weltarg.sch", "w") as file_h:
+        file_h.write(
+            """DATES
+  1 'NOV' 2022 /
+/
+"""
+            + weltargkeyword
+        )
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "merge": ["weltarg.sch"],
+    }
+    # Whenever this test fails, a fix has been merged in OPM-common, then
+    # remove pytest.raises.
+    with pytest.raises(ValueError):
+        sch = sunsch.process_sch_config(sunschconf)
+        assert "ORAT" in str(sch)
+
+    # But it is possible to workaround using an insert statement:
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "insert": [
+            {"": {"date": datetime.date(2022, 11, 1), "string": weltargkeyword}}
+        ],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "ORAT" in str(sch)
+    assert "SOMEUDA" in str(sch)
+
+
 def test_file_startswith_dates():
     """Test file_startswith_dates function"""
     os.chdir(DATADIR)
