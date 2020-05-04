@@ -5,6 +5,83 @@ from ecl import EclFileFlagEnum
 import sys
 
 
+def remove_GASLIFTOPT(schedule_file_list):
+
+    for FILENAME in schedule_file_list:
+
+        # Check if the FILENAME can be found
+        # This can be both relative or absolute, do check!
+        if not os.path.exists(FILENAME):
+            print("Schedule file does not exist!", " ")
+
+        f = open(FILENAME, "r")
+
+        # pre-check for LIFTOPT
+        contains_LIFTOPT = False
+        for line in f:
+            line_strip = line.strip()
+            new_line = line
+            if "LIFTOPT" in line_strip[0:7]:
+                contains_LIFTOPT = True
+
+        f.close()
+
+        if contains_LIFTOPT:
+
+            f = open(FILENAME, "r")
+            f_new = open(FILENAME + "_NO_LIFTOPT", "w")
+
+            # Read through all lines of text
+            for line in f:
+                line_strip = line.strip()
+                new_line = line
+                if "LIFTOPT" in line_strip[0:7]:
+                    f_new.write("-- " + new_line)
+                    f_new.write("-- **************************************** --\n")
+                    f_new.write("-- Removed for USEFLUX applications\n")
+                    f_new.write("-- **************************************** --\n")
+
+                    for line in f:
+                        line_strip = line.strip()
+                        new_line = line
+                        f_new.write("-- " + new_line)
+                        line_elements = line_strip.split()
+                        if "/" in line_elements:
+                            break
+
+                elif "GLIFTOPT" in line_strip[0:8]:
+                    f_new.write("-- " + new_line)
+
+                    for line in f:
+                        line_strip = line.strip()
+                        new_line = line
+                        f_new.write("-- " + new_line)
+                        line_elements = line_strip.split()
+
+                        if "/" in line_elements[0]:
+                            break
+
+                elif "WLIFTOPT" in line_strip[0:8]:
+                    f_new.write("-- " + new_line)
+
+                    for line in f:
+                        line_strip = line.strip()
+                        new_line = line
+                        f_new.write("-- " + new_line)
+                        line_elements = line_strip.split()
+
+                        if "/" in line_elements[0]:
+                            break
+
+                else:
+                    f_new.write(new_line)
+
+            f_new.close()
+            f.close()
+
+
+
+
 def project_DTIME(NEW_FLUXFILE, DTIME_value_scale=1.0):
 
     # ######################################################
