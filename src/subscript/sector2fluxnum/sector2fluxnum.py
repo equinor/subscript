@@ -76,9 +76,6 @@ def get_parser():
         "--test", type=str, help="Name of predefined DUMPFLUX case for testing"
     )
     parser.add_argument("-v", "--version", type=str, help="ECL version")
-    parser.add_argument(
-        "--lgr", action="store_true", help="Special feature for LGR treatment"
-    )
 
     return parser
 
@@ -159,44 +156,13 @@ def sector_to_fluxnum(args):
         fluxnum_new.set_fluxnum_kw()
     # #########################################################
 
-    if args.lgr:
-        print("Setting LGR box region ...", " ")
-        fluxnum_new.setLgrBoxRegion(args.i, args.j, args.k)
-
-        print("Checking completions ...", " ")
-        # Checks for well completions in multiple FLUXNUM regions
-        print("Including wells ...")
-        fluxnum_new.include_well_completions_extra_layer_lgr(completion_list, well_list)
-        print("Checking completions ...", " ")
-
-        # Checks for well completions in multiple FLUXNUM regions
-        print("Including wells ...")
-        fluxnum_new.include_well_completions_extra_layer_lgr(completion_list, well_list)
-        print("Creating Dummy LGRs ...")
-        fluxnum_new.set_dummy_lgr_well_completions_region_filter(
-            completion_list, well_list
-        )
-        print("Cluster Dummy LGRs vertically ...")
-        fluxnum_new.cluster_dummy_lgr_vertical_low_k(args.k)
-        fluxnum_new.cluster_dummy_lgr_vertical_high_k(args.k)
-
-        print("Checking NNCs ...")
-        if args.egrid:
-            EGRID_file = EclFile("%s.EGRID" % args.egrid[0])
-        else:
-            EGRID_file = EclFile("%s.EGRID" % args.ECLIPSE_CASE[0])
-
-        fluxnum_new.include_nnc(EGRID_file)
-        EGRID_file.close()
-
-    else:
-        print("Checking completions ...", " ")
-        # Checks for well completions in multiple FLUXNUM regions
-        print("Including wells ...")
-        fluxnum_new.include_well_completions(completion_list, well_list)
-        # Second iteration to check for wells completed in multiple cells
-        print("Including wells ...")
-        fluxnum_new.include_well_completions(completion_list, well_list)
+    print("Checking completions ...", " ")
+    # Checks for well completions in multiple FLUXNUM regions
+    print("Including wells ...")
+    fluxnum_new.include_well_completions(completion_list, well_list)
+    # Second iteration to check for wells completed in multiple cells
+    print("Including wells ...")
+    fluxnum_new.include_well_completions(completion_list, well_list)
 
     # ###########################################
 
@@ -216,33 +182,6 @@ def sector_to_fluxnum(args):
     if new_data_file.check_DUMPFLUX_kw() or new_data_file.check_USEFLUX_kw():
         print("ERROR: FLUX keywords already present in input ECLCASE")
         sys.exit(1)
-
-    # ###########################################
-
-    if args.lgr:
-        print("Writing dummy lgr data to file")
-        new_data_file.create_dummy_lgr_GRID_include(
-            "DUMMY_LGR.INC",
-            args,
-            fluxnum_new.dummy_lgr_cell,
-            fluxnum_new.dummy_lgr_well,
-            fluxnum_new.dummy_lgr_name,
-        )
-
-        new_data_file.write_dummy_lgr_data(
-            fluxnum_new.dummy_lgr_cell,
-            fluxnum_new.dummy_lgr_well,
-            fluxnum_new.dummy_lgr_name,
-        )
-
-        sch_files = comp.find_schedule_files("%s.DATA" % args.ECLIPSE_CASE[0])
-
-        comp.replace_completions_lgr(
-            sch_files,
-            fluxnum_new.dummy_lgr_cell,
-            fluxnum_new.dummy_lgr_well,
-            fluxnum_new.dummy_lgr_name,
-        )
 
     # ###########################################
 
