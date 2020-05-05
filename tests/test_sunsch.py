@@ -357,7 +357,7 @@ insert:
 def test_weltarg_uda(tmpdir):
     """WELTARG does not support UDA in opm-common 2020.04/rc2
 
-    It will maybe support it later
+    From 2020.04/rc4 it is supported.
     """
     tmpdir.chdir()
     weltargkeyword = """WELTARG
@@ -376,13 +376,12 @@ def test_weltarg_uda(tmpdir):
         "startdate": datetime.date(2020, 1, 1),
         "merge": ["weltarg.sch"],
     }
-    # Whenever this test fails, a fix has been merged in OPM-common, then
-    # remove pytest.raises.
-    with pytest.raises(ValueError):
-        sch = sunsch.process_sch_config(sunschconf)
-        assert "ORAT" in str(sch)
+    # With opm-common 2020.04/rc3 this raises a ValueError:
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "ORAT" in str(sch)
+    assert "SOMEUDA" in str(sch)
 
-    # But it is possible to workaround using an insert statement:
+    # But it is in any case possible to workaround using an insert statement:
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "insert": [
