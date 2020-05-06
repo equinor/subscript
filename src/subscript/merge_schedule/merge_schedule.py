@@ -60,7 +60,7 @@ def main():
     if args.end_date:
         sunsch_config["enddate"] = dateutil.parser.parse(args.end_date).date()
 
-    sch = sunsch.process_sch_config(sunsch_config, quiet=not args.verbose)
+    sch = sunsch.process_sch_config(sunsch_config)
 
     if os.path.exists(args.outputfile) and not args.force:
         print("ERROR: Not overwriting existing file {}".format(args.outputfile))

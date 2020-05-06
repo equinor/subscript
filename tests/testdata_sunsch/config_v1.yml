@@ -1,3 +1,7 @@
+# This configuration file is from may 2020 deprecated and
+# denoted "v1". Newer sunsch still supports this format,
+# but users should move to v2. Deprecation warnings
+# will be emitted.
 init: emptyinit.sch
 output: schedule.sch
 startdate: 2017-01-01

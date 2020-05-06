@@ -24,11 +24,11 @@ def test_main(tmpdir):
     shutil.copytree(DATADIR, "testdata_sunsch")
     tmpdir.join("testdata_sunsch").chdir()
 
-    outfile = "schedule.sch"  # also in config.yml
+    outfile = "schedule.inc"  # also in config_v2.yml
 
     if os.path.exists(outfile):
         os.unlink(outfile)
-    sys.argv = ["sunsch", "config.yml"]
+    sys.argv = ["sunsch", "config_v2.yml"]
     sunsch.main()
     assert os.path.exists(outfile)
 
@@ -53,10 +53,55 @@ def test_main(tmpdir):
     # Test that we can have statements in the init file
     # before the first DATES that are kept:
 
-    sch_conf = yaml.safe_load(open("config.yml"))
+    sch_conf = yaml.safe_load(open("config_v2.yml"))
     print(sch_conf)
     sch_conf["init"] = "initwithdates.sch"
-    sunsch.process_sch_config(sch_conf, quiet=False)
+    sunsch.process_sch_config(sch_conf)
+
+    # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
+    assert "BAR-FOO" in "".join(open(outfile).readlines())
+
+
+def test_main_configv1(tmpdir):
+    """Test command line sunsch, loading a yaml file"""
+
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    tmpdir.join("testdata_sunsch").chdir()
+
+    outfile = "schedule.sch"  # also in config_v1.yml
+
+    if os.path.exists(outfile):
+        os.unlink(outfile)
+    sys.argv = ["sunsch", "config_v1.yml"]
+    sunsch.main()
+    assert os.path.exists(outfile)
+
+    schlines = open(outfile).readlines()
+    assert len(schlines) > 70
+
+    # Check footemplate.sch was included:
+    assert any(["A-90" in x for x in schlines])
+
+    # Sample check for mergeme.sch:
+    assert any(["WRFTPLT" in x for x in schlines])
+
+    # Check for foo1.sch, A-1 should occur twice
+    assert sum(["A-1" in x for x in schlines]) == 2
+
+    # Check for substitutetest:
+    assert any(["400000" in x for x in schlines])
+
+    # Check for randomid:
+    assert any(["A-4" in x for x in schlines])
+
+    # Test that we can have statements in the init file
+    # before the first DATES that are kept:
+
+    sch_conf = yaml.safe_load(open("config_v1.yml"))
+    print(sch_conf)
+    sch_conf["init"] = "initwithdates.sch"
+    sunsch.process_sch_config(sch_conf)
 
     # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
     assert "BAR-FOO" in "".join(open(outfile).readlines())
