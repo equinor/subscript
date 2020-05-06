@@ -6,11 +6,9 @@ import datetime
 from cwrap import open
 from ecl.grid import EclGrid
 from ecl.eclfile import EclFile, FortIO
-from ecl.well import WellInfo
 from subscript.sector2fluxnum import flux_obj
 from subscript.sector2fluxnum import fluxfile_obj as ffo
 from subscript.sector2fluxnum import datafile_obj as do
-from subscript.sector2fluxnum import well_obj as wo
 from subscript.sector2fluxnum import completions as comp
 
 
@@ -121,23 +119,8 @@ def sector_to_fluxnum(args):
     init = EclFile("%s.INIT" % args.ECLIPSE_CASE[0])
 
     # Finding well completions
-    if args.well:
-        print("Reading completions from UNRST ...")
-        if args.restart:
-            well_info = WellInfo(grid, "%s.UNRST" % args.restart[0])
-        else:
-            well_info = WellInfo(grid, "%s.UNRST" % args.ECLIPSE_CASE[0])
-
-        wellObject = wo.Wells(well_info)
-        wellObject.find_completions()
-        well_list = wellObject.get_well_list()
-        completion_list = wellObject.get_completion_list()
-
-    else:
-        print("Reading completions from DATA file ...")
-        sch_file_list = comp.find_schedule_files("%s.DATA" % args.ECLIPSE_CASE[0])
-
-        completion_list, well_list = comp.find_completions(sch_file_list)
+    comp_dframe = comp.generate_compdat_dataframe("%s.DATA" % args.ECLIPSE_CASE[0])
+    completion_list, well_list = comp.get_completion_list(comp_dframe)
 
     if args.fipfile:
         fluxnum_new = flux_obj.Fluxnum_fipnum(

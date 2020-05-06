@@ -3,6 +3,7 @@ from ecl.eclfile import EclFile, EclKW
 from ecl.grid import EclRegion
 from ecl import EclFileFlagEnum
 import sys
+import os
 
 
 def remove_GASLIFTOPT(schedule_file_list):
@@ -78,8 +79,6 @@ def remove_GASLIFTOPT(schedule_file_list):
 
             f_new.close()
             f.close()
-
-
 
 
 def project_DTIME(NEW_FLUXFILE, DTIME_value_scale=1.0):
