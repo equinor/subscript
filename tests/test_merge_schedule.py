@@ -50,10 +50,14 @@ def test_main():
     ]
     merge_schedule.main()
     assert os.path.exists("merged.sch")
-    merged = open("merged.sch").readlines()
-    assert len(merged) == 28
-    assert "BAR-FOO" in "".join(merged)  # This magic string is first in initwithdates
-    assert "5 'NOV' 2020" in "".join(merged)
+    merged = open("merged.sch").read()
+    assert merged.count("\n") == 28
+    assert "BAR-FOO" in merged  # This magic string is first in initwithdates
+    assert "5 'NOV' 2020" in merged
+    assert "YES" in merged  # From last entry in merge2.sch
+    assert "NO" in merged  # From last entry in initwithdates
+    # Check date order is correct:
+    assert merged.find("YES") > merged.find("NO")
 
     # Test that the first file can contain statements prior to the
     # first DATES, and when we don't do any merges (dummy situation)
@@ -70,17 +74,20 @@ def test_main():
     merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 16
 
-    # But if we have statements prior to DATES in other files
-    # than the first, we want to fail:
-    with pytest.raises(ValueError):
-        sys.argv = [
-            "merge_schedule",
-            "--verbose",
-            "merge2.sch",
-            "initwithdates.sch",
-            "merged.sch",
-        ]
-        merge_schedule.main()
+    # When we have to files with statements prior to DATES, it is not
+    # obvious what the users means. Sunsch has chosen to group these to
+    # a single block that occurs together before the first occurence of any
+    # DATES in the final output
+    sys.argv = [
+        "merge_schedule",
+        "--verbose",
+        "merge2.sch",
+        "initwithdates.sch",
+        "merged.sch",
+    ]
+    merge_schedule.main()
+    merged_str = open("merged.sch").read()
+    assert merged_str.find("BAR-FOO") < merged_str.find("DATES")
 
     # Test that --force is working
     with open("existing.sch", "w") as fhandle:

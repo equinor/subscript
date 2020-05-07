@@ -11,7 +11,10 @@ def get_parser():
     epilog = """Merges several ECLIPSE schedule files into one single file.
     This is done by sorting on the DATES keyword in the different input files.
     If a given date exists in more than one input file, the order of keywords
-    under that date follows the input order of the files."""
+    under that date follows the input order of the files.
+
+    Anything before the first DATES keyword in all files will be merged to
+    one block occuring before the first DATES in all files."""
 
     parser = argparse.ArgumentParser(epilog=epilog)
 
@@ -41,17 +44,10 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    if not sunsch.file_startswith_dates(args.inputfiles[0]):
-        sunsch_config = {
-            "startdate": datetime.date(1900, 1, 1),
-            "init": args.inputfiles[0],
-            "merge": args.inputfiles[1:],
-        }
-    else:
-        sunsch_config = {
-            "startdate": datetime.date(1900, 1, 1),
-            "merge": args.inputfiles,
-        }
+    sunsch_config = {
+        "startdate": datetime.date(1900, 1, 1),
+        "files": args.inputfiles,
+    }
 
     if args.verbose:
         print("# Sending the following YAML configuration to sunsch:")
