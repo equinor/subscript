@@ -83,6 +83,48 @@ def test_integration():
     assert subprocess.check_output(["eclcompress", "-h"])
 
 
+def test_vfpprod(tmpdir):
+    """VFPPROD contains multiple record data, for which E100
+    fails if the record-ending slash is not on the same line as the data
+    """
+    tmpdir.chdir()
+    vfpstr = """
+VFPPROD
+  10 2021.3 LIQ WCT GOR THP GRAT METRIC BHP /
+  50 150 300 500 1000 1500 2000 3000 4000 5000 6500 8000 10000 /
+  50 100 150 200 250 300 400 500 /
+  0 0.1 0.2 0.3 0.4 0.5 0.65 0.8 0.95 /
+  300 332 350 400 500 1000 2000 5000 10000 30000 /
+  0 /
+  1 1 1 1
+  50.35 50.32 50.34 50.36 50.8 52.03 53.91 58.73 64.01 69.69 78.1 86.34 97.46 /
+  1 1 2 1
+  50.34 50.31 50.34 50.36 50.85 52.38 54.45 59.58 65.46 71.53 80.43 89.28 101.43 /
+  1 1 3 1
+"""
+    parsecontext = opm.io.ParseContext(
+        [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
+    )
+    # Confirm that OPM can parse the startiing point:
+    assert opm.io.Parser().parse_string(vfpstr, parsecontext)
+
+    # Call eclcompress as script on vfpstr:
+    with open("vfpfile.inc", "w") as testdeck:
+        testdeck.write(vfpstr)
+    print("foo")
+    sys.argv = ["eclcompress", "--keeporiginal", "vfpfile.inc"]  # noqa
+    eclc.main()
+
+    # Check that OPM can parse the output (but in this case, OPM allows
+    # having the slashes on the next line, so it is not a good test)
+    assert opm.io.Parser().parse_string(open("vfpfile.inc").read(), parsecontext)
+
+    # Verify that a slash at record-end is still there. This test will pass
+    # whether eclcompress is just skipping the file, or of it is able to
+    # compress it correctly.
+    assert "8000 10000 /" in open("vfpfile.inc").read()
+
+
 def test_main():
     """Test installed endpoint"""
 
