@@ -31,7 +31,9 @@ The workhorse of this script is itertools.groupby().
 
 
 def eclcompress(files, keeporiginal=False, dryrun=False):
-    """Run-length encode a set of grdecl files
+    """Run-length encode a set of grdecl files.
+
+    Files will be modified in-place, backup is optional.
 
     Args:
         files (list of strings): Filenames to be compressed
@@ -119,7 +121,15 @@ def chunks(l, n):
 
 def acceptedvalue(valuestring):
     """Return true only for strings that are numbers
-    we don't want to try to compress other things"""
+    we don't want to try to compress other things
+
+    Args:
+        valuestring (str)
+
+    Returns:
+        bool
+    """
+
     try:
         float(valuestring)
         return True
@@ -131,7 +141,18 @@ def compress_multiple_keywordsets(keywordsets, filelines):
     """Apply Eclipse type compression to data in filelines
 
     Individual ECL keyword are indicated by tuples in keywordsets
-    and no compression is attempted outside the ECL keyword data"""
+    and no compression is attempted outside the ECL keyword data
+
+    Args:
+        keywordsets (list of 2-tuples): (start, end) indices in
+            line number in the deck, referring to individual sections
+            of distinct keywords.
+        filelines (list of str): lines from Eclipse deck, cleaned.
+
+    Returns:
+        list of str, to be used as a replacement Eclipse deck
+    """
+
     compressedlines = []
     lastslashindex = 0
     for keywordtuple in keywordsets:
@@ -157,7 +178,7 @@ def compress_multiple_keywordsets(keywordsets, filelines):
                 compresseddata += [" ".join(equalvalues)]
         compressedlines += chunks(compresseddata, 5)
         # Only 5 chunks pr line, Eclipse will error if more than 132
-        # charactes on a line. TODO: Reprogram to use python textwrap
+        # characters on a line. TODO: Reprogram to use python textwrap
 
     # Add whatever is present at the end after the last slash:
     compressedlines += filelines[lastslashindex:]
@@ -167,8 +188,26 @@ def compress_multiple_keywordsets(keywordsets, filelines):
 def find_keyword_sets(filelines):
     """Parse list of strings, looking for Eclipse data sets that we want.
 
-    Return tuples with start and end line indices for datasets to
-    compress
+    Example:
+
+    If the deck consists of six lines like this:
+
+        -- now comes porosity
+        PORO
+        0.1 0.3 0.3
+        0.1 0.2
+        /
+        -- poro done
+
+    this will return [(1,4)] since 1 refers to the line with PORO and 4 refers
+    to the line with the trailing slash.
+
+    Args:
+        filelines (list of str): Eclipse deck (partial)
+
+    Return:
+        list of 2-tuples,  with start and end line indices for datasets to
+            compress
 
     """
     keywordsets = []
@@ -200,6 +239,11 @@ def cleanlines(filelines):
 
     Any comment start at beginning of line
 
+    Args:
+        filelines (list of str): Partial Eclipse deck.
+
+    Returns:
+        list of str, incoming deck, cleaned to what eclcompress supports.
     """
 
     # Text files are potentially big, so should we try to be a little
