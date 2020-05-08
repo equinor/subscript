@@ -56,6 +56,13 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
             print("!! skipped, contains INCLUDE statement, not supported !!")
             continue  # to next file
 
+        # VFP data records need to have trailing slashes pr. record
+        # on the same line. Not yet supported, so give up.
+        # (this might apply to all multi-record keywords?)
+        if any([x.find("VFP") > -1 for x in filelines]):
+            print("!! skipped, contains VFPxxxx statement, not supported !!")
+            continue  # to next file
+
         # Skip if it seems we have already compressed this file
         if any([x.find("eclcompress") > -1 for x in filelines]):
             print("!! skipped, seems to be compressed already !!")
