@@ -9,8 +9,9 @@ import os
 import datetime
 import tempfile
 import argparse
-import yaml
 import logging
+
+import yaml
 import six
 
 from opm.tools import TimeVector
@@ -26,8 +27,8 @@ SUPPORTED_DATEGRIDS = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 
 
 @configsuite.validator_msg("Is dategrid a supported frequency")
-def _is_valid_dategrid(dategrid):
-    return dategrid in SUPPORTED_DATEGRIDS
+def _is_valid_dategrid(dategrid_str):
+    return dategrid_str in SUPPORTED_DATEGRIDS
 
 
 @configsuite.validator_msg("Is filename an existing file")
@@ -36,7 +37,8 @@ def _is_existing_file(filename):
 
 
 @configsuite.transformation_msg("Convert V1 sunsch format to V2")
-def _V1_content_to_V2(v1_config):
+# pylint: disable=invalid-name
+def _V1_content_to_V2(config):
     """
     Process an incoming dictionary with sunsch configuration.
 
@@ -44,10 +46,7 @@ def _V1_content_to_V2(v1_config):
     nothing happens.
 
     Validation (and convertion from mutable dict to immutable named_dict)
-    happens later
-
-    Beware: Exceptions in this function as a transformation service will
-    be caught by ConfigSuite.
+    happens later.
 
     Args:
         config (dict)
@@ -55,35 +54,34 @@ def _V1_content_to_V2(v1_config):
     Returns
         dict
     """
-    v2_config = {}
 
-    if "insert" in v1_config:
-        v2_config["insert"] = []
-        for insertstatement in v1_config["insert"]:
+    if "insert" in config:
+        v2_insert = []
+        for insertstatement in config["insert"]:
             if len(insertstatement) == 1:
-                v2_config["insert"] += [remap_v1_insert_to_v2(insertstatement)]
+                v2_insert += [remap_v1_insert_to_v2(insertstatement)]
             else:
-                v2_config["insert"] += [insertstatement]
-    v2_config["files"] = []
-    if "init" in v1_config:
-        v2_config["files"] += [v1_config["init"]]
-    if "merge" in v1_config:
-        # In V1, this can be both a list and a string
-        if isinstance(v1_config["merge"], six.string_types):
-            v2_config["files"] += [v1_config["merge"]]
-        else:
-            v2_config["files"] += v1_config["merge"]
-    if "output" in v1_config:
-        v2_config["output"] = v1_config["output"]
-    if "startdate" in v1_config:
-        v2_config["startdate"] = v1_config["startdate"]
-    if "enddate" in v1_config:
-        v2_config["enddate"] = v1_config["enddate"]
-    if "refdate" in v1_config:
-        v2_config["refdate"] = v1_config["refdate"]
-    if "dategrid" in v1_config:
-        v2_config["dategrid"] = v1_config["dategrid"]
-    return v2_config
+                v2_insert += [insertstatement]
+        config["insert"] = v2_insert
+
+    if "init" in config or "merge" in config:
+        v2_files = []
+        if "files" in config:
+            # This is a strange mix of V1 and V2 config..
+            v2_files += config["files"]
+        if "init" in config:
+            v2_files += [config["init"]]
+            del config["init"]
+        if "merge" in config:
+            # In V1, this can be both a list and a string
+            if isinstance(config["merge"], six.string_types):
+                v2_files += [config["merge"]]
+            else:
+                v2_files += config["merge"]
+            del config["merge"]
+        config["files"] = v2_files
+
+    return config
 
 
 CONFIG_SCHEMA_V2 = {
@@ -145,6 +143,9 @@ CONFIG_SCHEMA_V2 = {
 }
 
 # This schema will be deprecated some day in the future.
+# It is not used in the code, but stays here for reference until the support
+# from this format is removed:
+#
 # CONFIG_SCHEMA_V1 = {
 #     MK.Type: types.NamedDict,
 #     MK.Content: {
@@ -225,9 +226,15 @@ def process_sch_config(conf):
     Assumes the configuration is valid, but this function will tolerate
     more than the configsuite configuration restricts the input to.
 
+    Recognized keys in the configuration dict: files, startdate, startime,
+    refdate, enddate, dategrid, insert
+
     Args:
         conf (dict or named_dict): Configuration dictionary for the schedule
             merges and inserts
+
+    Returns:
+        string, containing the generated schedule section
     """
 
     # At least test code is calling this function with a dictionary with
@@ -352,7 +359,7 @@ def load_timevector_from_file(filename, startdate, file_starts_with_dates):
         tmpschedule.load(filename)
         early_dates = [date for date in tmpschedule.dates if date.date() < startdate]
         if len(early_dates) > 1:
-            logger.info("Clipping away dates: " + str(early_dates[1:]))
+            logger.info("Clipping away dates: %s", str(early_dates[1:]))
             for date in early_dates:
                 tmpschedule.delete(date)
     else:
@@ -360,7 +367,7 @@ def load_timevector_from_file(filename, startdate, file_starts_with_dates):
 
         early_dates = [date for date in tmpschedule.dates if date.date() < startdate]
         if len(early_dates) > 1:
-            logger.info("Clipping away dates: " + str(early_dates[1:]))
+            logger.info("Clipping away dates: %s", str(early_dates[1:]))
             for date in early_dates:
                 tmpschedule.delete(date)
     return tmpschedule
@@ -691,18 +698,26 @@ def main():
             logger.warning(
                 "and the insert statements all start with a single dash on a line."
             )
+            logger.warning("The following auto-converted YAML might be usable for you: ")
+            logger.warning("\n%s", yaml.dump(_V1_content_to_V2(yaml_config)).strip())
+            logger.warning("End auto-converted YAML")
 
     if args.verbose:
         logger.setLevel(logging.INFO)
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
+    # Generate the schedule section, as a string:
     schedule = process_sch_config(config.snapshot)
 
     if config.snapshot.output == "-":
         print(str(schedule))
     else:
-        logger.info("Writing Eclipse deck to " + config.snapshot.output)
+        logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
+        dirname = os.path.dirname(config.snapshot.output)
+        if not os.path.exists(dirname):
+            logger.debug("mkdir %s", dirname)
+            os.makedirs(dirname)
         open(config.snapshot.output, "w").write(str(schedule))
 
 
