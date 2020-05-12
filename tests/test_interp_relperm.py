@@ -290,7 +290,7 @@ def test_mock_two_satnums(tmpdir):
     }
     interp_relperm.process_config(config)
     outfile_str = open("outfile.inc").read()
-    assert "interpolation to -0.9"  not in outfile_str
+    assert "interpolation to -0.9" not in outfile_str
     assert "interpolation to 0.8" in outfile_str
 
     config = {
@@ -307,8 +307,9 @@ def test_mock_two_satnums(tmpdir):
     }
     interp_relperm.process_config(config)
     outfile_str = open("outfile.inc").read()
-    assert "interpolation to -0.9"  not in outfile_str
+    assert "interpolation to -0.9" not in outfile_str
     assert "interpolation to 0.8" in outfile_str
+
 
 @pytest.mark.integration
 def test_integration():
