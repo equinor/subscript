@@ -190,6 +190,126 @@ def test_mock(tmpdir):
     assert outfile_df["PCOW"].sum() > 0
 
 
+def test_mock_two_satnums(tmpdir):
+    """Mocked pyscal-generated input files.
+
+    Note that this is using pyscal both for dumping to disk and
+    parsing from disk, and is thus not representative for how flexible
+    the code is for reading from include files not originating in pyscal.
+    """
+    tmpdir.chdir()
+    columns = [
+        "SATNUM",
+        "Nw",
+        "Now",
+        "Ng",
+        "Nog",
+        "swl",
+        "a",
+        "b",
+        "poro_ref",
+        "perm_ref",
+        "drho",
+    ]
+    dframe_pess = pd.DataFrame(
+        columns=columns,
+        data=[
+            [1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
+            [1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ],
+    )
+    dframe_base = pd.DataFrame(
+        columns=columns,
+        data=[
+            [1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+            [1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ],
+    )
+    dframe_opt = pd.DataFrame(
+        columns=columns,
+        data=[
+            [1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+            [1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+        ],
+    )
+    PyscalFactory.create_pyscal_list(dframe_pess).dump_family_1("pess.inc")
+    PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")
+    PyscalFactory.create_pyscal_list(dframe_opt).dump_family_1("opt.inc")
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [{"param_w": -0.5, "param_g": 0.5}],
+        "delta_s": 0.1,
+    }
+
+    interp_relperm.process_config(config)
+    outfile_str = open("outfile.inc").read()
+
+    # Assert things about the comments emitted by pyscal when interpolating:
+    # This is used as a proxy for asserting that interpolation parameters
+    # are used for the correct satnums
+    assert outfile_str.find("SCAL recommendation interpolation to 0.5")
+    assert outfile_str.find("SCAL recommendation interpolation to -0.5")
+    # SWOF comes before SGOF:
+    assert outfile_str.find("to -0.5") < outfile_str.find("to 0.5")
+    outfile_df = satfunc.df(outfile_str, ntsfun=2)
+    assert set(outfile_df["KEYWORD"].unique()) == {"SWOF", "SGOF"}
+    assert set(outfile_df["SATNUM"].unique()) == {1, 2}
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [
+            {"tables": [1], "param_w": -0.9, "param_g": -0.5},
+            {"tables": [2], "param_w": 0.5, "param_g": 0.8},
+        ],
+        "delta_s": 0.1,
+    }
+    interp_relperm.process_config(config)
+    outfile_str = open("outfile.inc").read()
+    assert outfile_str.find("to -0.9") < outfile_str.find("to 0.5")
+    assert outfile_str.find("to 0.5") < outfile_str.find("to -0.5")
+    assert outfile_str.find("to 0.5") < outfile_str.find("to 0.8")
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [
+            # This is a user error, the latter will override the first
+            {"param_w": -0.9, "param_g": -0.5},
+            {"param_w": 0.5, "param_g": 0.8},
+        ],
+        "delta_s": 0.1,
+    }
+    interp_relperm.process_config(config)
+    outfile_str = open("outfile.inc").read()
+    assert "interpolation to -0.9"  not in outfile_str
+    assert "interpolation to 0.8" in outfile_str
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [
+            # Here the user intentionally overwrites the first:
+            {"param_w": -0.9, "param_g": -0.5},
+            {"tables": [], "param_w": 0.5, "param_g": 0.8},
+        ],
+        "delta_s": 0.1,
+    }
+    interp_relperm.process_config(config)
+    outfile_str = open("outfile.inc").read()
+    assert "interpolation to -0.9"  not in outfile_str
+    assert "interpolation to 0.8" in outfile_str
+
 @pytest.mark.integration
 def test_integration():
     """Test that endpoint is installed"""
