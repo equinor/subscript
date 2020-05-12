@@ -13,7 +13,7 @@ from subscript.interp_relperm import interp_relperm
 from pyscal import PyscalFactory
 from ecl2df import satfunc
 
-TESTDATA = os.path.join(os.path.dirname(__file__), "data/relperm")
+TESTDATA = os.path.join(os.path.dirname(__file__), "testdata_interp_relperm")
 
 
 def test_get_cfg_schema():
