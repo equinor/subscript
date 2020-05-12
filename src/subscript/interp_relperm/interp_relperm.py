@@ -453,7 +453,7 @@ def process_config(cfg, root_path=""):
     for satnum in satnums:
         interp_values = {"param_w": 0, "param_g": 0}
         for interp in cfg_suite.snapshot.interpolations:
-            if not interp.tables or satnum in interp.tables or "all" in interp.tables:
+            if not interp.tables or satnum in interp.tables:
                 if interp.param_w:
                     interp_values["param_w"] = interp.param_w
                 if interp.param_g:
