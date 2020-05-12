@@ -11,6 +11,7 @@ import tempfile
 import argparse
 import yaml
 import logging
+import six
 
 from opm.tools import TimeVector
 
@@ -21,15 +22,18 @@ from configsuite import MetaKeys as MK
 logger = logging.getLogger(__name__)
 logging.basicConfig()
 
+SUPPORTED_DATEGRIDS = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
+
 
 @configsuite.validator_msg("Is dategrid a supported frequency")
 def _is_valid_dategrid(dategrid):
-    return dategrid in ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
+    return dategrid in SUPPORTED_DATEGRIDS
 
 
 @configsuite.validator_msg("Is filename an existing file")
 def _is_existing_file(filename):
     return os.path.exists(filename)
+
 
 @configsuite.transformation_msg("Convert V1 sunsch format to V2")
 def _V1_content_to_V2(v1_config):
@@ -51,32 +55,24 @@ def _V1_content_to_V2(v1_config):
     Returns
         dict
     """
-    print("STARTING  v1 transformation")
-    print(type(v1_config))
     v2_config = {}
 
-    print("starting inserts")
     if "insert" in v1_config:
-        print("we had inserts")
         v2_config["insert"] = []
         for insertstatement in v1_config["insert"]:
-            print("FFFF")
-            print(insertstatement)
-            print(len(insertstatement))
             if len(insertstatement) == 1:
                 v2_config["insert"] += [remap_v1_insert_to_v2(insertstatement)]
-                print(remap_v1_insert_to_v2(insertstatement))
             else:
-                v2_config["insert"] += insert_statement
-        print(v2_config["insert"])
-    print("inserts done")
-    print("alsjfa2")
-    v2_config["files"]  = []
+                v2_config["insert"] += [insertstatement]
+    v2_config["files"] = []
     if "init" in v1_config:
         v2_config["files"] += [v1_config["init"]]
     if "merge" in v1_config:
-        v2_config["files"] += v1_config["merge"]
-    print(v2_config["files"])
+        # In V1, this can be both a list and a string
+        if isinstance(v1_config["merge"], six.string_types):
+            v2_config["files"] += [v1_config["merge"]]
+        else:
+            v2_config["files"] += v1_config["merge"]
     if "output" in v1_config:
         v2_config["output"] = v1_config["output"]
     if "startdate" in v1_config:
@@ -87,9 +83,6 @@ def _V1_content_to_V2(v1_config):
         v2_config["refdate"] = v1_config["refdate"]
     if "dategrid" in v1_config:
         v2_config["dategrid"] = v1_config["dategrid"]
-    print("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-    print(v2_config)
-    print(type(v2_config))
     return v2_config
 
 
@@ -104,7 +97,7 @@ CONFIG_SCHEMA_V2 = {
                 MK.Item: {
                     MK.Type: types.String,
                     MK.ElementValidators: (_is_existing_file,),
-                },
+                }
             },
         },
         "output": {MK.Type: types.String, MK.Required: False},
@@ -145,99 +138,85 @@ CONFIG_SCHEMA_V2 = {
                             },
                         },
                     },
-                },
+                }
             },
         },
     },
 }
 
 # This schema will be deprecated some day in the future.
-CONFIG_SCHEMA_V1 = {
-    MK.Type: types.NamedDict,
-    MK.Transformation: _V1_content_to_V2,
-    MK.Content: {
-        "init": {
-            MK.Type: types.String,
-            MK.ElementValidators: (_is_existing_file,),
-            MK.Required: False,
-        },
-        "output": {MK.Type: types.String, MK.Required: False},
-        "startdate": {MK.Type: types.Date, MK.Required: False},
-        "refdate": {MK.Type: types.Date, MK.Required: False},
-        "enddate": {MK.Type: types.Date, MK.Required: False},
-        "dategrid": {
-            MK.Type: types.String,
-            MK.Required: False,
-            MK.ElementValidators: (_is_valid_dategrid,),
-        },
-        "merge": {
-            # Code allows this to be of type string as well
-            # but that is not possible in configsuite.
-            MK.Type: types.List,
-            MK.Required: False,
-            MK.Content: {
-                MK.Item: {
-                    MK.Type: types.String,
-                    MK.ElementValidators: (os.path.exists,),
-                }
-            },
-        },
-        "insert": {
-            MK.Type: types.List,
-            MK.Required: False,
-            MK.Content: {
-                MK.Item: {
-                    MK.Type: types.Dict,
-                    # In v1 config, this dict always has only one element, random key
-                    MK.Content: {
-                        MK.Key: {MK.Type: types.String},
-                        MK.Value: {
-                            MK.Type: types.NamedDict,
-                            MK.Content: {
-                                "date": {MK.Type: types.Date, MK.Required: False},
-                                "filename": {
-                                    MK.Type: types.String,
-                                    MK.Required: False,
-                                    MK.ElementValidators: (_is_existing_file,),
-                                },
-                                "days": {MK.Type: types.Integer, MK.Required: False},
-                                "string": {MK.Type: types.String, MK.Required: False},
-                                "substitute": {
-                                    MK.Type: types.Dict,
-                                    MK.Required: False,
-                                    MK.Content: {
-                                        MK.Key: {MK.Type: types.String},
-                                        MK.Value: {MK.Type: types.Integer},
-                                    },
-                                },
-                            },
-                        },
-                    },
-                }
-            },
-        },
-    },
-}
+# CONFIG_SCHEMA_V1 = {
+#     MK.Type: types.NamedDict,
+#     MK.Content: {
+#         "init": {
+#             MK.Type: types.String,
+#             MK.ElementValidators: (_is_existing_file,),
+#             MK.Required: False,
+#         },
+#         "output": {MK.Type: types.String, MK.Required: False},
+#         "startdate": {MK.Type: types.Date, MK.Required: False},
+#         "refdate": {MK.Type: types.Date, MK.Required: False},
+#         "enddate": {MK.Type: types.Date, MK.Required: False},
+#         "dategrid": {
+#             MK.Type: types.String,
+#             MK.Required: False,
+#             MK.ElementValidators: (_is_valid_dategrid,),
+#         },
+#         "merge": {
+#             # Code allows this to be of type string as well
+#             # but that is not possible in configsuite.
+#             MK.Type: types.List,
+#             MK.Required: False,
+#             MK.Content: {
+#                 MK.Item: {
+#                     MK.Type: types.String,
+#                     MK.ElementValidators: (os.path.exists,),
+#                 }
+#             },
+#         },
+#         "insert": {
+#             MK.Type: types.List,
+#             MK.Required: False,
+#             MK.Content: {
+#                 MK.Item: {
+#                     MK.Type: types.Dict,
+#                     # In v1 config, this dict always has only one element, random key
+#                     MK.Content: {
+#                         MK.Key: {MK.Type: types.String},
+#                         MK.Value: {
+#                             MK.Type: types.NamedDict,
+#                             MK.Content: {
+#                                 "date": {MK.Type: types.Date, MK.Required: False},
+#                                 "filename": {
+#                                     MK.Type: types.String,
+#                                     MK.Required: False,
+#                                     MK.ElementValidators: (_is_existing_file,),
+#                                 },
+#                                 "days": {MK.Type: types.Integer, MK.Required: False},
+#                                 "string": {MK.Type: types.String, MK.Required: False},
+#                                 "substitute": {
+#                                     MK.Type: types.Dict,
+#                                     MK.Required: False,
+#                                     MK.Content: {
+#                                         MK.Key: {MK.Type: types.String},
+#                                         MK.Value: {MK.Type: types.Integer},
+#                                     },
+#                                 },
+#                             },
+#                         },
+#                     },
+#                 }
+#             },
+#         },
+#     },
+# }
 
 
 def datetime_from_date(date):
     """Set time to 00:00:00 in a date"""
+    if isinstance(date, six.string_types):
+        raise ValueError("Is the string {} a date?".format(str(date)))
     return datetime.datetime.combine(date, datetime.datetime.min.time())
-
-
-def validate_config(conf):
-    suite_v1 = configsuite.ConfigSuite(conf, CONFIG_SCHEMA_V1)
-    suite_v2 = configsuite.ConfigSuite(conf, CONFIG_SCHEMA_V2)
-    if suite_v2.valid:
-        logger.info("Valid as v2 configuration for sunsch")
-        return "v2"
-    logger.warning("Not valid as sunsch v2 config, assuming v1 config")
-    logger.warning("v2 errors are: " + str(suite_v2.errors))
-    logger.warning("Continuing assuming v1 configuration format")
-    if suite_v1.valid:
-        logger.info("Valid as v1 configuration for sunsch")
-        return "v1"
-    logger.warning(suite_v1.errors)
 
 
 def process_sch_config(conf):
@@ -257,7 +236,7 @@ def process_sch_config(conf):
         conf = configsuite.ConfigSuite(conf, CONFIG_SCHEMA_V2).snapshot
 
     if conf.startdate is None:
-        if "refdate" in conf:
+        if conf.refdate:
             startdate = conf.refdate
         else:
             startdate = datetime.date(1900, 1, 1)
@@ -291,6 +270,7 @@ def process_sch_config(conf):
                 schedule.load_string(str(timevector), starttime)
 
     if conf.insert is not None:
+        logger.info("Processing %s insert statements", str(len(conf.insert)))
         for insert_statement in conf.insert:
             logger.debug(str(insert_statement))
 
@@ -299,9 +279,8 @@ def process_sch_config(conf):
                 logger.debug("Produced file: %s", str(filename))
             elif insert_statement.filename:
                 filename = insert_statement.filename
-            else:
+            elif not insert_statement.string:
                 logger.error("Invalid insert statement: %s", str(insert_statement))
-
 
             # Which date to use for insertion?
             if insert_statement.date:
@@ -349,7 +328,7 @@ def process_sch_config(conf):
 
     # Dategrid is added at the end, in order to support
     # an implicit end-date
-    if "dategrid" in conf:
+    if conf.dategrid:
         dates = dategrid(startdate, enddate, conf.dategrid)
         for date in dates:
             schedule.add_keywords(datetime_from_date(date), [""])
@@ -434,7 +413,8 @@ def substitute(insert_statement):
     Returns:
         filename (string): Filename on temporary location for immediate use
     """
-    if len(insert_statement) > 3:
+
+    if len([key for key in list(insert_statement) if key is not None]) > 3:
         # (there should be also 'days' or 'date' in the dict)
         logger.warning(
             "Too many (?) configuration elements in %s", str(insert_statement)
@@ -515,13 +495,12 @@ def dategrid(startdate, enddate, interval):
         list of datetime.date. Always includes start-date, might not include end-date
     """
 
-    supportedintervals = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
-    if interval not in supportedintervals:
+    if interval not in SUPPORTED_DATEGRIDS:
         raise ValueError(
             'Unsupported dategrid interval "'
             + interval
             + '". Pick among '
-            + ", ".join(supportedintervals)
+            + ", ".join(SUPPORTED_DATEGRIDS)
         )
     dates = [startdate]
     date = startdate + datetime.timedelta(days=1)
@@ -584,8 +563,10 @@ def get_parser():
 Reads a YAML-file specifying how a Eclipse Schedule section is to be
 produced given certain input files.
 
+Command line options override configuration in YAML.
+
 Output will not be generated unless the produced data is valid in
-        Eclipse, checking provided by OPM.""",
+Eclipse, checking provided by OPM.""",
         epilog="""YAML-file components:
 
  startdate - YYYY-MM-DD for the initial date of the simulation (START keyword)
@@ -620,20 +601,35 @@ Output will not be generated unless the produced data is valid in
         substitute - key-value pairs that will subsitute <key> in
                      incoming files (or inline string) with
                      associated values.
-        """,
+""",
     )
     parser.add_argument(
         "config", help="Config file in YAML format for Schedule merging"
     )
     parser.add_argument(
-        "-o",
-        "--output",
-        type=str,
-        default="",
-        help="Override output in yaml config. Use - for stdout",
+        "-o", "--output", type=str, default="", help="Output filename to write to"
     )
     parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Set logging level to info"
+        "-v", "--verbose", action="store_true", help="Set logging level to info."
+    )
+    parser.add_argument(
+        "--debug", action="store_true", help="Set logging level to debug."
+    )
+    parser.add_argument(
+        "--startdate", type=str, help="Start date (START keyword), YYYY-MM-DD."
+    )
+    parser.add_argument(
+        "--enddate",
+        type=str,
+        help="End date, delete keywords after this date, YYYY-MM-DD.",
+    )
+    parser.add_argument(
+        "--refdate",
+        type=str,
+        help="Reference date to use for relative inserts, YYYY-MM-DD.",
+    )
+    parser.add_argument(
+        "--dategrid", type=str, help="Interval for extra DATES to be inserted."
     )
 
     # Deprecated argument, keep to avoid old scripts failing. The setting is not used.
@@ -647,33 +643,67 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    # Load YAML file:
+    # Application defaults configuration:
+    defaults_config = {"output": "-", "startdate": "1900-01-01"}
+
+    # Users YAML configuration:
     yaml_config = yaml.safe_load(open(args.config))
 
-    # Check config syntax (as dictionary from yaml)
-    configs = configsuite.ConfigSuite(yaml_config, CONFIG_SCHEMA_V2)
-    if not configs.valid:
-        print(configs.errors)
-    config = configs.snapshot
-    # Overrides:
-    # todo: override with layer
-    #if args.output != "":
-    #    config["output"] = args.output
+    # Command line configuration:
+    cli_config = {}
+    if args.output:
+        cli_config["output"] = args.output
+    if args.startdate:
+        cli_config["startdate"] = args.startdate
+    if args.enddate:
+        cli_config["enddate"] = args.enddate
+    if args.enddate:
+        cli_config["refdate"] = args.refdate
+    if args.dategrid:
+        cli_config["dategrid"] = args.dategrid
 
-    #if "output" not in config:
-    #    config["output"] = "-"  # Write to stdout
+    # Merge defaults-, yaml- and command line options, and then validate:
+    config = configsuite.ConfigSuite(
+        {}, CONFIG_SCHEMA_V2, layers=(defaults_config, yaml_config, cli_config)
+    )
+    if not config.valid:
+        logger.error(config.errors)
+        logger.warning(
+            "Failed validating your input, will continue, but expect errors.."
+        )
+
+    else:
+        # Check if yaml had outdated V1 syntax, check that by removing the transformation
+        # from configsuite:
+        transformation_key = list(CONFIG_SCHEMA_V2.keys())[1]  # slightly ugly
+        config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
+        del config_schema_v2_pure[transformation_key]
+        config_pure = configsuite.ConfigSuite(
+            {}, config_schema_v2_pure, layers=(defaults_config, yaml_config, cli_config)
+        )
+        if not config_pure.valid:
+            logger.warning(
+                "Your configuration uses a DEPRECATED format. Please switch,"
+            )
+            logger.warning(
+                "The keys 'init' and 'merge' are now merged into a key called 'files'"
+            )
+            logger.warning(
+                "and the insert statements all start with a single dash on a line."
+            )
 
     if args.verbose:
+        logger.setLevel(logging.INFO)
+    if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    schedule = process_sch_config(config)
+    schedule = process_sch_config(config.snapshot)
 
-    print(config.output)
-    if config.output == "-":
+    if config.snapshot.output == "-":
         print(str(schedule))
     else:
-        logger.info("Writing Eclipse deck to " + config.output)
-        open(config.output, "w").write(str(schedule))
+        logger.info("Writing Eclipse deck to " + config.snapshot.output)
+        open(config.snapshot.output, "w").write(str(schedule))
 
 
 if __name__ == "__main__":

@@ -112,16 +112,16 @@ def test_config_schema(tmpdir):
     """Test the implementation of configsuite"""
     tmpdir.chdir()
     cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
     assert not cfg_suite.valid  # file missing
 
     with open("existingfile.sch", "w") as handle:
         handle.write("foo")
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
     assert cfg_suite.valid
 
     cfg = {"init": "existingfile.sch"}  # missing output
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
     assert cfg_suite.valid  # (missing output is allowed)
 
     import datetime
@@ -131,7 +131,7 @@ def test_config_schema(tmpdir):
         "output": "newfile.sch",
         "startdate": datetime.date(2018, 2, 2),
     }  # i'2018-02-02'}
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V1)
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
     print(cfg_suite.errors)
     assert cfg_suite.valid
 
