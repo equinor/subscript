@@ -76,14 +76,13 @@ from configsuite import types
 from configsuite import MetaKeys as MK
 
 
-@configsuite.validator_msg("Is valid file name")
+@configsuite.validator_msg("Valid file name")
 def _is_filename(fname):
     return os.path.isfile(fname)
 
 
-@configsuite.validator_msg("Is valid interpolator")
+@configsuite.validator_msg("Valid interpolator")
 def _is_valid_interpolator(interp):
-
     valid = False
     try:
         if interp["param_w"]:
@@ -100,7 +99,7 @@ def _is_valid_interpolator(interp):
     return valid
 
 
-@configsuite.validator_msg("Is valid table entries")
+@configsuite.validator_msg("Valid table entries")
 def _is_valid_table_entries(schema):
 
     valid = False

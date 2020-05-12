@@ -40,6 +40,33 @@ def test_get_cfg_schema():
     assert suite.valid
 
 
+def test_schema_errors():
+    """Test that configsuite errors correctly with some hint to the resolution"""
+    cfg = {
+        "base": ["swof_base.inc", "sgof_base.inc"],
+        "high": ["swof_opt.inc", "sgof_opt.inc"],
+        "low": ["swof_pes.inc", "sgof_pes.inc"],
+        "result_file": "foo.inc",
+    }
+    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    # We are in the wrong directory, so not valid yet:
+    assert not parsed_cfg.valid
+    assert "Valid file name is false on input" in str(parsed_cfg.errors)
+
+    os.chdir(TESTDATA)
+
+    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    assert not parsed_cfg.valid
+    assert "Missing key: interpolations" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"tables": []}]
+    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+    cfg["interpolations"] = [{"param_w": 0.25, "param_g": -0.4}]
+    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    assert parsed_cfg.valid
+
+
 def test_tables_to_dataframe():
     swoffn = os.path.join(TESTDATA, "swof_base.inc")
     sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
