@@ -31,9 +31,71 @@ def _is_valid_dategrid(dategrid):
 def _is_existing_file(filename):
     return os.path.exists(filename)
 
+@configsuite.transformation_msg("Convert V1 sunsch format to V2")
+def _V1_content_to_V2(v1_config):
+    """
+    Process an incoming dictionary with sunsch configuration.
+
+    If sunsch V1 format is detected, then transform to V2. If V2 format
+    nothing happens.
+
+    Validation (and convertion from mutable dict to immutable named_dict)
+    happens later
+
+    Beware: Exceptions in this function as a transformation service will
+    be caught by ConfigSuite.
+
+    Args:
+        config (dict)
+
+    Returns
+        dict
+    """
+    print("STARTING  v1 transformation")
+    print(type(v1_config))
+    v2_config = {}
+
+    print("starting inserts")
+    if "insert" in v1_config:
+        print("we had inserts")
+        v2_config["insert"] = []
+        for insertstatement in v1_config["insert"]:
+            print("FFFF")
+            print(insertstatement)
+            print(len(insertstatement))
+            if len(insertstatement) == 1:
+                v2_config["insert"] += [remap_v1_insert_to_v2(insertstatement)]
+                print(remap_v1_insert_to_v2(insertstatement))
+            else:
+                v2_config["insert"] += insert_statement
+        print(v2_config["insert"])
+    print("inserts done")
+    print("alsjfa2")
+    v2_config["files"]  = []
+    if "init" in v1_config:
+        v2_config["files"] += [v1_config["init"]]
+    if "merge" in v1_config:
+        v2_config["files"] += v1_config["merge"]
+    print(v2_config["files"])
+    if "output" in v1_config:
+        v2_config["output"] = v1_config["output"]
+    if "startdate" in v1_config:
+        v2_config["startdate"] = v1_config["startdate"]
+    if "enddate" in v1_config:
+        v2_config["enddate"] = v1_config["enddate"]
+    if "refdate" in v1_config:
+        v2_config["refdate"] = v1_config["refdate"]
+    if "dategrid" in v1_config:
+        v2_config["dategrid"] = v1_config["dategrid"]
+    print("FOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+    print(v2_config)
+    print(type(v2_config))
+    return v2_config
+
 
 CONFIG_SCHEMA_V2 = {
     MK.Type: types.NamedDict,
+    MK.Transformation: _V1_content_to_V2,
     MK.Content: {
         "files": {
             MK.Type: types.List,
@@ -92,6 +154,7 @@ CONFIG_SCHEMA_V2 = {
 # This schema will be deprecated some day in the future.
 CONFIG_SCHEMA_V1 = {
     MK.Type: types.NamedDict,
+    MK.Transformation: _V1_content_to_V2,
     MK.Content: {
         "init": {
             MK.Type: types.String,
@@ -184,120 +247,93 @@ def process_sch_config(conf):
     more than the configsuite configuration restricts the input to.
 
     Args:
-        conf (dict): Configuration dictionary for the schedule
+        conf (dict or named_dict): Configuration dictionary for the schedule
             merges and inserts
     """
 
-    if "startdate" not in conf:
-        # startdate if mandatory for yaml files, but left optional here
+    # At least test code is calling this function with a dictionary with
+    # config - convert it to a configsuite snapshot:
+    if isinstance(conf, dict):
+        conf = configsuite.ConfigSuite(conf, CONFIG_SCHEMA_V2).snapshot
+
+    if conf.startdate is None:
         if "refdate" in conf:
-            conf["startdate"] = conf["refdate"]
+            startdate = conf.refdate
         else:
-            conf["startdate"] = datetime.date(1900, 1, 1)
+            startdate = datetime.date(1900, 1, 1)
+    else:
+        startdate = conf.startdate
 
     if "starttime" not in conf:
-        conf["starttime"] = datetime_from_date(conf["startdate"])
+        starttime = datetime_from_date(startdate)
+    else:
+        starttime = conf.starttime
 
     if "refdate" not in conf:
-        conf["refdate"] = conf["startdate"]
+        refdate = conf.startdate
+    else:
+        refdate = conf.refdate
 
     # Initialize the opm.tools.TimeVector class, which needs
     # a date to anchor to:
-    schedule = TimeVector(conf["starttime"])
+    schedule = TimeVector(starttime)
 
-    if "files" not in conf:
-        conf["files"] = []
-
-    if "init" in conf:
-        logger.warning("init config entry is deprecated. Use 'files'.")
-        conf["files"] += [conf["init"]]
-        del conf["init"]
-
-    if "merge" in conf:
-        logger.warning("merge config entry is deprecated. Use 'files'.")
-        if not isinstance(conf["merge"], list):
-            conf["merge"] = [conf["merge"]]
-        conf["files"] += conf["merge"]
-        del conf["merge"]
-
-    for filename in conf["files"]:
-        logger.info("Loading %s", filename)
-        file_starts_with_dates = sch_file_starts_with_dates_keyword(filename)
-        timevector = load_timevector_from_file(
-            filename, conf["startdate"], file_starts_with_dates
-        )
-        if file_starts_with_dates:
-            schedule.load_string(str(timevector))
-        else:
-            schedule.load_string(str(timevector), conf["starttime"])
-
-    if "insert" not in conf:
-        conf["insert"] = []
-
-    insert_deprecation_warning_emitted = False
-    for insert_statement in conf["insert"]:
-        # In v1 the list entries are dictionaries with key length 1,
-        # in v2 there must be more than 1 key in the dictionaries in the list
-        if len(insert_statement.keys()) == 1:
-            if not insert_deprecation_warning_emitted:
-                logger.warning(
-                    "The configuration format you are using for inserts is deprecated"
-                )
-                insert_deprecation_warning_emitted = True
-            insert_statement = remap_v1_insert_to_v2(insert_statement)
-        logger.debug(str(insert_statement))
-        if "substitute" in insert_statement:
-            if "template" not in insert_statement:
-                logger.error("Invalid insert statement: %s", str(insert_statement))
-                raise ValueError(
-                    "When using substitute, you must provide template as well"
-                )
-            # Prepare a new file where substitutions have taken place:
-            insert_statement["filename"] = substitute(insert_statement)
-
-        # Which date to use for insertion?
-        if "date" in insert_statement:
-            date = datetime_from_date(insert_statement["date"])
-        elif "days" in insert_statement:
-            date = datetime_from_date(conf["refdate"]) + datetime.timedelta(
-                days=insert_statement["days"]
+    if conf.files is not None:
+        for filename in conf.files:
+            logger.info("Loading %s", filename)
+            file_starts_with_dates = sch_file_starts_with_dates_keyword(filename)
+            timevector = load_timevector_from_file(
+                filename, startdate, file_starts_with_dates
             )
-        else:
-            logger.error("Could not determine date for insertion")
-            logger.error("From data: %s", str(insert_statement))
-            continue
-
-        # Do the insertion:
-        if date >= conf["starttime"]:
-            if "filename" in insert_statement:
-                if "substitute" not in insert_statement:
-                    logger.info(
-                        "Inserting file %s at date %s",
-                        str(insert_statement["filename"]),
-                        str(date),
-                    )
-                else:
-                    logger.info(
-                        "Inserting file %s with substitutions at date %s",
-                        str(insert_statement["template"]),
-                        str(date),
-                    )
-                schedule.load(insert_statement["filename"], date=date)
+            if file_starts_with_dates:
+                schedule.load_string(str(timevector))
             else:
-                schedule.add_keywords(
-                    datetime_from_date(date), [insert_statement["string"]]
-                )
-        else:
-            logger.warning("Ignoring inserts before startdate")
+                schedule.load_string(str(timevector), starttime)
 
-    if "enddate" not in conf:
+    if conf.insert is not None:
+        for insert_statement in conf.insert:
+            logger.debug(str(insert_statement))
+
+            if insert_statement.substitute and insert_statement.template:
+                filename = substitute(insert_statement)
+                logger.debug("Produced file: %s", str(filename))
+            elif insert_statement.filename:
+                filename = insert_statement.filename
+            else:
+                logger.error("Invalid insert statement: %s", str(insert_statement))
+
+
+            # Which date to use for insertion?
+            if insert_statement.date:
+                date = datetime_from_date(insert_statement.date)
+            elif insert_statement.days:
+                date = datetime_from_date(refdate) + datetime.timedelta(
+                    days=insert_statement.days
+                )
+            else:
+                logger.error("Could not determine date for insertion")
+                logger.error("From data: %s", str(insert_statement))
+                continue
+
+            # Do the insertion:
+            if date >= starttime:
+                if insert_statement.string is None:
+                    schedule.load(filename, date=date)
+                else:
+                    schedule.add_keywords(
+                        datetime_from_date(date), [insert_statement.string]
+                    )
+            else:
+                logger.warning("Ignoring inserts before startdate")
+
+    if conf.enddate is None:
         enddate = schedule.dates[-1].date()
     else:
-        enddate = conf["enddate"]  # datetime.date
+        enddate = conf.enddate  # datetime.date
         if not isinstance(enddate, datetime.date):
             raise TypeError(
                 "ERROR: enddate {} not in ISO-8601 format, must be YYYY-MM-DD".format(
-                    conf["enddate"]
+                    conf.enddate
                 )
             )
 
@@ -314,7 +350,7 @@ def process_sch_config(conf):
     # Dategrid is added at the end, in order to support
     # an implicit end-date
     if "dategrid" in conf:
-        dates = dategrid(conf["startdate"], enddate, conf["dategrid"])
+        dates = dategrid(startdate, enddate, conf.dategrid)
         for date in dates:
             schedule.add_keywords(datetime_from_date(date), [""])
 
@@ -390,18 +426,15 @@ def substitute(insert_statement):
     be left untouched.
 
     Args:
-        insert_statement (dict): Required keys are "template", which is
+        insert_statement (named_dict): Required keys are "template", which is
             a filename with parameters to be replaced, and "substitute"
-            which is a dictionary with values parameter-value mappings
+            which is a named_dict with values parameter-value mappings
             to be used.
 
     Returns:
         filename (string): Filename on temporary location for immediate use
     """
-    assert "template" in insert_statement
-    assert "substitute" in insert_statement
-
-    if len(insert_statement.keys()) > 3:
+    if len(insert_statement) > 3:
         # (there should be also 'days' or 'date' in the dict)
         logger.warning(
             "Too many (?) configuration elements in %s", str(insert_statement)
@@ -409,16 +442,15 @@ def substitute(insert_statement):
 
     resultfile = tempfile.NamedTemporaryFile(mode="w", delete=False)
     resultfilename = resultfile.name
-    templatelines = open(insert_statement["template"], "r").readlines()
+    templatelines = open(insert_statement.template, "r").readlines()
 
     # Parse substitution list:
-    substdict = insert_statement["substitute"]
-    assert isinstance(substdict, dict)
+    substdict = insert_statement.substitute
     # Perform substitution and put into a tmp file
     for line in templatelines:
-        for key in substdict:
+        for (key, value) in substdict:
             if "<" + key + ">" in line:
-                line = line.replace("<" + key + ">", str(substdict[key]))
+                line = line.replace("<" + key + ">", str(value))
         resultfile.write(line)
     resultfile.close()
     return resultfilename
@@ -616,29 +648,32 @@ def main():
     args = parser.parse_args()
 
     # Load YAML file:
-    config = yaml.safe_load(open(args.config))
+    yaml_config = yaml.safe_load(open(args.config))
 
     # Check config syntax (as dictionary from yaml)
-    # Will emit warnings, but will never stop.
-    validate_config(config)
-
+    configs = configsuite.ConfigSuite(yaml_config, CONFIG_SCHEMA_V2)
+    if not configs.valid:
+        print(configs.errors)
+    config = configs.snapshot
     # Overrides:
-    if args.output != "":
-        config["output"] = args.output
+    # todo: override with layer
+    #if args.output != "":
+    #    config["output"] = args.output
 
-    if "output" not in config:
-        config["output"] = "-"  # Write to stdout
+    #if "output" not in config:
+    #    config["output"] = "-"  # Write to stdout
 
     if args.verbose:
-        logger.setLevel(logging.INFO)
+        logger.setLevel(logging.DEBUG)
 
     schedule = process_sch_config(config)
 
-    if config["output"] == "-" or "output" not in config:
+    print(config.output)
+    if config.output == "-":
         print(str(schedule))
     else:
-        logger.info("Writing Eclipse deck to " + config["output"])
-        open(config["output"], "w").write(str(schedule))
+        logger.info("Writing Eclipse deck to " + config.output)
+        open(config.output, "w").write(str(schedule))
 
 
 if __name__ == "__main__":

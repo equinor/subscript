@@ -6,7 +6,7 @@ init: emptyinit.sch
 output: schedule.sch
 startdate: 2017-01-01
 #refdate: 2017-01-01
-enddate: 2020-12-01
+enddate: 2022-12-01
 merge:
   - mergeme.sch
 dategrid: yearly
