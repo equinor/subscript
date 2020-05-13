@@ -680,8 +680,8 @@ def main():
         )
 
     else:
-        # Check if yaml had outdated V1 syntax, check that by removing the transformation
-        # from configsuite:
+        # Check if yaml had outdated V1 syntax, check that by removing the
+        # transformation from configsuite:
         transformation_key = list(CONFIG_SCHEMA_V2.keys())[1]  # slightly ugly
         config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
         del config_schema_v2_pure[transformation_key]
@@ -698,7 +698,9 @@ def main():
             logger.warning(
                 "and the insert statements all start with a single dash on a line."
             )
-            logger.warning("The following auto-converted YAML might be usable for you: ")
+            logger.warning(
+                "The following auto-converted YAML might be usable for you: "
+            )
             logger.warning("\n%s", yaml.dump(_V1_content_to_V2(yaml_config)).strip())
             logger.warning("End auto-converted YAML")
 
