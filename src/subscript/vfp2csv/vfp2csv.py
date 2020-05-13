@@ -77,6 +77,9 @@ def vfpfile2df(filename):
             if not line.strip().startswith("--")
         ]
 
+    # Strip mid-line comments:
+    lines = [line.split("--")[0] for line in lines]
+
     # BUG: Will not tolerate comments that has something else than a whitespace
     #      in front of it
     vfptabledata = [a.strip() for a in " ".join(lines).split("/")]

@@ -50,7 +50,7 @@
 -- PROSPER Lift Curves For ECLIPSE Simulator    (Liquid - Producer Well)  (Units System  - METRIC)
 
 
-VFPPROD
+VFPPROD -- in-line comment
 
 -- Table   Datum Depth   Rate Type   WFR Type   GFR Type
 -- -----   -----------   ---------   --------   --------
