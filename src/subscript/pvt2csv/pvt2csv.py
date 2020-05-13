@@ -61,6 +61,8 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
+    print("WARNING: This tool is deprecated. Use 'ecl2csv pvt' instead")
+
     tables_each_file = []
     for filename in args.PVTFILES:
         print(" ** Parsing {}".format(filename))
