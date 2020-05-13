@@ -66,15 +66,15 @@ def vfpfile2df(filename):
     """
     try:
         lines = [
-            l.strip()
-            for l in open(filename).readlines()
-            if not l.strip().startswith("--")
+            line.strip()
+            for line in open(filename).readlines()
+            if not line.strip().startswith("--")
         ]
     except UnicodeDecodeError:
         lines = [
-            l.strip()
-            for l in open(filename, encoding="iso-8859-1").readlines()
-            if not l.strip().startswith("--")
+            line.strip()
+            for line in open(filename, encoding="iso-8859-1").readlines()
+            if not line.strip().startswith("--")
         ]
 
     # BUG: Will not tolerate comments that has something else than a whitespace

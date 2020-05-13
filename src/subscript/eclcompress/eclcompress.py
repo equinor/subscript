@@ -113,10 +113,10 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
                     os.remove(filename + ".orig")
 
 
-def chunks(l, n):
+def chunks(ll, nn):
     """Yield successive n-sized chunks as strings from list l."""
-    for i in range(0, len(l), n):
-        yield " ".join(l[i : i + n])
+    for ii in range(0, len(ll), nn):
+        yield " ".join(ll[ii : ii + nn])
 
 
 def acceptedvalue(valuestring):
