@@ -123,6 +123,7 @@ def test_config_schema(tmpdir):
     with open("existingfile.sch", "w") as handle:
         handle.write("foo")
     cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
+    print(cfg_suite.errors)
     assert cfg_suite.valid
 
     cfg = {"init": "existingfile.sch"}  # missing output
@@ -143,7 +144,7 @@ def test_v1_to_v2():
     """Test the auto-converter from V1 to V2 config"""
     # pylint: disable=protected-access
 
-    conv = sunsch._V1_content_to_V2
+    conv = sunsch._v1_content_to_v2
 
     assert conv({}) == {}
     assert conv({"init": "foo"}) == {"files": ["foo"]}
@@ -235,14 +236,15 @@ def test_nonisodate():
         "startdate": "01-01-2020",  # Look, this is not how to write dates!
         "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         sunsch.process_sch_config(sunschconf)
 
+    # Check also for refdate:
     sunschconf = {
         "refdate": "01-01-2020",
         "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         sunsch.process_sch_config(sunschconf)
 
     sunschconf = {

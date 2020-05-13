@@ -36,13 +36,50 @@ def _is_existing_file(filename):
     return os.path.exists(filename)
 
 
-@configsuite.transformation_msg("Convert V1 sunsch format to V2")
+@configsuite.transformation_msg("Defaults and v1-vs-v2 handling of config")
+def _defaults_and_v1_format_handling(config):
+    """Wrapper transformation function.
+
+    Only one tranformation can be given to ConfigSuite.
+    """
+    return _v1_content_to_v2(_shuffle_start_refdate(config))
+
+
+@configsuite.transformation_msg("Shuffle startdate vs refdate")
+def _shuffle_start_refdate(config):
+    """
+    Ensure that:
+    * startdate is always defined, if not given, it is picked
+      from starttime or refdate. If neither of these, then default
+      value 1900-01-01 is chosen.
+    * starttime is always defined, set to 00:00 of startdate if not
+      explicit
+    * refdate is always defined, set to startdate if not excplicit.
+    """
+    if "startdate" not in config:
+        if "starttime" in config:
+            config["startdate"] = config["starttime"].date()
+        elif "refdate" in config:
+            config["startdate"] = config["refdate"]
+        else:
+            config["startdate"] = datetime.date(1900, 1, 1)
+
+    if "starttime" not in config:
+        config["starttime"] = datetime_from_date(config["startdate"])
+
+    if "refdate" not in config:
+        config["refdate"] = config["startdate"]
+
+    return config
+
+
+@configsuite.transformation_msg("Convert v1 sunsch format to v2")
 # pylint: disable=invalid-name
-def _V1_content_to_V2(config):
+def _v1_content_to_v2(config):
     """
     Process an incoming dictionary with sunsch configuration.
 
-    If sunsch V1 format is detected, then transform to V2. If V2 format
+    If sunsch v1 format is detected, then transform to v2. If v2 format
     nothing happens.
 
     Validation (and convertion from mutable dict to immutable named_dict)
@@ -54,12 +91,11 @@ def _V1_content_to_V2(config):
     Returns
         dict
     """
-
     if "insert" in config:
         v2_insert = []
         for insertstatement in config["insert"]:
             if len(insertstatement) == 1:
-                v2_insert += [remap_v1_insert_to_v2(insertstatement)]
+                v2_insert += [_remap_v1_insert_to_v2(insertstatement)]
             else:
                 v2_insert += [insertstatement]
         config["insert"] = v2_insert
@@ -67,13 +103,13 @@ def _V1_content_to_V2(config):
     if "init" in config or "merge" in config:
         v2_files = []
         if "files" in config:
-            # This is a strange mix of V1 and V2 config..
+            # This is a strange mix of v1 and v2 config..
             v2_files += config["files"]
         if "init" in config:
             v2_files += [config["init"]]
             del config["init"]
         if "merge" in config:
-            # In V1, this can be both a list and a string
+            # In v1, this can be both a list and a string
             if isinstance(config["merge"], six.string_types):
                 v2_files += [config["merge"]]
             else:
@@ -86,7 +122,7 @@ def _V1_content_to_V2(config):
 
 CONFIG_SCHEMA_V2 = {
     MK.Type: types.NamedDict,
-    MK.Transformation: _V1_content_to_V2,
+    MK.Transformation: _defaults_and_v1_format_handling,
     MK.Content: {
         "files": {
             MK.Type: types.List,
@@ -100,6 +136,7 @@ CONFIG_SCHEMA_V2 = {
         },
         "output": {MK.Type: types.String, MK.Required: False},
         "startdate": {MK.Type: types.Date, MK.Required: False},
+        "starttime": {MK.Type: types.DateTime, MK.Required: False},
         "refdate": {MK.Type: types.Date, MK.Required: False},
         "enddate": {MK.Type: types.Date, MK.Required: False},
         "dategrid": {
@@ -223,9 +260,6 @@ def datetime_from_date(date):
 def process_sch_config(conf):
     """Process a Schedule configuration into a opm.tools TimeVector
 
-    Assumes the configuration is valid, but this function will tolerate
-    more than the configsuite configuration restricts the input to.
-
     Recognized keys in the configuration dict: files, startdate, startime,
     refdate, enddate, dategrid, insert
 
@@ -236,45 +270,29 @@ def process_sch_config(conf):
     Returns:
         string, containing the generated schedule section
     """
-
-    # At least test code is calling this function with a dictionary with
+    # At least test code is calling this function with a dict as
     # config - convert it to a configsuite snapshot:
     if isinstance(conf, dict):
         conf = configsuite.ConfigSuite(conf, CONFIG_SCHEMA_V2).snapshot
 
-    if conf.startdate is None:
-        if conf.refdate:
-            startdate = conf.refdate
-        else:
-            startdate = datetime.date(1900, 1, 1)
-    else:
-        startdate = conf.startdate
-
-    if "starttime" not in conf:
-        starttime = datetime_from_date(startdate)
-    else:
-        starttime = conf.starttime
-
-    if "refdate" not in conf:
-        refdate = conf.startdate
-    else:
-        refdate = conf.refdate
+    # Rerun this to ensure error is caught (already done in transformation)
+    datetime_from_date(conf.startdate)
 
     # Initialize the opm.tools.TimeVector class, which needs
     # a date to anchor to:
-    schedule = TimeVector(starttime)
+    schedule = TimeVector(conf.starttime)
 
     if conf.files is not None:
         for filename in conf.files:
             logger.info("Loading %s", filename)
             file_starts_with_dates = sch_file_starts_with_dates_keyword(filename)
             timevector = load_timevector_from_file(
-                filename, startdate, file_starts_with_dates
+                filename, conf.startdate, file_starts_with_dates
             )
             if file_starts_with_dates:
                 schedule.load_string(str(timevector))
             else:
-                schedule.load_string(str(timevector), starttime)
+                schedule.load_string(str(timevector), conf.starttime)
 
     if conf.insert is not None:
         logger.info("Processing %s insert statements", str(len(conf.insert)))
@@ -293,7 +311,7 @@ def process_sch_config(conf):
             if insert_statement.date:
                 date = datetime_from_date(insert_statement.date)
             elif insert_statement.days:
-                date = datetime_from_date(refdate) + datetime.timedelta(
+                date = datetime_from_date(conf.refdate) + datetime.timedelta(
                     days=insert_statement.days
                 )
             else:
@@ -302,7 +320,7 @@ def process_sch_config(conf):
                 continue
 
             # Do the insertion:
-            if date >= starttime:
+            if date >= conf.starttime:
                 if insert_statement.string is None:
                     schedule.load(filename, date=date)
                 else:
@@ -336,7 +354,7 @@ def process_sch_config(conf):
     # Dategrid is added at the end, in order to support
     # an implicit end-date
     if conf.dategrid:
-        dates = dategrid(startdate, enddate, conf.dategrid)
+        dates = dategrid(conf.startdate, enddate, conf.dategrid)
         for date in dates:
             schedule.add_keywords(datetime_from_date(date), [""])
 
@@ -443,7 +461,7 @@ def substitute(insert_statement):
     return resultfilename
 
 
-def remap_v1_insert_to_v2(insert_statement):
+def _remap_v1_insert_to_v2(insert_statement):
     """
     Remap a config v1 insert section to how it should look like
     in the v2 config.
@@ -680,7 +698,7 @@ def main():
         )
 
     else:
-        # Check if yaml had outdated V1 syntax, check that by removing the
+        # Check if yaml had outdated v1 syntax, check that by removing the
         # transformation from configsuite:
         transformation_key = list(CONFIG_SCHEMA_V2.keys())[1]  # slightly ugly
         config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
@@ -690,19 +708,19 @@ def main():
         )
         if not config_pure.valid:
             logger.warning(
-                "Your configuration uses a DEPRECATED format. Please switch,"
+                (
+                    "Your configuration is DEPRECATED, "
+                    "switch to new format.\n"
+                    "The keys 'init' and 'merge' are "
+                    "now merged into a key called 'files'\n"
+                    "and the insert statements all start "
+                    "with a single dash on a line.\n"
+                    "The following auto-converted YAML "
+                    "might be usable for you:\n"
+                )
+                + yaml.dump(_v1_content_to_v2(yaml_config)).strip()
+                + "\nEnd auto-converted YAML"
             )
-            logger.warning(
-                "The keys 'init' and 'merge' are now merged into a key called 'files'"
-            )
-            logger.warning(
-                "and the insert statements all start with a single dash on a line."
-            )
-            logger.warning(
-                "The following auto-converted YAML might be usable for you: "
-            )
-            logger.warning("\n%s", yaml.dump(_V1_content_to_V2(yaml_config)).strip())
-            logger.warning("End auto-converted YAML")
 
     if args.verbose:
         logger.setLevel(logging.INFO)
@@ -717,7 +735,7 @@ def main():
     else:
         logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
         dirname = os.path.dirname(config.snapshot.output)
-        if not os.path.exists(dirname):
+        if dirname and not os.path.exists(dirname):
             logger.debug("mkdir %s", dirname)
             os.makedirs(dirname)
         open(config.snapshot.output, "w").write(str(schedule))
