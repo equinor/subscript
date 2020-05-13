@@ -37,7 +37,7 @@ def get_parser():
         "-e",
         "--clip_end",
         dest="end_date",
-        help="Ignore keywords in the input files after this date (YYY-MM-DD)",
+        help="Ignore keywords in the input files after this date (YYYY-MM-DD)",
         default=None,
     )
     return parser
@@ -59,8 +59,6 @@ def main():
 
     if args.end_date:
         sunsch_config["enddate"] = dateutil.parser.parse(args.end_date).date()
-
-    sunsch.validate_config(sunsch_config)
 
     sch = sunsch.process_sch_config(sunsch_config)
 
