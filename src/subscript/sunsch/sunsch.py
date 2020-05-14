@@ -720,7 +720,9 @@ def main():
         del config_schema_v2_pure[transformation_key]
         try:
             config_pure = configsuite.ConfigSuite(
-                {}, config_schema_v2_pure, layers=(defaults_config, yaml_config, cli_config)
+                {},
+                config_schema_v2_pure,
+                layers=(defaults_config, yaml_config, cli_config),
             )
             valid = config_pure.valid
         except KeyError:
