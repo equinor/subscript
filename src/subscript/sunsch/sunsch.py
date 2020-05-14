@@ -718,10 +718,15 @@ def main():
         transformation_key = list(CONFIG_SCHEMA_V2.keys())[1]  # slightly ugly
         config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
         del config_schema_v2_pure[transformation_key]
-        config_pure = configsuite.ConfigSuite(
-            {}, config_schema_v2_pure, layers=(defaults_config, yaml_config, cli_config)
-        )
-        if not config_pure.valid:
+        try:
+            config_pure = configsuite.ConfigSuite(
+                {}, config_schema_v2_pure, layers=(defaults_config, yaml_config, cli_config)
+            )
+            valid = config_pure.valid
+        except KeyError:
+            # Only Py2 gets here.
+            valid = False
+        if not valid:
             logger.warning(
                 (
                     "Your configuration is DEPRECATED, "
