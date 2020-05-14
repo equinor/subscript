@@ -151,7 +151,7 @@ def get_cfg_schema():
                 },
             },
             "result_file": {MK.Type: types.String},
-            "delta_s": {MK.Type: types.Number, MK.Required: False},
+            "delta_s": {MK.Type: types.Number, MK.Required: False, MK.AllowNone: True},
             "interpolations": {
                 MK.Type: types.List,
                 MK.Content: {
@@ -164,8 +164,16 @@ def get_cfg_schema():
                                 MK.Required: False,
                                 MK.Content: {MK.Item: {MK.Type: types.Integer}},
                             },
-                            "param_w": {MK.Type: types.Number, MK.Required: False},
-                            "param_g": {MK.Type: types.Number, MK.Required: False},
+                            "param_w": {
+                                MK.Type: types.Number,
+                                MK.Required: False,
+                                MK.AllowNone: True,
+                            },
+                            "param_g": {
+                                MK.Type: types.Number,
+                                MK.Required: False,
+                                MK.AllowNone: True,
+                            },
                         },
                     }
                 },
