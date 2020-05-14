@@ -134,14 +134,15 @@ CONFIG_SCHEMA_V2 = {
                 }
             },
         },
-        "output": {MK.Type: types.String, MK.Required: False},
-        "startdate": {MK.Type: types.Date, MK.Required: False},
-        "starttime": {MK.Type: types.DateTime, MK.Required: False},
-        "refdate": {MK.Type: types.Date, MK.Required: False},
-        "enddate": {MK.Type: types.Date, MK.Required: False},
+        "output": {MK.Type: types.String, MK.Required: False, MK.AllowNone: True},
+        "startdate": {MK.Type: types.Date, MK.Required: False, MK.AllowNone: True},
+        "starttime": {MK.Type: types.DateTime, MK.Required: False, MK.AllowNone: True},
+        "refdate": {MK.Type: types.Date, MK.Required: False, MK.AllowNone: True},
+        "enddate": {MK.Type: types.Date, MK.Required: False, MK.AllowNone: True},
         "dategrid": {
             MK.Type: types.String,
             MK.Required: False,
+            MK.AllowNone: True,
             MK.ElementValidators: (_is_valid_dategrid,),
         },
         "insert": {
@@ -151,19 +152,33 @@ CONFIG_SCHEMA_V2 = {
                 MK.Item: {
                     MK.Type: types.NamedDict,
                     MK.Content: {
-                        "date": {MK.Type: types.Date, MK.Required: False},
+                        "date": {
+                            MK.Type: types.Date,
+                            MK.Required: False,
+                            MK.AllowNone: True,
+                        },
                         "filename": {
                             MK.Type: types.String,
                             MK.Required: False,
+                            MK.AllowNone: True,
                             MK.ElementValidators: (_is_existing_file,),
                         },
                         "template": {
                             MK.Type: types.String,
                             MK.Required: False,
+                            MK.AllowNone: True,
                             MK.ElementValidators: (_is_existing_file,),
                         },
-                        "days": {MK.Type: types.Integer, MK.Required: False},
-                        "string": {MK.Type: types.String, MK.Required: False},
+                        "days": {
+                            MK.Type: types.Integer,
+                            MK.Required: False,
+                            MK.AllowNone: True,
+                        },
+                        "string": {
+                            MK.Type: types.String,
+                            MK.Required: False,
+                            MK.AllowNone: True,
+                        },
                         "substitute": {
                             MK.Type: types.Dict,
                             MK.Required: False,
