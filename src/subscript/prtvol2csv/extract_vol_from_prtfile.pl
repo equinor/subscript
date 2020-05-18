@@ -106,6 +106,10 @@ OUTER: while($line=<F_PRT>)
             }
             $line2=$line;   # Update $line2 (ready for next loop where it will act as the previous line)
             $line=<F_PRT>;  # Read next line
+            if (eof(F_PRT))
+            {
+                last;
+            }
         }
     }
 #    last OUTER if $line =~  /^\s*BALANCE  AT/;                 #End while if second BALANCE is found --> redundant (already taken care of in the inner while loop)
