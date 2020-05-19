@@ -3,15 +3,22 @@ import datetime
 import dateutil.parser
 import argparse
 import yaml
+import logging
 
 from subscript.sunsch import sunsch
+
+logger = logging.getLogger(__name__)
+logging.basicConfig()
 
 
 def get_parser():
     epilog = """Merges several ECLIPSE schedule files into one single file.
     This is done by sorting on the DATES keyword in the different input files.
     If a given date exists in more than one input file, the order of keywords
-    under that date follows the input order of the files."""
+    under that date follows the input order of the files.
+
+    Anything before the first DATES keyword in all files will be merged to
+    one block occuring before the first DATES in all files."""
 
     parser = argparse.ArgumentParser(epilog=epilog)
 
@@ -30,7 +37,7 @@ def get_parser():
         "-e",
         "--clip_end",
         dest="end_date",
-        help="Ignore keywords in the input files after this date (YYY-MM-DD)",
+        help="Ignore keywords in the input files after this date (YYYY-MM-DD)",
         default=None,
     )
     return parser
@@ -41,26 +48,19 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    if not sunsch.file_startswith_dates(args.inputfiles[0]):
-        sunsch_config = {
-            "startdate": datetime.date(1900, 1, 1),
-            "init": args.inputfiles[0],
-            "merge": args.inputfiles[1:],
-        }
-    else:
-        sunsch_config = {
-            "startdate": datetime.date(1900, 1, 1),
-            "merge": args.inputfiles,
-        }
+    sunsch_config = {"startdate": datetime.date(1900, 1, 1), "files": args.inputfiles}
 
     if args.verbose:
-        print("# Sending the following YAML configuration to sunsch:")
-        print(yaml.dump(sunsch_config))
-        print("# <end sunsch config>")
+        # Set the root logger to INFO, will be inherited by sunsch
+        logging.getLogger().setLevel(logging.INFO)
+
+    logger.info("# Sending the following YAML configuration to sunsch:")
+    logger.info(yaml.dump(sunsch_config))
+
     if args.end_date:
         sunsch_config["enddate"] = dateutil.parser.parse(args.end_date).date()
 
-    sch = sunsch.process_sch_config(sunsch_config, quiet=not args.verbose)
+    sch = sunsch.process_sch_config(sunsch_config)
 
     if os.path.exists(args.outputfile) and not args.force:
         print("ERROR: Not overwriting existing file {}".format(args.outputfile))
