@@ -11,7 +11,9 @@ from ert_shared.plugins.plugin_manager import ErtPluginManager
 def test_hook_implementations():
     pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
-    expected_jobs = {}
+    expected_jobs = {
+        "SUNSCH": "subscript/config_jobs/SUNSCH",
+    }
     installable_jobs = pm.get_installable_jobs()
     for wf_name, wf_location in expected_jobs.items():
         assert wf_name in installable_jobs

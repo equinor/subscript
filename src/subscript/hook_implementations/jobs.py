@@ -19,7 +19,7 @@ def _get_jobs_from_directory(directory):
 @hook_implementation
 @plugin_response(plugin_name="subscript")
 def installable_jobs():
-    return {}
+    return _get_jobs_from_directory("config_jobs")
 
 
 @hook_implementation
