@@ -187,7 +187,9 @@ def tables_to_dataframe(filenames):
         dataframe with the tables
     """
 
-    return pd.concat([satfunc.df(open(filename).read()) for filename in filenames])
+    return pd.concat(
+        [satfunc.df(open(filename).read()) for filename in filenames], sort=False
+    )
 
 
 def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
