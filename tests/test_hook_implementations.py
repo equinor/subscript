@@ -12,6 +12,7 @@ def test_hook_implementations():
     pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
     expected_jobs = {
+        "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
         "SUNSCH": "subscript/config_jobs/SUNSCH",
     }
     installable_jobs = pm.get_installable_jobs()
