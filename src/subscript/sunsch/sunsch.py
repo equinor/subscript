@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Tool for generating Eclipse Schedule files
 
