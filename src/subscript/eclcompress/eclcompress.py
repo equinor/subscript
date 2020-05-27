@@ -83,29 +83,10 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
                 logger.warning("Skipped %s, not text file.", filename)
                 continue
 
-        # Check if we can find the keyword INCLUDE in the file
-        # If so, there is probably a path nearby that includes slashes /
-        # that will most likely be broken by cleanlines.
-        # We skip such files!
-        if any([x.find("INCLUDE") > -1 for x in filelines]):
-            logger.warning("Skipped %s, contains INCLUDE statement.", filename)
-            continue  # to next file
-
-        # VFP data records need to have trailing slashes pr. record
-        # on the same line. Not yet supported, so give up.
-        # (this might apply to all multi-record keywords?)
-        if any([x.find("VFP") > -1 for x in filelines]):
-            logger.warning("Skipped %s, contains VFPxxxx statement", filename)
-            continue  # to next file
-
         # Skip if it seems we have already compressed this file
         if any([x.find("eclcompress") > -1 for x in filelines]):
             logger.warning("Skipped %s, compressed already", filename)
             continue  # to next file
-
-        # Ensure ECL keywords at start of line,
-        # newline before data, and put /'s as single character-lines
-        filelines = cleanlines(filelines)
 
         origbytes = sum([len(x) for x in filelines])
 
@@ -113,8 +94,9 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
             logger.info("File %s is empty, skipping", filename)
             continue
 
-        # Support multiple ECL keywords pr. file, so we first find the
-        # file lines with individual keyword data to process
+        # Index the list of strings (the file contents) by the line numbers
+        # where Eclipse keywords start, and where the first data record of the keyword
+        # ends (compression is not attempted in record 2 and onwards for any keyword)
         keywordsets = find_keyword_sets(filelines)
 
         if not keywordsets:
@@ -190,8 +172,8 @@ def acceptedvalue(valuestring):
 def compress_multiple_keywordsets(keywordsets, filelines):
     """Apply Eclipse type compression to data in filelines
 
-    Individual ECL keyword are indicated by tuples in keywordsets
-    and no compression is attempted outside the ECL keyword data
+    The list of strings given as input (filelines) is indexed
+    by the tuples in keywordsets.
 
     Args:
         keywordsets (list of 2-tuples): (start, end) indices in
@@ -203,19 +185,35 @@ def compress_multiple_keywordsets(keywordsets, filelines):
         list of str, to be used as a replacement Eclipse deck
     """
 
+    # List of finished lines to build up:
     compressedlines = []
-    lastslashindex = 0
+
+    # Line pointer to the last line with a slash in it:
+    lastslash_linepointer = 0
+
     for keywordtuple in keywordsets:
         if keywordtuple[0] is None:
-            continue  # This happens for extra /
-        startdata = keywordtuple[0] + 1
-        compressedlines += filelines[lastslashindex:startdata]
-        data = []  # List of strings, each string is one data element
-        #            (typically integer)
-        enddata = keywordtuple[1]
-        lastslashindex = enddata
-        for dataline in filelines[startdata:enddata]:
+            continue  # This happens for an extra /
+        start_linepointer = keywordtuple[0] + 1  # The line number where data starts.
+
+        # Append whatever we have gathered since previous keyword
+        compressedlines += filelines[lastslash_linepointer:start_linepointer]
+
+        data = (
+            []
+        )  # List of strings, each string is one data element (typically integer)
+        end_linepointer = keywordtuple[1]
+        lastslash_linepointer = end_linepointer + 1
+        for dataline in filelines[start_linepointer:end_linepointer]:
             data += dataline.split()
+
+        # Handle the last line carefully, it might contain something after the slash,
+        # and data in front of the slash:
+        assert "/" in filelines[end_linepointer]
+        lastline_comps = filelines[end_linepointer].split("/")
+        preslashdata = lastline_comps[0]
+        postslash = "/".join(filelines[end_linepointer].split("/")[1:])
+        data += preslashdata.split()
         compresseddata = []
         for _, g in itertools.groupby(data):
             equalvalues = list(g)
@@ -226,12 +224,20 @@ def compress_multiple_keywordsets(keywordsets, filelines):
                 compresseddata += [str(len(equalvalues)) + "*" + str(equalvalues[0])]
             else:
                 compresseddata += [" ".join(equalvalues)]
-        compressedlines += chunks(compresseddata, 5)
-        # Only 5 chunks pr line, Eclipse will error if more than 132
+        compressedlines += chunks(compresseddata, 10)
+        # Only 10 chunks pr line, Eclipse will error if more than 132
         # characters on a line. TODO: Reprogram to use python textwrap
 
-    # Add whatever is present at the end after the last slash:
-    compressedlines += filelines[lastslashindex:]
+        # Add the slash ending the record to the last line, or on a new line
+        # if the slash was already on its own line.
+        if preslashdata:
+            compressedlines[-1] += " /" + postslash.rstrip()
+        else:
+            compressedlines += ["/" + postslash.rstrip()]
+    # Add whatever is present at the end after the last slash
+    # (more DeckRecords (not compressed), comments, whatever)
+    # (avoid newlines, it will be readded later)
+    compressedlines += map(str.rstrip, filelines[lastslash_linepointer:])
     return compressedlines
 
 
@@ -252,19 +258,38 @@ def find_keyword_sets(filelines):
     this will return [(1,4)] since 1 refers to the line with PORO and 4 refers
     to the line with the trailing slash.
 
+    More tricky keywords like (multiple records)
+        EQUALS
+          'FIPNUM' 0 1 0 1 0 1 10 /
+          'FIPNUM' 1 2 1 2 1 2 20 /
+        /
+
+    we are not able to detect anything but the first record (line) without
+    having a full Eclipse parser (OPM). This means we we only compress the
+    first line. These type of keywords are not important to compress, and we
+    could just as well avoid compressing them altogether.
+
+    Eclipse keyword strings must always be alone on a line, if not they
+    are skipped (i.e. not recognized as an Eclipse keyword)
+
     Args:
         filelines (list of str): Eclipse deck (partial)
 
     Return:
-        list of 2-tuples,  with start and end line indices for datasets to
+        list of 2-tuples, with start and end line indices for datasets to
             compress
 
     """
+    blacklisted_keywords = ["INCLUDE"]  # (due to slashes in filenames)
     keywordsets = []
     kwstart = None
     for lineidx, line in enumerate(filelines):
-        if re.match("[A-Z]+.*", line) is not None:
+        if (
+            re.match("[A-Z]{2,8}$", line) is not None
+            and line.strip() not in blacklisted_keywords
+        ):
             kwstart = lineidx
+            continue
         if kwstart is not None and line.strip()[0:2] == "--":
             # This means we found a comment section within a data set
             # In that case it is vital to preserve the current line
@@ -272,56 +297,11 @@ def find_keyword_sets(filelines):
             # therefore we avoid compressing this!
             # (compressing and preserving line breaks can be done later)
             kwstart = None
-        if line[0] == "/":  # We can assume this because
-            #                               of cleanlines()
+            continue
+        if "/" in line:  # First occurence of a slash ends the keyword section
             keywordsets.append((kwstart, lineidx))
             kwstart = None
     return keywordsets
-
-
-def cleanlines(filelines):
-    """Cleanup in Eclipse grid files to easen parsing
-
-    ECL keywords always at start of a line, only uppercase letters,
-    newline straight after keyword
-
-    Any / should occur at single lines unless in comments
-
-    Any comment start at beginning of line
-
-    Args:
-        filelines (list of str): Partial Eclipse deck.
-
-    Returns:
-        list of str, incoming deck, cleaned to what eclcompress supports.
-    """
-
-    # Text files are potentially big, so should we try to be a little
-    # bit fast
-
-    # Regex for capturing an Eclipse keyword at the beginning of a line
-    eclkeyword = re.compile(r"^([A-Z]{2,8})\s(.*)")
-
-    # Detect comments after a slash on a line
-    slashspacecomment = re.compile(r"(.*/\s)(.*)$")
-    cleaned = []
-    for line in filelines:
-        line = line.strip()
-        # Put \n straight after any Eclipse keyword
-        line = eclkeyword.sub("\\1\n\\2", line)
-        if line.find("--") == -1:  # Don't touch lines with comments.
-            # If we have anything after a / on a line, ensure we add '--' to it.
-            # (we don't care if we add too many '--')
-            line = slashspacecomment.sub("\\1 --\\2", line)
-            # Split by / and ensure newlines around them
-            lines = "\n/\n".join(line.split("/")).split("\n")
-        else:
-            lines = [line]
-        # Remove empty lines
-        lines = list(filter(len, lines))
-        cleaned += lines
-
-    return cleaned
 
 
 def glob_patterns(patterns):

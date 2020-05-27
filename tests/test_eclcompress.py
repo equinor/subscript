@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""Test eclcompress with  pytest"""
+
 from __future__ import absolute_import
 
 import sys
@@ -11,7 +13,6 @@ import pytest
 import opm.io
 
 from subscript.eclcompress.eclcompress import (
-    cleanlines,
     compress_multiple_keywordsets,
     find_keyword_sets,
     glob_patterns,
@@ -27,7 +28,7 @@ FILELINES = [
     "",
     " SATNUM  ",
     "0 0   0 1 1 1 3 1 4 3 2",
-    "0 0 1 1 1 1 1 1 1 1 1 1 2" " 0 4 1 /",
+    "0 0 1 1 1 1 1 1 1 1 1 1 2 0 4 1 /",
     "IMBNUM",
     "0 0 3 3 2 2 2 2",
     "/ --something at the end we want to preserve",
@@ -39,32 +40,27 @@ FILELINES = [
     "0.5 0.5 0.5 0",
     "1   1  0 0",
     "/",
-    "-- A comment with slashes /which/must/be/preserved as comment",  # noqa
-    "PORO  0 0 0 / ",
+    "-- A comment with slashes /which/must/be/preserved as comment",
+    "PORO",
+    "0 0 0 / ",
     "PERMY",
-    "0 0 0 / -- more comments after ending slash, destroys compression",  # noqa
+    "0 0 0 / -- more comments after ending slash",
     "",
     "EQUALS",
-    "MULTZ 0.017101  1 40  1 64  5  5 / nasty comment without comment characters"  # noqa
+    "MULTZ 0.017101  1 40  1 64  5  5 / nasty comment without comment characters",
     "/",
+    "--fo",
 ]
 
 
-def test_cleanlines():
-    assert cleanlines([" PORO"]) == ["PORO"]
-    assert cleanlines(["PORO 3"]) == ["PORO", "3"]
-    assert cleanlines(["PORO 1 2 3 /"]) == ["PORO", "1 2 3 ", "/"]
-    assert cleanlines([" PORO/"]) == ["PORO", "/"]
-    assert cleanlines([" PORO/  foo"]) == ["PORO", "/", "  -- foo"]
-    assert cleanlines(["-- PORO 4"]) == ["-- PORO 4"]
-    assert cleanlines(["POROFOOBARCOM  4"]) == ["POROFOOBARCOM  4"]
-
-
 def test_find_keyword_sets():
+    """Check the indexing of list of strings into Eclipse keywords"""
     assert find_keyword_sets(["PORO", "0 1 2 3", "4 5 6", "/"]) == [(0, 3)]
 
     # Missing slash, then nothing found:
     assert find_keyword_sets(["PORO", "0 1 2 3", "4 5 6"]) == []
+
+    # MORE!!
 
     # Keyword with no data, will be found, but untouched by compression
     kw_nodata = ["PORO", "/"]
@@ -74,6 +70,8 @@ def test_find_keyword_sets():
 
 
 def test_empty_file(tmpdir):
+    """Check that compression of empty files is a noop"""
+    tmpdir.chdir()
     emptyfilename = "emptyfile.grdecl"
     with open(emptyfilename, "w"):
         pass
@@ -85,6 +83,7 @@ def test_empty_file(tmpdir):
 def test_no_touch_non_eclipse(tmpdir):
     """Check that we do not change a file that does not contain
     any Eclipse data"""
+    tmpdir.chdir()
     filename = "foo.txt"
     with open(filename, "w") as file_h:
         file_h.write("Some random text\nAnother line\nbut no Eclipse keywords")
@@ -94,6 +93,15 @@ def test_no_touch_non_eclipse(tmpdir):
 
 
 def test_compress_multiple_keywordsets():
+    """Test compression of sample lines"""
+    filelines = ["PORO", "0 0 0 3", "4 5 6", "/ postslashcomment"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "PORO",
+        "3*0 3 4 5 6",
+        "/ postslashcomment",
+    ]
+
     filelines = ["PORO", "0 0 0 3", "4 5 6", "/"]
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
@@ -102,13 +110,161 @@ def test_compress_multiple_keywordsets():
         "/",
     ]
 
+    filelines = ["PORO", "0 0 0 3", "4 5 6 /"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "PORO",
+        "3*0 3 4 5 6 /",
+    ]
+
+    filelines = ["PORO", "0 0 0 3", "4 5 6 / postslashcomment"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "PORO",
+        "3*0 3 4 5 6 / postslashcomment",
+    ]
+
+    filelines = ["PORO", "0 0 0 3 4 5 6 / postslashcomment"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "PORO",
+        "3*0 3 4 5 6 / postslashcomment",
+    ]
+
+    filelines = ["PORO", "0 0 /", "PERMX", "1 1 /"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "PORO",
+        "2*0 /",
+        "PERMX",
+        "2*1 /",
+    ]
+
+    filelines = ["PORO", "0 0 /", "", "PERMX", "1 1 /"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "PORO",
+        "2*0 /",
+        "",
+        "PERMX",
+        "2*1 /",
+    ]
+
+    filelines = ["-- comment", "PORO", "0 0", "/"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "-- comment",
+        "PORO",
+        "2*0",
+        "/",
+    ]
+
+    filelines = ["-- nastycomment with / slashes", "PORO", "0 0", "/"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "-- nastycomment with / slashes",
+        "PORO",
+        "2*0",
+        "/",
+    ]
+
+
+def test_multiplerecords():
+    """Test compression on keywords with multiple records,
+    for which eclcompress only supports compressing the first records
+
+    Conservation of the remainder of the keyword is critical to test.
+    """
+    filelines = [
+        "EQUALS",
+        "MULTZ 0.017101  1 40  1 64  5  5 / nasty comment without comment characters",
+        "/",
+    ]
+
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "EQUALS",
+        "MULTZ 0.017101 1 40 1 64 2*5 / nasty comment without comment characters",
+        "/",
+    ]
+
+    filelines = [
+        "EQUALS",
+        "1 1 / nasty comment/",
+        "2 2 / foo",
+        "3 3 /",
+        "/",
+        "PERMX",
+        "1 1 /",
+    ]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "EQUALS",
+        "2*1 / nasty comment/",  # (only compressing first record)
+        "2 2 / foo",
+        "3 3 /",
+        "/",
+        "PERMX",
+        "2*1 /",
+    ]
+
+    filelines = ["EQUALS", "1 1//", "2 2 / foo", "/"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == [
+        "EQUALS",
+        "2*1 //",
+        "2 2 / foo",
+        "/",
+    ]
+
+
+def test_grid_grdecl():
+    """A typical grid.grdecl file must be able to do compression on the
+    COORDS/ZCORN keywords, while conserving the other two"""
+    filelines = """
+SPECGRID
+214  669  49   1  F  /
+
+GDORIENT
+INC INC INC DOWN RIGHT /
+
+ZCORN
+  1 1 1 1 1 1 /
+""".split(
+        "\n"
+    )
+    kwsets = find_keyword_sets(filelines)
+    assert (
+        compress_multiple_keywordsets(kwsets, filelines)
+        == """
+SPECGRID
+214 669 49 1 F /
+
+GDORIENT
+INC INC INC DOWN RIGHT /
+
+ZCORN
+6*1 /
+""".split(
+            "\n"
+        )
+    )
+
+
+def test_include_statement():
+    """A file with an INCLUDE statement has been tricky
+    not to destroy while compressing"""
+    filelines = ["INCLUDE", "  '../include/grid/grid.grdecl'  /"]
+    kwsets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kwsets, filelines) == filelines
+
 
 def test_eclcompress():
-    cleaned = cleanlines(FILELINES)
-    kwsets = find_keyword_sets(cleaned)
-    compressed = compress_multiple_keywordsets(kwsets, cleaned)
+    """Test a given set of lines, and ensure that the output
+    can be parsed by opm.io"""
+    kwsets = find_keyword_sets(FILELINES)
+    compressed = compress_multiple_keywordsets(kwsets, FILELINES)
     compressedstr = "\n".join(compressed)
-
     # Feed the compressed string into opm.io. OPM hopefully chokes on whatever
     # Eclipse would choke on (and hopefully not on more..)
     parsecontext = opm.io.ParseContext(
@@ -145,14 +301,13 @@ VFPPROD
     parsecontext = opm.io.ParseContext(
         [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
     )
-    # Confirm that OPM can parse the startiing point:
+    # Confirm that OPM can parse the starting point:
     assert opm.io.Parser().parse_string(vfpstr, parsecontext)
 
     # Call eclcompress as script on vfpstr:
     with open("vfpfile.inc", "w") as testdeck:
         testdeck.write(vfpstr)
-    print("foo")
-    sys.argv = ["eclcompress", "--keeporiginal", "vfpfile.inc"]  # noqa
+    sys.argv = ["eclcompress", "--keeporiginal", "vfpfile.inc"]
     main()
 
     # Check that OPM can parse the output (but in this case, OPM allows
@@ -177,7 +332,7 @@ def test_main(tmpdir):
     if os.path.exists("testdeck.inc.orig"):
         os.unlink("testdeck.inc.orig")
 
-    sys.argv = ["eclcompress", "--keeporiginal", "testdeck.inc"]  # noqa
+    sys.argv = ["eclcompress", "--keeporiginal", "testdeck.inc"]
     main()
 
     assert os.path.exists("testdeck.inc.orig")
@@ -196,34 +351,41 @@ def test_main(tmpdir):
 
 
 def test_binary_file(tmpdir):
+    """Test that a binary file will be skipped"""
     tmpdir.chdir()
     binfile = "binfile.bin"
     with open(binfile, "wb") as file_h:
         # Random byte sequence that is not valid as UTF-8:
         file_h.write(bytearray([10, 0, 1, 2, 4, 5, 250, 255, 155]))
+    origbytes = open(binfile, "rb").read()
     main_eclcompress(binfile, None)
+    assert open(binfile, "rb").read() == origbytes
 
 
 def test_iso8859(tmpdir):
+    """Test that a text file with ISO-8859 encoding does
+    not trigger bugs (and is written back as utf-8)"""
     tmpdir.chdir()
     nastyfile = "nastyfile.inc"
     with codecs.open(nastyfile, "w", "ISO-8859-1") as file_h:
-        file_h.write(u"-- Gullfaks Sør\nPORO 1 1 1 1/\n")
+        file_h.write(u"-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
     main_eclcompress(nastyfile, None)
     assert "4*1" in open(nastyfile).read()  # Outputted file is always UTF-8
 
 
 def test_utf8(tmpdir):
+    """Test that we can parse and write a file with utf-8 chars"""
     tmpdir.chdir()
     nastyfile = "nastyfile.inc"
     with open(nastyfile, "w") as file_h:
-        file_h.write("-- Gullfaks Sør\nPORO 1 1 1 1/\n")
+        file_h.write("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
     main_eclcompress(nastyfile, None)
     assert "4*1" in open(nastyfile).read()
 
 
-@pytest.fixture
-def eclincludes(tmpdir):
+@pytest.fixture(name="eclincludes")
+def fixture_eclincludes(tmpdir):
+    """Provide a directory structure with grdecl files in it"""
     tmpdir.chdir()
     os.makedirs("eclipse/include/props")
     os.makedirs("eclipse/include/regions")
@@ -236,7 +398,10 @@ def eclincludes(tmpdir):
     yield
 
 
-def test_default_pattern(eclincludes):
+@pytest.mark.usefixtures("eclincludes")
+def test_default_pattern():
+    """Check how eclcompress behaves as a command line
+    tool in a standardized directory structure"""
     main_eclcompress(None, None)
     assert (
         "File compressed with eclcompress"
@@ -249,7 +414,8 @@ def test_default_pattern(eclincludes):
     assert "13*0" in open("eclipse/include/props/perm.grdecl").read()
 
 
-def test_files_override_default_wildcards(eclincludes, twofiles):
+@pytest.mark.usefixtures("eclincludes", "twofiles")
+def test_files_override_default_wildcards():
     """Default wildcardlist will not be used if explicit files are provided"""
     assert "0 0 0 0" in open("perm.grdecl").read()
     assert "0 0 0 0" in open("eclipse/include/props/perm.grdecl").read()
@@ -260,6 +426,7 @@ def test_files_override_default_wildcards(eclincludes, twofiles):
 
 @pytest.fixture
 def twofiles(tmpdir):
+    """Provide a tmpdir with two sample grdecl files and a filepattern file"""
     tmpdir.chdir()
 
     open("perm.grdecl", "w").write("PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/")
@@ -281,7 +448,8 @@ def twofiles(tmpdir):
         (["perm.grdecl", "poro.grdecl"], ""),
     ],
 )
-def test_compress_files_filelist(args, twofiles):
+@pytest.mark.usefixtures("twofiles")
+def test_compress_files_filelist(args):
     """Test the command line options for giving in both excplicit files and
     a list of file(pattern)s"""
 
@@ -293,7 +461,8 @@ def test_compress_files_filelist(args, twofiles):
     assert "7*1" in open("poro.grdecl").read()
 
 
-def text_compress_argparse_1(twofiles):
+@pytest.mark.usefixtures("twofiles")
+def text_compress_argparse_1():
     """Test also the command line interface with --files"""
     sys.argv = ["eclcompress", "--files", "files"]
     main()
@@ -303,7 +472,8 @@ def text_compress_argparse_1(twofiles):
     assert "7*1" in open("poro.grdecl").read()
 
 
-def text_compress_argparse_2(twofiles):
+@pytest.mark.usefixtures("twofiles")
+def text_compress_argparse_2():
     """Command line options, explicit files vs. --files"""
     sys.argv = ["eclcompress", "perm.grdecl", "--files", "files"]
     main()
@@ -313,7 +483,8 @@ def text_compress_argparse_2(twofiles):
     assert "7*1" in open("poro.grdecl").read()
 
 
-def text_compress_argparse_3(twofiles):
+@pytest.mark.usefixtures("twofiles")
+def text_compress_argparse_3():
     """Command line options, explicit files vs. --files"""
     sys.argv = ["eclcompress", "perm.grdecl"]
     main()
@@ -324,6 +495,7 @@ def text_compress_argparse_3(twofiles):
 
 
 def test_glob_patterns(tmpdir):
+    """Test globbing filepatterns from a file with patterns"""
     tmpdir.chdir()
 
     dummyfiles = ["perm.grdecl", "poro.grdecl"]
