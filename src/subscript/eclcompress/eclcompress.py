@@ -6,6 +6,7 @@ import shutil
 import logging
 import datetime
 import itertools
+import textwrap
 import argparse
 import re
 
@@ -224,9 +225,17 @@ def compress_multiple_keywordsets(keywordsets, filelines):
                 compresseddata += [str(len(equalvalues)) + "*" + str(equalvalues[0])]
             else:
                 compresseddata += [" ".join(equalvalues)]
-        compressedlines += chunks(compresseddata, 10)
-        # Only 10 chunks pr line, Eclipse will error if more than 132
-        # characters on a line. TODO: Reprogram to use python textwrap
+
+        # Wrap the output to 79 characters pr. line. Eclipse will error if more
+        # than 132 characters, if there are comments after the slash it will be
+        # added to the last line emitted by the wrapping and could overshoot the
+        # 132 limit (but having Eclipse ignore a comment is fine)
+        compressedlines += textwrap.wrap(
+            " ".join(compresseddata),
+            initial_indent="  ",
+            subsequent_indent="  ",
+            width=79,
+        )
 
         # Add the slash ending the record to the last line, or on a new line
         # if the slash was already on its own line.

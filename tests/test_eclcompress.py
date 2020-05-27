@@ -10,6 +10,8 @@ import subprocess
 
 import pytest
 
+import numpy as np
+
 import opm.io
 
 from subscript.eclcompress.eclcompress import (
@@ -98,7 +100,7 @@ def test_compress_multiple_keywordsets():
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "3*0 3 4 5 6",
+        "  3*0 3 4 5 6",
         "/ postslashcomment",
     ]
 
@@ -106,7 +108,7 @@ def test_compress_multiple_keywordsets():
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "3*0 3 4 5 6",
+        "  3*0 3 4 5 6",
         "/",
     ]
 
@@ -114,40 +116,40 @@ def test_compress_multiple_keywordsets():
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "3*0 3 4 5 6 /",
+        "  3*0 3 4 5 6 /",
     ]
 
     filelines = ["PORO", "0 0 0 3", "4 5 6 / postslashcomment"]
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "3*0 3 4 5 6 / postslashcomment",
+        "  3*0 3 4 5 6 / postslashcomment",
     ]
 
     filelines = ["PORO", "0 0 0 3 4 5 6 / postslashcomment"]
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "3*0 3 4 5 6 / postslashcomment",
+        "  3*0 3 4 5 6 / postslashcomment",
     ]
 
     filelines = ["PORO", "0 0 /", "PERMX", "1 1 /"]
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "2*0 /",
+        "  2*0 /",
         "PERMX",
-        "2*1 /",
+        "  2*1 /",
     ]
 
     filelines = ["PORO", "0 0 /", "", "PERMX", "1 1 /"]
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "PORO",
-        "2*0 /",
+        "  2*0 /",
         "",
         "PERMX",
-        "2*1 /",
+        "  2*1 /",
     ]
 
     filelines = ["-- comment", "PORO", "0 0", "/"]
@@ -155,7 +157,7 @@ def test_compress_multiple_keywordsets():
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "-- comment",
         "PORO",
-        "2*0",
+        "  2*0",
         "/",
     ]
 
@@ -164,7 +166,7 @@ def test_compress_multiple_keywordsets():
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "-- nastycomment with / slashes",
         "PORO",
-        "2*0",
+        "  2*0",
         "/",
     ]
 
@@ -177,14 +179,14 @@ def test_multiplerecords():
     """
     filelines = [
         "EQUALS",
-        "MULTZ 0.017101  1 40  1 64  5  5 / nasty comment without comment characters",
+        "  MULTZ 0.017101  1 40  1 64  5  5 / nasty comment without comment characters",
         "/",
     ]
 
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "EQUALS",
-        "MULTZ 0.017101 1 40 1 64 2*5 / nasty comment without comment characters",
+        "  MULTZ 0.017101 1 40 1 64 2*5 / nasty comment without comment characters",
         "/",
     ]
 
@@ -200,22 +202,40 @@ def test_multiplerecords():
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "EQUALS",
-        "2*1 / nasty comment/",  # (only compressing first record)
+        "  2*1 / nasty comment/",  # (only compressing first record)
         "2 2 / foo",
         "3 3 /",
         "/",
         "PERMX",
-        "2*1 /",
+        "  2*1 /",
     ]
 
     filelines = ["EQUALS", "1 1//", "2 2 / foo", "/"]
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "EQUALS",
-        "2*1 //",
+        "  2*1 //",
         "2 2 / foo",
         "/",
     ]
+
+
+def test_formatting():
+    """Test that compressed output is only 79 characters wide"""
+    numbers = " ".join([str(number) for number in np.random.rand(1, 100)[0]])
+    filelines = ["PORO", numbers, "/"]
+    formatted = compress_multiple_keywordsets(find_keyword_sets(filelines), filelines)
+    assert max([len(line) for line in formatted]) <= 79
+
+    # But, some keywords will not tolerate random
+    # newlines in their data-section, at least the multi-record keywords.
+    # So we should never wrap a line with a slash in it:
+    filelines = ["VFPPROD", " FOO" * 30 + " /"]
+    # If this is fed through eclcompress, it will be wrapped due to its
+    # length:
+    formatted = compress_multiple_keywordsets(find_keyword_sets(filelines), filelines)
+    assert len(formatted) > 2
+    # But then, this example is not valid Eclipse, so leave for now.
 
 
 def test_grid_grdecl():
@@ -238,13 +258,13 @@ ZCORN
         compress_multiple_keywordsets(kwsets, filelines)
         == """
 SPECGRID
-214 669 49 1 F /
+  214 669 49 1 F /
 
 GDORIENT
-INC INC INC DOWN RIGHT /
+  INC INC INC DOWN RIGHT /
 
 ZCORN
-6*1 /
+  6*1 /
 """.split(
             "\n"
         )
