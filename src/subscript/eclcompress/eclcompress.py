@@ -116,12 +116,12 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
 
         savings = origbytes - compressedbytecount
         totalsavings += savings
-        savingsKb = savings / 1024.0
+        savings_kb = savings / 1024.0
         logger.info(
             "Compression ratio on %s: %.1f, %d Kb saved",
             filename,
             compressionratio,
-            savingsKb,
+            savings_kb,
         )
         if not dryrun and compressedlines:
             shutil.copy2(filename, filename + ".orig")
@@ -144,12 +144,6 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
                     os.remove(filename + ".orig")
 
     return totalsavings
-
-
-def chunks(ll, nn):
-    """Yield successive n-sized chunks as strings from list l."""
-    for ii in range(0, len(ll), nn):
-        yield " ".join(ll[ii : ii + nn])
 
 
 def acceptedvalue(valuestring):
@@ -216,8 +210,8 @@ def compress_multiple_keywordsets(keywordsets, filelines):
         postslash = "/".join(filelines[end_linepointer].split("/")[1:])
         data += preslashdata.split()
         compresseddata = []
-        for _, g in itertools.groupby(data):
-            equalvalues = list(g)
+        for _, group in itertools.groupby(data):
+            equalvalues = list(group)
             # We apply compression even if there are only two consecutive
             # numbers. This reduces readability if humans ever look
             # at the output, but gives a marginal saving.
@@ -346,6 +340,7 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
+    # pylint: disable=W0107
     pass
 
 
@@ -456,7 +451,7 @@ def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False
         return
 
     if globbedfiles:
-        logger.info("Will try to compress the files: " + " ".join(globbedfiles))
+        logger.info("Will try to compress the files: %s", " ".join(globbedfiles))
         savings = eclcompress(globbedfiles, keeporiginal, dryrun)
         logger.info("Finished. Saved %d Mb from compression", savings / 1024.0 / 1024.0)
     else:
