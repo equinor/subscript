@@ -1,14 +1,18 @@
-# -*- coding: utf-8 -*-
-import sys
+#!/usr/bin/env python
+
 import os
 import glob
 import shutil
+import logging
 import datetime
 import itertools
 import argparse
 import re
 
-DESCRIPTION = """Compress Eclipse grid files by using the Eclipse
+logger = logging.getLogger(__name__)
+logging.basicConfig()
+
+DESCRIPTION = """Compress Eclipse input files by using the Eclipse
 syntax <number>*<value> so that the data set
 
   0  0  0  1  2  3  2  2  2  2
@@ -19,15 +23,31 @@ becomes
 The script processes one file at a time, replacing the files with
 compressed versions, leaving behind the original *only* if
 requested by a command line option.
+
+On the command line, may either provide a list of files to compress,
+or point to a text file with a filename (wildcards supported) pr. line,
 """
+
+DEFAULT_FILES_TO_COMPRESS = [
+    "eclipse/include/grid/*",
+    "eclipse/include/regions/*",
+    "eclipse/include/props/*",
+]
 
 EPILOG = """
-Compression statistics is computed
+Compression statistics is computed and included in an Eclipse comment in
+the output.
 
-See https://en.wikipedia.org/wiki/Run-length_encoding
+See https://en.wikipedia.org/wiki/Run-length_encoding for the compression
+algorithm used.
 
-The workhorse of this script is itertools.groupby().
-"""
+Default list of files to compress is """ + " ".join(
+    DEFAULT_FILES_TO_COMPRESS
+)
+
+# The string used here must match what is used as the DEFAULT
+# parameter in the ert joob config. It is not used elsewhere.
+MAGIC_DEFAULT_FILELIST = "__NONE__"
 
 
 def eclcompress(files, keeporiginal=False, dryrun=False):
@@ -39,35 +59,48 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
         files (list of strings): Filenames to be compressed
         keeporiginal (bool): Whether to copy the original to a backup file
         dryrun (bool): If true, only print compression efficiency
+    Returns:
+        int: Number of bytes saved by compression.
     """
 
     if not isinstance(files, list):
         files = [files]  # List with one element
 
+    totalsavings = 0
+
     for filename in files:
-        print("Compressing " + filename)
-        sys.stdout.flush()
-        with open(filename, "r") as fileh:
-            filelines = fileh.readlines()
+        logger.info("Compressing %s...", filename)
+        try:
+            with open(filename, "r") as fileh:
+                filelines = fileh.readlines()
+        except UnicodeDecodeError:
+            # Try ISO-8859:
+            try:
+                with open(filename, "r", encoding="ISO-8859-1") as fileh:
+                    filelines = fileh.readlines()
+            except (TypeError, UnicodeDecodeError):
+                # ISO-8859 under py2 is not intentionally supported
+                logger.warning("Skipped %s, not text file.", filename)
+                continue
 
         # Check if we can find the keyword INCLUDE in the file
         # If so, there is probably a path nearby that includes slashes /
         # that will most likely be broken by cleanlines.
         # We skip such files!
         if any([x.find("INCLUDE") > -1 for x in filelines]):
-            print("!! skipped, contains INCLUDE statement, not supported !!")
+            logger.warning("Skipped %s, contains INCLUDE statement.", filename)
             continue  # to next file
 
         # VFP data records need to have trailing slashes pr. record
         # on the same line. Not yet supported, so give up.
         # (this might apply to all multi-record keywords?)
         if any([x.find("VFP") > -1 for x in filelines]):
-            print("!! skipped, contains VFPxxxx statement, not supported !!")
+            logger.warning("Skipped %s, contains VFPxxxx statement", filename)
             continue  # to next file
 
         # Skip if it seems we have already compressed this file
         if any([x.find("eclcompress") > -1 for x in filelines]):
-            print("!! skipped, seems to be compressed already !!")
+            logger.warning("Skipped %s, compressed already", filename)
             continue  # to next file
 
         # Ensure ECL keywords at start of line,
@@ -76,9 +109,19 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
 
         origbytes = sum([len(x) for x in filelines])
 
+        if not origbytes:
+            logger.info("File %s is empty, skipping", filename)
+            continue
+
         # Support multiple ECL keywords pr. file, so we first find the
         # file lines with individual keyword data to process
         keywordsets = find_keyword_sets(filelines)
+
+        if not keywordsets:
+            logger.info(
+                "No Eclipse keywords found to compress in %s, skipping", filename
+            )
+            continue
 
         compressedlines = compress_multiple_keywordsets(keywordsets, filelines)
         compressedbytecount = sum([len(x) for x in compressedlines])
@@ -89,28 +132,35 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
         compressionratio = float(origbytes) / float(compressedbytecount)
 
         savings = origbytes - compressedbytecount
+        totalsavings += savings
         savingsKb = savings / 1024.0
-        print(" compression ratio: %.1f, %d Kb saved" % (compressionratio, savingsKb))
+        logger.info(
+            "Compression ratio on %s: %.1f, %d Kb saved",
+            filename,
+            compressionratio,
+            savingsKb,
+        )
         if not dryrun and compressedlines:
             shutil.copy2(filename, filename + ".orig")
-            with open(filename, "w") as f:
-                f.write(
+            with open(filename, "w") as file_h:
+                file_h.write(
                     "-- File compressed with eclcompress at "
                     + str(datetime.datetime.now())
                     + "\n"
                 )
-                f.write(
+                file_h.write(
                     "-- Compression ratio %.1f " % compressionratio
                     + "(higher is better, 1 is no compression)\n"
                 )
-                f.write("\n")
+                file_h.write("\n")
 
-                f.write("\n".join(compressedlines))
-                f.write("\n")
-                f.close()
+                file_h.write("\n".join(compressedlines))
+                file_h.write("\n")
 
                 if not keeporiginal:
                     os.remove(filename + ".orig")
+
+    return totalsavings
 
 
 def chunks(ll, nn):
@@ -274,6 +324,31 @@ def cleanlines(filelines):
     return cleaned
 
 
+def glob_patterns(patterns):
+    """
+    Args:
+        patterns (list of str): filename patterns
+
+    Returns:
+        list of str, globbed files.
+    """
+    # Remove duplicates:
+    patterns = list(set(patterns))
+
+    # Do globbing on the filesystem:
+    globbedfiles = [glob.glob(globpattern.strip()) for globpattern in patterns]
+
+    # Return flattened and with duplicates deleted
+    return list(
+        {
+            globbed
+            for sublist in globbedfiles
+            for globbed in sublist
+            if os.path.isfile(globbed)
+        }
+    )
+
+
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
 ):
@@ -291,25 +366,112 @@ def get_parser():
         formatter_class=CustomFormatter, description=DESCRIPTION, epilog=EPILOG
     )
     parser.add_argument(
-        "grdeclfiles", nargs="+", help="List of Eclipse grdecl files to compress"
+        "grdeclfiles",
+        nargs="*",
+        help=(
+            "List of Eclipse grdecl files to compress, supporting wildcards. "
+            "If no files are given, a default wildcard list will be used."
+        ),
     )
     parser.add_argument("--dryrun", action="store_true", help="Dry run only")
     parser.add_argument(
         "--keeporiginal", action="store_true", help="Copy original to filename.orig"
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument(
+        "--files",
+        help=(
+            "Text file with one wildcard pr. line, "
+            "specifying which files to apply compression to. "
+            "Defaults to everything below eclipse/include, but only if "
+            "no files are specified on the command line."
+        ),
+    )
     return parser
 
 
+def parse_wildcardfile(filename):
+    """Parse a file with one filename wildcard pr. line
+
+    If a magic filename is supplied, default list of
+    wildcards is returned. Magic filename is __NONE__
+
+    Wildcard file supports comments, starting by # or --
+
+    Args:
+        filename (str)
+
+    Returns:
+        list of str
+    """
+    if filename == MAGIC_DEFAULT_FILELIST:
+        return DEFAULT_FILES_TO_COMPRESS
+    if not os.path.exists(filename):
+        raise IOError("File {} not found".format(filename))
+
+    lines = open(filename).readlines()
+    lines = [line.strip() for line in lines]
+    lines = [line.split("#")[0] for line in lines]
+    lines = [line.split("--")[0] for line in lines]
+    lines = filter(len, lines)
+    return lines
+
+
 def main():
+    """Wrapper for the function main_eclcompress, parsing command line arguments"""
     parser = get_parser()
     args = parser.parse_args()
 
-    globbedfiles = [glob.glob(gf) for gf in list(args.grdeclfiles)]
+    if args.verbose:
+        logger.setLevel(logging.INFO)
 
-    # Flatten list of lists:
-    globbedfiles = [item for sublist in globbedfiles for item in sublist]
+    main_eclcompress(args.grdeclfiles, args.files, args.keeporiginal, args.dryrun)
 
-    eclcompress(globbedfiles, args.keeporiginal, args.dryrun)
+
+def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False):
+    """Implements the command line functionality
+
+    Args:
+        grdeclfiles (list of str or str): Filenames to compress
+        wildcardfile (str): Filename containing wildcards
+        keeporiginal (bool): Whether a backup file should be left behind
+        dryrun (bool): Nothing written to disk, only statistics for
+            compression printed to terminal.
+    """
+    # A list of wildcards on the command line should always be compressed:
+    if grdeclfiles:
+        patterns = grdeclfiles
+        if not isinstance(patterns, list):
+            patterns = [patterns]
+    else:
+        patterns = []
+
+    # Default handling of the wildcardfile depend on whether grdeclfiles
+    # is empty or not:
+    if grdeclfiles:
+        if wildcardfile and wildcardfile != MAGIC_DEFAULT_FILELIST:
+            patterns += parse_wildcardfile(wildcardfile)
+    else:
+        # If no explicit wildcards on the command line, default filelist will be
+        # processed:
+        if wildcardfile is not None:
+            patterns += parse_wildcardfile(wildcardfile)
+        else:
+            logger.info("Defaulted wildcards")
+            patterns += parse_wildcardfile(MAGIC_DEFAULT_FILELIST)
+
+    globbedfiles = glob_patterns(patterns)
+
+    if not globbedfiles:
+        logger.warning("No files to compress")
+        return
+
+    if globbedfiles:
+        logger.info("Will try to compress the files: " + " ".join(globbedfiles))
+        savings = eclcompress(globbedfiles, keeporiginal, dryrun)
+        logger.info("Finished. Saved %d Mb from compression", savings / 1024.0 / 1024.0)
+    else:
+        logger.warning("No files found to compress")
 
 
 if __name__ == "__main__":
