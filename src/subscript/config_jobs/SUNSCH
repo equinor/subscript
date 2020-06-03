@@ -1,4 +1,4 @@
-EXECUTABLE ../sunsch/sunsch.py
+EXECUTABLE sunsch
 ARGLIST      <config>
 
 MIN_ARG    1
