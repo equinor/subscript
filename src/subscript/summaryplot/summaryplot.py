@@ -153,6 +153,10 @@ def summaryplotter(
     gridfiles = []  # EclGrid objects
     parametervalues = []  # Vector of values pr. realization for colouring
 
+    if datafiles and not summaryfiles:
+        logging.info("Reloading summary files from disk")
+        summaryfiles = [EclSum(datafile) for datafile in datafiles]
+
     if maxlabels == 0:
         nolegend = True
 
@@ -537,14 +541,20 @@ def summaryplotter(
 
 def split_vectorsdatafiles(vectorsdatafiles):
     """
+    Takes a list of strings and determines which of the arguments are Eclipse runs
+    (by attempting to construct an EclSum object), and which are summary
+    vector names/wildcards (that is, those that are not openable as EclSum)
+
     Args:
         vectorsdatafiles (list of str)
+
     Returns:
-        4-tuple of lists, with EclSum, str, str, str
+        4-tuple of lists, with EclSum-filenames,  datafilename-strings,
+            vector-strings, parameterfilename-strings
     """
-    vectors = []  # strings
+    summaryfiles = []  # Eclsum instances corresponding to datafiles
     datafiles = []  # strings
-    summaryfiles = []  # EclSum objects
+    vectors = []  # strings
     parameterfiles = []  # strings
 
     for vecdata in vectorsdatafiles:
@@ -628,11 +638,25 @@ def main():
             while ch != "q" and plotprocess.is_alive():
                 ch = sys.stdin.read(1)
                 if ch == "r":
-                    print(
-                        "Reloading plot...\r"
-                    )  # Must use \r instead of \n since we have messed up terminal
                     plotprocess.terminate()
-                    plotprocess = Process(target=summaryplotter, args=args)
+                    plotprocess = Process(
+                        target=summaryplotter,
+                        kwargs=dict(
+                            summaryfiles=None,  # forces reload
+                            datafiles=datafiles,
+                            vectors=vectors,
+                            colourby=args.colourby,
+                            maxlabels=args.maxlabels,
+                            logcolourby=args.logcolourby,
+                            parameterfiles=parameterfiles,
+                            histvectors=args.hist,
+                            normalize=args.normalize,
+                            singleplot=args.singleplot,
+                            nolegend=args.nolegend,
+                            dumpimages=args.dumpimages,
+                            ensemblemode=args.ensemblemode,
+                        ),
+                    )
                     plotprocess.start()
         except KeyboardInterrupt:
             pass
