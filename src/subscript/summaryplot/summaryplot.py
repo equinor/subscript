@@ -298,7 +298,7 @@ def summaryplotter(
 
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
     # Remember that SOIL should also be supported, but must be calculated on
-    # demand from SWAT and SGAS
+    # demand from SWAT and SGAS (if present)
     restartvectordata = {}
     restartvectordates = {}
     for rstvec in restartvectors:
@@ -335,13 +335,17 @@ def summaryplotter(
                     swatvalue = rstfiles[datafile_idx].iget_named_kw(
                         "SWAT", report_step
                     )[active_index]
-                    sgasvalue = rstfiles[datafile_idx].iget_named_kw(
-                        "SGAS", report_step
-                    )[active_index]
-                    restartvectordata[rstvec][datafiles[datafile_idx]].append(
-                        1 - swatvalue - sgasvalue
-                    )
-
+                    if "SGAS" in rstfiles[datafile_idx]:
+                        sgasvalue = rstfiles[datafile_idx].iget_named_kw(
+                            "SGAS", report_step
+                        )[active_index]
+                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                            1 - swatvalue - sgasvalue
+                        )
+                    else:
+                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                            1 - swatvalue
+                        )
     # Data structure examples
     # restartvectordata["SOIL:1,1,1"]["datafile"] = [0.89, 0.70, 0.60, 0.55, 0.54]
     # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"]
