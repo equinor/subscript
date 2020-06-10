@@ -305,7 +305,11 @@ def summaryplotter(
         logging.info("Getting data for %s...", rstvec)
         match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", rstvec)
         dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
-        (ijk) = (int(match.group(2)), int(match.group(3)), int(match.group(4)))
+        (ijk) = (
+            int(match.group(2)) - 1,
+            int(match.group(3)) - 1,
+            int(match.group(4)) - 1,
+        )
         # Remember that these indices start on 1, not on zero!
 
         restartvectordata[rstvec] = {}
