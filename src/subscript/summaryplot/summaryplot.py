@@ -265,8 +265,12 @@ def summaryplotter(
     # line
     matchedsummaryvectors = []
     restartvectors = []
+    wildcard_in_use = False
     for vector in vectors:
-        if vector not in summaryfiles[0].keys():
+        matchingvectors = summaryfiles[0].keys(vector)
+        if len(matchingvectors) > 1:
+            wildcard_in_use = True
+        if not matchingvectors:
             # Check if it is a restart vector with syntax
             # <vector>:<i>,<j>,<k> aka SOIL:40,31,33
             if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", vector):
@@ -275,6 +279,10 @@ def summaryplotter(
             else:
                 logging.warning("No summary or restart vectors matched %s", vector)
         matchedsummaryvectors.extend(summaryfiles[0].keys(vector))
+    if wildcard_in_use:
+        logging.info(
+            "Summary vectors after wildcard expansion: %s", str(matchedsummaryvectors)
+        )
 
     # If we have any restart vectors defined, we must also load the restart files
     if restartvectors:
