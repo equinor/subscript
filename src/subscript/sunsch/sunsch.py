@@ -95,7 +95,13 @@ def _v1_content_to_v2(config):
     if "insert" in config:
         v2_insert = []
         for insertstatement in config["insert"]:
-            if len(insertstatement) == 1:
+            # ConfigSuite 0.6.1 always provides the "substitute" key in the dict,
+            # in order to detect v1 we must disregard an empty substitute:
+            if "substitute" in insertstatement and not insertstatement["substitute"]:
+                insertstatement_length = len(insertstatement) - 1
+            else:
+                insertstatement_length = len(insertstatement)
+            if insertstatement_length == 1:
                 v2_insert += [_remap_v1_insert_to_v2(insertstatement)]
             else:
                 v2_insert += [insertstatement]
@@ -117,7 +123,6 @@ def _v1_content_to_v2(config):
                 v2_files += config["merge"]
             del config["merge"]
         config["files"] = v2_files
-
     return config
 
 
@@ -127,50 +132,116 @@ CONFIG_SCHEMA_V2 = {
     MK.Content: {
         "files": {
             MK.Type: types.List,
-            MK.Required: False,
+            MK.Description: "List of filenames to include in merge operation",
             MK.Content: {
                 MK.Item: {
                     MK.Type: types.String,
+                    MK.Description: "Filename to merge",
                     MK.ElementValidators: (_is_existing_file,),
                 }
             },
         },
-        "output": {MK.Type: types.String, MK.Required: False},
-        "startdate": {MK.Type: types.Date, MK.Required: False},
-        "starttime": {MK.Type: types.DateTime, MK.Required: False},
-        "refdate": {MK.Type: types.Date, MK.Required: False},
-        "enddate": {MK.Type: types.Date, MK.Required: False},
-        "dategrid": {
+        "output": {
+            MK.Description: "Output filename, '-' means stdout",
             MK.Type: types.String,
-            MK.Required: False,
+            MK.AllowNone: True,
+            MK.Default: "-",
+        },
+        "startdate": {
+            MK.Description: "The start date of the Eclipse run (START keyword).",
+            MK.Type: types.Date,
+            MK.AllowNone: True,
+            # (a transformation will provide the default value here)
+        },
+        "starttime": {
+            MK.Description: (
+                "The start time, used for relative "
+                "inserts if clock accuracy is needed"
+            ),
+            MK.Type: types.DateTime,
+            MK.AllowNone: True,
+            # (a transformation will provide/calculate a default value here)
+        },
+        "refdate": {
+            MK.Description: (
+                "Reference date for relative inserts. "
+                "Only set if it should be different than startdate."
+            ),
+            MK.Type: types.Date,
+            MK.AllowNone: True,
+        },
+        "enddate": {
+            MK.Description: "An end date, events pass this date will be clipped",
+            MK.Type: types.Date,
+            MK.AllowNone: True,
+        },
+        "dategrid": {
+            MK.Description: (
+                "Set to yearly, monthly, etc to get a grid of dates included"
+            ),
+            MK.Type: types.String,
+            MK.AllowNone: True,
             MK.ElementValidators: (_is_valid_dategrid,),
         },
         "insert": {
+            MK.Description: (
+                "List of insert statements to process into the Schedule file"
+            ),
             MK.Type: types.List,
-            MK.Required: False,
             MK.Content: {
                 MK.Item: {
+                    MK.Description: "Insert statement",
                     MK.Type: types.NamedDict,
                     MK.Content: {
-                        "date": {MK.Type: types.Date, MK.Required: False},
+                        "date": {
+                            MK.Description: "Date at which to insert something",
+                            MK.Type: types.Date,
+                            MK.AllowNone: True,
+                        },
                         "filename": {
+                            MK.Description: "Filename with contents to insert",
                             MK.Type: types.String,
-                            MK.Required: False,
+                            MK.AllowNone: True,
                             MK.ElementValidators: (_is_existing_file,),
                         },
                         "template": {
+                            MK.Description: (
+                                "Template file in which substitution will "
+                                "take place before it is inserted"
+                            ),
                             MK.Type: types.String,
-                            MK.Required: False,
+                            MK.AllowNone: True,
                             MK.ElementValidators: (_is_existing_file,),
                         },
-                        "days": {MK.Type: types.Integer, MK.Required: False},
-                        "string": {MK.Type: types.String, MK.Required: False},
+                        "days": {
+                            MK.Description: (
+                                "Days after refdate/startdate at which "
+                                "insertion should take place"
+                            ),
+                            MK.Type: types.Integer,
+                            MK.AllowNone: True,
+                        },
+                        "string": {
+                            MK.Description: ("A string to insert, instead of filename"),
+                            MK.Type: types.String,
+                            MK.AllowNone: True,
+                        },
                         "substitute": {
+                            MK.Description: (
+                                "Key-value pairs for substitution in a template"
+                            ),
                             MK.Type: types.Dict,
-                            MK.Required: False,
                             MK.Content: {
-                                MK.Key: {MK.Type: types.String},
-                                MK.Value: {MK.Type: types.Integer},
+                                MK.Key: {
+                                    MK.Description: "Template key name",
+                                    MK.AllowNone: False,
+                                    MK.Type: types.String,
+                                },
+                                MK.Value: {
+                                    MK.AllowNone: "Value to insert in template",
+                                    MK.AllowNone: False,
+                                    MK.Type: types.Integer,
+                                },
                             },
                         },
                     },
@@ -179,76 +250,6 @@ CONFIG_SCHEMA_V2 = {
         },
     },
 }
-
-# This schema will be deprecated some day in the future.
-# It is not used in the code, but stays here for reference until the support
-# from this format is removed:
-#
-# CONFIG_SCHEMA_V1 = {
-#     MK.Type: types.NamedDict,
-#     MK.Content: {
-#         "init": {
-#             MK.Type: types.String,
-#             MK.ElementValidators: (_is_existing_file,),
-#             MK.Required: False,
-#         },
-#         "output": {MK.Type: types.String, MK.Required: False},
-#         "startdate": {MK.Type: types.Date, MK.Required: False},
-#         "refdate": {MK.Type: types.Date, MK.Required: False},
-#         "enddate": {MK.Type: types.Date, MK.Required: False},
-#         "dategrid": {
-#             MK.Type: types.String,
-#             MK.Required: False,
-#             MK.ElementValidators: (_is_valid_dategrid,),
-#         },
-#         "merge": {
-#             # Code allows this to be of type string as well
-#             # but that is not possible in configsuite.
-#             MK.Type: types.List,
-#             MK.Required: False,
-#             MK.Content: {
-#                 MK.Item: {
-#                     MK.Type: types.String,
-#                     MK.ElementValidators: (os.path.exists,),
-#                 }
-#             },
-#         },
-#         "insert": {
-#             MK.Type: types.List,
-#             MK.Required: False,
-#             MK.Content: {
-#                 MK.Item: {
-#                     MK.Type: types.Dict,
-#                     # In v1 config, this dict always has only one element, random key
-#                     MK.Content: {
-#                         MK.Key: {MK.Type: types.String},
-#                         MK.Value: {
-#                             MK.Type: types.NamedDict,
-#                             MK.Content: {
-#                                 "date": {MK.Type: types.Date, MK.Required: False},
-#                                 "filename": {
-#                                     MK.Type: types.String,
-#                                     MK.Required: False,
-#                                     MK.ElementValidators: (_is_existing_file,),
-#                                 },
-#                                 "days": {MK.Type: types.Integer, MK.Required: False},
-#                                 "string": {MK.Type: types.String, MK.Required: False},
-#                                 "substitute": {
-#                                     MK.Type: types.Dict,
-#                                     MK.Required: False,
-#                                     MK.Content: {
-#                                         MK.Key: {MK.Type: types.String},
-#                                         MK.Value: {MK.Type: types.Integer},
-#                                     },
-#                                 },
-#                             },
-#                         },
-#                     },
-#                 }
-#             },
-#         },
-#     },
-# }
 
 
 def datetime_from_date(date):
@@ -274,7 +275,9 @@ def process_sch_config(conf):
     # At least test code is calling this function with a dict as
     # config - convert it to a configsuite snapshot:
     if isinstance(conf, dict):
-        conf = configsuite.ConfigSuite(conf, CONFIG_SCHEMA_V2).snapshot
+        conf = configsuite.ConfigSuite(
+            conf, CONFIG_SCHEMA_V2, deduce_required=True
+        ).snapshot
 
     # Rerun this to ensure error is caught (already done in transformation)
     datetime_from_date(conf.startdate)
@@ -475,6 +478,12 @@ def _remap_v1_insert_to_v2(insert_statement):
         dict: The dictionary value being the first key in the input dict, with
             the key 'filename' added.
     """
+
+    # ConfigSuite 0.6.1 always provides the "substitute" key in the dict,
+    # delete it temporarily if it is present, and reinstate at the end.
+    if "substitute" in insert_statement and not insert_statement["substitute"]:
+        del insert_statement["substitute"]
+
     fileid = list(insert_statement.keys())[0]
 
     if len(insert_statement) > 1:
@@ -483,9 +492,10 @@ def _remap_v1_insert_to_v2(insert_statement):
         )
 
     filedata = list(insert_statement[fileid].keys())
-
     # v1 config property:
-    assert isinstance(insert_statement[fileid], dict)
+    if not isinstance(insert_statement[fileid], dict):
+        logger.error("BUG: The insert_statement: %s was not v1", str(insert_statement))
+        return {}
 
     v2_insert_statement = {}
 
@@ -505,6 +515,8 @@ def _remap_v1_insert_to_v2(insert_statement):
     if "filename" in insert_statement[fileid]:
         insert_statement[fileid].pop("filename")
     v2_insert_statement.update(insert_statement[fileid])
+    if "substitute" not in v2_insert_statement:
+        v2_insert_statement["substitute"] = {}
     return v2_insert_statement
 
 
@@ -670,7 +682,7 @@ def main():
     args = parser.parse_args()
 
     # Application defaults configuration:
-    defaults_config = {"output": "-", "startdate": "1900-01-01"}
+    defaults_config = {"output": "-", "startdate": datetime.date(1900, 1, 1)}
 
     # Users YAML configuration:
     yaml_config = yaml.safe_load(open(args.config))
@@ -690,25 +702,34 @@ def main():
 
     # Merge defaults-, yaml- and command line options, and then validate:
     config = configsuite.ConfigSuite(
-        {}, CONFIG_SCHEMA_V2, layers=(defaults_config, yaml_config, cli_config)
+        {},
+        CONFIG_SCHEMA_V2,
+        layers=(defaults_config, yaml_config, cli_config),
+        deduce_required=True,
     )
     if not config.valid:
         logger.error(config.errors)
         logger.warning(
             "Failed validating your input, will continue, but expect errors.."
         )
-
     else:
-        # Check if yaml had outdated v1 syntax, check that by removing the
-        # transformation from configsuite:
-        transformation_key = list(CONFIG_SCHEMA_V2.keys())[1]  # slightly ugly
         config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
-        del config_schema_v2_pure[transformation_key]
+        # Check if yaml had outdated v1 syntax, check that by removing the
+        # transformation key(s) in the top layer from configsuite:
+        trans_keys = [
+            key
+            for key in CONFIG_SCHEMA_V2.keys()
+            if str(key) == "MetaKeys.Transformation"
+        ]
+        for deletekey in trans_keys:
+            del config_schema_v2_pure[deletekey]
+
         try:
             config_pure = configsuite.ConfigSuite(
                 {},
                 config_schema_v2_pure,
                 layers=(defaults_config, yaml_config, cli_config),
+                deduce_required=True,
             )
             valid = config_pure.valid
         except KeyError:
@@ -725,9 +746,10 @@ def main():
                     "with a single dash on a line.\n"
                     "The following auto-converted YAML "
                     "might be usable for you:\n"
-                )
-                + yaml.dump(_v1_content_to_v2(yaml_config)).strip()
-                + "\nEnd auto-converted YAML"
+                    "%s"
+                    "\nEnd auto-converted YAML"
+                ),
+                yaml.dump(_v1_content_to_v2(yaml_config)).strip(),
             )
 
     if args.verbose:

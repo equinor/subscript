@@ -35,7 +35,7 @@ def test_get_cfg_schema():
             cfg["low"][i] = os.path.join(TESTDATA, cfg["low"][i])
 
     schema = interp_relperm.get_cfg_schema()
-    suite = configsuite.ConfigSuite(cfg, schema)
+    suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
 
     assert suite.valid
 
@@ -48,22 +48,32 @@ def test_schema_errors():
         "low": ["swof_pes.inc", "sgof_pes.inc"],
         "result_file": "foo.inc",
     }
-    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
     # We are in the wrong directory, so not valid yet:
     assert not parsed_cfg.valid
     assert "Valid file name is false on input" in str(parsed_cfg.errors)
 
     os.chdir(TESTDATA)
 
-    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
     assert not parsed_cfg.valid
-    assert "Missing key: interpolations" in str(parsed_cfg.errors)
+    assert "Valid interpolator list" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"tables": []}]
-    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert not parsed_cfg.valid
     assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
     cfg["interpolations"] = [{"param_w": 0.25, "param_g": -0.4}]
-    parsed_cfg = configsuite.ConfigSuite(cfg, interp_relperm.get_cfg_schema())
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
     assert parsed_cfg.valid
 
 
@@ -334,6 +344,7 @@ def test_main(tmpdir):
 if __name__ == "__main__":
 
     test_get_cfg_schema()
+    test_schema_errors()
     test_tables_to_dataframe()
     test_make_interpolant()
     test_args()

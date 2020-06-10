@@ -18,7 +18,7 @@ from subscript.sunsch import sunsch
 DATADIR = os.path.join(os.path.dirname(__file__), "testdata_sunsch")
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, caplog):
     """Test command line sunsch, loading a yaml file"""
 
     tmpdir.chdir()
@@ -31,6 +31,7 @@ def test_main(tmpdir):
         os.unlink(outfile)
     sys.argv = ["sunsch", "config_v2.yml"]
     sunsch.main()
+    assert "DEPRECATED" not in caplog.text
     assert os.path.exists(outfile)
 
     schlines = open(outfile).readlines()
@@ -63,7 +64,7 @@ def test_main(tmpdir):
     assert "BAR-FOO" in "".join(open(outfile).readlines())
 
 
-def test_main_configv1(tmpdir):
+def test_main_configv1(tmpdir, caplog):
     """Test command line sunsch, loading a yaml file.
 
     This is run on a v1 config file, which will be autoconverted to v2.
@@ -81,6 +82,7 @@ def test_main_configv1(tmpdir):
         os.unlink(outfile)
     sys.argv = ["sunsch", "config_v1.yml"]
     sunsch.main()
+    assert "DEPRECATED" in caplog.text
     assert os.path.exists(outfile)
 
     schlines = open(outfile).readlines()
@@ -117,25 +119,34 @@ def test_config_schema(tmpdir):
     """Test the implementation of configsuite"""
     tmpdir.chdir()
     cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
     assert not cfg_suite.valid  # file missing
 
     with open("existingfile.sch", "w") as handle:
         handle.write("foo")
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
     print(cfg_suite.errors)
     assert cfg_suite.valid
 
-    cfg = {"init": "existingfile.sch"}  # missing output
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
+    cfg = {"init": "existingfile.sch", "insert": []}  # missing output
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
     assert cfg_suite.valid  # (missing output is allowed)
 
     cfg = {
         "init": "existingfile.sch",
         "output": "newfile.sch",
         "startdate": datetime.date(2018, 2, 2),
-    }  # i'2018-02-02'}
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA_V2)
+        "insert": [],
+    }
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
     print(cfg_suite.errors)
     assert cfg_suite.valid
 
@@ -156,7 +167,7 @@ def test_v1_to_v2():
     }
 
     assert conv({"insert": [{"foo.sch": {"days": 100}}]}) == {
-        "insert": [{"days": 100, "filename": "foo.sch"}]
+        "insert": [{"days": 100, "filename": "foo.sch", "substitute": {}}]
     }
 
     # Check that V2 syntax is not altered:
