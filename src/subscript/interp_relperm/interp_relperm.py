@@ -81,6 +81,14 @@ def _is_filename(fname):
     return os.path.isfile(fname)
 
 
+@configsuite.validator_msg("Valid interpolator list")
+def _is_valid_interpolator_list(interpolators):
+    if len(interpolators) > 0:
+        return True
+    else:
+        return False
+
+
 @configsuite.validator_msg("Valid interpolator")
 def _is_valid_interpolator(interp):
     valid = False
@@ -151,9 +159,10 @@ def get_cfg_schema():
                 },
             },
             "result_file": {MK.Type: types.String},
-            "delta_s": {MK.Type: types.Number, MK.Required: False},
+            "delta_s": {MK.Type: types.Number, MK.Default: 0.01},
             "interpolations": {
                 MK.Type: types.List,
+                MK.ElementValidators: (_is_valid_interpolator_list,),
                 MK.Content: {
                     MK.Item: {
                         MK.Type: types.NamedDict,
@@ -161,11 +170,10 @@ def get_cfg_schema():
                         MK.Content: {
                             "tables": {
                                 MK.Type: types.List,
-                                MK.Required: False,
                                 MK.Content: {MK.Item: {MK.Type: types.Integer}},
                             },
-                            "param_w": {MK.Type: types.Number, MK.Required: False},
-                            "param_g": {MK.Type: types.Number, MK.Required: False},
+                            "param_w": {MK.Type: types.Number, MK.AllowNone: True},
+                            "param_g": {MK.Type: types.Number, MK.AllowNone: True},
                         },
                     }
                 },
@@ -403,14 +411,14 @@ def process_config(cfg, root_path=""):
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()
-    cfg_suite = configsuite.ConfigSuite(cfg, cfg_schema)
+    cfg_suite = configsuite.ConfigSuite(cfg, cfg_schema, deduce_required=True)
 
     if not cfg_suite.valid:
         print("Sorry, the configuration is invalid.")
         sys.exit(cfg_suite.errors)
 
     # set default values
-    relperm_delta_s = 0.01
+    relperm_delta_s = False
     if cfg_suite.snapshot.delta_s:
         relperm_delta_s = cfg_suite.snapshot.delta_s
 
