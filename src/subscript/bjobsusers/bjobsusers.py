@@ -113,8 +113,15 @@ def userinfo(username, finger_function):
             the shortname
     """
     finger_output = finger_function(username)
-    rex = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
-    [u2, fullname, org] = [x.strip() for x in rex.match(finger_output).groups()]
+    rex_with_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
+    rex_no_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)")
+    if rex_with_org.match(finger_output):
+        matches = rex_with_org.match(finger_output).groups()
+        org = matches[2].strip()
+    else:
+        matches = rex_no_org.match(finger_output).groups()
+        org = ""
+    fullname = matches[1].strip()
     if sys.version_info[0] < 3:
         fullname = fullname.encode("utf-8")
     return "{} ({}) ({})".format(fullname, org, username)

@@ -59,7 +59,12 @@ def test_get_jobs():
 
 
 def test_userinfo():
-    names = ("Foo Barrer (foo.bar.com)", "Føø Bårrær (foo.latin1.utf8.com)")
+    names = (
+        "Foo Barrer (foo.bar.com)",
+        "Føø Bårrær (foo.latin1.utf8.com)",
+        "New LSF Admin user",
+        "",
+    )
 
     # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
     for name in names:
