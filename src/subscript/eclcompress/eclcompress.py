@@ -453,7 +453,10 @@ def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False
     if globbedfiles:
         logger.info("Will try to compress the files: %s", " ".join(globbedfiles))
         savings = eclcompress(globbedfiles, keeporiginal, dryrun)
-        logger.info("Finished. Saved %d Mb from compression", savings / 1024.0 / 1024.0)
+        print(
+            "eclcompress finished. Saved %d Mb from compression"
+            % (savings / 1024.0 / 1024.0)
+        )
     else:
         logger.warning("No files found to compress")
 
