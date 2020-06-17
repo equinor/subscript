@@ -74,6 +74,36 @@ def test_main():
     assert set(result["filename"].values) == set(["parameters1.txt", "parameters2.txt"])
 
 
+def test_spaces_in_values(tmpdir):
+    """Test that we support spaces in values in parameters.txt
+    if they are quoted properly"""
+    tmpdir.chdir()
+    with open("parameters.txt", "w") as f_handle:
+        f_handle.write('somekey "value with spaces"')
+    # Single-qoutes:
+    with open("parameters2.txt", "w") as f_handle:
+        f_handle.write("somekey 'value with spaces'")
+
+    sys.argv = ["params2csv", "--keepconstantcolumns", "parameters.txt"]
+    params2csv.main()
+    result = pd.read_csv("params.csv")
+    assert "somekey" in result
+    assert result["somekey"].values[0] == "value with spaces"
+
+
+def test_spaces_in_values_single_quotes(tmpdir):
+    """Test that single quotes can also be used to support spaces in values"""
+    tmpdir.chdir()
+    with open("parameters.txt", "w") as f_handle:
+        f_handle.write('somekey "value with spaces"')
+
+    sys.argv = ["params2csv", "--keepconstantcolumns", "parameters.txt"]
+    params2csv.main()
+    result = pd.read_csv("params.csv")
+    assert "somekey" in result
+    assert result["somekey"].values[0] == "value with spaces"
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""

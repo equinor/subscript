@@ -5,7 +5,7 @@ pyscal>=0.1.5
 matplotlib
 numpy
 ecl2df>=0.5.0
-configsuite<0.6.0
+configsuite>=0.6.1
 six>=1.12.0
 xlrd
 xtgeo

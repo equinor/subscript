@@ -153,6 +153,10 @@ def summaryplotter(
     gridfiles = []  # EclGrid objects
     parametervalues = []  # Vector of values pr. realization for colouring
 
+    if datafiles and not summaryfiles:
+        logging.info("Reloading summary files from disk")
+        summaryfiles = [EclSum(datafile) for datafile in datafiles]
+
     if maxlabels == 0:
         nolegend = True
 
@@ -261,8 +265,12 @@ def summaryplotter(
     # line
     matchedsummaryvectors = []
     restartvectors = []
+    wildcard_in_use = False
     for vector in vectors:
-        if vector not in summaryfiles[0].keys():
+        matchingvectors = summaryfiles[0].keys(vector)
+        if len(matchingvectors) > 1:
+            wildcard_in_use = True
+        if not matchingvectors:
             # Check if it is a restart vector with syntax
             # <vector>:<i>,<j>,<k> aka SOIL:40,31,33
             if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", vector):
@@ -271,6 +279,10 @@ def summaryplotter(
             else:
                 logging.warning("No summary or restart vectors matched %s", vector)
         matchedsummaryvectors.extend(summaryfiles[0].keys(vector))
+    if wildcard_in_use:
+        logging.info(
+            "Summary vectors after wildcard expansion: %s", str(matchedsummaryvectors)
+        )
 
     # If we have any restart vectors defined, we must also load the restart files
     if restartvectors:
@@ -294,14 +306,18 @@ def summaryplotter(
 
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
     # Remember that SOIL should also be supported, but must be calculated on
-    # demand from SWAT and SGAS
+    # demand from SWAT and SGAS (if present)
     restartvectordata = {}
     restartvectordates = {}
     for rstvec in restartvectors:
         logging.info("Getting data for %s...", rstvec)
         match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", rstvec)
         dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
-        (ijk) = (int(match.group(2)), int(match.group(3)), int(match.group(4)))
+        (ijk) = (
+            int(match.group(2)) - 1,
+            int(match.group(3)) - 1,
+            int(match.group(4)) - 1,
+        )
         # Remember that these indices start on 1, not on zero!
 
         restartvectordata[rstvec] = {}
@@ -327,13 +343,17 @@ def summaryplotter(
                     swatvalue = rstfiles[datafile_idx].iget_named_kw(
                         "SWAT", report_step
                     )[active_index]
-                    sgasvalue = rstfiles[datafile_idx].iget_named_kw(
-                        "SGAS", report_step
-                    )[active_index]
-                    restartvectordata[rstvec][datafiles[datafile_idx]].append(
-                        1 - swatvalue - sgasvalue
-                    )
-
+                    if "SGAS" in rstfiles[datafile_idx]:
+                        sgasvalue = rstfiles[datafile_idx].iget_named_kw(
+                            "SGAS", report_step
+                        )[active_index]
+                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                            1 - swatvalue - sgasvalue
+                        )
+                    else:
+                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                            1 - swatvalue
+                        )
     # Data structure examples
     # restartvectordata["SOIL:1,1,1"]["datafile"] = [0.89, 0.70, 0.60, 0.55, 0.54]
     # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"]
@@ -547,14 +567,20 @@ def summaryplotter(
 
 def split_vectorsdatafiles(vectorsdatafiles):
     """
+    Takes a list of strings and determines which of the arguments are Eclipse runs
+    (by attempting to construct an EclSum object), and which are summary
+    vector names/wildcards (that is, those that are not openable as EclSum)
+
     Args:
         vectorsdatafiles (list of str)
+
     Returns:
-        4-tuple of lists, with EclSum, str, str, str
+        4-tuple of lists, with EclSum-filenames,  datafilename-strings,
+            vector-strings, parameterfilename-strings
     """
-    vectors = []  # strings
+    summaryfiles = []  # Eclsum instances corresponding to datafiles
     datafiles = []  # strings
-    summaryfiles = []  # EclSum objects
+    vectors = []  # strings
     parameterfiles = []  # strings
 
     for vecdata in vectorsdatafiles:
@@ -638,11 +664,25 @@ def main():
             while ch != "q" and plotprocess.is_alive():
                 ch = sys.stdin.read(1)
                 if ch == "r":
-                    print(
-                        "Reloading plot...\r"
-                    )  # Must use \r instead of \n since we have messed up terminal
                     plotprocess.terminate()
-                    plotprocess = Process(target=summaryplotter, args=args)
+                    plotprocess = Process(
+                        target=summaryplotter,
+                        kwargs=dict(
+                            summaryfiles=None,  # forces reload
+                            datafiles=datafiles,
+                            vectors=vectors,
+                            colourby=args.colourby,
+                            maxlabels=args.maxlabels,
+                            logcolourby=args.logcolourby,
+                            parameterfiles=parameterfiles,
+                            histvectors=args.hist,
+                            normalize=args.normalize,
+                            singleplot=args.singleplot,
+                            nolegend=args.nolegend,
+                            dumpimages=args.dumpimages,
+                            ensemblemode=args.ensemblemode,
+                        ),
+                    )
                     plotprocess.start()
         except KeyboardInterrupt:
             pass
