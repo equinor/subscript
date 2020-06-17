@@ -433,8 +433,13 @@ def summaryplotter(
                 sumlabel = "_nolegend_"
                 if normalize:
                     maxvalue = values.max()
-                    values = [i * 1 / maxvalue for i in values]
-                    sumlabel = histvec + " " + str(maxvalue)
+                    if abs(maxvalue) > 0.0:
+                        values = [i * 1 / maxvalue for i in values]
+                        sumlabel = histvec + " " + str(maxvalue)
+                    else:
+                        logging.warn(
+                            "Could not normalize %s, maxvalue is %g", histvec, maxvalue
+                        )
 
                 pyplot.plot_date(s.dates, values, "k.", label=sumlabel)
                 fig.autofmt_xdate()
@@ -465,8 +470,13 @@ def summaryplotter(
 
                 if normalize:
                     maxvalue = values.max()
-                    values = [i * 1 / maxvalue for i in values]
-                    sumlabel = sumlabel + " " + str(maxvalue)
+                    if abs(maxvalue) > 0.0:
+                        values = [i * 1 / maxvalue for i in values]
+                        sumlabel = sumlabel + " " + str(maxvalue)
+                    else:
+                        logging.warn(
+                            "Could not normalize %s, maxvalue is %g", vector, maxvalue
+                        )
 
                 pyplot.plot_date(
                     s.dates,
