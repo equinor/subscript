@@ -112,3 +112,19 @@ def test_main_merge(tmpdir):
     merged = pd.read_csv(merged_csv)
     assert len(merged) == 4
     assert len(merged.columns) == 5
+
+    # Test --filecolumn
+    sys.argv = [
+        "csv_merge",
+        test_csv_1,
+        test_csv_2,
+        "--filecolumn",
+        "FILETYPE",
+        "-v",
+        "-o",
+        merged_csv,
+    ]
+    csv_merge.main()
+    merged = pd.read_csv(merged_csv)
+    assert "FILETYPE" in merged
+    assert set(merged["FILETYPE"].unique()) == set([test_csv_1, test_csv_2])
