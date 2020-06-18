@@ -1,4 +1,4 @@
-EXECUTABLE ../eclcompress/eclcompress.py
+EXECUTABLE eclcompress
 
 DEFAULT <FILES> __NONE__
 

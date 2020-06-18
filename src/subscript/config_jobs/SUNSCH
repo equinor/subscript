@@ -1,5 +1,5 @@
-EXECUTABLE ../sunsch/sunsch.py
-ARGLIST      <config>
+EXECUTABLE sunsch
+ARGLIST    "--verbose" <config>
 
 MIN_ARG    1
 MAX_ARG    1
