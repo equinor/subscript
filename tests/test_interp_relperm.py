@@ -37,6 +37,8 @@ def test_get_cfg_schema():
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
 
+    print (suite.valid)
+    print (suite.errors)
     assert suite.valid
 
 
@@ -70,7 +72,67 @@ def test_schema_errors():
     assert not parsed_cfg.valid
     assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
 
-    cfg["interpolations"] = [{"param_w": 0.25, "param_g": -0.4}]
+    cfg["interpolations"] = [{"param_w": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert parsed_cfg.valid
+
+    cfg["interpolations"] = [{"param_w": 1.5}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": -1.5}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": 1.5}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": -1.5}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
+
+    cfg["interpolations"] = [{"param_w": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+   )
+
+    assert parsed_cfg.valid
+
+    cfg["interpolations"] = [{"param_g": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+   )
+
+    assert parsed_cfg.valid
+
+    cfg["interpolations"] = [{"param_w": 0, "param_g": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert parsed_cfg.valid
+
+    cfg["interpolations"] = [{"param_w": 0.1, "param_g": -0.1}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
