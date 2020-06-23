@@ -91,20 +91,16 @@ def _is_valid_interpolator_list(interpolators):
 
 @configsuite.validator_msg("Valid interpolator")
 def _is_valid_interpolator(interp):
-    valid = False
-    try:
-        if interp["param_w"]:
-            valid = True
-    except BaseException:
-        pass
+    inrange = False
 
-    try:
-        if interp["param_g"]:
-            valid = True
-    except BaseException:
-        pass
+    if "param_w" in interp:
+        if interp["param_w"] < 1.0 and interp["param_w"] > -1.0:
+            inrange = True
+    if "param_g" in interp:
+        if interp["param_g"] < 1.0 and interp["param_g"] > -1.0:
+            inrange = True
 
-    return valid
+    return inrange
 
 
 @configsuite.validator_msg("Valid table entries")
