@@ -55,7 +55,7 @@ def test_schema_errors():
     )
     # We are in the wrong directory, so not valid yet:
     assert not parsed_cfg.valid
-    assert "Valid file name is false on input" in str(parsed_cfg.errors)
+    assert "Valid file name" in str(parsed_cfg.errors)
 
     os.chdir(TESTDATA)
 
@@ -70,7 +70,7 @@ def test_schema_errors():
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
     assert not parsed_cfg.valid
-    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+    assert "Valid interpolator" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_w": 0}]
     parsed_cfg = configsuite.ConfigSuite(
@@ -85,7 +85,7 @@ def test_schema_errors():
     )
 
     assert not parsed_cfg.valid
-    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+    assert "Valid interpolator" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_g": -1.5}]
     parsed_cfg = configsuite.ConfigSuite(
@@ -93,7 +93,7 @@ def test_schema_errors():
     )
 
     assert not parsed_cfg.valid
-    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+    assert "Valid interpolator" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_g": 1.5}]
     parsed_cfg = configsuite.ConfigSuite(
@@ -109,7 +109,7 @@ def test_schema_errors():
     )
 
     assert not parsed_cfg.valid
-    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+    assert "Valid interpolator" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_w": 0}]
     parsed_cfg = configsuite.ConfigSuite(
