@@ -1,0 +1,419 @@
+{# 
+
+Everything between the symbol curly bracket + hash is comment and will not be generated in output file.
+This is an Eclipse template file with some variables marked with angular bracket. These variables will be
+replaced by the values calculated by CaseGen.
+
+For list of variables, please check:
+https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen#Eclipse_template_file
+
+#}
+--------------------------------------------------------------------------------------
+-- Pseudoization study - 2D model
+-- single porosity - fractures explicitly represented 
+-- NX x NY x NZ:		<nx> x <ny> x <nz> cells
+-- L x W x H:			<lx> x <ly> x <lz> m3 
+-- DY x DI x DZ: 		<dx> x <dy> x <dz> m
+-- Fracture thickness:		<ft> m
+
+-- Nr. matrix elements x:	<mex>
+-- Nr. matrix elements y:	<mey>
+-- Total nr. matrix elements:	<matrixElements>
+
+-- Fracture density x-dir:	<fracPerMeterX> / m
+-- Fracture density y-dir:	<fracPerMeterY> / m
+
+-- Nr. matrix cells:		<nMatrixCellsTot>
+-- Nr. fracture cells:		<nFracCells>
+-- Total nr. of grid cells:	<nCells>
+
+-- Geometry factor (1 means regular matrix blocks, < 1: larger centerblocks, > 1: larger sideblocks)
+-- Grid geometry factor x-dir:	<geometryFacX>		
+-- Grid geometry factor y-dir:	<geometryFacY>
+
+-- Matrix properties		Fracture properties
+------------------------------------------------------------
+-- permxm = 	<permxm> mD, 	permxf = 	<permxf> mD 
+-- phim = 	<porom>, 		phif = 		<porof>
+-- swatm = 	<swatm>		swatf = 	<swatf>
+
+-- Average properties (weighted on number of fracture- and matrix cells, and on cell size)
+------------------------------------------------------------
+-- Average porosity:		<avgPoro>
+-- Average permeability:	<avgPermx>
+
+
+RUNSPEC 
+--------------------------------------------------------------------------------------
+
+TITLE
+  synthetic fractured reservoir model - single porosity
+ 
+DIMENS
+-- NX  NY  NZ
+   <nx>    <ny>     <nz>  /
+ 
+-- Phases present
+OIL
+WATER
+--GAS
+--DISGAS
+
+
+
+PARALLEL
+3	/
+
+
+-- Units
+METRIC
+
+GRIDOPTS
+ YES 0  0 /
+
+
+ 
+TABDIMS
+-- NTSFUN  NTPVT  NSSFUN  NPPVT  NTFIP   NRPVT
+    2        1      100      100     3   /
+ 
+EQLDIMS
+-- NTEQUL  NDPRVD  NDRXVD
+      1      100     10  /
+ 
+REGDIMS
+-- NTFIP  NMFIPR  NRFREG  NTFREG
+     3      1       1        0  /
+ 
+WELLDIMS
+-- NWMAXZ  NCWMAX  NGMAXZ  NWGMAX
+      4     100       2       5  /
+
+UDQDIMS
+  3* 8 /
+
+NSTACK
+  25  /
+ 
+START
+--  DAY   MONTH  YEAR
+     30    'SEP'  2018   /
+ 
+UNIFOUT
+CART
+
+NUPCOL
+ 5 /
+
+--NOSIM
+
+-----------------------------------------------------------------------
+GRID
+-----------------------------------------------------------------------
+
+-- lx = <lx> m, ly = <ly> m, lz = <lz> m;
+-- 
+NOECHO
+INCLUDE
+ '<GRDECL_file>' /
+
+ECHO
+
+MINPV
+ 0.0000000001 /
+ 
+
+MESSAGES
+  5000 5000 5000 5000 50 1 1* 1* 500000 50000 50 1 /
+
+ 
+INIT
+ 
+GRIDFILE
+ 1 /
+
+COPY
+ 'PERMX'	'PERMY'/
+ 'PERMX'	'PERMZ'/
+/ 
+
+MULTIPLY
+ PERMZ <kvkh> /
+/
+
+----------------------------------------------------------------------
+PROPS
+----------------------------------------------------------------------
+--dummy relative permeability curves
+SWOF                                   
+--Sw		krw			kro			Pc
+2.48000E-01	0.00000E+00	1.00000E+00	0.0000
+2.64276E-01	1.68117E-10	9.16010E-01	0.0000
+2.80552E-01	1.07595E-08	8.36401E-01	0.0000
+2.96828E-01	1.22557E-07	7.61094E-01	0.0000
+3.13103E-01	6.88608E-07	6.90009E-01	0.0000
+3.29379E-01	2.62683E-06	6.23065E-01	0.0000
+3.45655E-01	7.84367E-06	5.60176E-01	0.0000
+3.61931E-01	1.97788E-05	5.01258E-01	0.0000
+3.78207E-01	4.40709E-05	4.46224E-01	0.0000
+3.94483E-01	8.93443E-05	3.94984E-01	0.0000
+4.10759E-01	1.68117E-04	3.47447E-01	0.0000
+4.27034E-01	2.97830E-04	3.03519E-01	0.0000
+4.43310E-01	5.01995E-04	2.63104E-01	0.0000
+4.59586E-01	8.11469E-04	2.26102E-01	0.0000
+4.75862E-01	1.26584E-03	1.92412E-01	0.0000
+4.92138E-01	1.91496E-03	1.61929E-01	0.0000
+5.08414E-01	2.82054E-03	1.34544E-01	0.0000
+5.24690E-01	4.05794E-03	1.10143E-01	0.0000
+5.40966E-01	5.71804E-03	8.86108E-02	0.0000
+5.57241E-01	7.90922E-03	6.98240E-02	0.0000
+5.73517E-01	1.07595E-02	5.36551E-02	0.0000
+5.89793E-01	1.44188E-02	3.99696E-02	0.0000
+6.06069E-01	1.90611E-02	2.86253E-02	0.0000
+6.22345E-01	2.48874E-02	1.94708E-02	0.0000
+6.38621E-01	3.21277E-02	1.23433E-02	0.0000
+6.54897E-01	4.10442E-02	7.06570E-03	0.0000
+6.71172E-01	5.19340E-02	3.44198E-03	0.0000
+6.87448E-01	6.51320E-02	1.24905E-03	0.0000
+7.03724E-01	8.10140E-02	2.20803E-04	0.0000
+7.20000E-01	1.00000E-01	0.00000E+00	0.0000
+/
+
+-- 	Fracture	and vugs	
+0	0	1	0.1
+0.2	0.2	0.8	0.07
+0.4	0.4	0.6	0.045
+0.6	0.6	0.4	0.025
+0.8	0.8	0.2	0.01
+0.99	0.99	0	0.001
+1	1	0	0
+/
+
+
+--dummy PVT model
+
+DENSITY
+-- OilDens   WaterDens    GasDens
+-- kg/m3       kg/m3       kg/m3
+
+  853		1000.00	/
+
+PVTW
+--     RefPres        Bw          Cw           Vw         dVw
+--       bara       rm3/m3       1/bara        cP        1/bara
+
+         263.51          1.020      3.372E-05         0.4366        0.00 /
+
+-----------------------------------------------------------
+-- PRESSURE  OIL FVF      OIL
+-- Po       Bo      VISCOSITY
+-- bara    rm3/Sm3      cP
+------------------------------------------------------------
+
+PVDO
+         136.00           1.1826           1.3848
+         158.80           1.1783           1.4302
+         181.60           1.1750           1.4829
+         204.40           1.1725           1.5423
+         227.20           1.1704           1.6077
+         250.00           1.1688           1.6788
+         272.80           1.1674           1.7551
+         295.60           1.1663           1.8362
+         318.40           1.1653           1.9219
+         341.20           1.1644           2.0117
+         364.00           1.1636           2.1053
+/
+
+ROCK
+         263.51       4.8376E-05 /
+
+------------------------------------------------------------------------
+REGIONS
+------------------------------------------------------------------------
+NOECHO
+INCLUDE
+ '<satnum_file>' /
+ 
+INCLUDE
+ '<fipnum_file>' /
+
+ECHO
+------------------------------------------------------------------------
+SOLUTION
+------------------------------------------------------------------------
+
+
+EQUIL                                  -- 
+   2050  200  2200 0 100  0 1 0 0 /		--
+
+ 
+------------------------------------------------------------------------
+--OUTPUT DATA
+------------------------------------------------------------------------
+SUMMARY
+FOPR
+FWPR
+FWPT
+FWIT
+FLPT
+FRPV
+FWCT
+FLPR
+FWIR
+FOIR
+FOPT
+FOE
+FOIP
+FWIP
+FOSAT
+FGSAT
+FPR
+FVPR
+FVPT
+FVIR
+FVIT
+
+FGPT
+FGPR
+FGIR
+FGIT
+FGOR
+
+FUDP
+FUPVINJ
+FUOCUT
+
+RPR
+/
+ROSAT
+/
+ROPR
+/
+RRPV
+/
+ROPT
+/
+RGPT
+/
+RGSAT
+/
+RGPR
+/
+
+ROE
+/
+ROFT
+ 1 2/
+/
+ROPT
+/
+ROIP
+/
+
+WWIR
+/
+WWIT
+/
+WOPT
+/
+WWPR
+/
+WOPR
+/
+WOPP
+/
+WBHP
+/
+WWCT
+/
+WMCTL
+/
+WGIR
+/
+WGIT
+/
+WGPT
+/
+WGPR
+/
+
+TCPU
+
+RUNSUM
+EXCEL
+ 
+------------------------------------------------------------------------
+--WELL AND PRODUCTION DATA
+------------------------------------------------------------------------
+SCHEDULE
+ 
+TUNING                                 -- Generated : Petrel
+-- Record 1: Time stepping controls
+-- TSINIT  TSMAXZ  TSMINZ  TSMCHP  TSFMAX  TSFMIN  TSFCNV  TFDIFF
+   1.0E-4  0.002  1.0E-9  
+/
+-- Record 2: Time truncation and convergence controls
+-- TRGTTE  TRGCNV  TRGMBE TRGLCV  XXXTTE  XXXCNV  XXXMBE  XXXLCV  XXXWFL  TRGFIP 
+   0.2     .01      1*     .001    
+/
+-- Record 3: Control of Newton and linear iterations
+-- NEWTMX  NEWTMN  LITMAX  LITMIN  MXWSIT  MXWPIT  DDPLIM  DDSLIM  TRGDPR  XXXDPR  
+      25     1*      100
+/
+ 
+RPTSCHED
+'CPU=1'/ 
+
+RPTRST
+  'PRESSURE' 'SOIL' /
+
+ 
+WELSPECS
+-- well   group  i   j  p-ref
+ 'PROD1'     1    <nx> <ny>    1*   'OIL'  2*	SHUT     /
+ 'INJ1'      2    1      1    1*   'WAT'  2*	SHUT     /
+/
+ 
+COMPDAT
+-- name      i    j    k   k     flag    s-table trans diam
+-- Top point
+<% for idx in range(nx_prod) -%>
+  'PROD1'     <nx-idx>  <ny>     <nz>  <nz>  'OPEN'   1*      1*    0.0005  3*	Z   /
+<% endfor -%>
+
+<% for idx in range(nx_inj) -%>
+  'INJ1'      <idx+1>     1      1  1   'OPEN'   1*      1*    0.0005  3*	Z   /	
+<% endfor -%>
+/
+
+UDQ  
+  
+  
+  DEFINE FUPVINJ FVIT / MAX(FRPV) /
+  UNITS FUPVINJ FLDS /
+  
+/
+
+
+WTEST
+ 'INJ1' 0.000000001 P 2 / /
+ 'PROD*' 0.000000001 P 2 /
+/
+
+
+WCONINJE
+--name   inj.ty  flag    con.m  qsurface  qres  BHP  THP  VFP
+ 'INJ1'  'WAT'  'OPEN'  'RATE' <injRate>	  1*	950 /
+/
+
+WCONPROD
+--name    flag   con.m   qo   qw  qg  ql  qres   bhp   thp
+ 'PROD1' 'OPEN'  'RESV'  1*   1*  1*  1*  <prodRate> /
+/
+
+
+-- Ensure that simulation is performed for approximately 1 PV
+TSTEP
+100*<(PoreVolume/injRate|float/100)|round(3,'ceil')> /
+
+END

@@ -1,0 +1,233 @@
+# UpCaRs Case Generator Configuration File
+General:
+  # Path to Eclipse template file ('--et','--ET','--eclTemplate')
+  TemplateFile : upcars_eclipse_ref_ss.tmpl
+  # BaseName of generated simulation files
+  #BaseName : AHM_<nCells>_LXY_<lx>_X_<ly>_M_GXY_<geometryFacX>_<geometryFacY>
+  BaseName : SMALL_SCALE
+  Seed : 12345
+
+Geometry:
+  # Number of matrix/main element grid cells, x-direction ('--nMatrixX','--NMATRIXX','--nMatrixX')
+  CellMatrixX : [25,25]
+
+  # Increment in x-direction ('--dx','--DX','--incX')
+  dx : 0.08
+
+  # Number of matrix/main element grid cells, y-direction ('--nMatrixY','--NMATRIXY','--nMatrixY')
+  CellMatrixY : [25, 25]
+
+  # Increment in y-direction ('--dy','--DY','--incY')
+  dy : 0.08
+
+  # Top point of the model ('--top')
+  top : 1500.0
+
+  # Parameters  describing the shape of model
+  # Formula for top depth is defined as:
+  #      z : radius_z*(1.0 - (x-xo)² / radius_x² - (y-yo)² / radius_y²)^0.5 + (x - xo) * tan(tilt)
+  #    For slab, set radius_z to 0
+  #    For hull, set either radius_x or radius_y to very high number e.g. 1E999
+
+  # Curvature radius in x-direction for dome/hull shape ('--radiusX')
+  radius_x : 9000.0
+  # Curvature radius in y-direction for dome/hull shape ('--radiusY')
+  radius_y : 9000.0
+  # Curvature radius in z-direction for home/hull shape, set to zero for slab ('--radiusZ')
+  radius_z : 0.0
+  # Tilting angle in degree (relative to x-axis) ('--tilt')
+  tilt : 0.0
+  # Location of dome/hull top point, fraction to length of the model in X-direction ('--centroidX', '--centroid_x')
+  centroid_x : 0.5
+  # Location of dome/hull top point, fraction to length of the model in Y-direction ('--centroidY', '--centroid_y')
+  centroid_y : 0.5
+
+Layers:
+  Background Matrix:
+    NZ : 50                   # Total number of cells in z-direction, including heterogeneous layers ('--matrix_nz)
+    dz : 0.02                 # Cell size in z-direction, only applied to background matrix ('--matrix_dz')
+    Porosity: 0.09            # background matrix porosity ('--matrix_poro')
+    Permeability: 5.0         # background matrix permeability ('--matrix_perm')
+    MULTX: 1.0                # background MULTX ('--matrix_multx')
+    MULTY: 1.0                # background MULTY ('--matrix_multy')
+    MULTPV: 1.0               # background MULTPV ('--matrix_multpv')
+    FIPNUM: 1                 # background FIPNUM ('--matrix_fipnum')
+    SATNUM: 1                 # background SATNUM ('--matrix_satnum')
+    SWATINIT: 0.2             # background SWATINIT ('--matrix_swatinit')
+  Streaks:
+    k: [25]                   # Streak start index ('--streak_k')
+    NZ: 1                     # Streak NZ, can be constant for all streaks or specified for each streak ('--streak_nz')
+    dz: 0.05                  # Streak dz, can be constant for all streaks or specified for each streak ('--streak_dz')
+    Porosity: 0.1             # Streak porosity, can be constant for all streaks or specified for each streak ('--streak_poro')
+    Permeability: 500.0       # Streak permeability, can be constant for all streaks or specified for each streak ('-streak_perm')
+    MULTX: 1.0                # Streak MULTX, can be constant for all streaks or specified for each streak ('--streak_multx')
+    MULTY: 1.0                # Streak MULTY, can be constant for all streaks or specified for each streak ('--streak_multy')
+    MULTPV: 1.0               # Streak MULTPV, can be constant for all streaks or specified for each streak ('--streak_multpv')
+    FIPNUM: 3                 # Streak FIPNUM, can be constant for all streaks or specified for each streak ('--streak_fipnum')
+    SATNUM: 2                 # Streak SATNUM, can be constant for all streaks or specified for each streak ('--streak_satnum')
+    SWATINIT: 0.2             # Streak SWATINIT, can be constant for all streaks or specified for each streak ('--streak_swatinit')
+    BoundingBox:  # Streak bounding box [i1, i2, j1, j2], can be single box for all streaks or specified for each streak
+
+Throws:
+  # Define throws, can be left empty. Use '--throw' to specify the list of throws and '--no_throw' to remove all specified throws
+  # Start_region_in_x-_direction
+  i1 : []
+  # End_region_in_x-_direction
+  i2 : []
+  # Start_region in_y-_direction
+  j1 : []
+  # End_region_in_y-_direction
+  j2 : []
+  # Shift_amount_in_z-_direction
+  dz : []
+
+Fracture:
+  # Flag to remove fracture at boundary ('--noBoundaryFracture', '--BoundaryFracture')
+  NoBoundaryFracture : No
+  # Fracture thickness ('--ft','--FT','--fractureThickness')
+  FractureThickness : 0.05
+  # Number of cells in fracture ('--ndz','--NDZ','--cellsDamageZone')
+  FractureCells  : 1
+
+  # Properties for fracture along x-axis
+  FractureX:
+    # Length of the fracture in fraction of model lx ('--fLengthX', '--FLENGTHX', '--flengthx')
+    Length: 1.0
+    # Offset of the fracture in fraction of model lx, will be adjusted to honor length ('--fOffsetX', '--FOFFSETX', '--foffsetx')
+    Offset: 0.0
+    # Height of the fracture in fraction of model lz ('--fHeightX', '--FHEIGHTX', '--fheightx')
+    Height: 1.0
+    # Z-offset of the fracture in fraction of model lz, will be adjusted to honor height ('--fVertOffsetX', '--FVERTOFFSETX', '--fvertoffsetx')
+    ZOffset: 0.0
+    # Fracture permeability for x-direction faults, can be a single value or list of values ('--fracPermX', '--FRACPERMX', '--fracpermx')
+    Permeability: 780.0
+
+  FractureY:
+    # Length of the fracture in fraction of model ly ('--fLengthY', '--FLENGTHY', '--flengthy')
+    Length: 1.0
+    # Offset of the fracture in fraction of model ly, will be adjusted to honor length ('--fOffsetY', '--FOFFSETY', '--foffsety')
+    Offset: 0
+    # Height of the fracture in fraction of model lz ('--fHeightY', '--FHEIGHTY', '--fheighty')
+    Height: 1.0
+    # Z-offset of the fracture in fraction of model lz, will be adjusted to honor height ('--fVertOffsetY', '--FVERTOFFSETY', '--fvertoffsety')
+    ZOffset: 0.0
+    # Fracture permeability for y-direction faults, can be a single value or list of values ('--fracPermY', '--FRACPERMY', '--fracpermy')
+    Permeability: 780.0
+
+  # Fracture porosity ('--porf','--PORF','--poroFracture')
+  Porosity : 0.1
+  # Fracture transmissibility multiplier in x- direction ('--multx','--MULTX','--multx')
+  MULTX : 1
+  # Fracture transmissibility multiplier in y- direction ('--multy','--MULTY','--multy')
+  MULTY : 1
+  # Fracture pore volume multiplier ('--pvDamage','--PVDAMAGE','--pvDamage')
+  MULTPV : 1
+  # Fracture FIPNUM ('--fipnumf','--FIPNUMF','--fipnumF')
+  FIPNUM : 2
+  # Fracture SATNUM ('--satnumf','--SATNUMF','--satnumF')
+  SATNUM : 2
+  # Fracture SWATINIT ('--swatinitf', '--SWATINITF', '--swatinitF')
+  SWATINIT : 1.0
+
+Near Fracture Vug:
+# Specify how many cells between fracture and vugs, put 0 to allow connection between fracture and vugs
+  Distance_to_fracture: 0
+  # Fraction of vugs to matrix, between 0 and 1 ('--vug1volume', '--VUG1VOLUME', '--vug1Volume')
+  Fraction :
+    Min : 0.0
+    Max : 0.0
+  # Spreading factor for near fracture vug. Small value will make vug concentrated near fracture ('--vug1Spread', '--VUG1SPREAD','--vug1_spread')
+  SpreadingFactor: 2.0
+  # Vug porosity interval, uniformly distributed ('--vug1Poro','--VUG1PORO','--vug1Poro')
+  Porosity :
+    Min : 0.1
+    Max : 0.1
+  # Vug permeability interval, uniformly distributed ('--vug1Perm','--VUG1PERM','--vug1Perm')
+  Permeability :
+    Min : 1000
+    Max : 10000
+  # Vugs transmissibility multiplier in x- direction ('--vug1MULTX', '--vug1multx')
+  MULTX : 1
+  # Vugs transmissibility multiplier in y- direction ('--vug1MULTY', '--vug1multy')
+  MULTY : 1
+  # Vugs pore volume multiplier ('--vug1MULTPV', '--vug1multpv')
+  MULTPV : 1
+  # Vugs FIPNUM ('--vug1FIPNUM', '--vug1fipnum')
+  FIPNUM : 3
+  # Vugs SATNUM ('--vug1SATNUM', '--vug1satnum')
+  SATNUM : 2
+  # Vugs initial water saturation ('--vug1SWATINIT', '--vug1swatinit')
+  SWATINIT : 1.0
+
+Random Vug:
+  # Fraction of vugs to matrix, between 0 and 1  ('--vug2Volume', '--VUG2VOLUME', '--vug2Volume')
+  Fraction :
+    Min : 0.0
+    Max : 0.0
+  # Vug porosity interval, uniformly distributed ('--vug2Poro','--VUG2PORO','--vug2Poro')
+  Porosity :
+    Min : 0.1
+    Max : 0.1
+  # Vug permeability interval, uniformly distributed ('--vug2Perm','--VUG2PERM','--vug2Perm')
+  Permeability :
+    Min : 1000.0
+    Max : 10000.0
+  # Vugs transmissibility multiplier in x- direction ('--vug2MULTX', '--vug2multx')
+  MULTX : 1.0
+  # Vugs transmissibility multiplier in y- direction ('--vug2MULTY', '--vug2multy')
+  MULTY : 1.0
+  # Vugs pore volume multiplier ('--vug2MULTPV', '--vug2multpv')
+  MULTPV : 1.0
+  # Vugs FIPNUM ('--vug2FIPNUM', '--vug2fipnum')
+  FIPNUM : 4
+  # Vugs SATNUM ('--vug2SATNUM', '--vug2satnum')
+  SATNUM : 2
+  # Vugs initial water saturation.('--vug2SWATINIT', '--vug2swatinit')
+  SWATINIT : 1.0
+
+Near Streak Vug:
+  # Specify how many cells between streak and vug, put 0 to allow connection between streak and vugs
+  Distance_to_streak: 1
+  # Fraction of vugs to matrix, between 0 and 1 ('--vug3volume', '--VUG3VOLUME', '--vug3Volume')
+  Fraction :
+    Min :  0.0
+    Max : 0.0
+  # Spreading factor for near fracture vug. Small value will make vug concentrated near fracture ('--vug3Spread', '--VUG3SPREAD','--vug3_spread')
+  SpreadingFactor: 2.0
+  # Vug porosity interval, uniformly distributed ('--vug3Poro','--VUG3PORO','--vug3Poro')
+  Porosity :
+    Min : 0.1
+    Max : 0.1
+  # Vug permeability interval, uniformly distributed ('--vug3Perm','--VUG3PERM','--vug3Perm')
+  Permeability :
+    Min : 1000
+    Max : 10000
+  # Vugs transmissibility multiplier in x- direction ('--vug3MULTX', '--vug3multx')
+  MULTX : 1
+  # Vugs transmissibility multiplier in y- direction ('--vug3MULTY', '--vug3multy')
+  MULTY : 1
+  # Vugs pore volume multiplier ('--vug3MULTPV', '--vug3multpv')
+  MULTPV : 1
+  # Vugs FIPNUM ('--vug3FIPNUM', '--vug3fipnum')
+  FIPNUM : 4
+  # Vugs SATNUM ('--vug3SATNUM', '--vug3satnum')
+  SATNUM : 2
+  # Vugs initial water saturation ('--vug3SWATINIT', '--vug3swatinit')
+  SWATINIT : 0.0
+
+Variables:
+  # Optional variables that can be used as expression in template file
+  # Can be added/changed in command line using ('--var', '--VAR', '--Var')
+  # for example --var nx_prod 2
+
+  # Number of perforated blocks for production well in x-direction
+  nx_prod : 2
+  # Number of perforated blocks for injection well in y-direction
+  nx_inj : 3
+  # Permeability anisotropy
+  kvkh : 1
+  # Injection rate
+  injRate : 0.01
+  # Production rate
+  prodRate : 0.01
+
