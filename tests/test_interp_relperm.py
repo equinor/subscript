@@ -118,6 +118,19 @@ def test_schema_errors():
 
     assert parsed_cfg.valid
 
+    cfg["interpolations"] = [{"param_w": "some weird text"}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    cfg["interpolations"] = [{"param_g": "Null"}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+
     cfg["interpolations"] = [{"param_g": 0}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
