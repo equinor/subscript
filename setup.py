@@ -63,7 +63,7 @@ setuptools.setup(
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
     install_requires=[],
-    setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
+    setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner", "scipy"],
     tests_require=["pytest"],
     entry_points={
         "console_scripts": SSCRIPTS,
