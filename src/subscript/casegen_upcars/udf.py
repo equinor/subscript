@@ -81,7 +81,11 @@ def compact_list(data):
             list_count.append(1)
     str_ = ""
     for idx, value in enumerate(list_value):
-        str_ += f" {list_count[idx]}*{value}" if list_count[idx] > 1 else f" {value}"
+        str_ += (
+            " {}*{}".format(list_count[idx], value)
+            if list_count[idx] > 1
+            else " {}".format(value)
+        )
     return str_
 
 

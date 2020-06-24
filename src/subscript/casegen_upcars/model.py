@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Engine part of casegen_upcars """
-# pylint:disable=bad-continuation, too-many-instance-attributes, too-many-arguments
-# pylint:disable=too-many-locals, too-many-branches, too-many-statements, too-many-lines
+# pylint:disable=bad-continuation
 import math
 import datetime
 import itertools
@@ -178,8 +177,10 @@ class Model:
         ):
             if len(var) != self._n_faults_y:
                 raise ValueError(
-                    f"Number of specified X-dir {title} ({len(var)}) is not equals to"
-                    f" number of fracture in Y-direction ({self._n_faults_y})"
+                    "Number of specified X-dir {} ({}) is not equals to number of "
+                    "fracture in Y-direction ({})".format(
+                        title, len(var), self._n_faults_y
+                    )
                 )
 
         self._fracture_length_y = listify(fracture_length_y, self._n_faults_x, float)
@@ -204,8 +205,10 @@ class Model:
         ):
             if len(var) != self._n_faults_x:
                 raise ValueError(
-                    f"Number of specified Y-dir {title} ({len(var)}) is not equals to"
-                    f" number of fracture in X-direction ({self._n_faults_x})"
+                    "Number of specified Y-dir {} ({}) is not equals to number of "
+                    "fracture in X-direction ({})".format(
+                        title, len(var), self._n_faults_x
+                    )
                 )
 
         self._total_nx = int(
@@ -555,7 +558,7 @@ class Model:
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(
             self._streak_k
-        ), f"Number of input {keyword} is not equal to number of streak"
+        ), "Number of input {} is not equal to number of streak".format(keyword)
         if isinstance(fracture_property, int):
             data_type = np.int8
         else:
@@ -638,12 +641,12 @@ class Model:
         values_x = listify(values_x, self._n_faults_x)
         values_y = listify(values_y, self._n_faults_y)
         assert len(values_x) == self._n_faults_x, (
-            f"Please specify correct number of fracture {keyword} for x-faults.\r\n"
-            f"You need {self._n_faults_x} values"
+            "Please specify correct number of fracture {} for x-faults.\r\n"
+            "You need {} values".format(keyword, self._n_faults_y)
         )
         assert len(values_y) == self._n_faults_y, (
-            f"Please specify correct number of fracture {keyword} for y-faults.\r\n"
-            f"You need {self._n_faults_y} values"
+            "Please specify correct number of fracture {} for y-faults.\r\n"
+            "You need {} values".format(keyword, self._n_faults_y)
         )
         self._fracture_props[keyword + "X"] = values_x
         self._fracture_props[keyword + "Y"] = values_y

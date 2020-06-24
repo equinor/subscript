@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# pylint: disable=too-many-locals, too-many-branches, too-many-statements
 # pylint: disable=bad-continuation
 """
 casegen_upcars is script to create conceptual model
@@ -253,10 +252,12 @@ def main():
             for throw in parser.throws:
                 if len(throw) != 5:
                     raise ValueError(
-                        f"{TERMINALCOLORS['FAIL']}You need to specify throw"
-                        f" in the following order:\r\n"
-                        f"{TERMINALCOLORS['OKBLUE']}i1   i2    j1    j2   dz"
-                        f"{TERMINALCOLORS['ENDC']}"
+                        "{}You need to specify throw in the following order:\r\n"
+                        "{}}i1   i2    j1    j2   dz{}".format(
+                            TERMINALCOLORS["FAIL"],
+                            TERMINALCOLORS["OKBLUE"],
+                            TERMINALCOLORS["ENDC"],
+                        )
                     )
                 throws.append(
                     [
