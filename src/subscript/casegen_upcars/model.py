@@ -5,7 +5,6 @@ from __future__ import print_function
 import math
 import datetime
 import itertools
-import io
 from itertools import product
 
 import six
