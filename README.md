@@ -57,3 +57,17 @@ This section is dedicated to code contributors to subscript.
   * `pip install pylint`
   * Then run `pylint src`
   * Deviations from default (strict) pylint are stored in .pylintrc at root level, or as comments in the file e.g. `# pylint: disable=broad-except`
+
+## Documentation ##
+
+Install the development requirements
+```
+pip install -r requirements-dev.txt
+```
+
+Then, to build the documentation for subscript run the following command:
+```
+sphinx-build -b html -nv docs/ build/docs
+```
+
+And now you can find the start page of the documentation in the build folder: `build/docs/index.html`

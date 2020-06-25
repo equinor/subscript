@@ -249,7 +249,7 @@ def find_keyword_sets(filelines):
 
     Example:
 
-    If the deck consists of six lines like this:
+    If the deck consists of six lines like this::
 
         -- now comes porosity
         PORO
@@ -261,7 +261,8 @@ def find_keyword_sets(filelines):
     this will return [(1,4)] since 1 refers to the line with PORO and 4 refers
     to the line with the trailing slash.
 
-    More tricky keywords like (multiple records)
+    More tricky keywords like (multiple records)::
+
         EQUALS
           'FIPNUM' 0 1 0 1 0 1 10 /
           'FIPNUM' 1 2 1 2 1 2 20 /

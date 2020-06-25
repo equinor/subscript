@@ -8,5 +8,8 @@ pytest
 pytest-runner
 pyscal>0.1.4
 sphinx
+sphinx-argparse
+sphinx_rtd_theme
+autoapi
 xlrd
 flake8
