@@ -253,7 +253,7 @@ def main():
                 if len(throw) != 5:
                     raise ValueError(
                         "{}You need to specify throw in the following order:\r\n"
-                        "{}}i1   i2    j1    j2   dz{}".format(
+                        "{}i1   i2    j1    j2   dz{}".format(
                             TERMINALCOLORS["FAIL"],
                             TERMINALCOLORS["OKBLUE"],
                             TERMINALCOLORS["ENDC"],
@@ -522,14 +522,14 @@ def main():
             if var not in built_in_functions:
                 undefined_var.append(var)
 
-    if len(undefined_var) > 0:
+    if undefined_var:
         print(
             "\033[91mWarning: Found {} undefined variables."
             "Please verify your output files.\033[0m\n{}".format(
                 len(undefined_var), undefined_var
             )
         )
-
+        
     with open(base_name + ".DATA", "w") as file_handle:
         file_handle.write(mask_token(case_template.render(dictionary), unmask=True))
 
