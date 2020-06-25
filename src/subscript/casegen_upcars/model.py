@@ -738,7 +738,7 @@ class Model:
                 + self._layer_dz[i]
             )
 
-        buffer_ = io.StringIO()
+        buffer_ = six.StringIO()
         print(
             "-- GRID generated using CaseGenerator "
             + datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
