@@ -529,7 +529,7 @@ def main():
                 len(undefined_var), undefined_var
             )
         )
-        
+
     with open(base_name + ".DATA", "w") as file_handle:
         file_handle.write(mask_token(case_template.render(dictionary), unmask=True))
 
