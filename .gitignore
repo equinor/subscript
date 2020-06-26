@@ -68,3 +68,6 @@ src/subscript/version.py
 .dir-locals.el
 '.'/
 *.swp
+
+# Auto documentation
+docs/subscript
