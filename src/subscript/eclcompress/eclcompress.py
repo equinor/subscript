@@ -14,11 +14,12 @@ logger = logging.getLogger(__name__)
 logging.basicConfig()
 
 DESCRIPTION = """Compress Eclipse input files by using the Eclipse
-syntax <number>*<value> so that the data set
+syntax <number>*<value> so that the data set::
 
   0  0  0  1  2  3  2  2  2  2
 
-becomes
+becomes::
+
   3*0 1 2 3 4*2
 
 The script processes one file at a time, replacing the files with
@@ -57,7 +58,7 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
     Files will be modified in-place, backup is optional.
 
     Args:
-        files (list of strings): Filenames to be compressed
+        files (list): List of filenames (str) to be compressed
         keeporiginal (bool): Whether to copy the original to a backup file
         dryrun (bool): If true, only print compression efficiency
     Returns:
@@ -171,13 +172,13 @@ def compress_multiple_keywordsets(keywordsets, filelines):
     by the tuples in keywordsets.
 
     Args:
-        keywordsets (list of 2-tuples): (start, end) indices in
+        keywordsets (list): List of 2-tuples, (start, end) indices in
             line number in the deck, referring to individual sections
             of distinct keywords.
-        filelines (list of str): lines from Eclipse deck, cleaned.
+        filelines (list): list of lines (strings) from Eclipse deck, cleaned.
 
     Returns:
-        list of str, to be used as a replacement Eclipse deck
+        list:  List of strings to be used as a replacement Eclipse deck
     """
 
     # List of finished lines to build up:
@@ -277,11 +278,11 @@ def find_keyword_sets(filelines):
     are skipped (i.e. not recognized as an Eclipse keyword)
 
     Args:
-        filelines (list of str): Eclipse deck (partial)
+        filelines (list): List of Eclipse deck (str) (not necessarily complete decks)
 
     Return:
-        list of 2-tuples, with start and end line indices for datasets to
-            compress
+        list: List of 2-tuples, with start and end line indices for datasets to
+        compress
 
     """
     blacklisted_keywords = ["INCLUDE"]  # (due to slashes in filenames)
@@ -311,10 +312,10 @@ def find_keyword_sets(filelines):
 def glob_patterns(patterns):
     """
     Args:
-        patterns (list of str): filename patterns
+        patterns (list): List of strings with filename patterns
 
     Returns:
-        list of str, globbed files.
+        list: List of strings with globbed files.
     """
     # Remove duplicates:
     patterns = list(set(patterns))
@@ -387,7 +388,7 @@ def parse_wildcardfile(filename):
         filename (str)
 
     Returns:
-        list of str
+        list: List of strings
     """
     if filename == MAGIC_DEFAULT_FILELIST:
         return DEFAULT_FILES_TO_COMPRESS
@@ -417,7 +418,7 @@ def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False
     """Implements the command line functionality
 
     Args:
-        grdeclfiles (list of str or str): Filenames to compress
+        grdeclfiles (list): List of strings or a string, with filename(s) to compress
         wildcardfile (str): Filename containing wildcards
         keeporiginal (bool): Whether a backup file should be left behind
         dryrun (bool): Nothing written to disk, only statistics for

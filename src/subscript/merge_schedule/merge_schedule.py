@@ -10,17 +10,17 @@ from subscript.sunsch import sunsch
 logger = logging.getLogger(__name__)
 logging.basicConfig()
 
+DESCRIPTION = """Merges several ECLIPSE schedule files into one single file.
+This is done by sorting on the DATES keyword in the different input files.
+If a given date exists in more than one input file, the order of keywords
+under that date follows the input order of the files.
+
+Anything before the first DATES keyword in all files will be merged to
+one block occuring before the first DATES in all files."""
+
 
 def get_parser():
-    epilog = """Merges several ECLIPSE schedule files into one single file.
-    This is done by sorting on the DATES keyword in the different input files.
-    If a given date exists in more than one input file, the order of keywords
-    under that date follows the input order of the files.
-
-    Anything before the first DATES keyword in all files will be merged to
-    one block occuring before the first DATES in all files."""
-
-    parser = argparse.ArgumentParser(epilog=epilog)
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
 
     parser.add_argument("inputfiles", type=str, nargs="+", help="Path to input files.")
     parser.add_argument("outputfile", type=str, help="Path to output file.")

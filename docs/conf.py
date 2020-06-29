@@ -23,7 +23,7 @@ project = "subscript"
 copyright = "2020, Equinor"
 author = "Equinor"
 
-import subscript
+import subscript  # noqa
 
 # The short X.Y version
 try:
@@ -49,14 +49,14 @@ release = version
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
-    'sphinx.ext.inheritance_diagram',
+    "sphinx.ext.inheritance_diagram",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
-    'sphinxarg.ext',
-    'autoapi.sphinx',
+    "sphinxarg.ext",
+    "autoapi.sphinx",
 ]
 
-autoapi_modules = {'subscript': None}
+autoapi_modules = {"subscript": None}
 
 autodoc_default_options = {"members": None}
 
@@ -64,6 +64,23 @@ autosummary_generate = True
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
+
+# Avoid complaints (listing this should not be necessary!)
+nitpick_ignore = [
+    ("py:class", "str"),
+    ("py:class", "int"),
+    ("py:class", "tuple"),
+    ("py:class", "float"),
+    ("py:class", "list"),
+    ("py:class", "dict"),
+    ("py:class", "named_dict"),
+    ("py:class", "bool"),
+    ("py:class", "datetime.date"),
+    ("py:class", "pd.DataFrame"),
+    ("py:class", "pyscal.WaterOilGas"),
+    ("py:class", "argparse.ArgumentParser"),
+    ("py:exc", "IOError"),
+]
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -84,7 +101,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "version.py"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -97,6 +114,7 @@ pygments_style = None
 
 html_theme = "sphinx_rtd_theme"
 
+html_logo = "_static/equinor-logo2.jpg"
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -107,7 +125,7 @@ html_theme = "sphinx_rtd_theme"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ['_static']
 
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.

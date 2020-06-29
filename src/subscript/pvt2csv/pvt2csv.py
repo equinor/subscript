@@ -78,7 +78,7 @@ def pvtfile2df(filename):
     not-applicable cells.
 
     Args:
-        filename (string) - filename to be opened and parsed.
+        filename (str) - filename to be opened and parsed.
 
     Returns:
         pd.DataFrame

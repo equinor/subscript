@@ -252,6 +252,11 @@ CONFIG_SCHEMA_V2 = {
 }
 
 
+def get_schema():
+    """Return the ConfigSuite schema"""
+    return CONFIG_SCHEMA_V2
+
+
 def datetime_from_date(date):
     """Set time to 00:00:00 in a date"""
     if isinstance(date, six.string_types):
@@ -406,9 +411,9 @@ def sch_file_starts_with_dates_keyword(filename):
     which date to anchor that to)
 
     Args:
-        filename (string): Filename which will be opened and read.
+        filename (str): Filename which will be opened and read.
     Returns:
-        bool, true if first keyword is DATES
+        bool: true if first keyword is DATES
     """
     file_starts_with_dates = True
 
@@ -440,7 +445,7 @@ def substitute(insert_statement):
             to be used.
 
     Returns:
-        filename (string): Filename on temporary location for immediate use
+        str: Filename on temporary location for immediate use
     """
 
     if len([key for key in list(insert_statement) if key is not None]) > 3:
@@ -605,37 +610,25 @@ Command line options override configuration in YAML.
 
 Output will not be generated unless the produced data is valid in
 Eclipse, checking provided by OPM.""",
-        epilog="""YAML-file components:
+        epilog="""YAML-file components::
 
  startdate - YYYY-MM-DD for the initial date of the simulation (START keyword)
-
  files - list of filenames to be merged. Optional
-
  output - filename for output. stdout if omitted
-
  refdate - if supplied, will work as a reference date for relative
            inserts. If not supplied, startdate will be used.
-
  enddate - YYYY-MM-DD. DATES after this date will be removed.
-
  dategrid - a string being either 'weekly', 'biweekly', 'monthly',
             'bimonthly' stating how often a DATES keyword is wanted
             (independent of inserts/merges).  '(bi)monthly' and
             'yearly' will be rounded to first in every month.
-
  insert - list of components to be inserted into the final Schedule
           file. Each list element can contain the elements:
-
         date - Fixed date for the insertion
-
         days - relative date for insertion relative to refdate/startdate
-
         filename - filename to override the yaml-component element name.
-
         string - instead of filename, you can write the contents inline
-
         template - filename if substitution is to take place
-
         substitute - key-value pairs that will subsitute <key> in
                      incoming files (or inline string) with
                      associated values.
@@ -703,7 +696,7 @@ def main():
     # Merge defaults-, yaml- and command line options, and then validate:
     config = configsuite.ConfigSuite(
         {},
-        CONFIG_SCHEMA_V2,
+        get_schema(),
         layers=(defaults_config, yaml_config, cli_config),
         deduce_required=True,
     )

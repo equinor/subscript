@@ -96,3 +96,4 @@ before_script:
 script:
   - pip install .
   - python setup.py test
+  - if [[ $TRAVIS_PYTHON_VERSION ==  3.6 ]]; then sphinx-build -W -b html -nv docs/ build/docs; fi

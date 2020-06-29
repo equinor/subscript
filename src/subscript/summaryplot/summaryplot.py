@@ -43,8 +43,9 @@ register_matplotlib_converters()
 DESCRIPTION = """
 Summaryplot will plot summary vectors from your Eclipse output files.
 
-To list summary vectors for a specific Eclipse output set, try
- > summary.x --list ECLFILE.DATA
+To list summary vectors for a specific Eclipse output set, try::
+
+  summary.x --list ECLFILE.DATA
 
 Command line argument VECTORSDATAFILES are assumed to be Eclipse DATA-files as long
 as the command line argument is an existing file. If not, it is assumed
@@ -134,15 +135,15 @@ def summaryplotter(
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 
     Args:
-        eclsums (list of EclSum)
-        vectors (list of str)
-        histvectors (bool),
-        normalize (bool)
-        singleplot (bool)
-        nolegend (bool)
-        maxlabels (int)
-        ensemblemode (bool)
-        dumpimages (bool)
+        eclsums (list): List of EclSum objects
+        vectors (list): List of strings, with Eclipse summary vectors
+        histvectors (bool):
+        normalize (bool):
+        singleplot (bool):
+        nolegend (bool):
+        maxlabels (int):
+        ensemblemode (bool):
+        dumpimages (bool):
         colourby (str):
         logcolourby (str):
     """
@@ -569,11 +570,11 @@ def split_vectorsdatafiles(vectorsdatafiles):
     vector names/wildcards (that is, those that are not openable as EclSum)
 
     Args:
-        vectorsdatafiles (list of str)
+        vectorsdatafiles (list): List of strings
 
     Returns:
-        4-tuple of lists, with EclSum-filenames,  datafilename-strings,
-            vector-strings, parameterfilename-strings
+        tuple: 4-tuple of lists, with EclSum-filenames, datafilename-strings,
+        vector-strings, parameterfilename-strings
     """
     summaryfiles = []  # Eclsum instances corresponding to datafiles
     datafiles = []  # strings
