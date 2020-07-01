@@ -15,12 +15,13 @@ from ecl.eclfile import EclFile
 DESCRIPTION = """
 Slice a subset of restart-dates from an E100 Restart file (UNRST)
 
-Example:
+Example::
+
     $ restartthinner --restarts 4 ECLIPSE.UNRST
+
 where four restarts evenly spread out in relevant dates will be picked and
 written to the same filename (keeping the original is optional)
 """
-EPILOG = ""
 
 
 def find_libecl_app(toolname):
@@ -32,10 +33,10 @@ def find_libecl_app(toolname):
     We prefer .x.
 
     Returns:
-        string with path if found.
+        str: String with path if found.
 
     Raises:
-        IOError if tool can't be found
+        IOError: if tool can't be found
     """
     extensions = [".x", ".c.x", ".cpp.x", ""]  # Order matters.
     candidates = [toolname + extension for extension in extensions]
@@ -169,7 +170,7 @@ def restartthinner(filename, numberofslices, quiet=False, dryrun=True, keep=Fals
 def get_parser():
     """Setup parser"""
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description=DESCRIPTION
     )
     parser.add_argument("UNRST", help="Name of UNRST file")
     parser.add_argument(

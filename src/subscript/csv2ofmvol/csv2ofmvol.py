@@ -16,19 +16,22 @@ convert this back to OFM (OilField Manager) "vol"-format, which gives
 the easiest route into Roxar's RMS, through a Production Profile
 Import job.
 
-Example input csv data:
+Example input CSV data::
+
     DATE,WELL,WOPR
     2010-01-01,A-3,1000
     2011-01-01,A-3,2000
     2012-01-01,A-3,3000
-which will produce the following vol-file output:
-    *METRIC
-    *DAILY
-    *DATE   *OIL
-    *NAME A-3
-    2010-01-01  1000
-    2011-01-01  2000
-    2012-01-01  3000
+
+which will produce the following vol-file output::
+
+  *METRIC
+  *DAILY
+  *DATE   *OIL
+  *NAME A-3
+  2010-01-01  1000
+  2011-01-01  2000
+  2012-01-01  3000
 """
 
 # Translation table from what vectors are called in PDM to
@@ -68,8 +71,8 @@ def read_pdm_csv_files(csvfiles):
             or list of DataFrames for which read_csv() has
             been done.
     Returns:
-        pd.DataFrame. Multiindex: (DATE, WELL), and data
-            vectors, WOPR, WWCT, etc.
+        pd.DataFrame: Multiindex over (DATE, WELL), and data
+        vectors, WOPR, WWCT, etc.
     """
 
     if not isinstance(csvfiles, list):

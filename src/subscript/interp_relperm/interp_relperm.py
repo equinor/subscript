@@ -16,50 +16,60 @@ high may be achieved.
 Krw, Krow, Pcow interpolated using parameter param_w
 Krg, Krog, Pcog interpolated using parameter param_g
 
-Config file syntax (yaml):
-#********************************************************************
-# Example config file
+.. code-block:: yaml
 
-base:  # Required: SWOF and SGOF in one unified or two separate files.
-       # Absolute or relative paths are accepted. Relative paths are
-       # interpreted with respect to command line option --root-path
-  - swof_base.inc
-  - /project/snakeoil/r017f/ert/input/relperm/sgof_base.inc
+  # Example config file
 
-high:  # Required: the phase(s) to be interpolated must be present,
-       # ie can drop either SWOF or SGOF if not relevant.
-  - swof_opt.inc
-  - ../include/sgof_opt.inc
+  base:
+    # Required: SWOF and SGOF in one unified or two separate files.
+    # Absolute or relative paths are accepted. Relative paths are
+    # interpreted with respect to command line option --root-path
+    - swof_base.inc
+    - /project/snakeoil/r017f/ert/input/relperm/sgof_base.inc
 
-low:   # Required: see high
-  - swof_pes.inc
-  - /project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc
+  high:
+    # Required: the phase(s) to be interpolated must be present,
+    # ie can drop either SWOF or SGOF if not relevant.
+    - swof_opt.inc
+    - ../include/sgof_opt.inc
 
-result_file  : outfilen.inc  # Required: Name of output file with interpolated tables
+  low:
+    # Required: see high
+    - swof_pes.inc
+    - /project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc
 
-delta_s      : 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
+  result_file  : outfilen.inc  # Required: Name of output file with interpolated tables
 
-interpolations: # Required: applied in order of appearance so that
-                # a default value for all tables can set and overrided
-                # for individual satnums later.
-  - tables   : [] # Required: list of satnums to be interpolated,
-                  # empty list interpreted as all entries
-    param_w  : -0.23
-    param_g  :  0.44
+  delta_s      : 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
 
-  - tables : [1]      # will only apply to satnum nr. 1, for SWOF and SGOF
-    param_w  : -0.23
-    param_g  :  0.24
+  # Required: applied in order of appearance so that
+  # a default value for all tables can set and overrided
+  # for individual satnums later.
+  interpolations:
+    - tables   : []
+      # Required: list of satnums to be interpolated
+      # empty list interpreted as all entries
+      # for individual satnums later.
+      param_w  : -0.23
+      param_g  :  0.44
 
-  - tables : [2,5,75] # applies to satnum 2, 5, and 75, for SWOF
-                      # (not SGOF since param_g not declared) SGOF
-                      # will be interpolated using 0.44, from above.
-                      # If a parameter not set, no interpolation will
-                      # be applied ie base table is returned
-    param_w  :  0.5
+  # Required: list of satnums to be interpolated
+  # empty list interpreted as all entries
+
+    - tables : [1]
+      # will only apply to satnum nr. 1, for SWOF and SGOF
+      param_w  : -0.23
+      param_g  :  0.24
+
+    - tables : [2,5,75]
+      # applies to satnum 2, 5, and 75, for SWOF
+      # (not SGOF since param_g not declared) SGOF
+      # will be interpolated using 0.44, from above.
+      # If a parameter not set, no interpolation will
+      # be applied ie base table is returned
+      param_w  :  0.5
 
 
-#*************************************************************************
 """
 
 from __future__ import print_function
@@ -185,7 +195,8 @@ def tables_to_dataframe(filenames):
     Routine to gather scal tables (SWOF and SGOF) from ecl include files.
 
     Parameters:
-        List with filenames to be parsed. Assumed to contain ecl SCAL tables
+        filenames (list): List with filenames (str) to be parsed.
+            Assumed to contain ecl SCAL tables
 
     Returns:
         dataframe with the tables
@@ -198,18 +209,19 @@ def tables_to_dataframe(filenames):
 
 def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     """
-    Routine to define a relperm.interpolant instance and perform interpolation.
+    Routine to define a pyscal.interpolant instance and perform interpolation.
 
     Parameters:
-        base_df (pandas DF): containing the base tables
-        low_df  (pandas DF): containing the low tables
-        high_df (pandas DF): containing the high tables
-        interp_param (dict('param_w', 'param_g')): the interp parameter values
-        satnum (int) : the satuation number index
-        h   : (float) the saturation spacing to be used in out tables
+        base_df (pd.DataFrame): containing the base tables
+        low_df (pd.DataFrame): containing the low tables
+        high_df (pd.DataFrame): containing the high tables
+        interp_param (dict): With keys ('param_w', 'param_g'),
+            the interp parameter values
+        satnum (int): the satuation number index
+        h (float): the saturation spacing to be used in out tables
 
     Returns:
-        relperm.interpolant : (relperm.recommendation) tables for a satnum
+        pyscal.WaterOilGas: Object holding tables for one satnum
     """
 
     # Define base tables
@@ -355,7 +367,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=h)
 
 
-def main():
+def get_parser():
     parser = argparse.ArgumentParser(
         epilog=__doc__, formatter_class=argparse.RawTextHelpFormatter
     )
@@ -375,6 +387,11 @@ def main():
         default="",
         help="Root path assumed for relative paths in config file.",
     )
+    return parser
+
+
+def main():
+    parser = get_parser()
     args = parser.parse_args()
 
     # parse the config file
@@ -392,7 +409,7 @@ def process_config(cfg, root_path=""):
 
     Args:
         cfg (dict): Configuration for files to parse and interpolate in
-        root_path (string): Preprended to the file paths. Defaults to empty string
+        root_path (str): Preprended to the file paths. Defaults to empty string
     """
     # add root-path to all include files
     if "base" in cfg.keys():

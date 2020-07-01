@@ -4,13 +4,15 @@
 """
 casegen_upcars is script to create conceptual model
 based on sugar-cube representation of fracture.
+
 It has capability to:
+
 - simple geometric: tilting, hull and dome shape
 - Layers heterogeneity (streaks)
 - multple throws (vertical shifting in any part of the model)
 - vugs distribution: random, near fracture and near streak
 - etc. Check wiki for more details:
-    https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen
+  https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen
 """
 from __future__ import print_function
 import shutil
@@ -48,9 +50,10 @@ def get_value(config_value, args_value):
     return args_value
 
 
-def main():
-    """ Entry subroutine """
-    dictionary = {}
+def get_parser():
+    """Returns an Argparse parser for parsing
+    arguments and generating documentation"""
+
     arg_parse = argparse.ArgumentParser(
         prog="UpCars Case Generator",
         description="Case generator for UpCars project",
@@ -58,6 +61,13 @@ def main():
         "check https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen",
     )
     fill_parser(arg_parse)
+    return arg_parse
+
+
+def main():
+    """ Entry subroutine """
+    dictionary = {}
+    arg_parse = get_parser()
     parser = arg_parse.parse_args()
 
     # YAML format

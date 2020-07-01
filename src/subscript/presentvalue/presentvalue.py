@@ -3,15 +3,6 @@ NPV calculation of oil and gas production income
 
 Documentation:
 https://wiki.equinor.com/wiki/index.php/ResScript:Python:Scripts:presentvalue
-
-Haavard Berland, DPN OE OSE PTC RP, November 2012
-  - major rewrite November 2015
-  - Yet another rewrite to Pandas in 2016
-
-Wouter J. de Bruin, June 2016
-  - Added calculation of break-even, CEI and IRR
-  - Added option to add a base case, which allows for calculating economics
-    on delta production profiles.
 """
 
 from __future__ import print_function
@@ -32,10 +23,13 @@ from scipy.optimize import newton
 
 from ecl.summary import EclSum
 
+DESCRIPTION = """Calculated present value of oil and gas streams from an Eclipse
+simulation. Optional yearly costs, and optional variation in prices."""
+
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description=DESCRIPTION
     )
     parser.add_argument("datafiles", nargs="+", help="Input Eclipse DATA files")
     parser.add_argument(

@@ -68,8 +68,10 @@ def compact_list(data):
     """
     Generate a compact representation of list value
     Useful in Eclipse context to make smaller file size and faster file writing
-    For example:
-    compact_list([1 1 1 1 2 1 1 1]) -> 4*1 2 3*1
+    For example::
+
+      compact_list([1 1 1 1 2 1 1 1]) -> 4*1 2 3*1
+
     """
     list_value = [data[0]]
     list_count = [1]
