@@ -177,6 +177,71 @@ def test_v1_to_v2():
     }
 
 
+def test_templating(tmpdir):
+    """Test templating"""
+    tmpdir.chdir()
+    with open("template.tmpl", "w") as handle:
+        handle.write("WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/")
+
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [
+            {
+                "template": "template.tmpl",
+                "days": 10,
+                "substitute": dict(WELLNAME="A-007", ORAT=200.3, GRAT=1.4e6),
+            }
+        ],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "A-007" in str(sch)
+    assert "200.3" in str(sch)
+    assert "1400000" in str(sch)
+    cfg_suite = configsuite.ConfigSuite(
+        sunschconf, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
+    assert cfg_suite.valid
+
+    # Let some of the valued be undefined:
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [
+            {
+                "template": "template.tmpl",
+                "days": 10,
+                "substitute": dict(WELLNAME="A-007"),
+            }
+        ],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "A-007" in str(sch)
+    assert "<ORAT>" in str(sch)
+    # (this error is let through sunsch)
+
+    # Let the date be undefined.
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"template": "template.tmpl", "substitute": dict(WELLNAME="A-007")}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    # sunsch logs this as an error that there is no date defined for the template.
+    assert "A-007" not in str(sch)
+
+    # Skip defining substitute:
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"template": "template.tmpl", "days": 100}],
+    }
+
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "A-007" not in str(sch)
+    # Sunsch lets this though, but logs an error.
+
+
 def test_days_integer():
     """Test that we can insert stuff a certain number of days
     after startup"""
