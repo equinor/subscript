@@ -326,7 +326,8 @@ def inspect_file(
 
                         if _check_file_binary(include_stripped, org_sim_loc):
                             print(
-                                "%sThe file %s seems to be binary; we'll simply copy this file and skip scanning its contents."
+                                "%sThe file %s seems to be binary; we'll simply copy "
+                                "this file and skip scanning its contents."
                                 % (indent, include_stripped)
                             )
                             copy(
@@ -354,16 +355,16 @@ def inspect_file(
                             # Check if file already exists
                             if os.path.exists(new_include):
 
-                                # Calculate MD5 hashes for the files with equal file names
-                                # to be able to compare the contents
+                                # Calculate MD5 hashes for the files with equal file
+                                # names to be able to compare the contents
                                 md5A = _md5checksum(filepath=new_include)
                                 md5B = _md5checksum(data=file_text)
 
                                 if md5A == md5B:
                                     # Files are equal, skip
                                     print(
-                                        "%sIdentical files in packing folder, skipping %s"
-                                        % (indent, new_include)
+                                        "%sIdentical files in packing folder, "
+                                        "skipping %s" % (indent, new_include)
                                     )
 
                                 else:
@@ -376,8 +377,8 @@ def inspect_file(
                                         fw.write(file_text)
                                         fw.close()
                                         print(
-                                            "%sfilename made unique with a timestamp (%s)."
-                                            % (indent, ts)
+                                            "%sfilename made unique with "
+                                            "a timestamp (%s)." % (indent, ts)
                                         )
                                         print(
                                             "%sFinished writing include file %s"
