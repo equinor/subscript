@@ -177,6 +177,55 @@ def test_v1_to_v2():
     }
 
 
+def test_days_integer():
+    """Test that we can insert stuff a certain number of days
+    after startup"""
+    os.chdir(DATADIR)
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert datetime.datetime(2020, 1, 11, 0, 0, 0) in sch.dates
+
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10.0}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert datetime.datetime(2020, 1, 11, 0, 0, 0) in sch.dates
+
+
+def test_days_float():
+    """Test that we can insert stuff a certain number of
+    floating point days after startup"""
+    os.chdir(DATADIR)
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10.1}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    # The TimeVector object has the "correct" date including time,
+    # being 0.1 days after 2020-1-11
+    assert datetime.datetime(2020, 1, 11, 2, 24, 0) in sch.dates
+    # However, the clocktime is not included when the TimeVector
+    # object is stringified:
+    assert "11 'JAN' 2020/" in str(sch)
+
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10.9}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert datetime.datetime(2020, 1, 11, 21, 36, 0) in sch.dates
+    # Rounding is downwards:
+    assert "11 'JAN' 2020/" in str(sch)
+
+
 def test_dateclip():
     """Test dateclipping"""
 
