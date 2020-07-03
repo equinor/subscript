@@ -5,6 +5,7 @@ import os
 import time
 import hashlib
 import six
+from shutil import copy
 
 import argparse
 
@@ -194,6 +195,39 @@ def _replace_paths(text, paths):
     return text
 
 
+def _check_file_binary(filename, org_sim_loc):
+    """Method that that checks whether a file is binary
+
+    Args:
+        filename (str): filename to inspect
+        org_sim_loc (str): original simulation path
+
+    Returns:
+        True if binary
+    """
+
+    # Check if the filename can be found
+    filename = _check_filename_found(filename, org_sim_loc)
+
+    # Try to open the file, if fail: show message to user
+    try:
+        f = open(filename, "r")
+    except IOError:
+        raise IOError(
+            "Script stopped: Could not open '%s'. Make sure you have read "
+            "access for this file." % filename
+        )
+
+    # Check whether the file is binary and should not be inspected
+    try:
+        with open(filename, "r") as f:
+            for _ in f:
+                pass
+    except UnicodeDecodeError:
+        return True
+    return False
+
+
 def inspect_file(
     filename, org_sim_loc, packing_path, eclipse_paths, indent, clear_comments
 ):
@@ -284,53 +318,82 @@ def inspect_file(
                             include_stripped, eclipse_paths
                         )
 
-                        file_text = inspect_file(
-                            include_stripped,
-                            org_sim_loc,
-                            packing_path,
-                            eclipse_paths,
-                            indent + "      ",
-                            clear_comments,
-                        )
-                        print("%sFinished inspecting %s" % (indent, include_stripped))
-
                         new_include = "%s/include/%s%s" % (
                             packing_path,
                             section,
                             include_stripped.split("/")[-1],
                         )
 
-                        # Write the results of the inspect to the include folder
-                        print("%sWriting include file %s..." % (indent, new_include))
+                        if _check_file_binary(include_stripped, org_sim_loc):
+                            print(
+                                "%sThe file %s seems to be binary; we'll simply copy this file and skip scanning its contents."
+                                % (indent, include_stripped)
+                            )
+                            copy(
+                                _check_filename_found(include_stripped, org_sim_loc),
+                                new_include,
+                            )
+                        else:
+                            file_text = inspect_file(
+                                include_stripped,
+                                org_sim_loc,
+                                packing_path,
+                                eclipse_paths,
+                                indent + "      ",
+                                clear_comments,
+                            )
+                            print(
+                                "%sFinished inspecting %s" % (indent, include_stripped)
+                            )
 
-                        # Check if file already exists
-                        if os.path.exists(new_include):
+                            # Write the results of the inspect to the include folder
+                            print(
+                                "%sWriting include file %s..." % (indent, new_include)
+                            )
 
-                            # Calculate MD5 hashes for the files with equal file names
-                            # to be able to compare the contents
-                            md5A = _md5checksum(filepath=new_include)
-                            md5B = _md5checksum(data=file_text)
+                            # Check if file already exists
+                            if os.path.exists(new_include):
 
-                            if md5A == md5B:
-                                # Files are equal, skip
-                                print(
-                                    "%sIdentical files in packing folder, skipping %s"
-                                    % (indent, new_include)
-                                )
+                                # Calculate MD5 hashes for the files with equal file names
+                                # to be able to compare the contents
+                                md5A = _md5checksum(filepath=new_include)
+                                md5B = _md5checksum(data=file_text)
 
+                                if md5A == md5B:
+                                    # Files are equal, skip
+                                    print(
+                                        "%sIdentical files in packing folder, skipping %s"
+                                        % (indent, new_include)
+                                    )
+
+                                else:
+                                    # Add timestamp to the filename to make it unique
+                                    ts = int(time.time())
+                                    new_include += str(ts)
+
+                                    try:
+                                        fw = open(new_include, "w")
+                                        fw.write(file_text)
+                                        fw.close()
+                                        print(
+                                            "%sfilename made unique with a timestamp (%s)."
+                                            % (indent, ts)
+                                        )
+                                        print(
+                                            "%sFinished writing include file %s"
+                                            % (indent, new_include)
+                                        )
+                                    except IOError:
+                                        raise IOError(
+                                            "Script stopped: Could not write to '%s'. "
+                                            "Make sure you have write access for "
+                                            "this file." % new_include
+                                        )
                             else:
-                                # Add timestamp to the filename to make it unique
-                                ts = int(time.time())
-                                new_include += str(ts)
-
                                 try:
                                     fw = open(new_include, "w")
                                     fw.write(file_text)
                                     fw.close()
-                                    print(
-                                        "%sfilename made unique with a timestamp (%s)."
-                                        % (indent, ts)
-                                    )
                                     print(
                                         "%sFinished writing include file %s"
                                         % (indent, new_include)
@@ -341,21 +404,6 @@ def inspect_file(
                                         "Make sure you have write access for "
                                         "this file." % new_include
                                     )
-                        else:
-                            try:
-                                fw = open(new_include, "w")
-                                fw.write(file_text)
-                                fw.close()
-                                print(
-                                    "%sFinished writing include file %s"
-                                    % (indent, new_include)
-                                )
-                            except IOError:
-                                raise IOError(
-                                    "Script stopped: Could not write to '%s'. "
-                                    "Make sure you have write access for "
-                                    "this file." % new_include
-                                )
 
                         # Change the include path in the current file being inspected
                         if "'" in include_full or '"' in include_full:
