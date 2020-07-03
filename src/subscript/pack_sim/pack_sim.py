@@ -223,11 +223,10 @@ def inspect_file(
     try:
         f = open(filename, "r")
     except IOError:
-        print(
-            "Script stopped: Could not open '%s'. Make sure you have read access for "
-            "this file." % filename
+        raise IOError(
+            "Script stopped: Could not open '%s'. Make sure you have read "
+            "access for this file." % filename
         )
-        return False
 
     # Modified text will be stored in new_data_file
     new_data_file = ""
@@ -293,9 +292,6 @@ def inspect_file(
                             indent + "      ",
                             clear_comments,
                         )
-                        if not file_text:
-                            return False
-
                         print("%sFinished inspecting %s" % (indent, include_stripped))
 
                         new_include = "%s/include/%s%s" % (
@@ -340,12 +336,11 @@ def inspect_file(
                                         % (indent, new_include)
                                     )
                                 except IOError:
-                                    print(
+                                    raise IOError(
                                         "Script stopped: Could not write to '%s'. "
                                         "Make sure you have write access for "
                                         "this file." % new_include
                                     )
-                                    return False
                         else:
                             try:
                                 fw = open(new_include, "w")
@@ -356,12 +351,11 @@ def inspect_file(
                                     % (indent, new_include)
                                 )
                             except IOError:
-                                print(
+                                raise IOError(
                                     "Script stopped: Could not write to '%s'. "
                                     "Make sure you have write access for "
                                     "this file." % new_include
                                 )
-                                return False
 
                         # Change the include path in the current file being inspected
                         if "'" in include_full or '"' in include_full:
@@ -520,7 +514,7 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
         fmu (bool): use fmu packing style or not
 
     Returns:
-        bool: True is successful, False if failed.
+        Nothing
 
     """
     global section
@@ -532,12 +526,10 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     fmu_include = ""
 
     if ecl_case == "":
-        print("Script stopped: please supply a non-empty Eclipse DATA-file")
-        return False
+        raise ValueError("Script stopped: please supply a non-empty Eclipse DATA-file")
 
     if packing_path == "":
-        print("Script stopped: please supply a non-empty packing path")
-        return False
+        raise ValueError("Script stopped: please supply a non-empty packing path")
 
     # This can raise IOError
     packing_path = os.path.abspath(packing_path)
@@ -577,11 +569,8 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     data_file = inspect_file(
         ecl_case, org_sim_loc, packing_path, eclipse_paths, "", clear_comments
     )
-    # try:
     if not data_file:
-        return False
-    # except:
-    # pass
+        raise ValueError("Script stopped: no text was found in the DATA deck.")
 
     data_file_name = ecl_case.split("/")[-1]
     path_new_data_file = "%s/%s%s" % (packing_path, fmu_data, data_file_name)
@@ -609,14 +598,12 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     print("*********************************************************************")
     if warnings == 0:
         print("SUCCESFULLY PACKED SIMULATION MODEL IN %s" % packing_path)
-        return True
     else:
         print(
             "PACKED SIMULATION MODEL WITH %s WARNING(S) IN %s"
             % (warnings, packing_path)
         )
         print("PLEASE CHECK WARNING(S)!")
-        return False
 
 
 def get_parser():
