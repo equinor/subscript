@@ -65,7 +65,10 @@ autosummary_generate = True
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
-# Avoid complaints (listing this should not be necessary!)
+# Avoid complaints, sphinx is run in nitpicky-mode (option "-n") to get
+# warnings for references it can't find, that means we need to add
+# ignore statements when we refer to objects outside subscript.
+# (this is typically the object type specs for each functions docstring)
 nitpick_ignore = [
     ("py:class", "str"),
     ("py:class", "int"),
@@ -77,6 +80,7 @@ nitpick_ignore = [
     ("py:class", "bool"),
     ("py:class", "datetime.date"),
     ("py:class", "pd.DataFrame"),
+    ("py:class", "opm.io.TimeVector"),
     ("py:class", "pyscal.WaterOilGas"),
     ("py:class", "argparse.ArgumentParser"),
     ("py:exc", "IOError"),
