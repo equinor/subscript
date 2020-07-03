@@ -218,7 +218,7 @@ CONFIG_SCHEMA_V2 = {
                                 "Days after refdate/startdate at which "
                                 "insertion should take place"
                             ),
-                            MK.Type: types.Integer,
+                            MK.Type: types.Number,
                             MK.AllowNone: True,
                         },
                         "string": {
@@ -275,7 +275,7 @@ def process_sch_config(conf):
             merges and inserts
 
     Returns:
-        string, containing the generated schedule section
+        opm.io.TimeVector:
     """
     # At least test code is calling this function with a dict as
     # config - convert it to a configsuite snapshot:
