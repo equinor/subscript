@@ -212,6 +212,7 @@ def _check_file_binary(filename, org_sim_loc):
     # Try to open the file, if fail: show message to user
     try:
         f = open(filename, "r")
+        f.close()
     except IOError:
         raise IOError(
             "Script stopped: Could not open '%s'. Make sure you have read "
@@ -373,9 +374,8 @@ def inspect_file(
                                     new_include += str(ts)
 
                                     try:
-                                        fw = open(new_include, "w")
-                                        fw.write(file_text)
-                                        fw.close()
+                                        with open(new_include, "w") as fw:
+                                            fw.write(file_text)
                                         print(
                                             "%sfilename made unique with "
                                             "a timestamp (%s)." % (indent, ts)
@@ -392,9 +392,8 @@ def inspect_file(
                                         )
                             else:
                                 try:
-                                    fw = open(new_include, "w")
-                                    fw.write(file_text)
-                                    fw.close()
+                                    with open(new_include, "w") as fw:
+                                        fw.write(file_text)
                                     print(
                                         "%sFinished writing include file %s"
                                         % (indent, new_include)
