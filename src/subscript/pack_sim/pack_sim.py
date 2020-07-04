@@ -226,6 +226,16 @@ def _check_file_binary(filename, org_sim_loc):
                 pass
     except UnicodeDecodeError:
         return True
+
+    # Python2 will not throw the UnicodeDecodeError, for backward compatibility reasons
+    # some hardcoded extensions are assumed to be binary. Remove when support for
+    # Python 2 is dropped.
+    binary_file_extensions = ["EGRID", "UNRST", "UNSMRY", "INIT", "SMSPEC", "SAVE"]
+    if any(
+        extension in filename.split(".")[-1] for extension in binary_file_extensions
+    ):
+        return True
+
     return False
 
 
