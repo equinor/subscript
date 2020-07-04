@@ -40,7 +40,7 @@ def test_binary_file_detection(tmpdir):
     tmp_data_file = "TMP.DATA"
     egrid_file = "2_R001_REEK-0.EGRID"
 
-    test_str = "GDFILE\n" f"'{egrid_file}' /"
+    test_str = "GDFILE\n'%s' /" % egrid_file
     with open("TMP.DATA", "w") as fhandle:
         fhandle.write(test_str)
 
@@ -48,7 +48,9 @@ def test_binary_file_detection(tmpdir):
     os.mkdir(packing_path + "/include")
     pack_sim.inspect_file(tmp_data_file, ECLDIR + "/", packing_path, "", "", False)
 
-    assert filecmp.cmp(f"{ECLDIR}/{egrid_file}", f"{packing_path}/include/{egrid_file}")
+    assert filecmp.cmp(
+        "%s/%s" % (ECLDIR, egrid_file), "%s/include/%s" % (packing_path, egrid_file)
+    )
 
 
 def test_empty_file_inspection(tmpdir):
