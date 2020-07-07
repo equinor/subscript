@@ -1,0 +1,48 @@
+# Version 2 of sunsch config file format
+
+# All files that we want to merge in. Can be left out
+# if only insertion is to be done. Assumes START keyword
+# is already present in deck. If there are keywords prior
+# to DATES in these files, these relate to START date.
+files:
+  - emptyinit.sch
+  - mergeme.sch
+
+# The filename to be given to Eclipse
+output: schedule.inc  # To be given to Eclipse
+
+# Mandatory, this should match the START keyword in
+# your deck, but will not be printed. If it differs,
+# it can be used to clip away schedule statements
+# prior to this date.
+startdate: 2017-01-01
+
+# Clip anything after this date in files mentioned above
+enddate: 2021-01-01
+
+# Add a DATES keyword at regular intervals
+dategrid: monthly
+
+# Reference date for days keyword in insert statements,
+# defaults to startdate
+refdate: 2018-01-01
+
+# Insert statements
+insert:
+  -
+    filename:  foo1.sch
+    date: 2020-01-01
+  -
+    filename: foo1.sch
+    days: 100
+  -
+    string: "WCONHIST\n  A-4 OPEN ORAT 5000 /\n/"
+    days: 40
+  -
+    template: footemplate.sch
+    days:  2
+    substitute: {ORAT: 3000, GRAT: 400000}
+    #  -
+    # template: footemplate.sch
+    #days: 4
+    #parameters: parameters.txt  # or parameters.json

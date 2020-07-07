@@ -1,5 +1,6 @@
 """Restart file (UNRST) thinner, command line application"""
 import os
+import sys
 import glob
 import datetime
 import tempfile
@@ -14,31 +15,30 @@ from ecl.eclfile import EclFile
 DESCRIPTION = """
 Slice a subset of restart-dates from an E100 Restart file (UNRST)
 
-Example:
+Example::
+
     $ restartthinner --restarts 4 ECLIPSE.UNRST
+
 where four restarts evenly spread out in relevant dates will be picked and
 written to the same filename (keeping the original is optional)
 """
-EPILOG = ""
 
 
 def find_libecl_app(toolname):
     """Locate path of apps in libecl.
 
-    These have varying suffixes due to a bug(?) in libecl Makefiles.
+    These have varying suffixes due through the history of libecl Makefiles.
 
     Depending on libecl-version, it has the .x or the .c.x suffix
-    We prefer .x
-
-    See https://github.com/equinor/libecl/pull/685
+    We prefer .x.
 
     Returns:
-        string with path if found.
+        str: String with path if found.
 
     Raises:
-        IOError if tool can't be found
+        IOError: if tool can't be found
     """
-    extensions = [".x", ".c.x", ".cpp.x"]  # Order matters.
+    extensions = [".x", ".c.x", ".cpp.x", ""]  # Order matters.
     candidates = [toolname + extension for extension in extensions]
     for candidate in candidates:
         for path in os.environ["PATH"].split(os.pathsep):
@@ -75,6 +75,16 @@ def ecl_repacker(rstfilename, slicerstindices, quiet):
         out = " >/dev/null"
     else:
         out = ""
+    # Error early if libecl tools are not available
+    try:
+        find_libecl_app("ecl_unpack")
+        find_libecl_app("ecl_pack")
+    except IOError:
+        print(
+            "ERROR: ecl_unpack.x and/or ecl_pack.x not found.\n"
+            "These tools are required and must be installed separately"
+        )
+        sys.exit(1)
     # Take special care if the UNRST file we get in is not in current directory
     if os.path.dirname(rstfilename) != "":
         os.chdir(os.path.dirname(rstfilename))
@@ -154,16 +164,17 @@ def restartthinner(filename, numberofslices, quiet=False, dryrun=True, keep=Fals
                 print("Info: Backing up %s to %s" % (filename, filename + ".orig"))
             shutil.copyfile(filename, filename + ".orig")
         ecl_repacker(filename, slicerstindices, quiet)
+    print("Written to " + filename)
 
 
 def get_parser():
     """Setup parser"""
     parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter, description=DESCRIPTION
     )
     parser.add_argument("UNRST", help="Name of UNRST file")
     parser.add_argument(
-        "-n", "--restarts", type=int, help="Number of restart dates wanted"
+        "-n", "--restarts", type=int, help="Number of restart dates wanted", default=0
     )
     parser.add_argument(
         "-d",
@@ -194,5 +205,9 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
     if args.restarts <= 0:
-        raise argparse.ArgumentTypeError("Number of restarts must be a positive number")
+        print("ERROR: Number of restarts must be a positive number")
+        sys.exit(1)
+    if args.UNRST.endswith("DATA"):
+        print("ERROR: Provide the UNRST file, not the DATA file")
+        sys.exit(1)
     restartthinner(args.UNRST, args.restarts, args.quiet, args.dryrun, args.keep)

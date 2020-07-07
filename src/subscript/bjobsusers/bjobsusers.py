@@ -26,10 +26,11 @@ def call_bjobs(status="RUN"):
             should typically be RUN or PEND
 
     Returns:
-        Multiline string in ascii, looking like
-            foobart 4*computenode1
-            foobarter 2*computenode4
-            foober computenode1
+        str: Multiline string in ascii, looking like::
+
+              foobart 4*computenode1
+              foobarter 2*computenode4
+              foober computenode1
 
         where the optional number in front a compute node name denotes
         the number of allocated cores to the job.
@@ -49,8 +50,8 @@ def get_jobs(status, bjobs_function):
              with bjobs output.
 
     Returns:
-        pd.DataFrame with the columns user and ncpu. Only one row pr username.
-            Sorted descending by ncpu.
+        pd.DataFrame: Dataframe with the columns user and ncpu.
+        Only one row pr username. Sorted descending by ncpu.
     """
     cmdoutput = bjobs_function(status)
     rex = re.compile(r".*(\d+)\*.*")
@@ -79,7 +80,9 @@ def call_finger(username):
 
     Returns:
         Unicode string with the first line of output from 'finger'
-        Example return value: "Login: foobert      Name: Foo Barrer (FOO BAR COM)"
+        Example return value::
+
+          Login: foobert      Name: Foo Barrer (FOO BAR COM)"
     """
     cmd = "finger -m {} | head -n 1".format(username)
     finger_output = None
@@ -109,12 +112,19 @@ def userinfo(username, finger_function):
             The output must be a Unicode string
 
     Returns:
-        string with full user name, organization from finger output and
-            the shortname
+        str: String with full user name, organization from finger output and
+        the shortname
     """
     finger_output = finger_function(username)
-    rex = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
-    [u2, fullname, org] = [x.strip() for x in rex.match(finger_output).groups()]
+    rex_with_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
+    rex_no_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)")
+    if rex_with_org.match(finger_output):
+        matches = rex_with_org.match(finger_output).groups()
+        org = matches[2].strip()
+    else:
+        matches = rex_no_org.match(finger_output).groups()
+        org = ""
+    fullname = matches[1].strip()
     if sys.version_info[0] < 3:
         fullname = fullname.encode("utf-8")
     return "{} ({}) ({})".format(fullname, org, username)

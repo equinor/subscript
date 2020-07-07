@@ -13,27 +13,31 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
 
+DESCRIPTION = """This is a simple interactive script for converting
+'a', 'b' between normal and inverse Leverett SwJ formulations. This is in
+particular useful for RMS, which uses the inverse formulation while,
+input from petrophysicist is usually on the normal form.
+In addition, interactive plotting of Sw vs height is provided
+(simplified Leverett).
+"""
+
+MENU = """1. Convert a TO A and b to B from Sw = aJ^b to Sw=(J/A)^(1/B)
+2. Convert A to a and B to b from Sw = (J/A)^(1/B) to Sw=aJ^b
+3. Plot height function (input as Sw = aJ^b) with swirra:
+4. Plot height function (input as Sw = (J/A)^(1/B) with swirra:
+"""
+
 
 def get_parser():
-    epilog = """This is a simple interactive script for converting
-    'a', 'b' between normal and inverse Leverett SwJ formulations. This is in
-    particular useful for RMS, which uses the inverse formulation while,
-    input from petrophysicist is usually on the normal form.
-    In addition, interactive plotting of Sw vs height is provided
-    (simplified Leverett).
-    """
-
-    return argparse.ArgumentParser(epilog=epilog)
+    return argparse.ArgumentParser(
+        description=DESCRIPTION, epilog="Interactive menu:\n\n" + MENU
+    )
 
 
 def menu():
 
     print("Choices:\n")
-    print("1. Convert a TO A and b to B from Sw = aJ^b to Sw=(J/A)^(1/B)")
-    print("2. Convert A to a and B to b from Sw = (J/A)^(1/B) to Sw=aJ^b")
-    print("3. Plot height function (input as Sw = aJ^b) with swirra: ")
-    print("4. Plot height function (input as Sw = (J/A)^(1/B) with swirra: ")
-    print("")
+    print(MENU)
     try:
         mode = int(input("Choose: "))
     except ValueError:

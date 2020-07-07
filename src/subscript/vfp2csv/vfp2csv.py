@@ -1,10 +1,3 @@
-"""
-Parses VFPPROD/VFPINJE files and dumps as CSV files
-
-Ad-hoc python parsing of the Eclipse 100 input files, cannot
-deal with the whole deck.
-"""
-
 from __future__ import print_function
 
 import argparse
@@ -12,10 +5,23 @@ import argparse
 import numpy as np
 import pandas as pd
 
+DESCRIPTION = """Process a VFP file (typically outputted from Prosper or similar)
+and relayout the data into a tabular format, exported to CSV.
+
+The table will always contain the columns FILENAME, VFPTYPE,
+TABLENUMBER and DATUM. Depending on the VFPTYPE (possible values:
+VFPINJ or VFPPROD) you will get different columns with data:
+BHP, THP, ALQ, WGR, OGR, WCT, GOR, LIQ
+
+Do not depend on column order. TABLENUMBER is not enforced unique, it
+is taken from whatever the data indicates, which can conflict.
+FILENAME is absolute or relative, depending on the input.
+"""
+
 
 def get_parser():
     """Set up parser for command line utility"""
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
         "vfpfiles", nargs="+", help="Text files containing VFPPROD/VFPINJE"
     )
@@ -66,16 +72,19 @@ def vfpfile2df(filename):
     """
     try:
         lines = [
-            l.strip()
-            for l in open(filename).readlines()
-            if not l.strip().startswith("--")
+            line.strip()
+            for line in open(filename).readlines()
+            if not line.strip().startswith("--")
         ]
     except UnicodeDecodeError:
         lines = [
-            l.strip()
-            for l in open(filename, encoding="iso-8859-1").readlines()
-            if not l.strip().startswith("--")
+            line.strip()
+            for line in open(filename, encoding="iso-8859-1").readlines()
+            if not line.strip().startswith("--")
         ]
+
+    # Strip mid-line comments:
+    lines = [line.split("--")[0] for line in lines]
 
     # BUG: Will not tolerate comments that has something else than a whitespace
     #      in front of it

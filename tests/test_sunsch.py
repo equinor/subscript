@@ -12,24 +12,26 @@ import yaml
 
 import pytest  # noqa: F401
 
+import configsuite
 from subscript.sunsch import sunsch
 
 DATADIR = os.path.join(os.path.dirname(__file__), "testdata_sunsch")
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, caplog):
     """Test command line sunsch, loading a yaml file"""
 
     tmpdir.chdir()
     shutil.copytree(DATADIR, "testdata_sunsch")
     tmpdir.join("testdata_sunsch").chdir()
 
-    outfile = "schedule.sch"  # also in config.yml
+    outfile = "schedule.inc"  # also in config_v2.yml
 
     if os.path.exists(outfile):
         os.unlink(outfile)
-    sys.argv = ["sunsch", "config.yml"]
+    sys.argv = ["sunsch", "config_v2.yml"]
     sunsch.main()
+    assert "DEPRECATED" not in caplog.text
     assert os.path.exists(outfile)
 
     schlines = open(outfile).readlines()
@@ -53,13 +55,240 @@ def test_main(tmpdir):
     # Test that we can have statements in the init file
     # before the first DATES that are kept:
 
-    sch_conf = yaml.safe_load(open("config.yml"))
+    sch_conf = yaml.safe_load(open("config_v2.yml"))
     print(sch_conf)
     sch_conf["init"] = "initwithdates.sch"
-    sunsch.process_sch_config(sch_conf, quiet=False)
+    sunsch.process_sch_config(sch_conf)
 
     # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
     assert "BAR-FOO" in "".join(open(outfile).readlines())
+
+
+def test_main_configv1(tmpdir, caplog):
+    """Test command line sunsch, loading a yaml file.
+
+    This is run on a v1 config file, which will be autoconverted to v2.
+
+    This format is to be deprecated, and should be removed in the future
+    """
+
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    tmpdir.join("testdata_sunsch").chdir()
+
+    outfile = "schedule.sch"  # also in config_v1.yml
+
+    if os.path.exists(outfile):
+        os.unlink(outfile)
+    sys.argv = ["sunsch", "config_v1.yml"]
+    sunsch.main()
+    assert "DEPRECATED" in caplog.text
+    assert os.path.exists(outfile)
+
+    schlines = open(outfile).readlines()
+    assert len(schlines) > 70
+
+    # Check footemplate.sch was included:
+    assert any(["A-90" in x for x in schlines])
+
+    # Sample check for mergeme.sch:
+    assert any(["WRFTPLT" in x for x in schlines])
+
+    # Check for foo1.sch, A-1 should occur twice
+    assert sum(["A-1" in x for x in schlines]) == 2
+
+    # Check for substitutetest:
+    assert any(["400000" in x for x in schlines])
+
+    # Check for randomid:
+    assert any(["A-4" in x for x in schlines])
+
+    # Test that we can have statements in the init file
+    # before the first DATES that are kept:
+
+    sch_conf = yaml.safe_load(open("config_v1.yml"))
+    print(sch_conf)
+    sch_conf["init"] = "initwithdates.sch"
+    sunsch.process_sch_config(sch_conf)
+
+    # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
+    assert "BAR-FOO" in "".join(open(outfile).readlines())
+
+
+def test_config_schema(tmpdir):
+    """Test the implementation of configsuite"""
+    tmpdir.chdir()
+    cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
+    assert not cfg_suite.valid  # file missing
+
+    with open("existingfile.sch", "w") as handle:
+        handle.write("foo")
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
+    print(cfg_suite.errors)
+    assert cfg_suite.valid
+
+    cfg = {"init": "existingfile.sch", "insert": []}  # missing output
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
+    assert cfg_suite.valid  # (missing output is allowed)
+
+    cfg = {
+        "init": "existingfile.sch",
+        "output": "newfile.sch",
+        "startdate": datetime.date(2018, 2, 2),
+        "insert": [],
+    }
+    cfg_suite = configsuite.ConfigSuite(
+        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
+    print(cfg_suite.errors)
+    assert cfg_suite.valid
+
+
+def test_v1_to_v2():
+    """Test the auto-converter from V1 to V2 config"""
+    # pylint: disable=protected-access
+
+    conv = sunsch._v1_content_to_v2
+
+    assert conv({}) == {}
+    assert conv({"init": "foo"}) == {"files": ["foo"]}
+    assert conv({"merge": "foo"}) == {"files": ["foo"]}
+    assert conv({"merge": ["foo"]}) == {"files": ["foo"]}
+    assert conv({"init": "bar", "merge": ["foo"]}) == {"files": ["bar", "foo"]}
+    assert conv({"init": "bar", "merge": ["foo", "com"]}) == {
+        "files": ["bar", "foo", "com"]
+    }
+
+    assert conv({"insert": [{"foo.sch": {"days": 100}}]}) == {
+        "insert": [{"days": 100, "filename": "foo.sch", "substitute": {}}]
+    }
+
+    # Check that V2 syntax is not altered:
+    assert conv({"files": ["a", "b"]}) == {"files": ["a", "b"]}
+    assert conv({"insert": [{"filename": "foo.sch", "days": 100}]}) == {
+        "insert": [{"days": 100, "filename": "foo.sch"}]
+    }
+
+
+def test_templating(tmpdir):
+    """Test templating"""
+    tmpdir.chdir()
+    with open("template.tmpl", "w") as handle:
+        handle.write("WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/")
+
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [
+            {
+                "template": "template.tmpl",
+                "days": 10,
+                "substitute": dict(WELLNAME="A-007", ORAT=200.3, GRAT=1.4e6),
+            }
+        ],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "A-007" in str(sch)
+    assert "200.3" in str(sch)
+    assert "1400000" in str(sch)
+    cfg_suite = configsuite.ConfigSuite(
+        sunschconf, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+    )
+    assert cfg_suite.valid
+
+    # Let some of the valued be undefined:
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [
+            {
+                "template": "template.tmpl",
+                "days": 10,
+                "substitute": dict(WELLNAME="A-007"),
+            }
+        ],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "A-007" in str(sch)
+    assert "<ORAT>" in str(sch)
+    # (this error is let through sunsch)
+
+    # Let the date be undefined.
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"template": "template.tmpl", "substitute": dict(WELLNAME="A-007")}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    # sunsch logs this as an error that there is no date defined for the template.
+    assert "A-007" not in str(sch)
+
+    # Skip defining substitute:
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"template": "template.tmpl", "days": 100}],
+    }
+
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "A-007" not in str(sch)
+    # Sunsch lets this though, but logs an error.
+
+
+def test_days_integer():
+    """Test that we can insert stuff a certain number of days
+    after startup"""
+    os.chdir(DATADIR)
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert datetime.datetime(2020, 1, 11, 0, 0, 0) in sch.dates
+
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10.0}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert datetime.datetime(2020, 1, 11, 0, 0, 0) in sch.dates
+
+
+def test_days_float():
+    """Test that we can insert stuff a certain number of
+    floating point days after startup"""
+    os.chdir(DATADIR)
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10.1}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    # The TimeVector object has the "correct" date including time,
+    # being 0.1 days after 2020-1-11
+    assert datetime.datetime(2020, 1, 11, 2, 24, 0) in sch.dates
+    # However, the clocktime is not included when the TimeVector
+    # object is stringified:
+    assert "11 'JAN' 2020/" in str(sch)
+
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10.9}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert datetime.datetime(2020, 1, 11, 21, 36, 0) in sch.dates
+    # Rounding is downwards:
+    assert "11 'JAN' 2020/" in str(sch)
 
 
 def test_dateclip():
@@ -72,7 +301,7 @@ def test_dateclip():
     sunschconf = {
         "startdate": datetime.date(1900, 1, 1),
         "enddate": datetime.date(2020, 1, 1),
-        "merge": ["mergeme.sch"],
+        "files": ["mergeme.sch"],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2019, 2, 9, 0, 0) in sch.dates
@@ -82,7 +311,7 @@ def test_dateclip():
     sunschconf = {
         "startdate": datetime.date(1900, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
-        "merge": ["mergeme.sch"],
+        "files": ["mergeme.sch"],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2020, 10, 1, 0, 0) in sch.dates
@@ -92,7 +321,7 @@ def test_dateclip():
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
-        "merge": ["mergeme.sch"],
+        "files": ["mergeme.sch"],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2019, 2, 9, 0, 0) not in sch.dates
@@ -102,7 +331,7 @@ def test_dateclip():
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2041, 1, 1),
-        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+        "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2030, 1, 1, 0, 0) in sch.dates
@@ -111,7 +340,7 @@ def test_dateclip():
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
-        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+        "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2030, 1, 1, 0, 0) not in sch.dates
@@ -120,7 +349,7 @@ def test_dateclip():
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
-        "insert": [{"foo1.sch": {"date": datetime.date(2000, 1, 1)}}],
+        "insert": [{"filename": "foo1.sch", "date": datetime.date(2000, 1, 1)}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2000, 1, 1, 0, 0) not in sch.dates
@@ -129,17 +358,18 @@ def test_dateclip():
 def test_nonisodate():
     """Test behaviour when users use non-ISO-dates"""
     sunschconf = {
-        "startdate": "01-01-2020",
-        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+        "startdate": "01-01-2020",  # Look, this is not how to write dates!
+        "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         sunsch.process_sch_config(sunschconf)
 
+    # Check also for refdate:
     sunschconf = {
         "refdate": "01-01-2020",
-        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+        "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         sunsch.process_sch_config(sunschconf)
 
     sunschconf = {
@@ -150,7 +380,7 @@ def test_nonisodate():
         # "startdate": "2020-01-01",
         "startdate": datetime.date(2020, 1, 1),
         "enddate": "01-01-2020",
-        "insert": [{"foo1.sch": {"date": datetime.date(2030, 1, 1)}}],
+        "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
     with pytest.raises(TypeError):
         sunsch.process_sch_config(sunschconf)
@@ -185,7 +415,7 @@ WRFTPLT
 
     sunschconf = {
         "startdate": datetime.date(2000, 1, 1),
-        "merge": "mergewithexistinginclude.sch",
+        "files": ["mergewithexistinginclude.sch"],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
@@ -213,7 +443,7 @@ INCLUDE
 
     sunschconf = {
         "startdate": datetime.date(2000, 1, 1),
-        "insert": [{"": {"days": 2, "string": "INCLUDE\n  'something.sch'/\n"}}],
+        "insert": [{"days": 2, "string": "INCLUDE\n  'something.sch'/\n"}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert "something.sch" in str(sch)
@@ -233,10 +463,10 @@ def test_merge():
     """
     os.chdir(DATADIR)
 
-    sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": "mergeme.sch"}
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["mergeme.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
-    sunschconf = {"startdate": datetime.date(2000, 1, 1), "merge": ["mergeme.sch"]}
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["mergeme.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
 
@@ -320,7 +550,7 @@ def test_dategrid():
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
 
 
-def test_comments(tmpdir):
+def test_comments():
     """Comments in files that are parsed by opm-common
     prior to piecing together will be lost, mentioned as
     a caveat in the documentation.
@@ -333,7 +563,7 @@ def test_comments(tmpdir):
     mycomment = "-- A comment at a specific date"
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
-        "insert": [{"": {"days": 1, "string": mycomment}}],
+        "insert": [{"days": 1, "string": mycomment}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert mycomment in str(sch)
@@ -374,7 +604,7 @@ def test_weltarg_uda(tmpdir):
         )
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
-        "merge": ["weltarg.sch"],
+        "files": ["weltarg.sch"],
     }
     # With opm-common 2020.04/rc3 this raises a ValueError:
     sch = sunsch.process_sch_config(sunschconf)
@@ -384,9 +614,7 @@ def test_weltarg_uda(tmpdir):
     # But it is in any case possible to workaround using an insert statement:
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
-        "insert": [
-            {"": {"date": datetime.date(2022, 11, 1), "string": weltargkeyword}}
-        ],
+        "insert": [{"date": datetime.date(2022, 11, 1), "string": weltargkeyword}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert "ORAT" in str(sch)
@@ -409,7 +637,7 @@ def test_e300_keywords():
     sunschconf = {
         "startdate": datetime.date(1900, 1, 1),
         "enddate": datetime.date(2020, 1, 1),
-        "merge": ["options3.sch"],
+        "files": ["options3.sch"],
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert "OPTIONS3" in str(sch)

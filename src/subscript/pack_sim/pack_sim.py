@@ -5,6 +5,7 @@ import os
 import time
 import hashlib
 import six
+from shutil import copy
 
 import argparse
 
@@ -194,6 +195,50 @@ def _replace_paths(text, paths):
     return text
 
 
+def _check_file_binary(filename, org_sim_loc):
+    """Method that that checks whether a file is binary
+
+    Args:
+        filename (str): filename to inspect
+        org_sim_loc (str): original simulation path
+
+    Returns:
+        True if binary
+    """
+
+    # Check if the filename can be found
+    filename = _check_filename_found(filename, org_sim_loc)
+
+    # Try to open the file, if fail: show message to user
+    try:
+        f = open(filename, "r")
+        f.close()
+    except IOError:
+        raise IOError(
+            "Script stopped: Could not open '%s'. Make sure you have read "
+            "access for this file." % filename
+        )
+
+    # Check whether the file is binary and should not be inspected
+    try:
+        with open(filename, "r") as f:
+            for _ in f:
+                pass
+    except UnicodeDecodeError:
+        return True
+
+    # Python2 will not throw the UnicodeDecodeError, for backward compatibility reasons
+    # some hardcoded extensions are assumed to be binary. Remove when support for
+    # Python 2 is dropped.
+    binary_file_extensions = ["EGRID", "UNRST", "UNSMRY", "INIT", "SMSPEC", "SAVE"]
+    if any(
+        extension in filename.split(".")[-1] for extension in binary_file_extensions
+    ):
+        return True
+
+    return False
+
+
 def inspect_file(
     filename, org_sim_loc, packing_path, eclipse_paths, indent, clear_comments
 ):
@@ -223,11 +268,10 @@ def inspect_file(
     try:
         f = open(filename, "r")
     except IOError:
-        print(
-            "Script stopped: Could not open '%s'. Make sure you have read access for "
-            "this file." % filename
+        raise IOError(
+            "Script stopped: Could not open '%s'. Make sure you have read "
+            "access for this file." % filename
         )
-        return False
 
     # Modified text will be stored in new_data_file
     new_data_file = ""
@@ -285,83 +329,91 @@ def inspect_file(
                             include_stripped, eclipse_paths
                         )
 
-                        file_text = inspect_file(
-                            include_stripped,
-                            org_sim_loc,
-                            packing_path,
-                            eclipse_paths,
-                            indent + "      ",
-                            clear_comments,
-                        )
-                        if not file_text:
-                            return False
-
-                        print("%sFinished inspecting %s" % (indent, include_stripped))
-
                         new_include = "%s/include/%s%s" % (
                             packing_path,
                             section,
                             include_stripped.split("/")[-1],
                         )
 
-                        # Write the results of the inspect to the include folder
-                        print("%sWriting include file %s..." % (indent, new_include))
+                        if _check_file_binary(include_stripped, org_sim_loc):
+                            print(
+                                "%sThe file %s seems to be binary; we'll simply copy "
+                                "this file and skip scanning its contents."
+                                % (indent, include_stripped)
+                            )
+                            copy(
+                                _check_filename_found(include_stripped, org_sim_loc),
+                                new_include,
+                            )
+                        else:
+                            file_text = inspect_file(
+                                include_stripped,
+                                org_sim_loc,
+                                packing_path,
+                                eclipse_paths,
+                                indent + "      ",
+                                clear_comments,
+                            )
+                            print(
+                                "%sFinished inspecting %s" % (indent, include_stripped)
+                            )
 
-                        # Check if file already exists
-                        if os.path.exists(new_include):
+                            # Write the results of the inspect to the include folder
+                            print(
+                                "%sWriting include file %s..." % (indent, new_include)
+                            )
 
-                            # Calculate MD5 hashes for the files with equal file names
-                            # to be able to compare the contents
-                            md5A = _md5checksum(filepath=new_include)
-                            md5B = _md5checksum(data=file_text)
+                            # Check if file already exists
+                            if os.path.exists(new_include):
 
-                            if md5A == md5B:
-                                # Files are equal, skip
-                                print(
-                                    "%sIdentical files in packing folder, skipping %s"
-                                    % (indent, new_include)
-                                )
+                                # Calculate MD5 hashes for the files with equal file
+                                # names to be able to compare the contents
+                                md5A = _md5checksum(filepath=new_include)
+                                md5B = _md5checksum(data=file_text)
 
-                            else:
-                                # Add timestamp to the filename to make it unique
-                                ts = int(time.time())
-                                new_include += str(ts)
-
-                                try:
-                                    fw = open(new_include, "w")
-                                    fw.write(file_text)
-                                    fw.close()
+                                if md5A == md5B:
+                                    # Files are equal, skip
                                     print(
-                                        "%sfilename made unique with a timestamp (%s)."
-                                        % (indent, ts)
+                                        "%sIdentical files in packing folder, "
+                                        "skipping %s" % (indent, new_include)
                                     )
+
+                                else:
+                                    # Add timestamp to the filename to make it unique
+                                    ts = int(time.time())
+                                    new_include += str(ts)
+
+                                    try:
+                                        with open(new_include, "w") as fw:
+                                            fw.write(file_text)
+                                        print(
+                                            "%sfilename made unique with "
+                                            "a timestamp (%s)." % (indent, ts)
+                                        )
+                                        print(
+                                            "%sFinished writing include file %s"
+                                            % (indent, new_include)
+                                        )
+                                    except IOError:
+                                        raise IOError(
+                                            "Script stopped: Could not write to '%s'. "
+                                            "Make sure you have write access for "
+                                            "this file." % new_include
+                                        )
+                            else:
+                                try:
+                                    with open(new_include, "w") as fw:
+                                        fw.write(file_text)
                                     print(
                                         "%sFinished writing include file %s"
                                         % (indent, new_include)
                                     )
                                 except IOError:
-                                    print(
+                                    raise IOError(
                                         "Script stopped: Could not write to '%s'. "
                                         "Make sure you have write access for "
                                         "this file." % new_include
                                     )
-                                    return False
-                        else:
-                            try:
-                                fw = open(new_include, "w")
-                                fw.write(file_text)
-                                fw.close()
-                                print(
-                                    "%sFinished writing include file %s"
-                                    % (indent, new_include)
-                                )
-                            except IOError:
-                                print(
-                                    "Script stopped: Could not write to '%s'. "
-                                    "Make sure you have write access for "
-                                    "this file." % new_include
-                                )
-                                return False
 
                         # Change the include path in the current file being inspected
                         if "'" in include_full or '"' in include_full:
@@ -520,7 +572,7 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
         fmu (bool): use fmu packing style or not
 
     Returns:
-        bool: True is successful, False if failed.
+        Nothing
 
     """
     global section
@@ -532,12 +584,10 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     fmu_include = ""
 
     if ecl_case == "":
-        print("Script stopped: please supply a non-empty Eclipse DATA-file")
-        return False
+        raise ValueError("Script stopped: please supply a non-empty Eclipse DATA-file")
 
     if packing_path == "":
-        print("Script stopped: please supply a non-empty packing path")
-        return False
+        raise ValueError("Script stopped: please supply a non-empty packing path")
 
     # This can raise IOError
     packing_path = os.path.abspath(packing_path)
@@ -577,11 +627,8 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     data_file = inspect_file(
         ecl_case, org_sim_loc, packing_path, eclipse_paths, "", clear_comments
     )
-    # try:
     if not data_file:
-        return False
-    # except:
-    # pass
+        raise ValueError("Script stopped: no text was found in the DATA deck.")
 
     data_file_name = ecl_case.split("/")[-1]
     path_new_data_file = "%s/%s%s" % (packing_path, fmu_data, data_file_name)
@@ -609,21 +656,19 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     print("*********************************************************************")
     if warnings == 0:
         print("SUCCESFULLY PACKED SIMULATION MODEL IN %s" % packing_path)
-        return True
     else:
         print(
             "PACKED SIMULATION MODEL WITH %s WARNING(S) IN %s"
             % (warnings, packing_path)
         )
         print("PLEASE CHECK WARNING(S)!")
-        return False
 
 
 def get_parser():
     """Function to create the argument parser that is going to be served to the user.
 
     Returns:
-        parser (argparse.ArgumentParser): The argument parser to be served
+        argparse.ArgumentParser: The argument parser to be served
 
     """
     parser = argparse.ArgumentParser(prog="pack_sim.py", description=DESCRIPTION)

@@ -4,6 +4,7 @@ import os
 import sys
 
 import subprocess
+import filecmp
 import pytest
 
 from subscript.pack_sim import pack_sim
@@ -28,6 +29,49 @@ def test_main(tmpdir):
 
     assert os.path.exists(ECLCASE)
     assert os.path.exists("include")
+
+
+def test_binary_file_detection(tmpdir):
+    """Test that binary files are found and handled correctly"""
+
+    tmpdir.chdir()
+
+    packing_path = "./packed"
+    tmp_data_file = "TMP.DATA"
+    egrid_file = "2_R001_REEK-0.EGRID"
+
+    test_str = "GDFILE\n'%s' /" % egrid_file
+    with open("TMP.DATA", "w") as fhandle:
+        fhandle.write(test_str)
+
+    os.mkdir(packing_path)
+    os.mkdir(packing_path + "/include")
+    pack_sim.inspect_file(tmp_data_file, ECLDIR + "/", packing_path, "", "", False)
+
+    assert filecmp.cmp(
+        "%s/%s" % (ECLDIR, egrid_file), "%s/include/%s" % (packing_path, egrid_file)
+    )
+
+
+def test_empty_file_inspection(tmpdir):
+    """Test that an empty include file is inspected correctly"""
+
+    tmpdir.chdir()
+
+    empty_include_file = "empty.inc"
+
+    packing_path = "./packed"
+    os.mknod(empty_include_file)
+
+    os.mkdir(packing_path)
+    os.mkdir(packing_path + "/include")
+
+    include_text = pack_sim.inspect_file(
+        empty_include_file, ECLDIR + "/", packing_path, "", "", False
+    )
+
+    assert isinstance(include_text, str)
+    assert len(include_text) == 0
 
 
 def test_strip_comments(tmpdir):

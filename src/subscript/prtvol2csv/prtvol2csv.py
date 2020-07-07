@@ -11,10 +11,10 @@ Extract reservoir volumes from Eclipse PRT files, dump to CSV.
 The data from the ascii table "FIELD TOTALS" will be parsed at
 initial time step (day 0), and if found, the table called
 "RESERVOIR VOLUMES". The latter table will only be written
-by Eclipse if you have
+by Eclipse if you have::
 
-RPTSOL
-  FIP=2 'FIPRESV' /
+  RPTSOL
+    FIP=2 'FIPRESV' /
 
 You can supply a region2fipnum data structure in a YAML-file
 which will cause a secondary CSV file to be generated, where

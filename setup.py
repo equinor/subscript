@@ -9,6 +9,7 @@ from setuptools import find_packages
 
 SSCRIPTS = [
     "bjobsusers = subscript.bjobsusers.bjobsusers:main",
+    "casegen_upcars = subscript.casegen_upcars.casegen_upcars:main",
     "convert_grid_format = subscript.convert_grid_format.convert_grid_format:main",
     "csv2ofmvol = subscript.csv2ofmvol.csv2ofmvol:main",
     "csvMergeEnsembles = subscript.csv_merge.csv_merge:main_deprecated",
@@ -64,7 +65,10 @@ setuptools.setup(
     install_requires=[],
     setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner"],
     tests_require=["pytest"],
-    entry_points={"console_scripts": SSCRIPTS},
+    entry_points={
+        "console_scripts": SSCRIPTS,
+        "ert": ["subscript_jobs = subscript.hook_implementations.jobs"],
+    },
     scripts=["src/subscript/legacy/" + scriptname for scriptname in LEGACYSCRIPTS],
     use_scm_version={"write_to": "src/subscript/version.py"},
     test_suite="tests",

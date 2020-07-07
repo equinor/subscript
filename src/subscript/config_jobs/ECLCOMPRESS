@@ -1,0 +1,9 @@
+EXECUTABLE eclcompress
+
+DEFAULT <FILES> __NONE__
+
+ARG_TYPE 0 STRING
+
+ARGLIST "--verbose" "--files" <FILES>
+MIN_ARG  0
+MAX_ARG 1

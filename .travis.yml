@@ -78,7 +78,22 @@ before_script:
              -DBUILD_SHARED_LIBS=ON
   - make -j 4 install
   - popd; popd
+  - git clone --branch master --depth 1 https://github.com/equinor/ert
+  - pushd ert
+  - source .libres_version
+  - rm -rf tests  # Avoid running these tests.
+  - rm -rf test-data  # Avoid running these tests.
+  - popd
+  - git clone --branch $LIBRES_VERSION --depth 1 https://github.com/equinor/libres
+  - pushd libres
+  - pip install -r requirements.txt --prefix=$INSTALL_DIR
+  - rm -rf python/tests  # Avoid running these tests.
+  - rm -rf test-data  # Avoid running these tests.
+  - popd
+  - bash ert/.build_install.sh libres
+  - pip install ert/ --prefix=$INSTALL_DIR
 
 script:
   - pip install .
   - python setup.py test
+  - if [[ $TRAVIS_PYTHON_VERSION ==  3.6 ]]; then sphinx-build -W -b html -nv docs/ build/docs; fi

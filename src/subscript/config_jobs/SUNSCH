@@ -1,0 +1,6 @@
+EXECUTABLE sunsch
+ARGLIST    "--verbose" <config>
+
+MIN_ARG    1
+MAX_ARG    1
+ARG_TYPE 0 STRING

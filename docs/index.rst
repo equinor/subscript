@@ -1,12 +1,29 @@
-Welcome to subscript's documentation!
-=====================================
+.. include:: intro.rst
+
+.. include:: users.rst
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :hidden:
 
-   subscript
+   self
 
+.. toctree::
+   :maxdepth: 1
+   :glob:
+   :hidden:
+
+   scripts/*
+
+.. toctree::
+   :hidden:
+   :maxdepth: 10
+   :caption: Python modules
+
+   subscript/subscript
+
+.. include:: contribution.rst
+
+.. include:: history.rst
 
 Indices and tables
 ==================

@@ -1,24 +1,21 @@
-"""
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
- Eclipse Summary plotter is based on ERT-Python
-  http://sib-docs.equinor.com/docs/ecl/index.html
-
- The source code is a part of the subscript repository:
-  https://github.com/equinor/subscript
-
-"""
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+#
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+#
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+#     Eclipse Summary plotter is based on ERT-Python
+#      http://fmu-docs.equinor.com/docs/ecl/index.html
+#
+#     The source code is a part of the subscript repository:
+#      https://github.com/equinor/subscript
 
 from __future__ import division, absolute_import
 from __future__ import print_function, unicode_literals
@@ -46,8 +43,9 @@ register_matplotlib_converters()
 DESCRIPTION = """
 Summaryplot will plot summary vectors from your Eclipse output files.
 
-To list summary vectors for a specific Eclipse output set, try
- > summary.x --list ECLFILE.DATA
+To list summary vectors for a specific Eclipse output set, try::
+
+  summary.x --list ECLFILE.DATA
 
 Command line argument VECTORSDATAFILES are assumed to be Eclipse DATA-files as long
 as the command line argument is an existing file. If not, it is assumed
@@ -137,21 +135,25 @@ def summaryplotter(
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 
     Args:
-        eclsums (list of EclSum)
-        vectors (list of str)
-        histvectors (bool),
-        normalize (bool)
-        singleplot (bool)
-        nolegend (bool)
-        maxlabels (int)
-        ensemblemode (bool)
-        dumpimages (bool)
+        eclsums (list): List of EclSum objects
+        vectors (list): List of strings, with Eclipse summary vectors
+        histvectors (bool):
+        normalize (bool):
+        singleplot (bool):
+        nolegend (bool):
+        maxlabels (int):
+        ensemblemode (bool):
+        dumpimages (bool):
         colourby (str):
         logcolourby (str):
     """
     rstfiles = []  # EclRst objects
     gridfiles = []  # EclGrid objects
     parametervalues = []  # Vector of values pr. realization for colouring
+
+    if datafiles and not summaryfiles:
+        logging.info("Reloading summary files from disk")
+        summaryfiles = [EclSum(datafile) for datafile in datafiles]
 
     if maxlabels == 0:
         nolegend = True
@@ -261,8 +263,12 @@ def summaryplotter(
     # line
     matchedsummaryvectors = []
     restartvectors = []
+    wildcard_in_use = False
     for vector in vectors:
-        if vector not in summaryfiles[0].keys():
+        matchingvectors = summaryfiles[0].keys(vector)
+        if len(matchingvectors) > 1:
+            wildcard_in_use = True
+        if not matchingvectors:
             # Check if it is a restart vector with syntax
             # <vector>:<i>,<j>,<k> aka SOIL:40,31,33
             if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", vector):
@@ -271,6 +277,10 @@ def summaryplotter(
             else:
                 logging.warning("No summary or restart vectors matched %s", vector)
         matchedsummaryvectors.extend(summaryfiles[0].keys(vector))
+    if wildcard_in_use:
+        logging.info(
+            "Summary vectors after wildcard expansion: %s", str(matchedsummaryvectors)
+        )
 
     # If we have any restart vectors defined, we must also load the restart files
     if restartvectors:
@@ -294,14 +304,18 @@ def summaryplotter(
 
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
     # Remember that SOIL should also be supported, but must be calculated on
-    # demand from SWAT and SGAS
+    # demand from SWAT and SGAS (if present)
     restartvectordata = {}
     restartvectordates = {}
     for rstvec in restartvectors:
         logging.info("Getting data for %s...", rstvec)
         match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", rstvec)
         dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
-        (ijk) = (int(match.group(2)), int(match.group(3)), int(match.group(4)))
+        (ijk) = (
+            int(match.group(2)) - 1,
+            int(match.group(3)) - 1,
+            int(match.group(4)) - 1,
+        )
         # Remember that these indices start on 1, not on zero!
 
         restartvectordata[rstvec] = {}
@@ -327,13 +341,17 @@ def summaryplotter(
                     swatvalue = rstfiles[datafile_idx].iget_named_kw(
                         "SWAT", report_step
                     )[active_index]
-                    sgasvalue = rstfiles[datafile_idx].iget_named_kw(
-                        "SGAS", report_step
-                    )[active_index]
-                    restartvectordata[rstvec][datafiles[datafile_idx]].append(
-                        1 - swatvalue - sgasvalue
-                    )
-
+                    if "SGAS" in rstfiles[datafile_idx]:
+                        sgasvalue = rstfiles[datafile_idx].iget_named_kw(
+                            "SGAS", report_step
+                        )[active_index]
+                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                            1 - swatvalue - sgasvalue
+                        )
+                    else:
+                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                            1 - swatvalue
+                        )
     # Data structure examples
     # restartvectordata["SOIL:1,1,1"]["datafile"] = [0.89, 0.70, 0.60, 0.55, 0.54]
     # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"]
@@ -413,8 +431,13 @@ def summaryplotter(
                 sumlabel = "_nolegend_"
                 if normalize:
                     maxvalue = values.max()
-                    values = [i * 1 / maxvalue for i in values]
-                    sumlabel = histvec + " " + str(maxvalue)
+                    if abs(maxvalue) > 0.0:
+                        values = [i * 1 / maxvalue for i in values]
+                        sumlabel = histvec + " " + str(maxvalue)
+                    else:
+                        logging.warn(
+                            "Could not normalize %s, maxvalue is %g", histvec, maxvalue
+                        )
 
                 pyplot.plot_date(s.dates, values, "k.", label=sumlabel)
                 fig.autofmt_xdate()
@@ -445,8 +468,13 @@ def summaryplotter(
 
                 if normalize:
                     maxvalue = values.max()
-                    values = [i * 1 / maxvalue for i in values]
-                    sumlabel = sumlabel + " " + str(maxvalue)
+                    if abs(maxvalue) > 0.0:
+                        values = [i * 1 / maxvalue for i in values]
+                        sumlabel = sumlabel + " " + str(maxvalue)
+                    else:
+                        logging.warn(
+                            "Could not normalize %s, maxvalue is %g", vector, maxvalue
+                        )
 
                 pyplot.plot_date(
                     s.dates,
@@ -537,14 +565,20 @@ def summaryplotter(
 
 def split_vectorsdatafiles(vectorsdatafiles):
     """
+    Takes a list of strings and determines which of the arguments are Eclipse runs
+    (by attempting to construct an EclSum object), and which are summary
+    vector names/wildcards (that is, those that are not openable as EclSum)
+
     Args:
-        vectorsdatafiles (list of str)
+        vectorsdatafiles (list): List of strings
+
     Returns:
-        4-tuple of lists, with EclSum, str, str, str
+        tuple: 4-tuple of lists, with EclSum-filenames, datafilename-strings,
+        vector-strings, parameterfilename-strings
     """
-    vectors = []  # strings
+    summaryfiles = []  # Eclsum instances corresponding to datafiles
     datafiles = []  # strings
-    summaryfiles = []  # EclSum objects
+    vectors = []  # strings
     parameterfiles = []  # strings
 
     for vecdata in vectorsdatafiles:
@@ -628,11 +662,25 @@ def main():
             while ch != "q" and plotprocess.is_alive():
                 ch = sys.stdin.read(1)
                 if ch == "r":
-                    print(
-                        "Reloading plot...\r"
-                    )  # Must use \r instead of \n since we have messed up terminal
                     plotprocess.terminate()
-                    plotprocess = Process(target=summaryplotter, args=args)
+                    plotprocess = Process(
+                        target=summaryplotter,
+                        kwargs=dict(
+                            summaryfiles=None,  # forces reload
+                            datafiles=datafiles,
+                            vectors=vectors,
+                            colourby=args.colourby,
+                            maxlabels=args.maxlabels,
+                            logcolourby=args.logcolourby,
+                            parameterfiles=parameterfiles,
+                            histvectors=args.hist,
+                            normalize=args.normalize,
+                            singleplot=args.singleplot,
+                            nolegend=args.nolegend,
+                            dumpimages=args.dumpimages,
+                            ensemblemode=args.ensemblemode,
+                        ),
+                    )
                     plotprocess.start()
         except KeyboardInterrupt:
             pass

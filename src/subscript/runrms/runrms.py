@@ -1,25 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Author: jriv@equinor.com
-"""
-Macro to run rms project from command line, which will in turn use the 'rms...'
-command OR will look at /prog/roxar/site. Note that not all options valid
-for 'rms' will be covered.
-
- * It should understand current RMS version in project and launch correct
-   RMS executable
- * It should be able to run test versions of RMS
- * It should be able to set the correct Equinor valid PYTHONPATH.
- * Company wide plugin path
-
-Example of usage::
-
-   runrms newreek.rms10.1.3 (if new project: warn and just start rms default)
-   runrms reek.rms10.1.3  (automaically detect version from .master)
-   runrms -project reek.10.1.3  (same as previous)
-   runrms reek.rms10.1.3 -v 11.0.1 (force version 11.0.1)
-
-"""
 
 from __future__ import division, absolute_import
 from __future__ import print_function, unicode_literals
@@ -35,6 +16,26 @@ import getpass
 from glob import glob
 
 from os.path import join
+
+DESCRIPTION = """
+Script to run rms project from command line, which will in turn use the
+'rms...' command OR will look at /prog/roxar/site. Note that not all
+options valid for 'rms' will be covered.
+
+* It should understand current RMS version in project and launch correct
+  RMS executable
+* It should be able to run test versions of RMS
+* It should be able to set the correct Equinor valid PYTHONPATH.
+* Company wide plugin path
+
+Example of usage::
+
+   runrms newreek.rms10.1.3 (if new project: warn and just start rms default)
+   runrms reek.rms10.1.3  (automaically detect version from .master)
+   runrms -project reek.10.1.3  (same as previous)
+   runrms reek.rms10.1.3 -v 11.0.1 (force version 11.0.1)
+
+"""
 
 
 RMS10PY = "python3.4"
@@ -73,6 +74,105 @@ def detect_os():
 
     else:
         return None
+
+
+def get_parser():
+    prs = argparse.ArgumentParser(description=DESCRIPTION)
+
+    # positional:
+    prs.add_argument("project", type=str, nargs="?", help="RMS project name")
+
+    prs.add_argument(
+        "--debug",
+        dest="debug",
+        action="store_true",
+        help="If you want to run this script in verbose mode",
+    )
+
+    prs.add_argument(
+        "--dryrun",
+        dest="dryrun",
+        action="store_true",
+        help="Run this script without actually launching RMS",
+    )
+
+    prs.add_argument(
+        "--version", "-v", dest="rversion", type=str, help="RMS version, e.g. 10.1.3",
+    )
+
+    prs.add_argument(
+        "--beta",
+        dest="beta",
+        action="store_true",
+        help="Will try latest RMS beta version",
+    )
+
+    prs.add_argument(
+        "--fake",
+        dest="fake",
+        action="store_true",
+        help="This is for CI testing only, will not look for rms executable",
+    )
+
+    prs.add_argument(
+        "--project",
+        "-project",
+        dest="rproject2",
+        type=str,
+        help="Name of RMS project (alternative launch)",
+    )
+
+    prs.add_argument(
+        "--readonly",
+        "-r",
+        "-readonly",
+        dest="ronly",
+        action="store_true",
+        help="Read only mode (disable save)",
+    )
+
+    prs.add_argument(
+        "--dpiscaling",
+        "-d",
+        dest="sdpi",
+        type=float,
+        help="Spesify RMS DPI display scaling as percent, where 100 is no scaling",
+    )
+
+    prs.add_argument(
+        "--batch",
+        "-batch",
+        dest="bworkflows",
+        nargs="+",
+        type=str,
+        help=(
+            "Runs project in batch mode (req. project) " "with workflows as argument(s)"
+        ),
+    )
+
+    prs.add_argument(
+        "--nopy",
+        dest="nopy",
+        action="store_true",
+        help="If you want to run RMS withouth any modication " "of current PYTHONPATH",
+    )
+
+    prs.add_argument(
+        "--includesyspy",
+        dest="incsyspy",
+        action="store_true",
+        help="If you want to run RMS and include current "
+        "system PYTHONPATH (typically Komodo based)",
+    )
+
+    prs.add_argument(
+        "--testpylib",
+        dest="testpylib",
+        action="store_true",
+        help="If you want to run RMS and use a test version of the Equinor "
+        "installed Python modules for RMS, e.g. test XTGeo (NB special usage!)",
+    )
+    return prs
 
 
 class _BColors:
@@ -130,109 +230,7 @@ class RunRMS(object):
         else:
             args = args
 
-        usetxt = THISSCRIPT + " projectname"
-
-        prs = argparse.ArgumentParser(description="Run RMS smarter", usage=usetxt)
-
-        # positional:
-        prs.add_argument("project", type=str, nargs="?", help="RMS project name")
-
-        prs.add_argument(
-            "--debug",
-            dest="debug",
-            action="store_true",
-            help="If you want to run this script in verbose mode",
-        )
-
-        prs.add_argument(
-            "--dryrun",
-            dest="dryrun",
-            action="store_true",
-            help="Run this script without actually launching RMS",
-        )
-
-        prs.add_argument(
-            "--version",
-            "-v",
-            dest="rversion",
-            type=str,
-            help="RMS version, e.g. 10.1.3",
-        )
-
-        prs.add_argument(
-            "--beta",
-            dest="beta",
-            action="store_true",
-            help="Will try latest RMS beta version",
-        )
-
-        prs.add_argument(
-            "--fake",
-            dest="fake",
-            action="store_true",
-            help="This is for CI testing only, will not look for rms executable",
-        )
-
-        prs.add_argument(
-            "--project",
-            "-project",
-            dest="rproject2",
-            type=str,
-            help="Name of RMS project (alternative launch)",
-        )
-
-        prs.add_argument(
-            "--readonly",
-            "-r",
-            "-readonly",
-            dest="ronly",
-            action="store_true",
-            help="Read only mode (disable save)",
-        )
-
-        prs.add_argument(
-            "--dpiscaling",
-            "-d",
-            dest="sdpi",
-            type=float,
-            help="Spesify RMS DPI display scaling as percent, where 100 is no scaling",
-        )
-
-        prs.add_argument(
-            "--batch",
-            "-batch",
-            dest="bworkflows",
-            nargs="+",
-            type=str,
-            help=(
-                "Runs project in batch mode (req. project) "
-                "with workflows as argument(s)"
-            ),
-        )
-
-        prs.add_argument(
-            "--nopy",
-            dest="nopy",
-            action="store_true",
-            help="If you want to run RMS withouth any modication "
-            "of current PYTHONPATH",
-        )
-
-        prs.add_argument(
-            "--includesyspy",
-            dest="incsyspy",
-            action="store_true",
-            help="If you want to run RMS and include current "
-            "system PYTHONPATH (typically Komodo based)",
-        )
-
-        prs.add_argument(
-            "--testpylib",
-            dest="testpylib",
-            action="store_true",
-            help="If you want to run RMS and use a test version of the Equinor "
-            "installed Python modules for RMS, e.g. test XTGeo (NB special usage!)",
-        )
+        prs = get_parser()
 
         args = prs.parse_args(args)
 

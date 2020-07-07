@@ -106,8 +106,8 @@ def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
     Load CSV files from disk, tag them and return DataFrame
 
     Args:
-        csvfiles (list of str): Pathnames to CSV files
-        tags (dict of lists): Each key will become a column name
+        csvfiles (list): List of strings with pathnames to CSV files
+        tags (dict): Dict of lists. Each key will become a column name
             in the returned dataframe, with values from the list
             corresponding to the csvfiles.
         memoryconservative (bool): If true, one dataframe will
