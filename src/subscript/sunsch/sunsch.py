@@ -46,6 +46,12 @@ def _defaults_and_v1_format_handling(config):
     return _v1_content_to_v2(_shuffle_start_refdate(config))
 
 
+@configsuite.transformation_msg("Convert to string")
+def _to_string(element):
+    """Convert anything to a string"""
+    return str(element)
+
+
 @configsuite.transformation_msg("Shuffle startdate vs refdate")
 def _shuffle_start_refdate(config):
     """
@@ -240,7 +246,11 @@ CONFIG_SCHEMA_V2 = {
                                 MK.Value: {
                                     MK.AllowNone: "Value to insert in template",
                                     MK.AllowNone: False,
-                                    MK.Type: types.Integer,
+                                    # Since we allow both numbers and strings here,
+                                    # it is converted to a string as configsuite
+                                    # only allows one type.
+                                    MK.Transformation: _to_string,
+                                    MK.Type: types.String,
                                 },
                             },
                         },
@@ -311,6 +321,11 @@ def process_sch_config(conf):
             if insert_statement.substitute and insert_statement.template:
                 filename = substitute(insert_statement)
                 logger.debug("Produced file: %s", str(filename))
+            elif insert_statement.template and not insert_statement.substitute:
+                logger.error(
+                    "Missing subsitute for template %s", insert_statement.template
+                )
+                continue
             elif insert_statement.filename:
                 filename = insert_statement.filename
             elif not insert_statement.string:
@@ -522,6 +537,11 @@ def _remap_v1_insert_to_v2(insert_statement):
     v2_insert_statement.update(insert_statement[fileid])
     if "substitute" not in v2_insert_statement:
         v2_insert_statement["substitute"] = {}
+    # Ensure the string transformation is applied
+    for key in v2_insert_statement["substitute"]:
+        v2_insert_statement["substitute"][key] = _to_string(
+            v2_insert_statement["substitute"][key]
+        )
     return v2_insert_statement
 
 
