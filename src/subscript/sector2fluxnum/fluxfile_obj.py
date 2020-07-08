@@ -122,21 +122,21 @@ def create_map_rst(
     @scale_i: Scale in resolution in i-direction
     @scale_j: Scale in resolution in j-direction
     @scale_k: Scale in resolution in k-direction
-              (Keep at 1 in this workflow)
+    (Keep at 1 in this workflow)
     @shift_i: Shift in i-direction in the coarse RMS model used
-              for further resolution refinement.
-              This value needs to be recorded in the process
-              of exporting the refined grid from RMS.
+    for further resolution refinement.
+    This value needs to be recorded in the process
+    of exporting the refined grid from RMS.
+    The corresponding coarse i-index in the refined grid is
+    i_coarse = (i_refine/scale_i) + shift_i)
 
-              The corresponding coarse i-index in the refined grid is
-              i_coarse = (i_refine/scale_i) + shift_i)
     @scale_j: Shift in j-direction in the coarse RMS model used
-              for further resolution refinement.
-              This value needs to be recorded in the process
-              of exporting the refined grid from RMS.
+    for further resolution refinement.
+    This value needs to be recorded in the process
+    of exporting the refined grid from RMS.
 
-              The corresponding coarse j-index in the refined grid is
-              j_coarse = (j_refine/scale_j) + shift_j)
+    The corresponding coarse j-index in the refined grid is
+    j_coarse = (j_refine/scale_j) + shift_j)
 
     If no suitable coarse index is found using the simple
     index scaling, a distance function is lauched to locate
