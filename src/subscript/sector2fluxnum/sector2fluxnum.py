@@ -95,16 +95,14 @@ def sector_to_fluxnum(args):
     now = datetime.datetime.now()
     args.ECLIPSE_CASE = os.path.abspath(args.ECLIPSE_CASE).split(".")[0:-1]
     if not args.ECLIPSE_CASE:
-        print("ERROR: Case does not exist", " ")
-        sys.exit(1)
+        raise Exception("ERROR: Case does not exist", " ")
 
     # Root name for writing to target directory
     ECLIPSE_CASE_ROOT = os.path.basename(args.ECLIPSE_CASE[0])
 
     args.OUTPUT_CASE = args.OUTPUT_CASE.split(".")[0:-1]
     if not args.OUTPUT_CASE:
-        print("ERROR: Specify OUTPUT_NAME of final FLUX file", " ")
-        sys.exit(1)
+        raise Exception("ERROR: Specify OUTPUT_NAME of final FLUX file", " ")
 
     if args.restart:
         args.restart = os.path.abspath(args.restart).split(".")[0:-1]
@@ -162,13 +160,12 @@ def sector_to_fluxnum(args):
     print("Writing DUMPFLUX DATA-file ...")
     new_data_file = do.Datafile("%s.DATA" % args.ECLIPSE_CASE[0])
 
-    if new_data_file.check_DUMPFLUX_kw() or new_data_file.check_USEFLUX_kw():
-        print("ERROR: FLUX keywords already present in input ECLCASE")
-        sys.exit(1)
+    if new_data_file.has_KW('DUMPFLUX') or new_data_file.has_KW('USEFLUX'):
+        raise Exception("ERROR: FLUX keywords already present in input ECL_CASE")
 
     # ###########################################
 
-    new_data_file.create_DUMPFLUX(FLUXNUM_filename)
+    new_data_file.create_DUMPFLUX_file(FLUXNUM_filename)
 
     # ###########################################
 
@@ -176,8 +173,7 @@ def sector_to_fluxnum(args):
         args.test = os.path.abspath(args.test).split(".")[0:-1]
 
         if not os.path.isfile("%s.FLUX" % args.test[0]):
-            print("ERROR: FLUX file from DUMPFLUX run not created")
-            sys.exit(1)
+            raise Exception("ERROR: FLUX file from DUMPFLUX run not created")
 
         # Needs the coordinates from the
         print("Generating new FLUX file...")
@@ -191,13 +187,12 @@ def sector_to_fluxnum(args):
     else:
         print("Executing DUMPFLUX NOSIM run ...")
         if args.version:
-            new_data_file.run_DUMPFLUX_NOSIM(args.version)
+            new_data_file.run_DUMPFLUX_nosim(args.version)
         else:
-            new_data_file.run_DUMPFLUX_NOSIM()
+            new_data_file.run_DUMPFLUX_nosim()
 
         if not os.path.isfile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT):
-            print("ERROR: FLUX file from DUMPFLUX run not created")
-            sys.exit(1)
+            raise Exception("ERROR: FLUX file from DUMPFLUX run not created")
 
         # Needs the coordinates from the
         print("Generating new FLUX file...")
@@ -222,7 +217,7 @@ def sector_to_fluxnum(args):
     # ######################################################
     f_c_map = ffo.create_map_rst(
         fluxObj_fine, grid_coarse, scale_i=1, scale_j=1, scale_k=1
-    )
+        )
 
     # ######################################################
     # Importing elements
@@ -233,7 +228,7 @@ def sector_to_fluxnum(args):
 
     ffo.write_new_fluxfile_from_rst(
         fluxObj_fine, grid_coarse, rst_coarse, f_c_map, fortio
-    )
+        )
 
     # Close FortIO stream
     fortio.close()
@@ -243,9 +238,8 @@ def sector_to_fluxnum(args):
     # ######################################################
 
     print("Writing suggestion for USEFLUX DATA-file ...")
-    new_data_file.create_USEFLUX(FLUXNUM_filename, args.OUTPUT_CASE[0])
-
-    new_data_file.add_USEFLUX_header_coarse(args)
+    new_data_file.create_USEFLUX_file(FLUXNUM_filename, args.OUTPUT_CASE[0])
+    new_data_file.set_USEFLUX_header(args)
 
 
 def main():
