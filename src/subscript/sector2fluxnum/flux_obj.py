@@ -175,7 +175,6 @@ class Fluxnum:
                 for g in temp_g:
                     self.fluxnum_kw[g] = 1
 
-
     def write_fluxnum_kw(self, filename_path):
         """
         Writes FLUXNUM keyword to file.
@@ -183,7 +182,6 @@ class Fluxnum:
         @filename_path : FLUXNUM keyword file
         """
 
-        
         with open(filename_path, "w") as fileH:
             self.fluxnum_kw.write_grdecl(fileH)
 
@@ -265,8 +263,8 @@ class Fluxnum_fipnum(Fluxnum):
             with open(fipnum_file, "r") as fileH:
                 fipnum = EclKW.read_grdecl(
                     fileH, "FIPNUM", ecl_type=EclTypeEnum.ECL_INT_TYPE
-                    )
-          
+                )
+
         else:
             fipnum = self.init.iget_named_kw("FIPNUM", 0)
 

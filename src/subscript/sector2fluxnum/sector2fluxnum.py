@@ -141,7 +141,7 @@ def sector_to_fluxnum(args):
     # Checks for well completions in multiple FLUXNUM regions
     print("Including wells ...")
     fluxnum_new.include_well_completions(completion_list, well_list)
-    
+
     # Second iteration to check for wells completed in multiple cells
     print("Including wells ...")
     fluxnum_new.include_well_completions(completion_list, well_list)
@@ -161,7 +161,7 @@ def sector_to_fluxnum(args):
     print("Writing DUMPFLUX DATA-file ...")
     new_data_file = do.Datafile("%s.DATA" % args.ECLIPSE_CASE[0])
 
-    if new_data_file.has_KW('DUMPFLUX') or new_data_file.has_KW('USEFLUX'):
+    if new_data_file.has_KW("DUMPFLUX") or new_data_file.has_KW("USEFLUX"):
         raise Exception("ERROR: FLUX keywords already present in input ECL_CASE")
 
     # ###########################################
@@ -214,7 +214,7 @@ def sector_to_fluxnum(args):
     # ######################################################
     f_c_map = ffo.create_map_rst(
         fluxObj_fine, grid_coarse, scale_i=1, scale_j=1, scale_k=1
-        )
+    )
 
     # ######################################################
     # Importing elements
@@ -225,7 +225,7 @@ def sector_to_fluxnum(args):
 
     ffo.write_new_fluxfile_from_rst(
         fluxObj_fine, grid_coarse, rst_coarse, f_c_map, fortio
-        )
+    )
 
     # Close FortIO stream
     fortio.close()

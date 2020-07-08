@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-import sys
-import os
-import shutil
 from ecl2df import compdat, EclFiles
 
 
@@ -47,4 +44,3 @@ def get_completion_list(dframe):
         completion_list.append(dframe['IJK'].loc[dframe['WELL'] == well].to_list())
 
     return completion_list, well_list
-
