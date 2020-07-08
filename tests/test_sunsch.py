@@ -241,6 +241,22 @@ def test_templating(tmpdir):
     assert "A-007" not in str(sch)
     # Sunsch lets this though, but logs an error.
 
+    # Let the template file be empty:
+    with open("empty.tmpl", "w") as handle:
+        handle.write("")
+    sunschconf = {
+        "startdate": datetime.date(2020, 1, 1),
+        "insert": [
+            {
+                "template": "empty.tmpl",
+                "days": 10,
+                "substitute": dict(WELLNAME="A-007", ORAT=200.3, GRAT=1.4e6),
+            }
+        ],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert str(sch) == ""
+
 
 def test_days_integer():
     """Test that we can insert stuff a certain number of days
@@ -469,6 +485,58 @@ def test_merge():
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["mergeme.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
+
+
+def test_sch_file_nonempty(tmpdir):
+    """Test that we can detect empty files"""
+    tmpdir.chdir()
+
+    with open("empty.sch", "w") as file_h:
+        file_h.write("")
+    assert not sunsch.sch_file_nonempty("empty.sch")
+
+    with open("commentonly.sch", "w") as file_h:
+        file_h.write("-- an Eclipse comment")
+    assert not sunsch.sch_file_nonempty("commentonly.sch")
+
+    with open("dates.sch", "w") as file_h:
+        file_h.write("DATES\n 1 NOV 2080 / \n/")
+    assert sunsch.sch_file_nonempty("dates.sch")
+
+    with open("wconprod.sch", "w") as file_h:
+        file_h.write("WCONPROD\n A ORAT 0 / \n/")
+    assert sunsch.sch_file_nonempty("wconprod.sch")
+
+    with open("bogus.sch", "w") as file_h:
+        file_h.write("BOGUSrn A ORAT 0 / \n/")
+    # Such a bogus file will give errors later, but
+    # it should be treated as nonempty to be able
+    # to catch the error elsewhere.
+    assert sunsch.sch_file_nonempty("wconprod.sch")
+
+
+def test_emptyfiles(tmpdir):
+    """Test that we don't crash when we try to include files
+    which are empty (or only contains comments)"""
+    tmpdir.chdir()
+    with open("empty.sch", "w") as file_h:
+        file_h.write("")
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["empty.sch"]}
+    sch = sunsch.process_sch_config(sunschconf)
+    assert str(sch) == ""
+
+    with open("commentonly.sch", "w") as file_h:
+        file_h.write("-- an Eclipse comment")
+    sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["commentonly.sch"]}
+    sch = sunsch.process_sch_config(sunschconf)
+    assert str(sch) == ""
+
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "insert": [{"filename": "commentonly.sch", "days": 1}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert str(sch) == ""
 
 
 def test_dategrid():
