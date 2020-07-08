@@ -303,7 +303,12 @@ def process_sch_config(conf):
 
     if conf.files is not None:
         for filename in conf.files:
-            logger.info("Loading %s", filename)
+            if sch_file_nonempty(filename):
+                logger.info("Loading %s", filename)
+            else:
+                logger.warning("No Eclipse statements in %s, skipping", filename)
+                continue
+
             file_starts_with_dates = sch_file_starts_with_dates_keyword(filename)
             timevector = load_timevector_from_file(
                 filename, conf.startdate, file_starts_with_dates
@@ -346,7 +351,12 @@ def process_sch_config(conf):
             # Do the insertion:
             if date >= conf.starttime:
                 if insert_statement.string is None:
-                    schedule.load(filename, date=date)
+                    if sch_file_nonempty(filename):
+                        schedule.load(filename, date=date)
+                    else:
+                        logger.warning(
+                            "No Eclipse statements in %s, skipping", filename
+                        )
                 else:
                     schedule.add_keywords(
                         datetime_from_date(date), [insert_statement.string]
@@ -415,6 +425,29 @@ def load_timevector_from_file(filename, startdate, file_starts_with_dates):
     return tmpschedule
 
 
+def sch_file_nonempty(filename):
+    """Determine if a file (to be included) has any Eclipse
+    keywords at all (excluding comments)
+
+    Args:
+        filename (str)
+
+    Returns:
+        bool: False if the file is empty or has only comments.
+    """
+    # Implementation is by trial and error:
+    try:
+        tmpschedule = TimeVector(datetime.date(1900, 1, 1))
+        tmpschedule.load(filename)
+    except IndexError:
+        return False
+    except ValueError:
+        # This is where we get for files not starting with DATES,
+        # but that means it is nonempty
+        return True
+    return True
+
+
 def sch_file_starts_with_dates_keyword(filename):
     """Determine if a file (to be included) has
     DATES as its first keyword, or something else.
@@ -430,16 +463,14 @@ def sch_file_starts_with_dates_keyword(filename):
     Returns:
         bool: true if first keyword is DATES
     """
-    file_starts_with_dates = True
-
     # Implementation is by trial and error:
     try:
         # Test if it has DATES
         tmpschedule = TimeVector(datetime.date(1900, 1, 1))
         tmpschedule.load(filename)
     except ValueError:
-        file_starts_with_dates = False
-    return file_starts_with_dates
+        return False
+    return True
 
 
 def substitute(insert_statement):
