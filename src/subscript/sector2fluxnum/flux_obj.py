@@ -106,9 +106,8 @@ class Fluxnum:
         except NameError:
             int_type = EclTypeEnum.ECL_INT_TYPE
 
-        fileH = open(fluxnum_file, "r")
-        self.fluxnum_kw = EclKW.read_grdecl(fileH, "FLUXNUM", ecl_type=int_type)
-        fileH.close()
+        with open(fluxnum_file, "r") as fileH:
+            self.fluxnum_kw = EclKW.read_grdecl(fileH, "FLUXNUM", ecl_type=int_type)
 
     def get_fluxnum_kw(self):
         return self.fluxnum_kw
@@ -184,10 +183,9 @@ class Fluxnum:
         @filename_path : FLUXNUM keyword file
         """
 
-        fileH = open(filename_path, "w")
-        self.fluxnum_kw.write_grdecl(fileH)
-        fileH.close()
-
+        
+        with open(filename_path, "w") as fileH:
+            self.fluxnum_kw.write_grdecl(fileH)
 
 
 class Fluxnum_box(Fluxnum):
@@ -262,15 +260,13 @@ class Fluxnum_fipnum(Fluxnum):
 
         if fipnum_file:
             if not os.path.isfile(fipnum_file):
-                print("ERROR: FIPNUM input file not found!")
-                sys.exit(1)
+                raise Exception("ERROR: FIPNUM input file not found!")
 
-            fileH = open(fipnum_file, "r")
-            fipnum = EclKW.read_grdecl(
-                fileH, "FIPNUM", ecl_type=EclTypeEnum.ECL_INT_TYPE
-            )
-            fileH.close()
-
+            with open(fipnum_file, "r") as fileH:
+                fipnum = EclKW.read_grdecl(
+                    fileH, "FIPNUM", ecl_type=EclTypeEnum.ECL_INT_TYPE
+                    )
+          
         else:
             fipnum = self.init.iget_named_kw("FIPNUM", 0)
 
