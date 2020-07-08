@@ -1,3 +1,4 @@
+import importlib
 import os
 from pkg_resources import resource_filename
 
@@ -26,3 +27,38 @@ def installable_jobs():
 @plugin_response(plugin_name="subscript")
 def installable_workflow_jobs():
     return {}
+
+
+def _get_module_variable_if_exists(module_name, variable_name, default=""):
+    try:
+        script_module = importlib.import_module(module_name)
+    except ImportError:
+        return default
+
+    return getattr(script_module, variable_name, default)
+
+
+@hook_implementation
+@plugin_response(plugin_name="subscript")
+def job_documentation(job_name):
+    subscript_jobs = set(installable_jobs().data.keys())
+    if job_name not in subscript_jobs:
+        return None
+
+    module_name = "subscript.{job_name}.{job_name}".format(job_name=job_name.lower())
+
+    description = _get_module_variable_if_exists(
+        module_name=module_name, variable_name="DESCRIPTION"
+    )
+    examples = _get_module_variable_if_exists(
+        module_name=module_name, variable_name="EXAMPLES"
+    )
+    category = _get_module_variable_if_exists(
+        module_name=module_name, variable_name="CATEGORY", default="other"
+    )
+
+    return {
+        "description": description,
+        "examples": examples,
+        "category": category,
+    }

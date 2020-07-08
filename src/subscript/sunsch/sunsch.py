@@ -26,6 +26,18 @@ logging.basicConfig()
 
 SUPPORTED_DATEGRIDS = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 
+DESCRIPTION = """Generate Eclipse Schedule file from merges and insertions.
+
+Reads a YAML-file specifying how a Eclipse Schedule section is to be
+produced given certain input files.
+
+Command line options override configuration in YAML.
+
+Output will not be generated unless the produced data is valid in
+Eclipse, checking provided by OPM."""
+
+CATEGORY = "utility.eclipse"
+
 
 @configsuite.validator_msg("Is dategrid a supported frequency")
 def _is_valid_dategrid(dategrid_str):
@@ -652,15 +664,7 @@ def get_parser():
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description="""Generate Eclipse Schedule file from merges and insertions.
-
-Reads a YAML-file specifying how a Eclipse Schedule section is to be
-produced given certain input files.
-
-Command line options override configuration in YAML.
-
-Output will not be generated unless the produced data is valid in
-Eclipse, checking provided by OPM.""",
+        description=DESCRIPTION,
         epilog="""YAML-file components::
 
  startdate - YYYY-MM-DD for the initial date of the simulation (START keyword)
