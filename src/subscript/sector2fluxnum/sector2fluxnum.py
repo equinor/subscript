@@ -141,6 +141,7 @@ def sector_to_fluxnum(args):
     # Checks for well completions in multiple FLUXNUM regions
     print("Including wells ...")
     fluxnum_new.include_well_completions(completion_list, well_list)
+    
     # Second iteration to check for wells completed in multiple cells
     print("Including wells ...")
     fluxnum_new.include_well_completions(completion_list, well_list)
@@ -180,8 +181,6 @@ def sector_to_fluxnum(args):
 
         grid_coarse = EclGrid("%s.EGRID" % args.test[0])
         grid_fine = EclGrid("%s.EGRID" % args.test[0])
-
-        #        flux_coarse = EclFile("%s.FLUX" % args.test[0])
         flux_fine = EclFile("%s.FLUX" % args.test[0])
 
     else:
@@ -199,8 +198,6 @@ def sector_to_fluxnum(args):
 
         grid_coarse = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
         grid_fine = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
-
-        #        flux_coarse = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
         flux_fine = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
 
     # Reads restart file
