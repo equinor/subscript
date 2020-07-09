@@ -7,10 +7,10 @@ def generate_compdat_dataframe(ECL_DATA_file_name):
     Create a datafram of unrolled well completions
 
     Args:
-       Input DATA file name
+    Input DATA file name
 
     Returns:
-       dataFrame with the following header:
+    dataFrame with the following header:
 
     """
     ECL_file = EclFiles(ECL_DATA_file_name)
@@ -25,12 +25,11 @@ def get_completion_list(dframe):
     Create a datafram of unrolled well completions
 
     Args:
-       Pandas data frame with completions
+    Pandas data frame with completions
 
     Returns:
-       List of unique well names
-       List of completions associated to well names
-
+    List of unique well names
+    List of completions associated to well names
     """
     # Convert from ECL index
     dframe[['I', 'J', 'K1', 'K2']] = dframe[['I', 'J', 'K1', 'K2']] - 1

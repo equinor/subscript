@@ -50,7 +50,7 @@ def get_parser():
     """Function to create the argument parser that is going to be served to the user.
 
     Returns:
-        parser (argparse.ArgumentParser): The argument parser to be served
+    parser (argparse.ArgumentParser): The argument parser to be served
 
     """
 
