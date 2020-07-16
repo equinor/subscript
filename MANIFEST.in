@@ -1,2 +1,8 @@
-include subscript/extract_resvol_from_prtfile.pl
-include subscript/extract_vol_from_prtfile.pl
+include LICENSE
+graft src/subscript
+graft docs
+graft tests
+include *.txt
+include *.yml
+include .libecl_version
+global-exclude *.py[cod] __pycache__
