@@ -13,3 +13,4 @@ sphinx_rtd_theme
 autoapi
 xlrd
 flake8
+check-manifest
