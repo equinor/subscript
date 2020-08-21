@@ -10,8 +10,9 @@ import textwrap
 import argparse
 import re
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
+import subscript
+
+logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """Compress Eclipse input files by using the Eclipse
 syntax <number>*<value> so that the data set::
