@@ -218,6 +218,14 @@ class RunRMS(object):
         if "PYTHONPATH" in os.environ:
             self.oldpythonpath = os.environ["PYTHONPATH"]
 
+        # Set environment variables for use by `run_external`
+        # from equinor/equilibrium:
+        if "PYTHONPATH" in os.environ:
+            os.environ["_PRE_RMS_PYTHONPATH"] = os.environ["PYTHONPATH"]
+        else:
+            os.environ["_PRE_RMS_PYTHONPATH"] = ""
+        os.environ["_PRE_RMS_BACKUP"] = "1"
+
         print(
             _BColors.BOLD,
             "\nRunning <{0}>. Type <{0} -h> for help\n".format(THISSCRIPT),
@@ -500,7 +508,7 @@ class RunRMS(object):
             )
 
     def launch_rms(self, empty=False):
-        """Lauch RMS with correct pythonpath"""
+        """Launch RMS with correct pythonpath"""
 
         if self.exe is None:
             self.exe = "rms -v " + self.version_requested
