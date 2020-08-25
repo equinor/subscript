@@ -19,7 +19,7 @@ TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
 
 def test_get_cfg_schema():
 
-    cfg_filen = os.path.join(TESTDATA, "cfg.yml")
+    cfg_filen = os.path.join(str(TESTDATA), "cfg.yml")
 
     with open(cfg_filen, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
@@ -27,13 +27,13 @@ def test_get_cfg_schema():
     # add root-path to all include files
     if "base" in cfg.keys():
         for i in range(len(cfg["base"])):
-            cfg["base"][i] = os.path.join(TESTDATA, cfg["base"][i])
+            cfg["base"][i] = os.path.join(str(TESTDATA), cfg["base"][i])
     if "high" in cfg.keys():
         for i in range(len(cfg["high"])):
-            cfg["high"][i] = os.path.join(TESTDATA, cfg["high"][i])
+            cfg["high"][i] = os.path.join(str(TESTDATA), cfg["high"][i])
     if "low" in cfg.keys():
         for i in range(len(cfg["low"])):
-            cfg["low"][i] = os.path.join(TESTDATA, cfg["low"][i])
+            cfg["low"][i] = os.path.join(str(TESTDATA), cfg["low"][i])
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
@@ -180,8 +180,8 @@ def test_schema_errors():
 
 
 def test_tables_to_dataframe():
-    swoffn = os.path.join(TESTDATA, "swof_base.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
 
     tables_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -203,18 +203,18 @@ def test_tables_to_dataframe():
 
 
 def test_make_interpolant():
-    swoffn = os.path.join(TESTDATA, "swof_base.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
 
     base_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(TESTDATA, "swof_pes.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_pes.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_pes.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_pes.inc")
 
     low_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(TESTDATA, "swof_opt.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_opt.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_opt.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_opt.inc")
 
     high_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
