@@ -6,6 +6,7 @@ import yaml
 import sys
 import configsuite
 
+import pathlib
 import subprocess
 import pytest
 
@@ -13,7 +14,7 @@ from subscript.interp_relperm import interp_relperm
 from pyscal import PyscalFactory
 from ecl2df import satfunc
 
-TESTDATA = os.path.join(os.path.dirname(__file__), "testdata_interp_relperm")
+TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
 
 
 def test_get_cfg_schema():
@@ -37,8 +38,6 @@ def test_get_cfg_schema():
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
 
-    print(suite.valid)
-    print(suite.errors)
     assert suite.valid
 
 
@@ -104,6 +103,14 @@ def test_schema_errors():
     assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_g": -1.5}]
+    cfg["interpolations"] = [{"param_w": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert parsed_cfg.valid
+
+    cfg["interpolations"] = [{"param_w": 1.5}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
@@ -112,6 +119,8 @@ def test_schema_errors():
     assert "Valid interpolator" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_w": 0}]
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
@@ -119,23 +128,42 @@ def test_schema_errors():
     assert parsed_cfg.valid
 
     cfg["interpolations"] = [{"param_w": "some weird text"}]
+
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    assert "Is x a number is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": 1.5}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
 
     assert not parsed_cfg.valid
     cfg["interpolations"] = [{"param_g": "Null"}]
+
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": -1.5}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
 
     assert not parsed_cfg.valid
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
 
-    cfg["interpolations"] = [{"param_g": 0}]
+    cfg["interpolations"] = [{"param_w": 0}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
 
+    assert parsed_cfg.valid
+    cfg["interpolations"] = [{"param_g": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
     assert parsed_cfg.valid
 
     cfg["interpolations"] = [{"param_w": 0, "param_g": 0}]
@@ -209,9 +237,9 @@ def test_make_interpolant():
 def test_args(tmpdir):
     tmpdir.chdir()
 
-    test_cfg = os.path.join(TESTDATA, "cfg.yml")
+    test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
 
-    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", TESTDATA]
+    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", str(TESTDATA)]
 
     interp_relperm.main()
 
@@ -406,9 +434,9 @@ def test_main(tmpdir):
 
     assert os.system("interp_relperm -h") == 0
 
-    test_cfg = os.path.join(TESTDATA, "cfg.yml")
+    test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
 
-    sys.argv = [__file__, "-c", test_cfg, "-r", TESTDATA]
+    sys.argv = [__file__, "-c", test_cfg, "-r", str(TESTDATA)]
 
     interp_relperm.main()
 

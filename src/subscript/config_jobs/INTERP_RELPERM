@@ -1,0 +1,11 @@
+EXECUTABLE	interp_relperm
+ARGLIST    "-c" <INTERP_CONFIG> "--root-path" <CONFIG_PATH>
+
+MIN_ARG    1
+MAX_ARG    2
+ARG_TYPE 0 STRING
+
+STDERR INTERP_RELPERM.stderr
+STDOUT INTERP_RELPERM.stdout
+
+
