@@ -56,7 +56,7 @@ def test_schema_errors():
     assert not parsed_cfg.valid
     assert "Valid file name" in str(parsed_cfg.errors)
 
-    os.chdir(TESTDATA)
+    os.chdir(str(TESTDATA))
 
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
