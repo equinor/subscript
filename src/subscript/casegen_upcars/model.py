@@ -759,7 +759,7 @@ class Model:
         for i in range(0, self._xv.shape[0]):
             for j in range(0, self._xv.shape[1]):
                 print(
-                    "{{x:{0}}} {{y:{0}}} {{z:{0}}}"
+                    "{{x:{0}}} {{y:{0}}} {{z:{0}}} "
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}}".format(
                         self._eclipse_output_float
                     ).format(x=self._xv[i, j], y=self._yv[i, j], z=0.0),
