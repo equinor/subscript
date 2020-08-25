@@ -6,7 +6,7 @@ import yaml
 import sys
 import configsuite
 
-import pathlib
+# import pathlib
 import subprocess
 import pytest
 
@@ -14,7 +14,8 @@ from subscript.interp_relperm import interp_relperm
 from pyscal import PyscalFactory
 from ecl2df import satfunc
 
-TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
+TESTDATA = os.path.join(os.path.dirname(__file__), "testdata_interp_relperm")
+# TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
 
 
 def test_get_cfg_schema():
