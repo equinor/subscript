@@ -27,7 +27,9 @@ range accordingly interpolation between base and high, or low and
 high may be achieved.
 
 Krw, Krow, Pcow interpolated using parameter param_w
+
 Krg, Krog, Pcog interpolated using parameter param_g
+
 """
 
 EPILOGUE = """
