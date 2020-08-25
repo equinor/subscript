@@ -1,5 +1,18 @@
-"""
-Interpolation script for relperm tables.
+from __future__ import print_function
+import pandas as pd
+import pyscal
+import sys
+import os
+import yaml
+import argparse
+from ecl2df import satfunc
+
+import configsuite
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+
+DESCRIPTION = """Interpolation script for relperm tables.
 Script reads base/high/low SWOF and SGOF tables from files and
 interpolates in between, using interpolation parameter(s) in range
 [-1,1], so that -1, 0, and 1 corresponds to low, base, and high tables
@@ -15,7 +28,9 @@ high may be achieved.
 
 Krw, Krow, Pcow interpolated using parameter param_w
 Krg, Krog, Pcog interpolated using parameter param_g
+"""
 
+EPILOGUE = """
 .. code-block:: yaml
 
   # Example config file
@@ -69,21 +84,9 @@ Krg, Krog, Pcog interpolated using parameter param_g
       # be applied ie base table is returned
       param_w  :  0.5
 
-
 """
 
-from __future__ import print_function
-import pandas as pd
-import pyscal
-import sys
-import os
-import yaml
-import argparse
-from ecl2df import satfunc
-
-import configsuite
-from configsuite import types
-from configsuite import MetaKeys as MK
+CATEGORY = "utility.eclipse"
 
 
 @configsuite.validator_msg("Valid file name")
@@ -391,7 +394,9 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        epilog=__doc__, formatter_class=argparse.RawTextHelpFormatter
+        description=DESCRIPTION,
+        epilog=EPILOGUE,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     parser.add_argument(

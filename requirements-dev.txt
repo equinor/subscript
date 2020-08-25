@@ -14,3 +14,4 @@ autoapi
 xlrd
 flake8
 check-manifest
+pathlib
