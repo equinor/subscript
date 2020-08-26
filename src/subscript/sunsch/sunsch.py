@@ -21,8 +21,9 @@ import configsuite
 from configsuite import types
 from configsuite import MetaKeys as MK
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
+from subscript import getLogger
+
+logger = getLogger(__name__)
 
 SUPPORTED_DATEGRIDS = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 

@@ -5,10 +5,10 @@ import argparse
 import yaml
 import logging
 
+import subscript
 from subscript.sunsch import sunsch
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
+logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """Merges several ECLIPSE schedule files into one single file.
 This is done by sorting on the DATES keyword in the different input files.
