@@ -269,13 +269,16 @@ def test_mock(tmpdir):
         "drho",
     ]
     dframe_pess = pd.DataFrame(
-        columns=columns, data=[[1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150]],
+        columns=columns,
+        data=[[1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150]],
     )
     dframe_base = pd.DataFrame(
-        columns=columns, data=[[1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150]],
+        columns=columns,
+        data=[[1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150]],
     )
     dframe_opt = pd.DataFrame(
-        columns=columns, data=[[1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150]],
+        columns=columns,
+        data=[[1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150]],
     )
     PyscalFactory.create_pyscal_list(dframe_pess).dump_family_1("pess.inc")
     PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")

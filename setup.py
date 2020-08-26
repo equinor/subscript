@@ -45,6 +45,14 @@ LEGACYSCRIPTS = [
     "runeclipse",
 ]
 
+TEST_REQUIREMENTS = [
+    "black>=20.8b0; python_version >= '3'",
+    "flake8",
+    "pytest",
+    "check-manifest",
+]
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS}
+
 setuptools.setup(
     name="subscript",
     description="Next-gen resscript",
@@ -63,8 +71,12 @@ setuptools.setup(
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
     install_requires=[],
-    setup_requires=["setuptools >=28", "setuptools_scm", "pytest-runner", "check-manifest"],
-    tests_require=["pytest", "check-manifest"],
+    setup_requires=[
+        "setuptools >=28",
+        "setuptools_scm",
+        "pytest-runner",
+        "check-manifest",
+    ],
     entry_points={
         "console_scripts": SSCRIPTS,
         "ert": ["subscript_jobs = subscript.hook_implementations.jobs"],
@@ -72,4 +84,5 @@ setuptools.setup(
     scripts=["src/subscript/legacy/" + scriptname for scriptname in LEGACYSCRIPTS],
     use_scm_version={"write_to": "src/subscript/version.py"},
     test_suite="tests",
+    extras_require=EXTRAS_REQUIRE,
 )
