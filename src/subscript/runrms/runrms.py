@@ -97,7 +97,11 @@ def get_parser():
     )
 
     prs.add_argument(
-        "--version", "-v", dest="rversion", type=str, help="RMS version, e.g. 10.1.3",
+        "--version",
+        "-v",
+        dest="rversion",
+        type=str,
+        help="RMS version, e.g. 10.1.3",
     )
 
     prs.add_argument(
