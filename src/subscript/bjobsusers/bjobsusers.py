@@ -1,7 +1,4 @@
-from __future__ import print_function
-
 import os
-import sys
 import re
 import subprocess
 import argparse
@@ -125,8 +122,6 @@ def userinfo(username, finger_function):
         matches = rex_no_org.match(finger_output).groups()
         org = ""
     fullname = matches[1].strip()
-    if sys.version_info[0] < 3:
-        fullname = fullname.encode("utf-8")
     return "{} ({}) ({})".format(fullname, org, username)
 
 

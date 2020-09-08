@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 # Author: jriv@equinor.com
 
-from __future__ import division, absolute_import
-from __future__ import print_function, unicode_literals
-
 import sys
 import time
 import datetime

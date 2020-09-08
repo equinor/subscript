@@ -6,7 +6,6 @@ This script is doing Python-only text parsing of the Eclipse 100 file
 and is very UNLIKELY to support all PVT files that E100 actually would
 accept.
 """
-from __future__ import print_function
 
 import re
 import argparse

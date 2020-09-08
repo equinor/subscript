@@ -17,8 +17,6 @@
 #     The source code is a part of the subscript repository:
 #      https://github.com/equinor/subscript
 
-from __future__ import division, absolute_import
-from __future__ import print_function, unicode_literals
 
 import sys
 import os
