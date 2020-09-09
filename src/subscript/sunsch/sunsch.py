@@ -13,7 +13,6 @@ import argparse
 import logging
 
 import yaml
-import six
 
 from opm.tools import TimeVector
 
@@ -136,7 +135,7 @@ def _v1_content_to_v2(config):
             del config["init"]
         if "merge" in config:
             # In v1, this can be both a list and a string
-            if isinstance(config["merge"], six.string_types):
+            if isinstance(config["merge"], str):
                 v2_files += [config["merge"]]
             else:
                 v2_files += config["merge"]
@@ -282,7 +281,7 @@ def get_schema():
 
 def datetime_from_date(date):
     """Set time to 00:00:00 in a date"""
-    if isinstance(date, six.string_types):
+    if isinstance(date, str):
         raise ValueError("Is the string {} a date?".format(str(date)))
     return datetime.datetime.combine(date, datetime.datetime.min.time())
 

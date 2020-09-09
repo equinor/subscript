@@ -14,7 +14,6 @@ It has capability to:
 - etc. Check wiki for more details:
   https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen
 """
-from __future__ import print_function
 import shutil
 import argparse
 from yaml import load, Loader

@@ -5,10 +5,6 @@ Documentation:
 https://wiki.equinor.com/wiki/index.php/ResScript:Python:Scripts:presentvalue
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import datetime
 import sys
 import numpy

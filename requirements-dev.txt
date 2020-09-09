@@ -1,12 +1,12 @@
 pandas
 scipy
-ecl2df>=0.5.0
-pyyaml>=5.1
+ecl2df
+pyyaml
 setuptools >=28
 setuptools_scm
 pytest
 pytest-runner
-pyscal>0.1.4
+pyscal
 sphinx
 sphinx-argparse
 sphinx_rtd_theme

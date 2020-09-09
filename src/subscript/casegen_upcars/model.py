@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """ Engine part of casegen_upcars """
 # pylint:disable=bad-continuation
-from __future__ import print_function
+
+import io
 import math
 import datetime
 import itertools
 from itertools import product
 
-import six
 import numpy as np
 
 from .udf import listify, TERMINALCOLORS, uniform_dist
@@ -670,7 +670,7 @@ class Model:
         self, filename, keyword, matrix_prop, streak_prop, frac_props, vug_prop
     ):
         """ Print out grid property to Eclipse format file """
-        buffer_ = six.StringIO()
+        buffer_ = io.StringIO()
         print(
             "-- Property file generated using CaseGenerator "
             + datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
@@ -743,7 +743,7 @@ class Model:
                 + self._layer_dz[i]
             )
 
-        buffer_ = six.StringIO()
+        buffer_ = io.StringIO()
         print(
             "-- GRID generated using CaseGenerator "
             + datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
