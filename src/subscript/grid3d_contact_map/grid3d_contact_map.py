@@ -11,7 +11,6 @@ from xtgeo.common import XTGeoDialog
 from xtgeoapp_grd3dmaps.avghc import _configparser
 from xtgeoapp_grd3dmaps.contact import _get_grid_props
 from xtgeoapp_grd3dmaps.avghc import _get_zonation_filters
-from xtgeoapp_grd3dmaps.contact import _compute_contact
 
 try:
     from ..theversion import version as __version__
@@ -50,7 +49,7 @@ def yamlconfig(inputfile, args):
     # in case of YAML input (e.g. zonation from file)
     config = _configparser.yconfig_addons(config, appname)
 
-    logger.info("Updated config:".format(config))
+    logger.info("Updated config: {}".format(config))
     for name, val in config.items():
         logger.info("{}".format(name))
         logger.info("{}".format(val))
@@ -124,7 +123,7 @@ def get_zranges(config, grd):
 
 def compute_contact(config, initd, restartd, dates):
     """The contact here is .... ready for gridding??"""
-    contact = _compute_contact.gridmap_contact(config, initd, restartd, dates)
+    compute_contact.gridmap_contact(config, initd, restartd, dates)
 
 
 #    return contact
@@ -183,7 +182,7 @@ def main(args=None):
     zonation, zoned = get_zranges(config, grd)
 
     xtg.say("Grid contact map...")
-    contact = compute_contact(config, initd, restartd, dates)
+    compute_contact(config, initd, restartd, dates)
 
     # for hcmode in hcmodelist:
 

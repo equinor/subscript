@@ -2,15 +2,10 @@
 
 from __future__ import division, print_function, absolute_import
 
-import getpass
-from time import localtime, strftime
 import numpy as np
-import numpy.ma as ma
-from collections import OrderedDict
 
 from xtgeo.common import XTGeoDialog
 from xtgeo.surface import RegularSurface
-from xtgeo.xyz import Polygons
 
 xtg = XTGeoDialog()
 logger = xtg.functionlogger(__name__)

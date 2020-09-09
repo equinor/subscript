@@ -168,7 +168,7 @@ def import_data(config, appname, gfile, initlist, restartlist, dates):
                 restfile, names=restprops, fformat="unrst", grid=grd, dates=dates
             )
 
-        except DateNotFoundError as rwarn:
+        except DateNotFoundError:
             logger.info("Got warning...")
             for prop in tmp.props:
                 logger.info("Append prop: {}".format(prop))

@@ -123,7 +123,7 @@ def _get_hcpfz_ecl(config, initd, restartd, dates, hcmode, filterarray):
 
     for cdate in cdates:
         cdate = str(cdate)
-        logger.debug("cdate is: ".format(cdate))
+        logger.debug("cdate is: {}".format(cdate))
         if "-" in cdate:
             d1 = str(cdate.split("-")[0])
             d2 = str(cdate.split("-")[1])
