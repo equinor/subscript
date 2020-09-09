@@ -1,0 +1,5 @@
+EXECUTABLE grid3d_hc_thickness
+ARGLIST "--config" <CONFIG_HCMAP> "--eclroot" <ECLIPSE>
+
+STDERR GRID3D_HC_THICKNESS.stderr
+STDOUT GRID3D_HC_THICKNESS.stdout

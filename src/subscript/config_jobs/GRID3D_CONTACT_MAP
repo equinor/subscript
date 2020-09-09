@@ -1,0 +1,5 @@
+EXECUTABLE grid3d_contact_map
+ARGLIST "--config" <CONFIG_CONTACTMAP> "--eclroot" <ECLIPSE>
+
+STDERR GRID3D_CONTACT_MAP.stderr
+STDOUT GRID3D_CONTACT_MAP.stdout
