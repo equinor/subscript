@@ -1,0 +1,28 @@
+title: Reek
+
+# Use "folderroot" and pure ROFF input
+# Use automatic mappsettings (detect from grid)
+
+input:
+  # folderroot is a short form to a folder
+  folderroot: ../xtgeo-testdata/3dgrids/reek
+  grid: $folderroot/reek_sim_grid.roff
+  por: $folderroot/reek_sim_poro.roff
+  permz: $folderroot/reek_sim_permx.roff
+
+# zonation from file on YAML format
+zonation:
+  yamlfile: tests/yaml/avg1a_zone.yml  # re-use 1a
+
+computesettings:
+  zone: Yes
+  all: No
+  mask_zeros: Yes  # means that ouput maps will be set to undef where zero
+
+# map definition not set; means deduced from grid
+
+output:
+  tag: avg1b     # the tag will added to file name as extra info, e.g. as
+                 # z1--avg1b_average_por.gri
+  mapfolder: TMP
+  plotfolder: TMP

@@ -1,0 +1,35 @@
+title: Reek
+#
+# No map settings here (will be automatically derived from 3D grid)!
+
+# just give rootname in case of "eclipserun" model
+# input is what to be made maps of
+input:
+  eclroot: ../xtgeo-testdata/3dgrids/reek/REEK
+  dates:
+    - 19991201
+
+# Zonation gives what zones to compute over, and typically is similar
+# to the zonation in RMS. Note that it is possible to read the zonation
+# from an extrernal YAML file, via:
+#   yamlfile: 'name_of_file.yml'
+zonation:
+  # zranges will normally be the Zone parameter, defined as K range cells
+  zranges:
+    - Z1: [1, 5]
+    - Z2: [6, 10]
+    - Z3: [11, 14]
+
+computesettings:
+  # choose oil, gas or both
+  mode: oil
+  critmode: No
+  shc_interval: [0.1, 1]          # saturation interv
+  method: use_poro
+  zone: Yes
+  all: Yes
+
+output:
+  tag: hc1c
+  mapfolder: TMP
+  plotfolder: TMP

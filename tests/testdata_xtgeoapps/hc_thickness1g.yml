@@ -1,0 +1,30 @@
+title: Reek
+
+# Using PORV as method, and a rotated template map in mapsettings
+
+input:
+  eclroot: ../xtgeo-testdata/3dgrids/reek/REEK
+  grid: ../xtgeo-testdata/3dgrids/reek/reek_grid_fromegrid.roff
+  dates:
+    - 19991201
+
+zonation:
+  zranges:
+    - Z1: [1, 5]
+
+mapsettings:
+  templatefile: ../xtgeo-testdata/surfaces/reek/1/reek_hcmap_rotated.gri
+
+computesettings:
+  # choose oil, gas or both
+  mode: both
+  critmode: No
+  shc_interval: [0.1, 1]          # saturation interv
+  method: use_porv
+  zone: Yes
+  all: Yes
+
+output:
+  tag: hc1g
+  mapfolder: TMP
+  plotfolder: TMP

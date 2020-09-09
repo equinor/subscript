@@ -1,0 +1,62 @@
+title: Reek
+# Case with filters, read dates from global config, and read zonation from a 3D parameter
+# Props from restarts only
+
+input:
+  eclroot: ../xtgeo-testdata/3dgrids/reek/REEK
+  grid: $eclroot.EGRID
+
+  # alternative approach to read a variables and dates:
+  properties:
+    -
+      name: SWAT
+      source: $eclroot.UNRST
+      dates: !include_from tests/yaml/global_config3a.yml::global.DATES
+      diffdates: !include_from tests/yaml/global_config3a.yml::global.DIFFDATES
+    -
+      name: PRESSURE
+      source: $eclroot.UNRST
+      dates: !include_from tests/yaml/global_config3a.yml::global.DATES
+      diffdates: !include_from tests/yaml/global_config3a.yml::global.DIFFDATES
+
+
+zonation:
+  zproperty:
+    name: Zone
+    source: ../xtgeo-testdata/3dgrids/reek/reek_sim_zone.roff
+    zones:
+      - myzone1: [1]  # refers to zonation numbers in 3D parameter
+      - myzone2+3: [2, 3]
+
+  #
+  # zranges:
+  #   - myzone1: [1, 5]  # refers to K layers
+
+
+filters:
+  -
+    name: FACIES
+    discrete: Yes
+    source: ../xtgeo-testdata/3dgrids/reek/reek_sim_facies2.roff
+    discrange: [2]  # Filter for a discrete will be spesic number sequence
+
+computesettings:
+  zone: Yes
+  all: Yes
+  mask_zeros: Yes  # means that ouput maps will be set to undef where zero
+
+# map definition (unrotated maps only, for rotated maps use a maptemplate...)
+mapsettings:
+  xori: 457000
+  xinc: 50
+  yori: 5927000
+  yinc: 50
+  ncol: 200
+  nrow: 250
+
+output:
+  tag: avg2c       # the tag will added to file name as extra info, e.g. as
+                   # z1--avg1a_average_poro.gri
+
+  mapfolder: TMP
+  plotfolder: TMP

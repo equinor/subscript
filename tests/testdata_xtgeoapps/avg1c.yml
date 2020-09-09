@@ -1,0 +1,41 @@
+title: Reek
+# Case with includefile, and maptemplate, All zone only
+
+input:
+  # folderroot is a short form to a folder
+  folderroot: ../xtgeo-testdata/3dgrids/reek
+  grid: $folderroot/reek_sim_grid.roff
+  por: $folderroot/reek_sim_poro.roff
+  permx: $folderroot/reek_sim_permx.roff
+
+# zonation from file on YAML format
+zonation:
+  yamlfile: tests/yaml/avg1a_zone.yml  # re-use 1a
+
+mapsettings:
+  templatefile: ../xtgeo-testdata/surfaces/reek/1/reek_hcmap_rotated.gri
+
+computesettings:
+  zone: Yes  # compute for all indivual zones
+  all: Yes  # compute for all zones total
+  mask_zeros: Yes  # output maps will be set to undef where zero
+
+plotsettings:
+  faultpolygons: ../xtgeo-testdata/polygons/reek/1/top_upper_reek_faultpoly.xyz
+  por:
+    # general range for "por":
+    valuerange: [0.1, 0.25]
+
+    # individial setting for zone Z1:
+    Z1:
+      valuerange: [0.2, 0.3]
+  permx:
+    # generell settings for perm
+    valuerange: [1, 2000]
+
+
+output:
+  tag: avg1c     # the tag will added to file name as extra info, e.g. as
+                 # z1--avg1b_average_por.gri
+  mapfolder: TMP
+  plotfolder: TMP

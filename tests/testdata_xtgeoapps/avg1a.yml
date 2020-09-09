@@ -1,0 +1,39 @@
+title: Reek
+# Case with includefile for zoantion
+
+# just give rootname in case of "eclipserun" model
+# input is what to be made maps of
+
+# This is a case with only Eclipse input
+
+input:
+  eclroot: ../xtgeo-testdata/3dgrids/reek/REEK
+  grid: $eclroot.EGRID
+  PORO: $eclroot.INIT
+  PRESSURE--19991201: $eclroot.UNRST
+  PRESSURE--20030101-19991201: $eclroot.UNRST
+
+# zonation from file on YAML format
+zonation:
+  yamlfile: tests/yaml/avg1a_zone.yml
+
+computesettings:
+  zone: Yes
+  all: Yes
+  mask_zeros: Yes  # means that ouput maps will be set to undef where zero
+
+# map definition (not rotated maps only)
+mapsettings:
+  xori: 457000
+  xinc: 50
+  yori: 5927000
+  yinc: 50
+  ncol: 200
+  nrow: 250
+
+output:
+  tag: avg1a     # the tag will added to file name as extra info, e.g. as
+                 # z1--avg1a_average_poro.gri
+  mapfolder: TMP
+  plotfolder: TMP
+  prefix: xxx

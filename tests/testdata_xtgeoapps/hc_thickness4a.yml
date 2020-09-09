@@ -1,0 +1,51 @@
+---
+# ROCK, e.g. to find average thickness of a facies in a interval.
+# Dates are irrelevant here
+#
+# Note also that discrete parameter filter can be given as dictionary:
+#    discrange:  {1: C_SAND, 2: HETR_SAND}
+# The list approach will also work:
+#    discrange: [1, 2]
+
+title: Reek
+
+input:
+  grid: ../xtgeo-testdata/3dgrids/reek/reek_sim_grid.roff
+
+zonation:
+  zproperty:
+    name: FIPNUM
+    source: ../xtgeo-testdata/3dgrids/reek/REEK.INIT
+    zones:
+      - myfip1: [1]  # can be a discrete selection, e.g. [1, 3, 6]
+      - myfip2: [2]
+
+# If several filters, they will be cumulative
+filters:
+  -
+    name: FACIES
+    source: ../xtgeo-testdata/3dgrids/reek/reek_sim_facies2.roff
+    discrete: Yes
+    discrange:  {1: C_SAND, 2: HETR_SAND}  # or as list: [1, 2]
+  -
+    tvdrange: [1610, 1640]
+
+computesettings:
+  # choose oil, gas, both, dz_only, rock
+  mode: rock  # will only look at rock thickness, no HC saturation
+  zone: yes
+  all: yes
+
+# map definition (not rotated maps only)
+mapsettings:
+  xori: 458300
+  xinc: 50
+  yori: 5928800
+  yinc: 50
+  ncol: 200
+  nrow: 200
+
+output:
+  mapfolder: TMP
+  plotfolder: TMP
+  tag: hc4a

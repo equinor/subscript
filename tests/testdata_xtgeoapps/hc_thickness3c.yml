@@ -1,0 +1,77 @@
+---
+# As 3b, but skip zonation filter. Rather zonation from a Eclipse file
+# as OPERNUM
+
+title: Reek
+# Case with external config files, e.g. a global config!
+# Reuse dates data from global config
+
+input:
+  eclroot: ../xtgeo-testdata/3dgrids/reek/REEK
+  dates: !include_from tests/yaml/global_config3a.yml::global.DATES
+  diffdates: !include_from tests/yaml/global_config3a.yml::global.DIFFDATES
+
+zonation:
+  zproperty:
+    name: FIPNUM
+    source: $eclroot.INIT
+    zones:
+      - myfip1: [1]  # can be a discrete selection, e.g. [1, 3, 6]
+      - myfip2: [2]
+
+# For filters, properties shall defined at the same grid layout as the grid read in input
+# If several filters, they will be cumulative
+filters:
+  -
+    name: PORO
+    source: $eclroot.INIT
+    intvrange: [0.0, 1.0]  # Filter for a continuous will be an interval
+
+
+computesettings:
+  # choose oil, gas or both
+  mode: oil
+  critmode: No
+  shc_interval: [0.001, 1]   # saturation interval
+  method: use_poro
+  zone: yes
+  all: yes
+
+# map definition (not rotated maps only)
+mapsettings:
+  xori: 458300
+  xinc: 50
+  yori: 5928800
+  yinc: 50
+  ncol: 200
+  nrow: 200
+
+# The plotsettings is optional and only for the PNG/SVG plots,
+# but setting the range etc is quite useful. The settings is
+# hieractical, which means that a general level setting will be
+# overridden by a more spesific setting, e.g. see below
+plotsettings:
+
+  faultpolygons: ../xtgeo-testdata/polygons/reek/1/top_upper_reek_faultpoly.xyz
+
+  valuerange: [0, 10]     # value range min/max (values above below
+                          # will be truncated in plot!)
+  diffvaluerange: [-3, 0]     # value range min/max for date diffs
+
+  xlabelrotation: 25      # Rotate the X axis labels (if they may overlap)
+
+  colortable: rainbow     # colours jet/rainbow/seismic/gnuplot/gnuplot2/...
+                          # OR from RMS colour file
+
+  # individual settings will override general plot settings!
+  Z1:
+    valuerange: [0, 8]
+    colortable: gnuplot2
+
+  Z2:
+    valuerange: [0, 5]
+
+output:
+  mapfolder: TMP
+  plotfolder: TMP
+  tag: hc3c

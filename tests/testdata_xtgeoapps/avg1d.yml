@@ -1,0 +1,29 @@
+title: Reek
+# Case with no mapsettings; will then estimate from grid
+
+input:
+  # folderroot is a short form to a folder
+  folderroot: ../xtgeo-testdata/3dgrids/reek
+  grid: $folderroot/reek_sim_grid.roff
+  diffsat: $folderroot/reek--sim_swat--20021201_19991201.roff
+
+# zonation from file on YAML format
+zonation:
+  yamlfile: tests/yaml/avg1a_zone.yml  # re-use 1a
+
+
+computesettings:
+  zone: No  # if compute for all indivual zones
+  all: Yes  # if compute for all zones total
+
+plotsettings:
+  faultpolygons: ../xtgeo-testdata/polygons/reek/1/top_upper_reek_faultpoly.xyz
+  diffsat:
+    # general range:
+    valuerange: [-1, 1]
+
+output:
+  tag: avg1d     # the tag will added to file name as extra info, e.g. as
+                 # z1--avg1b_average_por.gri
+  mapfolder: TMP
+  plotfolder: TMP

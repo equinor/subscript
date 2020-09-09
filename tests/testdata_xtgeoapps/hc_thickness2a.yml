@@ -1,0 +1,27 @@
+title: Reek
+# Use a STOIIP or HCPV property from RMS
+
+input:
+  grid: ../xtgeo-testdata/3dgrids/reek/reek_geo_grid.roff
+  # the name is the actual name of the parameter in the ROFF file
+  # here STOIIP (if you don't know, try with "unknown" as name!)
+  stoiip: {STOIIP: ../xtgeo-testdata/3dgrids/reek/reek_geo_stooip.roff}
+
+  # date will just be informative (on plots etc) in this case
+  dates: [19900101]
+
+zonation:
+  zranges:
+    - Z1: [1, 5]
+    - Z2: [6, 10]
+    - Z3: [11, 14]
+
+computesettings:
+  mode: oil
+  zone: Yes
+  all: Yes
+
+output:
+  mapfolder: TMP
+  plotfolder: TMP
+  tag: 'stoiip'  # could be wise to tag the file name when using STOIIP

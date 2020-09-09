@@ -1,0 +1,7 @@
+myzonation:
+  zranges:
+    - Z1: [1, 5]
+    - Z2: [6, 10]
+    - Z3: [11, 14]
+  superranges:
+    - Z1+3: [Z1, Z3]

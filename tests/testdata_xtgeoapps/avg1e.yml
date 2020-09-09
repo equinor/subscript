@@ -1,0 +1,32 @@
+title: Reek
+# As 1d, but speed up with tuning
+
+input:
+  # folderroot is a short form to a folder
+  folderroot: ../xtgeo-testdata/3dgrids/reek
+  grid: $folderroot/reek_sim_grid.roff
+  diffsat: $folderroot/reek--sim_swat--20021201_19991201.roff
+
+# zonation from file on YAML format
+zonation:
+  yamlfile: tests/yaml/avg1a_zone.yml  # re-use 1a
+
+
+computesettings:
+  zone: No
+  all: Yes
+  tuning:
+    zone_avg: Yes    # will average, weighted per zone first -> faster
+    coarsen: 2       # sample every 2'nd cell -> faster
+
+plotsettings:
+  faultpolygons: ../xtgeo-testdata/polygons/reek/1/top_upper_reek_faultpoly.xyz
+  diffsat:
+    # general range:
+    valuerange: [-1, 1]
+
+output:
+  tag: avg1e
+
+  mapfolder: TMP
+  plotfolder: TMP
