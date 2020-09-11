@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # pylint: disable=bad-continuation
 """
 casegen_upcars is script to create conceptual model

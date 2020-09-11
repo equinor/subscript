@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Conversion between grid corner point formats"""
 
 import argparse
