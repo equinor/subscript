@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """ Engine part of casegen_upcars """
 # pylint:disable=bad-continuation
 
