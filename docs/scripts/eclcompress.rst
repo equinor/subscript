@@ -13,8 +13,15 @@ becomes::
 This compression technique is called
 `run-length encoding <https://en.wikipedia.org/wiki/Run-length_encoding>`_.
 
-If called with no arguments, files in ``eclipse/include/`` will be searched for
-and compressed if found. The ``--verbose`` option is recommended to see what happens.
+If called with no arguments, a default list of files will be used, equivalent
+to specifying a file list like::
+
+  eclipse/include/grid/*
+  eclipse/include/regions/*
+  eclipse/include/props/*
+
+The ``--verbose`` option is recommended to see what happens, and is default when
+run via ERT.
 
 
 Command line
@@ -28,31 +35,17 @@ Command line
 ERT usage
 ---------
 
-Eclcompress is available as a pre-installed forward model for Python 3. In your ert
+Eclcompress is available as a pre-installed forward model in ERT. In your ERT
 config, include::
 
   FORWARD_MODEL ECLCOMPRESS
 
 between RMS and Eclipse to effectuate compression. If you have a custom file-list,
-add that using the FILES argument to the forward model.
+add that using the FILES argument to the forward model:
 
-ERT usage Python 2
-^^^^^^^^^^^^^^^^^^
-If you are on Python 2, you need to define a job config file for ``ECLCOMPRESS``
-and load that job definition, the file ``ert/bin/jobs/ECLCOMPRESS`` should read::
+.. code-block:: console
 
-  EXECUTABLE eclcompress
-  DEFAULT <FILES> __NONE__
-  ARG_TYPE 0 STRING
-  ARGLIST "--verbose" "--files" <FILES>
-  MIN_ARG  0
-  MAX_ARG 1
-
-and you need::
-
-  INSTALL_JOB ECLCOMPRESS ../bin/jobs/ECLCOMPRESS
-
-in your ert config.
+  FORWARD_MODEL ECLCOMPRESS(<FILES>=custom-file-list.txt)
 
 Notes
 -----
