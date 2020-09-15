@@ -85,12 +85,6 @@ def prep_output_dir(tablesdir=None, suffix=None):
     return tablesdir
 
 
-def prt_perl_parser(prt_file):
-    """Call two underlying perl scripts to do the
-    dirty PRT-file parsing"""
-    return
-
-
 def main():
     args = get_parser().parse_args()
 
