@@ -8,8 +8,9 @@ from ert_shared.plugins.plugin_manager import ErtPluginManager
 
 EXPECTED_JOBS = {
     "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
-    "SUNSCH": "subscript/config_jobs/SUNSCH",
     "INTERP_RELPERM": "subscript/config_jobs/INTERP_RELPERM",
+    "PRTVOL2CSV": "subscript/config_jobs/PRTVOL2CSV",
+    "SUNSCH": "subscript/config_jobs/SUNSCH",
 }
 
 
