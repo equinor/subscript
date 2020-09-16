@@ -21,6 +21,8 @@ which will cause a secondary CSV file to be generated, where
 fipnum data are summed up to user specified regions.
 """
 
+CATEGORY = "utility.eclipse"
+
 
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
