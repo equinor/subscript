@@ -1,0 +1,6 @@
+EXECUTABLE convert_grid_format 
+
+ARG_TYPE 0 STRING
+ARG_TYPE 1 STRING
+
+ARGLIST "--conversion" ecl2roff "--file" <INPUTNAME> "--output" <OUTPUTNAME>
