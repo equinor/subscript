@@ -1,6 +1,3 @@
-"""Test module for restartthinner"""
-from __future__ import absolute_import
-
 import sys
 import os
 import shutil

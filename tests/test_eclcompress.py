@@ -1,7 +1,5 @@
 """Test eclcompress with  pytest"""
 
-from __future__ import absolute_import
-
 import sys
 import os
 import codecs
