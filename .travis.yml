@@ -16,7 +16,6 @@ sudo: required
 
 matrix:
   include:
-    - python: '2.7'
     - python: '3.6'
     - python: '3.7'
     - python: '3.8'
@@ -64,7 +63,7 @@ before_script:
   - rm -rf python/tests  # Avoid running these tests.
   - popd
 # Build against specific (i.e. tested) opm-common version
-# Latest release (2019.10) does not support all Python bindings
+# PyPI OPM is currently not an official tagged release.
   - git clone --recursive https://github.com/OPM/opm-common.git
               --branch=release/2020.04/rc2
   - pushd opm-common
@@ -96,4 +95,4 @@ before_script:
 script:
   - pip install .
   - python setup.py test
-  - if [[ $TRAVIS_PYTHON_VERSION ==  3.6 ]]; then sphinx-build -W -b html -nv docs/ build/docs; fi
+  - sphinx-build -W -b html -nv docs/ build/docs

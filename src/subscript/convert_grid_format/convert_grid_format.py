@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 """Conversion between grid corner point formats"""
-
-from __future__ import division, print_function, absolute_import
 
 import argparse
 import os

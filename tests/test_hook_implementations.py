@@ -1,5 +1,4 @@
 import os
-import sys
 import shutil
 
 import pytest
@@ -9,12 +8,12 @@ from ert_shared.plugins.plugin_manager import ErtPluginManager
 
 EXPECTED_JOBS = {
     "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
-    "SUNSCH": "subscript/config_jobs/SUNSCH",
     "INTERP_RELPERM": "subscript/config_jobs/INTERP_RELPERM",
+    "PRTVOL2CSV": "subscript/config_jobs/PRTVOL2CSV",
+    "SUNSCH": "subscript/config_jobs/SUNSCH",
 }
 
 
-@pytest.mark.skipif(sys.version_info.major < 3, reason="requires python3")
 def test_hook_implementations():
     pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
@@ -47,7 +46,6 @@ def test_job_config_syntax():
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(sys.version_info.major < 3, reason="requires python3")
 def test_executables():
     """Test executables listed in job configurations exist in $PATH"""
     src_path = os.path.join(os.path.dirname(__file__), "../src")
@@ -57,7 +55,6 @@ def test_executables():
             assert shutil.which(executable)
 
 
-@pytest.mark.skipif(sys.version_info.major < 3, reason="requires python3")
 def test_hook_implementations_job_docs():
     pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 

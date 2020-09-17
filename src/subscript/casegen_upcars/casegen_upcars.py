@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # pylint: disable=bad-continuation
 """
 casegen_upcars is script to create conceptual model
@@ -14,7 +13,6 @@ It has capability to:
 - etc. Check wiki for more details:
   https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen
 """
-from __future__ import print_function
 import shutil
 import argparse
 from yaml import load, Loader
