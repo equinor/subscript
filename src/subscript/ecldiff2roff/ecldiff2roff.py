@@ -11,7 +11,7 @@ DESCRIPTION = """Compare a 3D parameter at two different timestamps
 in an Eclipse restart file, and write the difference pr. cell as
 a 3D grid parameter in ROFF grid format.
 
-The file extension ``.roff`` will be added to the OUTPUTNAME argument.
+The file extension ``.roff`` will be added to the OUTPUT argument.
 """
 
 CATEGORY = "utility.eclipse"
