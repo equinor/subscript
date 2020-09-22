@@ -1,0 +1,8 @@
+EXECUTABLE ecldiff2roff
+
+ARG_TYPE 0 STRING
+ARG_TYPE 1 STRING
+ARG_TYPE 2 STRING
+ARG_TYPE 3 STRING
+
+ARGLIST <ECLROOT> <PROP> "--diffdates" <DIFFDATES> "--outputfilebase" <OUTPUT> "--verbose"
