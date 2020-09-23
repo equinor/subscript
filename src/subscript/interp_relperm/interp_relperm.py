@@ -1,5 +1,17 @@
-"""
-Interpolation script for relperm tables.
+import pandas as pd
+import pyscal
+import sys
+import os
+import yaml
+import argparse
+from ecl2df import satfunc
+
+import configsuite
+from configsuite import types
+from configsuite import MetaKeys as MK
+
+
+DESCRIPTION = """Interpolation script for relperm tables.
 Script reads base/high/low SWOF and SGOF tables from files and
 interpolates in between, using interpolation parameter(s) in range
 [-1,1], so that -1, 0, and 1 corresponds to low, base, and high tables
@@ -14,8 +26,12 @@ range accordingly interpolation between base and high, or low and
 high may be achieved.
 
 Krw, Krow, Pcow interpolated using parameter param_w
+
 Krg, Krog, Pcog interpolated using parameter param_g
 
+"""
+
+EPILOGUE = """
 .. code-block:: yaml
 
   # Example config file
@@ -69,21 +85,9 @@ Krg, Krog, Pcog interpolated using parameter param_g
       # be applied ie base table is returned
       param_w  :  0.5
 
-
 """
 
-from __future__ import print_function
-import pandas as pd
-import pyscal
-import sys
-import os
-import yaml
-import argparse
-from ecl2df import satfunc
-
-import configsuite
-from configsuite import types
-from configsuite import MetaKeys as MK
+CATEGORY = "utility.eclipse"
 
 
 @configsuite.validator_msg("Valid file name")
@@ -101,16 +105,38 @@ def _is_valid_interpolator_list(interpolators):
 
 @configsuite.validator_msg("Valid interpolator")
 def _is_valid_interpolator(interp):
-    inrange = False
+    valid = False
 
-    if "param_w" in interp:
-        if interp["param_w"] < 1.0 and interp["param_w"] > -1.0:
-            inrange = True
-    if "param_g" in interp:
-        if interp["param_g"] < 1.0 and interp["param_g"] > -1.0:
-            inrange = True
+    try:
+        if interp["param_w"]:
+            valid = True
+        elif interp["param_w"] == 0:
+            valid = True
 
-    return inrange
+    except BaseException:
+        pass
+
+    try:
+        if interp["param_w"] > 1.0 or interp["param_w"] < -1.0:
+            valid = False
+    except BaseException:
+        pass
+
+    try:
+        if interp["param_g"]:
+            valid = True
+        elif interp["param_g"] == 0:
+            valid = True
+    except BaseException:
+        pass
+
+    try:
+        if interp["param_g"] > 1.0 or interp["param_g"] < -1.0:
+            valid = False
+    except BaseException:
+        pass
+
+    return valid
 
 
 @configsuite.validator_msg("Valid table entries")
@@ -369,7 +395,9 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        epilog=__doc__, formatter_class=argparse.RawTextHelpFormatter
+        description=DESCRIPTION,
+        epilog=EPILOGUE,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
 
     parser.add_argument(

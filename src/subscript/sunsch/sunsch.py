@@ -13,7 +13,6 @@ import argparse
 import logging
 
 import yaml
-import six
 
 from opm.tools import TimeVector
 
@@ -21,10 +20,23 @@ import configsuite
 from configsuite import types
 from configsuite import MetaKeys as MK
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
+from subscript import getLogger
+
+logger = getLogger(__name__)
 
 SUPPORTED_DATEGRIDS = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
+
+DESCRIPTION = """Generate Eclipse Schedule file from merges and insertions.
+
+Reads a YAML-file specifying how a Eclipse Schedule section is to be
+produced given certain input files.
+
+Command line options override configuration in YAML.
+
+Output will not be generated unless the produced data is valid in
+Eclipse, checking provided by OPM."""
+
+CATEGORY = "utility.eclipse"
 
 
 @configsuite.validator_msg("Is dategrid a supported frequency")
@@ -123,7 +135,7 @@ def _v1_content_to_v2(config):
             del config["init"]
         if "merge" in config:
             # In v1, this can be both a list and a string
-            if isinstance(config["merge"], six.string_types):
+            if isinstance(config["merge"], str):
                 v2_files += [config["merge"]]
             else:
                 v2_files += config["merge"]
@@ -269,7 +281,7 @@ def get_schema():
 
 def datetime_from_date(date):
     """Set time to 00:00:00 in a date"""
-    if isinstance(date, six.string_types):
+    if isinstance(date, str):
         raise ValueError("Is the string {} a date?".format(str(date)))
     return datetime.datetime.combine(date, datetime.datetime.min.time())
 
@@ -303,7 +315,12 @@ def process_sch_config(conf):
 
     if conf.files is not None:
         for filename in conf.files:
-            logger.info("Loading %s", filename)
+            if sch_file_nonempty(filename):
+                logger.info("Loading %s", filename)
+            else:
+                logger.warning("No Eclipse statements in %s, skipping", filename)
+                continue
+
             file_starts_with_dates = sch_file_starts_with_dates_keyword(filename)
             timevector = load_timevector_from_file(
                 filename, conf.startdate, file_starts_with_dates
@@ -346,7 +363,12 @@ def process_sch_config(conf):
             # Do the insertion:
             if date >= conf.starttime:
                 if insert_statement.string is None:
-                    schedule.load(filename, date=date)
+                    if sch_file_nonempty(filename):
+                        schedule.load(filename, date=date)
+                    else:
+                        logger.warning(
+                            "No Eclipse statements in %s, skipping", filename
+                        )
                 else:
                     schedule.add_keywords(
                         datetime_from_date(date), [insert_statement.string]
@@ -415,6 +437,29 @@ def load_timevector_from_file(filename, startdate, file_starts_with_dates):
     return tmpschedule
 
 
+def sch_file_nonempty(filename):
+    """Determine if a file (to be included) has any Eclipse
+    keywords at all (excluding comments)
+
+    Args:
+        filename (str)
+
+    Returns:
+        bool: False if the file is empty or has only comments.
+    """
+    # Implementation is by trial and error:
+    try:
+        tmpschedule = TimeVector(datetime.date(1900, 1, 1))
+        tmpschedule.load(filename)
+    except IndexError:
+        return False
+    except ValueError:
+        # This is where we get for files not starting with DATES,
+        # but that means it is nonempty
+        return True
+    return True
+
+
 def sch_file_starts_with_dates_keyword(filename):
     """Determine if a file (to be included) has
     DATES as its first keyword, or something else.
@@ -430,16 +475,14 @@ def sch_file_starts_with_dates_keyword(filename):
     Returns:
         bool: true if first keyword is DATES
     """
-    file_starts_with_dates = True
-
     # Implementation is by trial and error:
     try:
         # Test if it has DATES
         tmpschedule = TimeVector(datetime.date(1900, 1, 1))
         tmpschedule.load(filename)
     except ValueError:
-        file_starts_with_dates = False
-    return file_starts_with_dates
+        return False
+    return True
 
 
 def substitute(insert_statement):
@@ -621,15 +664,7 @@ def get_parser():
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        description="""Generate Eclipse Schedule file from merges and insertions.
-
-Reads a YAML-file specifying how a Eclipse Schedule section is to be
-produced given certain input files.
-
-Command line options override configuration in YAML.
-
-Output will not be generated unless the produced data is valid in
-Eclipse, checking provided by OPM.""",
+        description=DESCRIPTION,
         epilog="""YAML-file components::
 
  startdate - YYYY-MM-DD for the initial date of the simulation (START keyword)

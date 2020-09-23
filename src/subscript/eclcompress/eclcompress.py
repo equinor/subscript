@@ -10,24 +10,16 @@ import textwrap
 import argparse
 import re
 
-logger = logging.getLogger(__name__)
-logging.basicConfig()
+import subscript
 
-DESCRIPTION = """Compress Eclipse input files by using the Eclipse
-syntax <number>*<value> so that the data set::
+logger = subscript.getLogger(__name__)
 
-  0  0  0  1  2  3  2  2  2  2
-
-becomes::
-
-  3*0 1 2 3 4*2
-
+DESCRIPTION = """Apply run-length encoding to Eclipse input files, such
+that consecutive numbers like "1 1 1 1" are compressed to "4*1".
 The script processes one file at a time, replacing the files with
-compressed versions, leaving behind the original *only* if
-requested by a command line option.
+compressed versions.
 
-On the command line, may either provide a list of files to compress,
-or point to a text file with a filename (wildcards supported) pr. line,
+If called with no arguments, a default file list is used.
 """
 
 DEFAULT_FILES_TO_COMPRESS = [
@@ -37,15 +29,11 @@ DEFAULT_FILES_TO_COMPRESS = [
 ]
 
 EPILOG = """
-Compression statistics is computed and included in an Eclipse comment in
-the output.
-
-See https://en.wikipedia.org/wiki/Run-length_encoding for the compression
-algorithm used.
-
 Default list of files to compress is """ + " ".join(
     DEFAULT_FILES_TO_COMPRESS
 )
+
+CATEGORY = "utility.eclipse"
 
 # The string used here must match what is used as the DEFAULT
 # parameter in the ert joob config. It is not used elsewhere.
@@ -356,10 +344,18 @@ def get_parser():
         nargs="*",
         help=(
             "List of Eclipse grdecl files to compress, supporting wildcards. "
-            "If no files are given, a default wildcard list will be used."
+            "If no files are given, a default wildcard list will be used. "
+            "Wildcards should be enclosed in quotes when called on the command line."
         ),
     )
-    parser.add_argument("--dryrun", action="store_true", help="Dry run only")
+    parser.add_argument(
+        "--dryrun",
+        action="store_true",
+        help=(
+            "Dry run only. No files on disk will be modified, "
+            "but compression statistics will be outputted."
+        ),
+    )
     parser.add_argument(
         "--keeporiginal", action="store_true", help="Copy original to filename.orig"
     )

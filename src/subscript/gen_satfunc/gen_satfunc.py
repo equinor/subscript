@@ -8,10 +8,12 @@ import pyscal
 def get_parser():
     parser = argparse.ArgumentParser(prog="gen_satfunc")
     parser.add_argument(
-        "config_file", help=("Path to configuration file."),
+        "config_file",
+        help=("Path to configuration file."),
     )
     parser.add_argument(
-        "output_file", help="Path to output file with SWOF and/or SGOF tables.",
+        "output_file",
+        help="Path to output file with SWOF and/or SGOF tables.",
     )
     return parser
 

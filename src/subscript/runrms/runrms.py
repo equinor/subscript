@@ -1,9 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-# Author: jriv@equinor.com
-
-from __future__ import division, absolute_import
-from __future__ import print_function, unicode_literals
 
 import sys
 import time
@@ -97,7 +92,11 @@ def get_parser():
     )
 
     prs.add_argument(
-        "--version", "-v", dest="rversion", type=str, help="RMS version, e.g. 10.1.3",
+        "--version",
+        "-v",
+        dest="rversion",
+        type=str,
+        help="RMS version, e.g. 10.1.3",
     )
 
     prs.add_argument(
@@ -217,6 +216,14 @@ class RunRMS(object):
         self.oldpythonpath = ""
         if "PYTHONPATH" in os.environ:
             self.oldpythonpath = os.environ["PYTHONPATH"]
+
+        # Set environment variables for use by `run_external`
+        # from equinor/equilibrium:
+        if "PYTHONPATH" in os.environ:
+            os.environ["_PRE_RMS_PYTHONPATH"] = os.environ["PYTHONPATH"]
+        else:
+            os.environ["_PRE_RMS_PYTHONPATH"] = ""
+        os.environ["_PRE_RMS_BACKUP"] = "1"
 
         print(
             _BColors.BOLD,
@@ -500,7 +507,7 @@ class RunRMS(object):
             )
 
     def launch_rms(self, empty=False):
-        """Lauch RMS with correct pythonpath"""
+        """Launch RMS with correct pythonpath"""
 
         if self.exe is None:
             self.exe = "rms -v " + self.version_requested

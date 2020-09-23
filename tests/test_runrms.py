@@ -41,6 +41,12 @@ def test_do_parse_args(tmpdir):
     assert "dryrun=True" in str(runner.args)
 
 
+def test_backuppythonpath():
+    rr.RunRMS()
+    assert "_PRE_RMS_BACKUP" in os.environ
+    assert "_PRE_RMS_PYTHONPATH" in os.environ
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""

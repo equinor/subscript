@@ -2,10 +2,6 @@
 Merge multiple CSV files.
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import os
 import sys
 import argparse
@@ -14,8 +10,9 @@ import logging
 
 import pandas as pd
 
-logging.basicConfig()
-logger = logging.getLogger(__name__.split(".")[-1])
+import subscript
+
+logger = subscript.getLogger(__name__)
 
 REAL_REGEXP = r".*realization-(\d+)/.*"
 ITER_REGEXP = r".*/iter-(\d+).*"

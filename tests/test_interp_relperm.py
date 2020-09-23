@@ -1,11 +1,10 @@
-# from __future__ import absolute_import
-
 import pandas as pd
 import os
 import yaml
 import sys
 import configsuite
 
+# import pathlib
 import subprocess
 import pytest
 
@@ -14,11 +13,12 @@ from pyscal import PyscalFactory
 from ecl2df import satfunc
 
 TESTDATA = os.path.join(os.path.dirname(__file__), "testdata_interp_relperm")
+# TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
 
 
 def test_get_cfg_schema():
 
-    cfg_filen = os.path.join(TESTDATA, "cfg.yml")
+    cfg_filen = os.path.join(str(TESTDATA), "cfg.yml")
 
     with open(cfg_filen, "r") as ymlfile:
         cfg = yaml.safe_load(ymlfile)
@@ -26,19 +26,17 @@ def test_get_cfg_schema():
     # add root-path to all include files
     if "base" in cfg.keys():
         for i in range(len(cfg["base"])):
-            cfg["base"][i] = os.path.join(TESTDATA, cfg["base"][i])
+            cfg["base"][i] = os.path.join(str(TESTDATA), cfg["base"][i])
     if "high" in cfg.keys():
         for i in range(len(cfg["high"])):
-            cfg["high"][i] = os.path.join(TESTDATA, cfg["high"][i])
+            cfg["high"][i] = os.path.join(str(TESTDATA), cfg["high"][i])
     if "low" in cfg.keys():
         for i in range(len(cfg["low"])):
-            cfg["low"][i] = os.path.join(TESTDATA, cfg["low"][i])
+            cfg["low"][i] = os.path.join(str(TESTDATA), cfg["low"][i])
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
 
-    print(suite.valid)
-    print(suite.errors)
     assert suite.valid
 
 
@@ -57,7 +55,7 @@ def test_schema_errors():
     assert not parsed_cfg.valid
     assert "Valid file name" in str(parsed_cfg.errors)
 
-    os.chdir(TESTDATA)
+    os.chdir(str(TESTDATA))
 
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
@@ -104,6 +102,14 @@ def test_schema_errors():
     assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_g": -1.5}]
+    cfg["interpolations"] = [{"param_w": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert parsed_cfg.valid
+
+    cfg["interpolations"] = [{"param_w": 1.5}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
@@ -112,6 +118,8 @@ def test_schema_errors():
     assert "Valid interpolator" in str(parsed_cfg.errors)
 
     cfg["interpolations"] = [{"param_w": 0}]
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
@@ -119,23 +127,42 @@ def test_schema_errors():
     assert parsed_cfg.valid
 
     cfg["interpolations"] = [{"param_w": "some weird text"}]
+
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+
+    assert not parsed_cfg.valid
+    assert "Is x a number is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": 1.5}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
 
     assert not parsed_cfg.valid
     cfg["interpolations"] = [{"param_g": "Null"}]
+
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
+
+    cfg["interpolations"] = [{"param_g": -1.5}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
 
     assert not parsed_cfg.valid
+    assert "Valid interpolator is false on input" in str(parsed_cfg.errors)
 
-    cfg["interpolations"] = [{"param_g": 0}]
+    cfg["interpolations"] = [{"param_w": 0}]
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
     )
 
+    assert parsed_cfg.valid
+    cfg["interpolations"] = [{"param_g": 0}]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
     assert parsed_cfg.valid
 
     cfg["interpolations"] = [{"param_w": 0, "param_g": 0}]
@@ -152,8 +179,8 @@ def test_schema_errors():
 
 
 def test_tables_to_dataframe():
-    swoffn = os.path.join(TESTDATA, "swof_base.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
 
     tables_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -175,18 +202,18 @@ def test_tables_to_dataframe():
 
 
 def test_make_interpolant():
-    swoffn = os.path.join(TESTDATA, "swof_base.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_base.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
 
     base_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(TESTDATA, "swof_pes.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_pes.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_pes.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_pes.inc")
 
     low_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(TESTDATA, "swof_opt.inc")
-    sgoffn = os.path.join(TESTDATA, "sgof_opt.inc")
+    swoffn = os.path.join(str(TESTDATA), "swof_opt.inc")
+    sgoffn = os.path.join(str(TESTDATA), "sgof_opt.inc")
 
     high_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -209,9 +236,9 @@ def test_make_interpolant():
 def test_args(tmpdir):
     tmpdir.chdir()
 
-    test_cfg = os.path.join(TESTDATA, "cfg.yml")
+    test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
 
-    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", TESTDATA]
+    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", str(TESTDATA)]
 
     interp_relperm.main()
 
@@ -240,13 +267,16 @@ def test_mock(tmpdir):
         "drho",
     ]
     dframe_pess = pd.DataFrame(
-        columns=columns, data=[[1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150]],
+        columns=columns,
+        data=[[1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150]],
     )
     dframe_base = pd.DataFrame(
-        columns=columns, data=[[1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150]],
+        columns=columns,
+        data=[[1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150]],
     )
     dframe_opt = pd.DataFrame(
-        columns=columns, data=[[1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150]],
+        columns=columns,
+        data=[[1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150]],
     )
     PyscalFactory.create_pyscal_list(dframe_pess).dump_family_1("pess.inc")
     PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")
@@ -406,9 +436,9 @@ def test_main(tmpdir):
 
     assert os.system("interp_relperm -h") == 0
 
-    test_cfg = os.path.join(TESTDATA, "cfg.yml")
+    test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
 
-    sys.argv = [__file__, "-c", test_cfg, "-r", TESTDATA]
+    sys.argv = [__file__, "-c", test_cfg, "-r", str(TESTDATA)]
 
     interp_relperm.main()
 

@@ -1,13 +1,6 @@
 """
 NPV calculation of oil and gas production income
-
-Documentation:
-https://wiki.equinor.com/wiki/index.php/ResScript:Python:Scripts:presentvalue
 """
-
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
 
 import datetime
 import sys
@@ -135,16 +128,6 @@ def get_parser():
 def main():
     parser = get_parser()
     args = parser.parse_args()
-
-    # if not args.quiet:
-    #     header.compose(
-    #        "presentvalue",
-    #        "June 2016",
-    #        ["Havard Berland", "Wouter J. de Bruin"],
-    #        ["havb@statoil.com", "wbr@statoil.com"],
-    #        ["Access help with -h or check wiki"],
-    #        "Calculates economics of an Eclipse run, or difference between two runs.",
-    #     )
 
     # This is not adjustable pr options.. :)
     barrelsprcubic = 6.28981077

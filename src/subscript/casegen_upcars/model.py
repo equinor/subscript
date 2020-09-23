@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
 """ Engine part of casegen_upcars """
 # pylint:disable=bad-continuation
-from __future__ import print_function
+
+import io
 import math
 import datetime
 import itertools
 from itertools import product
 
-import six
 import numpy as np
 
 from .udf import listify, TERMINALCOLORS, uniform_dist
@@ -427,7 +426,9 @@ class Model:
                 idx : idx + self._fracture_cell_count,
                 start_fracture_idx:end_fracture_idx,
                 start_fracture_k : end_fracture_k + 1,
-            ] = (i + 1)
+            ] = (
+                i + 1
+            )
 
         for i, idx in enumerate(self._fracture_j):
             fracture_length = max(0.0, min(1.0, self._fracture_length_x[i])) * self._lx
@@ -491,15 +492,19 @@ class Model:
 
         self._xv, self._yv = np.meshgrid(self._x, self._y)
         if self._a * self._b * self._c != 0.0:
-            self._zv = -self._c * np.sqrt(
-                np.clip(
-                    1.0
-                    - (self._xv - x_mid) ** 2 / self._a ** 2
-                    - (self._yv - y_mid) ** 2 / self._b ** 2,
-                    0,
-                    None,
+            self._zv = (
+                -self._c
+                * np.sqrt(
+                    np.clip(
+                        1.0
+                        - (self._xv - x_mid) ** 2 / self._a ** 2
+                        - (self._yv - y_mid) ** 2 / self._b ** 2,
+                        0,
+                        None,
+                    )
                 )
-            ) + (self._xv - x_mid) * math.tan(math.radians(self._tilt))
+                + (self._xv - x_mid) * math.tan(math.radians(self._tilt))
+            )
         else:
             self._zv = (self._xv - x_mid) * math.tan(math.radians(self._tilt))
         self._zv += self._top - self._zv.min()
@@ -664,7 +669,7 @@ class Model:
         self, filename, keyword, matrix_prop, streak_prop, frac_props, vug_prop
     ):
         """ Print out grid property to Eclipse format file """
-        buffer_ = six.StringIO()
+        buffer_ = io.StringIO()
         print(
             "-- Property file generated using CaseGenerator "
             + datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
@@ -737,7 +742,7 @@ class Model:
                 + self._layer_dz[i]
             )
 
-        buffer_ = six.StringIO()
+        buffer_ = io.StringIO()
         print(
             "-- GRID generated using CaseGenerator "
             + datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
@@ -759,7 +764,7 @@ class Model:
         for i in range(0, self._xv.shape[0]):
             for j in range(0, self._xv.shape[1]):
                 print(
-                    "{{x:{0}}} {{y:{0}}} {{z:{0}}}"
+                    "{{x:{0}}} {{y:{0}}} {{z:{0}}} "
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}}".format(
                         self._eclipse_output_float
                     ).format(x=self._xv[i, j], y=self._yv[i, j], z=0.0),
@@ -1127,9 +1132,9 @@ class Model:
         """
         Calculate geometry factor which describes size-relationship between
         center-blocks and north/south or east/west blocks
-            1 	: all matrix blocks equal size
-            > 1	: N/S- or E/W- blocks are larger than center blocks
-          < 1	: center blocks are larger than N/S- or E/W- blocks
+            1   : all matrix blocks equal size
+            > 1 : N/S- or E/W- blocks are larger than center blocks
+            < 1 : center blocks are larger than N/S- or E/W- blocks
         """
         result = [0] * 2
         for idx, val in enumerate([self._matrix_x_arr, self._matrix_y_arr]):

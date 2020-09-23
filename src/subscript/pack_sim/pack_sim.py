@@ -1,18 +1,12 @@
-# -*- coding: utf-8 -*-
-from __future__ import absolute_import, division, print_function
 import sys
 import os
 import time
 import hashlib
-import six
 from shutil import copy
 
 import argparse
 
-try:
-    from StringIO import StringIO  # Python 2 import
-except ImportError:
-    from io import StringIO  # Python 3 import
+from io import StringIO
 
 DESCRIPTION = """The script pack_sim will read trough a data file and copy all
 include files to one include directory in the so-called packing
@@ -102,7 +96,7 @@ def _md5checksum(filepath=None, data=None):
 
     def _md5_on_fhandle(fhandle):
         m = hashlib.md5()
-        wholefile = six.ensure_str(fhandle.read())
+        wholefile = str(fhandle.read())
         m.update("".join(wholefile.splitlines()).encode("utf-8"))
         return m.hexdigest()
 
@@ -119,7 +113,7 @@ def _md5checksum(filepath=None, data=None):
     if data is not None:
         return _md5_on_fhandle(StringIO(data))
     # else:
-    with open(filepath, "rb") as fhandle:
+    with open(filepath, "r") as fhandle:
         return _md5_on_fhandle(fhandle)
 
 

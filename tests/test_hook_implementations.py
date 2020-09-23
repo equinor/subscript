@@ -1,5 +1,4 @@
 import os
-import sys
 import shutil
 
 import pytest
@@ -9,11 +8,15 @@ from ert_shared.plugins.plugin_manager import ErtPluginManager
 
 EXPECTED_JOBS = {
     "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
+    "ECLGRID2ROFF": "subscript/config_jobs/ECLGRID2ROFF",
+    "ECLINIT2ROFF": "subscript/config_jobs/ECLINIT2ROFF",
+    "ECLRST2ROFF": "subscript/config_jobs/ECLRST2ROFF",
+    "INTERP_RELPERM": "subscript/config_jobs/INTERP_RELPERM",
+    "PRTVOL2CSV": "subscript/config_jobs/PRTVOL2CSV",
     "SUNSCH": "subscript/config_jobs/SUNSCH",
 }
 
 
-@pytest.mark.skipif(sys.version_info.major < 3, reason="requires python3")
 def test_hook_implementations():
     pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
@@ -46,7 +49,6 @@ def test_job_config_syntax():
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(sys.version_info.major < 3, reason="requires python3")
 def test_executables():
     """Test executables listed in job configurations exist in $PATH"""
     src_path = os.path.join(os.path.dirname(__file__), "../src")
@@ -54,3 +56,17 @@ def test_executables():
         with open(os.path.join(src_path, job_config)) as f_handle:
             executable = f_handle.readlines()[0].split()[1]
             assert shutil.which(executable)
+
+
+def test_hook_implementations_job_docs():
+    pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
+
+    installable_jobs = pm.get_installable_jobs()
+
+    docs = pm.get_documentation_for_jobs()
+
+    assert set(docs.keys()) == set(installable_jobs.keys())
+
+    for job_name in installable_jobs.keys():
+        assert docs[job_name]["description"] != ""
+        assert docs[job_name]["category"] != "other"

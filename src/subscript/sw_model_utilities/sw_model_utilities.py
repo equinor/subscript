@@ -5,7 +5,6 @@
 #
 # https://wiki.equinor.com/wiki/index.php/Res:The_sw_model_utilities_script
 #
-# JRIV
 
 import argparse
 import math

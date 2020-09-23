@@ -1,13 +1,12 @@
 """Test that casegen_upcars is installed and launched with given demo cases"""
 # pylint:disable=bad-continuation
-from __future__ import absolute_import, print_function
 import os
 import subprocess
 import shutil
 
 import pandas as pd
 
-# from subscript.casegen_upcars import casegen_upcars
+import opm.io
 
 TESTDATA = "testdata_casegen_upcars"
 DATADIR = os.path.join(os.path.dirname(__file__), TESTDATA)
@@ -42,6 +41,8 @@ def test_demo_small_scale(tmpdir):
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
     ):
         assert os.path.exists(pre + base_name + suf)
+        if suf != ".DATA":
+            assert opm.io.Parser().parse(pre + base_name + suf)
 
     # check some key parameters in output file
     data_frame = pd.read_csv(base_name + ".DATA", index_col=0)
@@ -77,6 +78,8 @@ def test_demo_large_scale(tmpdir):
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
     ):
         assert os.path.exists(pre + base_name + suf)
+        if suf != ".DATA":
+            assert opm.io.Parser().parse(str(pre + base_name + suf))
 
     # check some key parameters in output file
     data_frame = pd.read_csv(base_name + ".DATA", index_col=0)

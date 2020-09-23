@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
 """Conversion between grid corner point formats"""
-
-from __future__ import division, print_function, absolute_import
 
 import argparse
 import os
@@ -66,15 +63,16 @@ def get_parser():
         "--propnames",
         dest="propnames",
         type=str,
-        help="List of propnames, separate either with \
-                        spaces or colon",
+        help="List of propnames, separate either with spaces or colon",
     )
     parser.add_argument(
         "--dates",
         dest="dates",
         type=str,
-        help="List of dates, separate either with \
-                        spaces or colon",
+        help=(
+            "List of dates, separated by spaces or colon, or filename "
+            "pointing to a file with one date pr. line."
+        ),
     )
 
     parser.add_argument(
@@ -153,6 +151,9 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
             if dates is None:
                 raise SystemExit("STOP. No dates given")
 
+            if os.path.exists(dates):
+                with open(dates, "r") as datesfile_h:
+                    dates = " ".join(datesfile_h.readlines())
             if ":" in dates:
                 dates = dates.split(":")
             else:
