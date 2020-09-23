@@ -412,8 +412,8 @@ def get_parser():
         "-r",
         "--root-path",
         type=str,
-        default="",
-        help="Root path assumed for relative paths in config file.",
+        default="./",
+        help="Root path assumed for relative paths in config file, except for the output file.",
     )
     return parser
 
@@ -442,13 +442,16 @@ def process_config(cfg, root_path=""):
     # add root-path to all include files
     if "base" in cfg.keys():
         for i in range(len(cfg["base"])):
-            cfg["base"][i] = os.path.join(root_path, cfg["base"][i])
+            if not os.path.isabs(cfg["base"][i]):
+                cfg["base"][i] = os.path.join(root_path, cfg["base"][i])
     if "high" in cfg.keys():
         for i in range(len(cfg["high"])):
-            cfg["high"][i] = os.path.join(root_path, cfg["high"][i])
+            if not os.path.isabs(cfg["high"][i]):
+                cfg["high"][i] = os.path.join(root_path, cfg["high"][i])
     if "low" in cfg.keys():
         for i in range(len(cfg["low"])):
-            cfg["low"][i] = os.path.join(root_path, cfg["low"][i])
+            if not os.path.isabs(cfg["low"][i]):
+                cfg["low"][i] = os.path.join(root_path, cfg["low"][i])
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()
