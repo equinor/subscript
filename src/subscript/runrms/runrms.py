@@ -502,7 +502,7 @@ class RunRMS(object):
             self.pluginspath = ""
             xwarn(
                 "Equinor RMS_PLUGINS_PATH for RMS ({}) not existing, set empty".format(
-                    python3path
+                    pluginspath
                 )
             )
 
