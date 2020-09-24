@@ -17,4 +17,8 @@ if the file ``dates.txt`` contains only the line::
 
 CATEGORY = "utility.eclipse"
 
-EXAMPLES = "FORWARD_MODEL ECLRST2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid, <PROP>=SGAS:SWAT, <DATES>=dates.txt)"  # noqa
+EXAMPLES = """
+.. code-block:: console
+
+  FORWARD_MODEL ECLRST2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid, <PROP>=SGAS:SWAT, <DATES>=dates.txt)
+"""  # noqa

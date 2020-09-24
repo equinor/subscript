@@ -13,4 +13,8 @@ given below will produce the files::
 
 CATEGORY = "utility.eclipse"
 
-EXAMPLES = "FORWARD_MODEL ECLINIT2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid, <PARAMETER>=PORO:PERMX)"  # noqa
+EXAMPLES = """
+.. code-block:: console
+
+  FORWARD_MODEL ECLINIT2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid, <PROP>=PORO:PERMX)
+  """  # noqa
