@@ -37,9 +37,7 @@ before_install:
 
 
 install:
-  - python -m pip install --upgrade pip
-  - python -m pip install --upgrade -r requirements.txt
-  - python -m pip install --upgrade -r requirements-dev.txt
+  - pip install .[tests,docs]
 
 # We compile and install libecl, because we need the C utilities as well as
 # the Python API. Only the Python API follows from the pip-installable libecl.
@@ -93,6 +91,5 @@ before_script:
   - pip install ert/ --prefix=$INSTALL_DIR
 
 script:
-  - pip install .
   - python setup.py test
   - sphinx-build -W -b html -nv docs/ build/docs

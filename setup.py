@@ -46,13 +46,39 @@ LEGACYSCRIPTS = [
     "runeclipse",
 ]
 
+REQUIREMENTS = [
+    "pandas",
+    "scipy",
+    "pyyaml",
+    "pyscal",
+    "matplotlib",
+    "numpy",
+    "ecl2df",
+    "configsuite",
+    "xlrd",
+    "xtgeo",
+]
+
+SETUP_REQUIREMENTS = [
+    "setuptools >=28",
+    "setuptools_scm",
+    "pytest-runner",
+    "check-manifest",
+]
+
 TEST_REQUIREMENTS = [
     "black>=20.8b0",
     "flake8",
     "pytest",
     "check-manifest",
 ]
-EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS}
+DOCS_REQUIREMENTS = [
+    "sphinx",
+    "sphinx-argparse",
+    "sphinx_rtd_theme",
+    "autoapi",
+]
+EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS}
 
 setuptools.setup(
     name="subscript",
@@ -71,13 +97,8 @@ setuptools.setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
-    install_requires=[],
-    setup_requires=[
-        "setuptools >=28",
-        "setuptools_scm",
-        "pytest-runner",
-        "check-manifest",
-    ],
+    install_requires=REQUIREMENTS,
+    setup_requires=SETUP_REQUIREMENTS,
     entry_points={
         "console_scripts": SSCRIPTS,
         "ert": ["subscript_jobs = subscript.hook_implementations.jobs"],
