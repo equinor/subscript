@@ -5,7 +5,7 @@ ARG_TYPE 1 STRING
 ARG_TYPE 2 STRING
 ARG_TYPE 3 STRING 
 
-ARGLIST "--conversion" ecl2roff "--file" <INPUTNAME> "--output" <OUTPUTNAME> "--propnames" <PARAMETER>  "--dates" <DATESFILE> "--mode" restart "--standardfmu"
+ARGLIST "--conversion" ecl2roff "--file" <ECLROOT> "--output" <OUTPUT> "--propnames" <PROP>  "--dates" <DATES> "--mode" restart "--standardfmu"
 
 MIN_ARG 4
 MAX_ARG 4
