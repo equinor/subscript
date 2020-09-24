@@ -1,8 +1,11 @@
-EXECUTABLE	interp_relperm
-ARGLIST    "-c" <INTERP_CONFIG> "--root-path" <CONFIG_PATH>
+EXECUTABLE  interp_relperm
 
-MIN_ARG    1
-MAX_ARG    2
+DEFAULT  <ROOT_PATH> "./"
+
+ARGLIST  "-c" <INTERP_CONFIG> "--root-path" <ROOT_PATH>
+
+MIN_ARG  1
+MAX_ARG  2
 ARG_TYPE 0 STRING
 
 STDERR INTERP_RELPERM.stderr

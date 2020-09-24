@@ -1,10 +1,13 @@
-import pandas as pd
-import pyscal
+"""interp_relperm module"""
+
 import sys
 import os
-import yaml
 import argparse
+import yaml
+import pandas as pd
+import pyscal
 from ecl2df import satfunc
+
 
 import configsuite
 from configsuite import types
@@ -99,8 +102,7 @@ def _is_filename(fname):
 def _is_valid_interpolator_list(interpolators):
     if len(interpolators) > 0:
         return True
-    else:
-        return False
+    return False
 
 
 @configsuite.validator_msg("Valid interpolator")
@@ -113,13 +115,13 @@ def _is_valid_interpolator(interp):
         elif interp["param_w"] == 0:
             valid = True
 
-    except BaseException:
+    except ValueError:
         pass
 
     try:
         if interp["param_w"] > 1.0 or interp["param_w"] < -1.0:
             valid = False
-    except BaseException:
+    except ValueError:
         pass
 
     try:
@@ -127,13 +129,13 @@ def _is_valid_interpolator(interp):
             valid = True
         elif interp["param_g"] == 0:
             valid = True
-    except BaseException:
+    except ValueError:
         pass
 
     try:
         if interp["param_g"] > 1.0 or interp["param_g"] < -1.0:
             valid = False
-    except BaseException:
+    except ValueError:
         pass
 
     return valid
@@ -159,7 +161,9 @@ def _is_valid_table_entries(schema):
 
 
 def get_cfg_schema():
-
+    """
+    Defines the yml config schema
+    """
     schema = {
         MK.Type: types.NamedDict,
         MK.Content: {
@@ -233,7 +237,7 @@ def tables_to_dataframe(filenames):
     )
 
 
-def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
+def make_interpolant(base_df, low_df, high_df, interp_param, satnum, delta_s):
     """
     Routine to define a pyscal.interpolant instance and perform interpolation.
 
@@ -244,7 +248,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         interp_param (dict): With keys ('param_w', 'param_g'),
             the interp parameter values
         satnum (int): the satuation number index
-        h (float): the saturation spacing to be used in out tables
+        delta_s (float): the saturation spacing to be used in out tables
 
     Returns:
         pyscal.WaterOilGas: Object holding tables for one satnum
@@ -252,7 +256,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
 
     # Define base tables
     swlbase = base_df.loc["SWOF", satnum]["SW"].min()
-    base = pyscal.WaterOilGas(swl=float(swlbase), h=h)
+    base = pyscal.WaterOilGas(swl=float(swlbase), h=delta_s)
     base.wateroil.add_fromtable(
         base_df.loc["SWOF", satnum].reset_index(),
         swcolname="SW",
@@ -264,7 +268,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     # Define low tables
     if "SWOF" in low_df.index.unique():
         swllow = low_df.loc["SWOF", satnum]["SW"].min()
-        low = pyscal.WaterOilGas(swl=float(swllow), h=h)
+        low = pyscal.WaterOilGas(swl=float(swllow), h=delta_s)
         low.wateroil.add_fromtable(
             low_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
@@ -274,7 +278,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         )
     else:
         swllow = base_df.loc["SWOF", satnum]["SW"].min()
-        low = pyscal.WaterOilGas(swl=float(swllow), h=h)
+        low = pyscal.WaterOilGas(swl=float(swllow), h=delta_s)
         low.wateroil.add_fromtable(
             base_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
@@ -286,7 +290,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
     # Define high tables
     if "SWOF" in high_df.index.unique():
         swlhigh = high_df.loc["SWOF", satnum]["SW"].min()
-        high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
+        high = pyscal.WaterOilGas(swl=float(swlhigh), h=delta_s)
         high.wateroil.add_fromtable(
             high_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
@@ -296,7 +300,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
         )
     else:
         swlhigh = base_df.loc["SWOF", satnum]["SW"].min()
-        high = pyscal.WaterOilGas(swl=float(swlhigh), h=h)
+        high = pyscal.WaterOilGas(swl=float(swlhigh), h=delta_s)
         high.wateroil.add_fromtable(
             base_df.loc["SWOF", satnum].reset_index(),
             swcolname="SW",
@@ -352,7 +356,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
             pccolname="PCOG",
         )
 
-    rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=h)
+    rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=delta_s)
 
     if "SWOF" not in low_df.index.unique() and interp_param["param_w"] < 0:
         sys.exit(
@@ -390,10 +394,13 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, h):
             + " but no high table is provided. Values cannot be positive"
         )
 
-    return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=h)
+    return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=delta_s)
 
 
 def get_parser():
+    """
+    Define the argparse parser
+    """
     parser = argparse.ArgumentParser(
         description=DESCRIPTION,
         epilog=EPILOGUE,
@@ -412,13 +419,19 @@ def get_parser():
         "-r",
         "--root-path",
         type=str,
-        default="",
-        help="Root path assumed for relative paths in config file.",
+        default="./",
+        help=(
+            "Root path assumed for relative paths"
+            " in config file, except for the output file."
+        ),
     )
     return parser
 
 
 def main():
+    """
+    Main function; this is what is executed
+    """
     parser = get_parser()
     args = parser.parse_args()
 
@@ -442,13 +455,16 @@ def process_config(cfg, root_path=""):
     # add root-path to all include files
     if "base" in cfg.keys():
         for i in range(len(cfg["base"])):
-            cfg["base"][i] = os.path.join(root_path, cfg["base"][i])
+            if not os.path.isabs(cfg["base"][i]):
+                cfg["base"][i] = os.path.join(root_path, cfg["base"][i])
     if "high" in cfg.keys():
         for i in range(len(cfg["high"])):
-            cfg["high"][i] = os.path.join(root_path, cfg["high"][i])
+            if not os.path.isabs(cfg["high"][i]):
+                cfg["high"][i] = os.path.join(root_path, cfg["high"][i])
     if "low" in cfg.keys():
         for i in range(len(cfg["low"])):
-            cfg["low"][i] = os.path.join(root_path, cfg["low"][i])
+            if not os.path.isabs(cfg["low"][i]):
+                cfg["low"][i] = os.path.join(root_path, cfg["low"][i])
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()
@@ -517,13 +533,13 @@ def process_config(cfg, root_path=""):
         )
 
     # Dump to Eclipse include file:
-    with open(cfg_suite.snapshot.result_file, "w") as f:
-        f.write("SWOF\n")
+    with open(cfg_suite.snapshot.result_file, "w") as fileh:
+        fileh.write("SWOF\n")
         for interpolant in interpolants:
-            f.write(interpolant.wateroil.SWOF(header=False))
-        f.write("\nSGOF\n")
+            fileh.write(interpolant.wateroil.SWOF(header=False))
+        fileh.write("\nSGOF\n")
         for interpolant in interpolants:
-            f.write(interpolant.gasoil.SGOF(header=False))
+            fileh.write(interpolant.gasoil.SGOF(header=False))
 
     print(
         "Done; interpolated relperm curves written to file: ",
