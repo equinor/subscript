@@ -59,7 +59,7 @@ Building documentation
 
 Install the development requirements::
 
-  pip install -r requirements-dev.txt
+  pip install .[tests]
 
 Then, to build the documentation for subscript run the following command::
 
