@@ -92,6 +92,13 @@ EPILOGUE = """
 
 CATEGORY = "utility.eclipse"
 
+EXAMPLES = """
+.. code-block:: console
+
+ FORWARD_MODEL INTERP_RELPERM(<INTERP_CONFIG>=<CONFIG_PATH>/interp_relperm_conf.yml, <ROOT_PATH>=<CONFIG_PATH>)
+
+"""  # noqa
+
 
 @configsuite.validator_msg("Valid file name")
 def _is_filename(fname):
