@@ -8,6 +8,7 @@ from ert_shared.plugins.plugin_manager import ErtPluginManager
 
 EXPECTED_JOBS = {
     "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
+    "ECLDIFF2ROFF": "subscript/config_jobs/ECLDIFF2ROFF",
     "ECLGRID2ROFF": "subscript/config_jobs/ECLGRID2ROFF",
     "ECLINIT2ROFF": "subscript/config_jobs/ECLINIT2ROFF",
     "ECLRST2ROFF": "subscript/config_jobs/ECLRST2ROFF",

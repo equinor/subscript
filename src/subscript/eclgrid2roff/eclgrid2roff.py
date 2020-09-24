@@ -4,9 +4,9 @@ This forward model uses the script ``convert_grid_format`` from subscript.
 
 Destination directory must exist.
 
-The file extension ``.roff`` will be added to the OUTPUTNAME argument.
+The file extension ``.roff`` will be added to the OUTPUT argument.
 """
 
 CATEGORY = "utility.eclipse"
 
-EXAMPLES = "FORWARD_MODEL ECLGRID2ROFF(<INPUTNAME>=<ECLBASE>, <OUTPUTNAME>=share/results/grids/eclgrid)"  # noqa
+EXAMPLES = "FORWARD_MODEL ECLGRID2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid)"  # noqa
