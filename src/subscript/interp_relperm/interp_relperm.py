@@ -1,5 +1,3 @@
-"""interp_relperm module"""
-
 import sys
 import os
 import argparse
@@ -92,6 +90,13 @@ EPILOGUE = """
 
 CATEGORY = "utility.eclipse"
 
+EXAMPLES = """
+.. code-block:: console
+
+ FORWARD_MODEL INTERP_RELPERM(<INTERP_CONFIG>=interp_relperm.yml, <ROOT_PATH>=<CONFIG_PATH>
+
+"""  # noqa
+
 
 @configsuite.validator_msg("Valid file name")
 def _is_filename(fname):
@@ -115,13 +120,13 @@ def _is_valid_interpolator(interp):
         elif interp["param_w"] == 0:
             valid = True
 
-    except ValueError:
+    except BaseException:
         pass
 
     try:
         if interp["param_w"] > 1.0 or interp["param_w"] < -1.0:
             valid = False
-    except ValueError:
+    except BaseException:
         pass
 
     try:
@@ -129,13 +134,13 @@ def _is_valid_interpolator(interp):
             valid = True
         elif interp["param_g"] == 0:
             valid = True
-    except ValueError:
+    except BaseException:
         pass
 
     try:
         if interp["param_g"] > 1.0 or interp["param_g"] < -1.0:
             valid = False
-    except ValueError:
+    except BaseException:
         pass
 
     return valid
