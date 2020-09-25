@@ -481,7 +481,8 @@ class RunRMS(object):
         usepy = RMS10PY
         thereleasepy = self.version_requested
         possible_versions = tuple([str(num) for num in range(10, 20)])
-        if self.version_requested and (
+
+        if (
             self.version_requested.startswith(possible_versions)
             or not self.version_requested[0].isdigit()
         ):
