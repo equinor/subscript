@@ -452,6 +452,9 @@ class RunRMS(object):
         to hardcode python version in *this* script, but rather make the correct
         folders. It requires/assumes that setup in /project/res/roxapi is correct
         """
+        if detect_os() is None:
+            return "python3.6"
+
 
         sdirs = [ROXAPISITE, detect_os(), self.version_requested, "lib"]
 
