@@ -455,7 +455,6 @@ class RunRMS(object):
         if detect_os() is None:
             return "python3.6"
 
-
         sdirs = [ROXAPISITE, detect_os(), self.version_requested, "lib"]
 
         searchdir = join(*sdirs)
