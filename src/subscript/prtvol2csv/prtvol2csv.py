@@ -23,6 +23,13 @@ fipnum data are summed up to user specified regions.
 
 CATEGORY = "utility.eclipse"
 
+EXAMPLES = """
+.. code-block:: console
+
+  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>)
+
+"""  # noqa
+
 
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter

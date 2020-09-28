@@ -16,12 +16,12 @@ The file extension ``.roff`` will be added to the OUTPUT argument.
 
 CATEGORY = "utility.eclipse"
 
-EXAMPLES = (
-    "FORWARD_MODEL ECLDIFF2ROFF("
-    "<ECLROOT>=<ECLBASE>, <PROP>=SGAS, "
-    "<DIFFDATES>=diff_dates.txt"
-    "<OUTPUT>=share/results/grids/eclgrid)"
-)
+EXAMPLES = """
+.. code-block:: console
+
+    FORWARD_MODEL ECLDIFF2ROFF(<ECLROOT>=<ECLBASE>, <PROP>=SGAS, <DIFFDATES>=diff_dates.txt <OUTPUT>=share/results/grids/eclgrid)
+
+"""  # noqa
 
 
 class CustomFormatter(
