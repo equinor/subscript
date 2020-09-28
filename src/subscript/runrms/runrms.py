@@ -10,7 +10,7 @@ import subprocess
 import getpass
 from glob import glob
 
-from os.path import join
+from os.path import join, isdir
 
 DESCRIPTION = """
 Script to run rms project from command line, which will in turn use the
@@ -92,11 +92,7 @@ def get_parser():
     )
 
     prs.add_argument(
-        "--version",
-        "-v",
-        dest="rversion",
-        type=str,
-        help="RMS version, e.g. 10.1.3",
+        "--version", "-v", dest="rversion", type=str, help="RMS version, e.g. 10.1.3"
     )
 
     prs.add_argument(
@@ -449,24 +445,63 @@ class RunRMS(object):
 
             self.setdpiscaling = "QT_SCALE_FACTOR={} ".format(usedpi / 100.0)
 
+    def _detect_pyver_from_path(self):
+        """
+        Loop through the folder in the /project/res/roxapi and get py version
+        from that. Hence with new RMS versions, it should not be necessary
+        to hardcode python version in *this* script, but rather make the correct
+        folders. It requires/assumes that setup in /project/res/roxapi is correct
+        """
+        if detect_os() is None:
+            return "python3.6"
+
+        sdirs = [ROXAPISITE, detect_os(), self.version_requested, "lib"]
+
+        searchdir = join(*sdirs)
+
+        if not isdir(searchdir):
+            raise RuntimeError(
+                "Seems that this version <{}> is not in {}".format(
+                    self.version_requested, ROXAPISITE
+                )
+            )
+
+        possible_py3v = list(["3." + str(minor) for minor in range(4, 20)])
+
+        self.debug("Search dir for Python version is {}".format(searchdir))
+        self.debug("Possible python versions: {}".format(possible_py3v))
+
+        for pyv in possible_py3v:
+            testpath = join(searchdir, "python" + pyv)
+            if isdir(testpath):
+                return testpath
+
+        raise RuntimeError("Cannot find valid PYTHONPATH for {}".format(searchdir))
+
     def get_pythonpath(self):
         """Get correct pythonpath and pluginspath for the given RMS version"""
         usepy = RMS10PY
         thereleasepy = self.version_requested
-        if (
-            self.version_requested.startswith("11")
-            or not self.version_requested[0].isdigit()
-        ):
-            usepy = RMS11PY
-            thereleasepy = self.version_requested
+        possible_versions = tuple([str(num) for num in range(10, 20)])
 
         if (
-            "beta" in self.version_requested
-            or "equinor" in self.version_requested
-            or self.args.beta
+            self.version_requested.startswith(possible_versions)
+            or not self.version_requested[0].isdigit()
         ):
+
+            if not self.version_requested[0].isdigit():
+                self.version_requested = "beta"
+
+            try:
+                usepy = self._detect_pyver_from_path()
+            except ValueError:
+                print("Cannot detect valid pythonpath...")
+            else:
+                thereleasepy = self.version_requested
+
+        else:
             usepy = RMS12PY
-            thereleasepy = "12.0.0"
+            thereleasepy = "12.0.1"
 
         osver = detect_os()
         if osver is None:

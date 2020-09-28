@@ -8,9 +8,7 @@ from subscript.runrms import runrms as rr
 TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
 TESTRMS2 = "tests/data/reek/rms/reek.rms11.1.0"
 
-FAKE = ""
-if "KOMODO_RELEASE" not in os.environ:
-    FAKE = "--fake"  # for travis or similar runs
+FAKE = "--fake"
 
 SKIPCIRUN = pytest.mark.skipif(FAKE != "", reason="Running travis or similar")
 
