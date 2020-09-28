@@ -7,10 +7,11 @@ import platform
 import os
 import argparse
 import subprocess
+import shutil
 import getpass
 from glob import glob
 
-from os.path import join
+from os.path import join, isdir
 
 DESCRIPTION = """
 Script to run rms project from command line, which will in turn use the
@@ -43,7 +44,12 @@ ROXAPISITE = "/project/res/roxapi"
 RHEL_ID = "/etc/redhat-release"
 
 
+RMS_ENV_PATH_PREFIX = "/project/res/roxapi/bin"
+
+
 def touch(fname):
+    """Touch a file on filesystem, updating its timestamp or
+    creating if it does not exist"""
     try:
         os.utime(fname, None)
     except OSError:
@@ -51,10 +57,12 @@ def touch(fname):
 
 
 def xwarn(mystring):
+    """Print a warning with colors"""
     print(_BColors.WARN, mystring, _BColors.ENDC)
 
 
 def xerror(mystring):
+    """Print an error in an appropriate color"""
     print(_BColors.ERROR, mystring, _BColors.ENDC)
 
 
@@ -72,6 +80,7 @@ def detect_os():
 
 
 def get_parser():
+    """Make a parser for command line arguments and for documentation"""
     prs = argparse.ArgumentParser(description=DESCRIPTION)
 
     # positional:
@@ -92,11 +101,7 @@ def get_parser():
     )
 
     prs.add_argument(
-        "--version",
-        "-v",
-        dest="rversion",
-        type=str,
-        help="RMS version, e.g. 10.1.3",
+        "--version", "-v", dest="rversion", type=str, help="RMS version, e.g. 10.1.3"
     )
 
     prs.add_argument(
@@ -175,6 +180,7 @@ def get_parser():
 
 
 class _BColors:
+    # pylint: disable=too-few-public-methods
     # local class for ANSI term color commands
 
     HEADER = "\033[93;42m"
@@ -188,7 +194,9 @@ class _BColors:
     UNDERLINE = "\033[4m"
 
 
-class RunRMS(object):
+class RunRMS:
+    """A class for setting up an environment in which to execute RMS"""
+
     def __init__(self):
         self.version_requested = None  # RMS version requested
         self.pythonpath = None  # RMS pythonpath
@@ -217,14 +225,6 @@ class RunRMS(object):
         if "PYTHONPATH" in os.environ:
             self.oldpythonpath = os.environ["PYTHONPATH"]
 
-        # Set environment variables for use by `run_external`
-        # from equinor/equilibrium:
-        if "PYTHONPATH" in os.environ:
-            os.environ["_PRE_RMS_PYTHONPATH"] = os.environ["PYTHONPATH"]
-        else:
-            os.environ["_PRE_RMS_PYTHONPATH"] = ""
-        os.environ["_PRE_RMS_BACKUP"] = "1"
-
         print(
             _BColors.BOLD,
             "\nRunning <{0}>. Type <{0} -h> for help\n".format(THISSCRIPT),
@@ -232,10 +232,9 @@ class RunRMS(object):
         )
 
     def do_parse_args(self, args):
+        """Parse command line args"""
         if args is None:
             args = sys.argv[1:]
-        else:
-            args = args
 
         prs = get_parser()
 
@@ -243,11 +242,11 @@ class RunRMS(object):
 
         self.args = args
 
-    def debug(self, str):
+    def debug(self, string):
         """Verbose mode for debugging..."""
         try:
             if self.args.debug:
-                print(str)
+                print(string)
         except AttributeError:
             pass
 
@@ -258,8 +257,7 @@ class RunRMS(object):
         def _fsplitter(xline):  # yes... an inner function
             if len(xline) == 3:
                 return xline[2]
-            else:
-                return "unknown"
+            return "unknown"
 
         # first check if folder exists, and issue a warning if not
         if not os.path.isdir(self.project):
@@ -273,7 +271,7 @@ class RunRMS(object):
                 for line in master.read().decode("UTF-8").splitlines():
                     if line.startswith("End GEOMATIC"):
                         break
-                    elif line.startswith("release"):
+                    if line.startswith("release"):
                         rel = list(line.split())
                         self.version_fromproject = rel[2]
                         self.complete_version_fromproject()
@@ -319,12 +317,13 @@ class RunRMS(object):
             rls = "{}{}".format(self.version_fromproject, ".0")
 
         self.version_fromproject = rls
+        return
 
     def get_rms_exe(self):
         """Get the correct RMS executable"""
 
         if self.args.fake:
-            return None
+            return
 
         if self.args.beta:
             ok2 = self._get_rms_exe_nonstandard()
@@ -348,6 +347,7 @@ class RunRMS(object):
                 "Cannot find requested RMS version: {}".format(self.version_requested)
             )
             raise SystemExit("EXIT")
+        return
 
     def _get_rms_exe_standard(self):
         """Check rms -v command..."""
@@ -366,10 +366,7 @@ class RunRMS(object):
                 continue
             if look:
                 line = line.strip(" ")
-                if "default" in line:
-                    usedefault = True
-                else:
-                    usedefault = False
+                usedefault = "default" in line
 
                 line = line.replace("(default)", "")
                 line = line.replace("\t", "")
@@ -388,7 +385,7 @@ class RunRMS(object):
         self.debug("Exe {}".format(self.exe))
         if self.version_requested in installed:
             print("Current RMS from standard install...")
-            self.exe = "rms -v " + self.version_requested
+            self.exe = "rms"
             return True
 
         return False
@@ -447,26 +444,65 @@ class RunRMS(object):
             if isinstance(tmpdpi, float) and 20 <= tmpdpi <= 500:
                 usedpi = tmpdpi
 
-            self.setdpiscaling = "QT_SCALE_FACTOR={} ".format(usedpi / 100.0)
+            self.setdpiscaling = "{}".format(usedpi / 100.0)
+
+    def _detect_pyver_from_path(self):
+        """
+        Loop through the folder in the /project/res/roxapi and get py version
+        from that. Hence with new RMS versions, it should not be necessary
+        to hardcode python version in *this* script, but rather make the correct
+        folders. It requires/assumes that setup in /project/res/roxapi is correct
+        """
+        if detect_os() is None:
+            return "python3.6"
+
+        sdirs = [ROXAPISITE, detect_os(), self.version_requested, "lib"]
+
+        searchdir = join(*sdirs)
+
+        if not isdir(searchdir):
+            raise RuntimeError(
+                "Seems that this version <{}> is not in {}".format(
+                    self.version_requested, ROXAPISITE
+                )
+            )
+
+        possible_py3v = list(["3." + str(minor) for minor in range(4, 20)])
+
+        self.debug("Search dir for Python version is {}".format(searchdir))
+        self.debug("Possible python versions: {}".format(possible_py3v))
+
+        for pyv in possible_py3v:
+            testpath = join(searchdir, "python" + pyv)
+            if isdir(testpath):
+                return testpath
+
+        raise RuntimeError("Cannot find valid PYTHONPATH for {}".format(searchdir))
 
     def get_pythonpath(self):
         """Get correct pythonpath and pluginspath for the given RMS version"""
         usepy = RMS10PY
         thereleasepy = self.version_requested
-        if (
-            self.version_requested.startswith("11")
-            or not self.version_requested[0].isdigit()
-        ):
-            usepy = RMS11PY
-            thereleasepy = self.version_requested
+        possible_versions = tuple([str(num) for num in range(10, 20)])
 
         if (
-            "beta" in self.version_requested
-            or "equinor" in self.version_requested
-            or self.args.beta
+            self.version_requested.startswith(possible_versions)
+            or not self.version_requested[0].isdigit()
         ):
+
+            if not self.version_requested[0].isdigit():
+                self.version_requested = "beta"
+
+            try:
+                usepy = self._detect_pyver_from_path()
+            except ValueError:
+                print("Cannot detect valid pythonpath...")
+            else:
+                thereleasepy = self.version_requested
+
+        else:
             usepy = RMS12PY
-            thereleasepy = "12.0.0"
+            thereleasepy = "12.0.1"
 
         osver = detect_os()
         if osver is None:
@@ -510,35 +546,22 @@ class RunRMS(object):
         """Launch RMS with correct pythonpath"""
 
         if self.exe is None:
-            self.exe = "rms -v " + self.version_requested
+            self.exe = "rms"
 
-        command = self.setdpiscaling + "RMS_IPL_ARGS_TO_PYTHON=1 "
+        args_list = [self.exe, "-v", self.version_requested]
 
-        if self.pluginspath:
-            command += "RMS_PLUGINS_LIBRARY=" + self.pluginspath + " "
-
-        if not self.args.nopy:
-            command += "PYTHONPATH="
-            if self.args.testpylib:
-                command += self.pythonpathtest + ":" + self.pythonpath
-            else:
-                command += self.pythonpath
-            if self.args.incsyspy:
-                command += ":" + self.oldpythonpath
-
-        command += " " + self.exe
         if self.args.ronly:
-            command += " -readonly"
+            args_list.append("-readonly")
         if self.args.bworkflows:
-            command += " -batch"
+            args_list.append("-batch")
             for bjobs in self.args.bworkflows:
-                command += " " + bjobs
+                args_list.append(bjobs)
 
         if not empty:
-            command += " -project " + self.project
+            args_list += ["-project", self.project]
 
-        self.command = command
-        print(_BColors.BOLD, "\nRunning: {}\n".format(command), _BColors.ENDC)
+        self.command = " ".join(args_list)
+        print(_BColors.BOLD, "\nRunning: {}\n".format(self.command), _BColors.ENDC)
         print("=" * 132)
 
         if self.locked:
@@ -555,12 +578,35 @@ class RunRMS(object):
             user = getpass.getuser()
             self.runloggerfile = "/tmp/runlogger_" + user + ".txt"
             touch(self.runloggerfile)
+            return 0
 
         else:
             print(_BColors.OKGREEN)
-            # os.system('/bin/bash -c ' + '"' + command + '"')
-            os.system(self.command)
+
+            rms_exec_env = os.environ.copy()
+            pythonpath = ""
+            if not self.args.nopy:
+                if self.args.testpylib:
+                    pythonpath += self.pythonpathtest + ":" + self.pythonpath
+                else:
+                    pythonpath += self.pythonpath
+                if self.args.incsyspy:
+                    pythonpath += ":" + self.oldpythonpath
+
+            rms_exec_env["PYTHONPATH"] = pythonpath
+            rms_exec_env["RMS_IPL_ARGS_TO_PYTHON"] = "1"
+            rms_exec_env["RMS_PLUGINS_LIBRARY"] = self.pluginspath
+
+            if self.setdpiscaling:
+                rms_exec_env["QT_SCALE_FACTOR"] = self.setdpiscaling
+
+            if shutil.which("disable_komodo_exec"):
+                rms_exec_env["PATH_PREFIX"] = RMS_ENV_PATH_PREFIX
+                args_list = ["disable_komodo_exec"] + args_list
+
+            rms_process = subprocess.run(args_list, env=rms_exec_env)
             print(_BColors.ENDC)
+            return rms_process.returncode
 
     def showinfo(self):
         """Show info on RMS project"""
@@ -603,16 +649,14 @@ class RunRMS(object):
         wanted = "rms" + self.version_requested
         if self.project.endswith(wanted):
             self.extstatus = (
-                "Good, project name extension is consistent " "with actual RMS version"
+                "Good, project name extension is consistent with actual RMS version"
             )
             self.okext = True
         else:
             self.extstatus = (
                 "UPS, project name extension is inconsistent "
-                "with actual RMS version: <{}> vs version <{}>".format(
-                    self.project, wanted
-                )
-            )
+                "with actual RMS version: <{}> vs version <{}>"
+            ).format(self.project, wanted)
             self.okext = False
 
     def runlogger(self):
@@ -668,7 +712,7 @@ def main(args=None):
 
     if runner.project is None and runner.version_requested is None:
         runner.version_requested = "10.1.3"
-        runner.exe = "rms -v 10.1.3"
+        runner.exe = "rms"
 
     if runner.version_requested is None:
         runner.version_requested = runner.version_fromproject
