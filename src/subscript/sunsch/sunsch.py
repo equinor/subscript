@@ -38,6 +38,12 @@ Eclipse, checking provided by OPM."""
 
 CATEGORY = "utility.eclipse"
 
+EXAMPLES = """
+.. code-block:: console
+
+  FORWARD_MODEL SUNSCH(<config>=sunsch_config.yml)
+"""
+
 
 @configsuite.validator_msg("Is dategrid a supported frequency")
 def _is_valid_dategrid(dategrid_str):

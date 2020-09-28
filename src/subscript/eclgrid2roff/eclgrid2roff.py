@@ -9,4 +9,9 @@ The file extension ``.roff`` will be added to the OUTPUT argument.
 
 CATEGORY = "utility.eclipse"
 
-EXAMPLES = "FORWARD_MODEL ECLGRID2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid)"  # noqa
+EXAMPLES = """
+..  code-block:: console
+
+   FORWARD_MODEL ECLGRID2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid)
+
+"""  # noqa

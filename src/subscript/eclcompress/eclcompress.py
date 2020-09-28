@@ -22,6 +22,12 @@ compressed versions.
 If called with no arguments, a default file list is used.
 """
 
+EXAMPLES = """
+.. code-block:: console
+
+  FORWARD_MODEL ECLCOMPRESS
+"""
+
 DEFAULT_FILES_TO_COMPRESS = [
     "eclipse/include/grid/*",
     "eclipse/include/regions/*",
