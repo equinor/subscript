@@ -13,6 +13,7 @@ EXPECTED_JOBS = {
     "ECLINIT2ROFF": "subscript/config_jobs/ECLINIT2ROFF",
     "ECLRST2ROFF": "subscript/config_jobs/ECLRST2ROFF",
     "INTERP_RELPERM": "subscript/config_jobs/INTERP_RELPERM",
+    "MERGE_RFT_ERTOBS": "subscript/config_jobs/MERGE_RFT_ERTOBS",
     "PRTVOL2CSV": "subscript/config_jobs/PRTVOL2CSV",
     "SUNSCH": "subscript/config_jobs/SUNSCH",
 }
