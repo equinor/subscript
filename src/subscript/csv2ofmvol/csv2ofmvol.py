@@ -28,6 +28,8 @@ which will produce the following vol-file output::
   2010-01-01  1000
   2011-01-01  2000
   2012-01-01  3000
+
+See also the ofmvol2csv utility.
 """
 
 # Translation table from what vectors are called in PDM to
@@ -50,6 +52,7 @@ PDMCOLS2VOL = {
 
 # But we only output these columns in vol-files:
 SUPPORTED_VOLCOLS = ["OIL", "GAS", "WATER", "GINJ", "WINJ", "BHP", "THP"]
+SUPPORTED_COLS = SUPPORTED_VOLCOLS + ["DAYS"]
 
 
 def read_pdm_csv_files(csvfiles):
@@ -161,11 +164,18 @@ def df2vol(data):
 
     The 'tab' character is used as a field separator in this format
     """
-    volcolumns = [PDMCOLS2VOL[x] for x in data.columns.values]
+    volcolumns = []
+    for colname in data.columns.values:
+        if colname in SUPPORTED_COLS:
+            volcolumns.append(colname)
+        elif colname in PDMCOLS2VOL:
+            volcolumns.append(PDMCOLS2VOL[colname])
+        else:
+            print("Warning: Unsupported column " + str(colname))
     voldata = data.copy()
     voldata.columns = volcolumns
     for col in voldata.columns:
-        if col not in SUPPORTED_VOLCOLS:
+        if col not in SUPPORTED_COLS:
             del voldata[col]
     volstr = ""
     volstr += "*METRIC\n"
@@ -216,7 +226,7 @@ def main():
 
     with open(args.output, "w") as outfile:
         outfile.write(
-            "-- Data printed by csv2vol at " + str(datetime.datetime.now()) + "\n"
+            "-- Data printed by csv2ofmvol at " + str(datetime.datetime.now()) + "\n"
         )
         outfile.write("-- Input files: " + str(args.csvfiles) + "\n")
         outfile.write("\n")
