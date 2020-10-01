@@ -237,7 +237,7 @@ def process_volfile(filename):
         else:
             logger.info("No NAME found in chunk, probably the very first.")
     if wellframes:
-        return pd.concat(wellframes, sort=True)
+        return pd.concat(wellframes, sort=False).sort_index()
     else:
         logger.warning("No data was parseable in %s", filename)
         return pd.DataFrame()
@@ -262,7 +262,7 @@ def ofmvol2csv_main(volfiles, output, includefileorigin=False):
         if not dframe.empty:
             dframes.append(dframe)
     if dframes:
-        alldata = pd.concat(dframes, sort=True)
+        alldata = pd.concat(dframes, sort=False).sort_index()
         alldata.to_csv(output)
         logger.info("Wrote %s rows to %s", str(len(alldata)), output)
     else:
