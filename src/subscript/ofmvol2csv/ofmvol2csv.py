@@ -282,3 +282,7 @@ def main():
         args.output,
         includefileorigin=args.includefileorigin,
     )
+
+
+if __name__ == "__main__":
+    main()

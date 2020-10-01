@@ -8,6 +8,7 @@ from ert_shared.plugins.plugin_manager import ErtPluginManager
 import subscript.hook_implementations.jobs
 
 EXPECTED_JOBS = {
+    "CSV2OFMVOL": "subscript/config_jobs/CSV2OFMVOL",
     "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
     "ECLDIFF2ROFF": "subscript/config_jobs/ECLDIFF2ROFF",
     "ECLGRID2ROFF": "subscript/config_jobs/ECLGRID2ROFF",

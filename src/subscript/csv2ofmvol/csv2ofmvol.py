@@ -1,11 +1,20 @@
 import sys
 import datetime
 import argparse
+import logging
 
 from dateutil.relativedelta import relativedelta
+
 import pandas as pd
 
+from subscript import getLogger as subscriptlogger
+from subscript.eclcompress.eclcompress import glob_patterns
+
+logger = subscriptlogger(__name__)
+
 DESCRIPTION = "Convert CSV files with production data to OFM vol-format"
+
+CATEGORY = "modeling.production"
 
 EPILOG = """The indented usage is to process CSV files outputted from the pyPDM
 library (possibly from the script 'export_production_data') and then
@@ -15,10 +24,10 @@ Import job.
 
 Example input CSV data::
 
-    DATE,WELL,WOPR
-    2010-01-01,A-3,1000
-    2011-01-01,A-3,2000
-    2012-01-01,A-3,3000
+    DATE,       WELL, WOPR
+    2010-01-01, A-3, 1000
+    2011-01-01, A-3, 2000
+    2012-01-01, A-3, 3000
 
 which will produce the following vol-file output::
 
@@ -78,13 +87,12 @@ def read_pdm_csv_files(csvfiles):
     if not isinstance(csvfiles, list):
         csvfiles = [csvfiles]
 
-    # Make list of dataframes:
     dataframes = []
     for item in csvfiles:
         if isinstance(item, pd.DataFrame):
             dataframes.append(item)
         elif isinstance(item, str):
-            dataframes.append(pd.read_csv(item, low_memory=False))
+            dataframes.append(pd.read_csv(item))
         else:
             raise ValueError("Only list of str or dataframes supported")
     data = pd.concat(dataframes, ignore_index=True, sort=False)
@@ -109,12 +117,13 @@ def read_pdm_csv_files(csvfiles):
     origlen = len(data)
     data = data[~data.index.duplicated(keep="first")]
     if origlen != len(data):
-        print(" ** Warning **: Duplicate data detected. Ignoring duplicates")
+        logger.warning("Duplicate data detected. Ignoring duplicates")
     return data.sort_index()
 
 
 def check_consecutive_dates(data):
-    """Verify that every day is present from the first to the last for every well"""
+    """Analyse consecutiveness in dates pr. well. Give warnings when suspicious
+    data is found"""
     for well in data.index.levels[0]:
         welldata = data.loc[well].reset_index()
         welldata["DATE"] = pd.to_datetime(welldata["DATE"])
@@ -146,18 +155,15 @@ def check_consecutive_dates(data):
             checkrows[ratecols].dropna(axis="columns").astype("float").abs().sum().sum()
         )
         if len(datedeltas) > 1 and checkprod > 0.1:
-            print("")
-            print(
-                "Warning: Uneven date intervals for well "
-                + well
-                + ", potentially check this data:"
+            logger.warning(
+                "Warning: Uneven date intervals for well %s, check these rows:",
+                str(well),
             )
-            print(checkrows)
+            logger.warning(str(checkrows))
+        print(str(dominantdelta))
         if int(datedeltas[0]) != 1:
-            print("Warning: Dates are not daily-consecutive for well " + well)
-            print("         Most common timedelta is: " + str(dominantdelta))
-
-    return True
+            logger.warning("Dates are not daily-consecutive for well %s", str(well))
+            logger.warning("Most common timedelta is: %s", str(dominantdelta))
 
 
 def df2vol(data):
@@ -172,7 +178,7 @@ def df2vol(data):
         elif colname in PDMCOLS2VOL:
             volcolumns.append(PDMCOLS2VOL[colname])
         else:
-            print("Warning: Unsupported column " + str(colname))
+            logger.warning("Unsupported column %s", str(colname))
     voldata = data.copy()
     voldata.columns = volcolumns
     for col in voldata.columns:
@@ -210,46 +216,75 @@ def get_parser():
     )
     parser.add_argument("csvfiles", nargs="+", help="CSV files with data")
     parser.add_argument("-o", "--output", type=str, default="pdm_data.vol")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     return parser
+
+
+def csv2ofmvol_main(csvfilepatterns, output):
+    """Main function written as a Python function to facilitate testing.
+
+    Arguments:
+        csvfilepatterns (list):  strings of filenames or filename wildcards. Can also
+            be a single string.
+        output (str): Filename to write to.
+    """
+
+    if isinstance(csvfilepatterns, str):
+        csvfilepatterns = [csvfilepatterns]
+
+    csvfiles = glob_patterns(csvfilepatterns)
+    if set(csvfiles) != set(csvfilepatterns):
+        logger.info("Wildcards used: %s", str(csvfilepatterns))
+    if not csvfiles:
+        logger.error("No filenames found")
+        return False
+
+    logger.info("Input files: %s", " ".join(csvfiles))
+
+    data = read_pdm_csv_files(csvfiles)
+
+    # Print warnings for suspicious data. Perhaps we should fail but difficult
+    # to ascertain how downstream tools will react.
+    check_consecutive_dates(data)
+
+    # Convert dataframes to a multiline string:
+    volstr = df2vol(data)
+
+    with open(output, "w") as outfile:
+        outfile.write(
+            "-- Data printed by csv2ofmvol at " + str(datetime.datetime.now()) + "\n"
+        )
+        outfile.write("-- Input files: " + str(csvfiles) + "\n")
+        outfile.write("\n")
+        outfile.write(volstr)
+    logger.info("Well count: %s", str(len(data.index.levels[0])))
+    logger.info("Date count: %s", str(len(data.index.levels[1])))
+
+    startdate = data.index.levels[1].min()
+    enddate = data.index.levels[1].max()
+    delta = relativedelta(enddate, startdate)
+    logger.info("Date range: %s --> %s", str(startdate.date()), str(enddate.date()))
+    logger.info(
+        "            %s years,  %s months, %s days.",
+        str(delta.years),
+        str(delta.months),
+        str(delta.days),
+    )
+    logger.info("Written %s lines to %s.", str(len(volstr) + 3), output)
+    return True
 
 
 def main():
     """Entry point if called from command line"""
     args = get_parser().parse_args()
 
-    print("Input files: {}".format(" ".join(args.csvfiles)))
-    data = read_pdm_csv_files(args.csvfiles)
+    if args.verbose:
+        logger.setLevel(logging.INFO)
 
-    if not check_consecutive_dates(data):
-        # The called subroutine will print relevant error messages
+    returncode = csv2ofmvol_main(args.csvfiles, args.output)
+
+    if not returncode:
         sys.exit(1)
-
-    # Convert dataframes to a multiline string:
-    volstr = df2vol(data)
-
-    with open(args.output, "w") as outfile:
-        outfile.write(
-            "-- Data printed by csv2ofmvol at " + str(datetime.datetime.now()) + "\n"
-        )
-        outfile.write("-- Input files: " + str(args.csvfiles) + "\n")
-        outfile.write("\n")
-        outfile.write(volstr)
-    print("Well count: " + str(len(data.index.levels[0])))
-    print("Date count: " + str(len(data.index.levels[1])))
-    startdate = data.index.levels[1].min()
-    enddate = data.index.levels[1].max()
-    delta = relativedelta(enddate, startdate)
-    print("Date range: " + str(startdate.date()) + " --> " + str(enddate.date()))
-    print(
-        "            "
-        + str(delta.years)
-        + " years, "
-        + str(delta.months)
-        + " months, "
-        + str(delta.days)
-        + " days."
-    )
-    print("Written " + str(len(volstr) + 3) + " lines to " + args.output)
 
 
 if __name__ == "__main__":

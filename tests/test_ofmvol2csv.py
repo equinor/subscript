@@ -350,4 +350,4 @@ def test_ert_hook(datadir):
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert os.path.exists("proddata.csv")
-    print(pd.read_csv("proddata.csv"))
+    assert not pd.read_csv("proddata.csv").empty
