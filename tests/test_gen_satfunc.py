@@ -30,8 +30,8 @@ def test_gen_satfunc():
         os.mkdir(testdir)
     os.chdir(testdir)
 
-    with open("relperm.conf", "w") as fh:
-        fh.write(EXAMPLE)
+    with open("relperm.conf", "w") as file_h:
+        file_h.write(EXAMPLE)
 
     if os.path.exists("swof.inc"):
         os.unlink("swof.inc")
@@ -41,8 +41,8 @@ def test_gen_satfunc():
     assert os.path.exists("swof.inc")
     assert len(open("swof.inc").readlines()) > 50
 
-    with open("relpermpc.conf", "w") as fh:
-        fh.write(
+    with open("relpermpc.conf", "w") as file_h:
+        file_h.write(
             """
 SWOF
 RELPERM 4 2 1   3 2 1   0.15 0.10 0.5 20 100 0.2 0.22 -0.5 30

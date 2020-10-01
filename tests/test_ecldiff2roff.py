@@ -38,6 +38,8 @@ logger.setLevel(logging.INFO)
     ],
 )
 def test_dateparsing(datetxt, expected, tmpdir):
+    """Test parsing of dates"""
+    # pylint: disable=unused-argument
     with open("datediff.txt", "w") as file_h:
         file_h.write(datetxt)
     assert ecldiff2roff.parse_diff_dates("datediff.txt") == expected
@@ -45,6 +47,7 @@ def test_dateparsing(datetxt, expected, tmpdir):
 
 @pytest.fixture
 def reek_data(tmpdir):
+    """Prepare a data directory with Reek Eclipse binary output"""
     reekdir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
     )
@@ -156,6 +159,10 @@ def test_mainfunction(
     expected_files,
     reek_data,
 ):
+    """Test the command line functionality of ecldiff2roff"""
+    # pylint: disable=unused-argument
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=too-many-arguments
     with open("datediff.txt", "w") as file_h:
         file_h.write(diffdates)
 
@@ -167,6 +174,9 @@ def test_mainfunction(
 
 
 def test_errors(reek_data):
+    """Test errors from the module"""
+    # pylint: disable=unused-argument
+    # pylint: disable=redefined-outer-name
     with open("validdates.txt", "w") as file_h:
         file_h.write("2000-01-01 2000-07-01")
 
@@ -194,6 +204,9 @@ def test_errors(reek_data):
 
 @pytest.mark.integration
 def test_integration(reek_data):
+    """Test that endpoint is installed and works"""
+    # pylint: disable=unused-argument
+    # pylint: disable=redefined-outer-name
     assert subprocess.check_output(["ecldiff2roff", "-h"])
 
     with open("validdates.txt", "w") as file_h:

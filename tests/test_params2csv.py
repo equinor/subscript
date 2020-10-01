@@ -10,7 +10,7 @@ from subscript.params2csv import params2csv
 
 
 def test_main():
-
+    """Test invocation from command line"""
     testdir = os.path.join(os.path.dirname(__file__), "testdata_params2csv")
     if not os.path.exists(testdir):
         os.mkdir(testdir)

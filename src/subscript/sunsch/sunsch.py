@@ -770,6 +770,7 @@ def main():
         config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
         # Check if yaml had outdated v1 syntax, check that by removing the
         # transformation key(s) in the top layer from configsuite:
+        # pylint: disable=consider-iterating-dictionary
         trans_keys = [
             key
             for key in CONFIG_SCHEMA_V2.keys()

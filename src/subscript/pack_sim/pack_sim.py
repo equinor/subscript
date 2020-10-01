@@ -95,10 +95,10 @@ def _md5checksum(filepath=None, data=None):
     """
 
     def _md5_on_fhandle(fhandle):
-        m = hashlib.md5()
+        md5hash = hashlib.md5()
         wholefile = str(fhandle.read())
-        m.update("".join(wholefile.splitlines()).encode("utf-8"))
-        return m.hexdigest()
+        md5hash.update("".join(wholefile.splitlines()).encode("utf-8"))
+        return md5hash.hexdigest()
 
     if data is not None and filepath is not None:
         raise ValueError(
@@ -144,18 +144,18 @@ def _get_paths(filename, org_sim_loc):
                 print("Found Eclipse PATHS keyword, creating a dictionary.")
 
                 # In the keyword, find the path definitions and ignore comments
-                for line in fhandle:
-                    line_strip = line.strip()
+                for innerline in fhandle:
+                    line_strip = innerline.strip()
                     if line_strip.startswith("--"):
                         continue
 
-                    if line.split("--")[0].strip() == "/":
+                    if innerline.split("--")[0].strip() == "/":
                         # Finished reading the data for the PATHS keyword
                         break
 
                     # Assume we have found a PATHS definition line
                     try:
-                        path_info = line.split("--")[0].strip().split("'")
+                        path_info = innerline.split("--")[0].strip().split("'")
                         paths[path_info[1]] = path_info[3]
                     except IndexError:
                         print(
@@ -205,8 +205,8 @@ def _check_file_binary(filename, org_sim_loc):
 
     # Try to open the file, if fail: show message to user
     try:
-        f = open(filename, "r")
-        f.close()
+        fhandle = open(filename, "r")
+        fhandle.close()
     except IOError:
         raise IOError(
             "Script stopped: Could not open '%s'. Make sure you have read "
@@ -219,15 +219,6 @@ def _check_file_binary(filename, org_sim_loc):
             for _ in f:
                 pass
     except UnicodeDecodeError:
-        return True
-
-    # Python2 will not throw the UnicodeDecodeError, for backward compatibility reasons
-    # some hardcoded extensions are assumed to be binary. Remove when support for
-    # Python 2 is dropped.
-    binary_file_extensions = ["EGRID", "UNRST", "UNSMRY", "INIT", "SMSPEC", "SAVE"]
-    if any(
-        extension in filename.split(".")[-1] for extension in binary_file_extensions
-    ):
         return True
 
     return False
@@ -260,7 +251,7 @@ def inspect_file(
 
     # Try to open the file, if fail: show message to user
     try:
-        f = open(filename, "r")
+        fhandle = open(filename, "r")
     except IOError:
         raise IOError(
             "Script stopped: Could not open '%s'. Make sure you have read "
@@ -271,7 +262,7 @@ def inspect_file(
     new_data_file = ""
 
     # Read through all lines of text
-    for line in f:
+    for line in fhandle:
         line = _normalize_line_endings(line)
         line_strip = line.strip()
 
@@ -292,7 +283,7 @@ def inspect_file(
 
             # In the INCLUDE or GDFILE keyword, find the include path and
             # ignore comments
-            for line in f:
+            for line in fhandle:
                 line_strip = line.strip()
 
                 # Remove comments if required
@@ -362,10 +353,10 @@ def inspect_file(
 
                                 # Calculate MD5 hashes for the files with equal file
                                 # names to be able to compare the contents
-                                md5A = _md5checksum(filepath=new_include)
-                                md5B = _md5checksum(data=file_text)
+                                md5a = _md5checksum(filepath=new_include)
+                                md5b = _md5checksum(data=file_text)
 
-                                if md5A == md5B:
+                                if md5a == md5b:
                                     # Files are equal, skip
                                     print(
                                         "%sIdentical files in packing folder, "
@@ -374,15 +365,15 @@ def inspect_file(
 
                                 else:
                                     # Add timestamp to the filename to make it unique
-                                    ts = int(time.time())
-                                    new_include += str(ts)
+                                    tstamp = int(time.time())
+                                    new_include += str(tstamp)
 
                                     try:
-                                        with open(new_include, "w") as fw:
-                                            fw.write(file_text)
+                                        with open(new_include, "w") as fhandle_w:
+                                            fhandle_w.write(file_text)
                                         print(
                                             "%sfilename made unique with "
-                                            "a timestamp (%s)." % (indent, ts)
+                                            "a timestamp (%s)." % (indent, tstamp)
                                         )
                                         print(
                                             "%sFinished writing include file %s"
@@ -396,8 +387,8 @@ def inspect_file(
                                         )
                             else:
                                 try:
-                                    with open(new_include, "w") as fw:
-                                        fw.write(file_text)
+                                    with open(new_include, "w") as fhandle_w:
+                                        fhandle_w.write(file_text)
                                     print(
                                         "%sFinished writing include file %s"
                                         % (indent, new_include)
@@ -430,47 +421,47 @@ def inspect_file(
                         new_data_file += line
                         if "--" in line:
                             print(line)
-        elif "RUNSPEC" == line_strip and fmu_include:
+        elif line_strip == "RUNSPEC" and fmu_include:
             section = "runspec/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "GRID" == line_strip and fmu_include:
+        elif line_strip == "GRID" and fmu_include:
             section = "grid/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "EDIT" == line_strip and fmu_include:
+        elif line_strip == "EDIT" and fmu_include:
             section = "edit/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "PROPS" == line_strip and fmu_include:
+        elif line_strip == "PROPS" and fmu_include:
             section = "props/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "REGIONS" == line_strip and fmu_include:
+        elif line_strip == "REGIONS" and fmu_include:
             section = "regions/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "SOLUTION" == line_strip and fmu_include:
+        elif line_strip == "SOLUTION" and fmu_include:
             section = "solution/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "SUMMARY" == line_strip and fmu_include:
+        elif line_strip == "SUMMARY" and fmu_include:
             section = "summary/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "SCHEDULE" == line_strip and fmu_include:
+        elif line_strip == "SCHEDULE" and fmu_include:
             section = "schedule/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif "OPTIMIZE" == line_strip and fmu_include:
+        elif line_strip == "OPTIMIZE" and fmu_include:
             section = "optimize/"
             if not os.path.exists("%s/include/%s" % (packing_path, section)):
                 os.makedirs("%s/include/%s" % (packing_path, section))
@@ -550,7 +541,7 @@ def inspect_file(
                 # This line represents anything else: just copy the info.
                 new_data_file += line
 
-    f.close()
+    fhandle.close()
 
     # Return modified text of inspected file
     return new_data_file
@@ -636,8 +627,8 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
             if data_file == content:
                 print("The DATA-file in place is identical. Did not re-save.")
             else:
-                ts = int(time.time())
-                path_new_data_file += str(ts)
+                tstamp = int(time.time())
+                path_new_data_file += str(tstamp)
 
                 print("A unique number has been added in the name of the datafile.")
 

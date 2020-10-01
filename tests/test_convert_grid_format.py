@@ -28,8 +28,8 @@ def test_convert_grid_format_egrid(tmpdir):
     cgf.main(["--file", RFILE1, "--output", outfile, "--mode", "grid", "--standardfmu"])
 
     # check number of active cells
-    gg = xtgeo.Grid(outfile)
-    assert gg.nactive == 35817
+    geogrid = xtgeo.Grid(outfile)
+    assert geogrid.nactive == 35817
 
 
 def test_convert_grid_format_restart(tmpdir):
@@ -83,6 +83,7 @@ def test_convert_grid_format_restart(tmpdir):
     ],
 )
 def test_datesfile(dates, date_mode, expected_files, tmpdir):
+    """Test invocation with a filename to the dates"""
 
     outfile = os.path.join(str(tmpdir), "reek_grid.roff")
 

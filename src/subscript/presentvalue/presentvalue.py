@@ -2,13 +2,13 @@
 NPV calculation of oil and gas production income
 """
 
+import os
 import datetime
 import sys
-import numpy
-import argparse
-import os
 import warnings
+import argparse
 
+import numpy
 import pandas
 
 # import resscript.header as header
@@ -19,8 +19,13 @@ from ecl.summary import EclSum
 DESCRIPTION = """Calculated present value of oil and gas streams from an Eclipse
 simulation. Optional yearly costs, and optional variation in prices."""
 
+BARRELSPRCUBIC = 6.28981077
+
+NOKUNIT = 1000000.0  # all NOK figures are scaled by this value (input and output)
+
 
 def get_parser():
+    """Parser for command line arguments and for documentation"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter, description=DESCRIPTION
     )
@@ -126,14 +131,9 @@ def get_parser():
 
 
 def main():
+    """Function for command line invocation"""
     parser = get_parser()
     args = parser.parse_args()
-
-    # This is not adjustable pr options.. :)
-    barrelsprcubic = 6.28981077
-
-    # Unsure whether it is a good idea to let the user adjust this
-    nokunit = 1000000.0  # all NOK figures are scaled by this value (input and output)
 
     filenameswithoutpath = [os.path.split(x)[1] for x in args.datafiles]
 
@@ -375,17 +375,17 @@ def main():
         prodecon.fillna(value=0, inplace=True)  # Zero-pad other data (costs)
         prodecon["presentvalue"] = (
             prodecon["OPR"]
-            * barrelsprcubic
+            * BARRELSPRCUBIC
             * prodecon["oilprice"]
             * prodecon["usdtonok"]
             + prodecon["GSR"] * prodecon["gasprice"]
-            - prodecon["costs"] * nokunit
+            - prodecon["costs"] * NOKUNIT
         ) * prodecon["discountfactors"]
 
         # Remove the year 1900 that was added for flat prices:
         prodecon = prodecon[prodecon.index != 1900]
 
-        pv = prodecon.loc[: cutoffyear - 1]["presentvalue"].sum() / nokunit
+        pvalue = prodecon.loc[: cutoffyear - 1]["presentvalue"].sum() / NOKUNIT
 
         if args.verbose:
             pandas.set_option(
@@ -396,7 +396,7 @@ def main():
             print(prodecon.loc[: cutoffyear - 1])
             print("===============================================")
 
-        print("PresentValue", pv, end=" ")
+        print("PresentValue", pvalue, end=" ")
 
         if prodecon["costs"].sum() > 0:
             # When costs are supplied, the break-even
@@ -414,7 +414,7 @@ def main():
 
                     prodecon["pv_bep"] = (
                         prodecon["OPR"]
-                        * barrelsprcubic
+                        * BARRELSPRCUBIC
                         * production["bep_prices"]
                         * prodecon["usdtonok"]
                         + (
@@ -426,23 +426,23 @@ def main():
                             / 100
                             * prodecon["usdtonok"]
                         )
-                        - prodecon["costs"] * nokunit
+                        - prodecon["costs"] * NOKUNIT
                     ) * prodecon["discountfactors"]
 
                 elif args.bepcalcmethod == 1:
                     prodecon["pv_bep"] = (
                         prodecon["OPR"]
-                        * barrelsprcubic
+                        * BARRELSPRCUBIC
                         * production["bep_prices"]
                         * prodecon["usdtonok"]
                         + (prodecon["GSR"] * prodecon["gasprice"])
-                        - prodecon["costs"] * nokunit
+                        - prodecon["costs"] * NOKUNIT
                     ) * prodecon["discountfactors"]
 
                 else:
                     sys.exit("No valid break-even calculation method requested.")
 
-                pv_bep = prodecon.loc[: cutoffyear - 1]["pv_bep"].sum() / nokunit
+                pv_bep = prodecon.loc[: cutoffyear - 1]["pv_bep"].sum() / NOKUNIT
 
                 return pv_bep
 
@@ -464,14 +464,14 @@ def main():
 
                 prodecon["pv_irr"] = (
                     prodecon["OPR"]
-                    * barrelsprcubic
+                    * BARRELSPRCUBIC
                     * prodecon["oilprice"]
                     * prodecon["usdtonok"]
                     + prodecon["GSR"] * prodecon["gasprice"]
-                    - prodecon["costs"] * nokunit
+                    - prodecon["costs"] * NOKUNIT
                 ) * production["discountfactors_irr"]
 
-                pv_irr = prodecon.loc[: cutoffyear - 1]["pv_irr"].sum() / nokunit
+                pv_irr = prodecon.loc[: cutoffyear - 1]["pv_irr"].sum() / NOKUNIT
 
                 return pv_irr
 
@@ -489,9 +489,9 @@ def main():
                 prodecon.loc[: cutoffyear - 1]["presentvalue"][
                     prodecon["presentvalue"] < 0
                 ].sum()
-                / nokunit
+                / NOKUNIT
             )
-            cei = pv / pv_negativecashflow if pv_negativecashflow > 0 else 999
+            cei = pvalue / pv_negativecashflow if pv_negativecashflow > 0 else 999
             print("CEI", cei, end=" ")
 
         print("")
@@ -509,7 +509,7 @@ def main():
                     paramfile
                 ):  # Looking relative to the directory containing the DATA file
                     handle = open(paramfile, "a")
-                    handle.write(args.paramname + " " + str(pv) + "\n")
+                    handle.write(args.paramname + " " + str(pvalue) + "\n")
                     if prodecon["costs"].sum() > 0:
                         handle.write(args.paramname + "_BEP" + " " + str(bep) + "\n")
                         handle.write(args.paramname + "_IRR" + " " + str(irr) + "\n")

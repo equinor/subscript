@@ -21,6 +21,8 @@
 import sys
 import os
 import re
+import tty
+import termios
 import difflib
 import logging
 import argparse
@@ -129,6 +131,7 @@ def summaryplotter(
     colourby="",
     logcolourby="",
 ):
+    # pylint: disable=too-many-arguments
     """
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 
@@ -197,9 +200,9 @@ def summaryplotter(
                         break
             if not valuefound:
                 logging.warning(
-                    str(colourbyparametername)
-                    + " was not found in parameter-file "
-                    + parameterfile
+                    "%s was not found in parameter-file %s",
+                    str(colourbyparametername),
+                    parameterfile,
                 )
                 parametervalues.append(0.0)
         # print parametervalues
@@ -209,9 +212,8 @@ def summaryplotter(
         maxvalue = np.max(parametervalues)
         if (maxvalue - minvalue) < 0.000001:
             logging.warning(
-                "No data found to colour by, are you sure you typed "
-                + colourbyparametername
-                + " correctly?"
+                "No data found to colour by, are you sure you typed %s correctly?",
+                colourbyparametername,
             )
             suggestion = difflib.get_close_matches(
                 colourbyparametername, parameternames, 1
@@ -318,38 +320,34 @@ def summaryplotter(
 
         restartvectordata[rstvec] = {}
         restartvectordates[rstvec] = {}
-        for datafile_idx in range(0, len(datafiles)):
-            active_index = gridfiles[datafile_idx].get_active_index(ijk=ijk)
-            restartvectordata[rstvec][datafiles[datafile_idx]] = []
-            restartvectordates[rstvec][datafiles[datafile_idx]] = []
+        for idx, datafile in enumerate(datafiles):
+            active_index = gridfiles[idx].get_active_index(ijk=ijk)
+            restartvectordata[rstvec][datafile] = []
+            restartvectordates[rstvec][datafile] = []
 
             # Loop over all restart steps
-            last_step = range(rstfiles[datafile_idx].num_named_kw("SWAT"))[-1]
+            last_step = range(rstfiles[idx].num_named_kw("SWAT"))[-1]
             for report_step in range(0, last_step + 1):
-                restartvectordates[rstvec][datafiles[datafile_idx]].append(
-                    rstfiles[datafile_idx].iget_restart_sim_time(report_step)
+                restartvectordates[rstvec][datafile].append(
+                    rstfiles[idx].iget_restart_sim_time(report_step)
                 )
                 if dataname != "SOIL":
-                    restartvectordata[rstvec][datafiles[datafile_idx]].append(
-                        rstfiles[datafile_idx].iget_named_kw(dataname, report_step)[
-                            active_index
-                        ]
+                    restartvectordata[rstvec][datafile].append(
+                        rstfiles[idx].iget_named_kw(dataname, report_step)[active_index]
                     )
                 else:
-                    swatvalue = rstfiles[datafile_idx].iget_named_kw(
-                        "SWAT", report_step
-                    )[active_index]
-                    if "SGAS" in rstfiles[datafile_idx]:
-                        sgasvalue = rstfiles[datafile_idx].iget_named_kw(
-                            "SGAS", report_step
-                        )[active_index]
-                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
+                    swatvalue = rstfiles[idx].iget_named_kw("SWAT", report_step)[
+                        active_index
+                    ]
+                    if "SGAS" in rstfiles[idx]:
+                        sgasvalue = rstfiles[idx].iget_named_kw("SGAS", report_step)[
+                            active_index
+                        ]
+                        restartvectordata[rstvec][datafile].append(
                             1 - swatvalue - sgasvalue
                         )
                     else:
-                        restartvectordata[rstvec][datafiles[datafile_idx]].append(
-                            1 - swatvalue
-                        )
+                        restartvectordata[rstvec][datafile].append(1 - swatvalue)
     # Data structure examples
     # restartvectordata["SOIL:1,1,1"]["datafile"] = [0.89, 0.70, 0.60, 0.55, 0.54]
     # restartvectortimes["SOIL:1,1,1"]["datafile"] = ["1 Jan 2011", "1 Jan 2012"]
@@ -386,10 +384,12 @@ def summaryplotter(
 
     if colourby or logcolourby:
         # Using contourf to provide the colorbar info, then clearing the figure
-        Z = [[0, 0], [0, 0]]
+        zeromatrix = [[0, 0], [0, 0]]
         step = (maxvalue - minvalue) / 100
         levels = np.arange(minvalue, maxvalue + step, step)
-        invisiblecontourplot = pyplot.contourf(Z, levels, cmap="GreenBlackRedMap")
+        invisiblecontourplot = pyplot.contourf(
+            zeromatrix, levels, cmap="GreenBlackRedMap"
+        )
         pyplot.clf()
         pyplot.close()
 
@@ -419,13 +419,13 @@ def summaryplotter(
 
         # Look for historic vectors in first summaryfile
         if histvectors:
-            s = summaryfiles[0]
+            firstsummary = summaryfiles[0]
             toks = vector.split(":", 1)
             histvec = toks[0] + "H"
             if len(toks) > 1:
                 histvec = histvec + ":" + toks[1]
-            if histvec in s.keys():
-                values = s.numpy_vector(histvec)
+            if histvec in firstsummary.keys():
+                values = firstsummary.numpy_vector(histvec)
                 sumlabel = "_nolegend_"
                 if normalize:
                     maxvalue = values.max()
@@ -433,36 +433,35 @@ def summaryplotter(
                         values = [i * 1 / maxvalue for i in values]
                         sumlabel = histvec + " " + str(maxvalue)
                     else:
-                        logging.warn(
+                        logging.warning(
                             "Could not normalize %s, maxvalue is %g", histvec, maxvalue
                         )
 
-                pyplot.plot_date(s.dates, values, "k.", label=sumlabel)
+                pyplot.plot_date(firstsummary.dates, values, "k.", label=sumlabel)
                 fig.autofmt_xdate()
 
-        for s_idx in range(0, len(summaryfiles)):
-            s = summaryfiles[s_idx]
-            if vector in s.keys():
-                if s_idx >= maxlabels:  # Truncate legend if too many
+        for idx, summaryfile in enumerate(summaryfiles):
+            if vector in summaryfile.keys():
+                if idx >= maxlabels:  # Truncate legend if too many
                     sumlabel = "_nolegend_"
                 else:
                     if singleplot:
-                        sumlabel = vector + " " + s.case.lower()
+                        sumlabel = vector + " " + summaryfile.case.lower()
                     else:
-                        sumlabel = s.case.lower()
+                        sumlabel = summaryfile.case.lower()
 
-                values = s.numpy_vector(vector)
+                values = summaryfile.numpy_vector(vector)
 
                 if ensemblemode:
                     cycledcolor = colours[vector_idx]
-                    if s_idx == 0:
+                    if idx == 0:
                         sumlabel = vector
                     else:
                         sumlabel = "_nolegend_"
                 elif singleplot:
                     cycledcolor = colours[vector_idx]
                 else:
-                    cycledcolor = colours[s_idx]
+                    cycledcolor = colours[idx]
 
                 if normalize:
                     maxvalue = values.max()
@@ -470,12 +469,12 @@ def summaryplotter(
                         values = [i * 1 / maxvalue for i in values]
                         sumlabel = sumlabel + " " + str(maxvalue)
                     else:
-                        logging.warn(
+                        logging.warning(
                             "Could not normalize %s, maxvalue is %g", vector, maxvalue
                         )
 
                 pyplot.plot_date(
-                    s.dates,
+                    summaryfile.dates,
                     values,
                     xdate=True,
                     ydate=False,
@@ -646,20 +645,17 @@ def main():
 
     # Give out a "menu" (text-based) only if we are running in foreground:
     if os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):
-        import tty
-        import termios
-
-        fd = sys.stdin.fileno()
-        old_settings = termios.tcgetattr(fd)
+        filedesc = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(filedesc)
         print("Menu: 'q' = quit, 'r' = reload plots")
         try:
             # change terminal settings to allow keyboard
             # input without user pressing 'enter'
             tty.setcbreak(sys.stdin.fileno())
-            ch = ""
-            while ch != "q" and plotprocess.is_alive():
-                ch = sys.stdin.read(1)
-                if ch == "r":
+            char = ""
+            while char != "q" and plotprocess.is_alive():
+                char = sys.stdin.read(1)
+                if char == "r":
                     plotprocess.terminate()
                     plotprocess = Process(
                         target=summaryplotter,
@@ -683,7 +679,7 @@ def main():
         except KeyboardInterrupt:
             pass
         # We have messed up the terminal, remember to fix:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        termios.tcsetattr(filedesc, termios.TCSADRAIN, old_settings)
 
         # Close plot windows (running in a subprocess)
         plotprocess.terminate()

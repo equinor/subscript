@@ -1,5 +1,6 @@
-import pytest
 import subprocess
+
+import pytest
 
 from subscript.sw_model_utilities import sw_model_utilities as swtool
 

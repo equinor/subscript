@@ -1,7 +1,8 @@
 import sys
 import datetime
-from dateutil.relativedelta import relativedelta
 import argparse
+
+from dateutil.relativedelta import relativedelta
 import pandas as pd
 
 DESCRIPTION = "Convert CSV files with production data to OFM vol-format"
@@ -196,6 +197,8 @@ class CustomFormatter(
     Multiple inheritance used for argparse to get both
     defaults and raw description formatter
     """
+
+    # pylint: disable=unnecessary-pass
 
     pass
 

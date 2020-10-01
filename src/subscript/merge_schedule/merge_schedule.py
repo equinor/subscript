@@ -1,9 +1,10 @@
 import os
 import datetime
-import dateutil.parser
 import argparse
-import yaml
 import logging
+
+import dateutil.parser
+import yaml
 
 import subscript
 from subscript.sunsch import sunsch
@@ -20,6 +21,7 @@ one block occuring before the first DATES in all files."""
 
 
 def get_parser():
+    """Make a parser for command line arguments and for documentation"""
     parser = argparse.ArgumentParser(description=DESCRIPTION)
 
     parser.add_argument("inputfiles", type=str, nargs="+", help="Path to input files.")

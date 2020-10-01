@@ -10,6 +10,8 @@ from subscript.pack_sim import pack_sim
 ECLDIR = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
 ECLCASE = "2_R001_REEK-0.DATA"
 
+# pylint: disable=protected-access
+
 
 @pytest.mark.integration
 def test_integration():
@@ -17,8 +19,9 @@ def test_integration():
     assert subprocess.check_output(["pack_sim", "-h"])
 
 
+@pytest.mark.integration
 def test_main(tmpdir):
-
+    """Test invocation from command line"""
     tmpdir.chdir()
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
@@ -90,6 +93,7 @@ def test_strip_comments(tmpdir):
 
 
 def test_replace_paths():
+    """Test that we are able to replace paths for include file reorganization"""
     test_str = " $ECLINCLUDE/grid/foo.grdecl \n $ECLINCLUDE/props/satnums.inc"
     paths = {"ECLINCLUDE": "include"}
     transformed_str = pack_sim._replace_paths(test_str, paths)
@@ -98,6 +102,7 @@ def test_replace_paths():
 
 
 def test_get_paths(tmpdir):
+    """Test that we can obtain the PATHS keyword from a deck"""
     tmpdir.chdir()
     file = "pathfile"
     os.mkdir("somepath")
@@ -119,12 +124,15 @@ def test_normalize_line_endings():
 
 
 def test_remove_comments():
+    """Test removal of Eclipse style comments from strings"""
     test_str = "faljklj a -- a comment\n--\n\n    --"
     assert "--" not in pack_sim._remove_comments(True, test_str)
     assert "--" in pack_sim._remove_comments(False, test_str)
 
 
 def test_md5sum(tmpdir):
+    """Check md5sum computations from files"""
+    tmpdir.chdir()
     test_str = "foo bar com"
     with open("foo.txt", "w") as fhandle:
         fhandle.write(test_str)

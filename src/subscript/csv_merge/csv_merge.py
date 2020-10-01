@@ -28,6 +28,7 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
+    # pylint: disable=unnecessary-pass
     pass
 
 
@@ -207,16 +208,16 @@ def main():
         for col in merged_df.columns:
             if len(merged_df[col].unique()) == 1:
                 columnstodelete.append(col)
-        logger.info("Dropping constant columns " + str(columnstodelete))
+        logger.info("Dropping constant columns %s", str(columnstodelete))
         merged_df.drop(columnstodelete, inplace=True, axis=1)
 
     if merged_df.empty:
-        print("ERROR: No data to output.")
+        logger.error("No data to output.")
         sys.exit(1)
 
     logger.info("Final column list: %s", str(merged_df.columns))
 
-    logger.info("Exporting CSV data to " + args.output)
+    logger.info("Exporting CSV data to %s", args.output)
 
     if args.output == "-" or args.output == "stdout":
         merged_df.to_csv(sys.stdout, index=False)

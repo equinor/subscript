@@ -1,5 +1,4 @@
 """Test that casegen_upcars is installed and launched with given demo cases"""
-# pylint:disable=bad-continuation
 import os
 import subprocess
 import shutil

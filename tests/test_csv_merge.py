@@ -8,6 +8,7 @@ from subscript.csv_merge import csv_merge
 
 
 def test_taglist():
+    """Test that we extract taglists correctly"""
     files = [
         "/a/boo/realization-3/iter-0/",
         "/a/boo/realization-5/iter-1/",

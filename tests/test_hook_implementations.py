@@ -3,8 +3,9 @@ import shutil
 
 import pytest
 
-import subscript.hook_implementations.jobs
 from ert_shared.plugins.plugin_manager import ErtPluginManager
+
+import subscript.hook_implementations.jobs
 
 EXPECTED_JOBS = {
     "ECLCOMPRESS": "subscript/config_jobs/ECLCOMPRESS",
@@ -21,9 +22,11 @@ EXPECTED_JOBS = {
 
 
 def test_hook_implementations():
-    pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
+    """Test that we have the correct set of jobs installed,
+    nothing more, nothing less"""
+    plugin_m = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
-    installable_jobs = pm.get_installable_jobs()
+    installable_jobs = plugin_m.get_installable_jobs()
     for wf_name, wf_location in EXPECTED_JOBS.items():
         assert wf_name in installable_jobs
         assert installable_jobs[wf_name].endswith(wf_location)
@@ -32,7 +35,7 @@ def test_hook_implementations():
     assert set(installable_jobs.keys()) == set(EXPECTED_JOBS.keys())
 
     expected_workflow_jobs = {}
-    installable_workflow_jobs = pm.get_installable_workflow_jobs()
+    installable_workflow_jobs = plugin_m.get_installable_workflow_jobs()
     for wf_name, wf_location in expected_workflow_jobs.items():
         assert wf_name in installable_workflow_jobs
         assert installable_workflow_jobs[wf_name].endswith(wf_location)
@@ -62,11 +65,12 @@ def test_executables():
 
 
 def test_hook_implementations_job_docs():
-    pm = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
+    """Check that there is docs for every installed hook"""
+    plugin_m = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
-    installable_jobs = pm.get_installable_jobs()
+    installable_jobs = plugin_m.get_installable_jobs()
 
-    docs = pm.get_documentation_for_jobs()
+    docs = plugin_m.get_documentation_for_jobs()
 
     assert set(docs.keys()) == set(installable_jobs.keys())
 

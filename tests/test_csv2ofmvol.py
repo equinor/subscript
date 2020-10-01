@@ -26,6 +26,7 @@ PRODDATA_A4 = pd.DataFrame(
 def test_read_pdf_csv_files():
     """Test parsing of CSV or dataframes"""
     with pytest.raises(TypeError):
+        # pylint: disable=no-value-for-parameter
         csv2ofmvol.read_pdm_csv_files()
     with pytest.raises(IOError):
         csv2ofmvol.read_pdm_csv_files(["foobar"])

@@ -12,6 +12,8 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
+    # pylint: disable=unnecessary-pass
+
     pass
 
 
@@ -70,6 +72,7 @@ of selecting individual columns.""",
 
 
 def main():
+    """Function for command line invocation"""
     parser = get_parser()
     args = parser.parse_args()
 
@@ -107,9 +110,7 @@ def main():
     wellmatcher = re.compile(pivottype[0])
 
     # Constant columns should be deleted upfront for speed reasons.
-    keepthese = set(
-        [x.lower() for x in realization_names + iteration_names + date_names]
-    )
+    keepthese = {x.lower() for x in realization_names + iteration_names + date_names}
     if not args.keepconstantcolumns:
         columnstodelete = []
         for col in ens.columns:
