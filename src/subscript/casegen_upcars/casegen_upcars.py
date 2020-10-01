@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# pylint: disable=bad-continuation
 """
 casegen_upcars is script to create conceptual model
 based on sugar-cube representation of fracture.
@@ -18,9 +17,9 @@ import argparse
 from yaml import load, Loader
 
 from jinja2 import Environment, FileSystemLoader, meta, DebugUndefined
-from .udf import TERMINALCOLORS, listify, flatten, conversion
-from .model import Model
-from .udf_arg_parser import fill_parser
+from subscript.casegen_upcars.udf import TERMINALCOLORS, listify, flatten, conversion
+from subscript.casegen_upcars.model import Model
+from subscript.casegen_upcars.udf_arg_parser import fill_parser
 
 
 def mask_token(stream_buffer, unique_token="#|{}^", unmask=False):

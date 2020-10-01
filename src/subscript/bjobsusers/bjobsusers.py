@@ -59,11 +59,10 @@ def get_jobs(status, bjobs_function):
     if not slines:
         # Empty bjobs-output should just return empty dataframe.
         return pd.DataFrame(columns=("user", "ncpu"))
-    else:
-        data = [
-            [uname, 1 if rex.match(hname) is None else int(rex.match(hname).group(1))]
-            for (uname, hname) in slines
-        ]
+    data = [
+        [uname, 1 if rex.match(hname) is None else int(rex.match(hname).group(1))]
+        for (uname, hname) in slines
+    ]
     return (
         pd.DataFrame(data, columns=("user", "ncpu"))
         .groupby("user")
@@ -94,9 +93,8 @@ def call_finger(username):
         pass
     if finger_output:
         return finger_output
-    else:
-        # When finger fails, return something similar and usable
-        return "Login: {}  Name: ?? ()".format(username)
+    # When finger fails, return something similar and usable
+    return "Login: {}  Name: ?? ()".format(username)
 
 
 def userinfo(username, finger_function):
@@ -126,16 +124,18 @@ def userinfo(username, finger_function):
 
 
 def show_status(status="RUN", title="Running", umax=10):
-    df = get_jobs(status, call_bjobs).iloc[:umax]
+    """Print job statistics to console user"""
+    dframe = get_jobs(status, call_bjobs).iloc[:umax]
     print("{} jobs:".format(title))
     print("--------------")
-    for u, n in df.iterrows():
-        print(n[0], userinfo(u, call_finger))
+    for user, count in dframe.iterrows():
+        print(count[0], userinfo(user, call_finger))
     print("- - - - - - - - - - -")
-    print("Total: {}".format(df["ncpu"].sum()))
+    print("Total: {}".format(dframe["ncpu"].sum()))
 
 
 def get_parser():
+    """Prepare a parser for argument parsing and documentation"""
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
         "-u", "--usercount", type=int, default=10, help="Number of users to display"
@@ -144,6 +144,7 @@ def get_parser():
 
 
 def main():
+    """For invocation on command line"""
     parser = get_parser()
     args = parser.parse_args()
 

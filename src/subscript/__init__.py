@@ -9,6 +9,7 @@ except pkg_resources.DistributionNotFound:
 
 
 def getLogger(module_name="subscript"):
+    # pylint: disable=invalid-name
     """Provide a unified logger for subscript
 
     In particular, the module names for each tool has

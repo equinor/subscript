@@ -9,19 +9,27 @@ from subscript.bjobsusers import bjobsusers
 
 
 def fake_bjobs(status):
+    # pylint: disable=unused-argument
+    """Return a string that could have been a real response from
+    the command line bjobs program"""
     return "foobar 3*computenode1\nfoobert 1*computenode2\nfoobar 8*computenode3"
 
 
 def bjobs_errors(status):
-    # Example error message from bjobs
+    # pylint: disable=unused-argument
+    """Example error message from bjobs"""
     return "LIM not responding"
 
 
-class FakeFinger(object):
+class FakeFinger:
+    """Emulate the Linux finger utility"""
+
+    # pylint:  disable=too-few-public-methods
     def __init__(self, name):
         self._name = name
 
     def __call__(self, username):
+        """Emulate the Linux finger utility"""
         result = "Login: {}          Name: " + self._name
         return subprocess.check_output(("echo", result)).decode("utf-8")
 
@@ -43,6 +51,7 @@ def test_real_bjobs():
 
 
 def test_get_jobs():
+    """Test getting all jobs as a dataframe"""
     jobs_df = bjobsusers.get_jobs("RUN", fake_bjobs)
     assert isinstance(jobs_df, pd.DataFrame)
     assert "ncpu" in jobs_df.columns
@@ -57,6 +66,7 @@ def test_get_jobs():
 
 
 def test_userinfo():
+    """Test that we can extract user info, with no UTF-8 issues"""
     names = (
         "Foo Barrer (foo.bar.com)",
         "Føø Bårrær (foo.latin1.utf8.com)",
@@ -73,6 +83,7 @@ def test_userinfo():
 
 
 def test_systemfinger():
+    """Test the real system finger utility"""
     currentuser = os.getlogin()
     if not currentuser:
         return

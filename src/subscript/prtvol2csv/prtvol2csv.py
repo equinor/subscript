@@ -1,9 +1,9 @@
 import os
 import argparse
-import pandas
-import yaml
 import subprocess
 
+import yaml
+import pandas
 
 DESCRIPTION = """
 Extract reservoir volumes from Eclipse PRT files, dump to CSV.
@@ -39,10 +39,13 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
+    # pylint: disable=unnecessary-pass
+
     pass
 
 
 def get_parser():
+    """A parser for command line argument parsing and for documentation"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
     )
@@ -95,6 +98,7 @@ def prep_output_dir(tablesdir=None, suffix=None):
 
 
 def main():
+    """Function for command line invocation"""
     args = get_parser().parse_args()
 
     tablesdir = prep_output_dir(args.dir, args.suffix)
@@ -103,6 +107,7 @@ def main():
     simvolumestxt = "eclvolumes_prt_fipnum.txt"
     resvolumestxt = "resvolumes_prt_fipnum.txt"
 
+    # pylint: disable=invalid-name
     PRTfile = args.DATAfile.replace("DATA", "PRT")
 
     ######################################################################
@@ -180,9 +185,8 @@ def main():
             "HCPV_TOTAL",
         ],
     ).set_index("FIPNUM")
-    if not len(
-        resvolumes_prt
-    ):  # if not FIPRESV is included in RPTSOL in *.DATA, then resvolums are missing
+    if resvolumes_prt.empty:
+        # if not FIPRESV is included in RPTSOL in *.DATA, then resvolums are missing
         resvolumes_prt = None
 
     ######################################################################

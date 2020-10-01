@@ -90,8 +90,6 @@ def _do_parse_args(args):
 
     if args is None:
         args = sys.argv[1:]
-    else:
-        args = args
 
     parser = get_parser()
 
@@ -107,7 +105,7 @@ def _do_parse_args(args):
 def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
     """Conversion..."""
 
-    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-arguments
 
     xtg.say("ecl2roff...")
 
@@ -177,7 +175,7 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
                 xtg.say("Output grid property to <{}>".format(outputfile))
                 prop.to_file(outputfile, fformat="roff")
         else:
-            raise SystemExit("Invalid grid extions")
+            raise SystemExit("Invalid grid extention")
 
 
 def main(args=None):

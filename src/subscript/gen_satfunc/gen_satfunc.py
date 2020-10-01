@@ -4,8 +4,12 @@ import sys
 
 import pyscal
 
+# Non-conforming names are in use here, as they follow a different norm.
+# pylint: disable=invalid-name
+
 
 def get_parser():
+    """Make a parser for command line arg parsing and for documentation"""
     parser = argparse.ArgumentParser(prog="gen_satfunc")
     parser.add_argument(
         "config_file",
@@ -19,6 +23,7 @@ def get_parser():
 
 
 def main():
+    """Used for invocation on the command line"""
     parser = get_parser()
     args = parser.parse_args()
 

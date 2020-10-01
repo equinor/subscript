@@ -1,14 +1,15 @@
 import os
 import sys
 
-import pytest
 import subprocess
+
+import pytest
 
 from subscript.summaryplot import summaryplot
 
 
 def test_summaryplotter():
-
+    """Test multiple command line invocations"""
     eclipsedeck = os.path.join(
         os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.DATA"
     )

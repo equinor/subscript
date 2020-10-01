@@ -5,8 +5,12 @@ from pkg_resources import resource_filename
 from ert_shared.plugins.plugin_manager import hook_implementation
 from ert_shared.plugins.plugin_response import plugin_response
 
+# pylint: disable=no-value-for-parameter
+
 
 def _get_jobs_from_directory(directory):
+    """Do a filesystem lookup in a directory to check
+    for available ERT forward models"""
     resource_directory = resource_filename("subscript", directory)
 
     all_files = [
@@ -20,16 +24,19 @@ def _get_jobs_from_directory(directory):
 @hook_implementation
 @plugin_response(plugin_name="subscript")
 def installable_jobs():
+    """Get the jobs/forward models exposed by subscript"""
     return _get_jobs_from_directory("config_jobs")
 
 
 @hook_implementation
 @plugin_response(plugin_name="subscript")
 def installable_workflow_jobs():
+    """Get the workflow jobs exposed by subscript"""
     return {}
 
 
 def _get_module_variable_if_exists(module_name, variable_name, default=""):
+    """Grab variables from subscript modules, e.g. for use in docs"""
     try:
         script_module = importlib.import_module(module_name)
     except ImportError:
@@ -41,6 +48,11 @@ def _get_module_variable_if_exists(module_name, variable_name, default=""):
 @hook_implementation
 @plugin_response(plugin_name="subscript")
 def job_documentation(job_name):
+    """Build documentation for a specific job.
+
+    Return:
+        dict:  keys: description, category, examples.
+    """
     subscript_jobs = set(installable_jobs().data.keys())
     if job_name not in subscript_jobs:
         return None

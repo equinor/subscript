@@ -6,6 +6,9 @@
 # https://wiki.equinor.com/wiki/index.php/Res:The_sw_model_utilities_script
 #
 
+# Some variables are here named to conform to something else than PEP8
+# pylint: disable=invalid-name
+
 import argparse
 import math
 from copy import deepcopy
@@ -28,13 +31,14 @@ MENU = """1. Convert a TO A and b to B from Sw = aJ^b to Sw=(J/A)^(1/B)
 
 
 def get_parser():
+    """Make a dummy parser for the command line for the sake of docs."""
     return argparse.ArgumentParser(
         description=DESCRIPTION, epilog="Interactive menu:\n\n" + MENU
     )
 
 
 def menu():
-
+    """Print an interactive menu to the user"""
     print("Choices:\n")
     print(MENU)
     try:
@@ -97,26 +101,22 @@ def autoformat(num):
     return num
 
 
-# ==============================================================================
-# A and B algebraic conversion
-# ==============================================================================
-
-
 def convert_normal2inverse(aval, bval):
-    # same formula both ways!
+    """A and B algebraic conversion
+
+    Note: same formula is valid in both conversion directions!"""
     bval2 = 1.0 / bval
     aval2 = (1.0 / aval) ** (bval2)
 
     return aval2, bval2
 
 
-# # ==============================================================================
-# # Plotting
-# # ==============================================================================
-
-
 def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
-
+    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
+    # Pylint rationale: Readability of this function would not improve with
+    # default pylint suggestions.
+    """Plot a capillary pressure function to users screen"""
     # height array; create an array from min to max, with step:
     hei = np.arange(0.01, hmax, 0.1)
 

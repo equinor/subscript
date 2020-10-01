@@ -44,6 +44,8 @@ RHEL_ID = "/etc/redhat-release"
 
 
 def touch(fname):
+    """Touch a file on filesystem, updating its timestamp or
+    creating if it does not exist"""
     try:
         os.utime(fname, None)
     except OSError:
@@ -51,10 +53,12 @@ def touch(fname):
 
 
 def xwarn(mystring):
+    """Print a warning with colors"""
     print(_BColors.WARN, mystring, _BColors.ENDC)
 
 
 def xerror(mystring):
+    """Print an error in an appropriate color"""
     print(_BColors.ERROR, mystring, _BColors.ENDC)
 
 
@@ -72,6 +76,7 @@ def detect_os():
 
 
 def get_parser():
+    """Make a parser for command line arguments and for documentation"""
     prs = argparse.ArgumentParser(description=DESCRIPTION)
 
     # positional:
@@ -171,6 +176,7 @@ def get_parser():
 
 
 class _BColors:
+    # pylint: disable=too-few-public-methods
     # local class for ANSI term color commands
 
     HEADER = "\033[93;42m"
@@ -184,7 +190,9 @@ class _BColors:
     UNDERLINE = "\033[4m"
 
 
-class RunRMS(object):
+class RunRMS:
+    """A class for setting up an environment in which to execute RMS"""
+
     def __init__(self):
         self.version_requested = None  # RMS version requested
         self.pythonpath = None  # RMS pythonpath
@@ -228,10 +236,9 @@ class RunRMS(object):
         )
 
     def do_parse_args(self, args):
+        """Parse command line args"""
         if args is None:
             args = sys.argv[1:]
-        else:
-            args = args
 
         prs = get_parser()
 
@@ -239,11 +246,11 @@ class RunRMS(object):
 
         self.args = args
 
-    def debug(self, str):
+    def debug(self, string):
         """Verbose mode for debugging..."""
         try:
             if self.args.debug:
-                print(str)
+                print(string)
         except AttributeError:
             pass
 
@@ -254,8 +261,7 @@ class RunRMS(object):
         def _fsplitter(xline):  # yes... an inner function
             if len(xline) == 3:
                 return xline[2]
-            else:
-                return "unknown"
+            return "unknown"
 
         # first check if folder exists, and issue a warning if not
         if not os.path.isdir(self.project):
@@ -269,7 +275,7 @@ class RunRMS(object):
                 for line in master.read().decode("UTF-8").splitlines():
                     if line.startswith("End GEOMATIC"):
                         break
-                    elif line.startswith("release"):
+                    if line.startswith("release"):
                         rel = list(line.split())
                         self.version_fromproject = rel[2]
                         self.complete_version_fromproject()
@@ -315,12 +321,13 @@ class RunRMS(object):
             rls = "{}{}".format(self.version_fromproject, ".0")
 
         self.version_fromproject = rls
+        return
 
     def get_rms_exe(self):
         """Get the correct RMS executable"""
 
         if self.args.fake:
-            return None
+            return
 
         if self.args.beta:
             ok2 = self._get_rms_exe_nonstandard()
@@ -344,6 +351,7 @@ class RunRMS(object):
                 "Cannot find requested RMS version: {}".format(self.version_requested)
             )
             raise SystemExit("EXIT")
+        return
 
     def _get_rms_exe_standard(self):
         """Check rms -v command..."""
@@ -362,10 +370,7 @@ class RunRMS(object):
                 continue
             if look:
                 line = line.strip(" ")
-                if "default" in line:
-                    usedefault = True
-                else:
-                    usedefault = False
+                usedefault = "default" in line
 
                 line = line.replace("(default)", "")
                 line = line.replace("\t", "")
@@ -638,16 +643,14 @@ class RunRMS(object):
         wanted = "rms" + self.version_requested
         if self.project.endswith(wanted):
             self.extstatus = (
-                "Good, project name extension is consistent " "with actual RMS version"
+                "Good, project name extension is consistent with actual RMS version"
             )
             self.okext = True
         else:
             self.extstatus = (
                 "UPS, project name extension is inconsistent "
-                "with actual RMS version: <{}> vs version <{}>".format(
-                    self.project, wanted
-                )
-            )
+                "with actual RMS version: <{}> vs version <{}>"
+            ).format(self.project, wanted)
             self.okext = False
 
     def runlogger(self):

@@ -120,13 +120,13 @@ def _is_valid_interpolator(interp):
         elif interp["param_w"] == 0:
             valid = True
 
-    except BaseException:
+    except (KeyError, ValueError, TypeError):
         pass
 
     try:
         if interp["param_w"] > 1.0 or interp["param_w"] < -1.0:
             valid = False
-    except BaseException:
+    except (KeyError, ValueError, TypeError):
         pass
 
     try:
@@ -134,13 +134,13 @@ def _is_valid_interpolator(interp):
             valid = True
         elif interp["param_g"] == 0:
             valid = True
-    except BaseException:
+    except (KeyError, ValueError, TypeError):
         pass
 
     try:
         if interp["param_g"] > 1.0 or interp["param_g"] < -1.0:
             valid = False
-    except BaseException:
+    except (KeyError, ValueError, TypeError):
         pass
 
     return valid
@@ -153,13 +153,13 @@ def _is_valid_table_entries(schema):
     try:
         if schema["low"]:
             valid = True
-    except BaseException:
+    except (KeyError, ValueError, TypeError):
         pass
 
     try:
         if schema["high"]:
             valid = True
-    except BaseException:
+    except (KeyError, ValueError, TypeError):
         pass
 
     return valid
@@ -459,17 +459,17 @@ def process_config(cfg, root_path=""):
     """
     # add root-path to all include files
     if "base" in cfg.keys():
-        for i in range(len(cfg["base"])):
-            if not os.path.isabs(cfg["base"][i]):
-                cfg["base"][i] = os.path.join(root_path, cfg["base"][i])
+        for idx in range(len(cfg["base"])):
+            if not os.path.isabs(cfg["base"][idx]):
+                cfg["base"][idx] = os.path.join(root_path, cfg["base"][idx])
     if "high" in cfg.keys():
-        for i in range(len(cfg["high"])):
-            if not os.path.isabs(cfg["high"][i]):
-                cfg["high"][i] = os.path.join(root_path, cfg["high"][i])
+        for idx in range(len(cfg["high"])):
+            if not os.path.isabs(cfg["high"][idx]):
+                cfg["high"][idx] = os.path.join(root_path, cfg["high"][idx])
     if "low" in cfg.keys():
-        for i in range(len(cfg["low"])):
-            if not os.path.isabs(cfg["low"][i]):
-                cfg["low"][i] = os.path.join(root_path, cfg["low"][i])
+        for idx in range(len(cfg["low"])):
+            if not os.path.isabs(cfg["low"][idx]):
+                cfg["low"][idx] = os.path.join(root_path, cfg["low"][idx])
 
     # validate cfg according to schema
     cfg_schema = get_cfg_schema()

@@ -11,7 +11,7 @@ from subscript.prtvol2csv import prtvol2csv
 
 
 def test_prtvol2csv(tmpdir):
-
+    """Test invocation from command line"""
     testdatadir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
     )
@@ -36,6 +36,7 @@ def test_integration():
 
 
 def test_prtvol2csv_regions(tmpdir):
+    """Test region support, getting data from yaml"""
     testdatadir = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
     )

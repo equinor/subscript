@@ -119,15 +119,13 @@ def get_observations(obsdir="", filepattern="*.obs"):
                 obs_dfs.append(wellobs)
         except ValueError:
             logger.warning(
-                "File %s could not be parsed as ERT observations, skipped."
-                % obsfilename
+                "File %s could not be parsed as ERT observations, skipped.", obsfilename
             )
 
     if obs_dfs:
         return pd.concat(obs_dfs)
-    else:
-        logger.warning("No observation data was parsed from %s" % obsdir)
-        return pd.DataFrame()
+    logger.warning("No observation data was parsed from %s", obsdir)
+    return pd.DataFrame()
 
 
 def merge_rft_ertobs(gendatacsv, obsdir):
@@ -157,7 +155,7 @@ def merge_rft_ertobs(gendatacsv, obsdir):
     obs_df = get_observations(obsdir)
 
     # For each simulated well, look up
-    logger.info("Parsed %s observations from files in %s" % (str(len(obs_df)), obsdir))
+    logger.info("Parsed %s observations from files in %s", str(len(obs_df)), obsdir)
 
     return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
 
@@ -178,7 +176,7 @@ def main():
     if not dframe.empty:
         dframe.to_csv(args.output, index=False)
         logger.info(
-            "Written merged RFT simulated and observed values to %s" % args.output
+            "Written merged RFT simulated and observed values to %s", args.output
         )
     else:
         logger.error("Empty dataframe from merge of simulated and observed values")

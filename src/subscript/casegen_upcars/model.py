@@ -1,5 +1,4 @@
 """ Engine part of casegen_upcars """
-# pylint:disable=bad-continuation
 
 import io
 import math
@@ -18,15 +17,15 @@ def fracture_idx(matrix_elements, fracture_cell_count, boundary_fracture):
     if boundary_fracture:
         offset = 0
         result.append(offset)
-        for i in matrix_elements:
-            offset += i + fracture_cell_count
+        for idx in matrix_elements:
+            offset += idx + fracture_cell_count
             result.append(offset)
     else:
         if len(matrix_elements) > 1:
             offset = matrix_elements[0]
             result.append(offset)
-            for i in matrix_elements[1:-1]:
-                offset += i + fracture_cell_count
+            for idx in matrix_elements[1:-1]:
+                offset += idx + fracture_cell_count
                 result.append(offset)
     return np.asarray(result, dtype=np.int8)
 
@@ -102,17 +101,17 @@ class Model:
 
         prts = [-1] * nz
         if streak_k is not None:
-            for i, (_k, _nz) in enumerate(zip(streak_k, streak_nz)):
+            for idx, (_k, _nz) in enumerate(zip(streak_k, streak_nz)):
                 if _nz > 0:
                     if _k - 1 < 0 or _k + _nz - 1 > nz:
                         print(
                             TERMINALCOLORS["WARNING"]
                             + "Warning: Streak #{} is outside background matrix.\n"
-                            "The streak will be ignored.".format(i + 1)
+                            "The streak will be ignored.".format(idx + 1)
                             + TERMINALCOLORS["ENDC"]
                         )
                     else:
-                        prts[_k - 1 : _k + _nz - 1] = [i] * _nz
+                        prts[_k - 1 : _k + _nz - 1] = [idx] * _nz
 
         layer_nz = []
         layer_dz = []
@@ -159,7 +158,7 @@ class Model:
         self._fracture_offset_x = listify(fracture_offset_x, self._n_faults_y, float)
         self._fracture_height_x = listify(fracture_height_x, self._n_faults_y, float)
         self._fracture_zoffset_x = listify(fracture_zoffset_x, self._n_faults_y, float)
-        for i, (var, title) in enumerate(
+        for idx, (var, title) in enumerate(
             zip(
                 [
                     self._fracture_length_x,
@@ -187,7 +186,7 @@ class Model:
         self._fracture_offset_y = listify(fracture_offset_y, self._n_faults_x, float)
         self._fracture_height_y = listify(fracture_height_y, self._n_faults_x, float)
         self._fracture_zoffset_y = listify(fracture_zoffset_y, self._n_faults_x, float)
-        for i, (var, title) in enumerate(
+        for idx, (var, title) in enumerate(
             zip(
                 [
                     self._fracture_length_y,
@@ -401,10 +400,10 @@ class Model:
             (self._total_nx, self._total_ny, self._total_nz), dtype=np.int8
         )
         # Use length instead of number of cells
-        for i, idx in enumerate(self._fracture_i):
-            fracture_length = max(0.0, min(1.0, self._fracture_length_y[i])) * self._ly
+        for _i, idx in enumerate(self._fracture_i):
+            fracture_length = max(0.0, min(1.0, self._fracture_length_y[_i])) * self._ly
             start_fracture = (
-                min(self._fracture_offset_y[i], 1.0 - self._fracture_length_y[i])
+                min(self._fracture_offset_y[_i], 1.0 - self._fracture_length_y[_i])
                 * self._ly
             )
             start_fracture_idx = np.abs(self._y - start_fracture).argmin()
@@ -412,9 +411,9 @@ class Model:
                 self._y - (start_fracture + fracture_length)
             ).argmin()
 
-            fracture_height = max(0.0, min(1.0, self._fracture_height_y[i])) * self._lz
+            fracture_height = max(0.0, min(1.0, self._fracture_height_y[_i])) * self._lz
             start_fracture_vert = (
-                min(self._fracture_zoffset_y[i], 1.0 - self._fracture_height_y[i])
+                min(self._fracture_zoffset_y[_i], 1.0 - self._fracture_height_y[_i])
                 * self._lz
             )
             start_fracture_k = np.abs(self._z - start_fracture_vert).argmin()
@@ -427,13 +426,13 @@ class Model:
                 start_fracture_idx:end_fracture_idx,
                 start_fracture_k : end_fracture_k + 1,
             ] = (
-                i + 1
+                _i + 1
             )
 
-        for i, idx in enumerate(self._fracture_j):
-            fracture_length = max(0.0, min(1.0, self._fracture_length_x[i])) * self._lx
+        for _i, idx in enumerate(self._fracture_j):
+            fracture_length = max(0.0, min(1.0, self._fracture_length_x[_i])) * self._lx
             start_fracture = (
-                min(self._fracture_offset_x[i], 1.0 - self._fracture_length_x[i])
+                min(self._fracture_offset_x[_i], 1.0 - self._fracture_length_x[_i])
                 * self._lx
             )
             start_fracture_idx = np.abs(self._x - start_fracture).argmin()
@@ -441,9 +440,9 @@ class Model:
                 self._x - (start_fracture + fracture_length)
             ).argmin()
 
-            fracture_height = max(0.0, min(1.0, self._fracture_height_x[i])) * self._lz
+            fracture_height = max(0.0, min(1.0, self._fracture_height_x[_i])) * self._lz
             start_fracture_vert = (
-                min(self._fracture_zoffset_x[i], 1.0 - self._fracture_height_x[i])
+                min(self._fracture_zoffset_x[_i], 1.0 - self._fracture_height_x[_i])
                 * self._lz
             )
             start_fracture_k = np.abs(self._z - start_fracture_vert).argmin()
@@ -454,7 +453,7 @@ class Model:
                 start_fracture_idx:end_fracture_idx,
                 idx : idx + self._fracture_cell_count,
                 start_fracture_k : end_fracture_k + 1,
-            ] = -(i + 1)
+            ] = -(_i + 1)
 
     def _build_grid(self):
         """ Create the mesh xv, yv and zv """
@@ -561,6 +560,7 @@ class Model:
     def _create_property(
         self, keyword, matrix_property, streak_property, fracture_property, vug_property
     ):
+        # pylint: disable=too-many-arguments
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(
             self._streak_k
@@ -575,11 +575,11 @@ class Model:
 
         props[self._streak_idx == -1] = matrix_property
 
-        for i, prop in enumerate(streak_property):
-            props[self._streak_idx == i] = prop
+        for idx, prop in enumerate(streak_property):
+            props[self._streak_idx == idx] = prop
 
-        for i, prop in enumerate(vug_property):
-            props[self._vug_idx == i + 1] = prop
+        for idx, prop in enumerate(vug_property):
+            props[self._vug_idx == idx + 1] = prop
         props[self._fracture_idx != 0] = fracture_property
         return props
 
@@ -592,6 +592,7 @@ class Model:
         fracture_y_property,
         vug_property,
     ):
+        # pylint: disable=too-many-arguments
         """ Distribute property in the cell with anisotropy in fracture property """
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(self._streak_k), (
@@ -617,14 +618,14 @@ class Model:
             (self._total_nx, self._total_ny, self._total_nz), dtype=data_type
         )
         props[self._streak_idx == -1] = matrix_property
-        for i, prop in enumerate(streak_property):
-            props[self._streak_idx == i] = prop
-        for i, prop in enumerate(vug_property):
-            props[self._vug_idx == i + 1] = prop
-        for i in range(self._n_faults_x):
-            props[self._fracture_idx == (i + 1)] = fracture_x_property[i]
-        for i in range(self._n_faults_y):
-            props[self._fracture_idx == -(i + 1)] = fracture_y_property[i]
+        for idx, prop in enumerate(streak_property):
+            props[self._streak_idx == idx] = prop
+        for idx, prop in enumerate(vug_property):
+            props[self._vug_idx == idx + 1] = prop
+        for idx in range(self._n_faults_x):
+            props[self._fracture_idx == (idx + 1)] = fracture_x_property[idx]
+        for idx in range(self._n_faults_y):
+            props[self._fracture_idx == -(idx + 1)] = fracture_y_property[idx]
         return props
 
     def set_layers_property(self, keyword, matrix_property, streak_property):
@@ -668,6 +669,7 @@ class Model:
     def export_props(
         self, filename, keyword, matrix_prop, streak_prop, frac_props, vug_prop
     ):
+        # pylint: disable=too-many-arguments
         """ Print out grid property to Eclipse format file """
         buffer_ = io.StringIO()
         print(
@@ -690,9 +692,9 @@ class Model:
             file_handle.write(buffer_.getvalue())
         buffer_.close()
 
-    def _get_surface_idx(self, i, j):
+    def _get_surface_idx(self, _i, _j):
         """ Return cell index of the surface """
-        offset = (i - 1) * 2 + (j - 1) * (4 * self._total_nx)
+        offset = (_i - 1) * 2 + (_j - 1) * (4 * self._total_nx)
         return [
             offset,
             offset + 1,
@@ -703,11 +705,11 @@ class Model:
     def export_grdecl(self, filename):
         """ Print out COORD, ZCORN, MULTX, MULTY and MULTPV to GRDECL file """
         surface = np.repeat(self._zv[0], 2)[1:-1]
-        for i in range(1, self._total_ny + 1):
+        for idx in range(1, self._total_ny + 1):
             surface = np.append(
                 surface,
                 np.tile(
-                    np.repeat(self._zv[i], 2)[1:-1], 2 if i < self._total_ny else 1
+                    np.repeat(self._zv[idx], 2)[1:-1], 2 if idx < self._total_ny else 1
                 ),
             )
         n_surface_points = surface.size
@@ -733,13 +735,15 @@ class Model:
             zcorn[0:n_surface_points] + self._layer_dz[0]
         )
 
-        for i in range(1, self._total_nz):
-            zcorn[n_surface_points * 2 * i : n_surface_points * (2 * i + 1)] = zcorn[
-                n_surface_points * (2 * i - 1) : n_surface_points * (2 * i)
-            ]
-            zcorn[n_surface_points * (2 * i + 1) : 2 * n_surface_points * (i + 1)] = (
-                zcorn[2 * n_surface_points * i : n_surface_points * (2 * i + 1)]
-                + self._layer_dz[i]
+        for idx in range(1, self._total_nz):
+            zcorn[
+                n_surface_points * 2 * idx : n_surface_points * (2 * idx + 1)
+            ] = zcorn[n_surface_points * (2 * idx - 1) : n_surface_points * (2 * idx)]
+            zcorn[
+                n_surface_points * (2 * idx + 1) : 2 * n_surface_points * (idx + 1)
+            ] = (
+                zcorn[2 * n_surface_points * idx : n_surface_points * (2 * idx + 1)]
+                + self._layer_dz[idx]
             )
 
         buffer_ = io.StringIO()
@@ -761,13 +765,13 @@ class Model:
         print("/", file=buffer_)
 
         print("COORD", file=buffer_)
-        for i in range(0, self._xv.shape[0]):
-            for j in range(0, self._xv.shape[1]):
+        for _i in range(0, self._xv.shape[0]):
+            for _j in range(0, self._xv.shape[1]):
                 print(
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}} "
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}}".format(
                         self._eclipse_output_float
-                    ).format(x=self._xv[i, j], y=self._yv[i, j], z=0.0),
+                    ).format(x=self._xv[_i, _j], y=self._yv[_i, _j], z=0.0),
                     file=buffer_,
                 )
         print("/", file=buffer_)
@@ -801,14 +805,14 @@ class Model:
         print(keyword, file=stream)
         list_value = [props[0]]
         list_count = [1]
-        for i in range(1, len(props)):
-            if props[i] == list_value[-1]:
+        for idx in range(1, len(props)):
+            if props[idx] == list_value[-1]:
                 list_count[-1] += 1
             else:
-                list_value.append(props[i])
+                list_value.append(props[idx])
                 list_count.append(1)
         string_buffer = ""
-        for i, (count, value) in enumerate(zip(list_count, list_value)):
+        for idx, (count, value) in enumerate(zip(list_count, list_value)):
             string_new = (
                 (" {0}*{1:" + value_format + "}").format(count, value)
                 if count > 1
@@ -831,6 +835,7 @@ class Model:
         self._vug_idx.fill(0)
 
     def bounded_box(self, i_1, i_2, j_1, j_2, k_1, k_2):
+        # pylint: disable=too-many-arguments
         """ Make sure the box is within model domain """
         return [
             max(i_1, 0),
@@ -982,17 +987,17 @@ class Model:
                 )
             )
             streak_box = []
-            for k, nz_size, rect in zip(
+            for _k, nz_size, rect in zip(
                 self._streak_k, self._streak_nz, self._streak_rect
             ):
-                k -= 1
+                _k -= 1
                 box = self.bounded_box(
                     rect[0] - near_streak_vug_distance_to_streak,
                     rect[1] + near_streak_vug_distance_to_streak,
                     rect[2] - near_streak_vug_distance_to_streak,
                     rect[3] + near_streak_vug_distance_to_streak,
-                    k - near_streak_vug_distance_to_streak,
-                    k + nz_size - 1 + near_streak_vug_distance_to_streak,
+                    _k - near_streak_vug_distance_to_streak,
+                    _k + nz_size - 1 + near_streak_vug_distance_to_streak,
                 )
                 streak_box.append(box)
                 streak_domain_flag[

@@ -37,6 +37,8 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
+    # pylint: disable=unnecessary-pass
+
     pass
 
 
@@ -238,9 +240,8 @@ def process_volfile(filename):
             logger.info("No NAME found in chunk, probably the very first.")
     if wellframes:
         return pd.concat(wellframes, sort=False).sort_index()
-    else:
-        logger.warning("No data was parseable in %s", filename)
-        return pd.DataFrame()
+    logger.warning("No data was parseable in %s", filename)
+    return pd.DataFrame()
 
 
 def ofmvol2csv_main(volfiles, output, includefileorigin=False):
@@ -277,5 +278,7 @@ def main():
         logger.setLevel(logging.INFO)
 
     ofmvol2csv_main(
-        args.volfiles, args.output, includefileorigin=args.includefileorigin,
+        args.volfiles,
+        args.output,
+        includefileorigin=args.includefileorigin,
     )

@@ -1,23 +1,25 @@
-import pandas as pd
 import os
-import yaml
 import sys
+import subprocess
+
+import yaml
 import configsuite
 
 # import pathlib
-import subprocess
 import pytest
+import pandas as pd
 
-from subscript.interp_relperm import interp_relperm
 from pyscal import PyscalFactory
 from ecl2df import satfunc
+
+from subscript.interp_relperm import interp_relperm
 
 TESTDATA = os.path.join(os.path.dirname(__file__), "testdata_interp_relperm")
 # TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
 
 
 def test_get_cfg_schema():
-
+    """Test the configsuite schema"""
     cfg_filen = os.path.join(str(TESTDATA), "cfg.yml")
 
     with open(cfg_filen, "r") as ymlfile:
@@ -25,14 +27,14 @@ def test_get_cfg_schema():
 
     # add root-path to all include files
     if "base" in cfg.keys():
-        for i in range(len(cfg["base"])):
-            cfg["base"][i] = os.path.join(str(TESTDATA), cfg["base"][i])
+        for idx in range(len(cfg["base"])):
+            cfg["base"][idx] = os.path.join(str(TESTDATA), cfg["base"][idx])
     if "high" in cfg.keys():
-        for i in range(len(cfg["high"])):
-            cfg["high"][i] = os.path.join(str(TESTDATA), cfg["high"][i])
+        for idx in range(len(cfg["high"])):
+            cfg["high"][idx] = os.path.join(str(TESTDATA), cfg["high"][idx])
     if "low" in cfg.keys():
-        for i in range(len(cfg["low"])):
-            cfg["low"][i] = os.path.join(str(TESTDATA), cfg["low"][i])
+        for idx in range(len(cfg["low"])):
+            cfg["low"][idx] = os.path.join(str(TESTDATA), cfg["low"][idx])
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
@@ -179,6 +181,8 @@ def test_schema_errors():
 
 
 def test_tables_to_dataframe():
+    """Test that tables in Eclipse format can be converted
+    into dataframes (using ecl2df)"""
     swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
     sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
 
@@ -202,6 +206,7 @@ def test_tables_to_dataframe():
 
 
 def test_make_interpolant():
+    """Test that we are able to make an interpolant from inc files"""
     swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
     sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
 
@@ -234,6 +239,7 @@ def test_make_interpolant():
 
 
 def test_args(tmpdir):
+    """Test that we can parse args on the command line"""
     tmpdir.chdir()
 
     test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
@@ -292,6 +298,7 @@ def test_mock(tmpdir):
     }
 
     interp_relperm.process_config(config)
+    interp_relperm.process_config(config)
 
     outfile_df = satfunc.df(open("outfile.inc").read(), ntsfun=1)
     assert set(outfile_df["KEYWORD"].unique()) == {"SWOF", "SGOF"}
@@ -311,6 +318,7 @@ def test_mock_two_satnums(tmpdir):
     parsing from disk, and is thus not representative for how flexible
     the code is for reading from include files not originating in pyscal.
     """
+    # pylint: disable=no-value-for-parameter
     tmpdir.chdir()
     columns = [
         "SATNUM",
@@ -432,6 +440,7 @@ def test_integration():
 
 
 def test_main(tmpdir):
+    """Test invocation from command line"""
     tmpdir.chdir()
 
     assert os.system("interp_relperm -h") == 0
@@ -446,6 +455,7 @@ def test_main(tmpdir):
 
 
 if __name__ == "__main__":
+    # pylint: disable=no-value-for-parameter
 
     test_get_cfg_schema()
     test_schema_errors()
