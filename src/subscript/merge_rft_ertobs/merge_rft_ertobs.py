@@ -62,27 +62,31 @@ def get_observations(obsdir="", filepattern="*.obs"):
     Gather observation data from a directory of input filenames, or later
     from ERT storage api.
 
-    Reads all files matching *.obs in the given directory.
+    Reads all files matching `*.obs` in the given directory.
     *This means that multiple report steps are not supported*.
 
     The dataframe will have the columns:
 
-        order: order of measurements as they appeared in the obsfile.
-        obs: observed pressure
-        error: assumed pressure error
-        well: name of well, deduced from filenames.
+    order
+        order of measurements as they appeared in the obsfile.
+    obs
+        observed pressure
+    error
+        assumed pressure error
+    well
+        name of well, deduced from filenames.
 
     Column names are made to match Webviz RFT plotter,
 
     https://github.com/equinor/webviz-subsurface/blob/master/webviz_subsurface/plugins/_rft_plotter/rft_plotter.py
 
     The column names are intentionally made compatible with columns
-    emitted by semeio/gendata_rft
+    emitted by ``semeio/gendata_rft``
 
     Args:
         obsfile (str): Path to a directory with observation files
         filepattern (str): Glob-filename pattern for observation files,
-            default *.obs. If this is changed, deducing name of well
+            default `*.obs`. If this is changed, deducing name of well
             from filename might fail.
     Return:
         pd.DataFrame
