@@ -4,13 +4,11 @@ import os
 import pytest
 
 import xtgeo
-from xtgeo.common import XTGeoDialog
 
+from subscript import getLogger
 import subscript.convert_grid_format.convert_grid_format as cgf
 
-xtg = XTGeoDialog()
-logger = xtg.basiclogger(__name__)
-
+logger = getLogger(__name__)
 
 RFILE1 = os.path.join(
     os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.EGRID"
