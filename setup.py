@@ -49,14 +49,15 @@ LEGACYSCRIPTS = [
 ]
 
 REQUIREMENTS = [
-    "pandas",
-    "scipy",
-    "pyyaml",
-    "pyscal",
+    "configsuite",
+    "ecl2df",
     "matplotlib",
     "numpy",
-    "ecl2df",
-    "configsuite",
+    "pandas",
+    "pyscal",
+    "pyyaml",
+    "scipy",
+    "segyio>1.8.0, <1.9.2",  # 1.9.3 fails on Py3.8
     "xlrd",
     "xtgeo",
 ]
