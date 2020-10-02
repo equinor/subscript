@@ -15,7 +15,7 @@ The simplest usage if you have a finished simulation named ``MYSIMULATION.DATA``
 is the following statement::
 
   $ presentvalue MYSIMULATION.DATA
-  Presentvalue 11433.1
+  {'Presentvalue': 11433.1}
 
 where the presentvalue is expressed in MNOK for the year you
 are discounting to (current year by default).
