@@ -206,6 +206,9 @@ def dict_to_parameterstxt(results, paramname):
 def get_paramfilename(eclfile):
     """Locate the parameters.txt file closest to the Eclipse DATA file
 
+    Args:
+        eclfile (str): Path to Eclipse DATA file.
+
     Returns.
         str: Empty string if no file found. Full path if found.
     """
@@ -234,7 +237,24 @@ def presentvalue_main(
     basedatafile=None,
 ):
     """Calculate presentvalue and financial parameters for a single Eclipse
-    run"""
+    run
+
+    Args:
+        datafile (str): Path to Eclipse DATA-file
+        economics (pd.DataFrame): Year-indexed data with economic parameters
+        discountrate (float): Yearly discount factor
+        discountto (int): Which year to discount to, defaults to current year
+        oilvector (str): Eclipse summary cumulative oil production vector
+        gasvector (str): Eclipse summary cumulative gas production vector
+        gasinjvector (str): Eclipse summary cumulative gas injection vector
+        cutoffyear (int): Production/costs beyond this year will be dropped
+        basedatafile (str): Path to Eclipse DATA file to use as reference
+            data (production from this file will be deducted)
+
+    Returns:
+        dict: with keys "PresentValue", and if input data allows it: "BEP1", "BEP",
+        "IRR" and "CEI".
+    """
     # pylint: disable=too-many-arguments
 
     logger.info("Discount rate: %s", str(discountrate))
@@ -271,6 +291,10 @@ def presentvalue_main(
 def calculate_financials(pv_df, cutoffyear):
     """Calculate economical parameters given a dataframe with
     income and costs.
+
+    Args:
+        pv_df (pd.DataFrame): A dataframe prepared with data for
+            presentvalue computations.
 
     Return:
         dict: Results, with keys: BEP1, BEP2, IRR, CEI. Keys
@@ -322,11 +346,14 @@ def calc_presentvalue_df(summary_df, econ_df, discountto):
     """
     Calculate a dataframe for present value computations.
 
+    Discount rate will be obtained from the econ_df dataframe.
+
     Args:
         summary_df (pd.DataFrame):  summary dataframe,  OPT, GPT, GIT, indexed
             year
-        econ_df (pd.DataFrame):
-        discountto (int):
+        econ_df (pd.DataFrame): Dataframe with economical input (prices and
+            costs)
+        discountto (int): Which year to discount to.
 
     Returns:
         pd.DataFrame: A column "presentvalue" will be added, which
@@ -418,7 +445,12 @@ def prepare_econ_table(
         gasprice (float): Default for gasprice if not included in CSV file.
         usdtonok (float): Default for usdtonk if not included in CSV file.
         discountrate (float): Default for discountrate if not included (as
-            constant) in CSV file."""
+            constant) in CSV file.
+
+    Returns:
+        pd.DataFrame: dataframe with economical data to be given
+        to calc_presentvalue_df().
+    """
     if filename:
         econ_df = pd.read_csv(filename, index_col=0)
         econ_df.columns = econ_df.columns.map(str.strip)
