@@ -173,6 +173,38 @@ def test_find_wellstart_indices(inputlines, expected):
             ).set_index(["WELL", "DATE"]),
         ),
         (
+            # More rows, DAYS is hours-pr-day (efficiency factor):
+            [
+                "*DATE *OIL *DAYS",
+                "*NAME A-1",
+                "2020-12-24 100 24.0",
+                "2020-12-25 200 23.0",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OIL", "DAYS"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 24), 100, 24.0],
+                    ["A-1", datetime.date(2020, 12, 25), 200, 23.0],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # More rows, special case for hours-pr-day for injectors
+            [
+                "*DATE *Winj *WiDay",
+                "*NAME A-1",
+                "2020-12-24 100 24.0",
+                "2020-12-25 200 23.0",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "WINJ", "WIDAY"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 24), 100, 24.0],
+                    ["A-1", datetime.date(2020, 12, 25), 200, 23.0],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
             # More columns:
             [
                 "*DATE *OPR *gas",
