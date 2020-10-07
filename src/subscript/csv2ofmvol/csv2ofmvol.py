@@ -25,9 +25,9 @@ Import job.
 Example input CSV data::
 
     DATE,       WELL, WOPR
-    2010-01-01, A-3, 1000
-    2011-01-01, A-3, 2000
-    2012-01-01, A-3, 3000
+    2010-01-01, A-3,  1000
+    2011-01-01, A-3,  2000
+    2012-01-01, A-3,  3000
 
 which will produce the following vol-file output::
 
@@ -122,8 +122,13 @@ def read_pdm_csv_files(csvfiles):
 
 
 def check_consecutive_dates(data):
-    """Analyse consecutiveness in dates pr. well. Give warnings when suspicious
-    data is found"""
+    """Analyse consecutiveness in dates pr. well.
+
+    Determines the  most common timedelta pr. datapoint, and warns
+    if there are exceptions and production/injection is nonzero.
+
+    Output is written using logger.warning().
+    """
     for well in data.index.levels[0]:
         welldata = data.loc[well].reset_index()
         welldata["DATE"] = pd.to_datetime(welldata["DATE"])
@@ -160,7 +165,6 @@ def check_consecutive_dates(data):
                 str(well),
             )
             logger.warning(str(checkrows))
-        print(str(dominantdelta))
         if int(datedeltas[0]) != 1:
             logger.warning("Dates are not daily-consecutive for well %s", str(well))
             logger.warning("Most common timedelta is: %s", str(dominantdelta))
@@ -227,6 +231,9 @@ def csv2ofmvol_main(csvfilepatterns, output):
         csvfilepatterns (list):  strings of filenames or filename wildcards. Can also
             be a single string.
         output (str): Filename to write to.
+
+    Returns:
+        bool: True if successful
     """
 
     if isinstance(csvfilepatterns, str):

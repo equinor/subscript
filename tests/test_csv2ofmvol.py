@@ -39,7 +39,6 @@ def test_read_pdf_csv_files():
     """Test parsing of CSV or dataframes"""
     # pylint: disable=no-value-for-parameter
     with pytest.raises(TypeError):
-        # pylint: disable=no-value-for-parameter
         csv2ofmvol.read_pdm_csv_files()
     with pytest.raises(IOError):
         csv2ofmvol.read_pdm_csv_files(["foobar"])
@@ -166,7 +165,7 @@ def test_ert_hook(datadir):
     with open(ert_config_fname, "w") as file_h:
         file_h.write("\n".join(ert_config))
 
-    subprocess.call(["ert", "test_run", ert_config_fname])
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert os.path.exists("proddata.vol")
     with open("proddata.vol") as file_h:
