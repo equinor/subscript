@@ -137,6 +137,31 @@ def test_find_wellstart_indices(inputlines, expected):
             ).set_index(["WELL", "DATE"]),
         ),
         (
+            # Well name with space, no quoutes. Trailing space ignored.
+            ["*DATE OPR", "*NAME NO A-1  ", "24.12.2020 100"],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[["NO A-1", datetime.date(2020, 12, 24), 100]],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # Well name with space, quouted.
+            ["*DATE OPR", "*NAME 'NO A-1'", "24.12.2020 100"],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[["NO A-1", datetime.date(2020, 12, 24), 100]],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # Well name with space, quouted v2. Conserve spaces
+            # inside quotes, but not spaces outside qoutes.
+            ["*DATE OPR", '*NAME  "  NO A-1 W  "  ', "24.12.2020 100"],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[["  NO A-1 W  ", datetime.date(2020, 12, 24), 100]],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
             # More rows:
             ["*DATE OPR", "*NAME A-1", "2020-12-24 100", "2020-12-25 200"],
             pd.DataFrame(
@@ -165,12 +190,7 @@ def test_find_wellstart_indices(inputlines, expected):
         ),
         (
             # Check that output is sorted on DATE:
-            [
-                "*DATE *OPR",
-                "*NAME A-1",
-                "2020-12-25 200",
-                "2020-12-24 100",
-            ],
+            ["*DATE *OPR", "*NAME A-1", "2020-12-25 200", "2020-12-24 100"],
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
                 data=[
@@ -241,12 +261,14 @@ def test_cmdline_globbing(datadir):
     output = pd.read_csv("volfiles.csv")
     assert isinstance(output, pd.DataFrame)
     assert not output.empty
-    assert set(output["OFMVOLFILE"]) == {"fileA.vol", "fileB.vol"}
-    assert len(output) == 15
+    assert set(output["OFMVOLFILE"]) == {"fileA.vol", "fileB.vol", "fileC.vol"}
+    assert len(output) == 17
     assert output["WELL"].is_monotonic
 
     ofmvol2csv.ofmvol2csv_main(
-        ["fileA.vol", "fileB.vol"], "volfiles-alt.csv", includefileorigin=True
+        ["fileA.vol", "fileB.vol", "fileC.vol"],
+        "volfiles-alt.csv",
+        includefileorigin=True,
     )
     output_alt = pd.read_csv("volfiles-alt.csv")
     pd.testing.assert_frame_equal(output, output_alt)
