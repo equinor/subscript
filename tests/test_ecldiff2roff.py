@@ -212,9 +212,11 @@ def test_integration(reek_data):
     with open("validdates.txt", "w") as file_h:
         file_h.write("2000-01-01 2000-07-01")
 
-    subprocess.call("ecldiff2roff 2_R001_REEK-0 SGAS", shell=True)
+    subprocess.run("ecldiff2roff 2_R001_REEK-0 SGAS", shell=True, check=True)
 
-    subprocess.call(
-        "ecldiff2roff 2_R001_REEK-0 SGAS --diffdates validdates.txt", shell=True
+    subprocess.run(
+        "ecldiff2roff 2_R001_REEK-0 SGAS --diffdates validdates.txt",
+        shell=True,
+        check=True,
     )
     assert os.path.exists("eclgrid--sgas--20000101_20000701.roff")

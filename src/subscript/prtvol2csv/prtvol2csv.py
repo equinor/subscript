@@ -117,21 +117,23 @@ def main():
     # same directory as the Python-script (!!)
     # This works with ResScript. Rethink for Komodo??
     scriptdir = os.path.dirname(os.path.abspath(__file__))
-    subprocess.call(
+    subprocess.run(
         [
             "/usr/bin/perl",
             os.path.join(scriptdir, "extract_vol_from_prtfile.pl"),
             PRTfile,
             os.path.join(tablesdir, simvolumestxt),
-        ]
+        ],
+        check=True,
     )
-    subprocess.call(
+    subprocess.run(
         [
             "/usr/bin/perl",
             os.path.join(scriptdir, "extract_resvol_from_prtfile.pl"),
             PRTfile,
             os.path.join(tablesdir, resvolumestxt),
-        ]
+        ],
+        check=True,
     )
 
     ######################################################################
