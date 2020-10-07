@@ -10,14 +10,41 @@ import logging
 
 import pandas as pd
 
-import subscript
+from ert_shared.plugins.plugin_manager import hook_implementation
+from res.job_queue import ErtScript
 
-logger = subscript.getLogger(__name__)
+from subscript import getLogger
+from subscript.eclcompress.eclcompress import glob_patterns
+
+logger = getLogger(__name__)
 
 REAL_REGEXP = r".*realization-(\d+)/.*"
 ITER_REGEXP = r".*/iter-(\d+).*"
 ENSEMBLE_REGEXP = r".*realization-\d+/(.*?)/.*"
 ENSEMBLESET_REGEXP = r".*/(.*?)/realization.*"
+
+# This documentation is for csv_merge as an ERT workflow
+DESCRIPTION = """
+CSV_MERGE will merge a selection of CSV files, typically across
+an ensemble, and write merged CSV to an output file, with the
+additional columns REAL and ENSEMBLE.
+"""
+
+EXAMPLES = """
+Add a file named e.g. ``ert/bin/workflows/MERGE_SATFUNC`` with the contents::
+
+  MAKE_DIRECTORY <CASEDIR>/share/results/tables/
+  CSV_MERGE <CASEDIR>/realization-*/iter-*/share/results/tables/satfunc.csv <CASEDIR>/share/results/tables/satfunc.csv
+
+(where ``<CASEDIR>`` typically points to ``/scratch/..``).
+
+Add to your ERT config to have the workflow automatically executed on successful
+runs::
+
+  LOAD_WORKFLOW ../bin/workflows/MERGE_SATFUNC
+  HOOK_WORKFLOW MERGE_SATFUNC POST_SIMULATION
+
+"""  # noqa
 
 
 class CustomFormatter(
@@ -30,6 +57,21 @@ class CustomFormatter(
 
     # pylint: disable=unnecessary-pass
     pass
+
+
+class CsvMerge(ErtScript):
+    """A class with a run() function that can be registered as an ERT plugin"""
+
+    # pylint: disable=too-few-public-methods
+    def run(self, *args):
+        # pylint: disable=no-self-use
+        """Parse with a simplified command line parser, for ERT only,
+        call csv_merge_main()"""
+        parser = get_ertwf_parser()
+        args = parser.parse_args(args)
+        logger.setLevel(logging.INFO)
+        globbedfiles = glob_patterns(args.csvfiles)
+        csv_merge_main(csvfiles=globbedfiles, output=args.output)
 
 
 def get_parser():
@@ -95,6 +137,21 @@ Do not assume anything on the ordering of columns after merging.
         "--quiet",
         help=argparse.SUPPRESS,
         # Deprecated (and default). Use --verbose if more output is wanted.
+    )
+    return parser
+
+
+def get_ertwf_parser():
+    """Alternative parser used for CSV_MERGE ERT workflow job"""
+    parser = argparse.ArgumentParser(formatter_class=CustomFormatter, description="")
+
+    parser.add_argument(
+        "csvfiles", nargs="+", help="input csv files, wildcards supported"
+    )
+    parser.add_argument(
+        "output",
+        type=str,
+        help="Name of output csv file.",
     )
     return parser
 
@@ -186,24 +243,37 @@ def main():
     if args.verbose:
         logger.setLevel(logging.INFO)
 
-    csvfiles = list(filter(os.path.exists, args.csvfiles))
+    csv_merge_main(
+        csvfiles=args.csvfiles,
+        output=args.output,
+        filecolumn=args.filecolumn,
+        memoryconservative=args.memoryconservative,
+        dropconstantcolumns=args.dropconstantcolumns,
+    )
+
+
+def csv_merge_main(
+    csvfiles, output, filecolumn="", memoryconservative=False, dropconstantcolumns=False
+):
+    """A "main" function that can be used both from the command line,
+    and from an ERT workflow"""
+    csvfiles = list(filter(os.path.exists, csvfiles))
 
     tags = {}
     tags["REAL"] = taglist(csvfiles, REAL_REGEXP)
     tags["ITER"] = taglist(csvfiles, ITER_REGEXP)
     tags["ENSEMBLE"] = taglist(csvfiles, ENSEMBLE_REGEXP)
     tags["ENSEMBLESET"] = taglist(csvfiles, ENSEMBLESET_REGEXP)
-    tags[args.filecolumn] = csvfiles
+    if filecolumn:
+        tags[filecolumn] = csvfiles
     tags = {tag: tags[tag] for tag in tags if len(tags[tag])}
 
     logger.info("Found tags: %s", str(tags.keys()))
     logger.debug("Tags: %s", str(tags))
 
-    merged_df = merge_csvfiles(
-        csvfiles, tags, memoryconservative=args.memoryconservative
-    )
+    merged_df = merge_csvfiles(csvfiles, tags, memoryconservative=memoryconservative)
 
-    if args.dropconstantcolumns:
+    if dropconstantcolumns:
         columnstodelete = []
         for col in merged_df.columns:
             if len(merged_df[col].unique()) == 1:
@@ -217,15 +287,25 @@ def main():
 
     logger.info("Final column list: %s", str(merged_df.columns))
 
-    logger.info("Exporting CSV data to %s", args.output)
+    logger.info("Exporting CSV data to %s", output)
 
-    if args.output == "-" or args.output == "stdout":
+    if output == "-" or output == "stdout":
         merged_df.to_csv(sys.stdout, index=False)
     else:
-        merged_df.to_csv(path_or_buf=args.output, index=False)
+        merged_df.to_csv(path_or_buf=output, index=False)
 
-    if args.verbose:
-        print(" - Finished writing to " + args.output)
+    logger.info(" - Finished writing to %s", output)
+
+
+@hook_implementation
+def legacy_ertscript_workflow(config):
+    """Hook the CsvMerge class into ERT with the name CSV_MERGE,
+    and inject documentation"""
+    workflow = config.add_workflow(CsvMerge, "CSV_MERGE")
+    workflow.parser = get_ertwf_parser
+    workflow.description = DESCRIPTION
+    workflow.examples = EXAMPLES
+    workflow.category = "export"
 
 
 if __name__ == "__main__":
