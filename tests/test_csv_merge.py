@@ -1,10 +1,20 @@
 """Test csvMergeEnsembles aka csv_merge"""
 import os
 import sys
+import subprocess
 
+import pytest
 import pandas as pd
 
 from subscript.csv_merge import csv_merge
+
+try:
+    # pylint: disable=unused-import
+    import ert_shared  # noqa
+
+    HAVE_ERT = True
+except ImportError:
+    HAVE_ERT = False
 
 
 def test_taglist():
@@ -95,7 +105,8 @@ def test_main_merge(tmpdir):
     merged = pd.read_csv(merged_csv)
 
     assert len(merged) == 4
-    assert len(merged.columns) == 4  # Also the constant column
+    assert "CONST" not in merged.columns
+    assert len(merged.columns) == 4
 
     # Test --memoryconservative
     sys.argv = [
@@ -127,3 +138,40 @@ def test_main_merge(tmpdir):
     merged = pd.read_csv(merged_csv)
     assert "FILETYPE" in merged
     assert set(merged["FILETYPE"].unique()) == set([test_csv_1, test_csv_2])
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_hook(tmpdir):
+    """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
+    realizations"""
+    os.makedirs("realization-0/iter-0")
+    os.makedirs("realization-1/iter-0")
+    with open("realization-0/iter-0/foo.csv", "w") as f_handle:
+        f_handle.write("FOO\nreal0")
+    with open("realization-1/iter-0/foo.csv", "w") as f_handle:
+        f_handle.write("FOO\nreal1")
+
+    with open("MERGE_FOO", "w") as wf_handle:
+        wf_handle.write("CSV_MERGE realization-*/iter-*/foo.csv merged.csv")
+
+    ert_config = [
+        "ECLBASE FOO.DATA",
+        "QUEUE_SYSTEM LOCAL",
+        "NUM_REALIZATIONS 1",
+        "RUNPATH .",
+        "",
+        "LOAD_WORKFLOW MERGE_FOO",
+        "HOOK_WORKFLOW MERGE_FOO POST_SIMULATION",
+    ]
+
+    ert_config_fname = "test.ert"
+    with open(ert_config_fname, "w") as file_h:
+        file_h.write("\n".join(ert_config))
+
+    subprocess.call(["ert", "test_run", ert_config_fname])
+
+    assert os.path.exists("merged.csv")
+    dframe = pd.read_csv("merged.csv")
+    assert set(dframe["REAL"].astype(str).values) == {"0", "1"}
+    assert set(dframe["FOO"].values) == {"real0", "real1"}
