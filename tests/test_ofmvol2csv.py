@@ -325,7 +325,7 @@ def test_ert_hook(datadir):
     with open(ert_config_fname, "w") as file_h:
         file_h.write("\n".join(ert_config))
 
-    subprocess.call(["ert", "test_run", ert_config_fname])
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert os.path.exists("proddata.csv")
     print(pd.read_csv("proddata.csv"))
