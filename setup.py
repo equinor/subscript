@@ -36,6 +36,11 @@ SSCRIPTS = [
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
 ]
 
+ERTPLUGINS = [
+    "subscript_jobs = subscript.hook_implementations.jobs",
+    "CsvMerge = subscript.csv_merge.csv_merge",
+]
+
 LEGACYSCRIPTS = [
     "duf",
     "eclmanual",
@@ -104,7 +109,7 @@ setuptools.setup(
     setup_requires=SETUP_REQUIREMENTS,
     entry_points={
         "console_scripts": SSCRIPTS,
-        "ert": ["subscript_jobs = subscript.hook_implementations.jobs"],
+        "ert": ERTPLUGINS,
     },
     scripts=["src/subscript/legacy/" + scriptname for scriptname in LEGACYSCRIPTS],
     use_scm_version={"write_to": "src/subscript/version.py"},
