@@ -202,7 +202,7 @@ def parse_well(well_lines, columnnames):
     and only data for a single well should be provided."""
 
     assert "*NAME" in well_lines[0]
-    wellname = well_lines[0].replace("*NAME", "").strip().strip("'")
+    wellname = well_lines[0].replace("*NAME", "").strip().strip("'").strip('"')
 
     stringbuf = io.StringIO()
     stringbuf.write("\n".join(well_lines))
