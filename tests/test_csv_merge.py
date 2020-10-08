@@ -169,7 +169,7 @@ def test_ert_hook(tmpdir):
     with open(ert_config_fname, "w") as file_h:
         file_h.write("\n".join(ert_config))
 
-    subprocess.call(["ert", "test_run", ert_config_fname])
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert os.path.exists("merged.csv")
     dframe = pd.read_csv("merged.csv")
