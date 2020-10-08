@@ -123,8 +123,10 @@ def test_endpoint(drogondata):
     """Test that the endpoint is installed"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    subprocess.call(
-        "merge_rft_ertobs gendata_rft.csv rft --output mergedrft.csv", shell=True
+    subprocess.run(
+        "merge_rft_ertobs gendata_rft.csv rft --output mergedrft.csv",
+        shell=True,
+        check=True,
     )
     dframe = pd.read_csv("mergedrft.csv")
     assert not dframe.empty
@@ -154,7 +156,7 @@ def test_ert_hook(drogondata):
     with open(ert_config_fname, "w") as file_h:
         file_h.write("\n".join(ert_config))
 
-    subprocess.call(["ert", "test_run", ert_config_fname])
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     dframe = pd.read_csv("mergedrft.csv")
     assert not dframe.empty
