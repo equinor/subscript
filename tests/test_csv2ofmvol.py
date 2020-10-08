@@ -2,11 +2,13 @@ import sys
 import os
 import shutil
 import subprocess
+import datetime
 
 import pandas as pd
 import pytest
 
 from subscript.csv2ofmvol import csv2ofmvol
+from subscript.ofmvol2csv import ofmvol2csv
 
 try:
     # pylint: disable=unused-import
@@ -116,7 +118,7 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
         (
             pd.DataFrame(
                 data={
-                    "DATE": ["2010-01-01"],
+                    "DATE": [datetime.date(2010, 1, 1)],
                     "WELL": ["A-4"],
                     "WOPR": [1000],
                 }
@@ -126,7 +128,7 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
         (
             pd.DataFrame(
                 data={
-                    "DATE": ["2010-01-01"],
+                    "DATE": [datetime.date(2010, 1, 1)],
                     "WELL": ["A-4"],
                     "WOPR": [1000],
                     "BOGUS": [88888],
@@ -152,18 +154,71 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
                 "2010-01-01 1000 24.0",
             ],
         ),
+        (
+            pd.DataFrame(
+                data={
+                    "DATE": ["2010-01-01"],
+                    "WELL": ["A-4"],
+                    "GINJ": [100000],
+                    "GIDAY": [23.0],
+                }
+            ).set_index(["WELL", "DATE"]),
+            [
+                "*METRIC",
+                "*DAILY",
+                "*HRS_IN_DAYS",
+                "*DATE *GINJ *GIDAY",
+                "*NAME A-4",
+                "2010-01-01 100000 23.0",
+            ],
+        ),
+        (
+            pd.DataFrame(
+                data={
+                    "DATE": ["2010-01-01"],
+                    "WELL": ["A-4"],
+                    "WINJ": [100000],
+                    "WIDAY": [23.0],
+                }
+            ).set_index(["WELL", "DATE"]),
+            [
+                "*METRIC",
+                "*DAILY",
+                "*HRS_IN_DAYS",
+                "*DATE *WINJ *WIDAY",
+                "*NAME A-4",
+                "2010-01-01 100000 23.0",
+            ],
+        ),
     ],
 )
 def test_df2vol(dframe, expected_lines):
     volstr = csv2ofmvol.df2vol(dframe)
     assert isinstance(volstr, str)
     assert volstr
-    print(volstr)
+
     # Allow empty lines, and let the test strings be written with space
     # and not necessarily tab characters.
     assert [
         line.replace("\t", " ") for line in volstr.split("\n") if line
     ] == expected_lines
+
+    # Bonus test, convert back to dataframe with ofmvol2str:
+
+    # Ensure dates in the multiindes are datetime types, needed for comparison.
+    dframe.index = dframe.index.set_levels(
+        [dframe.index.levels[0], pd.to_datetime(dframe.index.levels[1])]
+    )
+
+    # Need to convert column names also as in ofmvol2csv for comparison:
+    dframe = dframe.rename(columns=csv2ofmvol.PDMCOLS2VOL)
+
+    backagain_df = ofmvol2csv.process_volstr(volstr)
+    assert not backagain_df.empty
+    assert backagain_df.columns
+
+    # (bogus columns in dframe must be ignored)
+    pd.testing.assert_frame_equal(dframe[backagain_df.columns], backagain_df)
 
 
 def test_cvs2volstr():
@@ -172,7 +227,6 @@ def test_cvs2volstr():
 
     volstr = csv2ofmvol.df2vol(data)
     assert isinstance(volstr, str)
-    print(volstr)
 
     dupdata = csv2ofmvol.read_pdm_csv_files([PRODDATA_A3, PRODDATA_A4, PRODDATA_A3])
     assert len(dupdata) == len(data)

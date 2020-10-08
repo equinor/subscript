@@ -62,7 +62,8 @@ PDMCOLS2VOL = {
 
 # But we only output these columns in vol-files:
 SUPPORTED_VOLCOLS = ["OIL", "GAS", "WATER", "GINJ", "WINJ", "BHP", "THP"]
-SUPPORTED_COLS = SUPPORTED_VOLCOLS + ["DAYS"]
+SUPPORTED_DAYCOLS = ["DAYS", "GIDAY", "WIDAY"]
+SUPPORTED_COLS = SUPPORTED_VOLCOLS + SUPPORTED_DAYCOLS
 
 
 def read_pdm_csv_files(csvfiles):
@@ -110,8 +111,6 @@ def read_pdm_csv_files(csvfiles):
 
     if not [data.columns.values]:
         raise ValueError("No data columns found")
-
-    # Should we enforce only upper case columns as well?
 
     # Drop duplicate multiindices (WELL, DATE)
     origlen = len(data)
@@ -204,7 +203,7 @@ def df2vol(data):
     volstr = ""
     volstr += "*METRIC\n"
     volstr += "*DAILY\n"
-    if "DAYS" in voldata.columns:
+    if any([colname in SUPPORTED_DAYCOLS for colname in voldata.columns]):
         volstr += "*HRS_IN_DAYS\n"
     volstr += "*DATE\t*" + "\t*".join(voldata.columns) + "\n"
     for well in voldata.index.levels[0]:

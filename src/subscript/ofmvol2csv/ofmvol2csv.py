@@ -201,7 +201,10 @@ def parse_well(well_lines, columnnames):
     The list of input strings provided must have been cleaned upfront,
     and only data for a single well should be provided."""
 
-    assert "*NAME" in well_lines[0]
+    if "*NAME" not in well_lines[0]:
+        logger.error("parse_well(), first string must start with *NAME, got:")
+        logger.error("%s", well_lines[0])
+        raise ValueError
     wellname = well_lines[0].replace("*NAME", "").strip().strip("'").strip('"')
 
     stringbuf = io.StringIO()
@@ -222,10 +225,34 @@ def parse_well(well_lines, columnnames):
 
 
 def process_volfile(filename):
-    """Parse a single OFM vol-file and return a DataFrame"""
+    """Parse a single OFM vol-file and return a DataFrame.
+
+    Args:
+        filename (str): Path to file on disk
+
+    Returns:
+        pd.DataFrame
+    """
     logger.info("Parsing file %s", filename)
     with open(filename) as file_h:
-        filelines = unify_dateformat(cleanse_ofm_lines(file_h.readlines()))
+        volstr = "\n".join(file_h.readlines())
+    dframe = process_volstr(volstr)
+    if dframe.empty:
+        logger.warning("No data extracted from %s", filename)
+    return dframe
+
+
+def process_volstr(volstr):
+    """Parse a volstring (typically a vol-file read into a string with
+    newline characters)
+
+    Args:
+        volstr (str)
+
+    Returns:
+        pd.DataFrame
+    """
+    filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
     columnnames = extract_columnnames(filelines)
     logger.info("Columns found: %s", str(columnnames))
@@ -240,7 +267,6 @@ def process_volfile(filename):
             logger.info("No NAME found in chunk, probably the very first.")
     if wellframes:
         return pd.concat(wellframes, sort=False).sort_index()
-    logger.warning("No data was parseable in %s", filename)
     return pd.DataFrame()
 
 
