@@ -64,6 +64,16 @@ def test_read_pdf_csv_files():
         (
             pd.DataFrame(
                 data={
+                    "DATE": ["2010-01-01"],
+                    "WELL": ["A-4"],
+                    "WOPR": [1000],
+                }
+            ).set_index(["WELL", "DATE"]),
+            "",
+        ),
+        (
+            pd.DataFrame(
+                data={
                     "DATE": ["2010-01-01", "2010-01-03"],
                     "WELL": ["A-4", "A-4"],
                     "WOPR": [1000, 1000],
@@ -98,6 +108,62 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
     caplog.clear()
     csv2ofmvol.check_consecutive_dates(dframe)
     assert expected_warning in caplog.text
+
+
+@pytest.mark.parametrize(
+    "dframe, expected_lines",
+    [
+        (
+            pd.DataFrame(
+                data={
+                    "DATE": ["2010-01-01"],
+                    "WELL": ["A-4"],
+                    "WOPR": [1000],
+                }
+            ).set_index(["WELL", "DATE"]),
+            ["*METRIC", "*DAILY", "*DATE *OIL", "*NAME A-4", "2010-01-01 1000"],
+        ),
+        (
+            pd.DataFrame(
+                data={
+                    "DATE": ["2010-01-01"],
+                    "WELL": ["A-4"],
+                    "WOPR": [1000],
+                    "BOGUS": [88888],
+                }
+            ).set_index(["WELL", "DATE"]),
+            ["*METRIC", "*DAILY", "*DATE *OIL", "*NAME A-4", "2010-01-01 1000"],
+        ),
+        (
+            pd.DataFrame(
+                data={
+                    "DATE": ["2010-01-01"],
+                    "WELL": ["A-4"],
+                    "WOPR": [1000],
+                    "DAYS": [24.0],
+                }
+            ).set_index(["WELL", "DATE"]),
+            [
+                "*METRIC",
+                "*DAILY",
+                "*HRS_IN_DAYS",
+                "*DATE *OIL *DAYS",
+                "*NAME A-4",
+                "2010-01-01 1000 24.0",
+            ],
+        ),
+    ],
+)
+def test_df2vol(dframe, expected_lines):
+    volstr = csv2ofmvol.df2vol(dframe)
+    assert isinstance(volstr, str)
+    assert volstr
+    print(volstr)
+    # Allow empty lines, and let the test strings be written with space
+    # and not necessarily tab characters.
+    assert [
+        line.replace("\t", " ") for line in volstr.split("\n") if line
+    ] == expected_lines
 
 
 def test_cvs2volstr():

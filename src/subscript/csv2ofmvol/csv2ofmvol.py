@@ -133,6 +133,8 @@ def check_consecutive_dates(data):
         welldata = data.loc[well].reset_index()
         welldata["DATE"] = pd.to_datetime(welldata["DATE"])
         welldata["datediff"] = welldata["DATE"].diff()
+        if len(welldata) < 2:
+            continue
 
         # Determine most common date diff (typically one day)
         # which will be like this in Python: Timedelta('1 days 00:00:00')
@@ -174,20 +176,31 @@ def df2vol(data):
     """Convert a DataFrame to a multiline string in vol-format.
 
     The 'tab' character is used as a field separator in this format
+
+    Args:
+        data (pd.DataFrame): Production data, indexed by WELL and DATE.
+            Unsupported columns will be ignored.
+
+    Returns:
+        str: multiline, in "OFM vol"-format.
     """
-    volcolumns = []
-    for colname in data.columns.values:
-        if colname in SUPPORTED_COLS:
-            volcolumns.append(colname)
-        elif colname in PDMCOLS2VOL:
-            volcolumns.append(PDMCOLS2VOL[colname])
-        else:
-            logger.warning("Unsupported column %s", str(colname))
-    voldata = data.copy()
-    voldata.columns = volcolumns
-    for col in voldata.columns:
-        if col not in SUPPORTED_COLS:
-            del voldata[col]
+
+    # Apply column name translation for a subset of the incoming column names
+    columns_trans = [PDMCOLS2VOL.get(colname, colname) for colname in data.columns]
+
+    # Filter to only the supported columns:
+    columns = [colname for colname in columns_trans if colname in SUPPORTED_COLS]
+
+    unsupported = set(columns_trans) - set(columns)
+    if unsupported:
+        logger.warning("Unsupported column(s) %s", str(unsupported))
+
+    # Translate column names:
+    voldata = data.rename(columns=PDMCOLS2VOL, inplace=False)
+
+    # Drop non-supported columns:
+    voldata = voldata[columns]
+
     volstr = ""
     volstr += "*METRIC\n"
     volstr += "*DAILY\n"
