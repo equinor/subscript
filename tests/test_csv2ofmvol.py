@@ -215,7 +215,7 @@ def test_df2vol(dframe, expected_lines):
 
     backagain_df = ofmvol2csv.process_volstr(volstr)
     assert not backagain_df.empty
-    assert backagain_df.columns
+    assert not backagain_df.columns.empty
 
     # (bogus columns in dframe must be ignored)
     pd.testing.assert_frame_equal(dframe[backagain_df.columns], backagain_df)
