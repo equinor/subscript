@@ -80,6 +80,7 @@ def read_pdm_csv_files(csvfiles):
         csvfiles: list of strings of filepaths to CSV files,
             or list of DataFrames for which read_csv() has
             been done.
+
     Returns:
         pd.DataFrame: Multiindex over (DATE, WELL), and data
         vectors, WOPR, WWCT, etc.
@@ -127,6 +128,14 @@ def check_consecutive_dates(data):
     if there are exceptions and production/injection is nonzero.
 
     Output is written using logger.warning().
+
+    Args:
+        data (pd.DataFrame): Data with production, multiindex where
+            WELL is first index, and DATE is second. The DATE index
+            can be either a DateTimeIndex, or it will be converted to such.
+
+    Returns:
+        None
     """
     for well in data.index.levels[0]:
         welldata = data.loc[well].reset_index()
@@ -237,7 +246,7 @@ def get_parser():
 
 
 def csv2ofmvol_main(csvfilepatterns, output):
-    """Main function written as a Python function to facilitate testing.
+    """Convert a list of CSV files into one OFM vol-file.
 
     Arguments:
         csvfilepatterns (list):  strings of filenames or filename wildcards. Can also

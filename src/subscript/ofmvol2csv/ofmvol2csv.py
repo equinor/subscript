@@ -11,7 +11,7 @@ from subscript.eclcompress.eclcompress import glob_patterns
 logger = subscriptlogger(__name__)
 
 DESCRIPTION = """Parse output from Oilfield Manager (OFM) (or similar)
-containing production data pr. well into a CSV file. Date formats
+containing production data pr. well into one CSV file. Date formats
 dd.mm.yyyy and YYYY-MM-DD (recommended) are supported."""
 
 EPILOG = """
@@ -81,10 +81,10 @@ def cleanse_ofm_lines(filelines):
       * Replace tabs with spaces
 
     Args:
-        list of str
+        filelines (list): One string pr. line.
 
     Return:
-        list of str
+        list: One string pr. line
     """
     filelines = map(
         str.rstrip, filelines
@@ -109,10 +109,10 @@ def unify_dateformat(lines):
     one column.
 
     Args:
-        list of str
+        lines (list): One string pr. line
 
     Return:
-        list of str
+        list: One string pr. line
     """
     if any([line.startswith("*DAY *MONTH *YEAR") for line in lines]):
         # Later: Allow any whitespace between the columns
@@ -134,6 +134,9 @@ def extract_columnnames(filelines):
 
     If multiple lines with this information is found, a ValueError is raised,
     as this is not supported.
+
+    Args:
+        filelines (list): One string pr. line
 
     Return:
         list: The column names (strings) that is found, including the first DATE.
@@ -187,7 +190,14 @@ def split_list(linelist, splitidxs):
 
 def find_wellstart_indices(filelines):
     """Locate the indices of the lines that start with the identifier
-    for a new well"""
+    for a new well, the string "*NAME".
+
+    Args:
+        filelines (list): One string pr. line
+
+    Returns:
+        list: List of integers
+    """
     wellnamelinenumbers = [
         i for i in range(0, len(filelines)) if filelines[i].startswith("*NAME")
     ]
@@ -199,7 +209,20 @@ def parse_well(well_lines, columnnames):
     into a DataFrame
 
     The list of input strings provided must have been cleaned upfront,
-    and only data for a single well should be provided."""
+    and only data for a single well should be provided.
+
+    Use extract_columnnames() to find the list of columnnames that
+    can be extracted from the lines.
+
+    Args:
+        well_lines (list): One line pr. string
+        columnnames (list): Strings with columnnames to extract.
+            Other columns will be ignored.
+
+    Returns:
+        pd.DataFrame
+
+    """
 
     if "*NAME" not in well_lines[0]:
         logger.error("parse_well(), first string must start with *NAME, got:")
@@ -271,7 +294,18 @@ def process_volstr(volstr):
 
 
 def ofmvol2csv_main(volfiles, output, includefileorigin=False):
-    """Main function written as a Python function to facilitate testing"""
+    """Convert a set of volfiles (or wildcard patterns) into one CSV file.
+
+    Args:
+        volfiles (list): A string or a list of strings, with filenames and/or
+            wildcard patterns.
+        output (str): Filename to write to, in CSV format.
+        includefileorigin (bool): Whether to add a column with the originating
+            volfile filename for each row of data.
+
+    Returns:
+        None
+    """
     if isinstance(volfiles, str):
         volfiles = [volfiles]
 
