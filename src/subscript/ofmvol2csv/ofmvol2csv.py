@@ -190,7 +190,7 @@ def split_list(linelist, splitidxs):
 
 def find_wellstart_indices(filelines):
     """Locate the indices of the lines that start with the identifier
-    for a new well, the string "*NAME".
+    for a new well, the string ``*NAME``.
 
     Args:
         filelines (list): One string pr. line
