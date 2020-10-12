@@ -303,7 +303,7 @@ def csv2ofmvol_main(csvfilepatterns, output):
         delta = relativedelta(enddate, startdate)
         logger.info("Date range: %s --> %s", str(startdate.date()), str(enddate.date()))
         logger.info(
-            "            %s years,  %s months, %s days.",
+            "            %s years, %s months, %s days.",
             str(delta.years),
             str(delta.months),
             str(delta.days),
