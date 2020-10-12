@@ -235,13 +235,12 @@ def parse_well(well_lines, columnnames):
     stringbuf.seek(0)
     data = pd.read_table(
         stringbuf,
-        engine="c",
         skiprows=1,
         sep=r"\s+",
         names=columnnames,
-        parse_dates=[0],
         error_bad_lines=False,
     )
+    data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
     data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
     data = data.set_index(["WELL", "DATE"]).sort_index()
     return data
@@ -278,6 +277,8 @@ def process_volstr(volstr):
     filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
     columnnames = extract_columnnames(filelines)
+    if not columnnames:
+        raise ValueError("No columns found, one line must start with *DATE")
     logger.info("Columns found: %s", str(columnnames))
 
     wellframes = []
