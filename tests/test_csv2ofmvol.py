@@ -238,6 +238,9 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
     ],
 )
 def test_df2vol(dframe, expected_lines):
+    """Direct test of the dataframe to vol conversion, including a bonus test
+    using ofmvol2csv to see that we can go back again and obtain the same
+    dataframe."""
     volstr = csv2ofmvol.df2vol(dframe)
     assert isinstance(volstr, str)
     assert volstr
@@ -278,9 +281,62 @@ def test_df2vol(dframe, expected_lines):
             pd.DataFrame(),
             ValueError,
         ),
+        (
+            # Not-indexed:
+            pd.DataFrame(
+                data={
+                    "DATE": [],
+                    "WELL": [],
+                }
+            ),
+            ValueError,
+        ),
+        (
+            # No supported columns:
+            pd.DataFrame(
+                data={
+                    "DATE": [],
+                    "WELL": [],
+                }
+            ).set_index(["WELL", "DATE"]),
+            ValueError,
+        ),
+        (
+            # No supported columns:
+            pd.DataFrame(
+                data={
+                    "DATE": [datetime.date(2020, 1, 1)],
+                    "WELL": ["A-1"],
+                }
+            ).set_index(["WELL", "DATE"]),
+            ValueError,
+        ),
+        (
+            # No supported columns:
+            pd.DataFrame(
+                data={
+                    "DATE": [],
+                    "WELL": [],
+                    "SOAP": [],
+                }
+            ).set_index(["WELL", "DATE"]),
+            ValueError,
+        ),
+        (
+            # No supported columns:
+            pd.DataFrame(
+                data={
+                    "DATE": [datetime.date(2020, 1, 1)],
+                    "WELL": ["A-1"],
+                    "SOAP": [100],
+                }
+            ).set_index(["WELL", "DATE"]),
+            ValueError,
+        ),
     ],
 )
 def test_df2vol_errors(dframe, expected_error):
+    """Test that correct exceptions are raised"""
     with pytest.raises(expected_error):
         csv2ofmvol.df2vol(dframe)
 
