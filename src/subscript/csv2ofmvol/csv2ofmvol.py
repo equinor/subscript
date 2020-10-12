@@ -220,11 +220,11 @@ def df2vol(data):
     volstr += "*DAILY\n"
     if any([colname in SUPPORTED_DAYCOLS for colname in voldata.columns]):
         volstr += "*HRS_IN_DAYS\n"
-    volstr += "*DATE\t*" + "\t*".join(voldata.columns) + "\n"
+    volstr += "*DATE *" + " *".join(voldata.columns)
     if not voldata.empty:
         for well in voldata.index.levels[0]:
-            volstr += "*NAME " + well + "\n"
-            volstr += voldata.loc[well].to_csv(sep="\t", header=None)
+            volstr += "\n\n*NAME " + well + "\n"
+            volstr += voldata.loc[well].to_string(header=False, index_names=False)
     else:
         logger.warning("No data, only header written")
     return volstr

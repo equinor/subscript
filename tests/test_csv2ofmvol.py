@@ -1,5 +1,6 @@
 import sys
 import os
+import re
 import shutil
 import subprocess
 import datetime
@@ -202,6 +203,25 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
             ],
         ),
         (
+            # Two wells:
+            pd.DataFrame(
+                data={
+                    "DATE": [datetime.date(2010, 1, 1), datetime.date(2010, 1, 1)],
+                    "WELL": ["A-4", "A-5"],
+                    "WOPR": [1000, 2000],
+                }
+            ).set_index(["WELL", "DATE"]),
+            [
+                "*METRIC",
+                "*DAILY",
+                "*DATE *OIL",
+                "*NAME A-4",
+                "2010-01-01 1000",
+                "*NAME A-5",
+                "2010-01-01 2000",
+            ],
+        ),
+        (
             # Test mixing prod and inj, with empty cells.
             pd.DataFrame(
                 data={
@@ -245,11 +265,10 @@ def test_df2vol(dframe, expected_lines):
     assert isinstance(volstr, str)
     assert volstr
 
-    # Allow empty lines, and let the test strings be written with space
-    # and not necessarily tab characters.
-    assert [
-        line.replace("\t", " ") for line in volstr.split("\n") if line
-    ] == expected_lines
+    # Compare strings, but ignore whitespace differences.
+    assert [re.sub(r"\s+", " ", line) for line in volstr.split("\n") if line] == [
+        re.sub(r"\s+", " ", line) for line in expected_lines
+    ]
 
     # Bonus test, convert back to dataframe with ofmvol2str:
 
