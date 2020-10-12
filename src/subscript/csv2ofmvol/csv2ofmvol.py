@@ -4,7 +4,6 @@ import argparse
 import logging
 
 from dateutil.relativedelta import relativedelta
-
 import pandas as pd
 
 from subscript import getLogger as subscriptlogger
