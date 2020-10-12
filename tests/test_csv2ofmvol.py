@@ -5,6 +5,7 @@ import subprocess
 import datetime
 
 import pandas as pd
+import numpy as np
 import pytest
 
 from subscript.csv2ofmvol import csv2ofmvol
@@ -190,6 +191,25 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
                 "2010-01-01 100000 23.0",
             ],
         ),
+        (
+            # Test mixing prod and inj, with empty cells.
+            pd.DataFrame(
+                data={
+                    "DATE": ["2010-01-01", "2010-01-02"],
+                    "WELL": ["A-4", "A-4"],
+                    "WINJ": [1000, np.nan],
+                    "GINJ": [np.nan, 1000000],
+                }
+            ).set_index(["WELL", "DATE"]),
+            [
+                "*METRIC",
+                "*DAILY",
+                "*DATE *WINJ *GINJ",
+                "*NAME A-4",
+                "2010-01-01 1000.0 0.0",
+                "2010-01-02 0.0 1000000.0",
+            ],
+        ),
     ],
 )
 def test_df2vol(dframe, expected_lines):
@@ -218,7 +238,9 @@ def test_df2vol(dframe, expected_lines):
     assert not backagain_df.columns.empty
 
     # (bogus columns in dframe must be ignored)
-    pd.testing.assert_frame_equal(dframe[backagain_df.columns], backagain_df)
+    pd.testing.assert_frame_equal(
+        dframe[backagain_df.columns].fillna(value=0.0), backagain_df
+    )
 
 
 def test_cvs2volstr():

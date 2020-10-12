@@ -208,6 +208,10 @@ def df2vol(data):
     # Drop non-supported columns:
     voldata = voldata[columns]
 
+    # Fill empty cells with zeros, empty cells can stem from concatenation
+    # of dataframes with gas and water injectors.
+    voldata.fillna(value=0.0, inplace=True)
+
     volstr = ""
     volstr += "*METRIC\n"
     volstr += "*DAILY\n"

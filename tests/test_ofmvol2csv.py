@@ -323,7 +323,7 @@ def test_parse_well(inputlines, expected):
 )
 def test_errors(inputlines, expected_error):
     with pytest.raises(expected_error):
-        dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
+        ofmvol2csv.process_volstr("\n".join(inputlines))
 
 
 @pytest.mark.integration
