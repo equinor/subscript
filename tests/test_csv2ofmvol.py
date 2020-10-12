@@ -67,6 +67,16 @@ def test_read_pdf_csv_files():
         (
             pd.DataFrame(
                 data={
+                    "DATE": [],
+                    "WELL": [],
+                    "WOPR": [],
+                }
+            ).set_index(["WELL", "DATE"]),
+            "",
+        ),
+        (
+            pd.DataFrame(
+                data={
                     "DATE": ["2010-01-01"],
                     "WELL": ["A-4"],
                     "WOPR": [1000],
@@ -210,6 +220,21 @@ def test_check_consecutive_dates(dframe, expected_warning, caplog):
                 "2010-01-02 0.0 1000000.0",
             ],
         ),
+        (
+            # Empty input. This would be an error if it wasn't for the header.
+            pd.DataFrame(
+                data={
+                    "DATE": [],
+                    "WELL": [],
+                    "OIL": [],
+                }
+            ).set_index(["WELL", "DATE"]),
+            [
+                "*METRIC",
+                "*DAILY",  # (this is meaningless, and can be dropped)
+                "*DATE *OIL",
+            ],
+        ),
     ],
 )
 def test_df2vol(dframe, expected_lines):
@@ -226,21 +251,38 @@ def test_df2vol(dframe, expected_lines):
     # Bonus test, convert back to dataframe with ofmvol2str:
 
     # Ensure dates in the multiindes are datetime types, needed for comparison.
-    dframe.index = dframe.index.set_levels(
-        [dframe.index.levels[0], pd.to_datetime(dframe.index.levels[1])]
-    )
+    if not dframe.empty:
+        dframe.index = dframe.index.set_levels(
+            [dframe.index.levels[0], pd.to_datetime(dframe.index.levels[1])]
+        )
 
     # Need to convert column names also as in ofmvol2csv for comparison:
     dframe = dframe.rename(columns=csv2ofmvol.PDMCOLS2VOL)
 
     backagain_df = ofmvol2csv.process_volstr(volstr)
-    assert not backagain_df.empty
-    assert not backagain_df.columns.empty
 
-    # (bogus columns in dframe must be ignored)
-    pd.testing.assert_frame_equal(
-        dframe[backagain_df.columns].fillna(value=0.0), backagain_df
-    )
+    if dframe.empty:
+        assert backagain_df.empty
+    else:
+        # (bogus columns in dframe must be ignored)
+        pd.testing.assert_frame_equal(
+            dframe[backagain_df.columns].fillna(value=0.0), backagain_df
+        )
+
+
+@pytest.mark.parametrize(
+    "dframe, expected_error",
+    [
+        (
+            # Empty input
+            pd.DataFrame(),
+            ValueError,
+        ),
+    ],
+)
+def test_df2vol_errors(dframe, expected_error):
+    with pytest.raises(expected_error):
+        csv2ofmvol.df2vol(dframe)
 
 
 def test_cvs2volstr():
@@ -275,6 +317,37 @@ def test_main():
     assert sum(["NAME A-3" in line for line in vollines]) == 1
     assert sum(["NAME A-4" in line for line in vollines]) == 1
     assert sum(["*OIL" in line for line in vollines]) == 1
+
+
+def test_emptyfile(tmpdir):
+    """Verify behaviour on empty input"""
+    tmpdir.chdir()
+    # All empty file.
+    with open("empty.csv", "w") as file_h:
+        file_h.write("")
+    with pytest.raises(pd.errors.EmptyDataError):
+        csv2ofmvol.csv2ofmvol_main("empty.csv", "empty.vol")
+    assert not os.path.exists("empty.vol")
+
+    # CSV file with wrong columns:
+    with open("columns.csv", "w") as file_h:
+        file_h.write("FOO")
+    with pytest.raises(ValueError, match="WELL not found in dataset"):
+        csv2ofmvol.csv2ofmvol_main("columns.csv", "columns.vol")
+    assert not os.path.exists("columns.vol")
+
+    # CSV file with index columns:
+    with open("indexcols.csv", "w") as file_h:
+        file_h.write("DATE,WELL")
+    with pytest.raises(ValueError, match="No supported data columns provided"):
+        csv2ofmvol.csv2ofmvol_main("indexcols.csv", "columns.vol")
+
+    # CSV file with index columns and one data column
+    with open("oilcol.csv", "w") as file_h:
+        file_h.write("DATE,WELL,OIL")
+    csv2ofmvol.csv2ofmvol_main("oilcol.csv", "oilcol.vol")
+    lines = open("oilcol.vol").readlines()
+    assert len(lines) == 6  # comments + three header lines (metric, daily, date+oil)
 
 
 @pytest.fixture

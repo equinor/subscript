@@ -198,6 +198,9 @@ def df2vol(data):
     # Filter to only the supported columns:
     columns = [colname for colname in columns_trans if colname in SUPPORTED_COLS]
 
+    if not columns:
+        raise ValueError("No supported data columns provided")
+
     unsupported = set(columns_trans) - set(columns)
     if unsupported:
         logger.warning("Unsupported column(s) %s", str(unsupported))
@@ -218,9 +221,12 @@ def df2vol(data):
     if any([colname in SUPPORTED_DAYCOLS for colname in voldata.columns]):
         volstr += "*HRS_IN_DAYS\n"
     volstr += "*DATE\t*" + "\t*".join(voldata.columns) + "\n"
-    for well in voldata.index.levels[0]:
-        volstr += "*NAME " + well + "\n"
-        volstr += voldata.loc[well].to_csv(sep="\t", header=None)
+    if not voldata.empty:
+        for well in voldata.index.levels[0]:
+            volstr += "*NAME " + well + "\n"
+            volstr += voldata.loc[well].to_csv(sep="\t", header=None)
+    else:
+        logger.warning("No data, only header written")
     return volstr
 
 
@@ -291,16 +297,17 @@ def csv2ofmvol_main(csvfilepatterns, output):
     logger.info("Well count: %s", str(len(data.index.levels[0])))
     logger.info("Date count: %s", str(len(data.index.levels[1])))
 
-    startdate = data.index.levels[1].min()
-    enddate = data.index.levels[1].max()
-    delta = relativedelta(enddate, startdate)
-    logger.info("Date range: %s --> %s", str(startdate.date()), str(enddate.date()))
-    logger.info(
-        "            %s years,  %s months, %s days.",
-        str(delta.years),
-        str(delta.months),
-        str(delta.days),
-    )
+    if len(data) > 1:
+        startdate = data.index.levels[1].min()
+        enddate = data.index.levels[1].max()
+        delta = relativedelta(enddate, startdate)
+        logger.info("Date range: %s --> %s", str(startdate.date()), str(enddate.date()))
+        logger.info(
+            "            %s years,  %s months, %s days.",
+            str(delta.years),
+            str(delta.months),
+            str(delta.days),
+        )
     logger.info("Written %s lines to %s.", str(len(volstr) + 3), output)
     return True
 
