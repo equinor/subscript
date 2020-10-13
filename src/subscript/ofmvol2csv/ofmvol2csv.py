@@ -233,7 +233,7 @@ def parse_well(well_lines, columnnames):
     stringbuf = io.StringIO()
     stringbuf.write("\n".join(well_lines))
     stringbuf.seek(0)
-    data = pd.read_csv(
+    data = pd.read_table(
         stringbuf,
         skiprows=1,
         sep=r"\s+",
