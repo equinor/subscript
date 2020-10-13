@@ -2,6 +2,7 @@ import os
 import shutil
 
 import pytest
+import rstcheck
 
 from ert_shared.plugins.plugin_manager import ErtPluginManager
 
@@ -19,6 +20,9 @@ EXPECTED_JOBS = {
     "PRTVOL2CSV": "subscript/config_jobs/PRTVOL2CSV",
     "SUNSCH": "subscript/config_jobs/SUNSCH",
 }
+
+# Avoid category inflation. Add to this list when it makes sense:
+ACCEPTED_JOB_CATEGORIES = ["modeling", "utility"]
 
 
 def test_hook_implementations():
@@ -65,7 +69,9 @@ def test_executables():
 
 
 def test_hook_implementations_job_docs():
-    """Check that there is docs for every installed hook"""
+    """For each installed job, we require the associated
+    description string to be nonempty, and valid RST markup"""
+
     plugin_m = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
     installable_jobs = plugin_m.get_installable_jobs()
@@ -75,5 +81,9 @@ def test_hook_implementations_job_docs():
     assert set(docs.keys()) == set(installable_jobs.keys())
 
     for job_name in installable_jobs.keys():
-        assert docs[job_name]["description"] != ""
-        assert docs[job_name]["category"] != "other"
+        desc = docs[job_name]["description"]
+        assert desc != ""
+        assert not list(rstcheck.check(desc))
+        category = docs[job_name]["category"]
+        assert category != "other"
+        assert category.split(".")[0] in ACCEPTED_JOB_CATEGORIES
