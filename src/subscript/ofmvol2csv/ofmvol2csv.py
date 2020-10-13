@@ -282,13 +282,11 @@ def process_volstr(volstr):
     logger.info("Columns found: %s", str(columnnames))
 
     wellframes = []
-    for wellchunk in split_list(filelines, find_wellstart_indices(filelines)):
-        if any([line.startswith("*NAME") for line in wellchunk]):
-            wellframe = parse_well(wellchunk, columnnames)
-            if not wellframe.empty:
-                wellframes.append(wellframe)
-        else:
-            logger.info("No NAME found in chunk, probably the very first.")
+    for wellchunk in split_list(filelines, find_wellstart_indices(filelines))[1:]:
+        # wellchunk zero does not contain data:            --------->        ^^^^
+        wellframe = parse_well(wellchunk, columnnames)
+        if not wellframe.empty:
+            wellframes.append(wellframe)
     if wellframes:
         return pd.concat(wellframes, sort=False).sort_index()
     return pd.DataFrame()
