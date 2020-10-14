@@ -76,9 +76,10 @@ SETUP_REQUIREMENTS = [
 
 TEST_REQUIREMENTS = [
     "black>=20.8b0",
+    "check-manifest",
     "flake8",
     "pytest",
-    "check-manifest",
+    "rstcheck",
 ]
 DOCS_REQUIREMENTS = [
     "sphinx",

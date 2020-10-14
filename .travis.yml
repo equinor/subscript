@@ -92,4 +92,5 @@ before_script:
 
 script:
   - python setup.py test
+  - rstcheck -r docs
   - sphinx-build -W -b html -nv docs/ build/docs
