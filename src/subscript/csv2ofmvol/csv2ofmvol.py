@@ -38,6 +38,9 @@ which will produce the following vol-file output::
   2011-01-01  2000
   2012-01-01  3000
 
+In order to import such a file into RMS, select "OilField Manager text", and ensure
+you set the date format to yyyy-MM-dd (ISO-8601).
+
 See also the ofmvol2csv utility.
 """
 
