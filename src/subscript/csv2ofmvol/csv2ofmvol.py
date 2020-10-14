@@ -185,7 +185,7 @@ def df2vol(data):
     The 'tab' character is used as a field separator in this format
 
     Args:
-        data (pd.DataFrame): Production data, indexed by WELL and DATE.
+        data (pd.DataFrame): Production data, indexed by [WELL, DATE].
             Unsupported columns will be ignored.
 
     Returns:

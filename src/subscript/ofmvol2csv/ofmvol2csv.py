@@ -220,7 +220,7 @@ def parse_well(well_lines, columnnames):
             Other columns will be ignored.
 
     Returns:
-        pd.DataFrame
+        pd.DataFrame: Indexed by WELL and DATE.
 
     """
 
@@ -253,7 +253,7 @@ def process_volfile(filename):
         filename (str): Path to file on disk
 
     Returns:
-        pd.DataFrame
+        pd.DataFrame: Indexed by WELL and DATE.
     """
     logger.info("Parsing file %s", filename)
     with open(filename) as file_h:
@@ -272,7 +272,7 @@ def process_volstr(volstr):
         volstr (str)
 
     Returns:
-        pd.DataFrame
+        pd.DataFrame: Indexed by WELL and DATE
     """
     filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
