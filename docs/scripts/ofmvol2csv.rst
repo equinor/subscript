@@ -54,17 +54,20 @@ The reason for converting *vol*-files to CSV is to be able
 to utilize Pandas or other tools that reads CSV to for example
 modify production data.
 
-If you want to scale all numbers, you could write a small
-Python script doing:
+Examples:
 
 .. code-block:: python
 
   import pandas as pd
 
   proddata = pd.read_csv("proddata.csv")
-  # Scale up all water production by 5 percent
+  # Scale up all water production by 5 percent:
   proddata["WATER"] = proddata["WATER"] * 1.05
   proddata.to_csv("proddata-scaled.csv", index=False)
+
+  # Only include wells with non-zero oil production:
+  oildata = proddata.groupby("WELL").filter(lambda x: x["OIL"].sum() > 0)
+  oildata.to_csv("oilproducers.csv", index=False)
 
 From CSV to vol again
 ---------------------

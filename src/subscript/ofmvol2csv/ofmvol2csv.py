@@ -11,7 +11,7 @@ from subscript.eclcompress.eclcompress import glob_patterns
 logger = subscriptlogger(__name__)
 
 DESCRIPTION = """Parse output from Oilfield Manager (OFM) (or similar)
-containing production data pr. well into a CSV file. Date formats
+containing production data pr. well into one CSV file. Date formats
 dd.mm.yyyy and YYYY-MM-DD (recommended) are supported."""
 
 EPILOG = """
@@ -81,10 +81,10 @@ def cleanse_ofm_lines(filelines):
       * Replace tabs with spaces
 
     Args:
-        list of str
+        filelines (list): One string pr. line.
 
     Return:
-        list of str
+        list: One string pr. line
     """
     filelines = map(
         str.rstrip, filelines
@@ -109,10 +109,10 @@ def unify_dateformat(lines):
     one column.
 
     Args:
-        list of str
+        lines (list): One string pr. line
 
     Return:
-        list of str
+        list: One string pr. line
     """
     if any([line.startswith("*DAY *MONTH *YEAR") for line in lines]):
         # Later: Allow any whitespace between the columns
@@ -134,6 +134,9 @@ def extract_columnnames(filelines):
 
     If multiple lines with this information is found, a ValueError is raised,
     as this is not supported.
+
+    Args:
+        filelines (list): One string pr. line
 
     Return:
         list: The column names (strings) that is found, including the first DATE.
@@ -187,7 +190,14 @@ def split_list(linelist, splitidxs):
 
 def find_wellstart_indices(filelines):
     """Locate the indices of the lines that start with the identifier
-    for a new well"""
+    for a new well, the string ``*NAME``.
+
+    Args:
+        filelines (list): One string pr. line
+
+    Returns:
+        list: List of integers
+    """
     wellnamelinenumbers = [
         i for i in range(0, len(filelines)) if filelines[i].startswith("*NAME")
     ]
@@ -199,9 +209,25 @@ def parse_well(well_lines, columnnames):
     into a DataFrame
 
     The list of input strings provided must have been cleaned upfront,
-    and only data for a single well should be provided."""
+    and only data for a single well should be provided.
 
-    assert "*NAME" in well_lines[0]
+    Use extract_columnnames() to find the list of columnnames that
+    can be extracted from the lines.
+
+    Args:
+        well_lines (list): One line pr. string
+        columnnames (list): Strings with columnnames to extract.
+            Other columns will be ignored.
+
+    Returns:
+        pd.DataFrame: Indexed by WELL and DATE.
+
+    """
+
+    if "*NAME" not in well_lines[0]:
+        logger.error("parse_well(), first string must start with *NAME, got:")
+        logger.error("%s", well_lines[0])
+        raise ValueError
     wellname = well_lines[0].replace("*NAME", "").strip().strip("'").strip('"')
 
     stringbuf = io.StringIO()
@@ -209,43 +235,76 @@ def parse_well(well_lines, columnnames):
     stringbuf.seek(0)
     data = pd.read_table(
         stringbuf,
-        engine="c",
         skiprows=1,
         sep=r"\s+",
         names=columnnames,
-        parse_dates=[0],
         error_bad_lines=False,
     )
+    data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
     data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
     data = data.set_index(["WELL", "DATE"]).sort_index()
     return data
 
 
 def process_volfile(filename):
-    """Parse a single OFM vol-file and return a DataFrame"""
+    """Parse a single OFM vol-file and return a DataFrame.
+
+    Args:
+        filename (str): Path to file on disk
+
+    Returns:
+        pd.DataFrame: Indexed by WELL and DATE.
+    """
     logger.info("Parsing file %s", filename)
     with open(filename) as file_h:
-        filelines = unify_dateformat(cleanse_ofm_lines(file_h.readlines()))
+        volstr = "\n".join(file_h.readlines())
+    dframe = process_volstr(volstr)
+    if dframe.empty:
+        logger.warning("No data extracted from %s", filename)
+    return dframe
+
+
+def process_volstr(volstr):
+    """Parse a volstring (typically a vol-file read into a string with
+    newline characters)
+
+    Args:
+        volstr (str)
+
+    Returns:
+        pd.DataFrame: Indexed by WELL and DATE
+    """
+    filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
     columnnames = extract_columnnames(filelines)
+    if not columnnames:
+        raise ValueError("No columns found, one line must start with *DATE")
     logger.info("Columns found: %s", str(columnnames))
 
     wellframes = []
-    for wellchunk in split_list(filelines, find_wellstart_indices(filelines)):
-        if any([line.startswith("*NAME") for line in wellchunk]):
-            wellframe = parse_well(wellchunk, columnnames)
-            if not wellframe.empty:
-                wellframes.append(wellframe)
-        else:
-            logger.info("No NAME found in chunk, probably the very first.")
+    for wellchunk in split_list(filelines, find_wellstart_indices(filelines))[1:]:
+        # wellchunk zero does not contain data:            --------->        ^^^^
+        wellframe = parse_well(wellchunk, columnnames)
+        if not wellframe.empty:
+            wellframes.append(wellframe)
     if wellframes:
         return pd.concat(wellframes, sort=False).sort_index()
-    logger.warning("No data was parseable in %s", filename)
     return pd.DataFrame()
 
 
 def ofmvol2csv_main(volfiles, output, includefileorigin=False):
-    """Main function written as a Python function to facilitate testing"""
+    """Convert a set of volfiles (or wildcard patterns) into one CSV file.
+
+    Args:
+        volfiles (list): A string or a list of strings, with filenames and/or
+            wildcard patterns.
+        output (str): Filename to write to, in CSV format.
+        includefileorigin (bool): Whether to add a column with the originating
+            volfile filename for each row of data.
+
+    Returns:
+        None
+    """
     if isinstance(volfiles, str):
         volfiles = [volfiles]
 
@@ -282,3 +341,7 @@ def main():
         args.output,
         includefileorigin=args.includefileorigin,
     )
+
+
+if __name__ == "__main__":
+    main()

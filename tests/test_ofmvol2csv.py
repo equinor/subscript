@@ -173,6 +173,82 @@ def test_find_wellstart_indices(inputlines, expected):
             ).set_index(["WELL", "DATE"]),
         ),
         (
+            # More rows, DAYS is hours-pr-day (efficiency factor):
+            [
+                "*DATE *OIL *DAYS",
+                "*NAME A-1",
+                "2020-12-24 100 24.0",
+                "2020-12-25 200 23.0",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OIL", "DAYS"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 24), 100, 24.0],
+                    ["A-1", datetime.date(2020, 12, 25), 200, 23.0],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # More rows, special case for hours-pr-day for injectors
+            [
+                "*DATE *Winj *WiDay",
+                "*NAME A-1",
+                "2020-12-24 100 24.0",
+                "2020-12-25 200 23.0",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "WINJ", "WIDAY"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 24), 100, 24.0],
+                    ["A-1", datetime.date(2020, 12, 25), 200, 23.0],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # Test that we guess DD.MM.YYYY by default.
+            [
+                "*DATE *Days *Oil",
+                "*NAME A-1",
+                "01.02.1987 8.1 100",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "DAYS", "OIL"],
+                data=[
+                    ["A-1", datetime.date(1987, 2, 1), 8.1, 100],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # Pandas will try MM.DD.YYYY if DD.MM.YYYY is unfeasible:
+            [
+                "*DATE *Days *Oil",
+                "*NAME A-1",
+                "01.20.1987 8.1 100",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "DAYS", "OIL"],
+                data=[
+                    ["A-1", datetime.date(1987, 1, 20), 8.1, 100],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
+            # Pandas will mix (!!) MM.DD.YYYY if DD.MM.YYYY when necessary..
+            [
+                "*DATE *Days *Oil",
+                "*NAME A-1",
+                "01.20.1987 8.1 100",
+                "21.1.1987 9.1 200",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "DAYS", "OIL"],
+                data=[
+                    ["A-1", datetime.date(1987, 1, 20), 8.1, 100],
+                    ["A-1", datetime.date(1987, 1, 21), 9.1, 200],
+                ],
+            ).set_index(["WELL", "DATE"]),
+        ),
+        (
             # More columns:
             [
                 "*DATE *OPR *gas",
@@ -199,6 +275,17 @@ def test_find_wellstart_indices(inputlines, expected):
                 ],
             ).set_index(["WELL", "DATE"]),
         ),
+        (
+            # Empty dataset
+            [
+                "*DATE *Days *Oil",
+                "*NAME A-1",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "DAYS", "OIL"],
+                data=[],
+            ).set_index(["WELL", "DATE"]),
+        ),
     ],
 )
 def test_parse_well(inputlines, expected):
@@ -207,6 +294,36 @@ def test_parse_well(inputlines, expected):
     colnames = ofmvol2csv.extract_columnnames(inputlines)
     dframe = ofmvol2csv.parse_well(inputlines[1:], colnames)
     pd.testing.assert_frame_equal(dframe, expected)
+
+
+@pytest.mark.parametrize(
+    "inputlines, expected_error",
+    [
+        (
+            # Unparseable date:
+            ["*DATE OPR", "*NAME A-1", "24.24.2020 100"],
+            ValueError,  # pd._libs.tslibs.parsing.DateParseError
+        ),
+        (
+            # Missing DATE/columns line:
+            [
+                "*DATO OPR",
+                "*NAME A-1",
+            ],
+            ValueError,
+        ),
+        (
+            # Totally bogus:
+            [
+                "Nothing here..",
+            ],
+            ValueError,
+        ),
+    ],
+)
+def test_errors(inputlines, expected_error):
+    with pytest.raises(expected_error):
+        ofmvol2csv.process_volstr("\n".join(inputlines))
 
 
 @pytest.mark.integration
@@ -301,35 +418,6 @@ def test_roundtrip(datadir):
     pd.testing.assert_frame_equal(first_frame, second_frame)
 
 
-def test_bogusfiles(tmpdir):
-    tmpdir.chdir()
-    with open("bogus.vol", "w") as file_h:
-        file_h.write("Nothing here")
-    ofmvol2csv.ofmvol2csv_main("bogus.vol", "bogus.csv")
-    assert not os.path.exists("bogus.csv")
-
-    with open("emptydata.vol", "w") as file_h:
-        file_h.write("*DATE *OIL\n")
-        file_h.write("*NAME WELL-NODATA\n")
-
-    ofmvol2csv.ofmvol2csv_main("emptydata.vol", "empty.csv")
-    assert not os.path.exists("empty.csv")
-
-
-def test_wrongdateformat(tmpdir):
-    tmpdir.chdir()
-
-    with open("date.vol", "w") as file_h:
-        file_h.write("*DATE *OIL\n")
-        file_h.write("*NAME WELLNAME\n")
-        file_h.write("33.33.3333 100")
-    ofmvol2csv.ofmvol2csv_main("date.vol", "nodate.csv")
-    assert os.path.exists("nodate.csv")
-    # This currently goes through, pandas reads the erroneous
-    # date as a string/object, and is outputted untouched to the CSV
-    # Maybe fair enough to let another downstream tool pick up the error.
-
-
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(datadir):
@@ -350,4 +438,4 @@ def test_ert_hook(datadir):
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert os.path.exists("proddata.csv")
-    print(pd.read_csv("proddata.csv"))
+    assert not pd.read_csv("proddata.csv").empty
