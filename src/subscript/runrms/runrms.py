@@ -5,6 +5,7 @@ import time
 import datetime
 import platform
 import os
+import tempfile
 import argparse
 import subprocess
 import getpass
@@ -598,8 +599,19 @@ class RunRMS:
 
         else:
             print(_BColors.OKGREEN)
-            # os.system('/bin/bash -c ' + '"' + command + '"')
-            os.system(self.command)
+
+            # make a tmp file which also sets path; to be combined with run_external
+            fhandle, fname = tempfile.mkstemp(text=True)
+            with open(fname, "w+") as fxx:
+                newpath = "export PATH=/project/res/roxapi/bin:$PATH\n"
+                fxx.write(newpath)
+                fxx.write(self.command)
+
+            os.close(fhandle)
+            os.system("chmod u+rx " + fname + "; sleep 1")
+            os.system("disable_komodo_exec " + fname)
+            os.unlink(fname)
+
             print(_BColors.ENDC)
 
     def showinfo(self):
