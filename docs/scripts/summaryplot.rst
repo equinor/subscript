@@ -27,7 +27,8 @@ PERFECTMATCH.DATA it is sufficient to write "PERFECTMATCH" OR "PERFECTMATCH."
 completion).
 
 Vectors can be written with wildcards. For a list of possible vectors, issue
-``summary.x --list <eclipsedatafile>``
+``summary.x --list <eclipsedatafile>``. If using the c-shell (``csh``), you
+need to enclose each vector wildcard in quotes.
 
 .. figure:: images/Summaryplot-normalizeexample.png
    :width: 40%
