@@ -43,7 +43,7 @@ BETA = "RMS_test_latest"
 SITE = "/prog/roxar/site/"
 ROXAPISITE = "/project/res/roxapi"
 RHEL_ID = "/etc/redhat-release"
-NEWPATH = "export PATH=/project/res/roxapi/bin:$PATH"
+RUN_EXTERNAL_PATH = "export PATH=/project/res/roxapi/bin:$PATH"
 
 
 def touch(fname):
@@ -607,11 +607,11 @@ class RunRMS:
             if shutil.which("disable_komodo_exec"):
                 fhandle, fname = tempfile.mkstemp(text=True)
                 with open(fname, "w+") as fxx:
-                    fxx.write(NEWPATH + "\n")
+                    fxx.write(RUN_EXTERNAL_PATH + "\n")
                     fxx.write(self.command)
 
                 os.close(fhandle)
-                os.system("chmod u+rx " + fname + "; sleep 1")
+                os.system("chmod u+rx " + fname)
                 os.system("disable_komodo_exec " + fname)
                 if self.args.debug:
                     os.system("cat " + fname)
