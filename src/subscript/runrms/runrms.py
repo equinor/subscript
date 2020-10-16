@@ -5,7 +5,6 @@ import time
 import datetime
 import platform
 import os
-import tempfile
 import argparse
 import subprocess
 import shutil
@@ -51,7 +50,7 @@ RHEL_ID = "/etc/redhat-release"
 # PATH in RUN_EXTERNAL_PATH. A temp-file is used to start RMS with the augmented path,
 # modifying env directly from Python may not work.
 
-RUN_EXTERNAL_PATH = "export PATH=/project/res/roxapi/bin:$PATH"
+RUN_EXTERNAL_PATH = "/project/res/roxapi/bin"
 RUN_EXTERNAL_CMD = "/project/res/roxapi/bin/run_external"
 
 
@@ -233,14 +232,6 @@ class RunRMS:
         if "PYTHONPATH" in os.environ:
             self.oldpythonpath = os.environ["PYTHONPATH"]
 
-        # Set environment variables for use by `run_external`
-        # from equinor/equilibrium:
-        if "PYTHONPATH" in os.environ:
-            os.environ["_PRE_RMS_PYTHONPATH"] = os.environ["PYTHONPATH"]
-        else:
-            os.environ["_PRE_RMS_PYTHONPATH"] = ""
-        os.environ["_PRE_RMS_BACKUP"] = "1"
-
         print(
             _BColors.BOLD,
             "\nRunning <{0}>. Type <{0} -h> for help\n".format(THISSCRIPT),
@@ -401,7 +392,7 @@ class RunRMS:
         self.debug("Exe {}".format(self.exe))
         if self.version_requested in installed:
             print("Current RMS from standard install...")
-            self.exe = "rms -v " + self.version_requested
+            self.exe = "rms"
             return True
 
         return False
@@ -460,7 +451,7 @@ class RunRMS:
             if isinstance(tmpdpi, float) and 20 <= tmpdpi <= 500:
                 usedpi = tmpdpi
 
-            self.setdpiscaling = "QT_SCALE_FACTOR={} ".format(usedpi / 100.0)
+            self.setdpiscaling = "{}".format(usedpi / 100.0)
 
     def _detect_pyver_from_path(self):
         """
@@ -562,35 +553,22 @@ class RunRMS:
         """Launch RMS with correct pythonpath"""
 
         if self.exe is None:
-            self.exe = "rms -v " + self.version_requested
+            self.exe = "rms"
 
-        command = self.setdpiscaling + "RMS_IPL_ARGS_TO_PYTHON=1 "
+        args_list = [self.exe, "-v", self.version_requested]
 
-        if self.pluginspath:
-            command += "RMS_PLUGINS_LIBRARY=" + self.pluginspath + " "
-
-        if not self.args.nopy:
-            command += "PYTHONPATH="
-            if self.args.testpylib:
-                command += self.pythonpathtest + ":" + self.pythonpath
-            else:
-                command += self.pythonpath
-            if self.args.incsyspy:
-                command += ":" + self.oldpythonpath
-
-        command += " " + self.exe
         if self.args.ronly:
-            command += " -readonly"
+            args_list.append("-readonly")
         if self.args.bworkflows:
-            command += " -batch"
+            args_list.append("-batch")
             for bjobs in self.args.bworkflows:
-                command += " " + bjobs
+                args_list.append(bjobs)
 
         if not empty:
-            command += " -project " + self.project
+            args_list += ["-project", self.project]
 
-        self.command = command
-        print(_BColors.BOLD, "\nRunning: {}\n".format(command), _BColors.ENDC)
+        self.command = " ".join(args_list)
+        print(_BColors.BOLD, "\nRunning: {}\n".format(self.command), _BColors.ENDC)
         print("=" * 132)
 
         if self.locked:
@@ -611,29 +589,28 @@ class RunRMS:
         else:
             print(_BColors.OKGREEN)
 
-            # To make run_external work in a Komodo setting:
-            # make a tmp file which also sets path; to be combined with run_external
+            rms_exec_env = os.environ.copy()
+            pythonpath = ""
+            if not self.args.nopy:
+                if self.args.testpylib:
+                    pythonpath += self.pythonpathtest + ":" + self.pythonpath
+                else:
+                    pythonpath += self.pythonpath
+                if self.args.incsyspy:
+                    pythonpath += ":" + self.oldpythonpath
+
+            rms_exec_env["PYTHONPATH"] = pythonpath
+            rms_exec_env["RMS_IPL_ARGS_TO_PYTHON"] = "1"
+            rms_exec_env["RMS_PLUGINS_LIBRARY"] = self.pluginspath
+
+            if self.setdpiscaling:
+                rms_exec_env["QT_SCALE_FACTOR"] = self.setdpiscaling
 
             if shutil.which("disable_komodo_exec"):
+                rms_exec_env["PATH_PREFIX"] = RUN_EXTERNAL_PATH
+                args_list = ["disable_komodo_exec"] + args_list
 
-                if not shutil.which(RUN_EXTERNAL_CMD):
-                    raise RuntimeError(f"The script {RUN_EXTERNAL_CMD} is not present")
-
-                fhandle, fname = tempfile.mkstemp(text=True)
-                with open(fname, "w+") as fxx:
-                    fxx.write(RUN_EXTERNAL_PATH + "\n")
-                    fxx.write(self.command)
-
-                os.close(fhandle)
-                os.system("chmod u+rx " + fname)
-                os.system("disable_komodo_exec " + fname)
-                if self.args.debug:
-                    os.system("cat " + fname)
-                os.unlink(fname)
-            else:
-                # backup is to run the old way
-                os.system(self.command)
-
+            subprocess.run(args_list, env=rms_exec_env)
             print(_BColors.ENDC)
 
     def showinfo(self):
