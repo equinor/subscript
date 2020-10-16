@@ -5,8 +5,10 @@ import time
 import datetime
 import platform
 import os
+import tempfile
 import argparse
 import subprocess
+import shutil
 import getpass
 from glob import glob
 
@@ -41,6 +43,16 @@ BETA = "RMS_test_latest"
 SITE = "/prog/roxar/site/"
 ROXAPISITE = "/project/res/roxapi"
 RHEL_ID = "/etc/redhat-release"
+
+# Note
+# From October/November 2020: If disable_komodo_exec is present, RMS will be launched
+# with komodo disabled. To make run_external (which enables komodo again for that
+# particular command) work when komodo is disabled, it is installed separately in a
+# PATH in RUN_EXTERNAL_PATH. A temp-file is used to start RMS with the augmented path,
+# modifying env directly from Python may not work.
+
+RUN_EXTERNAL_PATH = "export PATH=/project/res/roxapi/bin:$PATH"
+RUN_EXTERNAL_CMD = "/project/res/roxapi/bin/run_external"
 
 
 def touch(fname):
@@ -598,8 +610,30 @@ class RunRMS:
 
         else:
             print(_BColors.OKGREEN)
-            # os.system('/bin/bash -c ' + '"' + command + '"')
-            os.system(self.command)
+
+            # To make run_external work in a Komodo setting:
+            # make a tmp file which also sets path; to be combined with run_external
+
+            if shutil.which("disable_komodo_exec"):
+
+                if not shutil.which(RUN_EXTERNAL_CMD):
+                    raise RuntimeError(f"The script {RUN_EXTERNAL_CMD} is not present")
+
+                fhandle, fname = tempfile.mkstemp(text=True)
+                with open(fname, "w+") as fxx:
+                    fxx.write(RUN_EXTERNAL_PATH + "\n")
+                    fxx.write(self.command)
+
+                os.close(fhandle)
+                os.system("chmod u+rx " + fname)
+                os.system("disable_komodo_exec " + fname)
+                if self.args.debug:
+                    os.system("cat " + fname)
+                os.unlink(fname)
+            else:
+                # backup is to run the old way
+                os.system(self.command)
+
             print(_BColors.ENDC)
 
     def showinfo(self):
