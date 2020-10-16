@@ -1,5 +1,4 @@
 """Test runrms script, but manual interactive testing is also needed"""
-import os
 import subprocess
 
 import pytest
@@ -38,13 +37,6 @@ def test_do_parse_args(tmpdir):
     print(runner.args)
 
     assert "dryrun=True" in str(runner.args)
-
-
-def test_backuppythonpath():
-    """Test that we can backup the environment variable PYTHONPATH"""
-    rr.RunRMS()
-    assert "_PRE_RMS_BACKUP" in os.environ
-    assert "_PRE_RMS_PYTHONPATH" in os.environ
 
 
 @pytest.mark.integration
