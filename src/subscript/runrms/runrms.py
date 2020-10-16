@@ -8,6 +8,7 @@ import os
 import tempfile
 import argparse
 import subprocess
+import shutil
 import getpass
 from glob import glob
 
@@ -42,6 +43,7 @@ BETA = "RMS_test_latest"
 SITE = "/prog/roxar/site/"
 ROXAPISITE = "/project/res/roxapi"
 RHEL_ID = "/etc/redhat-release"
+NEWPATH = "export PATH=/project/res/roxapi/bin:$PATH"
 
 
 def touch(fname):
@@ -600,17 +602,23 @@ class RunRMS:
         else:
             print(_BColors.OKGREEN)
 
+            # To make run_external work in a Komodo setting:
             # make a tmp file which also sets path; to be combined with run_external
-            fhandle, fname = tempfile.mkstemp(text=True)
-            with open(fname, "w+") as fxx:
-                newpath = "export PATH=/project/res/roxapi/bin:$PATH\n"
-                fxx.write(newpath)
-                fxx.write(self.command)
+            if shutil.which("disable_komodo_exec"):
+                fhandle, fname = tempfile.mkstemp(text=True)
+                with open(fname, "w+") as fxx:
+                    fxx.write(NEWPATH + "\n")
+                    fxx.write(self.command)
 
-            os.close(fhandle)
-            os.system("chmod u+rx " + fname + "; sleep 1")
-            os.system("disable_komodo_exec " + fname)
-            os.unlink(fname)
+                os.close(fhandle)
+                os.system("chmod u+rx " + fname + "; sleep 1")
+                os.system("disable_komodo_exec " + fname)
+                if self.args.debug:
+                    os.system("cat " + fname)
+                os.unlink(fname)
+            else:
+                # backup is to run the old way
+                os.system(self.command)
 
             print(_BColors.ENDC)
 
