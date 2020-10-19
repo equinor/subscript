@@ -43,15 +43,8 @@ SITE = "/prog/roxar/site/"
 ROXAPISITE = "/project/res/roxapi"
 RHEL_ID = "/etc/redhat-release"
 
-# Note
-# From October/November 2020: If disable_komodo_exec is present, RMS will be launched
-# with komodo disabled. To make run_external (which enables komodo again for that
-# particular command) work when komodo is disabled, it is installed separately in a
-# PATH in RUN_EXTERNAL_PATH. A temp-file is used to start RMS with the augmented path,
-# modifying env directly from Python may not work.
 
-RUN_EXTERNAL_PATH = "/project/res/roxapi/bin"
-RUN_EXTERNAL_CMD = "/project/res/roxapi/bin/run_external"
+RMS_ENV_PATH_PREFIX = "/project/res/roxapi/bin"
 
 
 def touch(fname):
@@ -585,6 +578,7 @@ class RunRMS:
             user = getpass.getuser()
             self.runloggerfile = "/tmp/runlogger_" + user + ".txt"
             touch(self.runloggerfile)
+            return 0
 
         else:
             print(_BColors.OKGREEN)
@@ -607,11 +601,12 @@ class RunRMS:
                 rms_exec_env["QT_SCALE_FACTOR"] = self.setdpiscaling
 
             if shutil.which("disable_komodo_exec"):
-                rms_exec_env["PATH_PREFIX"] = RUN_EXTERNAL_PATH
+                rms_exec_env["PATH_PREFIX"] = RMS_ENV_PATH_PREFIX
                 args_list = ["disable_komodo_exec"] + args_list
 
-            subprocess.run(args_list, env=rms_exec_env)
+            rms_process = subprocess.run(args_list, env=rms_exec_env)
             print(_BColors.ENDC)
+            return rms_process.returncode
 
     def showinfo(self):
         """Show info on RMS project"""
@@ -717,7 +712,7 @@ def main(args=None):
 
     if runner.project is None and runner.version_requested is None:
         runner.version_requested = "10.1.3"
-        runner.exe = "rms -v 10.1.3"
+        runner.exe = "rms"
 
     if runner.version_requested is None:
         runner.version_requested = runner.version_fromproject
