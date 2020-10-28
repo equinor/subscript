@@ -461,6 +461,33 @@ INCLUDE
     assert "something.sch" in str(sch)
 
 
+def test_merge_paths_in_use(tmpdir, caplog):
+    """If the PATHS keyword is in use for getting includes,
+    there will be "variables" in use in INCLUDE-statements.
+
+    These variables are defined in the DATA file and outside
+    sunsch's scope, but we should ensure a proper error message"""
+    tmpdir.chdir()
+    open("pathsinclude.sch", "w").write(
+        """
+DATES
+  1 'JAN' 2030 /
+/
+
+INCLUDE
+  '$MYSCHFILES/something.sch' /
+"""
+    )
+
+    sunschconf = {
+        "startdate": datetime.date(2000, 1, 1),
+        "files": ["pathsinclude.sch"],
+    }
+    with pytest.raises(SystemExit):
+        sunsch.process_sch_config(sunschconf)
+    assert "PATHS variables in INCLUDE" in caplog.text
+
+
 def test_merge():
     """Test that merge can be both a list and a string, that
     allows both syntaxes in yaml:
