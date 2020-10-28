@@ -457,8 +457,25 @@ def sch_file_nonempty(filename):
     try:
         tmpschedule = TimeVector(datetime.date(1900, 1, 1))
         tmpschedule.load(filename)
-    except IndexError:
-        return False
+    except IndexError as err:
+        if "Keyword index 0 is out of range" in str(err):
+            # This is what we get from opm for empty files.
+            return False
+
+        # Try to workaround a non-explanatory error from opm-common:
+        if "map::at" in str(err):
+            logger.error("Error happened while parsing %s", filename)
+            logger.error(
+                "You have potentially used PATHS variables in INCLUDE statements?"
+            )
+            logger.error("This is not supported")
+            raise SystemExit
+
+        # Unknown error condition
+        logger.error("Could not parse %s", filename)
+        logger.error(err)
+        raise SystemExit
+
     except ValueError:
         # This is where we get for files not starting with DATES,
         # but that means it is nonempty
