@@ -551,3 +551,41 @@ perm.grdecl"""
 
     with pytest.raises(IOError):
         parse_wildcardfile("notthere")
+
+
+def test_eclkw_regexp(tmpdir):
+    tmpdir.chdir()
+
+    uncompressed_str = "G1\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/"
+
+    # Nothing is found by default here.
+    assert not find_keyword_sets(uncompressed_str.split())
+
+    # Only if we specify a regexp catching this odd keyword name:
+
+    kw_sets = find_keyword_sets(uncompressed_str.split(), eclkw_regexp="G1")
+    kwend_idx = len(uncompressed_str.split()) - 1
+    assert kw_sets == [(0, kwend_idx)]
+    assert compress_multiple_keywordsets(kw_sets, uncompressed_str.split()) == [
+        "G1",
+        "  13*0",
+        "/",
+    ]
+
+    with open("g1.grdecl", "w") as f_handle:
+        f_handle.write(uncompressed_str)
+
+    # Alternative regexpes that should also work with this G1:
+    kw_sets = find_keyword_sets(
+        uncompressed_str.split(), eclkw_regexp="[A-Z]{1-8}$"
+    ) == [(0, kwend_idx)]
+
+    kw_sets = find_keyword_sets(
+        uncompressed_str.split(), eclkw_regexp="[A-Z0-9]{2-8}$"
+    ) == [(0, kwend_idx)]
+
+    sys.argv = ["eclcompress", "g1.grdecl", "--eclkw_regexp", "G1"]
+    main()
+    compressed = open("g1.grdecl").read()
+    assert "File compressed with eclcompress" in compressed
+    assert "13*0" in compressed
