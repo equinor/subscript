@@ -1,9 +1,5 @@
 #!/usr/bin/perl -w 
 
-#
-# $Id: runeclipse 551 2018-09-28 09:00:50Z eism $
-#
-
 use strict;
 
 use Getopt::Std;
