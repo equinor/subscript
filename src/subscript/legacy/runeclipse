@@ -1,9 +1,5 @@
 #!/usr/bin/perl -w 
 
-#
-# $Id: runeclipse 551 2018-09-28 09:00:50Z eism $
-#
-
 use strict;
 
 use Getopt::Std;
@@ -13,9 +9,11 @@ use IO::File;
 
 # ------------------------------------------------------
 
-my $ecldir       = "/prog/ecl/grid";
-my $ecltestdir   = "/prog/ecl/testgrid";
-my $mpiintelroot = "/prog/ecl/grid/tools/linux_x86_64/intel/mpi/5.0.2.044";
+
+my $ecldir       = "/prog/res/ecl/grid";
+my $eclolddir    = "/prog/ecl/grid";
+my $ecltestdir   = "/prog/res/ecl/testgrid";
+my $mpiintelroot = "/prog/res/ecl/grid/tools/linux_x86_64/intel/mpi/2018.1.163";
 
 my $lisens = "7321\@eclipse-lic-no.statoil.no";
 
@@ -33,7 +31,7 @@ my $arch64 = "x86_64Linux";    # bsub resource string for 64bit
 # ---------------------------------------------------
 
 my $que_name  = "daily";
-my $version   = "2018.2";
+my $version   = "2019.3";
 my $memoryreq = 512;
 
 my $progname    = "eclipse";
@@ -57,6 +55,8 @@ my $mpiext = $mpiextchmpi;
 my $mpirun = $mpirun64;
 
 # ------------------------------------------------------
+
+
 
 sub find_number_of_processors;
 sub find_allocated_processors;
@@ -159,6 +159,7 @@ if ($parallel) {
         $mpiext   = $mpiextintel;
     }
     elsif ( $version_year > 2006 ) {    # Use SCALI
+	in_error("Parallel runs for version < 2011 is no longer supported, sorry");
         $scali  = 1;
         $mpirun = $mpirunscali;
         $mpiext = $mpiextscali;
@@ -183,19 +184,29 @@ if ($parallel) {
 }
 
 #
-# Test if executable exists. If not; try test installation:
+# Test if executable exists. If not; try old then test installation:
 #
 
 my $exe64;
 
-if ( $version_year < 2006 ) {
-    $exe64 = "$ecldir/$version/bin/linux/$progname.exe";
-}
-else {
-    $exe64 = "$ecldir/$version/bin/linux_x86_64/$progname.exe";
+$exe64 = "$ecldir/$version/bin/linux_x86_64/$progname.exe" ;
+
+if ( !-f $exe64 ) {
+    # Trying the old installation
+    $ecldir = $eclolddir;
+    $exe64  = "$ecldir/$version/bin/linux_x86_64/$progname.exe";
+    $config = "$ecldir/$extconfig";
+
+    if ($version_year < 2006) {
+	$exe64 = "$ecldir/$version/bin/linux/$progname.exe" ;
+    } else {
+	$exe64 = "$ecldir/$version/bin/linux_x86_64/$progname.exe" ;
+} ;
+
 }
 
 if ( !-f $exe64 ) {
+    # Trying the test installation
     $ecldir = $ecltestdir;
     $exe64  = "$ecldir/$version/bin/linux_x86_64/$progname.exe";
     $config = "$ecldir/$extconfig";
@@ -206,6 +217,7 @@ if ( !-f $exe64 ) {
 
     $testversion = 1;
 }
+
 
 #
 # Build batchfile:
