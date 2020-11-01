@@ -1,0 +1,17 @@
+smry:
+- key: GOPR:BRENT
+  observations:
+  - date: '2005-08-21'
+    error: 5.0
+    label: SEP_TEST_2005
+    value: 100.0
+  - error: 5.0
+    label: SEP_TEST_RST_2005
+    restart: 42.0
+    value: 100.0
+- key: GOPR:NESS
+  observations:
+  - days: 911.0
+    error: 10.0
+    label: SEP_TEST_2008
+    value: 213.0

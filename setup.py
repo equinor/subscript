@@ -18,6 +18,7 @@ SSCRIPTS = [
     "csv_stack = subscript.csv_stack.csv_stack:main",
     "eclcompress = subscript.eclcompress.eclcompress:main",
     "ecldiff2roff = subscript.ecldiff2roff.ecldiff2roff:main",
+    "ertobs2yml = subscript.ertobs2yml.ertobs2yml:main",
     "gen_satfunc = subscript.gen_satfunc.gen_satfunc:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
