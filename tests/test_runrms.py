@@ -10,19 +10,15 @@ from subscript.runrms import runrms as rr
 TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
 TESTRMS2 = "tests/data/reek/rms/reek.rms11.1.0"
 
-FAKE = "--fake"
-
-SKIPCIRUN = pytest.mark.skipif(FAKE != "", reason="Running travis or similar")
-
 
 def test_main_no_project():
     """Will only see effect of this when running pytest -s"""
-    print(rr.main(["--dryrun", FAKE]))
+    print(rr.main(["--dryrun"]))
 
 
 def test_main_projects():
     """Will only see effect of this when running pytest -s"""
-    print(rr.main([TESTRMS2, "--dryrun", FAKE]))
+    print(rr.main([TESTRMS2, "--dryrun"]))
 
 
 def test_do_parse_args(tmpdir):
@@ -33,7 +29,7 @@ def test_do_parse_args(tmpdir):
     runner.runloggerfile = tmpdir.mkdir("runner1").join("runrms_usage.log")
     assert runner.args is None
 
-    args = ["--dryrun", FAKE]
+    args = ["--dryrun"]
     runner.do_parse_args(args)
 
     print(runner.args)
@@ -47,7 +43,6 @@ def test_integration():
     assert subprocess.check_output(["runrms", "-h"])
 
 
-@SKIPCIRUN
 def test_scan_rms(tmpdir):
     """Scan master files in RMS"""
     runner = rr.RunRMS()
@@ -62,7 +57,7 @@ def test_scan_rms(tmpdir):
 
 @pytest.mark.skipif(
     not shutil.which("disable_komodo_exec"),
-    reason="The executable disable_komodo_exec is not available"
+    reason="The executable disable_komodo_exec is not available",
 )
 def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
