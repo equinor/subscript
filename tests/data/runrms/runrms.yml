@@ -1,16 +1,16 @@
 # On pythonpath:
-# One can expect in 95% of cases that minor version of RMS will use same
-# python library as the previous minor version, e.g. RMS 11.1.2 should
+#
+# RMS version are major.minor.micro
+#
+# One can expect in 95% of cases that micro version of RMS will use same
+# python library as the previous micro version, e.g. RMS 11.1.2 should
 # use same as RMS 11.1.1 etc. Usuually there is a symlink in /project/res/roxapi
 # that shows this. However, it is possible of making this more fine-grained
-# if needed (that e.g. 11.1.2 uses a slightly different python library than
-# 11.1.1).
+# _if needed_ (that e.g. 99.1.2 uses a slightly different python library than
+# 99.1.1).
 # So pythonpath is given as list, where first is highest priority. If folder is
 # not found, then the second in the list is used, This will ensure that new
-# patch version may work even if symlink is not made.
-
-roxarsite: /prog/roxar/site
-roxapisite: /project/res/roxapi
+# micro version may work even if symlink is not made.
 
 rms:
   latest:
@@ -30,21 +30,30 @@ rms:
       - /project/res/roxapi/<PLATFORM>/12.1.0/lib/python3.6/site-packages
     tcltkpath: /prog/roxar/rms/versions/12.1.0/lib/LINUX_64/tkxxx
 
-  11.0.1:
-    replaced_by: 11.0.2
+  11.0.0:
+    replaced_by: 11.0.1
 
-  11.0.2:
-    exe: rms -v 11.0.2
+  11.0.1:
+    exe: rms -v 11.0.1
     pythonpath:
-      - /project/res/roxapi/<PLATFORM>/11.0.2/lib/python3.6/site-packages
+      - /project/res/roxapi/<PLATFORM>/11.0.1/lib/python3.6/site-packages
       - /project/res/roxapi/<PLATFORM>/11.0/lib/python3.6/site-packages
-    tcltkpath: /prog/roxar/rms/versions/11.0.2/lib/LINUX_64
+    tcltkpath: /prog/roxar/rms/versions/11.0.1/lib/LINUX_64/
 
   11.1.0:
-    replaced_by: 11.1.2
+    replaced_by: 11.1.1
+
 
   11.1.1:
-    replaced_by: 11.1.2
+    exe: rms -v 11.1.1
+    pythonpath:
+      - /project/res/roxapi/<PLATFORM>/11.1.1/lib/python3.6/site-packages
+      - /project/res/roxapi/<PLATFORM>/11.1/lib/python3.6/site-packages
+      - /project/res/roxapi/<PLATFORM>/11.0/lib/python3.6/site-packages
+    tcltkpath: /prog/roxar/rms/versions/11.1.1/lib/LINUX_64
+    pluginspath:
+      - /project/res/roxapi/<PLATFORM>/11.1/plugins
+
 
   11.1.2:
     default: true
@@ -55,8 +64,8 @@ rms:
       - /project/res/roxapi/<PLATFORM>/11.0/lib/python3.6/site-packages
     tcltkpath: /prog/roxar/rms/versions/11.1.2/lib/LINUX_64
 
-  12.0.0:
-    replaced_by: 12.0.1
+  # 12.0.0:
+  #   replaced_by: 12.0.1
 
   12.0.1:
     exe: rms -v 12.0.1
@@ -68,7 +77,7 @@ rms:
 # list of nonstandard installs
 rms_nonstandard:
   12.0.0:
+    exe: /prog/roxar/site/RMS12/rms/rms
     pythonpath:
       - /project/res/roxapi/<PLATFORM>/12.0.0/lib/python3.6/site-packages
-    exe: /prog/roxar/site/RMS12/rms/rms
-    tcltkpath: /prog/roxar/rms/versions/12.0.1/lib/LINUX_64
+    tcltkpath: /prog/roxar/site/RMS12/rms/versions/12.0.0/lib/LINUX_64

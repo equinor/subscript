@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+"""
+The runrms script. See also the assosiated runrms.yml YAML file paths in SETUP variable
+"""
 import os
 import pathlib
 import sys
@@ -15,7 +18,8 @@ import subprocess
 
 import yaml
 
-logger = logging.getLogger("runrms")
+
+LOGGER = logging.getLogger("runrms")
 
 
 DESCRIPTION = """
@@ -192,14 +196,17 @@ class _BColors:
 class RunRMS:
     """A class for setting up an environment in which to execute RMS"""
 
+    # pylint: disable=too-many-instance-attributes
+
     def __init__(self):
         self.setup = None
+        self.setupfile = None
         self.version_requested = None  # RMS version requested
         self.osver = "x86_64_RH_7"
         self.pythonpath = None  # RMS pythonpath
         self.testpythonpath = None  # RMS pythonpath for testing
         self.tcltkpath = None
-        self.pluginspath = None  # RMS pythonpath
+        self.pluginspath = None
         self.args = None  # The cmd line arguments
         self.project = None  # The path to the RMS project
         self.version_fromproject = None  # Actual ver from the .master (number/string)
@@ -236,6 +243,7 @@ class RunRMS:
             with open(RHEL_ID, "r") as buffer:
                 major = buffer.read().split(" ")[6].split(".")[0].replace("'", "")
                 self.osver = "x86_64_RH_" + str(major)
+                LOGGER.debug("RHEL version found in %s", RHEL_ID)
 
     def do_parse_args(self, args):
         """Parse command line args"""
@@ -252,7 +260,7 @@ class RunRMS:
             logging.basicConfig(level=logging.DEBUG)
 
         for key, value in vars(self.args).items():
-            logger.debug("Arg = %s: %s", key, value)
+            LOGGER.debug("Arg = %s: %s", key, value)
 
     def parse_setup(self):
         """Parse setup YAML file to set spesific settings for the requested RMS ver"""
@@ -265,14 +273,15 @@ class RunRMS:
         for mysetup in setup:
             try:
                 with open(mysetup, "r") as stream:
-                    logger.debug("Actual setup file: %s", mysetup)
+                    LOGGER.debug("Actual setup file: %s", mysetup)
+                    self.setupfile = mysetup
                     self.setup = yaml.safe_load(stream)
             except FileNotFoundError:
                 continue
             else:
                 break
         out = json.dumps(self.setup, sort_keys=True, indent=4, separators=(",", ": "))
-        logger.debug("Setup:\n%s", out)
+        LOGGER.debug("Setup:\n%s", out)
 
     def requested_rms_version(self):
         """
@@ -285,11 +294,13 @@ class RunRMS:
         proposed_version = None
         default_version = None
 
-        for rmsver in self.setup["rms"]:
-            logger.debug("Possible RMS version... %s", rmsver)
-            rmsversions = self.setup["rms"][rmsver]
+        rmssection = "rms"  # in yaml, keep as variable in case rms_nonstandard is used
+
+        for rmsver in self.setup[rmssection]:
+            LOGGER.debug("Possible RMS version... %s", rmsver)
+            rmsversions = self.setup[rmssection][rmsver]
             if "default" in rmsversions and rmsversions["default"] is True:
-                logger.debug("Default found as %s", rmsver)
+                LOGGER.debug("Default found as %s", rmsver)
                 proposed_version = rmsver
                 default_version = rmsver
                 self.defaultver = rmsver
@@ -303,36 +314,38 @@ class RunRMS:
         elif self.version_fromproject:
             proposed_version = self.version_fromproject
 
-        if not proposed_version in self.setup["rms"]:
+        if proposed_version not in self.setup[rmssection]:
             xwarn(f"Proposed version {proposed_version} is not in standard setup")
-            xwarn("Will try nonstandard...")
-            if not proposed_version in self.setup["rms_nonstandard"]:
+            xwarn("Will try nonstandard... PLEASE USE STANDARD INSTALL IF POSSIBLE")
+            if proposed_version not in self.setup["rms_nonstandard"]:
                 xwarn(f"Nope, {proposed_version} is not in nonstandard setup either")
                 xwarn(f"Will reset to default version {default_version}")
                 proposed_version = default_version
+            else:
+                rmssection = "rms_nonstandard"
 
         # the proposed version may be ~valid, but it may have a "replaced_by" tag:
-        propver = self.setup["rms"][proposed_version]
+        propver = self.setup[rmssection][proposed_version]
         if "replaced_by" in propver:
             newp = propver["replaced_by"]
             xwarn(f"The requested version {proposed_version} is replaced with {newp}")
             proposed_version = newp
 
         self.version_requested = proposed_version
-        self.exe = self.setup["rms"][proposed_version].get("exe", None)
+        self.exe = self.setup[rmssection][proposed_version].get("exe", None)
 
         if self.exe is None:
             raise RuntimeError("Executable is not found, probably a config/setup error")
 
-        pypath = self.setup["rms"][proposed_version].get("pythonpath", None)
+        pypath = self.setup[rmssection][proposed_version].get("pythonpath", None)
         pypath = self._process_pypath(pypath)
         self.pythonpath = pypath
 
-        self.tcltkpath = self.setup["rms"][proposed_version].get("tcltkpath", None)
+        self.tcltkpath = self.setup[rmssection][proposed_version].get("tcltkpath", None)
 
-        logger.debug("EXECUTABLE: %s", self.exe)
-        logger.debug("PYTHONPATH: %s", self.pythonpath)
-        logger.debug("TCLTK: %s", self.tcltkpath)
+        LOGGER.debug("EXECUTABLE: %s", self.exe)
+        LOGGER.debug("PYTHONPATH: %s", self.pythonpath)
+        LOGGER.debug("TCLTK: %s", self.tcltkpath)
 
     def _process_pypath(self, pypath):
         """The proposed pythonpath from setup may be a list; select from this"""
@@ -350,7 +363,7 @@ class RunRMS:
         xwarn("Actual python path is not present")
         return None
 
-    def scan_rms(self):
+    def scan_rms(self):  # noqa: C901
         """
         Scan the RMS project's .master and returns some basic data needed
         for launching the RMS project.
@@ -405,12 +418,12 @@ class RunRMS:
         except EnvironmentError:
             pass
 
-        logger.debug("project is %s", self.project)
-        logger.debug("version from project is %s", self.version_fromproject)
-        logger.debug("lock status from project is %s", self.locked)
+        LOGGER.debug("project is %s", self.project)
+        LOGGER.debug("version from project is %s", self.version_fromproject)
+        LOGGER.debug("lock status from project is %s", self.locked)
         for mkey in mkeys:
             value = getattr(self, mkey)
-            logger.debug("MKEY %s: %s", mkey, value)
+            LOGGER.debug("MKEY %s: %s", mkey, value)
 
     def _complete_version_fromproject(self):
         """For RMS 10.0.0 and 11.0.0 (etc) the release is reported as
@@ -432,10 +445,10 @@ class RunRMS:
 
         self.version_fromproject = rls
 
-    def launch_rms(self, empty=False):
+    def launch_rms(self, empty=False):  # pylint: disable=too-many-branches # noqa: C901
         """Launch RMS with correct pythonpath"""
 
-        args_list = [self.exe]
+        args_list = self.exe.split()
 
         if self.args.ronly:
             args_list.append("-readonly")
@@ -460,7 +473,8 @@ class RunRMS:
                 time.sleep(1)
                 print("... {}".format(sec))
 
-        print(_BColors.OKGREEN)
+        # if not self.args.debug:
+        #     print(_BColors.OKGREEN)
 
         rms_exec_env = os.environ.copy()
         pythonpath = ""
@@ -472,14 +486,24 @@ class RunRMS:
             if self.args.incsyspy:
                 pythonpath += ":" + self.oldpythonpath
 
-        logger.debug("Actual PYTHONPATH: %s", pythonpath)
+        LOGGER.debug("Actual PYTHONPATH: %s", pythonpath)
 
         rms_exec_env["PYTHONPATH"] = pythonpath
         rms_exec_env["RMS_IPL_ARGS_TO_PYTHON"] = "1"
-        rms_exec_env["RMS_PLUGINS_LIBRARY"] = self.pluginspath
+
+        if self.pluginspath:
+            rms_exec_env["RMS_PLUGINS_LIBRARY"] = self.pluginspath
+
+        if self.tcltkpath:
+            rms_exec_env["TCL_LIBRARY"] = self.tcltkpath
+            rms_exec_env["TK_LIBRARY"] = self.tcltkpath
 
         if self.setdpiscaling:
             rms_exec_env["QT_SCALE_FACTOR"] = self.setdpiscaling
+
+        LOGGER.debug("args_list    : %s", args_list)
+        for key, value in rms_exec_env.items():
+            LOGGER.debug("rms_exec_env... %s: %s", key, value)
 
         if shutil.which("disable_komodo_exec"):
             rms_exec_env["PATH_PREFIX"] = RMS_ENV_PATH_PREFIX
@@ -487,12 +511,9 @@ class RunRMS:
 
         if self.args.dryrun:
             xwarn("<<<< DRYRUN, do not start RMS >>>>")
-            logger.debug("args_list    : %s", args_list)
-            for key, value in rms_exec_env.items():
-                logger.debug("rms_exec_env... %s: %s", key, value)
             print(_BColors.ENDC)
         else:
-            rms_process = subprocess.run(args_list, env=rms_exec_env)
+            rms_process = subprocess.run(args_list, env=rms_exec_env, check=True)
             print(_BColors.ENDC)
             return rms_process.returncode
 
@@ -504,6 +525,7 @@ class RunRMS:
         print("=" * 132)
         print(f"Script runrms from subscript version {__version__}")
         print("=" * 132)
+        print("{0:30s}: {1}".format("Setup for runrms", self.setupfile))
         print("{0:30s}: {1}".format("Project name", self.project))
         print("{0:30s}: {1}".format("Last saved by", self.user))
         print("{0:30s}: {1} {2}".format("Last saved date & time", self.date, self.time))
@@ -518,6 +540,7 @@ class RunRMS:
                 )
             )
 
+        print("{0:30s}: {1}".format("Setup for runrms", self.setupfile))
         print("{0:30s}: {1}".format("RMS version requested", self.version_requested))
         print("{0:30s}: {1}".format("Equinor current default ver.", self.defaultver))
         print("{0:30s}: {1}".format("RMS version in project", self.version_fromproject))
@@ -526,6 +549,7 @@ class RunRMS:
         print("{0:30s}: {1}".format("System pythonpath*", self.oldpythonpath))
         print("{0:30s}: {1}".format("Pythonpath added as first**", self.pythonpath))
         print("{0:30s}: {1}".format("RMS plugins path", self.pluginspath))
+        print("{0:30s}: {1}".format("TCL/TK path", self.tcltkpath))
         print("{0:30s}: {1}".format("RMS DPI scaling", self.setdpiscaling))
         print("{0:30s}: {1}".format("RMS executable", self.exe))
         print("=" * 132)
@@ -590,8 +614,8 @@ class RunRMS:
         with open(self.runloggerfile, "a") as logg:
             logg.write(lline)
 
-        logger.debug("Logging usage to %s:", self.runloggerfile)
-        logger.debug(lline)
+        LOGGER.debug("Logging usage to %s:", self.runloggerfile)
+        LOGGER.debug(lline)
 
 
 def main(args=None):
@@ -624,9 +648,10 @@ def main(args=None):
     runner.showinfo()
     status = runner.launch_rms(empty=emptyproject)
 
-    logger.debug("Status from subprocess: %s", status)
+    LOGGER.debug("Status from subprocess: %s", status)
 
-    runner.runlogger()
+    if not runner.args.dryrun:
+        runner.runlogger()
 
 
 if __name__ == "__main__":
