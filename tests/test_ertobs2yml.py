@@ -367,10 +367,7 @@ def test_ertobs2df(string, expected):
     [
         (pd.DataFrame(), {}),
         (pd.DataFrame([{"FOO": "BAR"}]), {}),
-        (
-            pd.DataFrame([{"CLASS": "SUMMARY_OBSERVATION", "KEY": "WOPR:OP1"}]),
-            {"smry": [{"key": "WOPR:OP1"}]},
-        ),
+        #################################################################
         (
             pd.DataFrame(
                 [
@@ -398,20 +395,90 @@ def test_ertobs2df(string, expected):
                 ]
             },
         ),
+        #################################################################
         (
             pd.DataFrame(
                 [
-                    {"CLASS": "SUMMARY_OBSERVATION", "KEY": "WOPR:OP1"},
-                    {"CLASS": "SUMMARY_OBSERVATION", "KEY": "WOPR:OP2"},
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP1",
+                        "DATE": "2025-01-01",
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP2",
+                        "DATE": "2026-01-01",
+                    },
                 ]
             ),
-            {"smry": [{"key": "WOPR:OP1"}, {"key": "WOPR:OP2"}]},
+            {
+                "smry": [
+                    {"key": "WOPR:OP1", "observations": [{"date": "2025-01-01"}]},
+                    {"key": "WOPR:OP2", "observations": [{"date": "2026-01-01"}]},
+                ]
+            },
+        ),
+        #################################################################
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                    },
+                ]
+            ),
+            {
+                "rft": [
+                    {
+                        "well": "RFT_2006_OP1",
+                        "date": "1986-04-05",
+                        "observations": [{}],
+                    },
+                ]
+            },
+        ),
+        #################################################################
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "VALUE": 100,
+                        "K": 4,
+                    },
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "VALUE": 101,
+                        "K": 5,
+                    },
+                ]
+            ),
+            {
+                "rft": [
+                    {
+                        "well": "RFT_2006_OP1",
+                        "date": "1986-04-05",
+                        "observations": [
+                            {"k": 4, "value": 100},
+                            {"k": 5, "value": 101},
+                        ],
+                    },
+                ]
+            },
         ),
     ],
 )
 def test_df2obsdict(obs_df, expected_dict):
     """Test converting from dataframe representation to the dictionary
     representation designed for yaml output"""
+    print("*" * 100)
+    print(obs_df)
     assert df2obsdict(obs_df) == expected_dict
 
 

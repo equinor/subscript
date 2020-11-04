@@ -9,6 +9,7 @@ import datetime
 import argparse
 import yaml
 
+import numpy as np
 import pandas as pd
 
 from subscript import getLogger
@@ -73,7 +74,7 @@ INCLUDE_RE = re.compile(
 CLASS_SHORTNAME = {
     "SUMMARY_OBSERVATION": "smry",
     "GENERAL_OBSERVATION": "general",
-    "BLOCK_OBSERVATION": "block",
+    "BLOCK_OBSERVATION": "rft",
     "HISTORY_OBSERVATION": "hist",
 }
 
@@ -462,6 +463,7 @@ def ertobs2df(input_str, cwd="."):
         if len(obs_unit_split) < 2:
             print(observation_unit_str)
             print(obs_unit_split)
+            raise ValueError
         obs_unit = {"CLASS": obs_unit_split[0], "LABEL": obs_unit_split[1]}
         logger.info("Parsing observation %s %s", obs_unit["CLASS"], obs_unit["LABEL"])
         if len(obs_unit_split) > 2:
@@ -508,6 +510,92 @@ def validate_dframe(obs_df):
     return not failed
 
 
+def lowercase_dictkeys(some_dict):
+    """Convert all keys in a dictionary to lowe-case"""
+    return {key.lower(): value for key, value in some_dict.items()}
+
+
+def summary_df2obsdict(smry_df):
+    """Generate a dictionary structure suitable for yaml
+    for summary observations in dataframe representation
+
+    Args:
+        sum_df (pd.DataFrame)
+    Returns:
+        list: List of dictionaries, each dict has "key" and "observation"
+    """
+    assert isinstance(smry_df, pd.DataFrame)
+    if "CLASS" in smry_df:
+        assert len(smry_df["CLASS"].unique()) == 1
+        smry_df.drop("CLASS", axis=1, inplace=True)
+
+    smry_obs_list = []
+    if isinstance(smry_df, pd.DataFrame):
+        smry_df.dropna(axis=1, how="all", inplace=True)
+
+    if "DATE" not in smry_df:
+        raise ValueError("Can't have summary observation without a date")
+
+    for smrykey, smrykey_df in smry_df.groupby("KEY"):
+        if isinstance(smrykey_df, pd.DataFrame):
+            smrykey_df.drop("KEY", axis=1, inplace=True)
+        smry_obs_list.append(
+            {
+                "key": smrykey,
+                "observations": [
+                    lowercase_dictkeys(dict(keyvalues.dropna()))
+                    for _, keyvalues in smrykey_df.iterrows()
+                ],
+            }
+        )
+
+    return smry_obs_list
+
+
+def block_df2obsdict(block_df):
+    """Generate a dictionary structure suitable for yaml
+    for block observations in dataframe representation
+
+    Args:
+        block_df (pd.DataFrame)
+    Returns:
+        list: List of dictionaries, each dict has "well", "date" and
+        "observations"
+    """
+    assert isinstance(block_df, pd.DataFrame)
+
+    block_obs_list = []
+    if "CLASS" in block_df:
+        assert len(block_df["CLASS"].unique()) == 1
+        block_df.drop("CLASS", axis=1, inplace=True)
+
+    if "DATE" not in block_df:
+        raise ValueError("Can't have rft/block observation without a date")
+
+    block_df.dropna(axis=1, how="all", inplace=True)
+
+    for blocklabel, blocklabel_df in block_df.groupby(["LABEL", "DATE"]):
+        blocklabel_dict = {}
+        if "WELL" not in blocklabel_df:
+            blocklabel_dict["well"] = blocklabel[0]
+        else:
+            blocklabel_dict["well"] = blocklabel_df["WELL"].unique()[0]
+            blocklabel_dict["label"] = blocklabel[0]
+        blocklabel_dict["date"] = blocklabel[1]
+        if "FIELD" in blocklabel_df:
+            blocklabel_dict["field"] = blocklabel_df["FIELD"].unique()[0]
+        blocklabel_dict["observations"] = [
+            lowercase_dictkeys(dict(keyvalues.dropna()))
+            for _, keyvalues in blocklabel_df.drop(
+                ["FIELD", "LABEL", "DATE"],
+                axis=1,
+                errors="ignore",
+            ).iterrows()
+        ]
+        block_obs_list.append(blocklabel_dict)
+    return block_obs_list
+
+
 def df2obsdict(obs_df):
     """Generate a dictionary structure of all observations, this data structure
     is designed to look good in yaml, and is supported by WebViz and
@@ -522,35 +610,25 @@ def df2obsdict(obs_df):
     obsdict = {}
     if "CLASS" not in obs_df:
         return {}
+
+    # Format dates as strings in yaml:
     if "DATE" in obs_df:
         obs_df = obs_df.copy()
         obs_df["DATE"] = obs_df["DATE"].astype(str)
+        obs_df["DATE"].replace("NaT", np.nan, inplace=True)
 
+    # Process SUMMARY_OBSERVATION:
     if "SUMMARY_OBSERVATION" in obs_df["CLASS"].values:
-        # Start with an empty list:
-        obsdict[CLASS_SHORTNAME["SUMMARY_OBSERVATION"]] = []
-        # Now group by KEY:
-        for key in obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"]["KEY"].unique():
-            sum_key_dict = {"key": key}
-            sum_key_observations = []
-            for _, obs_unit in obs_df[
-                (obs_df["CLASS"] == "SUMMARY_OBSERVATION") & (obs_df["KEY"] == key)
-            ].iterrows():
+        obsdict[CLASS_SHORTNAME["SUMMARY_OBSERVATION"]] = summary_df2obsdict(
+            obs_df.set_index("CLASS").loc[["SUMMARY_OBSERVATION"]]
+        )
 
-                # print(str({**(obs_unit.dropna())}))
-                obs_unit_dict = {**(obs_unit.dropna())}
-                del obs_unit_dict["KEY"]
-                del obs_unit_dict["CLASS"]
-                if "DATE" in obs_unit_dict and obs_unit_dict["DATE"] == "NaT":
-                    del obs_unit_dict["DATE"]
-                obs_unit_dict = {
-                    key.lower(): value for key, value in obs_unit_dict.items()
-                }
-                if obs_unit_dict:
-                    sum_key_observations.append(obs_unit_dict)
-            if sum_key_observations:
-                sum_key_dict["observations"] = sum_key_observations
-            obsdict[CLASS_SHORTNAME["SUMMARY_OBSERVATION"]].append(sum_key_dict)
+    # Process BLOCK_OBSERVATION:
+    if "BLOCK_OBSERVATION" in obs_df["CLASS"].values:
+        obsdict[CLASS_SHORTNAME["BLOCK_OBSERVATION"]] = block_df2obsdict(
+            obs_df.set_index("CLASS").loc[["BLOCK_OBSERVATION"]]
+        )
+
     return obsdict
 
 
@@ -591,7 +669,7 @@ def main():
 def dump_results(dframe, csvfile=None, yamlfile=None):
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips
-    export if filenames are empty.
+    export if filenames are empty or None.
 
     Args:
         dframe (pd.DataFrame)

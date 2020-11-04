@@ -1,3 +1,51 @@
+rft:
+- date: '2006-10-22'
+  field: PRESSURE
+  observations:
+  - error: 5.0
+    i: 1.0
+    j: 1.0
+    k: 1.0
+    obs: P1
+    value: 100.0
+  - error: 5.0
+    i: 2.0
+    j: 2.0
+    k: 1.0
+    obs: P2
+    value: 101.0
+  - error: 5.0
+    i: 2.0
+    j: 3.0
+    k: 1.0
+    obs: P3
+    value: 102.0
+  well: RFT_2006
+- date: '2006-10-22'
+  field: PRESSURE
+  observations:
+  - error: 5.0
+    i: 1.0
+    j: 1.0
+    k: 1.0
+    obs: P1
+    source: SUMMARY
+    value: 100.0
+  - error: 5.0
+    i: 2.0
+    j: 2.0
+    k: 1.0
+    obs: P2
+    source: SUMMARY
+    value: 101.0
+  - error: 5.0
+    i: 2.0
+    j: 3.0
+    k: 1.0
+    obs: P3
+    source: SUMMARY
+    value: 102.0
+  well: RFT_2006_SUM
 smry:
 - key: GOPR:BRENT
   observations:
