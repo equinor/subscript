@@ -9,23 +9,15 @@ import pandas as pd
 from subscript.params2csv import params2csv
 
 
-def test_main():
+def test_main(tmpdir):
     """Test invocation from command line"""
-    testdir = os.path.join(os.path.dirname(__file__), "testdata_params2csv")
-    if not os.path.exists(testdir):
-        os.mkdir(testdir)
-    os.chdir(testdir)
-
-    if os.path.exists("parameters1.txt"):
-        os.unlink("parameters1.txt")
+    tmpdir.chdir()
     with open("parameters1.txt", "w") as f_handle:
         f_handle.write("FOO     100\n")
         f_handle.write("BAR com\n")
         f_handle.write("BOGUS\n")
         f_handle.write("CONSTANT 1\n")
 
-    if os.path.exists("parameters2.txt"):
-        os.unlink("parameters2.txt")
     with open("parameters2.txt", "w") as f_handle:
         f_handle.write("FOO 200\n")
         f_handle.write("BAR dot\n")
