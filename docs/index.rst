@@ -1,7 +1,5 @@
 .. include:: intro.rst
 
-.. include:: users.rst
-
 .. toctree::
    :hidden:
 

@@ -27,7 +27,7 @@ def fracture_idx(matrix_elements, fracture_cell_count, boundary_fracture):
             for idx in matrix_elements[1:-1]:
                 offset += idx + fracture_cell_count
                 result.append(offset)
-    return np.asarray(result, dtype=np.int8)
+    return np.asarray(result, dtype=np.int16)
 
 
 class Model:
@@ -286,7 +286,7 @@ class Model:
 
         # Layer Index
         self._layer_idx = np.empty(
-            (self._total_nx, self._total_ny, self._total_nz), dtype=np.int8
+            (self._total_nx, self._total_ny, self._total_nz), dtype=np.int16
         )
         self._layer_dz = np.zeros(self._total_nz)
         # self._layer_nz = layer_nz
@@ -397,7 +397,7 @@ class Model:
         # < 1 for fracture in j direction
         # 0 for non-fracture
         self._fracture_idx = np.zeros(
-            (self._total_nx, self._total_ny, self._total_nz), dtype=np.int8
+            (self._total_nx, self._total_ny, self._total_nz), dtype=np.int16
         )
         # Use length instead of number of cells
         for _i, idx in enumerate(self._fracture_i):
@@ -566,7 +566,7 @@ class Model:
             self._streak_k
         ), "Number of input {} is not equal to number of streak".format(keyword)
         if isinstance(fracture_property, int):
-            data_type = np.int8
+            data_type = np.int16
         else:
             data_type = np.float
         props = np.empty(
@@ -611,7 +611,7 @@ class Model:
             + " is not equal to number fault in Y- direction"
         )
         if isinstance(fracture_x_property, int):
-            data_type = np.int8
+            data_type = np.int16
         else:
             data_type = np.float
         props = np.empty(
