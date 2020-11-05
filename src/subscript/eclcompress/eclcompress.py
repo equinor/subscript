@@ -45,8 +45,10 @@ CATEGORY = "utility.eclipse"
 # parameter in the ert joob config. It is not used elsewhere.
 MAGIC_DEFAULT_FILELIST = "__NONE__"
 
+DENYLIST_KEYWORDS = ["INCLUDE"]  # Due to slashes in filenames
 
-def eclcompress(files, keeporiginal=False, dryrun=False):
+
+def eclcompress(files, keeporiginal=False, dryrun=False, eclkw_regexp=None):
     """Run-length encode a set of grdecl files.
 
     Files will be modified in-place, backup is optional.
@@ -55,6 +57,8 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
         files (list): List of filenames (str) to be compressed
         keeporiginal (bool): Whether to copy the original to a backup file
         dryrun (bool): If true, only print compression efficiency
+        eclkw_regexp (str): Regular expression for locating Eclipse keywords.
+            Default is [A-Z]{2-8}$
     Returns:
         int: Number of bytes saved by compression.
     """
@@ -93,7 +97,7 @@ def eclcompress(files, keeporiginal=False, dryrun=False):
         # Index the list of strings (the file contents) by the line numbers
         # where Eclipse keywords start, and where the first data record of the keyword
         # ends (compression is not attempted in record 2 and onwards for any keyword)
-        keywordsets = find_keyword_sets(filelines)
+        keywordsets = find_keyword_sets(filelines, eclkw_regexp=eclkw_regexp)
 
         if not keywordsets:
             logger.info(
@@ -239,7 +243,7 @@ def compress_multiple_keywordsets(keywordsets, filelines):
     return compressedlines
 
 
-def find_keyword_sets(filelines):
+def find_keyword_sets(filelines, eclkw_regexp=None):
     """Parse list of strings, looking for Eclipse data sets that we want.
 
     Example:
@@ -273,19 +277,25 @@ def find_keyword_sets(filelines):
 
     Args:
         filelines (list): List of Eclipse deck (str) (not necessarily complete decks)
+        eclkw_regexp (str): Regular expression for locating Eclipse keywords.
+            Default is [A-Z]{2-8}$
 
     Return:
         list: List of 2-tuples, with start and end line indices for datasets to
         compress
 
     """
-    blacklisted_keywords = ["INCLUDE"]  # (due to slashes in filenames)
     keywordsets = []
     kwstart = None
+    if eclkw_regexp is None:
+        eclkw_regexp = "[A-Z]{2,8}$"
+    if isinstance(eclkw_regexp, str):
+        eclkw_regexp = re.compile(eclkw_regexp)
+
     for lineidx, line in enumerate(filelines):
         if (
-            re.match("[A-Z]{2,8}$", line) is not None
-            and line.strip() not in blacklisted_keywords
+            re.match(eclkw_regexp, line) is not None
+            and line.strip() not in DENYLIST_KEYWORDS
         ):
             kwstart = lineidx
             continue
@@ -297,7 +307,8 @@ def find_keyword_sets(filelines):
             # (compressing and preserving line breaks can be done later)
             kwstart = None
             continue
-        if "/" in line:  # First occurence of a slash ends the keyword section
+        if "/" in line and kwstart is not None:
+            # First occurence of a slash ends the keyword section
             keywordsets.append((kwstart, lineidx))
             kwstart = None
     return keywordsets
@@ -375,6 +386,14 @@ def get_parser():
             "no files are specified on the command line."
         ),
     )
+    parser.add_argument(
+        "--eclkw_regexp",
+        help=(
+            "Regular expression to determine which Eclipse keyword "
+            "to recognize. Default is minimium two and maximum 8 A-Z "
+            "letters."
+        ),
+    )
     return parser
 
 
@@ -413,10 +432,18 @@ def main():
     if args.verbose:
         logger.setLevel(logging.INFO)
 
-    main_eclcompress(args.grdeclfiles, args.files, args.keeporiginal, args.dryrun)
+    main_eclcompress(
+        args.grdeclfiles,
+        args.files,
+        keeporiginal=args.keeporiginal,
+        dryrun=args.dryrun,
+        eclkw_regexp=args.eclkw_regexp,
+    )
 
 
-def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False):
+def main_eclcompress(
+    grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False, eclkw_regexp=None
+):
     """Implements the command line functionality
 
     Args:
@@ -425,6 +452,8 @@ def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False
         keeporiginal (bool): Whether a backup file should be left behind
         dryrun (bool): Nothing written to disk, only statistics for
             compression printed to terminal.
+        eclkw_regexp (str): Regular expression for locating Eclipse keywords.
+            Default is [A-Z]{2-8}$
     """
     # A list of wildcards on the command line should always be compressed:
     if grdeclfiles:
@@ -456,7 +485,12 @@ def main_eclcompress(grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False
 
     if globbedfiles:
         logger.info("Will try to compress the files: %s", " ".join(globbedfiles))
-        savings = eclcompress(globbedfiles, keeporiginal, dryrun)
+        savings = eclcompress(
+            globbedfiles,
+            keeporiginal=keeporiginal,
+            dryrun=dryrun,
+            eclkw_regexp=eclkw_regexp,
+        )
         print(
             "eclcompress finished. Saved %d Mb from compression"
             % (savings / 1024.0 / 1024.0)

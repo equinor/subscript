@@ -66,6 +66,9 @@ Notes
   compressed file into account.
 - Eclipse loading time of the compressed file is probably reduced by the
   same factor as the compression factor.
+- Only keywords that consist of the letters A-Z, minimum length 2 and maximum
+  length 8 are attempted compressed. If you have other odd keyword names, you
+  can specify them directly or as a regular expression as a command line option.
 
 
 Possible improvements
