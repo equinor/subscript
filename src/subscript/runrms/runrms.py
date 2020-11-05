@@ -7,7 +7,6 @@ import pathlib
 import sys
 import time
 import argparse
-import copy
 import shutil
 import datetime
 import getpass
