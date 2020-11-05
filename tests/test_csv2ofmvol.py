@@ -1,7 +1,6 @@
 import sys
 import os
 import re
-import shutil
 import subprocess
 import datetime
 
@@ -371,19 +370,11 @@ def test_cvs2volstr():
     assert len(dupdata) == len(data)
 
 
-def test_main():
+def test_main(datadir):
     """Test command line interface"""
-
     # Test installation
     assert os.system("csv2ofmvol -h") == 0
 
-    curdir = os.path.dirname(__file__)
-    testdatadir = os.path.join(curdir, "testdata_csv2ofmvol")
-    if not os.path.exists(testdatadir):
-        os.mkdir(testdatadir)
-    os.chdir(testdatadir)
-    PRODDATA_A3.to_csv("prodA3.csv", index=False)
-    PRODDATA_A4.to_csv("prodA4.csv", index=False)
     sys.argv = ["csv2ofmvol", "prodA3.csv", "prodA4.csv", "-o", "outfile.vol"]
     csv2ofmvol.main()
     vollines = open("outfile.vol").readlines()
@@ -428,10 +419,9 @@ def test_emptyfile(tmpdir):
 @pytest.fixture
 def datadir(tmpdir):
     """Prepare a tmp directory with some example data preloaded"""
-    data = os.path.join(os.path.dirname(__file__), "testdata_csv2ofmvol")
     tmpdir.chdir()
-    shutil.copytree(data, "data")
-    os.chdir("data")
+    PRODDATA_A3.to_csv("prodA3.csv", index=False)
+    PRODDATA_A4.to_csv("prodA4.csv", index=False)
     yield
 
 
