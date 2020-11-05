@@ -250,7 +250,7 @@ class RunRMS:
         self.args = args
 
         if self.args.debug:
-            logger.basicConfig(level=logging.DEBUG)
+            logger.setLevel(logging.DEBUG)
 
         for key, value in vars(self.args).items():
             logger.debug("Arg = %s: %s", key, value)
