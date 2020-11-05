@@ -62,7 +62,7 @@ def test_scan_rms(tmpdir):
 
 @pytest.mark.skipif(
     not shutil.which("disable_komodo_exec"),
-    reason="The executable disable_komodo_exec is not available"
+    reason="The executable disable_komodo_exec is not available",
 )
 def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
