@@ -1,0 +1,11 @@
+[BASIC]
+good-names=logger,version,getLogger
+
+[GENERAL]
+disable=C0330,C0114
+# C0114: Missing module docstring
+# C0330: wrong hanging indentation (not compatible with black)
+
+[SIMILARITIES]
+min-similarity-lines=8
+ignore-imports=yes
