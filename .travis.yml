@@ -17,5 +17,8 @@ install:
 
 script:
   - python setup.py test
+  # Check repository is untainted by test code:
+  - git status --porcelain
+  - test -z "$(git status --porcelain)"
   - rstcheck -r docs
   - sphinx-build -W -b html -nv docs/ build/docs
