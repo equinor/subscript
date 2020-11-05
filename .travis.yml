@@ -76,7 +76,7 @@ before_script:
   - popd; popd
   - git clone --branch master --depth 1 https://github.com/equinor/ert
   - pushd ert
-  # - source .libres_version
+  - source .libres_version
   - rm -rf tests # Avoid running these tests.
   - rm -rf test-data # Avoid running these tests.
   - popd
