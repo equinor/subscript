@@ -8,18 +8,19 @@ import sys
 import time
 import argparse
 import copy
-import logging
 import shutil
 import datetime
 import getpass
+import logging
 import platform
 import json
 import subprocess
 
 import yaml
 
+from subscript import getLogger
 
-LOGGER = logging.getLogger("runrms")
+logger = getLogger(__name__)
 
 
 DESCRIPTION = """
@@ -51,14 +52,9 @@ except ImportError:
 THISSCRIPT = pathlib.Path(sys.argv[0]).name
 RHEL_ID = pathlib.Path("/etc/redhat-release")
 
-# where to look for setup/config file
-SETUP = [
-    "/prog/roxar/rms/versions/runrms.yml",
-    "/project/res/roxapi/aux/runrms.yml",
-    "tests/data/runrms/runrms.yml",
-]
 
-RMS_ENV_PATH_PREFIX = "/project/res/roxapi/bin"
+# location of setup file; for testing this can be overriden by the --setup argument
+SETUP = "/project/res/roxapi/aux/runrms.yml"
 
 
 def xwarn(mystring):
@@ -109,14 +105,6 @@ def get_parser():
     )
 
     prs.add_argument(
-        "--project",
-        "-project",
-        dest="rproject2",
-        type=str,
-        help="Name of RMS project (alternative launch)",
-    )
-
-    prs.add_argument(
         "--readonly",
         "-r",
         "-readonly",
@@ -131,7 +119,7 @@ def get_parser():
         dest="sdpi",
         default=100,
         type=float,
-        help="Spesify RMS DPI display scaling as percent, where 100 is no scaling",
+        help="Specify RMS DPI display scaling as percent, where 100 is no scaling",
     )
 
     prs.add_argument(
@@ -194,7 +182,13 @@ class _BColors:
 
 
 class RunRMS:
-    """A class for setting up an environment in which to execute RMS"""
+    """
+    A class with methods local to this script.
+
+    It is not likely that several instances of the class is required; the
+    use of a class here is more for the convinience that 'self' can hold the
+    different variables (attributes) across the methods.
+    """
 
     # pylint: disable=too-many-instance-attributes
 
@@ -243,7 +237,7 @@ class RunRMS:
             with open(RHEL_ID, "r") as buffer:
                 major = buffer.read().split(" ")[6].split(".")[0].replace("'", "")
                 self.osver = "x86_64_RH_" + str(major)
-                LOGGER.debug("RHEL version found in %s", RHEL_ID)
+                logger.debug("RHEL version found in %s", RHEL_ID)
 
     def do_parse_args(self, args):
         """Parse command line args"""
@@ -260,28 +254,27 @@ class RunRMS:
             logging.basicConfig(level=logging.DEBUG)
 
         for key, value in vars(self.args).items():
-            LOGGER.debug("Arg = %s: %s", key, value)
+            logger.debug("Arg = %s: %s", key, value)
 
     def parse_setup(self):
-        """Parse setup YAML file to set spesific settings for the requested RMS ver"""
+        """Parse setup YAML file to set specific settings for the requested RMS ver"""
 
-        setup = copy.deepcopy(SETUP)
+        setup = SETUP
         if self.args.altsetup:
             # allow for user path from command line for testing
-            setup.insert(0, self.args.altsetup)
+            setup = self.args.altsetup
 
-        for mysetup in setup:
-            try:
-                with open(mysetup, "r") as stream:
-                    LOGGER.debug("Actual setup file: %s", mysetup)
-                    self.setupfile = mysetup
-                    self.setup = yaml.safe_load(stream)
-            except FileNotFoundError:
-                continue
-            else:
-                break
+        if not pathlib.Path(setup).is_file():
+            xerror(f"Requested setup <{setup}> does not exist!")
+            raise FileNotFoundError()
+
+        with open(setup, "r") as stream:
+            logger.debug("Actual setup file: %s", setup)
+            self.setupfile = setup
+            self.setup = yaml.safe_load(stream)
+
         out = json.dumps(self.setup, sort_keys=True, indent=4, separators=(",", ": "))
-        LOGGER.debug("Setup:\n%s", out)
+        logger.debug("Setup:\n%s", out)
 
     def requested_rms_version(self):
         """
@@ -297,10 +290,10 @@ class RunRMS:
         rmssection = "rms"  # in yaml, keep as variable in case rms_nonstandard is used
 
         for rmsver in self.setup[rmssection]:
-            LOGGER.debug("Possible RMS version... %s", rmsver)
+            logger.debug("Possible RMS version... %s", rmsver)
             rmsversions = self.setup[rmssection][rmsver]
             if "default" in rmsversions and rmsversions["default"] is True:
-                LOGGER.debug("Default found as %s", rmsver)
+                logger.debug("Default found as %s", rmsver)
                 proposed_version = rmsver
                 default_version = rmsver
                 self.defaultver = rmsver
@@ -343,27 +336,46 @@ class RunRMS:
 
         self.tcltkpath = self.setup[rmssection][proposed_version].get("tcltkpath", None)
 
-        LOGGER.debug("EXECUTABLE: %s", self.exe)
-        LOGGER.debug("PYTHONPATH: %s", self.pythonpath)
-        LOGGER.debug("TCLTK: %s", self.tcltkpath)
+        logger.debug("EXECUTABLE: %s", self.exe)
+        logger.debug("PYTHONPATH: %s", self.pythonpath)
+        logger.debug("TCLTK: %s", self.tcltkpath)
 
     def _process_pypath(self, pypath):
-        """The proposed pythonpath from setup may be a list; select from this"""
+        """
+        The proposed pythonpath from setup is a list.
 
+        The list in the setup YAML file is a priority list. E.g.
+          - /some/main/python3.6/site-packages
+          - /some/other/python3.6/site-packages
+
+        Each folder is checked for existence, and ommitted if folder is not present.
+        If the final list is empty, a warning is made. In the case above, the
+        following will be returned:
+
+          "/some/main/python3.6/site-packages:/some/other/python3.6/site-packages"
+
+        """
+        pypathlist = []
         if isinstance(pypath, list):
             for pyp in pypath:
                 pyp = pyp.replace("<PLATFORM>", self.osver)
 
                 if self.args.dryrun:
-                    return pyp + "... DRYRUN FAKE MODE"
+                    pypathlist.append(pyp + "... DRYRUN FAKE MODE")
+                    continue
 
                 if pathlib.Path(pyp).is_dir():
-                    return pyp
+                    pypathlist.append(pyp)
+                else:
+                    xwarn(f"Proposed {pypath} does not exist!")
 
-        xwarn("Actual python path is not present")
-        return None
+        if not pypathlist:
+            xwarn("No valid in-house PYTHONPATHS are provied")
+            return None
 
-    def scan_rms(self):  # noqa: C901
+        return ":".join(pypathlist)
+
+    def scan_rms(self):  # TODO: reduce complexity
         """
         Scan the RMS project's .master and returns some basic data needed
         for launching the RMS project.
@@ -418,12 +430,12 @@ class RunRMS:
         except EnvironmentError:
             pass
 
-        LOGGER.debug("project is %s", self.project)
-        LOGGER.debug("version from project is %s", self.version_fromproject)
-        LOGGER.debug("lock status from project is %s", self.locked)
+        logger.debug("project is %s", self.project)
+        logger.debug("version from project is %s", self.version_fromproject)
+        logger.debug("lock status from project is %s", self.locked)
         for mkey in mkeys:
             value = getattr(self, mkey)
-            LOGGER.debug("MKEY %s: %s", mkey, value)
+            logger.debug("MKEY %s: %s", mkey, value)
 
     def _complete_version_fromproject(self):
         """For RMS 10.0.0 and 11.0.0 (etc) the release is reported as
@@ -445,7 +457,7 @@ class RunRMS:
 
         self.version_fromproject = rls
 
-    def launch_rms(self, empty=False):  # pylint: disable=too-many-branches # noqa: C901
+    def launch_rms(self, empty=False):
         """Launch RMS with correct pythonpath"""
 
         args_list = self.exe.split()
@@ -462,8 +474,33 @@ class RunRMS:
 
         self.command = " ".join(args_list)
         print(_BColors.BOLD, "\nRunning: {}\n".format(self.command), _BColors.ENDC)
-        print("=" * 132)
+        print("=" * shutil.get_terminal_size((132, 20)).columns)
 
+        self._handle_locked_project()
+
+        if not self.args.debug:
+            print(_BColors.OKGREEN)
+
+        rms_exec_env = self._collect_env_settings()
+
+        if shutil.which("disable_komodo_exec"):
+            rms_exec_env["PATH_PREFIX"] = self.setup["roxenv_path"]
+            args_list = ["disable_komodo_exec"] + args_list
+
+        logger.debug("args_list    : %s", args_list)
+
+        if self.args.dryrun:
+            xwarn("<<<< DRYRUN, do not start RMS >>>>")
+            print(_BColors.ENDC)
+        else:
+            rms_process = subprocess.run(args_list, env=rms_exec_env, check=True)
+            print(_BColors.ENDC)
+            return rms_process.returncode
+
+        return None
+
+    def _handle_locked_project(self):
+        """Action if project is locked"""
         if self.locked:
             xwarn(
                 "NB! Opening a locked RMS project (you have 5 seconds to press "
@@ -473,8 +510,8 @@ class RunRMS:
                 time.sleep(1)
                 print("... {}".format(sec))
 
-        # if not self.args.debug:
-        #     print(_BColors.OKGREEN)
+    def _collect_env_settings(self):
+        """Collect env settings"""
 
         rms_exec_env = os.environ.copy()
         pythonpath = ""
@@ -486,7 +523,7 @@ class RunRMS:
             if self.args.incsyspy:
                 pythonpath += ":" + self.oldpythonpath
 
-        LOGGER.debug("Actual PYTHONPATH: %s", pythonpath)
+        logger.debug("Actual PYTHONPATH: %s", pythonpath)
 
         rms_exec_env["PYTHONPATH"] = pythonpath
         rms_exec_env["RMS_IPL_ARGS_TO_PYTHON"] = "1"
@@ -501,30 +538,17 @@ class RunRMS:
         if self.setdpiscaling:
             rms_exec_env["QT_SCALE_FACTOR"] = self.setdpiscaling
 
-        LOGGER.debug("args_list    : %s", args_list)
         for key, value in rms_exec_env.items():
-            LOGGER.debug("rms_exec_env... %s: %s", key, value)
+            logger.debug("rms_exec_env... %s: %s", key, value)
 
-        if shutil.which("disable_komodo_exec"):
-            rms_exec_env["PATH_PREFIX"] = RMS_ENV_PATH_PREFIX
-            args_list = ["disable_komodo_exec"] + args_list
-
-        if self.args.dryrun:
-            xwarn("<<<< DRYRUN, do not start RMS >>>>")
-            print(_BColors.ENDC)
-        else:
-            rms_process = subprocess.run(args_list, env=rms_exec_env, check=True)
-            print(_BColors.ENDC)
-            return rms_process.returncode
-
-        return None
+        return rms_exec_env
 
     def showinfo(self):
         """Show info on RMS project"""
 
-        print("=" * 132)
+        print("=" * shutil.get_terminal_size((132, 20)).columns)
         print(f"Script runrms from subscript version {__version__}")
-        print("=" * 132)
+        print("=" * shutil.get_terminal_size((132, 20)).columns)
         print("{0:30s}: {1}".format("Setup for runrms", self.setupfile))
         print("{0:30s}: {1}".format("Project name", self.project))
         print("{0:30s}: {1}".format("Last saved by", self.user))
@@ -552,11 +576,11 @@ class RunRMS:
         print("{0:30s}: {1}".format("TCL/TK path", self.tcltkpath))
         print("{0:30s}: {1}".format("RMS DPI scaling", self.setdpiscaling))
         print("{0:30s}: {1}".format("RMS executable", self.exe))
-        print("=" * 132)
+        print("=" * shutil.get_terminal_size((132, 20)).columns)
         print("NOTES:")
         print("*   Will be added if --includesyspy option is used")
         print("**  Will be added unless --nopy option is used")
-        print("=" * 132)
+        print("=" * shutil.get_terminal_size((132, 20)).columns)
 
     def check_vconsistency(self):
         """Check consistency of file extension vs true version"""
@@ -614,8 +638,8 @@ class RunRMS:
         with open(self.runloggerfile, "a") as logg:
             logg.write(lline)
 
-        LOGGER.debug("Logging usage to %s:", self.runloggerfile)
-        LOGGER.debug(lline)
+        logger.debug("Logging usage to %s:", self.runloggerfile)
+        logger.debug(lline)
 
 
 def main(args=None):
@@ -628,8 +652,6 @@ def main(args=None):
     runner.parse_setup()
 
     runner.project = runner.args.project
-    if runner.args.rproject2:
-        runner.project = runner.args.rproject2
 
     if runner.project:
         runner.project = runner.project.rstrip("/")
@@ -648,7 +670,7 @@ def main(args=None):
     runner.showinfo()
     status = runner.launch_rms(empty=emptyproject)
 
-    LOGGER.debug("Status from subprocess: %s", status)
+    logger.debug("Status from subprocess: %s", status)
 
     if not runner.args.dryrun:
         runner.runlogger()
