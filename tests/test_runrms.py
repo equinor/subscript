@@ -65,8 +65,8 @@ def test_scan_rms(tmpdir):
 )
 def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
-        with open("rms_fake", "w") as f:
-            f.write(
+        with open("rms_fake", "w") as fhandle:
+            fhandle.write(
                 """\
 #!/usr/bin/env python3
 import os
