@@ -65,6 +65,7 @@ src/subscript/version.py
 # other
 .idea/
 .projectile
+.vscode/
 .dir-locals.el
 '.'/
 *.swp

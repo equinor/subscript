@@ -2,27 +2,27 @@
 import subprocess
 import os
 import stat
-import pytest
+import pathlib
 import shutil
+
+import pytest
 
 from subscript.runrms import runrms as rr
 
-TESTRMS1 = "tests/data/reek/rms/reek.rms10.1.3"
-TESTRMS2 = "tests/data/reek/rms/reek.rms11.1.0"
-
-FAKE = "--fake"
-
-SKIPCIRUN = pytest.mark.skipif(FAKE != "", reason="Running travis or similar")
+# the resolve().as_posix() for pytest tmpdir fixture (workaround)
+TESTRMS1 = pathlib.Path("tests/data/reek/rms/reek.rms10.1.3").resolve().as_posix()
+TESTRMS2 = pathlib.Path("tests/data/reek/rms/reek.rms11.1.0").resolve().as_posix()
+TESTSETUP = pathlib.Path("tests/testdata_runrms/runrms.yml").resolve().as_posix()
 
 
 def test_main_no_project():
     """Will only see effect of this when running pytest -s"""
-    print(rr.main(["--dryrun", FAKE]))
+    print(rr.main(["--dryrun", "--setup", TESTSETUP]))
 
 
 def test_main_projects():
     """Will only see effect of this when running pytest -s"""
-    print(rr.main([TESTRMS2, "--dryrun", FAKE]))
+    print(rr.main([TESTRMS2, "--dryrun", "--setup", TESTSETUP]))
 
 
 def test_do_parse_args(tmpdir):
@@ -33,7 +33,7 @@ def test_do_parse_args(tmpdir):
     runner.runloggerfile = tmpdir.mkdir("runner1").join("runrms_usage.log")
     assert runner.args is None
 
-    args = ["--dryrun", FAKE]
+    args = ["--dryrun", "--setup", TESTSETUP]
     runner.do_parse_args(args)
 
     print(runner.args)
@@ -47,7 +47,6 @@ def test_integration():
     assert subprocess.check_output(["runrms", "-h"])
 
 
-@SKIPCIRUN
 def test_scan_rms(tmpdir):
     """Scan master files in RMS"""
     runner = rr.RunRMS()
@@ -66,8 +65,8 @@ def test_scan_rms(tmpdir):
 )
 def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
     with tmpdir.as_cwd():
-        with open("rms_fake", "w") as f:
-            f.write(
+        with open("rms_fake", "w") as fhandle:
+            fhandle.write(
                 """\
 #!/usr/bin/env python3
 import os
