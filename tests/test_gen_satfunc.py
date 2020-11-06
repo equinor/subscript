@@ -23,18 +23,13 @@ def test_integration():
     assert subprocess.check_output(["gen_satfunc", "-h"])
 
 
-def test_gen_satfunc():
+def test_gen_satfunc(tmpdir):
     """Test the main function and its args handling"""
-    testdir = os.path.join(os.path.dirname(__file__), "testdata_gen_satfunc")
-    if not os.path.exists(testdir):
-        os.mkdir(testdir)
-    os.chdir(testdir)
+    tmpdir.chdir()
 
     with open("relperm.conf", "w") as file_h:
         file_h.write(EXAMPLE)
 
-    if os.path.exists("swof.inc"):
-        os.unlink("swof.inc")
     sys.argv = ["gen_satfunc", "relperm.conf", "swof.inc"]
     gen_satfunc.main()
 
@@ -48,8 +43,6 @@ SWOF
 RELPERM 4 2 1   3 2 1   0.15 0.10 0.5 20 100 0.2 0.22 -0.5 30
 """
         )
-    if os.path.exists("swofpc.inc"):
-        os.unlink("swofpc.inc")
     sys.argv = ["gen_satfunc", "relpermpc.conf", "swofpc.inc"]
     gen_satfunc.main()
     assert os.path.exists("swofpc.inc")
