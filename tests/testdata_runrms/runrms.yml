@@ -17,7 +17,7 @@ rms:
   latest:
     exe: /prog/roxar/site/RMS_test_latest/rms/rms
     pythonpath:
-      - /project/res/roxapi/<PLATFORM>/12.1/lib/python3.6/site-packages
+      - /project/res/roxapi/<PLATFORM>/12.1/lib/python3.8/site-packages
     tcltkpath: /prog/roxar/site/RMS_test_latest/rms/versions
 
   2013.1.4:
