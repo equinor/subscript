@@ -1,4 +1,5 @@
-"""Parser ERT observation files into an equivalent DataFrame representation"""
+"""Module for parsing and writing ERT observation files into/from an
+equivalent DataFrame representation"""
 import os
 import re
 import datetime
@@ -403,3 +404,31 @@ def ertobs2df(input_str, cwd="."):
 def lowercase_dictkeys(some_dict):
     """Convert all keys in a dictionary to lower-case"""
     return {key.lower(): value for key, value in some_dict.items()}
+
+
+def dfsmry2ertobs(obs_df):
+    """Write SUMMARY_OBSERVATION as ERT observations
+
+    Args:
+        obs_df (pd.DataFrame): Observations in internal dataframe
+            representation
+
+    Returns:
+        str: ERT observation format string, multiline
+    """
+    ertobs_str = ""
+    for _, row in obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].iterrows():
+        ertobs_str += "SUMMARY_OBSERVATION " + str(row["LABEL"]) + "\n"
+        ertobs_str += "{\n"
+        if "DATE" in row and not pd.isnull(row["DATE"]):
+            ertobs_str += (
+                "    DATE = "
+                + str(pd.to_datetime(row["DATE"]).strftime(ERT_DATE_FORMAT))
+                + ";\n"
+            )
+
+        for datatype in ["RESTART", "VALUE", "ERROR"]:
+            if not pd.isnull(row[datatype]):
+                ertobs_str += "    " + datatype + " = " + str(row[datatype]) + ";\n"
+        ertobs_str += "};\n"
+    return ertobs_str
