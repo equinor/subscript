@@ -513,14 +513,17 @@ class RunRMS:
         """Collect env settings"""
 
         rms_exec_env = os.environ.copy()
-        pythonpath = ""
+        pythonpathlist = []
+
         if not self.args.nopy:
             if self.args.testpylib:
-                pythonpath += self.args.testpylib + ":" + self.pythonpath
-            else:
-                pythonpath += self.pythonpath
+                pythonpathlist.append(self.args.testpylib)
+            if self.pythonpath:
+                pythonpathlist.append(self.pythonpath)
             if self.args.incsyspy:
-                pythonpath += ":" + self.oldpythonpath
+                pythonpathlist.append(self.oldpythonpath)
+
+        pythonpath = ":".join(pythonpathlist)
 
         logger.debug("Actual PYTHONPATH: %s", pythonpath)
 
