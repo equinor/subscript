@@ -15,6 +15,7 @@ import pytest
 
 from subscript.ertobs2yml.ertobs2yml import (
     df2obsdict,
+    df2resinsight_df,
     main,
 )
 
@@ -146,6 +147,70 @@ def test_df2obsdict(obs_df, expected_dict):
     assert df2obsdict(obs_df) == expected_dict
 
 
+@pytest.mark.parametrize(
+    "obs_df, expected_ri_df",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP1",
+                        "DATE": "2025-01-01",
+                        "VALUE": 2222.3,
+                        "ERROR": 100,
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP2",
+                        "DATE": "2026-01-01",
+                        "VALUE": 222.3,
+                        "ERROR": 10,
+                    },
+                    {
+                        # This row triggers a warning and is ignored.
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "FOPT",
+                        "RESTART": 32,
+                        "VALUE": 2033320,
+                        "ERROR": 1000,
+                    },
+                    {
+                        # This row is not supported by ri, and is ignored.
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "VALUE": 100,
+                        "K": 4,
+                    },
+                ]
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "DATE": "2025-01-01",
+                        "VECTOR": "WOPR:OP1",
+                        "VALUE": 2222.3,
+                        "ERROR": 100.0,
+                    },
+                    {
+                        "DATE": "2026-01-01",
+                        "VECTOR": "WOPR:OP2",
+                        "VALUE": 222.3,
+                        "ERROR": 10,
+                    },
+                ]
+            ),
+        )
+    ],
+)
+def test_df2resinsight_df(obs_df, expected_ri_df):
+    """Test that we can go from internal dataframe representation
+    to the resinsight dataframe representation of observations
+    (which only supports a subset of ERT observations)"""
+    pd.testing.assert_frame_equal(df2resinsight_df(obs_df), expected_ri_df)
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
@@ -171,15 +236,17 @@ def test_commandline(tmpdir, monkeypatch):
         "output.csv",
         "--yml",
         "output.yml",
+        "--resinsight",
+        "ri_output.csv",
         os.path.join(testdata_dir, "ert-doc.obs"),
     ]
     monkeypatch.setattr(sys, "argv", arguments)
     main()
     assert os.path.exists("output.csv")
     assert os.path.exists("output.yml")
+    assert os.path.exists("ri_output.csv")
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
     reference_dframe_from_disk = pd.read_csv(os.path.join(testdata_dir, "ert-doc.csv"))
-
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
@@ -190,6 +257,14 @@ def test_commandline(tmpdir, monkeypatch):
         open(os.path.join(testdata_dir, "ert-doc.yml"))
     )
     assert dict_from_yml_on_disk == reference_dict_from_yml
+
+    ri_from_csv_on_disk = pd.read_csv("ri_output.csv")
+    reference_ri_from_disk = pd.read_csv(os.path.join(testdata_dir, "ri-obs.csv"))
+    pd.testing.assert_frame_equal(
+        # Enforce correct column order
+        ri_from_csv_on_disk,
+        reference_ri_from_disk,
+    )
 
     # Test CSV to stdout:
     arguments = [
@@ -228,7 +303,10 @@ def test_ert_hook(tmpdir):
         "RUNPATH .",
         "FORWARD_MODEL ERTOBS2YML(<OBS_FILE>="
         + obs_file
-        + ", <CSV_OUTPUT>=ert-obs.csv, <YML_OUTPUT>=ert-obs.yml, "
+        + ", "
+        + "<CSV_OUTPUT>=ert-obs.csv, "
+        + "<YML_OUTPUT>=ert-obs.yml, "
+        + "<RESINSIGHT_OUTPUT>=ri-obs.csv, "
         + "<INCLUDEDIR>="
         + testdata_dir
         + ")",  # noqa
@@ -242,3 +320,4 @@ def test_ert_hook(tmpdir):
 
     assert os.path.exists("ert-obs.csv")
     assert os.path.exists("ert-obs.yml")
+    assert os.path.exists("ri-obs.csv")

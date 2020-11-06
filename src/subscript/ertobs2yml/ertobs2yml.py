@@ -77,6 +77,11 @@ def get_parser():
         help="Name of output CSV file. Use '-' to write to stdout.",
     )
     parser.add_argument(
+        "--resinsight",
+        type=str,
+        help="Name of ResInsight observations CSV file. Use '-' to write to stdout.",
+    )
+    parser.add_argument(
         "--includedir",
         type=str,
         help=(
@@ -240,6 +245,48 @@ def df2obsdict(obs_df):
     return obsdict
 
 
+def df2resinsight_df(obs_df):
+    """Generate a dataframe observation representation supported by ResInsight.
+
+    Only a subset of the observations can be written to this representation.
+
+    See https://resinsight.org/import/observeddata
+
+    The "Line based CSV" format is chosen by this function, as it is closer
+    to the internal dataframe representation.
+
+    Args:
+        obs_df (pd.DataFrame): Dataframe representation of observations, this format
+            is internal to this module, and is nothing but a flattening
+
+    Returns:
+        pd.DataFrame. This can be written directly to disk as CSV and
+        imported into the ResInsight application"""
+
+    ri_column_names = ["DATE", "VECTOR", "VALUE", "ERROR"]
+    ri_df = obs_df.copy()
+
+    # Only SUMMARY_OBSERVATION is supported:
+    ri_df = ri_df[ri_df["CLASS"] == "SUMMARY_OBSERVATION"]
+
+    ri_df.rename({"KEY": "VECTOR"}, axis="columns", inplace=True)
+
+    # Ensure all vectors are present:
+    for ri_vec in ri_column_names:
+        if ri_vec not in ri_df:
+            ri_df[ri_vec] = np.nan
+
+    # Observations without a DATE (but probably with RESTART defined) cannot
+    # be exported to ResInsight. Warn about those:
+    obs_no_date = ri_df[ri_df["DATE"].isna()]
+    if not obs_no_date.empty:
+        logger.warning("Some observations are missing DATE, these are skipped")
+        logger.warning("\n %s", str(obs_no_date.dropna(axis="columns", how="all")))
+
+    # Slice out only the columns we want, in a predefined order:
+    return ri_df[ri_column_names].dropna(axis="rows", subset=["DATE"])
+
+
 def main():
     """Command line client, parse command line arguments and run function."""
     parser = get_parser()
@@ -271,10 +318,10 @@ def main():
     if not validate_dframe(dframe):
         logger.error("Observation dataframe is invalid!")
 
-    dump_results(dframe, args.csv, args.yml)
+    dump_results(dframe, args.csv, args.yml, args.resinsight)
 
 
-def dump_results(dframe, csvfile=None, yamlfile=None):
+def dump_results(dframe, csvfile=None, yamlfile=None, resinsightfile=None):
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips
     export if filenames are empty or None.
@@ -303,6 +350,19 @@ def dump_results(dframe, csvfile=None, yamlfile=None):
                 f_handle.write(yaml_str)
         else:
             print(yaml_str)
+
+    if resinsightfile and resinsightfile != __MAGIC_NONE__:
+        ri_dframe = df2resinsight_df(dframe)
+        if resinsightfile != __MAGIC_STDOUT__:
+            logger.info(
+                "Writing observations in ResInsight format to CSV-file: %s",
+                resinsightfile,
+            )
+            ri_dframe.to_csv(resinsightfile, index=False, sep=";")
+        else:
+            # Ignore pipe errors when writing to stdout:
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+            ri_dframe.to_csv(sys.stdout, index=False, sep=";")
 
 
 if __name__ == "__main__":
