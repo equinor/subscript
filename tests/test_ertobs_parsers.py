@@ -17,8 +17,10 @@ from subscript.ertobs.parsers import (
     mask_curly_braces,
     parse_observation_unit,
     split_by_sep_in_masked_string,
-    dfsmry2ertobs,
+    obsdict2df,
 )
+
+from subscript.ertobs.writers import df2ertobs, df2obsdict
 
 
 @pytest.mark.parametrize(
@@ -248,12 +250,16 @@ def test_parse_observation_unit(string, expected):
         (";", pd.DataFrame()),
         (";", pd.DataFrame()),
         (
-            "SUM WCT {DATE=01/01/2001;VALUE=1;ERROR=0.1;};",
+            (
+                "SUMMARY_OBSERVATION WCT "
+                "{DATE=01/01/2001;KEY=WWCT:OP1;VALUE=1;ERROR=0.1;};"
+            ),
             pd.DataFrame(
                 [
                     {
-                        "CLASS": "SUM",
+                        "CLASS": "SUMMARY_OBSERVATION",
                         "LABEL": "WCT",
+                        "KEY": "WWCT:OP1",
                         "DATE": datetime.datetime(2001, 1, 1, 0, 0),
                         "VALUE": 1,
                         "ERROR": 0.1,
@@ -262,27 +268,30 @@ def test_parse_observation_unit(string, expected):
             ),
         ),
         (
-            "SUM SEP_1 {VALUE = 100;}; SUM SEP_2 {VALUE=200;};",
+            (
+                "SUMMARY_OBSERVATION SEP_1 {VALUE = 100;}; "
+                "SUMMARY_OBSERVATION SEP_2 {VALUE=200;};"
+            ),
             pd.DataFrame(
                 [
-                    {"CLASS": "SUM", "LABEL": "SEP_1", "VALUE": 100},
-                    {"CLASS": "SUM", "LABEL": "SEP_2", "VALUE": 200},
+                    {"CLASS": "SUMMARY_OBSERVATION", "LABEL": "SEP_1", "VALUE": 100},
+                    {"CLASS": "SUMMARY_OBSERVATION", "LABEL": "SEP_2", "VALUE": 200},
                 ]
             ),
         ),
         (
-            "BLOCK R1 {FIELD=PR; OBS P1 {I=1;}; OBS P2 {J=2;};};",
+            "BLOCK_OBSERVATION R1 {FIELD=PR; OBS P1 {I=1;}; OBS P2 {J=2;};};",
             pd.DataFrame(
                 [
                     {
-                        "CLASS": "BLOCK",
+                        "CLASS": "BLOCK_OBSERVATION",
                         "LABEL": "R1",
                         "FIELD": "PR",
                         "OBS": "P1",
                         "I": 1,
                     },
                     {
-                        "CLASS": "BLOCK",
+                        "CLASS": "BLOCK_OBSERVATION",
                         "LABEL": "R1",
                         "FIELD": "PR",
                         "OBS": "P2",
@@ -292,22 +301,44 @@ def test_parse_observation_unit(string, expected):
             ),
         ),
         (
-            "HIST WOPR:P1;",
+            "HISTORY_OBSERVATION WOPR:P1;",
             pd.DataFrame(
                 [
                     {
-                        "CLASS": "HIST",
+                        "CLASS": "HISTORY_OBSERVATION",
                         "LABEL": "WOPR:P1",
                     }
                 ]
             ),
         ),
         (
-            "HIST WOPR:P1{ERROR=10;};",
+            "HISTORY_OBSERVATION WOPR:P1 {};",  # NB: Empty {}
             pd.DataFrame(
                 [
                     {
-                        "CLASS": "HIST",
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                    }
+                ]
+            ),
+        ),
+        (
+            "HISTORY_OBSERVATION WOPR:P1 {\n};",  # NB: Empty {}, with newline
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                    }
+                ]
+            ),
+        ),
+        (
+            "HISTORY_OBSERVATION WOPR:P1{ERROR=10;};",
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
                         "LABEL": "WOPR:P1",
                         "ERROR": 10,
                     }
@@ -315,17 +346,17 @@ def test_parse_observation_unit(string, expected):
             ),
         ),
         (
-            "HIST WOPR:P2 {ERROR=10; SEGMENT SEG1 {ERROR=20;START=2};};",
+            "HISTORY_OBSERVATION WOPR:P2 {ERROR=10; SEGMENT SEG1 {ERROR=20;START=2};};",
             pd.DataFrame(
                 [
                     {
-                        "CLASS": "HIST",
+                        "CLASS": "HISTORY_OBSERVATION",
                         "LABEL": "WOPR:P2",
                         "ERROR": 10,
                         "SEGMENT": "DEFAULT",
                     },
                     {
-                        "CLASS": "HIST",
+                        "CLASS": "HISTORY_OBSERVATION",
                         "LABEL": "WOPR:P2",
                         "ERROR": 20,
                         "START": 2,
@@ -340,8 +371,19 @@ def test_ertobs2df(string, expected):
     """Test converting all the way from ERT observation format to a Pandas
     Dataframe works as expected (this includes many of the other functions
     that are also tested individually)"""
+    dframe = ertobs2df(string)
     pd.testing.assert_frame_equal(
-        ertobs2df(string).sort_index(axis=1), expected.sort_index(axis=1)
+        dframe.sort_index(axis=1), expected.sort_index(axis=1)
+    )
+
+    pd.testing.assert_frame_equal(ertobs2df(df2ertobs(dframe)), dframe)
+
+    # Round-trip test via yaml:
+    if "DATE" not in expected:
+        return
+    round_trip_yaml_dframe = obsdict2df(df2obsdict(dframe))
+    pd.testing.assert_frame_equal(
+        round_trip_yaml_dframe.sort_index(axis=1), dframe.sort_index(axis=1)
     )
 
 
@@ -420,80 +462,3 @@ def test_ertobs2df_starttime(string, expected):
 def test_filter_comments(string, expected):
     """Test that comments are properly filtered out"""
     assert filter_comments(string) == expected
-
-
-@pytest.mark.parametrize(
-    "obs_df, expected_str",
-    [
-        (
-            pd.DataFrame(
-                [
-                    {
-                        "CLASS": "SUMMARY_OBSERVATION",
-                        "LABEL": "WOPR:OP1",
-                        "DATE": "2025-01-01",
-                        "VALUE": 2222.3,
-                        "ERROR": 100,
-                    },
-                    {
-                        "CLASS": "SUMMARY_OBSERVATION",
-                        "LABEL": "WOPR:OP2",
-                        "DATE": "2026-01-01",
-                        "VALUE": 222.3,
-                        "ERROR": 10,
-                    },
-                    {
-                        "CLASS": "SUMMARY_OBSERVATION",
-                        "LABEL": "FOPT",
-                        "RESTART": 32,
-                        "VALUE": 2033320,
-                        "ERROR": 1000,
-                    },
-                    {
-                        # This is not SUMMARY and is ignored.
-                        "CLASS": "BLOCK_OBSERVATION",
-                        "LABEL": "RFT_2006_OP1",
-                        "DATE": "1986-04-05",
-                        "VALUE": 100,
-                        "K": 4,
-                    },
-                ]
-            ),
-            """SUMMARY_OBSERVATION WOPR:OP1
-{
-    DATE = 01/01/2025;
-    VALUE = 2222.3;
-    ERROR = 100.0;
-};
-SUMMARY_OBSERVATION WOPR:OP2
-{
-    DATE = 01/01/2026;
-    VALUE = 222.3;
-    ERROR = 10.0;
-};
-SUMMARY_OBSERVATION FOPT
-{
-    RESTART = 32.0;
-    VALUE = 2033320.0;
-    ERROR = 1000.0;
-};
-""",
-        )
-    ],
-)
-def test_dfsmry2ertobs(obs_df, expected_str):
-    """Test that we can generate ERT summary observation text format
-    from the internal dataframe representation"""
-    assert dfsmry2ertobs(obs_df).strip() == expected_str.strip()
-
-    # Should be able to go back again also for
-    # a subset:
-    obs_df["DATE"] = pd.to_datetime(obs_df["DATE"])
-    pd.testing.assert_frame_equal(
-        ertobs2df(expected_str),
-        obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].dropna(
-            axis="columns", how="all"
-        ),
-        # We relax int/float problems as long as the values are equal:
-        check_dtype=False,
-    )

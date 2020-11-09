@@ -15,7 +15,7 @@ EXPECTED_JOBS = {
     "ECLGRID2ROFF": "subscript/config_jobs/ECLGRID2ROFF",
     "ECLINIT2ROFF": "subscript/config_jobs/ECLINIT2ROFF",
     "ECLRST2ROFF": "subscript/config_jobs/ECLRST2ROFF",
-    "ERTOBS2YML": "subscript/config_jobs/ERTOBS2YML",
+    "ERTOBS": "subscript/config_jobs/ERTOBS",
     "INTERP_RELPERM": "subscript/config_jobs/INTERP_RELPERM",
     "MERGE_RFT_ERTOBS": "subscript/config_jobs/MERGE_RFT_ERTOBS",
     "OFMVOL2CSV": "subscript/config_jobs/OFMVOL2CSV",

@@ -21,7 +21,7 @@ rft:
     obs: P3
     value: 102.0
   well: RFT_2006
-- date: '2006-10-22'
+- date: '2007-10-22'
   field: PRESSURE
   observations:
   - error: 5.0
@@ -45,7 +45,7 @@ rft:
     obs: P3
     source: SUMMARY
     value: 102.0
-  well: RFT_2006_SUM
+  well: RFT_2007_SUM
 smry:
 - key: GOPR:BRENT
   observations:

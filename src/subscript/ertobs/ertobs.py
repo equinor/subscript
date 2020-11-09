@@ -11,8 +11,18 @@ import pandas as pd
 
 from subscript import getLogger
 
-from subscript.ertobs.parsers import ertobs2df
-from subscript.ertobs.writers import df2obsdict, df2resinsight_df, CLASS_SHORTNAME
+from subscript.ertobs.parsers import (
+    ertobs2df,
+    compute_date_from_days,
+    resinsight_df2df,
+    obsdict2df,
+)
+from subscript.ertobs.writers import (
+    df2obsdict,
+    df2resinsight_df,
+    CLASS_SHORTNAME,
+    df2ertobs,
+)
 
 logger = getLogger(__name__)
 
@@ -77,11 +87,13 @@ def get_parser():
     )
     parser.add_argument(
         "--resinsight",
+        "--ri",
         type=str,
         help="Name of ResInsight observations CSV file. Use '-' to write to stdout.",
     )
     parser.add_argument(
         "--ertobs",
+        "--ert",
         type=str,
         help="Name of ERT observation file. Use '-' to write to stdout.",
     )
@@ -129,7 +141,7 @@ def validate_internal_dframe(obs_df):
     repeated_rows = obs_df[obs_df.set_index(list(index)).index.duplicated(keep=False)]
     if not repeated_rows.empty:
         logger.error("Non-unique observation classes and labels")
-        logger.error("\n%s", str(repeated_rows))
+        logger.error("\n%s", str(repeated_rows.dropna(axis="columns", how="all")))
         failed = True
 
     # check that segment has start and end if not default.
@@ -157,13 +169,20 @@ def autoparse_file(filename):
         if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
             set(dframe.columns)
         ) and not dframe.empty:
-            return ("resinsight", dframe)
+            logger.info("Parsed %s as a ResInsight observation file", filename)
+            return ("resinsight", resinsight_df2df(dframe))
     except ValueError:
         pass
 
     try:
         dframe = pd.read_csv(filename, sep=",")
         if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
+            logger.info(
+                "Parsed %s as a CSV (internal dataframe format for ertobs) file",
+                filename,
+            )
+            if "DATE" in dframe:
+                dframe["DATE"] = pd.to_datetime(dframe["DATE"])
             return ("csv", dframe)
     except ValueError:
         pass
@@ -171,20 +190,41 @@ def autoparse_file(filename):
     try:
         with open(filename) as f_handle:
             obsdict = yaml.safe_load(f_handle.read())
-        if "smry" or "rft" in obsdict:
-            return ("yaml", obsdict)
+        if isinstance(obsdict, dict):
+            if obsdict.get("smry", None) or obsdict.get("rft", None):
+                logger.info("Parsed %s as a YAML file with observations", filename)
+                return ("yaml", obsdict2df(obsdict))
+    except yaml.scanner.ScannerError:
+        # This occurs if there are tabs in the file, which is not
+        # allowed in a YAML file (but it can be present in ERT observation files)
+        pass
     except ValueError:
         pass
 
     try:
         with open(filename) as f_handle:
-            dframe = ertobs2df(f_handle.read())
+            # This function does not have information on include file paths.
+            # Accept a FileNotFoundError while parsing, if we encounter that
+            # it is most likely an ert file, but which needs additional hints
+            # on where include files are located.
+            try:
+                dframe = ertobs2df(f_handle.read())
+            except FileNotFoundError:
+                logger.info(
+                    "Parsed %s as an ERT observation file, with include statements",
+                    filename,
+                )
+                return ("ert", pd.DataFrame())
         if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
-            return ("ert", dframe)
+            if set(dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys())):
+                logger.info("Parsed %s as an ERT observation file", filename)
+                return ("ert", dframe)
     except ValueError:
         pass
 
-    logger.error("Unable to parse %s as any supported observation file format")
+    logger.error(
+        "Unable to parse %s as any supported observation file format", filename
+    )
     return (None, pd.DataFrame)
 
 
@@ -193,39 +233,48 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
     if args.verbose:
-        if __MAGIC_STDOUT__ in (args.csv, args.yml):
+        if __MAGIC_STDOUT__ in (args.csv, args.yml, args.ertobs):
             raise SystemExit("Don't use verbose mode when writing to stdout")
         logger.setLevel(logging.INFO)
 
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    with open(args.input_file) as f_handle:
-        input_str = f_handle.read()
+    (filetype, dframe) = autoparse_file(args.input_file)
 
-    if not args.includedir or args.includedir == __MAGIC_NONE__:
-        # Try and error for the location of include files, first in current
-        # dir, then in the directory of the input file. The proper default
-        # for cwd is the location of the ert config file, which is not
-        # available in this parser, and must be supplied on command line.
-        try:
-            dframe = ertobs2df(input_str, cwd=".", starttime=args.starttime)
-        except FileNotFoundError:
-            dframe = ertobs2df(
-                input_str,
-                cwd=os.path.dirname(args.input_file),
-                starttime=args.starttime,
-            )
-    else:
-        dframe = ertobs2df(input_str, cwd=args.includedir, starttime=args.starttime)
+    # For ERT files, there is the problem of include-file-path. If not-found
+    # include filepaths are present, the filetype is ert, but dframe is empty.
+    if filetype == "ert" and pd.DataFrame.empty:
+        with open(args.input_file) as f_handle:
+            input_str = f_handle.read()
+        if not args.includedir or args.includedir == __MAGIC_NONE__:
+            # Try and error for the location of include files, first in current
+            # dir, then in the directory of the input file. The proper default
+            # for cwd is the location of the ert config file, which is not
+            # available in this parser, and must be supplied on command line.
+            try:
+                dframe = ertobs2df(input_str, cwd=".", starttime=args.starttime)
+            except FileNotFoundError:
+                dframe = ertobs2df(
+                    input_str,
+                    cwd=os.path.dirname(args.input_file),
+                    starttime=args.starttime,
+                )
+        else:
+            dframe = ertobs2df(input_str, cwd=args.includedir)
+
+    if args.starttime:
+        dframe = compute_date_from_days(dframe)
 
     if not validate_internal_dframe(dframe):
         logger.error("Observation dataframe is invalid!")
 
-    dump_results(dframe, args.csv, args.yml, args.resinsight)
+    dump_results(dframe, args.csv, args.yml, args.resinsight, args.ertobs)
 
 
-def dump_results(dframe, csvfile=None, yamlfile=None, resinsightfile=None):
+def dump_results(
+    dframe, csvfile=None, yamlfile=None, resinsightfile=None, ertfile=None
+):
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips
     export if filenames are empty or None.
@@ -234,6 +283,7 @@ def dump_results(dframe, csvfile=None, yamlfile=None, resinsightfile=None):
         dframe (pd.DataFrame)
         csvfile (str): Filename
         yamlfile (str): Filename
+        ertfile (str): Filename
     """
 
     if csvfile and csvfile != __MAGIC_NONE__:
@@ -269,6 +319,15 @@ def dump_results(dframe, csvfile=None, yamlfile=None, resinsightfile=None):
             # Ignore pipe errors when writing to stdout:
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             ri_dframe.to_csv(sys.stdout, index=False, sep=";")
+
+    if ertfile and ertfile != __MAGIC_NONE__:
+        ertobs_str = df2ertobs(dframe)
+        if ertfile != __MAGIC_STDOUT__:
+            with open(ertfile, "w") as f_handle:
+                logger.info("Writing ERT observation format to %s", ertfile)
+                f_handle.write(ertobs_str)
+        else:
+            print(ertobs_str)
 
 
 if __name__ == "__main__":

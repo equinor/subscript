@@ -8,6 +8,10 @@ import numpy as np
 import pandas as pd
 
 from subscript import getLogger
+from subscript.ertobs.util import (
+    ERT_DATE_FORMAT,
+    uppercase_dictkeys,
+)
 
 logger = getLogger(__name__)
 
@@ -48,8 +52,6 @@ INCLUDE_RE = re.compile(
     + ";)"
 )
 """Regular expression for capturing include statements in input file"""
-
-ERT_DATE_FORMAT = "%d/%m/%Y"
 
 
 def expand_includes(input_str, cwd="."):
@@ -402,7 +404,21 @@ def ertobs2df(input_str, cwd=".", starttime=None):
         else:
             obs_list.append(obs_unit)
 
-    dframe = pd.DataFrame(obs_list)
+    return compute_date_from_days(pd.DataFrame(obs_list), starttime)
+
+
+def compute_date_from_days(dframe, starttime=None):
+    """Fill in DATE cells in a dataframe computed from
+    a given starttime and data in DAYS cells.
+
+    Args:
+        dframe (pd.Dataframe)
+        starttime (str): If provided, DAYS data will be interpreted relative
+            to this starttime, and converted to DATE.
+
+    Returns:
+        pd.DataFrame
+    """
     if starttime and "DAYS" in dframe:
         if "DATE" not in dframe:
             dframe["DATE"] = np.nan
@@ -417,34 +433,81 @@ def ertobs2df(input_str, cwd=".", starttime=None):
     return dframe
 
 
-def lowercase_dictkeys(some_dict):
-    """Convert all keys in a dictionary to lower-case"""
-    return {key.lower(): value for key, value in some_dict.items()}
+def resinsight_df2df(ri_dframe):
+    """Convert a ResInsight observation dataframe (as it is represented on
+    disk) to the internal dataframe representation of observations.
 
-
-def dfsmry2ertobs(obs_df):
-    """Write SUMMARY_OBSERVATION as ERT observations
+    This is the reverse of writers.df2resinsight_df()
 
     Args:
-        obs_df (pd.DataFrame): Observations in internal dataframe
-            representation
+        dframe (pd.DataFrame)
 
     Returns:
-        str: ERT observation format string, multiline
+        pd.DataFrame
     """
-    ertobs_str = ""
-    for _, row in obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].iterrows():
-        ertobs_str += "SUMMARY_OBSERVATION " + str(row["LABEL"]) + "\n"
-        ertobs_str += "{\n"
-        if "DATE" in row and not pd.isnull(row["DATE"]):
-            ertobs_str += (
-                "    DATE = "
-                + str(pd.to_datetime(row["DATE"]).strftime(ERT_DATE_FORMAT))
-                + ";\n"
-            )
+    if ri_dframe.empty:
+        return pd.DataFrame()
 
-        for datatype in ["RESTART", "VALUE", "ERROR"]:
-            if not pd.isnull(row[datatype]):
-                ertobs_str += "    " + datatype + " = " + str(row[datatype]) + ";\n"
-        ertobs_str += "};\n"
-    return ertobs_str
+    dframe = ri_dframe.copy()
+    dframe.rename({"VECTOR": "KEY"}, axis="columns", inplace=True)
+    dframe["LABEL"] = dframe["KEY"].astype(str)  # + "-" + dframe["DATE"].astype(str)
+    dframe["CLASS"] = "SUMMARY_OBSERVATION"
+    if "DATE" in dframe:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    return dframe
+
+
+def obsdict2df(obsdict):
+    """Convert an observation dictionary (with YAML file format structure)
+    into the internal dataframe representation
+
+    Args:
+        obsdict
+
+    Returns:
+        pd.DataFrame
+    """
+    if not isinstance(obsdict, dict):
+        raise ValueError("obsdict must be a dictionary")
+
+    rows = []  # List of dicts
+    if "smry" in obsdict:
+        for keylist in obsdict["smry"]:
+            if "observations" not in keylist:
+                logger.warning("Missing 'observations' list in summary observation")
+                continue
+            for obs in keylist["observations"]:
+                rowdict = {"CLASS": "SUMMARY_OBSERVATION", "KEY": keylist["key"]}
+                rowdict.update(uppercase_dictkeys(obs))
+                if "label" not in obs:
+                    rowdict["LABEL"] = keylist["key"]
+                    del rowdict["KEY"]  # superfluous
+                rows.append(rowdict)
+    if "rft" in obsdict:
+        # "well" is a required field in yaml syntax, but is
+        # not required in ert observation. Thus, it might be dummy-defaulted.
+        for keylist in obsdict["rft"]:
+            if "observations" not in keylist:
+                logger.warning("Missing 'observations' in rft observation")
+                continue
+            for obs in keylist["observations"]:
+                rowdict = {"CLASS": "BLOCK_OBSERVATION"}
+                rowdict.update(uppercase_dictkeys(keylist))
+                if "OBSERVATIONS" in rowdict:
+                    del rowdict["OBSERVATIONS"]
+                if "label" not in obs:
+                    if "well" in keylist:
+                        rowdict["LABEL"] = keylist["well"]
+                        # NB: This label is not guaranteed to be unique
+                    else:  # Make up something:
+                        rowdict["LABEL"] = (
+                            keylist.get("field", "NXXXXONE")
+                            + "-"
+                            + keylist.get("date", "NaT")
+                        )
+                rowdict.update(uppercase_dictkeys(obs))
+                rows.append(rowdict)
+    dframe = pd.DataFrame(rows)
+    if "DATE" in dframe:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    return dframe
