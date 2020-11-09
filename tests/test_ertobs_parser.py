@@ -6,7 +6,7 @@ import pandas as pd
 import pytest
 
 
-from subscript.ertobs2yml.ertobs_parser import (
+from subscript.ertobs.parsers import (
     INCLUDE_RE,
     OBS_ARGS_RE,
     ertobs2df,

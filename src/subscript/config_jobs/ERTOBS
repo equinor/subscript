@@ -1,4 +1,4 @@
-EXECUTABLE ertobs2yml 
+EXECUTABLE ertobs
 
 ARG_TYPE 0 STRING
 ARG_TYPE 1 STRING
@@ -11,7 +11,7 @@ DEFAULT <CSV_OUTPUT> __NONE
 DEFAULT <YML_OUTPUT> __NONE__
 DEFAULT <RESINSIGHT_OUTPUT> __NONE__
 
-ARGLIST "--verbose" "--includedir" <INCLUDE_DIR> "--csv" <CSV_OUTPUT> "--yml" <YML_OUTPUT> "--resinsight" <RESINSIGHT_OUTPUT> <OBS_FILE>
+ARGLIST "--verbose" "--includedir" <INCLUDE_DIR> "--csv" <CSV_OUTPUT> "--yml" <YML_OUTPUT> "--resinsight" <RESINSIGHT_OUTPUT> <INPUT_FILE>
 
 MIN_ARG 2
 MAX_ARG 4
