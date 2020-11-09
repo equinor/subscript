@@ -348,6 +348,68 @@ def test_ertobs2df(string, expected):
 @pytest.mark.parametrize(
     "string, expected",
     [
+        ########################################################################
+        (
+            (
+                "SUMMARY_OBSERVATION 2S_BHP1 {VALUE=501.3; ERROR=5; "
+                "DAYS=1.404965; KEY=WBHP:2S;};"
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "LABEL": "2S_BHP1",
+                        "KEY": "WBHP:2S",
+                        "DATE": datetime.datetime(2020, 1, 1, 0, 0)
+                        + datetime.timedelta(days=1.404965),
+                        "DAYS": 1.404965,
+                        "VALUE": 501.3,
+                        "ERROR": 5,
+                    }
+                ]
+            ),
+        ),
+        ########################################################################
+        (
+            (
+                "SUMMARY_OBSERVATION 2S_BHP1 {VALUE=501.3; ERROR=5; "
+                "DATE=2020-01-01; DAYS=1.404965; KEY=WBHP:2S;};"
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "LABEL": "2S_BHP1",
+                        "KEY": "WBHP:2S",
+                        "DATE": pd.to_datetime(
+                            datetime.date(2020, 1, 1)
+                        ),  # in-place DATE overrides
+                        "DAYS": 1.404965,
+                        "VALUE": 501.3,
+                        "ERROR": 5,
+                    }
+                ]
+            ),
+        ),
+    ],
+)
+def test_ertobs2df_starttime(string, expected):
+    """Test that when DAYS is given but no DATES, we can
+    get a computed DATE if starttime is provided"""
+    pd.testing.assert_frame_equal(
+        ertobs2df(string, starttime="2020-01-01").sort_index(axis=1),
+        expected.sort_index(axis=1),
+    )
+    # Test again with datetime object passed, not string:
+    pd.testing.assert_frame_equal(
+        ertobs2df(string, starttime=datetime.date(2020, 1, 1)).sort_index(axis=1),
+        expected.sort_index(axis=1),
+    )
+
+
+@pytest.mark.parametrize(
+    "string, expected",
+    [
         ("foo\n-- hallo\nhei", "foo\nhei"),
         ("foo --a comment", "foo"),
         ("\n", ""),

@@ -4,6 +4,7 @@ import os
 import re
 import datetime
 
+import numpy as np
 import pandas as pd
 
 from subscript import getLogger
@@ -358,7 +359,7 @@ def flatten_observation_unit(obsunit, subunit_label="obs_sub_id"):
     return obs_subunits
 
 
-def ertobs2df(input_str, cwd="."):
+def ertobs2df(input_str, cwd=".", starttime=None):
     """Parse a string with ERT observations and convert to
     an equivalent tabular format, represented by a Pandas dataframe.
 
@@ -369,6 +370,8 @@ def ertobs2df(input_str, cwd="."):
             when resolving include statements (for include files). Defaults
             to current directory, but the ERT observation format assumes
             it is the directory of the ERT config file.
+        starttime (str): If provided, DAYS data will be interpreted relative
+            to this starttime, and converted to DATE.
 
     Returns:
         pd.DataFrame
@@ -398,7 +401,20 @@ def ertobs2df(input_str, cwd="."):
                 obs_list.append({**obs_unit, **obs_subunit})
         else:
             obs_list.append(obs_unit)
-    return pd.DataFrame(obs_list)
+
+    dframe = pd.DataFrame(obs_list)
+    if starttime and "DAYS" in dframe:
+        if "DATE" not in dframe:
+            dframe["DATE"] = np.nan
+        start = pd.to_datetime(starttime)
+        date_needed_rows = ~dframe["DAYS"].isna() & dframe["DATE"].isna()
+        dframe.loc[date_needed_rows, "DATE"] = start + pd.to_timedelta(
+            dframe.loc[date_needed_rows, "DAYS"], "d"
+        )
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    if "DATE" in dframe:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    return dframe
 
 
 def lowercase_dictkeys(some_dict):

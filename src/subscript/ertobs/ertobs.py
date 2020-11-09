@@ -41,7 +41,6 @@ __MAGIC_NONE__ = "__NONE__"  # For ERT hook defaults support.
 __MAGIC_STDOUT__ = "-"
 
 
-
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
 ):
@@ -67,11 +66,14 @@ def get_parser():
     parser.add_argument(
         "-o",
         "--yml",
+        "--yaml",
         type=str,
         help="Name of output YAML file. Use '-' to write to stdout.",
     )
     parser.add_argument(
-        "--csv", type=str, help="Name of output CSV file. Use '-' to write to stdout.",
+        "--csv",
+        type=str,
+        help="Name of output CSV file. Use '-' to write to stdout.",
     )
     parser.add_argument(
         "--resinsight",
@@ -82,6 +84,13 @@ def get_parser():
         "--ertobs",
         type=str,
         help="Name of ERT observation file. Use '-' to write to stdout.",
+    )
+    parser.add_argument(
+        "--starttime",
+        "--startdate",
+        type=str,
+        default=None,
+        help="Starttime or startdate to be used for converting DAYS to date(time)s",
     )
     parser.add_argument(
         "--includedir",
@@ -99,7 +108,7 @@ def get_parser():
     return parser
 
 
-def validate_dframe(obs_df):
+def validate_internal_dframe(obs_df):
     """Validate the internal dataframe format for observations. """
     failed = False
     if obs_df.empty:
@@ -111,7 +120,7 @@ def validate_dframe(obs_df):
     if "LABEL" not in obs_df:
         logger.error("LABEL is not in dataframe - not valid")
         failed = True
-    non_supported_classes = set(CLASS_SHORTNAME.keys()) - set(obs_df["CLASS"])
+    non_supported_classes = set(obs_df["CLASS"]) - set(CLASS_SHORTNAME.keys())
     if non_supported_classes:
         logger.error("Unsupported observation classes: %s", str(non_supported_classes))
         failed = True
@@ -125,9 +134,10 @@ def validate_dframe(obs_df):
 
     # check that segment has start and end if not default.
     # summary obs requires four arguments.
-    # block requires two global, and i,j,k,value,error for each subunit.
+    # block requires two global, and j,k,value,error for each subunit.
     # general requires data, restart, obs_file. index_list, index_file,
     # error_covariance is optional.
+    logger.info("Observation dataframe validated")
     return not failed
 
 
@@ -182,7 +192,6 @@ def main():
     """Command line client, parse command line arguments and run function."""
     parser = get_parser()
     args = parser.parse_args()
-
     if args.verbose:
         if __MAGIC_STDOUT__ in (args.csv, args.yml):
             raise SystemExit("Don't use verbose mode when writing to stdout")
@@ -200,13 +209,17 @@ def main():
         # for cwd is the location of the ert config file, which is not
         # available in this parser, and must be supplied on command line.
         try:
-            dframe = ertobs2df(input_str, cwd=".")
+            dframe = ertobs2df(input_str, cwd=".", starttime=args.starttime)
         except FileNotFoundError:
-            dframe = ertobs2df(input_str, cwd=os.path.dirname(args.input_file))
+            dframe = ertobs2df(
+                input_str,
+                cwd=os.path.dirname(args.input_file),
+                starttime=args.starttime,
+            )
     else:
-        dframe = ertobs2df(input_str, cwd=args.includedir)
+        dframe = ertobs2df(input_str, cwd=args.includedir, starttime=args.starttime)
 
-    if not validate_dframe(dframe):
+    if not validate_internal_dframe(dframe):
         logger.error("Observation dataframe is invalid!")
 
     dump_results(dframe, args.csv, args.yml, args.resinsight)
@@ -234,6 +247,8 @@ def dump_results(dframe, csvfile=None, yamlfile=None, resinsightfile=None):
 
     if yamlfile and yamlfile != __MAGIC_NONE__:
         obs_dict_for_yaml = df2obsdict(dframe)
+        if not obs_dict_for_yaml and not dframe.empty:
+            logger.error("None of your observations are supported in YAML")
         yaml_str = yaml.safe_dump(obs_dict_for_yaml)
 
         if yamlfile != __MAGIC_STDOUT__:

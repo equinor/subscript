@@ -89,7 +89,9 @@ def block_df2obsdict(block_df):
         blocklabel_dict["observations"] = [
             lowercase_dictkeys(dict(keyvalues.dropna()))
             for _, keyvalues in blocklabel_df.drop(
-                ["FIELD", "LABEL", "DATE"], axis=1, errors="ignore",
+                ["FIELD", "LABEL", "DATE"],
+                axis=1,
+                errors="ignore",
             ).iterrows()
         ]
         block_obs_list.append(blocklabel_dict)

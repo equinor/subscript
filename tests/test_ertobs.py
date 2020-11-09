@@ -4,7 +4,6 @@ other formats, and test the ERT hook"""
 import os
 import io
 import sys
-import datetime
 import subprocess
 
 import pandas as pd

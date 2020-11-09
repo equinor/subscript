@@ -1,11 +1,6 @@
-import os
-import io
-import sys
 import datetime
-import subprocess
 
 import pandas as pd
-import yaml
 
 import pytest
 
@@ -14,6 +9,7 @@ from subscript.ertobs.writers import (
     df2obsdict,
     df2resinsight_df,
 )
+
 
 @pytest.mark.parametrize(
     "obs_df, expected_dict",
@@ -195,5 +191,3 @@ def test_df2resinsight_df(obs_df, expected_ri_df):
     to the resinsight dataframe representation of observations
     (which only supports a subset of ERT observations)"""
     pd.testing.assert_frame_equal(df2resinsight_df(obs_df), expected_ri_df)
-
-
