@@ -1,9 +1,9 @@
 
-ERTOBS2YML
-==========
+ERTOBS
+======
 
 .. argparse::
-   :module: subscript.ertobs2yml.ertobs2yml
+   :module: subscript.ertobs.ertobs
    :func: get_parser
-   :prog: ertobs2yml
+   :prog: ertobs
 
