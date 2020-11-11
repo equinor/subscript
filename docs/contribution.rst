@@ -17,6 +17,28 @@ Contributing to subscript
 * For a new script, write a new file ``docs/scripts/scriptname.rst`` describing
   the script. Use sphinx-argparse to document the command line syntax.
 
+Maintenance responsibility
+--------------------------
+
+* Equinor (PETEC Reservoir Toolbox) maintains the repository infrastructure,
+  monitoring that automated tests pass on updated dependencies, and ensures
+  deploy to Komodo is active.
+* Maintenance responsibility for each admitted scripts (response to bug reports
+  and adaptations to changes in dependencies) belongs to the Product Owner
+  in Equinor.
+* Scripts/changes admitted from actors external to Equinor will be maintained
+  by Equinor.
+* Unmaintained scripts that fail to pass tests will be removed.
+
+Open source
+-----------
+
+Subscript is both open source and closed source. The twin repository
+``subscript-internal`` holds similar infrastructure but with scripts that are
+excepted from the Open Source requirement in TR1621. Internal or confidental
+data should never be submitted to subscript. For each open script, there must
+be accompanying public test data.
+
 Code style
 ----------
 
