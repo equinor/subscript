@@ -20,6 +20,8 @@ from subscript.fmuobs.parsers import (
     mask_curly_braces,
     parse_observation_unit,
     split_by_sep_in_masked_string,
+    smrydictlist2df,
+    blockdictlist2df,
     obsdict2df,
 )
 
@@ -464,4 +466,269 @@ def test_ertobs2df_starttime(string, expected):
     pd.testing.assert_frame_equal(
         ertobs2df(string, starttime=datetime.date(2020, 1, 1)).sort_index(axis=1),
         expected.sort_index(axis=1),
+    )
+
+
+# smrydictlist2df
+@pytest.mark.parametrize(
+    "smrylist, expected_df",
+    [
+        ([{"key": "WOPR:P"}], pd.DataFrame()),
+        ([{"key": "WOPR:P1", "observations": []}], pd.DataFrame()),
+        (
+            [{"key": "WOPR:P1", "observations": [{"date": "2020"}]}],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "WOPR:P1-1",  # Auto-generated label
+                        "KEY": "WOPR:P1",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [{"key": "WOPR:P1", "observations": [{"date": "2020", "label": "FOO"}]}],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        # The handling of key vs label here might change
+                        "LABEL": "FOO",
+                        "KEY": "WOPR:P1",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "key": "WOPR:P1",
+                    "observations": [
+                        {"date": "2020-01-01", "value": 1000, "error": 100}
+                    ],
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "KEY": "WOPR:P1",
+                        "LABEL": "WOPR:P1-1",
+                        "VALUE": 1000,
+                        "ERROR": 100,
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "key": "WOPR:P1",
+                    "observations": [
+                        {"date": "2020-01-01", "value": 1000, "error": 100.0},
+                        {"date": "2030-01-01", "value": 2000, "error": 200},
+                    ],
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "KEY": "WOPR:P1",
+                        "LABEL": "WOPR:P1-1",
+                        "VALUE": 1000.0,
+                        "ERROR": 100.0,
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2030, 1, 1),
+                        "KEY": "WOPR:P1",
+                        "LABEL": "WOPR:P1-2",
+                        "VALUE": 2000.0,
+                        "ERROR": 200.0,
+                    },
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "key": "WOPR:P1",
+                    "observations": [
+                        {"date": "2020-01-01", "value": 1000, "error": 100},
+                        {"date": "2030-01-01", "value": 2000, "error": 200},
+                    ],
+                },
+                {
+                    "key": "WOPR:P2",
+                    "observations": [
+                        {"date": "2020-01-01", "value": 3000, "error": 300},
+                    ],
+                },
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "KEY": "WOPR:P1",
+                        "LABEL": "WOPR:P1-1",
+                        "VALUE": 1000.0,
+                        "ERROR": 100.0,
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2030, 1, 1),
+                        "KEY": "WOPR:P1",
+                        "LABEL": "WOPR:P1-2",
+                        "VALUE": 2000.0,
+                        "ERROR": 200.0,
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "KEY": "WOPR:P2",
+                        "LABEL": "WOPR:P2-1",
+                        "VALUE": 3000.0,
+                        "ERROR": 300.0,
+                    },
+                ]
+            ),
+        ),
+    ],
+)
+def test_smrydictlist2df(smrylist, expected_df):
+    if "DATE" in expected_df:
+        expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
+    pd.testing.assert_frame_equal(
+        smrydictlist2df(smrylist).sort_index(axis=1),
+        expected_df.sort_index(axis=1),
+        check_dtype=False,
+    )
+
+
+# blockdictlist2df
+@pytest.mark.parametrize(
+    "blocklist, expected_df",
+    [
+        ([{"well": "P1"}], pd.DataFrame()),
+        ([{"well": "P1", "observations": []}], pd.DataFrame()),
+        (
+            [{"well": "P1", "observations": [{"date": "2020", "value": 100, "i": 4}]}],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "P1-1",  # Auto-generated label
+                        "WELL": "P1",
+                        "VALUE": 100.0,
+                        "I": 4,
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [{"well": "P1", "observations": [{"date": "2020"}]}],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "P1-1",
+                        "WELL": "P1",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [{"well": "P1", "observations": [{"date": "2020"}, {"date": "2021"}]}],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "P1-1",
+                        "WELL": "P1",
+                    },
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2021, 1, 1),
+                        "LABEL": "P1-2",
+                        "WELL": "P1",
+                    },
+                ]
+            ),
+        ),
+        #################################################################
+    ],
+)
+def test_blockdictlist2df(blocklist, expected_df):
+    print(blockdictlist2df(blocklist))
+    print(expected_df)
+    if "DATE" in expected_df:
+        expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
+    pd.testing.assert_frame_equal(
+        blockdictlist2df(blocklist).sort_index(axis=1),
+        expected_df.sort_index(axis=1),
+        check_dtype=False,
+    )
+
+
+# obsdictlist2df
+@pytest.mark.parametrize(
+    "obsdict, expected_df",
+    [
+        (
+            {
+                "rft": [
+                    {
+                        "well": "P1",
+                        "observations": [{"date": "2020", "value": 100, "i": 4}],
+                    }
+                ],
+                "smry": [{"key": "WOPR:P1", "observations": [{"date": "2020"}]}],
+            },
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "WOPR:P1-1",  # Auto-generated label
+                        "KEY": "WOPR:P1",
+                    },
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "P1-1",  # Auto-generated label
+                        "WELL": "P1",
+                        "VALUE": 100.0,
+                        "I": 4,
+                    },
+                ]
+            ),
+        ),
+    ],
+)
+def test_obsdict2df(obsdict, expected_df):
+    print("FAAAAAAAAAAAAAAAAAAAAAA")
+    print(obsdict2df(obsdict))
+    print(expected_df)
+    if "DATE" in expected_df:
+        expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
+    pd.testing.assert_frame_equal(
+        obsdict2df(obsdict).sort_index(axis=1),
+        expected_df.sort_index(axis=1),
+        check_dtype=False,
     )

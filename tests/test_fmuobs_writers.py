@@ -3,6 +3,7 @@ representation to various other formats, csv, ert-observations format,
 resinsight and yaml (webviz)"""
 import datetime
 
+import numpy as np
 import pandas as pd
 
 import pytest
@@ -13,7 +14,11 @@ from subscript.fmuobs.writers import (
     dfsummary2ertobs,
     dfgeneral2ertobs,
     dfhistory2ertobs,
+    df2ertobs,
     df2obsdict,
+    summary_df2obsdict,
+    convert_dframe_date_to_str,
+    block_df2obsdict,
     df2resinsight_df,
 )
 from subscript.fmuobs.parsers import ertobs2df
@@ -98,8 +103,9 @@ def test_dfsummary2ertobs(obs_df, expected_str):
 
 
 # dfblock2ertobs:
-@pytest.mark.parametrize("obs_df, expected_str",
-        [
+@pytest.mark.parametrize(
+    "obs_df, expected_str",
+    [
         (
             pd.DataFrame(
                 [
@@ -116,7 +122,8 @@ def test_dfsummary2ertobs(obs_df, expected_str):
     DATE = 05/04/1986;
     OBS P1 {};
 };
-"""),
+""",
+        ),
         (
             pd.DataFrame(
                 [
@@ -124,7 +131,7 @@ def test_dfsummary2ertobs(obs_df, expected_str):
                         "CLASS": "BLOCK_OBSERVATION",
                         "LABEL": "RFT_SWAT_2006_OP1",
                         "FIELD": "SWAT",
-                        "DATE": datetime(1900, 1, 1),
+                        "DATE": datetime.date(1900, 1, 1),
                         "OBS": "P1",
                         "I": 1,
                         "J": 2,
@@ -138,26 +145,322 @@ def test_dfsummary2ertobs(obs_df, expected_str):
     DATE = 01/01/1900;
     OBS P1 { I = 1; J = 2;};
 };
-"""),
-        ]
+""",
+        ),
+    ],
 )
-def  test_dfblock2ertobs(obs_df, expected_str):
-    print(dfblock2ertobs(obs_df))
+def test_dfblock2ertobs(obs_df, expected_str):
+    """Test generating BLOCK_OBSERVATION ert observation from dataframe
+    format"""
     assert dfblock2ertobs(obs_df).strip() == expected_str.strip()
 
 
 # dfhistory2ertobs:
-#    writeme
+@pytest.mark.parametrize(
+    "obs_df, expected_str",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                    }
+                ]
+            ),
+            "HISTORY_OBSERVATION WOPR:P1;",
+        ),
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                        "ERROR": 2,
+                    },
+                    {
+                        # This is not HISTORY and should be ignored
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "LABEL": "FOPT",
+                    },
+                ]
+            ),
+            "HISTORY_OBSERVATION WOPR:P1 { ERROR = 2.0;};",
+        ),
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                        "ERROR": 2,
+                        "NOTINCLUDED": "SKIPPED",
+                    }
+                ]
+            ),
+            "HISTORY_OBSERVATION WOPR:P1 { ERROR = 2;};",
+        ),
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                        "ERROR": 2,
+                        "SEGMENT": "DEFAULT",
+                    },
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                        "ERROR": 4,
+                        "SEGMENT": "LATE",
+                    },
+                ]
+            ),
+            "HISTORY_OBSERVATION WOPR:P1 { ERROR = 2; SEGMENT LATE { ERROR = 4;};};",
+        ),
+    ],
+)
+def test_dfhistory2ertobs(obs_df, expected_str):
+    """Test making HISTORY_OBSERVATION from dataframe format"""
+    # Relaxed on whitespace
+    assert dfhistory2ertobs(obs_df).strip().replace("\n", "").replace(
+        "  ", " "
+    ) == expected_str.strip().replace("\n", "")
+
 
 # dfgeneral2ertobs:
-# writeme. add test that it filters to only general obs.
+@pytest.mark.parametrize(
+    "obs_df, expected_str",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS1",
+                        "DATA": "RFT_BH67",
+                        "RESTART": 20,
+                        "OBS_FILE": "some_file.txt",
+                        "INDEX_LIST": "1,2,3,4",
+                        "ERROR_COVAR": "e_covar.txt",
+                        "SKIPME": None,
+                    }
+                ]
+            ),
+            """GENERAL_OBSERVATION GEN_OBS1 {
+   DATA = RFT_BH67;
+   RESTART = 20;
+   OBS_FILE = some_file.txt;
+   INDEX_LIST = 1,2,3,4;
+   ERROR_COVAR = e_covar.txt;
+};""",
+        ),
+    ],
+)
+def test_dfgeneral2ertobs(obs_df, expected_str):
+    """Test making GENERAL_OBSERVATION from dataframe format"""
+    # Relaxed on whitespace
+    assert dfgeneral2ertobs(obs_df).strip().replace("\n", "").replace(
+        "  ", " "
+    ) == expected_str.strip().replace("\n", "").replace("  ", " ")
 
-# dfertobs:
-# writeme
-# test that it splits correctly.
+
+@pytest.mark.parametrize(
+    "obs_df, expected_str",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "LABEL": "WOPR:OP1",
+                        "DATE": "2025-01-01",
+                        "VALUE": 2222.3,
+                        "ERROR": 100,
+                    },
+                    {
+                        "CLASS": "HISTORY_OBSERVATION",
+                        "LABEL": "WOPR:P1",
+                    },
+                    # Note that order is not preserved.
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "OBS": "P1",
+                    },
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS1",
+                        "DATA": "RFT_BH67",
+                        "RESTART": 20,
+                    },
+                ]
+            ),
+            """
+SUMMARY_OBSERVATION WOPR:OP1
+{
+    DATE = 01/01/2025;
+    VALUE = 2222.3;
+    ERROR = 100.0;
+};
+BLOCK_OBSERVATION RFT_2006_OP1
+{
+    DATE = 05/04/1986;
+    OBS P1 {};
+};
+HISTORY_OBSERVATION WOPR:P1;
+GENERAL_OBSERVATION GEN_OBS1 {
+    DATA = RFT_BH67;
+    RESTART = 20.0;
+};""",
+        ),
+    ],
+)
+def test_df2ertobs(obs_df, expected_str):
+    """Test making any kind of *OBSERVATION in ert format from dataframe format"""
+    # Relaxed on whitespace
+    assert df2ertobs(obs_df).strip().replace("\n", "").replace(
+        "  ", " "
+    ) == expected_str.strip().replace("\n", "").replace("  ", " ")
+
 
 # summary_df2obsdict
-# block_df2obsdict
+@pytest.mark.parametrize(
+    "obs_df, expected_list",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP1",
+                        "DATE": datetime.date(2025, 1, 1),
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP1",
+                        "DATE": datetime.date(2026, 1, 1),
+                        "IGNOREME": None,
+                    },
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "KEY": "WOPR:OP2",
+                        "DATE": datetime.date(2026, 1, 1),
+                        "VALUE": 1000,
+                        "ERROR": 100,
+                    },
+                ]
+            ),
+            [
+                {
+                    "key": "WOPR:OP1",
+                    "observations": [
+                        {"date": "2025-01-01"},
+                        {"date": "2026-01-01"},
+                    ],
+                },
+                {
+                    "key": "WOPR:OP2",
+                    "observations": [
+                        {
+                            "date": "2026-01-01",
+                            "value": 1000.0,
+                            "error": 100.0,
+                        },
+                    ],
+                },
+            ],
+        ),
+    ],
+)
+def test_summary_df2obsdict(obs_df, expected_list):
+    """Test the summary part of the yaml/dict format. The summary_df2obsdict
+    function returns a list"""
+    assert summary_df2obsdict(obs_df) == expected_list
+
+
+# test_block_df2obsdict()
+@pytest.mark.parametrize(
+    "obs_df, expected_dict",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "VALUE": 100,
+                        "K": 4,
+                    },
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": datetime.date(1986, 4, 5),
+                        "VALUE": 101,
+                        "K": 5,
+                    },
+                ]
+            ),
+            [
+                {
+                    "well": "RFT_2006_OP1",
+                    "date": "1986-04-05",
+                    "observations": [
+                        {"k": 4, "value": 100},
+                        {"k": 5, "value": 101},
+                    ],
+                },
+            ],
+        ),
+    ],
+)
+def test_block_df2obsdict(obs_df, expected_dict):
+    """Test converting from dataframe representation for BLOCK/rft observations
+    to the dictionary representation designed for yaml output"""
+    assert block_df2obsdict(obs_df) == expected_dict
+
+
+@pytest.mark.parametrize(
+    "dframe, expected_dframe",
+    [
+        (pd.DataFrame(), pd.DataFrame()),
+        (pd.DataFrame([{"date": 1}]), pd.DataFrame([{"date": 1}])),
+        (pd.DataFrame([{"DATE": 1}]), pd.DataFrame([{"DATE": "1"}])),
+        (
+            pd.DataFrame([{"DATE": datetime.date(2020, 1, 1)}]),
+            pd.DataFrame([{"DATE": "2020-01-01"}]),
+        ),
+        (
+            pd.DataFrame([{"DATE": datetime.datetime(2020, 1, 1, 2, 3, 4)}]),
+            pd.DataFrame([{"DATE": "2020-01-01 02:03:04"}]),
+        ),
+        (
+            pd.DataFrame(
+                [{"DATE": datetime.date(2020, 1, 1)}, {"DATE": np.datetime64("NaT")}]
+            ),
+            pd.DataFrame([{"DATE": "2020-01-01"}, {"DATE": np.nan}]),
+        ),
+        (
+            pd.DataFrame([{"DATE": datetime.date(2020, 1, 1)}, {"DATE": np.nan}]),
+            pd.DataFrame([{"DATE": "2020-01-01"}, {"DATE": np.nan}]),
+        ),
+        (pd.DataFrame([{"DATE": "nan"}]), pd.DataFrame([{"DATE": np.nan}])),
+    ],
+)
+def test_convert_dframe_date_to_str(dframe, expected_dframe):
+    """Test that we treat date as correct python objects in dataframes.
+
+    This is used for generating yaml, where we want to output strings and void
+    "datetime"-objects embedded in the yaml output.
+    """
+    pd.testing.assert_frame_equal(
+        convert_dframe_date_to_str(dframe),
+        expected_dframe,
+    )
+
 
 # df2obsdict()
 @pytest.mark.parametrize(

@@ -136,6 +136,16 @@ def dfhistory2ertobs(obs_df):
 
 
 def dfgeneral2ertobs(obs_df):
+    """Write GENERAL_OBSERVATION from dataframe rows as ERT observations
+
+
+    Args:
+        obs_df (pd.DataFrame): Observations in internal dataframe
+            representation
+
+    Returns:
+        str: ERT observation format string, multiline
+    """
     ertobs_str = ""
     gen_obs_df = obs_df[obs_df["CLASS"] == "GENERAL_OBSERVATION"]
     if "DATE" in gen_obs_df:
@@ -162,6 +172,20 @@ def dfgeneral2ertobs(obs_df):
 
 
 def df2ertobs(obs_df):
+    """Generate a complete set of ERT observations from a dataframe
+    with potentially all classes of observations.
+
+    The order of observation classes is hardcoded.
+
+    The order of observations within each class follows the order in the
+    dataframe.
+
+    Args:
+        obs_df (pd.DataFrame): Observations in internal dataframe format
+
+    Returns:
+        str: ERT observations as multiline string.
+    """
     ertobs_str = ""
     if "CLASS" not in obs_df:
         return ertobs_str
@@ -201,6 +225,8 @@ def summary_df2obsdict(smry_df):
     if "DATE" not in smry_df:
         raise ValueError("Can't have summary observation without a date")
 
+    smry_df = convert_dframe_date_to_str(smry_df)
+
     if "KEY" not in smry_df:
         # We need to guess that the LABEL contains the (Eclipse summary vector) KEY:
         smry_df["KEY"] = smry_df["LABEL"]
@@ -218,6 +244,29 @@ def summary_df2obsdict(smry_df):
         )
 
     return smry_obs_list
+
+
+def convert_dframe_date_to_str(dframe):
+    """Convert the DATE column in a dataframe to a string.
+    Replace "NaT" (Not-a-Time) with np.nan after conversion
+
+    Returns a copy of the dataframe if something is modified
+
+    Returns the input if DATE is not found in the input frame.
+
+    Args:
+        dframe (pd.DataFrame): dataframe to manipulate
+
+    Returns:
+        pd.DataFrame: DATE as a string type
+    """
+    if "DATE" in dframe:
+        dframe = dframe.copy()
+        dframe["DATE"] = dframe["DATE"].astype(str)
+        dframe["DATE"].replace("NaT", np.nan, inplace=True)
+        dframe["DATE"].replace("NaN", np.nan, inplace=True)
+        dframe["DATE"].replace("nan", np.nan, inplace=True)
+    return dframe
 
 
 def block_df2obsdict(block_df):
@@ -240,6 +289,8 @@ def block_df2obsdict(block_df):
 
     if "DATE" not in block_df:
         raise ValueError("Can't have rft/block observation without a date")
+
+    block_df = convert_dframe_date_to_str(block_df)
 
     block_df.dropna(axis=1, how="all", inplace=True)
 
@@ -279,12 +330,6 @@ def df2obsdict(obs_df):
     obsdict = {}
     if "CLASS" not in obs_df:
         return {}
-
-    # Format dates as strings in yaml:
-    if "DATE" in obs_df:
-        obs_df = obs_df.copy()
-        obs_df["DATE"] = obs_df["DATE"].astype(str)
-        obs_df["DATE"].replace("NaT", np.nan, inplace=True)
 
     # Process SUMMARY_OBSERVATION:
     if "SUMMARY_OBSERVATION" in obs_df["CLASS"].values:

@@ -457,6 +457,74 @@ def resinsight_df2df(ri_dframe):
     return dframe
 
 
+def smrydictlist2df(smrylist):
+    """Parse a list structure (subpart of yaml syntax) of summary observations
+    into  dataframe format
+
+    Args:
+        blocklist (list): List of dictionaries with summary observations
+
+    Returns:
+        pd.DataFrame
+    """
+    rows = []
+    for keylist in smrylist:
+        if "observations" not in keylist:
+            logger.warning("Missing 'observations' list in summary observation")
+            continue
+        for obs_idx, obs in enumerate(keylist["observations"]):
+            rowdict = {"CLASS": "SUMMARY_OBSERVATION", "KEY": keylist["key"]}
+            rowdict.update(uppercase_dictkeys(obs))
+            if "label" in keylist:
+                logger.warning(
+                    "label should be attached to dated observations, ignored label=%s",
+                    keylist["label"],
+                )
+            if "label" not in obs:
+                # We need to make up a unique label, indexed from 1 and upwards:
+                rowdict["LABEL"] = keylist["key"] + "-" + str(obs_idx + 1)
+            rows.append(rowdict)
+    dframe = pd.DataFrame(rows)
+    if "DATE" in dframe:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    return dframe
+
+
+def blockdictlist2df(blocklist):
+    """Parse a list structure (subpart of yaml syntax) of block observations
+    into  dataframe format
+
+    Args:
+        blocklist (list): List of dictionaries with block/rft observations
+
+    Returns:
+        pd.DataFrame
+    """
+    rows = []
+    # "well" is a required field in yaml syntax, but is
+    # not required in ert observation. But in ERT observation
+    # syntax and internal dataframe format, a label is mandatory, but not in
+    # YAML. A label is made up from well-name and index of observation for the
+    # well.
+    for keylist in blocklist:
+        if "observations" not in keylist:
+            logger.warning("Missing 'observations' in rft observation")
+            continue
+        for obs_idx, obs in enumerate(keylist["observations"]):
+            rowdict = {"CLASS": "BLOCK_OBSERVATION"}
+            rowdict.update(uppercase_dictkeys(keylist))
+            if "OBSERVATIONS" in rowdict:
+                del rowdict["OBSERVATIONS"]
+            if "label" not in obs:
+                rowdict["LABEL"] = keylist["well"] + "-" + str(obs_idx + 1)
+            rowdict.update(uppercase_dictkeys(obs))
+            rows.append(rowdict)
+    dframe = pd.DataFrame(rows)
+    if "DATE" in dframe:
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+    return dframe
+
+
 def obsdict2df(obsdict):
     """Convert an observation dictionary (with YAML file format structure)
     into the internal dataframe representation
@@ -471,44 +539,9 @@ def obsdict2df(obsdict):
     if not isinstance(obsdict, dict):
         raise ValueError("obsdict must be a dictionary")
 
-    rows = []  # List of dicts
+    dframes = []  # List of dicts
     if "smry" in obsdict:
-        for keylist in obsdict["smry"]:
-            if "observations" not in keylist:
-                logger.warning("Missing 'observations' list in summary observation")
-                continue
-            for obs in keylist["observations"]:
-                rowdict = {"CLASS": "SUMMARY_OBSERVATION", "KEY": keylist["key"]}
-                rowdict.update(uppercase_dictkeys(obs))
-                if "label" not in obs:
-                    rowdict["LABEL"] = keylist["key"]
-                    del rowdict["KEY"]  # superfluous
-                rows.append(rowdict)
+        dframes.append(smrydictlist2df(obsdict["smry"]))
     if "rft" in obsdict:
-        # "well" is a required field in yaml syntax, but is
-        # not required in ert observation. Thus, it might be dummy-defaulted.
-        for keylist in obsdict["rft"]:
-            if "observations" not in keylist:
-                logger.warning("Missing 'observations' in rft observation")
-                continue
-            for obs in keylist["observations"]:
-                rowdict = {"CLASS": "BLOCK_OBSERVATION"}
-                rowdict.update(uppercase_dictkeys(keylist))
-                if "OBSERVATIONS" in rowdict:
-                    del rowdict["OBSERVATIONS"]
-                if "label" not in obs:
-                    if "well" in keylist:
-                        rowdict["LABEL"] = keylist["well"]
-                        # NB: This label is not guaranteed to be unique
-                    else:  # Make up something:
-                        rowdict["LABEL"] = (
-                            keylist.get("field", "NXXXXONE")
-                            + "-"
-                            + keylist.get("date", "NaT")
-                        )
-                rowdict.update(uppercase_dictkeys(obs))
-                rows.append(rowdict)
-    dframe = pd.DataFrame(rows)
-    if "DATE" in dframe:
-        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
-    return dframe
+        dframes.append(blockdictlist2df(obsdict["rft"]))
+    return pd.concat(dframes, ignore_index=True)
