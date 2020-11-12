@@ -78,7 +78,7 @@ def dfblock2ertobs(obs_df):
                         "block dataframe for one label has multiple {}".format(dataname)
                     )
         for _, row in block_df.iterrows():
-            ertobs_str += "    OBS " + row["OBS"] + "{"
+            ertobs_str += "    OBS " + row["OBS"] + " {"
             for dataname in ["I", "J", "K", "VALUE", "ERROR", "SOURCE"]:
                 if dataname in row and not pd.isnull(row[dataname]):
                     ertobs_str += " " + dataname + " = " + str(row[dataname]) + ";"
@@ -226,6 +226,7 @@ def block_df2obsdict(block_df):
 
     Args:
         block_df (pd.DataFrame)
+
     Returns:
         list: List of dictionaries, each dict has "well", "date" and
         "observations"

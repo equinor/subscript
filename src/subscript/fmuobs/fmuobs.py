@@ -1,4 +1,5 @@
-"""Parse ERT observation files"""
+"""fmuobs is a converter tool for observation files used in assisted
+history matching"""
 import os
 import sys
 import signal
@@ -47,7 +48,7 @@ CATEGORY = "utility.transformation"
 EXAMPLES = """
 .. code-block:: console
 
-  FORWARD_MODEL ERTOBS(<INPUT_FILE>=observations.txt, YML_OUTPUT>=observations.yml, <RESINSIGHT_OUTPUT>=observations-ri.csv)
+  FORWARD_MODEL FMUOBS(<INPUT_FILE>=observations.txt, YML_OUTPUT>=observations.yml, <RESINSIGHT_OUTPUT>=observations-ri.csv)
 """  # noqa
 
 __MAGIC_NONE__ = "__NONE__"  # For ERT hook defaults support.
@@ -77,28 +78,28 @@ def get_parser():
         type=str,
     )
     parser.add_argument(
+        "--ertobs",
+        "--ert",
+        type=str,
+        help="Name of ERT observation file. Use '-' to write to stdout.",
+    )
+    parser.add_argument(
         "-o",
         "--yml",
         "--yaml",
         type=str,
-        help="Name of output YAML file. Use '-' to write to stdout.",
-    )
-    parser.add_argument(
-        "--csv",
-        type=str,
-        help="Name of output CSV file. Use '-' to write to stdout.",
+        help="YAML output-file. Use '-' to write to stdout.",
     )
     parser.add_argument(
         "--resinsight",
         "--ri",
         type=str,
-        help="Name of ResInsight observations CSV file. Use '-' to write to stdout.",
+        help="ResInsight observations output CSV-file. Use '-' to write to stdout.",
     )
     parser.add_argument(
-        "--ertobs",
-        "--ert",
+        "--csv",
         type=str,
-        help="Name of ERT observation file. Use '-' to write to stdout.",
+        help="Name of output CSV file. Use '-' to write to stdout.",
     )
     parser.add_argument(
         "--starttime",
@@ -149,17 +150,26 @@ def validate_internal_dframe(obs_df):
 
     # Left to validate:
     # check that segment has start and end if not default.
-    # summary obs requires four arguments.
+    # summary obs requires four arguments. (also for resinsight?)
     # block requires two global, and j,k,value,error for each subunit.
+    # block requires label
     # general requires data, restart, obs_file. index_list, index_file,
     # error_covariance is optional.
+    # always call this after parsing from resinsight/yaml
     logger.info("Observation dataframe validated")
     return not failed
 
 
 def autoparse_file(filename):
-    """Detects which kind of observation file format a given filename has. This
-    is done by attempting to parse its content.
+    """Detects the observation file format for a given filename. This
+    is done by attempting to parse its content and giving up on
+    exceptions.
+
+    NB: In case of ERT file formats, the include statements are
+    interpreted relative to current working directory. Thus it
+    is recommended to reparse with correct cwd after detecting ERT file
+    format. The correct cwd for include-statement is the path of the
+    ERT config file, which is outside the context of fmuobs.
 
     Args:
         filename (str)
@@ -233,7 +243,7 @@ def autoparse_file(filename):
 
 
 def main():
-    """Command line client, parse command line arguments and run function."""
+    """Command line client, parse command line arguments and execute the tool."""
     parser = get_parser()
     args = parser.parse_args()
     if args.verbose:
@@ -287,6 +297,7 @@ def dump_results(
         dframe (pd.DataFrame)
         csvfile (str): Filename
         yamlfile (str): Filename
+        resinsightfile (str): Filename
         ertfile (str): Filename
     """
 

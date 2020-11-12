@@ -9,7 +9,10 @@ import pytest
 
 
 from subscript.fmuobs.writers import (
+    dfblock2ertobs,
     dfsummary2ertobs,
+    dfgeneral2ertobs,
+    dfhistory2ertobs,
     df2obsdict,
     df2resinsight_df,
 )
@@ -95,8 +98,52 @@ def test_dfsummary2ertobs(obs_df, expected_str):
 
 
 # dfblock2ertobs:
-
-# writeme!!!
+@pytest.mark.parametrize("obs_df, expected_str",
+        [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "OBS": "P1",
+                    },
+                ]
+            ),
+            """BLOCK_OBSERVATION RFT_2006_OP1
+{
+    DATE = 05/04/1986;
+    OBS P1 {};
+};
+"""),
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_SWAT_2006_OP1",
+                        "FIELD": "SWAT",
+                        "DATE": datetime(1900, 1, 1),
+                        "OBS": "P1",
+                        "I": 1,
+                        "J": 2,
+                        "NOTINCLUDED": "SKIPME",
+                    },
+                ]
+            ),
+            """BLOCK_OBSERVATION RFT_SWAT_2006_OP1
+{
+    FIELD = SWAT;
+    DATE = 01/01/1900;
+    OBS P1 { I = 1; J = 2;};
+};
+"""),
+        ]
+)
+def  test_dfblock2ertobs(obs_df, expected_str):
+    print(dfblock2ertobs(obs_df))
+    assert dfblock2ertobs(obs_df).strip() == expected_str.strip()
 
 
 # dfhistory2ertobs:

@@ -362,8 +362,8 @@ def flatten_observation_unit(obsunit, subunit_label="obs_sub_id"):
 
 
 def ertobs2df(input_str, cwd=".", starttime=None):
-    """Parse a string with ERT observations and convert to
-    an equivalent tabular format, represented by a Pandas dataframe.
+    """Parse a string with ERT observations and convert into
+    the internal dataframe format.
 
     Args:
         input_str (str): String in ERT observation syntax. Newlines and
@@ -376,7 +376,7 @@ def ertobs2df(input_str, cwd=".", starttime=None):
             to this starttime, and converted to DATE.
 
     Returns:
-        pd.DataFrame
+        pd.DataFrame. The DATE column is always of type datetime64
     """
     ertobs_str = expand_includes(filter_comments(input_str), cwd=cwd)
 
@@ -417,7 +417,7 @@ def compute_date_from_days(dframe, starttime=None):
             to this starttime, and converted to DATE.
 
     Returns:
-        pd.DataFrame
+        pd.DataFrame. DATE column is always of type datetime64
     """
     if starttime and "DAYS" in dframe:
         if "DATE" not in dframe:
@@ -462,7 +462,8 @@ def obsdict2df(obsdict):
     into the internal dataframe representation
 
     Args:
-        obsdict
+        obsdict (dict): Dictionary of observations. Top level keys are "smry"
+            and/or "rft", pointing to list of dictionaries.
 
     Returns:
         pd.DataFrame
