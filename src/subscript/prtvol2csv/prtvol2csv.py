@@ -26,7 +26,7 @@ CATEGORY = "utility.eclipse"
 EXAMPLES = """
 .. code-block:: console
 
-  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>)
+  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>.PRT)
 
 """  # noqa
 
