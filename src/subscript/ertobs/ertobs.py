@@ -26,15 +26,17 @@ from subscript.ertobs.writers import (
 
 logger = getLogger(__name__)
 
-DESCRIPTION = """Parser for ERT observation files.
+DESCRIPTION = """Converter for assisted history match observation files.
 
-Will read ERT observation file format, YAML file format, CSV file format
-or ResInsight file format, and can write to any of the other formats.
+Supported file formats:
+    * ERT observation files
+    * YAML observation files (Webviz)
+    * ResInsight observation files (semi-colon separated values)
 
-Internal data structure for all data formats is a Pandas DataFrame, which can
-be dumped as CSV. YAML and ResInsight formats only supports a subset of
-observation data in ERT observation files, while YAML file may also contain more
-information that cannot be brought over to other formats.
+Any of these formats can be parsed and outputted to any of the other formats,
+for the subset of observations types supported by each format. Internally the
+script holds a tabular format that supports all formats, and this can be
+exported and imported as CSV.
 
 ERT observation file syntax:
 https://fmu-docs.equinor.com/docs/ert/reference/configuration/observations.html
@@ -44,7 +46,8 @@ CATEGORY = "utility.transformation"
 
 EXAMPLES = """
 .. code-block:: console
-  FORWARD_MODEL ERTOBS(<INPUT_FILE>=observations.txt, <RESINSIGHT_OUTPUT>=observations-ri.csv, <YML_OUTPUT>=observations.yml)
+
+  FORWARD_MODEL ERTOBS(<INPUT_FILE>=observations.txt, YML_OUTPUT>=observations.yml, <RESINSIGHT_OUTPUT>=observations-ri.csv)
 """  # noqa
 
 __MAGIC_NONE__ = "__NONE__"  # For ERT hook defaults support.
@@ -63,7 +66,7 @@ class CustomFormatter(
 
 def get_parser():
     """Return a parser for the command line client, and for
-    generating help text"""
+    generating help text (reusing the help text used for the FORWARD_MODEL)"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
     )
@@ -144,6 +147,7 @@ def validate_internal_dframe(obs_df):
         logger.error("\n%s", str(repeated_rows.dropna(axis="columns", how="all")))
         failed = True
 
+    # Left to validate:
     # check that segment has start and end if not default.
     # summary obs requires four arguments.
     # block requires two global, and j,k,value,error for each subunit.

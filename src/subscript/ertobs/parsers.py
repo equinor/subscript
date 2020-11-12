@@ -412,7 +412,7 @@ def compute_date_from_days(dframe, starttime=None):
     a given starttime and data in DAYS cells.
 
     Args:
-        dframe (pd.Dataframe)
+        dframe (pd.DataFrame): Any dataframe with a floating point column named DAYS
         starttime (str): If provided, DAYS data will be interpreted relative
             to this starttime, and converted to DATE.
 
