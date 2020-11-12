@@ -1,4 +1,7 @@
-"""Test the ERT observation file format parser"""
+"""Test the fmuobs parsers, for ERT observation file, YAML and ResInsight.
+
+They all parse and transform the data into the internal dataframe
+representation."""
 
 import datetime
 
@@ -6,7 +9,7 @@ import pandas as pd
 import pytest
 
 
-from subscript.ertobs.parsers import (
+from subscript.fmuobs.parsers import (
     INCLUDE_RE,
     OBS_ARGS_RE,
     ertobs2df,
@@ -20,68 +23,7 @@ from subscript.ertobs.parsers import (
     obsdict2df,
 )
 
-from subscript.ertobs.writers import df2ertobs, df2obsdict
-
-
-@pytest.mark.parametrize(
-    "string, expected",
-    [
-        ("", ""),
-        ("1", 1),
-        ("1.0", 1),
-        ("1.1", 1.1),
-        ("1e4", 10000),
-        ("1.0e4", 10000),
-        ("1.1e4", 11000),
-        ("foo", "foo"),
-        ("01/01/1900", datetime.datetime(1900, 1, 1)),
-        ("12/24/2020", "12/24/2020"),
-        ("01/12/2020", datetime.datetime(2020, 12, 1)),
-    ],
-)
-def test_fix_dtype(string, expected):
-    """Test that values are converted to numeric when possible"""
-    assert fix_dtype(string) == expected
-
-
-@pytest.mark.parametrize(
-    "string, masked_string, expected",
-    [
-        ("", "", []),
-        (";", ";", []),
-        ("foo", "foo", ["foo"]),
-        ("foo", "XXX", ["foo"]),
-        ("foo;", "XXX;", ["foo"]),
-        ("foo; ", "XXX; ", ["foo"]),
-        ("foo {hei;};", "foo XXXXXX;", ["foo {hei;}"]),
-        (
-            "foo {hei;}; bar {hopp;};",
-            "foo XXXXXX; bar XXXXXXX;",
-            ["foo {hei;}", "bar {hopp;}"],
-        ),
-    ],
-)
-def test_split_by_sep_in_masked_string(string, masked_string, expected):
-    """Test that we are able to split strings by separator positions in
-    an auxiliary string"""
-    assert list(split_by_sep_in_masked_string(string, masked_string)) == expected
-
-
-@pytest.mark.parametrize(
-    "string, filename",
-    [
-        ("include foo.txt;", "foo.txt"),
-        ("include 'foo.txt';", "foo.txt"),
-        ('include "foo.txt" ;', "foo.txt"),
-        (" include    'foo.txt' ; ", "foo.txt"),
-        ("include foo-bar_com.txt; ", "foo-bar_com.txt"),
-        ("include føø_9-.txt;", "føø_9-.txt"),
-        ("include 'hei hopp.txt';", "hei hopp.txt"),
-    ],
-)
-def test_include_re(string, filename):
-    """Test that we can deduce the filename for an include"""
-    assert INCLUDE_RE.match(string).groups()[1] == filename
+from subscript.fmuobs.writers import df2ertobs, df2obsdict
 
 
 def test_expand_includes(tmpdir):
@@ -107,21 +49,6 @@ def test_expand_includes(tmpdir):
         expand_includes("hallo; include leaf.txt; hei", cwd="subdir")
         == "hallo; foo; hei"
     )
-
-
-@pytest.mark.parametrize(
-    "string, expected",
-    [
-        ("obs p1 {i=1; };", ("obs p1 ", "{i=1; }")),
-        ("field=pressure; obs p1 {i=1; };", ("field=pressure", None)),
-        ("obs p1 {i=1; }; obs p2 {i=2;};", ("obs p1 ", "{i=1; }")),
-        ("value=100;", ("value=100", None)),
-    ],
-)
-def test_obs_args_re(string, expected):
-    """Test that a regular expression is able to parse and split the observation
-    arguments (inside a curly brace set)"""
-    assert OBS_ARGS_RE.match(string).groups() == expected
 
 
 @pytest.mark.parametrize(
@@ -159,6 +86,97 @@ def test_mask_curly_braces(string, expected):
     """Test that curly braces can be masked, to facilitate splitting
     by semicolons but ignore semicolons inside curly braces"""
     assert mask_curly_braces(string) == expected
+
+
+@pytest.mark.parametrize(
+    "string, masked_string, expected",
+    [
+        ("", "", []),
+        (";", ";", []),
+        ("foo", "foo", ["foo"]),
+        ("foo", "XXX", ["foo"]),
+        ("foo;", "XXX;", ["foo"]),
+        ("foo; ", "XXX; ", ["foo"]),
+        ("foo {hei;};", "foo XXXXXX;", ["foo {hei;}"]),
+        (
+            "foo {hei;}; bar {hopp;};",
+            "foo XXXXXX; bar XXXXXXX;",
+            ["foo {hei;}", "bar {hopp;}"],
+        ),
+    ],
+)
+def test_split_by_sep_in_masked_string(string, masked_string, expected):
+    """Test that we are able to split strings by separator positions in
+    an auxiliary string"""
+    assert list(split_by_sep_in_masked_string(string, masked_string)) == expected
+
+
+@pytest.mark.parametrize(
+    "string, expected",
+    [
+        ("foo\n-- hallo\nhei", "foo\nhei"),
+        ("foo --a comment", "foo"),
+        ("\n", ""),
+        (" ", ""),
+        ("foo -- hallo -- hopp", "foo"),
+    ],
+)
+def test_filter_comments(string, expected):
+    """Test that comments are properly filtered out"""
+    assert filter_comments(string) == expected
+
+
+@pytest.mark.parametrize(
+    "string, expected",
+    [
+        ("", ""),
+        ("1", 1),
+        ("1.0", 1),
+        ("1.1", 1.1),
+        ("1e4", 10000),
+        ("1.0e4", 10000),
+        ("1.1e4", 11000),
+        ("foo", "foo"),
+        ("01/01/1900", datetime.datetime(1900, 1, 1)),
+        ("12/24/2020", "12/24/2020"),
+        ("01/12/2020", datetime.datetime(2020, 12, 1)),
+    ],
+)
+def test_fix_dtype(string, expected):
+    """Test that values are converted to numeric when possible"""
+    assert fix_dtype(string) == expected
+
+
+@pytest.mark.parametrize(
+    "string, filename",
+    [
+        ("include foo.txt;", "foo.txt"),
+        ("include 'foo.txt';", "foo.txt"),
+        ('include "foo.txt" ;', "foo.txt"),
+        (" include    'foo.txt' ; ", "foo.txt"),
+        ("include foo-bar_com.txt; ", "foo-bar_com.txt"),
+        ("include føø_9-.txt;", "føø_9-.txt"),
+        ("include 'hei hopp.txt';", "hei hopp.txt"),
+    ],
+)
+def test_include_re(string, filename):
+    """Test that we can deduce the filename for an include"""
+    assert INCLUDE_RE.match(string).groups()[1] == filename
+
+
+@pytest.mark.parametrize(
+    "string, expected",
+    [
+        ("obs p1 {i=1; };", ("obs p1 ", "{i=1; }")),
+        ("field=pressure; obs p1 {i=1; };", ("field=pressure", None)),
+        ("obs p1 {i=1; }; obs p2 {i=2;};", ("obs p1 ", "{i=1; }")),
+        ("value=100;", ("value=100", None)),
+    ],
+)
+def test_obs_args_re(string, expected):
+    """Test that a regular expression is able to parse and split the observation
+    arguments (inside a curly brace set)"""
+    assert OBS_ARGS_RE.match(string).groups() == expected
 
 
 @pytest.mark.parametrize(
@@ -447,18 +465,3 @@ def test_ertobs2df_starttime(string, expected):
         ertobs2df(string, starttime=datetime.date(2020, 1, 1)).sort_index(axis=1),
         expected.sort_index(axis=1),
     )
-
-
-@pytest.mark.parametrize(
-    "string, expected",
-    [
-        ("foo\n-- hallo\nhei", "foo\nhei"),
-        ("foo --a comment", "foo"),
-        ("\n", ""),
-        (" ", ""),
-        ("foo -- hallo -- hopp", "foo"),
-    ],
-)
-def test_filter_comments(string, expected):
-    """Test that comments are properly filtered out"""
-    assert filter_comments(string) == expected

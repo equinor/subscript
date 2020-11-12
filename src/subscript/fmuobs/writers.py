@@ -1,5 +1,5 @@
-"""Support functions for usage with ertobs, for converting from the internal
-dataframe format to ERT observationf format, YAML format and ResInsight
+"""Support functions for usage with fmuobs, for converting from the internal
+dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
@@ -9,7 +9,7 @@ import pandas as pd
 from subscript import getLogger
 
 
-from subscript.ertobs.util import CLASS_SHORTNAME, ERT_DATE_FORMAT, lowercase_dictkeys
+from subscript.fmuobs.util import CLASS_SHORTNAME, ERT_DATE_FORMAT, lowercase_dictkeys
 
 logger = getLogger(__name__)
 

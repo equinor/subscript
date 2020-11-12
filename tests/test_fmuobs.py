@@ -12,13 +12,13 @@ import yaml
 import pytest
 
 
-from subscript.ertobs.ertobs import (
+from subscript.fmuobs.fmuobs import (
     autoparse_file,
     main,
 )
 
-from subscript.ertobs.parsers import ertobs2df, obsdict2df
-from subscript.ertobs.writers import df2ertobs, df2obsdict
+from subscript.fmuobs.parsers import ertobs2df, obsdict2df
+from subscript.fmuobs.writers import df2ertobs, df2obsdict
 
 
 try:
@@ -42,7 +42,7 @@ except ImportError:
 def test_autoparse_file(filename, expected_format):
     """Test that the included observation file formats in the test suite
     are correctly recognized"""
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_ertobs")
+    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     os.chdir(testdata_dir)
     assert autoparse_file(filename)[0] == expected_format
 
@@ -103,7 +103,7 @@ def test_autoparse_string(string, expected_format, tmpdir):
     ],
 )
 def test_roundtrip_ertobs(filename, orig_format):
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_ertobs")
+    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
 
@@ -158,7 +158,7 @@ def test_roundtrip_ertobs(filename, orig_format):
     ],
 )
 def test_roundtrip_yaml(filename, orig_format):
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_ertobs")
+    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
 
@@ -183,7 +183,7 @@ def test_roundtrip_yaml(filename, orig_format):
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
-    assert subprocess.check_output(["ertobs", "-h"])
+    assert subprocess.check_output(["fmuobs", "-h"])
 
 
 @pytest.mark.integration
@@ -194,10 +194,10 @@ def test_commandline(tmpdir, monkeypatch):
     When code changes, updates to the CSV and YML might
     be necessary.
     """
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_ertobs")
+    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     tmpdir.chdir()
     arguments = [
-        "ertobs",
+        "fmuobs",
         "--includedir",
         str(testdata_dir),
         "--verbose",
@@ -237,11 +237,11 @@ def test_commandline(tmpdir, monkeypatch):
 
     # Test CSV to stdout:
     arguments = [
-        "ertobs",
+        "fmuobs",
         "--includedir",
         str(testdata_dir),
         "--csv",
-        "-",  # ertobs.__MAGIC_STDOUT__
+        "-",  # fmuobs.__MAGIC_STDOUT__
         os.path.join(testdata_dir, "ert-doc.obs"),
     ]
     run_result = subprocess.run(arguments, check=True, stdout=subprocess.PIPE)
@@ -255,10 +255,10 @@ def test_commandline(tmpdir, monkeypatch):
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(tmpdir):
-    """Mock an ERT config with ERTOBS2YML as a FORWARD_MODEL and run it"""
+    """Mock an ERT config with FMUOBS as a FORWARD_MODEL and run it"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_ertobs")
+    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     obs_file = os.path.join(testdata_dir, "ert-doc.obs")
     tmpdir.chdir()
 
@@ -270,7 +270,7 @@ def test_ert_hook(tmpdir):
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
         "RUNPATH .",
-        "FORWARD_MODEL ERTOBS(<INPUT_FILE>="
+        "FORWARD_MODEL FMUOBS(<INPUT_FILE>="
         + obs_file
         + ", "
         + "<CSV_OUTPUT>=ert-obs.csv, "

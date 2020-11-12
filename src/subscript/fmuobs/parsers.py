@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 
 from subscript import getLogger
-from subscript.ertobs.util import (
+from subscript.fmuobs.util import (
     ERT_DATE_FORMAT,
     uppercase_dictkeys,
 )

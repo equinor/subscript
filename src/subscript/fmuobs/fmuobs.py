@@ -11,13 +11,13 @@ import pandas as pd
 
 from subscript import getLogger
 
-from subscript.ertobs.parsers import (
+from subscript.fmuobs.parsers import (
     ertobs2df,
     compute_date_from_days,
     resinsight_df2df,
     obsdict2df,
 )
-from subscript.ertobs.writers import (
+from subscript.fmuobs.writers import (
     df2obsdict,
     df2resinsight_df,
     CLASS_SHORTNAME,
