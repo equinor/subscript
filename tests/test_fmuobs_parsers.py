@@ -269,6 +269,7 @@ def test_parse_observation_unit(string, expected):
     [
         (";", pd.DataFrame()),
         (";", pd.DataFrame()),
+        #########################################################333
         (
             (
                 "SUMMARY_OBSERVATION WCT "
@@ -287,6 +288,23 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        ##########################################################
+        (
+            "SUMMARY_OBSERVATION FGPT_1{VALUE=1e+10;ERROR=3.0e+8;DATE=01/01/2020;KEY=FGPT;};",
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "LABEL": "FGPT_1",
+                        "KEY": "FGPT",
+                        "DATE": datetime.datetime(2020, 1, 1, 0, 0),
+                        "VALUE": 1e10,
+                        "ERROR": 3.0e8,
+                    }
+                ]
+            ),
+        ),
+        #########################################################333
         (
             (
                 "SUMMARY_OBSERVATION SEP_1 {VALUE = 100;}; "
@@ -299,6 +317,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        #########################################################333
         (
             "BLOCK_OBSERVATION R1 {FIELD=PR; OBS P1 {I=1;}; OBS P2 {J=2;};};",
             pd.DataFrame(
@@ -320,6 +339,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        #########################################################333
         (
             "HISTORY_OBSERVATION WOPR:P1;",
             pd.DataFrame(
@@ -331,6 +351,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        #########################################################333
         (
             "HISTORY_OBSERVATION WOPR:P1 {};",  # NB: Empty {}
             pd.DataFrame(
@@ -342,6 +363,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        #########################################################333
         (
             "HISTORY_OBSERVATION WOPR:P1 {\n};",  # NB: Empty {}, with newline
             pd.DataFrame(
@@ -353,6 +375,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        #########################################################333
         (
             "HISTORY_OBSERVATION WOPR:P1{ERROR=10;};",
             pd.DataFrame(
@@ -365,6 +388,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
+        #########################################################333
         (
             "HISTORY_OBSERVATION WOPR:P2 {ERROR=10; SEGMENT SEG1 {ERROR=20;START=2};};",
             pd.DataFrame(
@@ -393,10 +417,12 @@ def test_ertobs2df(string, expected):
     that are also tested individually)"""
     dframe = ertobs2df(string)
     pd.testing.assert_frame_equal(
-        dframe.sort_index(axis=1), expected.sort_index(axis=1)
+        dframe.sort_index(axis=1), expected.sort_index(axis=1), check_dtype=False
     )
 
-    pd.testing.assert_frame_equal(ertobs2df(df2ertobs(dframe)), dframe)
+    pd.testing.assert_frame_equal(
+        ertobs2df(df2ertobs(dframe)).sort_index(axis=1), dframe.sort_index(axis=1)
+    )
 
     # Round-trip test via yaml:
     if "DATE" not in expected:

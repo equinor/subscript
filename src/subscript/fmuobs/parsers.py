@@ -19,13 +19,13 @@ logger = getLogger(__name__)
 # Note that lower-case is supported by the regexp's, but might not be supported
 # by ERT.
 _WHITESPACE = r"[\s]*"
-_KEY_VALUE_CHARS = r"\nA-Za-z:/=_\-\.,0-9\s"
+_KEY_VALUE_CHARS = r"\nA-Za-z:/=_\+\-\.,0-9\s"
 _OBS_CLASS = r"([A-Z_]+)"
 _OBS_LABEL = r"([A-Za-z0-9_\-]+)"
 _SEMICOLON = _WHITESPACE + ";" + _WHITESPACE
 
 # This avoids nested {}, and avoids capturing trailing ; in matched group
-_OPTIONAL_CURLY_SUBGROUP = r"(\{[A-Za-z=0-9\.,_;/\s]*\})?" + _SEMICOLON
+_OPTIONAL_CURLY_SUBGROUP = r"(\{[A-Za-z=0-9\+\.,_;/\s]*\})?" + _SEMICOLON
 
 OBS_ARGS_RE = re.compile(
     _WHITESPACE
