@@ -1,3 +1,6 @@
+ -- These observation data are copied from the ERT docs,
+ -- https://github.com/equinor/ert/blob/master/docs/rst/manual/reference/configuration/observations.rst
+
  SUMMARY_OBSERVATION SEP_TEST_2005
  {
     VALUE = 100.0;

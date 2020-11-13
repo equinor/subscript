@@ -31,6 +31,12 @@ def dfsummary2ertobs(obs_df):
     for _, row in smry_df.iterrows():
         ertobs_str += "SUMMARY_OBSERVATION " + str(row["LABEL"]) + "\n"
         ertobs_str += "{\n"
+        if "COMMENT" in row and not pd.isnull(row["COMMENT"]):
+            ertobs_str += (
+                "    -- "
+                + str(row["COMMENT"]).replace("\n", "\n    -- ").strip()
+                + "\n"
+            )
         if "DATE" in row and not pd.isnull(row["DATE"]):
             # Special formatting of the DATE
             ertobs_str += (
@@ -63,6 +69,14 @@ def dfblock2ertobs(obs_df):
         )
     for obslabel, block_df in block_obs_df.groupby("LABEL"):
         ertobs_str += "BLOCK_OBSERVATION " + obslabel + "\n{\n"
+        if "COMMENT" in block_df and not pd.isnull(block_df["COMMENT"]).any():
+            if len(block_df["COMMENT"].dropna().unique()) != 1:
+                logger.warning("Inconsistency in COMMENT in block dataframe")
+            ertobs_str += (
+                "    -- "
+                + str(block_df["COMMENT"].values[0]).replace("\n", "\n    -- ").strip()
+                + "\n"
+            )
         for dataname in ["FIELD", "DATE"]:
             if dataname in block_df.columns:
                 if len(block_df[dataname].unique()) == 1:
@@ -74,10 +88,17 @@ def dfblock2ertobs(obs_df):
                         + ";\n"
                     )
                 else:
+                    # This inconsistency is critical
                     raise ValueError(
                         "block dataframe for one label has multiple {}".format(dataname)
                     )
         for _, row in block_df.iterrows():
+            if "SUBCOMMENT" in row and not pd.isnull("SUBCOMMENT"):
+                ertobs_str += (
+                    "    -- "
+                    + str(row["SUBCOMMENT"]).strip().replace("\n", "\n    -- ").strip()
+                    + "\n"
+                )
             ertobs_str += "    OBS " + row["OBS"] + " {"
             for dataname in ["I", "J", "K", "VALUE", "ERROR", "SOURCE"]:
                 if dataname in row and not pd.isnull(row[dataname]):
@@ -206,7 +227,8 @@ def summary_df2obsdict(smry_df):
     used as label, since it is not unique over dates, while the label has to be.
 
     Note: The labels in ert observation format is not possible to preserve while going
-    through the dictionary format (because the way dates are rolled over)
+    through the dictionary format (because the way dates are rolled over). But
+    a potential column LABEL will be included as "label".
 
     Args:
         sum_df (pd.DataFrame)
@@ -228,7 +250,8 @@ def summary_df2obsdict(smry_df):
     smry_df = convert_dframe_date_to_str(smry_df)
 
     if "KEY" not in smry_df:
-        # We need to guess that the LABEL contains the (Eclipse summary vector) KEY:
+        logger.warning("KEY not provided when generating YAML for summary observations")
+        logger.warning("Using LABEL, but this might not be Eclipse summary vectors.")
         smry_df["KEY"] = smry_df["LABEL"]
     for smrykey, smrykey_df in smry_df.groupby("KEY"):
         if isinstance(smrykey_df, pd.DataFrame):
@@ -304,14 +327,22 @@ def block_df2obsdict(block_df):
         blocklabel_dict["date"] = blocklabel[1]
         if "FIELD" in blocklabel_df:
             blocklabel_dict["field"] = blocklabel_df["FIELD"].unique()[0]
+        if "COMMENT" in blocklabel_df:
+            blocklabel_dict["comment"] = blocklabel_df["COMMENT"].unique()[0]
+        # Now overwrite the COMMENT column in order to inject
+        # the SUBCOMMENT at the lower level in the dict.
+        if "SUBCOMMENT" in blocklabel_df:
+            blocklabel_df["COMMENT"] = blocklabel_df["SUBCOMMENT"]
         blocklabel_dict["observations"] = [
             lowercase_dictkeys(dict(keyvalues.dropna()))
             for _, keyvalues in blocklabel_df.drop(
-                ["FIELD", "LABEL", "DATE", "WELL"],
+                ["FIELD", "LABEL", "DATE", "WELL", "SUBCOMMENT"],
                 axis=1,
                 errors="ignore",
             ).iterrows()
         ]
+        # if "subcomment" in blocklabel_dict:
+        #    blocklabel_dict["comment"] = blocklabel_dict.pop("subcomment")
         block_obs_list.append(blocklabel_dict)
     return block_obs_list
 

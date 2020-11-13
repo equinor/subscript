@@ -490,6 +490,51 @@ def test_ertobs2df_starttime(string, expected):
         ),
         #################################################################
         (
+            [
+                {
+                    "key": "WOPR:P1",
+                    "comment": "first oil producer",
+                    "observations": [{"date": "2020"}],
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "WOPR:P1-1",  # Auto-generated label
+                        "KEY": "WOPR:P1",
+                        "COMMENT": "first oil producer",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "key": "WOPR:P1",
+                    "comment": "first oil producer",
+                    "observations": [
+                        {"date": "2020", "comment": "uncertain first point"}
+                    ],
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "WOPR:P1-1",  # Auto-generated label
+                        "KEY": "WOPR:P1",
+                        "COMMENT": "first oil producer",
+                        "SUBCOMMENT": "uncertain first point",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
             [{"key": "WOPR:P1", "observations": [{"date": "2020", "label": "FOO"}]}],
             pd.DataFrame(
                 [
@@ -607,6 +652,8 @@ def test_ertobs2df_starttime(string, expected):
     ],
 )
 def test_smrydictlist2df(smrylist, expected_df):
+    """Test converting summary observations as dictionaries (yaml) into
+    internal dataframe format"""
     if "DATE" in expected_df:
         expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
     pd.testing.assert_frame_equal(
@@ -623,14 +670,15 @@ def test_smrydictlist2df(smrylist, expected_df):
         ([{"well": "P1"}], pd.DataFrame()),
         ([{"well": "P1", "observations": []}], pd.DataFrame()),
         (
-            [{"well": "P1", "observations": [{"date": "2020", "value": 100, "i": 4}]}],
+            [{"well": "OP1", "observations": [{"date": "2020", "value": 100, "i": 4}]}],
             pd.DataFrame(
                 [
                     {
                         "CLASS": "BLOCK_OBSERVATION",
                         "DATE": datetime.date(2020, 1, 1),
-                        "LABEL": "P1-1",  # Auto-generated label
-                        "WELL": "P1",
+                        "LABEL": "OP1",  # Auto-generated label
+                        "OBS": "P1",  # Auto-generated label
+                        "WELL": "OP1",
                         "VALUE": 100.0,
                         "I": 4,
                     }
@@ -639,34 +687,60 @@ def test_smrydictlist2df(smrylist, expected_df):
         ),
         #################################################################
         (
-            [{"well": "P1", "observations": [{"date": "2020"}]}],
+            [
+                {
+                    "well": "OP1",
+                    "comment": "first well",
+                    "observations": [{"date": "2020", "comment": "bad measurement"}],
+                }
+            ],
             pd.DataFrame(
                 [
                     {
                         "CLASS": "BLOCK_OBSERVATION",
                         "DATE": datetime.date(2020, 1, 1),
-                        "LABEL": "P1-1",
-                        "WELL": "P1",
+                        "LABEL": "OP1",  # Auto-generated label
+                        "OBS": "P1",  # Auto-generated label
+                        "WELL": "OP1",
+                        "COMMENT": "first well",
+                        "SUBCOMMENT": "bad measurement",
                     }
                 ]
             ),
         ),
         #################################################################
         (
-            [{"well": "P1", "observations": [{"date": "2020"}, {"date": "2021"}]}],
+            [{"well": "OP1", "observations": [{"date": "2020"}]}],
             pd.DataFrame(
                 [
                     {
                         "CLASS": "BLOCK_OBSERVATION",
                         "DATE": datetime.date(2020, 1, 1),
-                        "LABEL": "P1-1",
-                        "WELL": "P1",
+                        "LABEL": "OP1",
+                        "OBS": "P1",
+                        "WELL": "OP1",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [{"well": "OP1", "observations": [{"date": "2020"}, {"date": "2021"}]}],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "LABEL": "OP1",
+                        "OBS": "P1",
+                        "WELL": "OP1",
                     },
                     {
                         "CLASS": "BLOCK_OBSERVATION",
                         "DATE": datetime.date(2021, 1, 1),
-                        "LABEL": "P1-2",
-                        "WELL": "P1",
+                        "LABEL": "OP1",
+                        "OBS": "P2",
+                        "WELL": "OP1",
                     },
                 ]
             ),
@@ -675,8 +749,10 @@ def test_smrydictlist2df(smrylist, expected_df):
     ],
 )
 def test_blockdictlist2df(blocklist, expected_df):
-    print(blockdictlist2df(blocklist))
-    print(expected_df)
+    """Test converting block/rft observations in dict (yaml) format into
+    internal dataframe format"""
+    # print(blockdictlist2df(blocklist))
+    # print(expected_df)
     if "DATE" in expected_df:
         expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
     pd.testing.assert_frame_equal(
@@ -694,25 +770,26 @@ def test_blockdictlist2df(blocklist, expected_df):
             {
                 "rft": [
                     {
-                        "well": "P1",
+                        "well": "OP1",
                         "observations": [{"date": "2020", "value": 100, "i": 4}],
                     }
                 ],
-                "smry": [{"key": "WOPR:P1", "observations": [{"date": "2020"}]}],
+                "smry": [{"key": "WOPR:OP1", "observations": [{"date": "2020"}]}],
             },
             pd.DataFrame(
                 [
                     {
                         "CLASS": "SUMMARY_OBSERVATION",
                         "DATE": datetime.date(2020, 1, 1),
-                        "LABEL": "WOPR:P1-1",  # Auto-generated label
-                        "KEY": "WOPR:P1",
+                        "LABEL": "WOPR:OP1-1",  # Auto-generated label
+                        "KEY": "WOPR:OP1",
                     },
                     {
                         "CLASS": "BLOCK_OBSERVATION",
                         "DATE": datetime.date(2020, 1, 1),
-                        "LABEL": "P1-1",  # Auto-generated label
-                        "WELL": "P1",
+                        "LABEL": "OP1",  # Auto-generated label
+                        "OBS": "P1",  # Auto-generated label
+                        "WELL": "OP1",
                         "VALUE": 100.0,
                         "I": 4,
                     },
@@ -722,9 +799,9 @@ def test_blockdictlist2df(blocklist, expected_df):
     ],
 )
 def test_obsdict2df(obsdict, expected_df):
-    print("FAAAAAAAAAAAAAAAAAAAAAA")
-    print(obsdict2df(obsdict))
-    print(expected_df)
+    """Test converting yaml format (any kind of observation) into internal
+    dataframe format. Specifics in each class of observation has its own test
+    functions"""
     if "DATE" in expected_df:
         expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
     pd.testing.assert_frame_equal(

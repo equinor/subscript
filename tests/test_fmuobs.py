@@ -17,8 +17,8 @@ from subscript.fmuobs.fmuobs import (
     main,
 )
 
-from subscript.fmuobs.parsers import ertobs2df, obsdict2df
-from subscript.fmuobs.writers import df2ertobs, df2obsdict
+from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
+from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
 
 try:
@@ -96,13 +96,16 @@ def test_autoparse_string(string, expected_format, tmpdir):
 @pytest.mark.parametrize(
     "filename, orig_format",
     [
-        ("ert-doc.obs", "ert"),
-        ("ri-obs.csv", "resinsight"),
-        ("ert-doc.yml", "yaml"),
-        ("ert-doc.csv", "csv"),
+        ("ert-doc.obs"),
+        ("ri-obs.csv"),
+        ("ert-doc.yml"),
+        ("ert-doc.csv"),
     ],
 )
-def test_roundtrip_ertobs(filename, orig_format):
+def test_roundtrip_ertobs(filename):
+    """Test converting all included test data sets into ERT observations
+    (as strings) and then parsing it, ensuring that we end up in the
+    same place"""
     testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
@@ -151,13 +154,20 @@ def test_roundtrip_ertobs(filename, orig_format):
 @pytest.mark.parametrize(
     "filename, orig_format",
     [
-        ("ert-doc.obs", "ert"),
-        ("ri-obs.csv", "resinsight"),
-        ("ert-doc.yml", "yaml"),
-        ("ert-doc.csv", "csv"),
+        ("ert-doc.obs"),
+        ("ri-obs.csv"),
+        ("ert-doc.yml"),
+        ("ert-doc.csv"),
     ],
 )
-def test_roundtrip_yaml(filename, orig_format):
+def test_roundtrip_yaml(filename):
+    """Test converting all test data sets in testdir into yaml and back again.
+
+    Due to yaml supporting a subset of features in the internal dataframe format
+    some exceptions must be hardcoded in this test function.
+
+    Also pay attention to the way the yaml parser creates LABEL data.
+    """
     testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
@@ -167,7 +177,7 @@ def test_roundtrip_yaml(filename, orig_format):
         (dframe["CLASS"] == "SUMMARY_OBSERVATION")
         | (dframe["CLASS"] == "BLOCK_OBSERVATION")
     ].dropna(axis="columns", how="all")
-    # Convert to ERT obs format and back again:
+    # Convert to YAML (really dict) format and back again:
     obsdict = df2obsdict(dframe)
     yaml_roundtrip_dframe = obsdict2df(obsdict)
     yaml_roundtrip_dframe.set_index("CLASS", inplace=True)
@@ -177,7 +187,57 @@ def test_roundtrip_yaml(filename, orig_format):
         del yaml_roundtrip_dframe["WELL"]
     if "WELL" in dframe:
         del dframe["WELL"]
-    pd.testing.assert_frame_equal(yaml_roundtrip_dframe, dframe, check_like=True)
+    # print(yaml_roundtrip_dframe.head(15))
+    # print(dframe.head(15))
+    pd.testing.assert_frame_equal(
+        yaml_roundtrip_dframe.sort_index(axis="columns"),
+        dframe.sort_index(axis="columns"),
+        check_like=True,
+    )
+
+
+@pytest.mark.parametrize(
+    "filename, orig_format",
+    [
+        ("ert-doc.obs"),
+        ("ri-obs.csv"),
+        ("ert-doc.yml"),
+        ("ert-doc.csv"),
+    ],
+)
+def test_roundtrip_resinsight(filename):
+    """Test converting all test data sets in testdir into resinsight and back again.
+
+    ResInsight only supports SUMMARY_OBSERVATION.
+    """
+    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
+    os.chdir(testdata_dir)
+    dframe = autoparse_file(filename)[1]
+
+    # Reduce to the subset supported by yaml:
+    dframe = dframe[dframe["CLASS"] == "SUMMARY_OBSERVATION"].dropna(
+        axis="columns", how="all"
+    )
+    # Drop observations with no date:
+    dframe = dframe[~dframe["DATE"].isna()].dropna(axis=1, how="all")
+
+    # Convert to ResInsight dataframe format and back again:
+    ri_dframe = df2resinsight_df(dframe)
+    ri_roundtrip_dframe = resinsight_df2df(ri_dframe)
+
+    # LABEL is not part of the ResInsight format, and a made-up label
+    # is obtained through the roundtrip (when importing back). Skip it
+    # when comparing.
+
+    pd.testing.assert_frame_equal(
+        ri_roundtrip_dframe.sort_index(axis="columns").drop(
+            "LABEL", axis="columns", errors="ignore"
+        ),
+        dframe.sort_index(axis="columns").drop(
+            "LABEL", axis="columns", errors="ignore"
+        ),
+        check_like=True,
+    )
 
 
 @pytest.mark.integration

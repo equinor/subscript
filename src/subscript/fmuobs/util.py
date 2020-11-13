@@ -1,3 +1,5 @@
+"""Small utility functions used by fmuobs, parsers and/or writers"""
+
 # Used in yaml file
 CLASS_SHORTNAME = {
     "SUMMARY_OBSERVATION": "smry",

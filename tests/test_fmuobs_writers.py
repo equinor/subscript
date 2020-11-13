@@ -37,6 +37,7 @@ from subscript.fmuobs.parsers import ertobs2df
                         "DATE": "2025-01-01",
                         "VALUE": 2222.3,
                         "ERROR": 100,
+                        "COMMENT": "FOO BAR\ndontcrash",
                     },
                     {
                         "CLASS": "SUMMARY_OBSERVATION",
@@ -64,6 +65,8 @@ from subscript.fmuobs.parsers import ertobs2df
             ),
             """SUMMARY_OBSERVATION WOPR:OP1
 {
+    -- FOO BAR
+    -- dontcrash
     DATE = 01/01/2025;
     VALUE = 2222.3;
     ERROR = 100.0;
@@ -90,13 +93,13 @@ def test_dfsummary2ertobs(obs_df, expected_str):
     assert dfsummary2ertobs(obs_df).strip() == expected_str.strip()
 
     # Should be able to go back again also for
-    # a subset:
+    # a subset, but the comments are not attempted parsed:
     obs_df["DATE"] = pd.to_datetime(obs_df["DATE"])
     pd.testing.assert_frame_equal(
         ertobs2df(expected_str),
-        obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].dropna(
-            axis="columns", how="all"
-        ),
+        obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"]
+        .dropna(axis="columns", how="all")
+        .drop("COMMENT", axis=1, errors="ignore"),
         # We relax int/float problems as long as the values are equal:
         check_dtype=False,
     )
@@ -124,6 +127,65 @@ def test_dfsummary2ertobs(obs_df, expected_str):
 };
 """,
         ),
+        ############################################################
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "OBS": "P1",
+                        "COMMENT": "FOO",
+                        "SUBCOMMENT": "bza",
+                    },
+                ]
+            ),
+            """BLOCK_OBSERVATION RFT_2006_OP1
+{
+    -- FOO
+    DATE = 05/04/1986;
+    -- bza
+    OBS P1 {};
+};
+""",
+        ),
+        ############################################################
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "OBS": "P1",
+                        "COMMENT": "FOO\ndontcrash",
+                        "SUBCOMMENT": "bza",
+                    },
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "LABEL": "RFT_2006_OP1",
+                        "DATE": "1986-04-05",
+                        "OBS": "P2",
+                        "COMMENT": "FOO",
+                        "SUBCOMMENT": "bzarrr\ndonterror!",
+                    },
+                ]
+            ),
+            """BLOCK_OBSERVATION RFT_2006_OP1
+{
+    -- FOO
+    -- dontcrash
+    DATE = 05/04/1986;
+    -- bza
+    OBS P1 {};
+    -- bzarrr
+    -- donterror!
+    OBS P2 {};
+};
+""",
+        ),
+        ############################################################
         (
             pd.DataFrame(
                 [
@@ -350,6 +412,7 @@ def test_df2ertobs(obs_df, expected_str):
                         "DATE": datetime.date(2026, 1, 1),
                         "VALUE": 1000,
                         "ERROR": 100,
+                        "LABEL": "OP2_2026",
                     },
                 ]
             ),
@@ -368,6 +431,7 @@ def test_df2ertobs(obs_df, expected_str):
                             "date": "2026-01-01",
                             "value": 1000.0,
                             "error": 100.0,
+                            "label": "OP2_2026",
                         },
                     ],
                 },
@@ -394,6 +458,8 @@ def test_summary_df2obsdict(obs_df, expected_list):
                         "DATE": "1986-04-05",
                         "VALUE": 100,
                         "K": 4,
+                        "COMMENT": "first well",
+                        "SUBCOMMENT": "bad measurement",
                     },
                     {
                         "CLASS": "BLOCK_OBSERVATION",
@@ -401,16 +467,19 @@ def test_summary_df2obsdict(obs_df, expected_list):
                         "DATE": datetime.date(1986, 4, 5),
                         "VALUE": 101,
                         "K": 5,
+                        # This is a required label in ERT obs, but optional here:
+                        "OBS": "P2",
                     },
                 ]
             ),
             [
                 {
                     "well": "RFT_2006_OP1",
+                    "comment": "first well",
                     "date": "1986-04-05",
                     "observations": [
-                        {"k": 4, "value": 100},
-                        {"k": 5, "value": 101},
+                        {"k": 4, "value": 100, "comment": "bad measurement"},
+                        {"k": 5, "value": 101, "obs": "P2"},
                     ],
                 },
             ],

@@ -474,6 +474,14 @@ def smrydictlist2df(smrylist):
             continue
         for obs_idx, obs in enumerate(keylist["observations"]):
             rowdict = {"CLASS": "SUMMARY_OBSERVATION", "KEY": keylist["key"]}
+            if "comment" in keylist:
+                rowdict["COMMENT"] = keylist["comment"]
+            # "comment" may be present at two levels in the dictionary, valid
+            # for the whole observation, or for individual dated observations.
+            # The latter is put into the column "SUBCOMMENT"
+            if "comment" in obs:
+                obs["subcomment"] = obs["comment"]
+                del obs["comment"]
             rowdict.update(uppercase_dictkeys(obs))
             if "label" in keylist:
                 logger.warning(
@@ -493,6 +501,9 @@ def smrydictlist2df(smrylist):
 def blockdictlist2df(blocklist):
     """Parse a list structure (subpart of yaml syntax) of block observations
     into  dataframe format
+
+    The internal dataframe format uses "LABEL" and "OBS" as unique keys
+    for individual observations. These are constructed if not present.
 
     Args:
         blocklist (list): List of dictionaries with block/rft observations
@@ -516,7 +527,17 @@ def blockdictlist2df(blocklist):
             if "OBSERVATIONS" in rowdict:
                 del rowdict["OBSERVATIONS"]
             if "label" not in obs:
-                rowdict["LABEL"] = keylist["well"] + "-" + str(obs_idx + 1)
+                rowdict["LABEL"] = keylist["well"]
+            if "obs" not in obs:
+                # Make up a label for the particular 3D-point for the
+                # observation, using P1, P2, etc. as in the ERT doc example.
+                rowdict["OBS"] = "P" + str(obs_idx + 1)
+            if "comment" in obs:
+                # Comments can be present at two level in yaml format, the
+                # lower level (pr. individual obs indices) are stored in
+                # SUBCOMMENT
+                rowdict["SUBCOMMENT"] = obs["comment"]
+                del obs["comment"]
             rowdict.update(uppercase_dictkeys(obs))
             rows.append(rowdict)
     dframe = pd.DataFrame(rows)
