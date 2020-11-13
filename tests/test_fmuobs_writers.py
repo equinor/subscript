@@ -457,6 +457,7 @@ def test_summary_df2obsdict(obs_df, expected_list):
                         "LABEL": "RFT_2006_OP1",
                         "DATE": "1986-04-05",
                         "VALUE": 100,
+                        "FIELD": "PRESSURE",
                         "K": 4,
                         "COMMENT": "first well",
                         "SUBCOMMENT": "bad measurement",
@@ -475,6 +476,7 @@ def test_summary_df2obsdict(obs_df, expected_list):
             [
                 {
                     "well": "RFT_2006_OP1",
+                    "field": "PRESSURE",
                     "comment": "first well",
                     "date": "1986-04-05",
                     "observations": [

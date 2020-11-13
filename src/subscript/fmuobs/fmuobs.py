@@ -41,6 +41,9 @@ exported and imported as CSV.
 
 ERT observation file syntax:
 https://fmu-docs.equinor.com/docs/ert/reference/configuration/observations.html
+
+ResInsight format:
+https://resinsight.org/import/observeddata/
 """
 
 CATEGORY = "utility.transformation"

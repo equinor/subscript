@@ -25,7 +25,7 @@ def dfsummary2ertobs(obs_df):
         str: ERT observation format string, multiline
     """
     ertobs_str = ""
-    smry_df = obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"]
+    smry_df = obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].copy()
     if "DATE" in smry_df:
         smry_df["DATE"] = pd.to_datetime(smry_df["DATE"]).dt.strftime(ERT_DATE_FORMAT)
     for _, row in smry_df.iterrows():
@@ -62,7 +62,7 @@ def dfblock2ertobs(obs_df):
         str: ERT observation format string, multiline
     """
     ertobs_str = ""
-    block_obs_df = obs_df[obs_df["CLASS"] == "BLOCK_OBSERVATION"]
+    block_obs_df = obs_df[obs_df["CLASS"] == "BLOCK_OBSERVATION"].copy()
     if "DATE" in block_obs_df:
         block_obs_df["DATE"] = pd.to_datetime(block_obs_df["DATE"]).dt.strftime(
             ERT_DATE_FORMAT

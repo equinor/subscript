@@ -690,6 +690,52 @@ def test_smrydictlist2df(smrylist, expected_df):
             [
                 {
                     "well": "OP1",
+                    "field": "PRESSURE",
+                    "observations": [{"date": "2020", "value": 100, "i": 4}],
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "FIELD": "PRESSURE",
+                        "LABEL": "OP1",  # Auto-generated label
+                        "OBS": "P1",  # Auto-generated label
+                        "WELL": "OP1",
+                        "VALUE": 100.0,
+                        "I": 4,
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "well": "OP1",
+                    "field": "PRESSURE",
+                    "observations": [{"date": "2020", "field": "overwritten"}],
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "BLOCK_OBSERVATION",
+                        "DATE": datetime.date(2020, 1, 1),
+                        "FIELD": "overwritten",
+                        "LABEL": "OP1",  # Auto-generated label
+                        "OBS": "P1",  # Auto-generated label
+                        "WELL": "OP1",
+                    }
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "well": "OP1",
                     "comment": "first well",
                     "observations": [{"date": "2020", "comment": "bad measurement"}],
                 }
@@ -771,6 +817,7 @@ def test_blockdictlist2df(blocklist, expected_df):
                 "rft": [
                     {
                         "well": "OP1",
+                        "field": "PRESSURE",
                         "observations": [{"date": "2020", "value": 100, "i": 4}],
                     }
                 ],
@@ -789,6 +836,7 @@ def test_blockdictlist2df(blocklist, expected_df):
                         "DATE": datetime.date(2020, 1, 1),
                         "LABEL": "OP1",  # Auto-generated label
                         "OBS": "P1",  # Auto-generated label
+                        "FIELD": "PRESSURE",
                         "WELL": "OP1",
                         "VALUE": 100.0,
                         "I": 4,

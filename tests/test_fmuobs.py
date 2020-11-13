@@ -94,7 +94,7 @@ def test_autoparse_string(string, expected_format, tmpdir):
 
 
 @pytest.mark.parametrize(
-    "filename, orig_format",
+    "filename",
     [
         ("ert-doc.obs"),
         ("ri-obs.csv"),
@@ -152,7 +152,7 @@ def test_roundtrip_ertobs(filename):
 
 
 @pytest.mark.parametrize(
-    "filename, orig_format",
+    "filename",
     [
         ("ert-doc.obs"),
         ("ri-obs.csv"),
@@ -197,7 +197,7 @@ def test_roundtrip_yaml(filename):
 
 
 @pytest.mark.parametrize(
-    "filename, orig_format",
+    "filename",
     [
         ("ert-doc.obs"),
         ("ri-obs.csv"),
