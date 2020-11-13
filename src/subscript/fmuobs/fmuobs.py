@@ -10,6 +10,10 @@ import yaml
 
 import pandas as pd
 
+from ert_shared.plugins.plugin_manager import hook_implementation
+from res.job_queue import ErtScript
+
+
 from subscript import getLogger
 
 from subscript.fmuobs.parsers import (
@@ -49,9 +53,22 @@ https://resinsight.org/import/observeddata/
 CATEGORY = "utility.transformation"
 
 EXAMPLES = """
-.. code-block:: console
+Add a file named e.g. ``ert/bin/workflows/wf_fmuobs`` with the contents:
 
-  FORWARD_MODEL FMUOBS(<INPUT_FILE>=observations.txt, YML_OUTPUT>=observations.yml, <RESINSIGHT_OUTPUT>=observations-ri.csv)
+.. code-block:: none
+
+  --       inputfile           yamlfile         resinsightfile    ertfile   csvfile
+  FMUOBS observations.txt   observations.yml  observations-ri.csv __NONE__  __NONE__
+
+The input file may be in any of the supported formats. For those output file
+you want to skip, use ``__NONE__``.  You probably need to use the variables
+``<CONFIG_PATH>`` and ``<CASEDIR>`` to build fully qualified pathnames.
+
+Add to your ert config::
+
+    LOAD_WORKFLOW ../bin/workflows/wf_fmuobs
+    HOOK_WORKFLOW wf_fmuobs PRE_SIMULATION
+
 """  # noqa
 
 __MAGIC_NONE__ = "__NONE__"  # For ERT hook defaults support.
@@ -70,13 +87,15 @@ class CustomFormatter(
 
 def get_parser():
     """Return a parser for the command line client, and for
-    generating help text (reusing the help text used for the FORWARD_MODEL)"""
+    generating help text. The description, defaults and help-text for
+    each argument is shared with the parser for the ERT workflow"""
+
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
     )
 
     parser.add_argument(
-        "input_file",
+        "inputfile",
         help="Input file, in any of the supported observation formats",
         type=str,
     )
@@ -250,44 +269,70 @@ def main():
     """Command line client, parse command line arguments and execute the tool."""
     parser = get_parser()
     args = parser.parse_args()
-    if args.verbose:
-        if __MAGIC_STDOUT__ in (args.csv, args.yml, args.ertobs):
+    fmuobs(
+        args.inputfile,
+        ertobs=args.ertobs,
+        yml=args.yml,
+        resinsight=args.resinsight,
+        csv=args.csv,
+        verbose=args.verbose,
+        debug=args.debug,
+        starttime=args.starttime,
+        includedir=args.includedir,
+    )
+
+
+def fmuobs(
+    inputfile,
+    ertobs=None,
+    yml=None,
+    resinsight=None,
+    csv=None,
+    verbose=False,
+    debug=False,
+    starttime=None,
+    includedir=None,
+):
+    # pylint: disable=too-many-arguments
+    """Alternative to main() with named arguments"""
+    if verbose:
+        if __MAGIC_STDOUT__ in (csv, yml, ertobs):
             raise SystemExit("Don't use verbose mode when writing to stdout")
         logger.setLevel(logging.INFO)
 
-    if args.debug:
+    if debug:
         logger.setLevel(logging.DEBUG)
 
-    (filetype, dframe) = autoparse_file(args.input_file)
+    (filetype, dframe) = autoparse_file(inputfile)
 
     # For ERT files, there is the problem of include-file-path. If not-found
     # include filepaths are present, the filetype is ert, but dframe is empty.
     if filetype == "ert" and pd.DataFrame.empty:
-        with open(args.input_file) as f_handle:
+        with open(inputfile) as f_handle:
             input_str = f_handle.read()
-        if not args.includedir or args.includedir == __MAGIC_NONE__:
+        if not includedir or includedir == __MAGIC_NONE__:
             # Try and error for the location of include files, first in current
             # dir, then in the directory of the input file. The proper default
             # for cwd is the location of the ert config file, which is not
             # available in this parser, and must be supplied on command line.
             try:
-                dframe = ertobs2df(input_str, cwd=".", starttime=args.starttime)
+                dframe = ertobs2df(input_str, cwd=".", starttime=starttime)
             except FileNotFoundError:
                 dframe = ertobs2df(
                     input_str,
-                    cwd=os.path.dirname(args.input_file),
-                    starttime=args.starttime,
+                    cwd=os.path.dirname(inputfile),
+                    starttime=starttime,
                 )
         else:
-            dframe = ertobs2df(input_str, cwd=args.includedir)
+            dframe = ertobs2df(input_str, cwd=includedir)
 
-    if args.starttime:
+    if starttime:
         dframe = compute_date_from_days(dframe)
 
     if not validate_internal_dframe(dframe):
         logger.error("Observation dataframe is invalid!")
 
-    dump_results(dframe, args.csv, args.yml, args.resinsight, args.ertobs)
+    dump_results(dframe, csv, yml, resinsight, ertobs)
 
 
 def dump_results(
@@ -347,6 +392,37 @@ def dump_results(
                 f_handle.write(ertobs_str)
         else:
             print(ertobs_str)
+
+
+class FmuObs(ErtScript):
+    """This class defines the ERT workflow hook.
+
+    It is constructed to work identical to the command line except
+
+      * fmuobs is upper-cased to FMUOBS
+      * All option names with double-dash must be enclosed in "" to avoid
+        interference with the ERT comment characters "--".
+    """
+
+    # pylint: disable=too-few-public-methods
+    def run(self, *args):
+        # pylint: disable=no-self-use
+        """Pass the ERT workflow arguments on to the same parser as the command
+        line."""
+        parser = get_parser()
+        parsed_args = parser.parse_args(args)
+        fmuobs(**vars(parsed_args))
+
+
+@hook_implementation
+def legacy_ertscript_workflow(config):
+    """A hook for usage of this script in an ERT workflow,
+    using the legacy hook format."""
+    workflow = config.add_workflow(FmuObs, "FMUOBS")
+    workflow.parser = get_parser
+    workflow.description = DESCRIPTION
+    workflow.examples = EXAMPLES
+    workflow.category = CATEGORY
 
 
 if __name__ == "__main__":

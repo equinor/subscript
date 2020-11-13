@@ -21,15 +21,6 @@ from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
 
-try:
-    # pylint: disable=unused-import
-    import ert_shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
-
 @pytest.mark.parametrize(
     "filename, expected_format",
     [
@@ -321,9 +312,8 @@ def test_commandline(tmpdir, monkeypatch):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
-def test_ert_hook(tmpdir):
-    """Mock an ERT config with FMUOBS as a FORWARD_MODEL and run it"""
+def test_ert_workflow_hook(tmpdir):
+    """Mock an ERT config with FMUOBS as a workflow and run it"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
     testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
@@ -333,20 +323,22 @@ def test_ert_hook(tmpdir):
     with open("FOO.DATA", "w") as file_h:
         file_h.write("--Empty")
 
+    with open("wf_fmuobs", "w") as file_h:
+        file_h.write(
+            'FMUOBS "--verbose" '
+            + obs_file
+            + ' "--yaml" ert-obs.yml "--resinsight" ri-obs.csv "--includedir" '
+            + testdata_dir
+            + "\n"
+        )
+
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
         "RUNPATH .",
-        "FORWARD_MODEL FMUOBS(<INPUT_FILE>="
-        + obs_file
-        + ", "
-        + "<CSV_OUTPUT>=ert-obs.csv, "
-        + "<YML_OUTPUT>=ert-obs.yml, "
-        + "<RESINSIGHT_OUTPUT>=ri-obs.csv, "
-        + "<INCLUDEDIR>="
-        + testdata_dir
-        + ")",  # noqa
+        "LOAD_WORKFLOW wf_fmuobs",
+        "HOOK_WORKFLOW wf_fmuobs PRE_SIMULATION",
     ]
 
     ert_config_fname = "test.ert"
@@ -355,6 +347,5 @@ def test_ert_hook(tmpdir):
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
-    assert os.path.exists("ert-obs.csv")
     assert os.path.exists("ert-obs.yml")
     assert os.path.exists("ri-obs.csv")
