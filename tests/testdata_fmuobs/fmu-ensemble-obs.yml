@@ -1,0 +1,20 @@
+# This example is copied from the fmu-ensemble documentation at
+# https://equinor.github.io/fmu-ensemble/advancedusage.html#working-with-observations
+
+# Eclipse summary vectors compared with allocated summary vectors
+smryh:
+  - key: FOPT
+    histvec: FOPTH
+    time_index: monthly  # or yearly, daily, raw or last, or a ISO-date
+
+smry:
+  # Mandatory elements per entry: key and observations
+  - key: WBP4:OP_1
+    # This is a global comment regarding this set of observations
+    comment: "Shut-in pressures converted from well head conditions"
+    observations:
+      # Mandatory elements per entry in ecl_vector observations: value, error, date
+      - {value: 251, error: 4, date: 2001-01-01}
+      - {value: 251, error: 10, date: 2002-01-01}
+      - {value: 251, error: 10, date: 2003-01-01,
+        comment: First measurement after sensor drift correction}

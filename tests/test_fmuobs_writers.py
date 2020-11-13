@@ -399,6 +399,7 @@ def test_df2ertobs(obs_df, expected_str):
                         "CLASS": "SUMMARY_OBSERVATION",
                         "KEY": "WOPR:OP1",
                         "DATE": datetime.date(2025, 1, 1),
+                        "COMMENT": "foo",
                     },
                     {
                         "CLASS": "SUMMARY_OBSERVATION",
@@ -413,12 +414,14 @@ def test_df2ertobs(obs_df, expected_str):
                         "VALUE": 1000,
                         "ERROR": 100,
                         "LABEL": "OP2_2026",
+                        "SUBCOMMENT": "verygood",
                     },
                 ]
             ),
             [
                 {
                     "key": "WOPR:OP1",
+                    "comment": "foo",
                     "observations": [
                         {"date": "2025-01-01"},
                         {"date": "2026-01-01"},
@@ -432,6 +435,7 @@ def test_df2ertobs(obs_df, expected_str):
                             "value": 1000.0,
                             "error": 100.0,
                             "label": "OP2_2026",
+                            "comment": "verygood",
                         },
                     ],
                 },

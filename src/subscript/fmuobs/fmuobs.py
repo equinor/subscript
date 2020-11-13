@@ -211,10 +211,11 @@ def autoparse_file(filename):
             if obsdict.get("smry", None) or obsdict.get("rft", None):
                 logger.info("Parsed %s as a YAML file with observations", filename)
                 return ("yaml", obsdict2df(obsdict))
-    except yaml.scanner.ScannerError:
+    except yaml.scanner.ScannerError as exception:
         # This occurs if there are tabs in the file, which is not
         # allowed in a YAML file (but it can be present in ERT observation files)
-        pass
+        logger.debug("ScannerError while attempting yaml-parsing")
+        logger.debug(str(exception))
     except ValueError:
         pass
 

@@ -254,17 +254,21 @@ def summary_df2obsdict(smry_df):
         logger.warning("Using LABEL, but this might not be Eclipse summary vectors.")
         smry_df["KEY"] = smry_df["LABEL"]
     for smrykey, smrykey_df in smry_df.groupby("KEY"):
+        smry_obs_element = {}
+        smry_obs_element["key"] = smrykey
+        if "COMMENT" in smrykey_df and not pd.isnull(smrykey_df["COMMENT"]).all():
+            smry_obs_element["comment"] = smrykey_df["COMMENT"].unique()[0]
         if isinstance(smrykey_df, pd.DataFrame):
             smrykey_df.drop("KEY", axis=1, inplace=True)
-        smry_obs_list.append(
-            {
-                "key": smrykey,
-                "observations": [
-                    lowercase_dictkeys(dict(keyvalues.dropna()))
-                    for _, keyvalues in smrykey_df.iterrows()
-                ],
-            }
-        )
+        if "SUBCOMMENT" in smrykey_df:
+            smrykey_df["COMMENT"] = smrykey_df["SUBCOMMENT"]
+            del smrykey_df["SUBCOMMENT"]
+        observations = [
+            lowercase_dictkeys(dict(keyvalues.dropna()))
+            for _, keyvalues in smrykey_df.iterrows()
+        ]
+        smry_obs_element["observations"] = observations
+        smry_obs_list.append(smry_obs_element)
 
     return smry_obs_list
 

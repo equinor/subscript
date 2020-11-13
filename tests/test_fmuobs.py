@@ -37,6 +37,7 @@ except ImportError:
         ("ri-obs.csv", "resinsight"),
         ("ert-doc.yml", "yaml"),
         ("ert-doc.csv", "csv"),
+        ("fmu-ensemble-obs.yml", "yaml"),
     ],
 )
 def test_autoparse_file(filename, expected_format):
@@ -100,6 +101,7 @@ def test_autoparse_string(string, expected_format, tmpdir):
         ("ri-obs.csv"),
         ("ert-doc.yml"),
         ("ert-doc.csv"),
+        ("fmu-ensemble-obs.yml"),
     ],
 )
 def test_roundtrip_ertobs(filename):
@@ -142,6 +144,10 @@ def test_roundtrip_ertobs(filename):
             inplace=True,
         )
         subframe.sort_index(inplace=True)
+        # Comments are not preservable through ertobs roundtrips:
+        subframe.drop(
+            ["COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore", inplace=True
+        )
         if _class == "BLOCK_OBSERVATION":
             if "WELL" in subframe:
                 # WELL as used in yaml is not preservable in roundtrips
@@ -158,6 +164,7 @@ def test_roundtrip_ertobs(filename):
         ("ri-obs.csv"),
         ("ert-doc.yml"),
         ("ert-doc.csv"),
+        ("fmu-ensemble-obs.yml"),
     ],
 )
 def test_roundtrip_yaml(filename):
@@ -187,8 +194,8 @@ def test_roundtrip_yaml(filename):
         del yaml_roundtrip_dframe["WELL"]
     if "WELL" in dframe:
         del dframe["WELL"]
-    # print(yaml_roundtrip_dframe.head(15))
-    # print(dframe.head(15))
+    # print(yaml_roundtrip_dframe)
+    # print(dframe)
     pd.testing.assert_frame_equal(
         yaml_roundtrip_dframe.sort_index(axis="columns"),
         dframe.sort_index(axis="columns"),
@@ -203,6 +210,7 @@ def test_roundtrip_yaml(filename):
         ("ri-obs.csv"),
         ("ert-doc.yml"),
         ("ert-doc.csv"),
+        ("fmu-ensemble-obs.yml"),
     ],
 )
 def test_roundtrip_resinsight(filename):
@@ -231,10 +239,10 @@ def test_roundtrip_resinsight(filename):
 
     pd.testing.assert_frame_equal(
         ri_roundtrip_dframe.sort_index(axis="columns").drop(
-            "LABEL", axis="columns", errors="ignore"
+            ["LABEL", "COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore"
         ),
         dframe.sort_index(axis="columns").drop(
-            "LABEL", axis="columns", errors="ignore"
+            ["LABEL", "COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore"
         ),
         check_like=True,
     )
