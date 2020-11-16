@@ -34,7 +34,7 @@ from subscript.fmuobs.parsers import ertobs2df
                     {
                         "CLASS": "SUMMARY_OBSERVATION",
                         "LABEL": "WOPR:OP1",
-                        "DATE": "2025-01-01",
+                        "DATE": "2025-06-01",
                         "VALUE": 2222.3,
                         "ERROR": 100,
                         "COMMENT": "FOO BAR\ndontcrash",
@@ -67,7 +67,7 @@ from subscript.fmuobs.parsers import ertobs2df
 {
     -- FOO BAR
     -- dontcrash
-    DATE = 01/01/2025;
+    DATE = 01/06/2025;
     VALUE = 2222.3;
     ERROR = 100.0;
 };

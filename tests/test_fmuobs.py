@@ -29,6 +29,7 @@ from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
         ("ert-doc.yml", "yaml"),
         ("ert-doc.csv", "csv"),
         ("fmu-ensemble-obs.yml", "yaml"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
     ],
 )
 def test_autoparse_file(filename, expected_format):
@@ -93,6 +94,7 @@ def test_autoparse_string(string, expected_format, tmpdir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_ertobs(filename):
@@ -143,7 +145,14 @@ def test_roundtrip_ertobs(filename):
             if "WELL" in subframe:
                 # WELL as used in yaml is not preservable in roundtrips
                 del subframe["WELL"]
-        pd.testing.assert_frame_equal(roundtrip_subframe, subframe, check_dtype=False)
+        # print(roundtrip_subframe)
+        # print(subframe)
+
+        pd.testing.assert_frame_equal(
+            roundtrip_subframe.sort_index(),
+            subframe.sort_index(),
+            check_dtype=False,
+        )
         # check_dtype is turned off to avoid integer vs. floating dtype
         # differences, which we really cannot preserve properly.
 
@@ -156,6 +165,7 @@ def test_roundtrip_ertobs(filename):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_yaml(filename):
@@ -188,8 +198,8 @@ def test_roundtrip_yaml(filename):
     # print(yaml_roundtrip_dframe)
     # print(dframe)
     pd.testing.assert_frame_equal(
-        yaml_roundtrip_dframe.sort_index(axis="columns"),
-        dframe.sort_index(axis="columns"),
+        yaml_roundtrip_dframe.sort_index(axis="columns").sort_values("LABEL"),
+        dframe.sort_index(axis="columns").sort_values("LABEL"),
         check_like=True,
     )
 
