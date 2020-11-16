@@ -88,7 +88,7 @@ EPILOGUE = """
 
 """
 
-CATEGORY = "utility.eclipse"
+CATEGORY = "modeling.reservoir"
 
 EXAMPLES = """
 .. code-block:: console
