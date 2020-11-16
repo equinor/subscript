@@ -55,10 +55,10 @@ LEGACYSCRIPTS = [
 
 REQUIREMENTS = [
     "configsuite",
+    "ecl",
     "ecl2df",
     "equinor-libres",
     "ert",
-    "libecl",
     "matplotlib",
     "numpy",
     "pandas",
