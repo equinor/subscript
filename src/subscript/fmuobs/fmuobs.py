@@ -50,19 +50,17 @@ ResInsight format:
 https://resinsight.org/import/observeddata/
 """
 
-CATEGORY = "utility.transformation"
+CATEGORY = "observations.transformation"
 
 EXAMPLES = """
 Add a file named e.g. ``ert/bin/workflows/wf_fmuobs`` with the contents:
 
 .. code-block:: none
 
-  --       inputfile           yamlfile         resinsightfile    ertfile   csvfile
-  FMUOBS observations.txt   observations.yml  observations-ri.csv __NONE__  __NONE__
+  FMUOBS "--verbose" observations.txt "--yaml" observations.yml "--resinsight" observations-ri.csv
 
-The input file may be in any of the supported formats. For those output file
-you want to skip, use ``__NONE__``.  You probably need to use the variables
-``<CONFIG_PATH>`` and ``<CASEDIR>`` to build fully qualified pathnames.
+You probably need to use the variables ``<CONFIG_PATH>`` and ``<CASEDIR>`` to
+build fully qualified pathnames.
 
 Add to your ert config::
 
@@ -71,7 +69,6 @@ Add to your ert config::
 
 """  # noqa
 
-__MAGIC_NONE__ = "__NONE__"  # For ERT hook defaults support.
 __MAGIC_STDOUT__ = "-"
 
 
@@ -310,7 +307,7 @@ def fmuobs(
     if filetype == "ert" and pd.DataFrame.empty:
         with open(inputfile) as f_handle:
             input_str = f_handle.read()
-        if not includedir or includedir == __MAGIC_NONE__:
+        if not includedir:
             # Try and error for the location of include files, first in current
             # dir, then in the directory of the input file. The proper default
             # for cwd is the location of the ert config file, which is not
@@ -350,7 +347,9 @@ def dump_results(
         ertfile (str): Filename
     """
 
-    if csvfile and csvfile != __MAGIC_NONE__:
+    if not (csvfile or yamlfile or resinsightfile or ertfile):
+        logger.warning("No output filenames provided")
+    if csvfile:
         if csvfile != __MAGIC_STDOUT__:
             logger.info("Writing observations as CSV to %s", csvfile)
             dframe.to_csv(csvfile, index=False)
@@ -359,19 +358,23 @@ def dump_results(
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             dframe.to_csv(sys.stdout, index=False)
 
-    if yamlfile and yamlfile != __MAGIC_NONE__:
+    if yamlfile and yamlfile:
         obs_dict_for_yaml = df2obsdict(dframe)
         if not obs_dict_for_yaml and not dframe.empty:
             logger.error("None of your observations are supported in YAML")
         yaml_str = yaml.safe_dump(obs_dict_for_yaml)
 
         if yamlfile != __MAGIC_STDOUT__:
+            logger.info(
+                "Writing observations in YAML (webviz) format to file: %s",
+                resinsightfile,
+            )
             with open(yamlfile, "w") as f_handle:
                 f_handle.write(yaml_str)
         else:
             print(yaml_str)
 
-    if resinsightfile and resinsightfile != __MAGIC_NONE__:
+    if resinsightfile:
         ri_dframe = df2resinsight_df(dframe)
         if resinsightfile != __MAGIC_STDOUT__:
             logger.info(
@@ -384,7 +387,7 @@ def dump_results(
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             ri_dframe.to_csv(sys.stdout, index=False, sep=";")
 
-    if ertfile and ertfile != __MAGIC_NONE__:
+    if ertfile:
         ertobs_str = df2ertobs(dframe)
         if ertfile != __MAGIC_STDOUT__:
             with open(ertfile, "w") as f_handle:
