@@ -212,6 +212,7 @@ def test_roundtrip_yaml(filename):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_resinsight(filename):

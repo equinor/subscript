@@ -144,7 +144,16 @@ def get_parser():
 
 
 def validate_internal_dframe(obs_df):
-    """Validate the internal dataframe format for observations. """
+    """Validate the internal dataframe format for observations.
+
+    Will log warnings and/or errors if anything found.
+
+    Args:
+        obs_df (pd.DataFrame): Dataframe to validate
+
+    Returns:
+        bool: True if everything is ok (or empty)
+    """
     failed = False
     if obs_df.empty:
         logger.warning("Observation dataframe empty")
@@ -167,14 +176,15 @@ def validate_internal_dframe(obs_df):
         logger.error("\n%s", str(repeated_rows.dropna(axis="columns", how="all")))
         failed = True
 
-    # Left to validate:
-    # check that segment has start and end if not default.
-    # summary obs requires four arguments. (also for resinsight?)
-    # block requires two global, and j,k,value,error for each subunit.
-    # block requires label
-    # general requires data, restart, obs_file. index_list, index_file,
-    # error_covariance is optional.
-    # always call this after parsing from resinsight/yaml
+    # Possibilities for further validation:
+    #  * Check that segment has start and end if not default.
+    #  * SUMMARY_OBSERVATION requires four arguments (also for resinsight?)
+    #  * BLOCK_OBSERVATIONk requires two global, and j, k, value, error for
+    #    each subunit.
+    #  * block requires label
+    #  * general requires data, restart, obs_file. index_list, index_file,
+    #  * error_covariance is optional.
+
     logger.info("Observation dataframe validated")
     return not failed
 
