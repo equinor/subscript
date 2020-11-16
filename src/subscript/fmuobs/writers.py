@@ -26,8 +26,6 @@ def dfsummary2ertobs(obs_df):
     """
     ertobs_str = ""
     smry_df = obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].copy()
-    if "DATE" in smry_df:
-        smry_df["DATE"] = pd.to_datetime(smry_df["DATE"]).dt.strftime(ERT_DATE_FORMAT)
     for _, row in smry_df.iterrows():
         ertobs_str += "SUMMARY_OBSERVATION " + str(row["LABEL"]) + "\n"
         ertobs_str += "{\n"
