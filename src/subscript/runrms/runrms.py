@@ -61,9 +61,14 @@ def xwarn(mystring):
     print(_BColors.WARN, mystring, _BColors.ENDC)
 
 
-def xerror(mystring):
-    """Print an error in an appropriate color"""
+def xalert(mystring):
+    """Print an alert warning in an appropriate color"""
     print(_BColors.ERROR, mystring, _BColors.ENDC)
+
+
+def xcritical(mystring):
+    """Print an critical error in an appropriate color"""
+    print(_BColors.CRITICAL, mystring, _BColors.ENDC)
 
 
 def get_parser():
@@ -219,6 +224,7 @@ class RunRMS:
         self.command = "rms"
         self.setdpiscaling = ""
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
+        self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
 
         self.oldpythonpath = ""
         if "PYTHONPATH" in os.environ:
@@ -264,7 +270,7 @@ class RunRMS:
             setup = self.args.altsetup
 
         if not pathlib.Path(setup).is_file():
-            xerror(f"Requested setup <{setup}> does not exist!")
+            xcritical(f"Requested setup <{setup}> does not exist!")
             raise FileNotFoundError()
 
         with open(setup, "r") as stream:
@@ -320,8 +326,9 @@ class RunRMS:
         propver = self.setup[rmssection][proposed_version]
         if "replaced_by" in propver:
             newp = propver["replaced_by"]
-            xwarn(f"The requested version {proposed_version} is replaced with {newp}")
+            msg = f"The requested version {proposed_version} is replaced with {newp}"
             proposed_version = newp
+            self.userwarnings.append(msg)
 
         self.version_requested = proposed_version
         self.exe = self.setup[rmssection][proposed_version].get("exe", None)
@@ -413,7 +420,7 @@ class RunRMS:
                             setattr(self, mkey, _fsplitter(line.split()))
 
         except EnvironmentError as err:
-            xerror("Stop! Cannot open .master file: {}".format(err))
+            xcritical("Stop! Cannot open .master file: {}".format(err))
             print("Possible causes:")
             print(" * Project is not existing")
             print(" * Project is corrupt")
@@ -557,6 +564,7 @@ class RunRMS:
         print("{0:30s}: {1} {2}".format("Last saved date & time", self.date, self.time))
         print("{0:30s}: {1}".format("Locking info", self.lockf))
         if not self.okext:
+            self.userwarnings.append(self.extstatus)
             print(
                 "{0:30s}: {2}{1}{3}".format(
                     "File extension status",
@@ -583,6 +591,12 @@ class RunRMS:
         print("*   Will be added if --includesyspy option is used")
         print("**  Will be added unless --nopy option is used")
         print("=" * shutil.get_terminal_size((132, 20)).columns)
+
+        if self.userwarnings:
+            print()
+            xalert("NOTICE!")
+            for msg in self.userwarnings:
+                xalert(msg)
 
     def check_vconsistency(self):
         """Check consistency of file extension vs true version"""
