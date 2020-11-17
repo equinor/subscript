@@ -1,0 +1,122 @@
+ -- These observation data are copied from the ERT docs,
+ -- https://github.com/equinor/ert/blob/master/docs/rst/manual/reference/configuration/observations.rst
+
+ SUMMARY_OBSERVATION SEP_TEST_2005
+ {
+    VALUE = 100.0;
+    ERROR =     5;
+    DATE  = 21/08/2005;
+    KEY   = GOPR:BRENT;
+ };
+ 
+ -- Giving the observation time in terms of restart number.
+ SUMMARY_OBSERVATION SEP_TEST_RST_2005
+ {
+    VALUE    = 100;
+    ERROR    =   5;
+    RESTART  =  42;
+    KEY      = GOPR:BRENT;
+ };
+
+  -- Giving the observation time in terms of days
+ -- from simulation start.
+ SUMMARY_OBSERVATION SEP_TEST_2008
+ {
+    VALUE    = 213;
+    ERROR    =  10;
+    DAYS     = 911;
+    KEY      = GOPR:NESS;
+ };
+
+ BLOCK_OBSERVATION RFT_2006
+ {
+    FIELD = PRESSURE;
+    DATE  = 22/10/2006;
+
+   OBS P1 { I = 1;  J = 1;  K = 1;   VALUE = 100;  ERROR = 5; };
+   OBS P2 { I = 2;  J = 2;  K = 1;   VALUE = 101;  ERROR = 5; };
+   OBS P3 { I = 2;  J = 3;  K = 1;   VALUE = 102;  ERROR = 5; };
+ };
+
+ BLOCK_OBSERVATION RFT_2007_SUM
+ {
+    FIELD = PRESSURE;
+    DATE  = 22/10/2007;
+    SOURCE = SUMMARY;
+ 
+    OBS P1 { I = 1;  J = 1;  K = 1;   VALUE = 100;  ERROR = 5; };
+    OBS P2 { I = 2;  J = 2;  K = 1;   VALUE = 101;  ERROR = 5; };
+    OBS P3 { I = 2;  J = 3;  K = 1;   VALUE = 102;  ERROR = 5; };
+ };
+
+GENERAL_OBSERVATION GEN_OBS1{
+   DATA     = SOME_FIELD;
+   RESTART  = 20;
+   OBS_FILE = some_file.txt;
+};
+
+GENERAL_OBSERVATION GEN_OBS2{
+   DATA       = SOME_FIELD;
+   INDEX_LIST = 0,3,9;
+   RESTART    = 20;
+   OBS_FILE   = some_file.txt;
+};
+
+HISTORY_OBSERVATION WOPR:OP1;
+HISTORY_OBSERVATION VAR:WGNAME;
+
+HISTORY_OBSERVATION WOPR:C-17;
+HISTORY_OBSERVATION WWCT:C-17;
+HISTORY_OBSERVATION WGOR:C-17;
+
+HISTORY_OBSERVATION GOPR:SUBFIELD
+
+HISTORY_OBSERVATION GOPR:FIELD
+{
+   ERROR       = 1000;
+   ERROR_MODE  = ABS;
+};
+
+HISTORY_OBSERVATION GWIR:FIELD
+{
+   ERROR       = 0.20;
+   ERROR_MODE  = REL;
+};
+
+HISTORY_OBSERVATION GWIT:FIELD
+{
+   ERROR       = 0.20;
+   ERROR_MODE  = RELMIN;
+   ERROR_MIN   = 100;
+};
+
+HISTORY_OBSERVATION GGIT:FIELD { ERROR = 0.20; ERROR_MODE = RELMIN; ERROR_MIN = 100; };
+
+HISTORY_OBSERVATION WOPR:P1 { include "hist_obs_wells.txt"; };
+HISTORY_OBSERVATION WOPR:P2 { include "hist_obs_wells.txt"; };
+HISTORY_OBSERVATION WOPR:P3 { include "hist_obs_wells.txt"; };
+HISTORY_OBSERVATION WOPR:P4 { include "hist_obs_wells.txt"; };
+HISTORY_OBSERVATION WOPR:P5 { include "hist_obs_wells.txt"; };
+
+HISTORY_OBSERVATION GGIR:FIELD
+{
+   ERROR       = 0.20;
+   ERROR_MODE  = RELMIN;
+   ERROR_MIN   = 100;
+
+   SEGMENT FIRST_YEAR
+   {
+      START = 0;
+      STOP  = 10;
+      ERROR = 0.50;
+      ERROR_MODE = REL;
+   };
+
+   SEGMENT SECOND_YEAR
+   {
+      START      = 11;
+      STOP       = 20;
+      ERROR     = 1000;
+      ERROR_MODE = ABS;
+   };
+};
