@@ -1,6 +1,6 @@
 
 CSV_MERGE
-===========
+=========
 
 .. argparse::
    :module: subscript.csv_merge.csv_merge
