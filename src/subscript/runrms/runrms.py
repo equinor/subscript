@@ -337,8 +337,14 @@ class RunRMS:
             raise RuntimeError("Executable is not found, probably a config/setup error")
 
         pypath = self.setup[rmssection][proposed_version].get("pythonpath", None)
-        pypath = self._process_pypath(pypath)
-        self.pythonpath = pypath
+        self.pythonpath = self._process_pypath(pypath)
+
+        # test pythonpath
+        pypathtest = self.setup[rmssection][proposed_version].get(
+            "pythonpath_test", None
+        )
+        if pypathtest:
+            self.testpythonpath = self._process_pypath(pypathtest)
 
         self.tcltkpath = self.setup[rmssection][proposed_version].get("tcltkpath", None)
 
@@ -348,7 +354,7 @@ class RunRMS:
 
     def _process_pypath(self, pypath):
         """
-        The proposed pythonpath from setup is a list.
+        The proposed pythonpath or testpythonpath from setup is a list.
 
         The list in the setup YAML file is a priority list. E.g.
           - /some/main/python3.6/site-packages
@@ -523,8 +529,8 @@ class RunRMS:
         pythonpathlist = []
 
         if not self.args.nopy:
-            if self.args.testpylib:
-                pythonpathlist.append(self.args.testpylib)
+            if self.args.testpylib and self.testpythonpath:
+                pythonpathlist.append(self.testpythonpath)
             if self.pythonpath:
                 pythonpathlist.append(self.pythonpath)
             if self.args.incsyspy:
@@ -573,7 +579,6 @@ class RunRMS:
                     _BColors.ENDC,
                 )
             )
-
         print("{0:30s}: {1}".format("Setup for runrms", self.setupfile))
         print("{0:30s}: {1}".format("RMS version requested", self.version_requested))
         print("{0:30s}: {1}".format("Equinor current default ver.", self.defaultver))
@@ -581,7 +586,16 @@ class RunRMS:
         print("{0:30s}: {1}".format("RMS internal storage ID", self.fileversion))
         print("{0:30s}: {1}".format("RMS executable variant", self.variant))
         print("{0:30s}: {1}".format("System pythonpath*", self.oldpythonpath))
-        print("{0:30s}: {1}".format("Pythonpath added as first**", self.pythonpath))
+
+        order = "first"
+        if self.args.testpylib and self.testpythonpath:
+            print(
+                "{0:30s}: {1}".format(
+                    "Test Pypath added as first**", self.testpythonpath
+                )
+            )
+            order = "second"
+        print("{0:30s}: {1}".format(f"Pythonpath added as {order}**", self.pythonpath))
         print("{0:30s}: {1}".format("RMS plugins path", self.pluginspath))
         print("{0:30s}: {1}".format("TCL/TK path", self.tcltkpath))
         print("{0:30s}: {1}".format("RMS DPI scaling", self.setdpiscaling))
