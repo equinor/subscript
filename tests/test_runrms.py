@@ -116,6 +116,7 @@ sys.exit(0)
 
         runner = rr.RunRMS()
         runner.do_parse_args(["-v", "10.1.3"])
+        runner.parse_setup()
         runner.version_requested = "10.1.3"
         runner.exe = "./rms_fake"
         runner.pythonpath = ""

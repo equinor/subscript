@@ -18,6 +18,8 @@ rms:
     exe: /prog/roxar/site/RMS_test_latest/rms/rms
     pythonpath:
       - /project/res/roxapi/<PLATFORM>/12.1/lib/python3.8/site-packages
+    pythonpath_test:
+      - /project/res/roxapi/<PLATFORM>/12.1_test/lib/python3.8/site-packages
     tcltkpath: /prog/roxar/site/RMS_test_latest/rms/versions
 
   2013.1.4:
@@ -38,36 +40,34 @@ rms:
     exe: rms -v 11.0.1
     pythonpath:
       - /project/res/roxapi/<PLATFORM>/11.0/lib/python3.6/site-packages
+    pythonpath_test:
+      - /project/res/roxapi/<PLATFORM>/11.0_test/lib/python3.6/site-packages
     tcltkpath: /prog/roxar/rms/versions/11.0.1/lib/LINUX_64/
 
   11.1.0:
-    replaced_by: 11.1.1
+    replaced_by: 11.1.2
 
   11.1.1:
-    exe: rms -v 11.1.1
-    pythonpath:
-      - /project/res/roxapi/<PLATFORM>/11.1/lib/python3.6/site-packages
-    tcltkpath: /prog/roxar/rms/versions/11.1.1/lib/LINUX_64
-    pluginspath:
-      - /project/res/roxapi/<PLATFORM>/11.1/plugins
+    replaced_by: 11.1.2
 
   11.1.2:
     default: true
     exe: rms -v 11.1.2
     pythonpath:
       - /project/res/roxapi/<PLATFORM>/11.1/lib/python3.6/site-packages
+    pythonpath_test:
+      - /project/res/roxapi/<PLATFORM>/11.1_test/lib/python3.6/site-packages
     tcltkpath: /prog/roxar/rms/versions/11.1.2/lib/LINUX_64
-
-  # 12.0.0:
-  #   replaced_by: 12.0.1
 
   12.0.1:
     exe: rms -v 12.0.1
     pythonpath:
       - /project/res/roxapi/<PLATFORM>/12.0/lib/python3.6/site-packages
+    pythonpath_test:
+      - /project/res/roxapi/<PLATFORM>/12.0_test/lib/python3.6/site-packages
     tcltkpath: /prog/roxar/rms/versions/12.0.1/lib/LINUX_64
 
-# list of nonstandard installs
+# list of nonstandard installs (experimental)
 rms_nonstandard:
   12.0.0:
     exe: /prog/roxar/site/RMS12/rms/rms

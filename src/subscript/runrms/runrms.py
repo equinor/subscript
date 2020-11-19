@@ -61,9 +61,14 @@ def xwarn(mystring):
     print(_BColors.WARN, mystring, _BColors.ENDC)
 
 
-def xerror(mystring):
-    """Print an error in an appropriate color"""
+def xalert(mystring):
+    """Print an alert warning in an appropriate color"""
     print(_BColors.ERROR, mystring, _BColors.ENDC)
+
+
+def xcritical(mystring):
+    """Print an critical error in an appropriate color"""
+    print(_BColors.CRITICAL, mystring, _BColors.ENDC)
 
 
 def get_parser():
@@ -219,6 +224,7 @@ class RunRMS:
         self.command = "rms"
         self.setdpiscaling = ""
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
+        self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
 
         self.oldpythonpath = ""
         if "PYTHONPATH" in os.environ:
@@ -264,7 +270,7 @@ class RunRMS:
             setup = self.args.altsetup
 
         if not pathlib.Path(setup).is_file():
-            xerror(f"Requested setup <{setup}> does not exist!")
+            xcritical(f"Requested setup <{setup}> does not exist!")
             raise FileNotFoundError()
 
         with open(setup, "r") as stream:
@@ -320,8 +326,9 @@ class RunRMS:
         propver = self.setup[rmssection][proposed_version]
         if "replaced_by" in propver:
             newp = propver["replaced_by"]
-            xwarn(f"The requested version {proposed_version} is replaced with {newp}")
+            msg = f"The requested version {proposed_version} is replaced with {newp}"
             proposed_version = newp
+            self.userwarnings.append(msg)
 
         self.version_requested = proposed_version
         self.exe = self.setup[rmssection][proposed_version].get("exe", None)
@@ -330,8 +337,14 @@ class RunRMS:
             raise RuntimeError("Executable is not found, probably a config/setup error")
 
         pypath = self.setup[rmssection][proposed_version].get("pythonpath", None)
-        pypath = self._process_pypath(pypath)
-        self.pythonpath = pypath
+        self.pythonpath = self._process_pypath(pypath)
+
+        # test pythonpath
+        pypathtest = self.setup[rmssection][proposed_version].get(
+            "pythonpath_test", None
+        )
+        if pypathtest:
+            self.testpythonpath = self._process_pypath(pypathtest)
 
         self.tcltkpath = self.setup[rmssection][proposed_version].get("tcltkpath", None)
 
@@ -341,7 +354,7 @@ class RunRMS:
 
     def _process_pypath(self, pypath):
         """
-        The proposed pythonpath from setup is a list.
+        The proposed pythonpath or testpythonpath from setup is a list.
 
         The list in the setup YAML file is a priority list. E.g.
           - /some/main/python3.6/site-packages
@@ -413,7 +426,7 @@ class RunRMS:
                             setattr(self, mkey, _fsplitter(line.split()))
 
         except EnvironmentError as err:
-            xerror("Stop! Cannot open .master file: {}".format(err))
+            xcritical("Stop! Cannot open .master file: {}".format(err))
             print("Possible causes:")
             print(" * Project is not existing")
             print(" * Project is corrupt")
@@ -516,8 +529,8 @@ class RunRMS:
         pythonpathlist = []
 
         if not self.args.nopy:
-            if self.args.testpylib:
-                pythonpathlist.append(self.args.testpylib)
+            if self.args.testpylib and self.testpythonpath:
+                pythonpathlist.append(self.testpythonpath)
             if self.pythonpath:
                 pythonpathlist.append(self.pythonpath)
             if self.args.incsyspy:
@@ -557,6 +570,7 @@ class RunRMS:
         print("{0:30s}: {1} {2}".format("Last saved date & time", self.date, self.time))
         print("{0:30s}: {1}".format("Locking info", self.lockf))
         if not self.okext:
+            self.userwarnings.append(self.extstatus)
             print(
                 "{0:30s}: {2}{1}{3}".format(
                     "File extension status",
@@ -565,7 +579,6 @@ class RunRMS:
                     _BColors.ENDC,
                 )
             )
-
         print("{0:30s}: {1}".format("Setup for runrms", self.setupfile))
         print("{0:30s}: {1}".format("RMS version requested", self.version_requested))
         print("{0:30s}: {1}".format("Equinor current default ver.", self.defaultver))
@@ -573,7 +586,16 @@ class RunRMS:
         print("{0:30s}: {1}".format("RMS internal storage ID", self.fileversion))
         print("{0:30s}: {1}".format("RMS executable variant", self.variant))
         print("{0:30s}: {1}".format("System pythonpath*", self.oldpythonpath))
-        print("{0:30s}: {1}".format("Pythonpath added as first**", self.pythonpath))
+
+        order = "first"
+        if self.args.testpylib and self.testpythonpath:
+            print(
+                "{0:30s}: {1}".format(
+                    "Test Pypath added as first**", self.testpythonpath
+                )
+            )
+            order = "second"
+        print("{0:30s}: {1}".format(f"Pythonpath added as {order}**", self.pythonpath))
         print("{0:30s}: {1}".format("RMS plugins path", self.pluginspath))
         print("{0:30s}: {1}".format("TCL/TK path", self.tcltkpath))
         print("{0:30s}: {1}".format("RMS DPI scaling", self.setdpiscaling))
@@ -583,6 +605,12 @@ class RunRMS:
         print("*   Will be added if --includesyspy option is used")
         print("**  Will be added unless --nopy option is used")
         print("=" * shutil.get_terminal_size((132, 20)).columns)
+
+        if self.userwarnings:
+            print()
+            xalert("NOTICE!")
+            for msg in self.userwarnings:
+                xalert(msg)
 
     def check_vconsistency(self):
         """Check consistency of file extension vs true version"""
