@@ -40,3 +40,4 @@ and this should run for some minutes without failures.
 
 * `Contributor guidelines <docs/contribution.rst>`_
 
+Copyright 2020 Equinor ASA
