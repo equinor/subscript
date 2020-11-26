@@ -94,6 +94,30 @@ def test_prtvol2csv_regions(tmpdir):
     assert len(dframe) == 3
 
 
+def test_prtvol2csv_regions_typemix(tmpdir):
+    """Test region support, getting data from yaml"""
+    prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
+
+    yamlexample = {
+        "region2fipnum": {
+            "RegionA": [1, 4, 6],
+            8: [2, 5],
+        }
+    }
+
+    tmpdir.chdir()
+    with open("regions.yml", "w") as reg_fh:
+        reg_fh.write(yaml.dump(yamlexample))
+    sys.argv = ["prtvol2csv", str(prtfile), "--regions", "regions.yml"]
+    prtvol2csv.main()
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_region.csv")
+    assert not dframe.empty
+    assert "REGION" in dframe
+    assert "RegionA" in dframe["REGION"].values
+    assert "8" in dframe["REGION"].values
+    assert len(dframe) == 2
+
+
 def test_prtvol2csv_noresvol(tmpdir):
     """Test when FIPRESV is not included
 
