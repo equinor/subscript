@@ -282,6 +282,8 @@ def main():
             reg2fip = yaml.safe_load(yamlfile)
         if reg2fip and "region2fipnum" in reg2fip:
             reg2fipmap = reg2fip["region2fipnum"]
+            # Ensure all dictonary keys (region names) are strings:
+            reg2fipmap = {str(key): value for key, value in reg2fipmap.items()}
             # Invert the dictionary of lists, as we alse need to map
             # from fipnum to region:
             fip2regmap = {}
