@@ -80,7 +80,7 @@ jobs:
             git rm -r *
 
             cp -R ../html/* .
-
+            touch .nojekyll  # If not, github pages ignores _* directories.
             git add .
 
             if git diff-index --quiet HEAD; then
