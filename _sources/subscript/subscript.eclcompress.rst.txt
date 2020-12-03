@@ -1,0 +1,18 @@
+=========================
+``subscript.eclcompress``
+=========================
+
+.. automodule:: subscript.eclcompress
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.eclcompress.eclcompress
+
+.. currentmodule:: subscript.eclcompress

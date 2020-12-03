@@ -1,0 +1,10 @@
+=====================
+``subscript.version``
+=====================
+
+.. automodule:: subscript.version
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.version

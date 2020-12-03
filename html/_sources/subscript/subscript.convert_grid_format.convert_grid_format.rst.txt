@@ -1,0 +1,10 @@
+=====================================================
+``subscript.convert_grid_format.convert_grid_format``
+=====================================================
+
+.. automodule:: subscript.convert_grid_format.convert_grid_format
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.convert_grid_format.convert_grid_format

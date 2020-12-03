@@ -1,0 +1,18 @@
+======================
+``subscript.pack_sim``
+======================
+
+.. automodule:: subscript.pack_sim
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.pack_sim.pack_sim
+
+.. currentmodule:: subscript.pack_sim

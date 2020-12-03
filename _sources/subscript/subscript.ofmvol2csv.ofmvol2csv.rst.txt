@@ -1,0 +1,10 @@
+===================================
+``subscript.ofmvol2csv.ofmvol2csv``
+===================================
+
+.. automodule:: subscript.ofmvol2csv.ofmvol2csv
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.ofmvol2csv.ofmvol2csv

@@ -1,0 +1,10 @@
+=========================
+``subscript.fmuobs.util``
+=========================
+
+.. automodule:: subscript.fmuobs.util
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.fmuobs.util

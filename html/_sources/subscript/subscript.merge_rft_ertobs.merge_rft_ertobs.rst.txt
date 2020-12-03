@@ -1,0 +1,10 @@
+===============================================
+``subscript.merge_rft_ertobs.merge_rft_ertobs``
+===============================================
+
+.. automodule:: subscript.merge_rft_ertobs.merge_rft_ertobs
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.merge_rft_ertobs.merge_rft_ertobs

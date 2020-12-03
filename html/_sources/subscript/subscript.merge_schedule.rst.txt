@@ -1,0 +1,18 @@
+============================
+``subscript.merge_schedule``
+============================
+
+.. automodule:: subscript.merge_schedule
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.merge_schedule.merge_schedule
+
+.. currentmodule:: subscript.merge_schedule

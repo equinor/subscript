@@ -1,0 +1,10 @@
+===================================================
+``subscript.sw_model_utilities.sw_model_utilities``
+===================================================
+
+.. automodule:: subscript.sw_model_utilities.sw_model_utilities
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.sw_model_utilities.sw_model_utilities

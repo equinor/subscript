@@ -1,0 +1,10 @@
+=============================
+``subscript.vfp2csv.vfp2csv``
+=============================
+
+.. automodule:: subscript.vfp2csv.vfp2csv
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.vfp2csv.vfp2csv

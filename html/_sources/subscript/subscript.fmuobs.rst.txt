@@ -1,0 +1,21 @@
+====================
+``subscript.fmuobs``
+====================
+
+.. automodule:: subscript.fmuobs
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.fmuobs.fmuobs
+   subscript.fmuobs.parsers
+   subscript.fmuobs.util
+   subscript.fmuobs.writers
+
+.. currentmodule:: subscript.fmuobs

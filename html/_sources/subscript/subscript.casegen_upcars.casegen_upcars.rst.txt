@@ -1,0 +1,10 @@
+===========================================
+``subscript.casegen_upcars.casegen_upcars``
+===========================================
+
+.. automodule:: subscript.casegen_upcars.casegen_upcars
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.casegen_upcars.casegen_upcars

@@ -1,0 +1,18 @@
+====================
+``subscript.runrms``
+====================
+
+.. automodule:: subscript.runrms
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.runrms.runrms
+
+.. currentmodule:: subscript.runrms

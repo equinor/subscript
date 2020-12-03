@@ -1,0 +1,10 @@
+=================================
+``subscript.csv_stack.csv_stack``
+=================================
+
+.. automodule:: subscript.csv_stack.csv_stack
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.csv_stack.csv_stack

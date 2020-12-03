@@ -1,0 +1,10 @@
+============================
+``subscript.fmuobs.parsers``
+============================
+
+.. automodule:: subscript.fmuobs.parsers
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.fmuobs.parsers

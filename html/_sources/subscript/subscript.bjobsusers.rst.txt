@@ -1,0 +1,18 @@
+========================
+``subscript.bjobsusers``
+========================
+
+.. automodule:: subscript.bjobsusers
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.bjobsusers.bjobsusers
+
+.. currentmodule:: subscript.bjobsusers

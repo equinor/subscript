@@ -1,0 +1,10 @@
+===========================================
+``subscript.restartthinner.restartthinner``
+===========================================
+
+.. automodule:: subscript.restartthinner.restartthinner
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.restartthinner.restartthinner

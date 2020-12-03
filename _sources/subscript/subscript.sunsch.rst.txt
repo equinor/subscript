@@ -1,0 +1,18 @@
+====================
+``subscript.sunsch``
+====================
+
+.. automodule:: subscript.sunsch
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.sunsch.sunsch
+
+.. currentmodule:: subscript.sunsch

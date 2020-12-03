@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>subscript.casegen_upcars.model &mdash; subscript 0.7.2.dev15+g90704d2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="subscript.casegen_upcars.udf" href="subscript.casegen_upcars.udf.html" />
+    <link rel="prev" title="subscript.casegen_upcars.casegen_upcars" href="subscript.casegen_upcars.casegen_upcars.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> subscript
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.2.dev15+g90704d2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">subscript</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/gen_satfunc.html">GEN_SATFUNC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/merge_schedule.html">MERGE_SCHEDULE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/runrms.html">RUNRMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/vfp2csv.html">VFP2CSV</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python modules</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="subscript.casegen_upcars.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.eclcompress.html"><code class="docutils literal notranslate"><span class="pre">subscript.eclcompress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ecldiff2roff.html"><code class="docutils literal notranslate"><span class="pre">subscript.ecldiff2roff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.gen_satfunc.html"><code class="docutils literal notranslate"><span class="pre">subscript.gen_satfunc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.merge_rft_ertobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_rft_ertobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.merge_schedule.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_schedule</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ofmvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.ofmvol2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.pack_sim.html"><code class="docutils literal notranslate"><span class="pre">subscript.pack_sim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.params2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.params2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.pvt2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.pvt2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.version.html"><code class="docutils literal notranslate"><span class="pre">subscript.version</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.vfp2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.vfp2csv</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
+        
+          <li><a href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.model</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/subscript/subscript.casegen_upcars.model.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-subscript.casegen_upcars.model">
+<span id="subscript-casegen-upcars-model"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.model</span></code><a class="headerlink" href="#module-subscript.casegen_upcars.model" title="Permalink to this headline">¶</a></h1>
+<p>Engine part of casegen_upcars</p>
+<dl class="py class">
+<dt id="subscript.casegen_upcars.model.Model">
+<em class="property">class </em><code class="sig-prename descclassname">subscript.casegen_upcars.model.</code><code class="sig-name descname">Model</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">nMatrixX</span></em>, <em class="sig-param"><span class="n">nMatrixY</span></em>, <em class="sig-param"><span class="n">nz</span></em>, <em class="sig-param"><span class="n">dx</span></em>, <em class="sig-param"><span class="n">dy</span></em>, <em class="sig-param"><span class="n">dz</span></em>, <em class="sig-param"><span class="n">streak_k</span></em>, <em class="sig-param"><span class="n">streak_dz</span></em>, <em class="sig-param"><span class="n">streak_nz</span></em>, <em class="sig-param"><span class="n">streak_rect</span></em>, <em class="sig-param"><span class="n">fractureThickness</span></em>, <em class="sig-param"><span class="n">fracture_cell_count</span></em>, <em class="sig-param"><span class="n">fracture_at_boundary</span></em>, <em class="sig-param"><span class="n">top</span></em>, <em class="sig-param"><span class="n">radius_x</span></em>, <em class="sig-param"><span class="n">radius_y</span></em>, <em class="sig-param"><span class="n">radius_z</span></em>, <em class="sig-param"><span class="n">tilt</span></em>, <em class="sig-param"><span class="n">centroid_x</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">centroid_y</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">fracture_length_x</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">fracture_offset_x</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">fracture_height_x</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">fracture_zoffset_x</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">fracture_length_y</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">fracture_offset_y</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">fracture_height_y</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">fracture_zoffset_y</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">seed</span><span class="o">=</span><span class="default_value">12345</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Model class is responsible for creating the grid
+according to user specification and create
+a dictionary of input and calculated properties</p>
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.bounded_box">
+<code class="sig-name descname">bounded_box</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">i_1</span></em>, <em class="sig-param"><span class="n">i_2</span></em>, <em class="sig-param"><span class="n">j_1</span></em>, <em class="sig-param"><span class="n">j_2</span></em>, <em class="sig-param"><span class="n">k_1</span></em>, <em class="sig-param"><span class="n">k_2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.bounded_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make sure the box is within model domain</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.calculate_avg_prop">
+<code class="sig-name descname">calculate_avg_prop</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix_property</span></em>, <em class="sig-param"><span class="n">streak_property</span></em>, <em class="sig-param"><span class="n">fracture_property</span></em>, <em class="sig-param"><span class="n">vug_property</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.calculate_avg_prop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the average properties</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.clear_throws">
+<code class="sig-name descname">clear_throws</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.clear_throws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear throws information</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.distribute_property">
+<code class="sig-name descname">distribute_property</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.distribute_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate porosity and permeability for each cell</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.export_grdecl">
+<code class="sig-name descname">export_grdecl</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.export_grdecl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out COORD, ZCORN, MULTX, MULTY and MULTPV to GRDECL file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.export_props">
+<code class="sig-name descname">export_props</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">matrix_prop</span></em>, <em class="sig-param"><span class="n">streak_prop</span></em>, <em class="sig-param"><span class="n">frac_props</span></em>, <em class="sig-param"><span class="n">vug_prop</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.export_props" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print out grid property to Eclipse format file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.grow_box">
+<code class="sig-name descname">grow_box</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">box</span></em>, <em class="sig-param"><span class="n">growth</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.grow_box" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grow the box (i1, i2, j1, j2, k1, k2) outward by value of growth
+and make sure it is still within boundary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.remove_vug">
+<code class="sig-name descname">remove_vug</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.remove_vug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all vug distribution
+:return: None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.set_fracture_anisotropy_property">
+<code class="sig-name descname">set_fracture_anisotropy_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">values_x</span></em>, <em class="sig-param"><span class="n">values_y</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.set_fracture_anisotropy_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store fracture anisotropy property</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.set_fracture_property">
+<code class="sig-name descname">set_fracture_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.set_fracture_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store fracture property</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.set_layers_property">
+<code class="sig-name descname">set_layers_property</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">keyword</span></em>, <em class="sig-param"><span class="n">matrix_property</span></em>, <em class="sig-param"><span class="n">streak_property</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.set_layers_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store matrix and streak property</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.set_throws">
+<code class="sig-name descname">set_throws</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">throws</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.set_throws" title="Permalink to this definition">¶</a></dt>
+<dd><p>Store throws information</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="subscript.casegen_upcars.model.Model.set_vug">
+<code class="sig-name descname">set_vug</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">near_fracture_vug_fraction_dist</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_permeability_dist</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_porosity_dist</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_distance_to_fracture</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_multx</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_multy</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_multpv</span></em>, <em class="sig-param"><span class="n">near_fracture_vug_dispersion_factor</span></em>, <em class="sig-param"><span class="n">random_vug_fraction_dist</span></em>, <em class="sig-param"><span class="n">random_vug_permeability_dist</span></em>, <em class="sig-param"><span class="n">random_vug_porosity_dist</span></em>, <em class="sig-param"><span class="n">random_vug_multx</span></em>, <em class="sig-param"><span class="n">random_vug_multy</span></em>, <em class="sig-param"><span class="n">random_vug_multpv</span></em>, <em class="sig-param"><span class="n">near_streak_vug_fraction_dist</span></em>, <em class="sig-param"><span class="n">near_streak_vug_permeability_dist</span></em>, <em class="sig-param"><span class="n">near_streak_vug_porosity_dist</span></em>, <em class="sig-param"><span class="n">near_streak_vug_distance_to_streak</span></em>, <em class="sig-param"><span class="n">near_streak_vug_multx</span></em>, <em class="sig-param"><span class="n">near_streak_vug_multy</span></em>, <em class="sig-param"><span class="n">near_streak_vug_multpv</span></em>, <em class="sig-param"><span class="n">near_streak_vug_dispersion_factor</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.Model.set_vug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distribute all three types of vugs</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="subscript.casegen_upcars.model.fracture_idx">
+<code class="sig-prename descclassname">subscript.casegen_upcars.model.</code><code class="sig-name descname">fracture_idx</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">matrix_elements</span></em>, <em class="sig-param"><span class="n">fracture_cell_count</span></em>, <em class="sig-param"><span class="n">boundary_fracture</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.model.fracture_idx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return list of start of fracture cell index</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="subscript.casegen_upcars.udf.html" class="btn btn-neutral float-right" title="subscript.casegen_upcars.udf" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="subscript.casegen_upcars.casegen_upcars.html" class="btn btn-neutral float-left" title="subscript.casegen_upcars.casegen_upcars" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Equinor
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+=====================
+``subscript.vfp2csv``
+=====================
+
+.. automodule:: subscript.vfp2csv
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.vfp2csv.vfp2csv
+
+.. currentmodule:: subscript.vfp2csv

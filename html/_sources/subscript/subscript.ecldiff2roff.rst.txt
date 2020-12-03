@@ -1,0 +1,18 @@
+==========================
+``subscript.ecldiff2roff``
+==========================
+
+.. automodule:: subscript.ecldiff2roff
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.ecldiff2roff.ecldiff2roff
+
+.. currentmodule:: subscript.ecldiff2roff

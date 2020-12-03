@@ -1,0 +1,44 @@
+=============
+``subscript``
+=============
+
+.. automodule:: subscript
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.bjobsusers
+   subscript.casegen_upcars
+   subscript.convert_grid_format
+   subscript.csv2ofmvol
+   subscript.csv_merge
+   subscript.csv_stack
+   subscript.eclcompress
+   subscript.ecldiff2roff
+   subscript.fmuobs
+   subscript.gen_satfunc
+   subscript.hook_implementations
+   subscript.interp_relperm
+   subscript.merge_rft_ertobs
+   subscript.merge_schedule
+   subscript.ofmvol2csv
+   subscript.pack_sim
+   subscript.params2csv
+   subscript.presentvalue
+   subscript.prtvol2csv
+   subscript.pvt2csv
+   subscript.restartthinner
+   subscript.runrms
+   subscript.summaryplot
+   subscript.sunsch
+   subscript.sw_model_utilities
+   subscript.version
+   subscript.vfp2csv
+
+.. currentmodule:: subscript

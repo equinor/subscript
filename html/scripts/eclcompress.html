@@ -1,0 +1,386 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>ECLCOMPRESS &mdash; subscript 0.7.2.dev15+g90704d2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ECLDIFF2ROFF" href="ecldiff2roff.html" />
+    <link rel="prev" title="CSV_STACK" href="csv_stack.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> subscript
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.2.dev15+g90704d2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">subscript</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ECLCOMPRESS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ert-usage">ERT usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#possible-improvements">Possible improvements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gen_satfunc.html">GEN_SATFUNC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_schedule.html">MERGE_SCHEDULE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runrms.html">RUNRMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>ECLCOMPRESS</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/scripts/eclcompress.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="eclcompress">
+<h1>ECLCOMPRESS<a class="headerlink" href="#eclcompress" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">eclcompress</span></code> is a command line utility to compress Eclipse grid files using
+the Eclipse syntax <code class="docutils literal notranslate"><span class="pre">number*value</span></code> so that the dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">2</span>  <span class="mi">3</span>  <span class="mi">2</span>  <span class="mi">2</span>  <span class="mi">2</span>  <span class="mi">2</span>
+</pre></div>
+</div>
+<p>becomes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">3</span><span class="o">*</span><span class="mi">0</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="o">*</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>This compression technique is called
+<a class="reference external" href="https://en.wikipedia.org/wiki/Run-length_encoding">run-length encoding</a>.</p>
+<p>If called with no arguments, a default list of files will be used, equivalent
+to specifying a file list like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">eclipse</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">grid</span><span class="o">/*</span>
+<span class="n">eclipse</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">regions</span><span class="o">/*</span>
+<span class="n">eclipse</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">props</span><span class="o">/*</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> option is recommended to see what happens, and is default when
+run via ERT.</p>
+<div class="section" id="command-line">
+<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
+<p><p>Apply run-length encoding to Eclipse input files, such
+that consecutive numbers like “1 1 1 1” are compressed to “4*1”.
+The script processes one file at a time, replacing the files with
+compressed versions.</p>
+<p>If called with no arguments, a default file list is used.</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">eclcompress</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dryrun</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keeporiginal</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">files</span> <span class="n">FILES</span><span class="p">]</span>
+                   <span class="p">[</span><span class="o">--</span><span class="n">eclkw_regexp</span> <span class="n">ECLKW_REGEXP</span><span class="p">]</span>
+                   <span class="p">[</span><span class="n">grdeclfiles</span> <span class="p">[</span><span class="n">grdeclfiles</span> <span class="o">...</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h3>
+<dl class="option-list">
+<dt><kbd>grdeclfiles</kbd></dt>
+<dd><p>List of Eclipse grdecl files to compress, supporting wildcards. If no files are given, a default wildcard list will be used. Wildcards should be enclosed in quotes when called on the command line.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
+<dl class="option-list">
+<dt><kbd>--dryrun</kbd></dt>
+<dd><p>Dry run only. No files on disk will be modified, but compression statistics will be outputted.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--keeporiginal</kbd></dt>
+<dd><p>Copy original to filename.orig</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--files</kbd></dt>
+<dd><p>Text file with one wildcard pr. line, specifying which files to apply compression to. Defaults to everything below eclipse/include, but only if no files are specified on the command line.</p>
+</dd>
+<dt><kbd>--eclkw_regexp</kbd></dt>
+<dd><p>Regular expression to determine which Eclipse keyword to recognize. Default is minimium two and maximum 8 A-Z letters.</p>
+</dd>
+</dl>
+</div>
+<p><p>Default list of files to compress is eclipse/include/grid/* eclipse/include/regions/* eclipse/include/props/*</p>
+</p>
+</div>
+<div class="section" id="ert-usage">
+<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this headline">¶</a></h2>
+<p>Eclcompress is available as a pre-installed forward model in ERT. In your ERT
+config, include:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FORWARD_MODEL</span> <span class="n">ECLCOMPRESS</span>
+</pre></div>
+</div>
+<p>between RMS and Eclipse to effectuate compression. If you have a custom file-list,
+add that using the FILES argument to the forward model:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">FORWARD_MODEL ECLCOMPRESS(&lt;FILES&gt;=custom-file-list.txt)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="notes">
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Existing whitespace (spaces and end-of-lines and such) are not preserved,
+not around ‘/’ characters either.</p></li>
+<li><p>Filenames often contains slashes ‘/’, so if the file in question contains
+the INCLUDE keyword it will be skipped and left untouched.</p></li>
+<li><p>If there are comments within the data section of a keyword, that
+data section will not be compressed.</p></li>
+<li><p>The script is designed for compression of one parameter pr. file, one
+at a time. It can handle more, but the more complex Eclipse syntax you
+put into the files you try to compress, eventually you might encounter
+some bug or limitation. Check the test-function in the source code
+for what it at least can handle.</p></li>
+<li><p>The compression factor outputted on the command line and in the header of
+the compressed file, does not take the extra header (two lines) in the
+compressed file into account.</p></li>
+<li><p>Eclipse loading time of the compressed file is probably reduced by the
+same factor as the compression factor.</p></li>
+<li><p>Only keywords that consist of the letters A-Z, minimum length 2 and maximum
+length 8 are attempted compressed. If you have other odd keyword names, you
+can specify them directly or as a regular expression as a command line option.</p></li>
+</ul>
+</div>
+<div class="section" id="possible-improvements">
+<h2>Possible improvements<a class="headerlink" href="#possible-improvements" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Support for comments inside data sections.</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ecldiff2roff.html" class="btn btn-neutral float-right" title="ECLDIFF2ROFF" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="csv_stack.html" class="btn btn-neutral float-left" title="CSV_STACK" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Equinor
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

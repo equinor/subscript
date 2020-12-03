@@ -1,0 +1,18 @@
+=========================
+``subscript.gen_satfunc``
+=========================
+
+.. automodule:: subscript.gen_satfunc
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.gen_satfunc.gen_satfunc
+
+.. currentmodule:: subscript.gen_satfunc

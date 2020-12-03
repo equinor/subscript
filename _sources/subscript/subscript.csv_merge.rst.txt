@@ -1,0 +1,18 @@
+=======================
+``subscript.csv_merge``
+=======================
+
+.. automodule:: subscript.csv_merge
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.csv_merge.csv_merge
+
+.. currentmodule:: subscript.csv_merge

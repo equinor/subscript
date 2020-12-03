@@ -1,0 +1,10 @@
+=======================================
+``subscript.hook_implementations.jobs``
+=======================================
+
+.. automodule:: subscript.hook_implementations.jobs
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.hook_implementations.jobs

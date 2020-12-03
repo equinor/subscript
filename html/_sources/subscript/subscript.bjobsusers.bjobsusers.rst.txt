@@ -1,0 +1,10 @@
+===================================
+``subscript.bjobsusers.bjobsusers``
+===================================
+
+.. automodule:: subscript.bjobsusers.bjobsusers
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.bjobsusers.bjobsusers

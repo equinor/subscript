@@ -1,0 +1,10 @@
+=====================================
+``subscript.eclcompress.eclcompress``
+=====================================
+
+.. automodule:: subscript.eclcompress.eclcompress
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.eclcompress.eclcompress

@@ -1,0 +1,10 @@
+===========================================
+``subscript.interp_relperm.interp_relperm``
+===========================================
+
+.. automodule:: subscript.interp_relperm.interp_relperm
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.interp_relperm.interp_relperm

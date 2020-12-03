@@ -1,0 +1,18 @@
+==============================
+``subscript.merge_rft_ertobs``
+==============================
+
+.. automodule:: subscript.merge_rft_ertobs
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.merge_rft_ertobs.merge_rft_ertobs
+
+.. currentmodule:: subscript.merge_rft_ertobs

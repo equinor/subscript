@@ -1,0 +1,496 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SUNSCH &mdash; subscript 0.7.2.dev15+g90704d2 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SW_MODEL_UTILITIES" href="sw_model_utilities.html" />
+    <link rel="prev" title="SUMMARYPLOT" href="summaryplot.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> subscript
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.7.2.dev15+g90704d2
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">subscript</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gen_satfunc.html">GEN_SATFUNC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_schedule.html">MERGE_SCHEDULE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runrms.html">RUNRMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SUNSCH</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#features-in-short">Features in short</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#when-to-use">When to use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yaml-file-syntax">Yaml file syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#yaml-example">YAML example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ert-usage">ERT usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ert-usage-python-2">ERT usage Python 2</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#caveats">Caveats</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python modules</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>SUNSCH</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/scripts/sunsch.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sunsch">
+<h1>SUNSCH<a class="headerlink" href="#sunsch" title="Permalink to this headline">¶</a></h1>
+<p>Sunsch is a tool to build your final Schedule section to Eclipse. This can be done
+through merging multiple partial Schedule files, or inserting small Schedule commands
+at specific dates, possibly with templating included while inserting. Insertion
+can be at absolute dates, or at relative dates to a start date.</p>
+<p><p>Generate Eclipse Schedule file from merges and insertions.</p>
+<p>Reads a YAML-file specifying how a Eclipse Schedule section is to be
+produced given certain input files.</p>
+<p>Command line options override configuration in YAML.</p>
+<p>Output will not be generated unless the produced data is valid in
+Eclipse, checking provided by OPM.</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">sunsch</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">startdate</span> <span class="n">STARTDATE</span><span class="p">]</span>
+              <span class="p">[</span><span class="o">--</span><span class="n">enddate</span> <span class="n">ENDDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">refdate</span> <span class="n">REFDATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dategrid</span> <span class="n">DATEGRID</span><span class="p">]</span>
+              <span class="n">config</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>config</kbd></dt>
+<dd><p>Config file in YAML format for Schedule merging</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-o, --output</kbd></dt>
+<dd><p>Output filename to write to</p>
+<p>Default: “”</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Set logging level to info.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--debug</kbd></dt>
+<dd><p>Set logging level to debug.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--startdate</kbd></dt>
+<dd><p>Start date (START keyword), YYYY-MM-DD.</p>
+</dd>
+<dt><kbd>--enddate</kbd></dt>
+<dd><p>End date, delete keywords after this date, YYYY-MM-DD.</p>
+</dd>
+<dt><kbd>--refdate</kbd></dt>
+<dd><p>Reference date to use for relative inserts, YYYY-MM-DD.</p>
+</dd>
+<dt><kbd>--dategrid</kbd></dt>
+<dd><p>Interval for extra DATES to be inserted.</p>
+</dd>
+</dl>
+</div>
+<p><p>YAML-file components:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">startdate</span> <span class="o">-</span> <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="k">for</span> <span class="n">the</span> <span class="n">initial</span> <span class="n">date</span> <span class="n">of</span> <span class="n">the</span> <span class="n">simulation</span> <span class="p">(</span><span class="n">START</span> <span class="n">keyword</span><span class="p">)</span>
+<span class="n">files</span> <span class="o">-</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">filenames</span> <span class="n">to</span> <span class="n">be</span> <span class="n">merged</span><span class="o">.</span> <span class="n">Optional</span>
+<span class="n">output</span> <span class="o">-</span> <span class="n">filename</span> <span class="k">for</span> <span class="n">output</span><span class="o">.</span> <span class="n">stdout</span> <span class="k">if</span> <span class="n">omitted</span>
+<span class="n">refdate</span> <span class="o">-</span> <span class="k">if</span> <span class="n">supplied</span><span class="p">,</span> <span class="n">will</span> <span class="n">work</span> <span class="k">as</span> <span class="n">a</span> <span class="n">reference</span> <span class="n">date</span> <span class="k">for</span> <span class="n">relative</span>
+          <span class="n">inserts</span><span class="o">.</span> <span class="n">If</span> <span class="ow">not</span> <span class="n">supplied</span><span class="p">,</span> <span class="n">startdate</span> <span class="n">will</span> <span class="n">be</span> <span class="n">used</span><span class="o">.</span>
+<span class="n">enddate</span> <span class="o">-</span> <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span><span class="o">.</span> <span class="n">DATES</span> <span class="n">after</span> <span class="n">this</span> <span class="n">date</span> <span class="n">will</span> <span class="n">be</span> <span class="n">removed</span><span class="o">.</span>
+<span class="n">dategrid</span> <span class="o">-</span> <span class="n">a</span> <span class="n">string</span> <span class="n">being</span> <span class="n">either</span> <span class="s1">&#39;weekly&#39;</span><span class="p">,</span> <span class="s1">&#39;biweekly&#39;</span><span class="p">,</span> <span class="s1">&#39;monthly&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;bimonthly&#39;</span> <span class="n">stating</span> <span class="n">how</span> <span class="n">often</span> <span class="n">a</span> <span class="n">DATES</span> <span class="n">keyword</span> <span class="ow">is</span> <span class="n">wanted</span>
+           <span class="p">(</span><span class="n">independent</span> <span class="n">of</span> <span class="n">inserts</span><span class="o">/</span><span class="n">merges</span><span class="p">)</span><span class="o">.</span>  <span class="s1">&#39;(bi)monthly&#39;</span> <span class="ow">and</span>
+           <span class="s1">&#39;yearly&#39;</span> <span class="n">will</span> <span class="n">be</span> <span class="n">rounded</span> <span class="n">to</span> <span class="n">first</span> <span class="ow">in</span> <span class="n">every</span> <span class="n">month</span><span class="o">.</span>
+<span class="n">insert</span> <span class="o">-</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">components</span> <span class="n">to</span> <span class="n">be</span> <span class="n">inserted</span> <span class="n">into</span> <span class="n">the</span> <span class="n">final</span> <span class="n">Schedule</span>
+         <span class="n">file</span><span class="o">.</span> <span class="n">Each</span> <span class="nb">list</span> <span class="n">element</span> <span class="n">can</span> <span class="n">contain</span> <span class="n">the</span> <span class="n">elements</span><span class="p">:</span>
+       <span class="n">date</span> <span class="o">-</span> <span class="n">Fixed</span> <span class="n">date</span> <span class="k">for</span> <span class="n">the</span> <span class="n">insertion</span>
+       <span class="n">days</span> <span class="o">-</span> <span class="n">relative</span> <span class="n">date</span> <span class="k">for</span> <span class="n">insertion</span> <span class="n">relative</span> <span class="n">to</span> <span class="n">refdate</span><span class="o">/</span><span class="n">startdate</span>
+       <span class="n">filename</span> <span class="o">-</span> <span class="n">filename</span> <span class="n">to</span> <span class="n">override</span> <span class="n">the</span> <span class="n">yaml</span><span class="o">-</span><span class="n">component</span> <span class="n">element</span> <span class="n">name</span><span class="o">.</span>
+       <span class="n">string</span> <span class="o">-</span> <span class="n">instead</span> <span class="n">of</span> <span class="n">filename</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">write</span> <span class="n">the</span> <span class="n">contents</span> <span class="n">inline</span>
+       <span class="n">template</span> <span class="o">-</span> <span class="n">filename</span> <span class="k">if</span> <span class="n">substitution</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">take</span> <span class="n">place</span>
+       <span class="n">substitute</span> <span class="o">-</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="n">pairs</span> <span class="n">that</span> <span class="n">will</span> <span class="n">subsitute</span> <span class="o">&lt;</span><span class="n">key</span><span class="o">&gt;</span> <span class="ow">in</span>
+                    <span class="n">incoming</span> <span class="n">files</span> <span class="p">(</span><span class="ow">or</span> <span class="n">inline</span> <span class="n">string</span><span class="p">)</span> <span class="k">with</span>
+                    <span class="n">associated</span> <span class="n">values</span><span class="o">.</span>
+</pre></div>
+</div>
+</p>
+<div class="section" id="features-in-short">
+<h2>Features in short<a class="headerlink" href="#features-in-short" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Configuration in YAML format</p></li>
+<li><p>Merging via DATE keyword</p></li>
+<li><p>Optional clipping any events before or after chosen start and end dates</p></li>
+<li><p>A “date grid” can be inserted. Weekly, biweekly, monthly, bimonthly and yearly
+are supported. Monthly dates will be rounded to the first of every month.</p></li>
+<li><p>Insertion of small Schedule snippets, opening a well for example. Can
+be inserted either at dates relative a reference date, or at a specific date.</p></li>
+<li><p>Schedule snippets can have parameters that get values when inserted.
+This is similar to what one could achieve using DESIGN_KW, but with less temporary files.</p></li>
+</ul>
+</div>
+<div class="section" id="when-to-use">
+<h2>When to use<a class="headerlink" href="#when-to-use" title="Permalink to this headline">¶</a></h2>
+<p>The tool is designed for FMU runs. It can be used both for the history section
+and for prediction, but probably has its most relevant usage in sensitivities
+for prediction. It will enable usage of the aging Schlumberger Schedule
+application, in that the exported text file from Schlumberger Schedule can be
+further processed with this tool. If RMS10/11 is in use already for well
+planning and Schedule export, the need for this tool is less, and one should
+possibly try not to use both unless needed.</p>
+</div>
+<div class="section" id="yaml-file-syntax">
+<h2>Yaml file syntax<a class="headerlink" href="#yaml-file-syntax" title="Permalink to this headline">¶</a></h2>
+<p>Write a configuration file in YAML format, describing which Schedule files you
+are starting from and which you want to merge in, and any other directives to
+insert at specific points in the Schedule file.</p>
+<p>Start listing the files that should be included as is (merged by date):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">files</span><span class="p">:</span>
+  <span class="o">-</span> <span class="n">eclipse</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">schedule</span><span class="o">/</span><span class="n">initialfile</span><span class="o">.</span><span class="n">sch</span>
+  <span class="o">-</span> <span class="n">eclipse</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">schedule</span><span class="o">/</span><span class="n">mergein</span><span class="o">.</span><span class="n">sch</span>
+</pre></div>
+</div>
+<p>to your configuration. This file normally starts with keywords for the Schedule
+section except the DATES keyword, as the date is implicit through the START
+keyword in your Eclipse deck.</p>
+<p>In an FMU setting, the script should be run with the RUNPATH as the current
+directory, so you would normally use paths relative to that (runpath is usually
+<code class="docutils literal notranslate"><span class="pre">realization-*/iter-*</span></code>)</p>
+<p>Then you add where the output should go, again relative to RUNPATH:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="p">:</span> <span class="n">eclipse</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">schedule</span><span class="o">/</span><span class="n">finalschedule</span><span class="o">.</span><span class="n">sch</span>
+</pre></div>
+</div>
+<p>This last filename is what needs to go into your templated Eclipse DATA-file.</p>
+<p>You should add startdate to the configuration, it is supposed to be the same as
+the START given to Eclipse. If there is anything before that date in any of the
+input files or insert statements, that will be clipped away. Similarly for
+enddate. You may also add refdate. This is only used for relative insertions of
+Schedule snippets, so that you can say that some command should be inserted X
+days after the refdate.</p>
+<p>If you want explicit DATEs at regular intervals, you can use the date-grid feature:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dategrid</span><span class="p">:</span> <span class="n">yearly</span>
+</pre></div>
+</div>
+<p>This is in case the file you initialize from is empty, or does not already have
+this. Together with enddate you can also use this to extend the dategrid in the
+initial file.</p>
+<p>The insert statement has more features. If files are supplied to the insert
+statement, those files should not include the DATES keyword, because this is to
+be generated. You can specify the date for where it should go in (dates in
+ISO-format), or you can state how many days relative to the reference date. An
+additional feature is to also substitute parameters in the inserted file (with
+this you can use the same sch-file for say WCONPROD at multiple dates, but with
+varying rates). The Schedule file to be inserted should then have <code class="docutils literal notranslate"><span class="pre">&lt;ORAT&gt;</span></code> (you
+could also accomplish this using DESIGN_KW and producing many files to be
+inserted, but doing it in this yaml file can allow for cleaner directories).</p>
+<p>See the example below for how the insert statement is used.</p>
+</div>
+<div class="section" id="yaml-example">
+<h2>YAML example<a class="headerlink" href="#yaml-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1995-06-01</span>
+<span class="nt">refdate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2022-01-01</span>
+<span class="nt">enddate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2030-12-01</span>
+<span class="nt">output</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/schedule.sch</span>
+<span class="nt">files</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/history.sch</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/receptionpressures.sch</span>
+<span class="nt">dategrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">monthly</span>
+<span class="nt">insert</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span>
+    <span class="nt">filename</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iorwell1.sch</span>
+    <span class="nt">date</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2020-01-01</span>
+  <span class="p p-Indicator">-</span>
+    <span class="nt">filename</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iorwell2.sch</span>
+    <span class="nt">days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>  <span class="c1"># Relative to refdate</span>
+  <span class="p p-Indicator">-</span>
+    <span class="nt">string</span><span class="p">:</span> <span class="s">&quot;WCONHIST\n</span><span class="nv"> </span><span class="s">A-5</span><span class="nv"> </span><span class="s">OPEN</span><span class="nv"> </span><span class="s">ORAT</span><span class="nv"> </span><span class="s">5000/\n/&quot;</span>
+    <span class="nt">days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>
+  <span class="p p-Indicator">-</span>
+    <span class="nt">template</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/prediction_existing_wells.sch</span>
+    <span class="nt">days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+    <span class="nt">substitute</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="nt"> ORAT</span><span class="p">:</span> <span class="nv">3000</span><span class="p p-Indicator">,</span><span class="nt"> GRAT</span><span class="p">:</span> <span class="nv">400000</span><span class="p p-Indicator">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ert-usage">
+<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this headline">¶</a></h2>
+<p>Sunsch is installed as a forward model in ERT. A typical configuration could look like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="p">[</span> <span class="n">various</span> <span class="n">DESIGN_KW</span> <span class="n">statements</span> <span class="n">producing</span> <span class="nb">input</span> <span class="n">files</span> <span class="n">to</span> <span class="n">sunsch</span><span class="p">]</span>
+<span class="n">FORWARD_MODEL</span> <span class="n">DESIGN_KW</span><span class="p">(</span><span class="o">&lt;</span><span class="n">template_file</span><span class="o">&gt;=&lt;</span><span class="n">CONFIG_PATH</span><span class="o">&gt;/../</span><span class="nb">input</span><span class="o">/</span><span class="n">templates</span><span class="o">/</span><span class="n">config_sunsch</span><span class="o">.</span><span class="n">tmpl</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">result_file</span><span class="o">&gt;=&lt;</span><span class="n">RUNPATH</span><span class="o">&gt;/</span><span class="n">sunsch_config</span><span class="o">.</span><span class="n">yml</span><span class="p">)</span>
+<span class="n">FORWARD_MODEL</span> <span class="n">SUNSCH</span><span class="p">(</span><span class="o">&lt;</span><span class="n">config</span><span class="o">&gt;=</span><span class="n">sunsch_config</span><span class="o">.</span><span class="n">yml</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(if you don’t need to templatize your sunsch configuration, you can simplify)</p>
+<div class="section" id="ert-usage-python-2">
+<h3>ERT usage Python 2<a class="headerlink" href="#ert-usage-python-2" title="Permalink to this headline">¶</a></h3>
+<p>If you are on Python 2, you need to define a job config file for <code class="docutils literal notranslate"><span class="pre">SUNSCH</span></code> and load
+that job definition, the file <code class="docutils literal notranslate"><span class="pre">ert/bin/jobs/SUNSCH</span></code> should read:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXECUTABLE</span> <span class="n">sunsch</span>
+<span class="n">ARGLIST</span>    <span class="s2">&quot;--verbose&quot;</span> <span class="o">&lt;</span><span class="n">config</span><span class="o">&gt;</span>
+<span class="n">MIN_ARG</span>    <span class="mi">1</span>
+<span class="n">MAX_ARG</span>    <span class="mi">1</span>
+<span class="n">ARG_TYPE</span> <span class="mi">0</span> <span class="n">STRING</span>
+</pre></div>
+</div>
+<p>and you need:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSTALL_JOB</span> <span class="n">SUNSCH</span> <span class="o">../</span><span class="nb">bin</span><span class="o">/</span><span class="n">jobs</span><span class="o">/</span><span class="n">SUNSCH</span>
+</pre></div>
+</div>
+<p>in your ert config.</p>
+</div>
+</div>
+<div class="section" id="caveats">
+<h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Any comments (starting with <code class="docutils literal notranslate"><span class="pre">--</span></code> in the source files) are lost in the final
+output. This is unfortunate, but hard to fix. It is related to the comments in
+input files not having a well-defined location in the final output.</p></li>
+<li><p>Any INCLUDE files that merged schedule files have, will be parsed and read.
+That means that the files must exist already and that paths must match up. The
+final output will not contain the INCLUDE statement, but its content. If you
+need INCLUDE statements in the final output that are not parsed (and can refer
+to not-yet-existing files), use a string insertion in the insert section.</p></li>
+<li><p>Some error in the Eclipse deck that Eclipse 100 accepts (missing / in some
+circumstances), will not be accepted by sunsch (only when using string
+insertion)</p></li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="sw_model_utilities.html" class="btn btn-neutral float-right" title="SW_MODEL_UTILITIES" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="summaryplot.html" class="btn btn-neutral float-left" title="SUMMARYPLOT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2020, Equinor
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

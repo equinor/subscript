@@ -1,0 +1,10 @@
+=====================================
+``subscript.summaryplot.summaryplot``
+=====================================
+
+.. automodule:: subscript.summaryplot.summaryplot
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.summaryplot.summaryplot

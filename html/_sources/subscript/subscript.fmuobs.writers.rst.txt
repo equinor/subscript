@@ -1,0 +1,10 @@
+============================
+``subscript.fmuobs.writers``
+============================
+
+.. automodule:: subscript.fmuobs.writers
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.fmuobs.writers

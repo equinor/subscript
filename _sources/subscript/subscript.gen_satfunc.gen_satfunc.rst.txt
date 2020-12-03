@@ -1,0 +1,10 @@
+=====================================
+``subscript.gen_satfunc.gen_satfunc``
+=====================================
+
+.. automodule:: subscript.gen_satfunc.gen_satfunc
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.gen_satfunc.gen_satfunc

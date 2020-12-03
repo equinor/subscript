@@ -1,0 +1,10 @@
+=================================
+``subscript.csv_merge.csv_merge``
+=================================
+
+.. automodule:: subscript.csv_merge.csv_merge
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.csv_merge.csv_merge
