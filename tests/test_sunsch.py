@@ -3,6 +3,7 @@ import sys
 import shutil
 import datetime
 import subprocess
+from pathlib import Path
 
 import yaml
 
@@ -639,6 +640,76 @@ def test_dategrid():
     assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
     assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
+
+
+def test_wrap_long_lines():
+    """Test that lines that are excessively long gets wrapped.
+
+    Eclipse allows lines at atmost 128 characters length."""
+    assert sunsch.wrap_long_lines("") == ""
+    assert sunsch.wrap_long_lines("foo") == "foo"
+    assert sunsch.wrap_long_lines("\n") == ""
+    assert sunsch.wrap_long_lines("foo\n") == "foo"
+    assert sunsch.wrap_long_lines("x" * 127) == "x" * 127
+    assert sunsch.wrap_long_lines("x" * 128) == "x" * 128
+
+    # We don't break long "words", let these error in Eclipse:
+    assert sunsch.wrap_long_lines("x" * 129) == "x" * 129
+    assert sunsch.wrap_long_lines("x x x x x", maxchars=3) == "x x\nx x\nx"
+
+    # Whitespace is collapsed before wrapping:
+    assert sunsch.wrap_long_lines("x         x", maxchars=3) == "x x"
+    assert sunsch.wrap_long_lines("       x         x", maxchars=3) == "x x"
+    # But whitespace in short enough line is not touched:
+    assert sunsch.wrap_long_lines("x     x", maxchars=9) == "x     x"
+
+    # Check that minus signs are not treated as hyphens (at which to break lines):
+    assert sunsch.wrap_long_lines("-1.2 -4.5", maxchars=6) == "-1.2\n-4.5"
+    assert sunsch.wrap_long_lines("1.00e-5 1.111e-6", maxchars=6) == "1.00e-5\n1.111e-6"
+
+    # Comments must never be wrapped, and whitespace untouched:
+    assert sunsch.wrap_long_lines("-- foo bar   com", maxchars=6) == "-- foo bar   com"
+    assert (
+        sunsch.wrap_long_lines("1 3 5 4 5 -- long line", maxchars=13)
+        == "1 3 5 4 5 -- long line"
+    )
+    assert (
+        sunsch.wrap_long_lines("1 3 5 4 5 -- long line", maxchars=5)
+        == "1 3 5\n4 5-- long line"
+    )
+
+
+def test_long_vfp_lines(tmpdir, caplog):
+    tmpdir.chdir()
+    Path("vfp.inc").write_text(
+        """VFPPROD
+1 100 'GAS' 'WGR' 'GOR' 'THP' ' ' 'METRIC' 'BHP' /
+100000 300000 1000000 2000000 3000000 4000000 5000000
+6000000 7000000 8000000 9000000 10000000
+/
+30 50 /
+0 /
+5000 /
+0 /
+-- This two-line record might get emitted as one long line by opm-common
+-- This will error in Eclipse
+1 1 1 1 35.4324212 37.234245 39.2343242 40.4324234 43.23523546 45.54676535
+        47.3242356 49.345345 50.2342343 52.4353456 54.24342344 56.32424324
+/
+2 1 1 1 55.4324212 57.234245 59.2343242 60.4324234 63.23523546 65.54676535
+        67.3242356 69.345345 70.2342343 72.4353456 74.24342344 76.32424324
+/""",
+        encoding="utf-8",
+    )
+
+    Path("conf.yml").write_text(
+        "files:\n  - vfp.inc\noutput: sch.inc", encoding="utf-8"
+    )
+    sys.argv = ["sunsch", "conf.yml"]
+    sunsch.main()
+    schinc = Path("sch.inc").read_text()
+    assert max([len(line) for line in schinc.split("\n")]) <= 129
+    assert "Line 7 had length 146, wrapped" in caplog.text
 
 
 def test_comments():

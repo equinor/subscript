@@ -220,9 +220,9 @@ def compress_multiple_keywordsets(keywordsets, filelines):
                 compresseddata += [" ".join(equalvalues)]
 
         # Wrap the output to 79 characters pr. line. Eclipse will error if more
-        # than 132 characters, if there are comments after the slash it will be
+        # than 128 characters, if there are comments after the slash it will be
         # added to the last line emitted by the wrapping and could overshoot the
-        # 132 limit (but having Eclipse ignore a comment is fine)
+        # 128 limit (but having Eclipse ignore a comment is fine)
         compressedlines += textwrap.wrap(
             " ".join(compresseddata),
             initial_indent="  ",

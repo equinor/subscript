@@ -1,0 +1,3 @@
+ERROR_MODE  = RELMIN;
+ERROR       = 0.25;
+ERROR_MIN   = 100;

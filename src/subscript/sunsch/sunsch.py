@@ -10,6 +10,7 @@ import os
 import datetime
 import tempfile
 import argparse
+import textwrap
 import logging
 
 import yaml
@@ -551,6 +552,46 @@ def substitute(insert_statement):
     return resultfilename
 
 
+def wrap_long_lines(string, maxchars=128, warn=True):
+    """Wrap long lines in a multiline string.
+
+    Short enough lines are not touched.
+
+    Args:
+        string (str): Multiline string to be possibly wrapped
+        maxchars (int): Maximal length of each line
+        warn (bool): Whether to log a warning for each line
+            of excessive length
+
+    Returns:
+        str: Multiline string with no lines more than maxchars
+        in length. Trailing whitespace is always stripped.
+    """
+    wrappedstr = ""
+    for line_idx, line in enumerate(string.splitlines()):
+        commentsplit = line.partition("--")
+        pre_comment = commentsplit[0]
+        if len(pre_comment) > maxchars:
+            # Trim all whitespace down to one space:
+            pre_comment = " ".join(pre_comment.split())
+            # (Comments are supported here even though they are always
+            # stripped out by the current opm.io.TimeVector implementation)
+            if warn:
+                logger.warning("Line %d had length %d, wrapped", line_idx, len(line))
+            wrappedstr += "\n".join(
+                textwrap.wrap(
+                    pre_comment,
+                    width=maxchars,
+                    break_long_words=False,
+                    break_on_hyphens=False,
+                )
+            ).strip()
+            wrappedstr += commentsplit[1] + commentsplit[2] + "\n"
+        else:
+            wrappedstr += line + "\n"
+    return wrappedstr.strip()
+
+
 def _remap_v1_insert_to_v2(insert_statement):
     """
     Remap a config v1 insert section to how it should look like
@@ -830,17 +871,19 @@ def main():
         logger.setLevel(logging.DEBUG)
 
     # Generate the schedule section, as a string:
-    schedule = process_sch_config(config.snapshot)
+    schedule = wrap_long_lines(
+        str(process_sch_config(config.snapshot)), maxchars=128, warn=True
+    )
 
     if config.snapshot.output == "-":
-        print(str(schedule))
+        print(schedule)
     else:
         logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
         dirname = os.path.dirname(config.snapshot.output)
         if dirname and not os.path.exists(dirname):
             logger.debug("mkdir %s", dirname)
             os.makedirs(dirname)
-        open(config.snapshot.output, "w").write(str(schedule))
+        open(config.snapshot.output, "w").write(schedule)
 
 
 if __name__ == "__main__":
