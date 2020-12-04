@@ -40,6 +40,7 @@ SSCRIPTS = [
 ERTPLUGINS = [
     "subscript_jobs = subscript.hook_implementations.jobs",
     "CsvMerge = subscript.csv_merge.csv_merge",
+    "CsvStack = subscript.csv_stack.csv_stack",
     "FmuObs = subscript.fmuobs.fmuobs",
 ]
 

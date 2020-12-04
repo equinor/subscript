@@ -2,12 +2,22 @@
 import re
 import sys
 import subprocess
+from pathlib import Path
 
 import pandas as pd
 
 import pytest
 
 from subscript.csv_stack import csv_stack
+
+try:
+    # pylint: disable=unused-import
+    import ert_shared  # noqa
+
+    HAVE_ERT = True
+except ImportError:
+    HAVE_ERT = False
+
 
 TESTFRAME = pd.DataFrame(
     columns=["REAL", "DATE", "PORO", "WOPT:A1", "WOPT:A2", "RPR:1", "RPR:2", "CONST"],
@@ -228,3 +238,140 @@ def test_csv_stack_stdout(tmpdir):
     output = result.stdout.decode()
     assert "WELL" in output
     assert "A2,2015" in output
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_forward_model(tmpdir):
+    """Test that the ERT hook can run on a mocked case"""
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    tmpdir.chdir()
+    TESTFRAME.to_csv("stackme.csv", index=False)
+    with open("FOO.DATA", "w") as file_h:
+        file_h.write("--Empty")
+    ert_config = [
+        "ECLBASE FOO.DATA",
+        "QUEUE_SYSTEM LOCAL",
+        "NUM_REALIZATIONS 1",
+        "RUNPATH .",
+        ("FORWARD_MODEL CSV_STACK(" "<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv)"),
+    ]
+
+    ert_config_fname = "stacktest.ert"
+    with open(ert_config_fname, "w") as file_h:
+        file_h.write("\n".join(ert_config))
+
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+
+    dframe = pd.read_csv("stacked.csv")
+    assert not dframe.empty
+    assert "RPR:1" in dframe
+    assert "CONST" not in dframe
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_forward_model_keepminimal(tmpdir):
+    """Test that the ERT hook can run on a mocked case"""
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    tmpdir.chdir()
+    TESTFRAME.to_csv("stackme.csv", index=False)
+    with open("FOO.DATA", "w") as file_h:
+        file_h.write("--Empty")
+    ert_config = [
+        "ECLBASE FOO.DATA",
+        "QUEUE_SYSTEM LOCAL",
+        "NUM_REALIZATIONS 1",
+        "RUNPATH .",
+        (
+            "FORWARD_MODEL CSV_STACK("
+            '<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv, <OPTION>="--keepminimal")'
+        ),
+    ]
+
+    ert_config_fname = "stacktest.ert"
+    with open(ert_config_fname, "w") as file_h:
+        file_h.write("\n".join(ert_config))
+
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+
+    dframe = pd.read_csv("stacked.csv")
+    assert not dframe.empty
+    assert "RPR:1" not in dframe
+    assert "CONST" not in dframe
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_forward_model_keepconstants(tmpdir):
+    """Test that the ERT hook can run on a mocked case"""
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    tmpdir.chdir()
+    TESTFRAME.to_csv("stackme.csv", index=False)
+    with open("FOO.DATA", "w") as file_h:
+        file_h.write("--Empty")
+    ert_config = [
+        "ECLBASE FOO.DATA",
+        "QUEUE_SYSTEM LOCAL",
+        "NUM_REALIZATIONS 1",
+        "RUNPATH .",
+        (
+            "FORWARD_MODEL CSV_STACK("
+            '<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv, <OPTION>="--keepconstantcolumns")'  # noqa
+        ),
+    ]
+
+    ert_config_fname = "stacktest.ert"
+    with open(ert_config_fname, "w") as file_h:
+        file_h.write("\n".join(ert_config))
+
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+
+    dframe = pd.read_csv("stacked.csv")
+    assert not dframe.empty
+    assert "RPR:1" in dframe
+    assert "CONST" in dframe
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_csv_stack_ert_workflow(tmpdir):
+    """Test that CSV_STACK can be run as an ERT workflow/plugin"""
+    tmpdir.chdir()
+
+    csvfile = "some_ensemble/share/results/tables/unsmry--monthly.csv"
+    Path(csvfile).parent.mkdir(parents=True)
+
+    pd.DataFrame([{"WOPT:A": 1, "WOPT:B": 2}]).to_csv(csvfile, index=False)
+
+    Path("CSV_STACK_WELLS").write_text(
+        (
+            'CSV_STACK "<CASEDIR>/share/results/tables/unsmry--monthly.csv"'
+            '"--split" well "--output" stacked.csv "--keepconstantcolumns"'
+        )
+    )
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE FOO.DATA",
+                "DEFINE <CASEDIR> some_ensemble",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALIZATIONS 1",
+                "RUNPATH .",
+                "",
+                "LOAD_WORKFLOW CSV_STACK_WELLS",
+                "HOOK_WORKFLOW CSV_STACK_WELLS POST_SIMULATION",
+            ]
+        )
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+
+    assert Path("stacked.csv").is_file()
+    pd.testing.assert_frame_equal(
+        pd.read_csv("stacked.csv"),
+        pd.DataFrame([{"WELL": "A", "WOPT": 1}, {"WELL": "B", "WOPT": 2}]),
+    )

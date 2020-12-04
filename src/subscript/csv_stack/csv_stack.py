@@ -8,6 +8,9 @@ from typing import Pattern
 
 import pandas as pd
 
+from ert_shared.plugins.plugin_manager import hook_implementation
+from res.job_queue import ErtScript
+
 from subscript import getLogger
 
 logger = getLogger(__name__)
@@ -25,6 +28,36 @@ A-1, A-2, or A-3 as values.
 
 If importing the output CSV into Spotfire, you may then view and filter WOPT and
 friends by wellname, instead of selecting individual columns."""
+
+# The following string is used for the ERT forward model:
+EXAMPLE = """
+Put this in your ERT config::
+
+  FORWARD_MODEL CSV_STACK(<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv, <OPTION>="--keepminimal")
+
+"""  # noqa
+
+CATEGORY = "utility.transformation"
+
+# The following string is used for the ERT workflow documentation, note
+# the very subtle difference in variable name.
+WORKFLOW_EXAMPLE = """
+Add a file named e.g. ``ert/bin/workflows/CSV_STACK_WELLS`` with the contents::
+
+  CSV_STACK \"<CASEDIR>/share/results/tables/unsmry--montly.csv\" "--split" well "--keepminimal"
+
+assuming you already have a CSV file in the given path that you want to stack.
+
+It is important to individually quote any arguments that include ``--`` or else
+ERT will take the rest of the line as a comment.
+
+Add to your ERT config to have the workflow automatically executed on
+successful runs::
+
+  LOAD_WORKFLOW ../bin/workflows/CSV_STACK_WELLS
+  HOOK_WORKFLOW CSV_STACK_WELLS POST_SIMULATION
+
+"""  # noqa
 
 # List of columns that will always be kept, case insensitive:
 ALWAYS_KEEP = [
@@ -65,6 +98,20 @@ class CustomFormatter(
     pass
 
 
+class CsvStack(ErtScript):
+    """A class with a run() function that can be registered as an ERT plugin,
+    to be used as a ERT workflow (wrapping the command line utility)"""
+
+    # pylint: disable=too-few-public-methods
+    def run(self, *args):
+        # pylint: disable=no-self-use
+        """Parse with a simplified command line parser, for ERT only,
+        calling csv_stack_main()"""
+        parser = get_parser()
+        args = parser.parse_args(args)
+        csv_stack_main(args, support_magics=False)
+
+
 def get_parser():
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
@@ -73,22 +120,21 @@ def get_parser():
     )
     parser.add_argument(
         "csvfile",
-        help="input csv file. If you type stdin or -, it will read from stdin ",
+        help="Input CSV file. If you use -, it will read from stdin ",
     )
     parser.add_argument(
         "-o",
         "--output",
         type=str,
         help=(
-            "name of output csv file. "
-            "Use - or stdout to have the output dumped to stdout."
+            "Name of output csv file. " "Use - or to have the output dumped to stdout."
         ),
         default="stacked.csv",
     )
     parser.add_argument(
         "--split",
         type=str,
-        help="type of column to be split/unpivoted/stacked. Choose from the "
+        help="Type of column to be split/unpivoted/stacked. Choose from the "
         + "the predefined set: well, region, group, block, all",
         default="well",
     )
@@ -110,6 +156,17 @@ def get_parser():
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Be verbose", default=False
     )
+    parser.add_argument(
+        # Placeholders for one empty argument from ERT forward model
+        # This is the way to support --keepminimal, the default
+        # in the job configuration is "" and will end in this argument
+        # unless the ert config sets it to f.ex. --keepminimal
+        "option",
+        default="",
+        nargs="?",
+        help=argparse.SUPPRESS,
+    )
+
     return parser
 
 
@@ -117,6 +174,25 @@ def main():
     """Function for command line invocation"""
     parser = get_parser()
     args = parser.parse_args()
+    csv_stack_main(args, support_magics=True)
+
+
+def csv_stack_main(args, support_magics=False):
+    """A main function to be used both from the command line, and
+    when used as an ERT plugin (ERT workflow).
+
+    This function writes to disk or to stdout.
+
+    Args:
+        args: Namespace with command line arguments
+        support_magics (bool): If True, it is possible to read and write to
+            stdin/stdout. Should not be set when used as ERT workflow.
+    """
+    if not support_magics and (
+        args.output == __MAGIC_STDOUT__ or args.csvfile == __MAGIC_STDIN__
+    ):
+        logger.error("Can't use stdin/stdout")
+        sys.exit(1)
 
     if args.verbose:
         if args.output == __MAGIC_STDOUT__:
@@ -124,10 +200,10 @@ def main():
         logger.setLevel(logging.INFO)
 
     if args.csvfile == __MAGIC_STDIN__:
-        logger.info("Loading ensemble from stdin.")
+        logger.info("Loading CSV data from stdin.")
         dframe = pd.read_csv(sys.stdin)
     else:
-        logger.info("Loading ensemble from %s", args.csvfile)
+        logger.info("Loading CSV data from %s", args.csvfile)
         dframe = pd.read_csv(args.csvfile)
 
     if args.split not in STACK_LIBRARY:
@@ -250,6 +326,17 @@ def csv_stack(
         del dframe["level_0"]
 
     return dframe.reset_index(drop=True)
+
+
+@hook_implementation
+def legacy_ertscript_workflow(config):
+    """Hook the CsvStack class into ERT with the name CSV_STACK,
+    and inject documentation"""
+    workflow = config.add_workflow(CsvStack, "CSV_STACK")
+    workflow.parser = get_parser
+    workflow.description = DESCRIPTION
+    workflow.examples = WORKFLOW_EXAMPLE
+    workflow.category = CATEGORY
 
 
 if __name__ == "__main__":
