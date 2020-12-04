@@ -1,7 +1,55 @@
+"""Tool to stack/pivot CSV files, exposed as command line client,
+ERT workflow and ERT forward model"""
 import sys
 import re
+import logging
 import argparse
-import pandas
+from typing import Pattern
+
+import pandas as pd
+
+from subscript import getLogger
+
+logger = getLogger(__name__)
+
+__MAGIC_STDOUT__ = "-"
+__MAGIC_STDIN__ = "-"
+
+DESCRIPTION = """Stack columns in a CSV exported file.
+
+All columns in your data set with a colon ":" in it, will be split such that the
+string after the colon will become a column value instead of its own column.
+Thus all columns called WOPT:A-1, WOPT:A-2, WOPT:A-3 etc will be merged into one
+column called WOPT, and you will have a column name called "WELL" that contains
+A-1, A-2, or A-3 as values.
+
+If importing the output CSV into Spotfire, you may then view and filter WOPT and
+friends by wellname, instead of selecting individual columns."""
+
+# List of columns that will always be kept, case insensitive:
+ALWAYS_KEEP = [
+    "Realization",
+    "Realisation",
+    "RunName",
+    "Real",
+    "Iteration",
+    "Iter",
+    "Ensemble",
+    "date",
+]
+
+# Library of columns that we are able to split.
+# Dictionary of lists. Lists contain the elements:
+#  0: regexp for matching in front of the colum name separator
+#  1: Separator in column names
+#  2: Name of new column
+STACK_LIBRARY = {
+    "well": ["W[A-Z]*:.*", ":", "WELL"],
+    "region": ["R[A-Z_]*:.*", ":", "REGION"],
+    "group": ["G[A-Z]*:.*", ":", "GROUP"],
+    "block": ["B[A-Z]*:.*", ":", "BLOCK"],
+    "all": [".*:.*", ":", "IDENTIFIER"],
+}
 
 
 class CustomFormatter(
@@ -21,19 +69,7 @@ def get_parser():
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter,
-        description="""
-Stack wells in a CSV exported file.
-
-All columns in your data set with a colon ":" in it, will
-be split such that the string after the colon will become
-a column value instead of its own column. Thus all
-columns called WOPT:A-1, WOPT:A-2, WOPT:A-3 etc will be merged
-into one column called WOPT, and you will have a column name
-called "WELL" that contains A-1, A-2, or A-3 as values.
-
-If importing the produced stackedversion.csv into Spotfire,
-you may then view and filter WOPT and friends by wellname, instead
-of selecting individual columns.""",
+        description=DESCRIPTION,
     )
     parser.add_argument(
         "csvfile",
@@ -65,8 +101,14 @@ of selecting individual columns.""",
     parser.add_argument(
         "--keepminimal",
         action="store_true",
-        help="Keep only REAL, ENSEMBLE, DATE and unpivoted columns",
+        help=(
+            "Keep only REAL, ENSEMBLE, DATE and unpivoted columns. "
+            "Implies dropping constant columns"
+        ),
         default=False,
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Be verbose", default=False
     )
     return parser
 
@@ -76,122 +118,138 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    quiet = args.output == "-" or args.output == "stdout"
+    if args.verbose:
+        if args.output == __MAGIC_STDOUT__:
+            raise SystemExit("Don't use verbose mode when writing to stdout")
+        logger.setLevel(logging.INFO)
 
-    # Maybe too much usage()-noise to have these as options (?)
-    # Case does not matter in these lists, they will be lower()ed.
-    realization_names = ["Realization", "Realisation", "RunName", "Real"]
-    iteration_names = ["Iteration", "Iter", "Ensemble"]
-    date_names = ["date"]
-
-    # Library of columns that we are able to split.
-    unpivottypes = {
-        "well": ["W[A-Z]*:.*", ":", "WELL"],
-        "region": ["R[A-Z_]*:.*", ":", "REGION"],
-        "group": ["G[A-Z]*:.*", ":", "GROUP"],
-        "block": ["B[A-Z]*:.*", ":", "BLOCK"],
-        "all": [".*:.*", ":", "IDENTIFIER"],
-    }
-
-    if args.csvfile == "stdin" or args.csvfile == "-":
-        if not quiet:
-            print("Loading ensemble from stdin.")
-        ens = pandas.read_csv(sys.stdin)
+    if args.csvfile == __MAGIC_STDIN__:
+        logger.info("Loading ensemble from stdin.")
+        dframe = pd.read_csv(sys.stdin)
     else:
-        if not quiet:
-            print("Loading ensemble from " + args.csvfile)
-        ens = pandas.read_csv(args.csvfile)
+        logger.info("Loading ensemble from %s", args.csvfile)
+        dframe = pd.read_csv(args.csvfile)
 
-    if args.split not in unpivottypes:
-        print("ERROR: Don't know how to split on " + str(args.split))
+    if args.split not in STACK_LIBRARY:
+        logger.error("Don't know how to split on %s", str(args.split))
         sys.exit(1)
 
-    pivottype = unpivottypes[args.split]
-    wellmatcher = re.compile(pivottype[0])
+    stackargs = STACK_LIBRARY[args.split]
 
-    # Constant columns should be deleted upfront for speed reasons.
-    keepthese = {x.lower() for x in realization_names + iteration_names + date_names}
-    if not args.keepconstantcolumns:
-        columnstodelete = []
-        for col in ens.columns:
-            if len(ens[col].unique()) == 1:
+    if not args.keepconstantcolumns or args.keepminimal:
+        dframe = drop_constants(dframe, args.keepminimal, re.compile(stackargs[0]))
+
+    stacked = csv_stack(dframe, re.compile(stackargs[0]), stackargs[1], stackargs[2])
+
+    logger.info("Writing stacked CSV to %s", args.output)
+    output = args.output if args.output != __MAGIC_STDOUT__ else sys.stdout
+    stacked.to_csv(output, index=False)
+
+
+def drop_constants(dframe: pd.DataFrame, keepminimal: bool, stackmatcher: Pattern):
+    """Drop/purge/remove columns from the dataframe that we don't want
+    to include in a stacking operation (stacking can blow up the dataframe size)
+
+    Obey a global variable with list of columns that we should always keep, you
+    don't want to remove e.g. the ensemble name even if it is constant.
+
+    Args:
+        dframe (pd.DataFrame): Dataframe with data
+        keepminimial (bool): If True, columns not involved in the stacking
+            operation will also  be dropped.
+        stackmatcher (Pattern): Regular expression that matches
+            the columns to be stacked.
+
+    Returns:
+        pd.DataFrame, possibly with fewer columns.
+    """
+    keepthese = {x.lower() for x in ALWAYS_KEEP}
+    columnstodelete = []
+    for col in dframe.columns:
+        if len(dframe[col].unique()) == 1:
+            # col was a constant column
+            columnstodelete.append(col)
+        if keepminimal:
+            # Also drop columns not involved in stacking operation
+            if not (stackmatcher.match(col) or col.lower() in keepthese):
                 columnstodelete.append(col)
-            if args.keepminimal:
-                if not (wellmatcher.match(col) or col.lower() in keepthese):
-                    columnstodelete.append(col)
-        if args.keepminimal:
-            if not quiet:
-                print("Deleting constant and unwanted columns " + str(columnstodelete))
-        else:
-            if not quiet:
-                print("Deleting constant columns " + str(columnstodelete))
-        ens.drop(columnstodelete, inplace=True, axis=1)
-        if not quiet:
-            print("Deleted " + str(len(columnstodelete)) + " columns")
+    if keepminimal:
+        logger.info("Deleting constant and unwanted columns %s", str(columnstodelete))
+    else:
+        logger.info("Deleting constant columns %s", str(columnstodelete))
+    logger.info("Deleted %d columns", len(columnstodelete))
+    return dframe.drop(columnstodelete, axis=1)
 
+
+def csv_stack(
+    dframe: pd.DataFrame, stackmatcher: Pattern, stackseparator: str, newcolumn: str
+):
+    """Reshape an incoming dataframe by stacking/pivoting.
+
+    The dataframe object will be modified in-place.
+
+    Args:
+        dframe (pd.DataFrame): Data to reshape
+        stackmatcher (Pattern): Regular expression that matches columns
+            to be stacked.
+        stackseparator (str): String to use for splitting columns names
+        newcolumn (str): Name of new column containing the latter part of the
+            stacked column names.
+
+    Returns:
+        pd.DataFrame
+    """
+    if isinstance(stackmatcher, str):
+        stackmatcher = re.compile(stackmatcher)
+    if newcolumn in dframe:
+        raise ValueError("Column name %s already exists in the data")
     tuplecols = []
     dostack = False
     colstostack = 0
-    if not quiet:
-        print(
-            "Will stack columns matching '"
-            + pivottype[0]
-            + "' with separator '"
-            + pivottype[1]
-            + "'"
-        )
-        print("Name of new identifying column will be '" + pivottype[2] + "'")
+    logger.info(
+        "Will stack columns matching '%s' with separator '%s'",
+        stackmatcher,
+        stackseparator,
+    )
+    logger.info("Name of new identifying column will be '%s'", newcolumn)
 
     nostackcolumnnames = []
-    for col in ens.columns:
-        if wellmatcher.match(col):
-            tuplecols.append(tuple(col.split(pivottype[1])))
+    for col in dframe.columns:
+        if stackmatcher.match(col):
+            tuplecols.append(tuple(col.split(stackseparator)))
             colstostack = colstostack + 1
             dostack = True
         else:
             tuplecols.append(tuple([col, ""]))
             nostackcolumnnames.append(col)
 
-    if not quiet:
-        print(
-            "Found "
-            + str(colstostack)
-            + " out of "
-            + str(len(ens.columns))
-            + " columns to stack"
-        )
+    logger.info("Found %d out of %d columns to stack", colstostack, len(dframe.columns))
 
     if dostack:
         # Convert to MultiIndex columns
-        ens.columns = pandas.MultiIndex.from_tuples(
-            tuplecols, names=["Parametername", pivottype[2]]
-        )
+        dframe.columns = pd.MultiIndex.from_tuples(tuplecols, names=["", newcolumn])
 
         # Stack the multiindex columns, this will add a lot of rows to
         # our ensemble, and condense the number of columns
-        ens = ens.stack()
+        dframe = dframe.stack()
 
         # The values from non-multiindex-columns must be propagated to
         # the rows that emerged from the stacking. If you use the
         # 'all' pivottype, then you will get some NaN-values in the
         # MultiIndex columns that are intentional.
-        ens[nostackcolumnnames] = ens[nostackcolumnnames].fillna(method="ffill")
+        dframe[nostackcolumnnames] = dframe[nostackcolumnnames].fillna(method="ffill")
 
-        ens = ens.reset_index()
+        dframe = dframe.reset_index()
 
         # Now we have rows that does not belong to any well, we should
         # delete those rows
-        ens = ens[ens[pivottype[2]] != ""]
+        dframe = dframe[dframe[newcolumn] != ""]
 
         # And delete a byproduct of our reshaping (this is the index
         # prior to stacking)
-        del ens["level_0"]
+        del dframe["level_0"]
 
-    if args.output == "stdout" or args.output == "-":
-        ens.to_csv(sys.stdout, index=False)
-    else:
-        print("Writing csv data to " + args.output)
-        ens.to_csv(args.output, index=False)
+    return dframe.reset_index(drop=True)
 
 
 if __name__ == "__main__":

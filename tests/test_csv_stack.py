@@ -1,7 +1,11 @@
-import os
+"""Test module for csv_stack"""
+import re
 import sys
+import subprocess
 
 import pandas as pd
+
+import pytest
 
 from subscript.csv_stack import csv_stack
 
@@ -19,10 +23,116 @@ TESTFRAME = pd.DataFrame(
 )
 
 
-def test_main_csv_stack(tmpdir):
-    """Test command line interface for csvMergeEnsembles/csv_merge_ensembles"""
+def test_drop_constants():
+    """Testing that we can drop constants and obey keepminimal"""
+    const_drop = csv_stack.drop_constants(TESTFRAME, False, re.compile("W[A-Z]*:.*"))
+    assert "CONST" not in const_drop
+    assert "RPR:1" in const_drop
+    assert "WOPT:A1" in const_drop
 
-    assert os.system("csv_stack -h") == 0
+    minimal_well = csv_stack.drop_constants(TESTFRAME, True, re.compile("W[A-Z]*:.*"))
+    assert "CONST" not in minimal_well
+    assert "RPR:1" not in minimal_well
+    assert "WOPT:A1" in minimal_well
+
+    minimal_region = csv_stack.drop_constants(TESTFRAME, True, re.compile("R[A-Z]*:.*"))
+    assert "CONST" not in minimal_region
+    assert "RPR:1" in minimal_region
+    assert "WOPT:A1" not in minimal_region
+
+
+@pytest.mark.parametrize(
+    "dframe, regexp, newcol, expected",
+    [
+        (
+            pd.DataFrame([{"WOPT:A": 1, "WOPT:B": 2}]),
+            "W[A-Z]*:.*",
+            "WELLNAME",
+            pd.DataFrame([{"WELLNAME": "A", "WOPT": 1}, {"WELLNAME": "B", "WOPT": 2}]),
+        ),
+        (
+            pd.DataFrame([{"WOPT:A": 1, "WOPT:B": 2}]),
+            "B[A-Z]*:.*",
+            "WELLNAME",
+            pd.DataFrame([{"WOPT:A": 1, "WOPT:B": 2}]),
+        ),
+    ],
+)
+def test_csv_stack_parametrized(dframe, regexp, newcol, expected):
+    """Parametrized test of the stacking operation"""
+    pd.testing.assert_frame_equal(
+        csv_stack.csv_stack(dframe, re.compile(regexp), ":", newcol),
+        expected,
+        check_names=False,
+    )
+
+
+def test_csv_stack():
+    """Unparametrized test of the TESTFRAME frame"""
+    well_stacked = csv_stack.csv_stack(
+        TESTFRAME.copy(), re.compile("W[A-Z]*:.*"), ":", "WELL"
+    )
+    assert "WELL" in well_stacked
+    assert "WOPT:A1" not in well_stacked
+    assert "RPR:1" in well_stacked
+    assert "CONST" in well_stacked
+
+    region_stacked = csv_stack.csv_stack(
+        TESTFRAME.copy(), re.compile("R[A-Z]*:.*"), ":", "REGION"
+    )
+    assert "REGION" in region_stacked
+    assert "WOPT:A1" in region_stacked
+    assert "RPR:1" not in region_stacked
+    assert "RPR" in region_stacked
+    assert "CONST" in region_stacked
+
+
+def test_stack_library():
+    """Test that all stacking operations mentioned in the so called
+    stack library will run on TESTFRAME without errors"""
+
+    dframe = TESTFRAME.copy()
+
+    # Add some extra columns to test all:
+    dframe["GPR:1"] = range(30, 37)
+    dframe["GPR:2"] = range(40, 47)
+    dframe["BPR:1,2,3"] = range(50, 57)
+    dframe["BPR:4,5,6"] = range(60, 67)
+    for _, stackargs in csv_stack.STACK_LIBRARY.items():
+        stacked = csv_stack.csv_stack(
+            dframe.copy(), stackargs[0], stackargs[1], stackargs[2]
+        )
+        assert isinstance(stacked, pd.DataFrame)
+        assert not stacked.empty
+        assert stackargs[2] in stacked
+        assert not stacked[stackargs[2]].dropna().empty
+
+
+def test_csv_no_columns():
+    """Test what  happens when we stack on columns that are not in the input"""
+    regexp, colon, col_name = csv_stack.STACK_LIBRARY["block"]
+    # (assert there are no BPR columns in TESTFRAME)
+    block_stacked = csv_stack.csv_stack(TESTFRAME.copy(), regexp, colon, col_name)
+    # Returned frame should be untouched
+    pd.testing.assert_frame_equal(block_stacked, TESTFRAME)
+
+
+def test_csv_stack_all():
+    """Test that can stack "all" columns colons in them"""
+    regexp, colon, col_name = csv_stack.STACK_LIBRARY["all"]
+    dframe = TESTFRAME.copy()
+    dframe["WOPR:A1"] = [10, 11, 12, 13, 14, 15, 17]
+    dframe["WOPR:A2"] = [20, 21, 22, 23, 24, 25, 27]
+    all_stacked = csv_stack.csv_stack(dframe, regexp, colon, col_name)
+    assert len(all_stacked) == 28
+    assert set(all_stacked["IDENTIFIER"].unique()) == set(["1", "2", "A1", "A2"])
+
+
+@pytest.mark.integration
+def test_commandlinetool(tmpdir):
+    """Test command line interface for csv_stack"""
+
+    assert subprocess.check_output(["csv_stack", "-h"])  # nosec
 
     tmpdir.chdir()
     TESTFRAME.to_csv("testframe.csv", index=False)
@@ -68,3 +178,41 @@ def test_main_csv_stack(tmpdir):
     assert "RPR" in stacked
     assert 1 in stacked["REGION"].astype(int).values
     assert 2 in stacked["REGION"].astype(int).values
+
+
+@pytest.mark.skipif(
+    sys.version_info < (3, 7),
+    reason="Requires Python 3.7 or higher (subprocess-capture-output)",
+)
+@pytest.mark.parametrize("verbose", [False, True])
+def test_csv_stack_verbose(tmpdir, verbose):
+    """Test that --verbose gives INFO logging to stdout"""
+    tmpdir.chdir()
+    TESTFRAME.to_csv("testframe.csv", index=False)
+
+    commands = ["csv_stack", "testframe.csv", "--output", "stacked.csv"]
+    if verbose:
+        commands.append("-v")
+
+    result = subprocess.run(commands, check=True, capture_output=True)
+    output = result.stdout.decode() + result.stderr.decode()
+
+    if verbose:
+        assert "INFO:" in output
+    else:
+        assert "INFO:" not in output
+
+
+@pytest.mark.skipif(
+    sys.version_info < (3, 7),
+    reason="Requires Python 3.7 or higher (subprocess-capture-output)",
+)
+def test_csv_stack_stdout(tmpdir):
+    """Test that csv output can be dumped to stdout"""
+    tmpdir.chdir()
+    TESTFRAME.to_csv("testframe.csv", index=False)
+    commands = ["csv_stack", "testframe.csv", "--output", csv_stack.__MAGIC_STDOUT__]
+    result = subprocess.run(commands, check=True, capture_output=True)
+    output = result.stdout.decode()
+    assert "WELL" in output
+    assert "A2,2015" in output
