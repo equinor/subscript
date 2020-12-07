@@ -3,6 +3,7 @@ EXECUTABLE merge_rft_ertobs
 ARG_TYPE 0 STRING
 ARG_TYPE 1 STRING
 ARG_TYPE 2 STRING
+DEFAULT <OUTPUT> "rft_ertobs_sim.csv"
 
 ARGLIST "--verbose" <GENDATACSV> <OBSDIR> "--output" <OUTPUT>
 

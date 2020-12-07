@@ -21,7 +21,7 @@ CATEGORY = "utility.eclipse"
 EXAMPLES = """
 .. code-block:: console
 
-  FORWARD_MODEL MERGE_RFT_ERTOBS(<GENDATACSV>=gendata_rft.csv, <OBSDIR>=<CONFIG_PATH>/input/observations/rft)
+  FORWARD_MODEL MERGE_RFT_ERTOBS(<GENDATACSV>=gendata_rft.csv, <OBSDIR>=<CONFIG_PATH>/input/observations/rft, <OUTPUT>=rft_ertobs_sim.csv)
 
 """  # noqa
 
@@ -53,7 +53,9 @@ def get_parser():
 
     parser.add_argument("obsdir", type=str, help="Directory with ERT observation data")
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
-    parser.add_argument("-o", "--output", type=str, help="Output CSV file")
+    parser.add_argument(
+        "-o", "--output", type=str, default="rft_ertobs_sim.csv", help="Output CSV file"
+    )
     return parser
 
 
