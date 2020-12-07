@@ -10,6 +10,7 @@ import pandas as pd
 from subscript import getLogger
 from subscript.fmuobs.util import (
     ERT_DATE_FORMAT,
+    ERT_ALT_DATE_FORMAT,
     uppercase_dictkeys,
 )
 
@@ -214,7 +215,10 @@ def fix_dtype(value):
         try:
             return datetime.datetime.strptime(value, ERT_DATE_FORMAT)
         except ValueError:
-            return str(value)
+            try:
+                return datetime.datetime.strptime(value, ERT_ALT_DATE_FORMAT)
+            except ValueError:
+                return str(value)
 
 
 def remove_enclosing_curly_braces(string):
