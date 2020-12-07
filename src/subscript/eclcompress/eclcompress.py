@@ -39,7 +39,7 @@ Default list of files to compress is """ + " ".join(
     DEFAULT_FILES_TO_COMPRESS
 )
 
-CATEGORY = "utility.eclipse"
+CATEGORY = "modeling.reservoir"
 
 # The string used here must match what is used as the DEFAULT
 # parameter in the ert joob config. It is not used elsewhere.
