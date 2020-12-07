@@ -14,4 +14,6 @@ EXAMPLES = """
 
    FORWARD_MODEL ECLGRID2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid)
 
+where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
+basename relative to ``RUNPATH``.
 """  # noqa
