@@ -33,6 +33,8 @@ EXAMPLES = """
 
   FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>)
 
+where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
+basename relative to ``RUNPATH``.
 """  # noqa
 
 logger = getLogger(__name__)
