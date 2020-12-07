@@ -1,11 +1,22 @@
+.. image:: https://img.shields.io/github/workflow/status/equinor/subscript/subscript
+    :target: https://github.com/equinor/subscript/actions?query=workflow%3Asubscript
+
+.. image:: https://img.shields.io/lgtm/alerts/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/equinor/subscript/alerts/
+
+.. image:: https://img.shields.io/lgtm/grade/python/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
+    :target: https://lgtm.com/projects/g/equinor/subscript/context:python
+
+.. image:: https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-blue.svg
+    :target: https://www.python.org
+
 *********
 subscript
 *********
 
 Subscript is Equinors collection of scripts used for subsurface reservoir modelling.
 
-Docs are hosted on https://fmu-docs.equinor.com/docs/subscript (requires Equinor
-login).
+Docs are hosted on https://equinor.github.io/subscript/.
 
 Using subscript
 ===============
