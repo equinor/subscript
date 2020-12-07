@@ -21,4 +21,7 @@ EXAMPLES = """
 .. code-block:: console
 
   FORWARD_MODEL ECLRST2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid, <PROP>=SGAS:SWAT, <DATES>=dates.txt)
+
+where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
+basename relative to ``RUNPATH``.
 """  # noqa
