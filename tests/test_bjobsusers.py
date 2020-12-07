@@ -1,4 +1,4 @@
-import os
+import getpass
 import subprocess
 
 import pandas as pd
@@ -84,7 +84,7 @@ def test_userinfo():
 
 def test_systemfinger():
     """Test the real system finger utility"""
-    currentuser = os.getlogin()
+    currentuser = getpass.getuser()
     if not currentuser:
         return
     usersummary = bjobsusers.userinfo(currentuser, bjobsusers.call_finger)
