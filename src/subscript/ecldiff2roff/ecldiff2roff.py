@@ -21,6 +21,8 @@ EXAMPLES = """
 
     FORWARD_MODEL ECLDIFF2ROFF(<ECLROOT>=<ECLBASE>, <PROP>=SGAS, <DIFFDATES>=diff_dates.txt <OUTPUT>=share/results/grids/eclgrid)
 
+where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
+basename relative to ``RUNPATH``.
 """  # noqa
 
 

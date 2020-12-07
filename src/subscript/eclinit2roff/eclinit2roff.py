@@ -17,4 +17,7 @@ EXAMPLES = """
 .. code-block:: console
 
   FORWARD_MODEL ECLINIT2ROFF(<ECLROOT>=<ECLBASE>, <OUTPUT>=share/results/grids/eclgrid, <PROP>=PORO:PERMX)
-  """  # noqa
+
+where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
+basename relative to ``RUNPATH``.
+"""  # noqa
