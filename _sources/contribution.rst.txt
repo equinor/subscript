@@ -42,8 +42,6 @@ be accompanying public test data.
 Code style
 ----------
 
-* subscript shall work in Python 3!
-* Python2 compatibility is encouraged throughout 2020, but not required.
 * PEP8 is the rule for naming of files, functions, classes, etc.
 
   * Convert old code from camelCase style to snake_style.
