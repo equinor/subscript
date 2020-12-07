@@ -16,7 +16,7 @@ from GENDATA_RFT. Dump to CSV file for visualization in Webviz.
 Only works with a single report step pr RFT measurement.
 """
 
-CATEGORY = "utility.eclipse"
+CATEGORY = "utility.transformation"
 
 EXAMPLES = """
 .. code-block:: console
