@@ -479,10 +479,6 @@ def main_eclcompress(
 
     globbedfiles = glob_patterns(patterns)
 
-    if not globbedfiles:
-        logger.warning("No files to compress")
-        return
-
     if globbedfiles:
         logger.info("Will try to compress the files: %s", " ".join(globbedfiles))
         savings = eclcompress(

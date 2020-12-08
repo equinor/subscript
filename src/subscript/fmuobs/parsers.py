@@ -423,6 +423,7 @@ def compute_date_from_days(dframe, starttime=None):
     Returns:
         pd.DataFrame. DATE column is always of type datetime64
     """
+    assert isinstance(dframe, pd.DataFrame)
     if starttime and "DAYS" in dframe:
         if "DATE" not in dframe:
             dframe["DATE"] = np.nan

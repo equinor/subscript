@@ -863,6 +863,7 @@ def main():
                     "\nEnd auto-converted YAML"
                 ),
                 yaml.dump(_v1_content_to_v2(yaml_config)).strip(),
+                # lgtm [py/call-to-non-callable]
             )
 
     if args.verbose:
