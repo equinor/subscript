@@ -10,6 +10,7 @@ CLASS_SHORTNAME = {
 
 
 ERT_DATE_FORMAT = "%d/%m/%Y"
+ERT_ALT_DATE_FORMAT = "%d.%m.%Y"  # Not found in doc, but supported by ERT
 
 
 def lowercase_dictkeys(some_dict):

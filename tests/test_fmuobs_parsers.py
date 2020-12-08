@@ -269,11 +269,11 @@ def test_parse_observation_unit(string, expected):
     [
         (";", pd.DataFrame()),
         (";", pd.DataFrame()),
-        # ########################################################333
+        # ########################################################
         (
             (
                 "SUMMARY_OBSERVATION WCT "
-                "{DATE=01/01/2001;KEY=WWCT:OP1;VALUE=1;ERROR=0.1;};"
+                "{DATE=01/04/2001;KEY=WWCT:OP1;VALUE=1;ERROR=0.1;};"
             ),
             pd.DataFrame(
                 [
@@ -281,7 +281,27 @@ def test_parse_observation_unit(string, expected):
                         "CLASS": "SUMMARY_OBSERVATION",
                         "LABEL": "WCT",
                         "KEY": "WWCT:OP1",
-                        "DATE": datetime.datetime(2001, 1, 1, 0, 0),
+                        "DATE": datetime.datetime(2001, 4, 1, 0, 0),
+                        "VALUE": 1,
+                        "ERROR": 0.1,
+                    }
+                ]
+            ),
+        ),
+        # ########################################################
+        (
+            (
+                "SUMMARY_OBSERVATION WCT "
+                # Testing alternative date input format:
+                "{DATE=01.04.2001;KEY=WWCT:OP1;VALUE=1;ERROR=0.1;};"
+            ),
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "SUMMARY_OBSERVATION",
+                        "LABEL": "WCT",
+                        "KEY": "WWCT:OP1",
+                        "DATE": datetime.datetime(2001, 4, 1, 0, 0),
                         "VALUE": 1,
                         "ERROR": 0.1,
                     }
@@ -307,7 +327,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             (
                 "SUMMARY_OBSERVATION SEP_1 {VALUE = 100;}; "
@@ -320,7 +340,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             "BLOCK_OBSERVATION R1 {FIELD=PR; OBS P1 {I=1;}; OBS P2 {J=2;};};",
             pd.DataFrame(
@@ -342,7 +362,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             "HISTORY_OBSERVATION WOPR:P1;",
             pd.DataFrame(
@@ -354,7 +374,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             "HISTORY_OBSERVATION WOPR:P1 {};",  # NB: Empty {}
             pd.DataFrame(
@@ -366,7 +386,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             "HISTORY_OBSERVATION WOPR:P1 {\n};",  # NB: Empty {}, with newline
             pd.DataFrame(
@@ -378,7 +398,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             "HISTORY_OBSERVATION WOPR:P1{ERROR=10;};",
             pd.DataFrame(
@@ -391,7 +411,7 @@ def test_parse_observation_unit(string, expected):
                 ]
             ),
         ),
-        # ########################################################333
+        # ########################################################
         (
             "HISTORY_OBSERVATION WOPR:P2 {ERROR=10; SEGMENT SEG1 {ERROR=20;START=2};};",
             pd.DataFrame(
