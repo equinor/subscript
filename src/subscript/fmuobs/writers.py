@@ -205,6 +205,7 @@ def df2ertobs(obs_df):
     Returns:
         str: ERT observations as multiline string.
     """
+    assert isinstance(obs_df, pd.DataFrame)
     ertobs_str = ""
     if "CLASS" not in obs_df:
         return ertobs_str

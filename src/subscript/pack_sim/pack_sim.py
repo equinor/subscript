@@ -270,8 +270,6 @@ def inspect_file(
         line_strip = _remove_comments(clear_comments, line_strip)
         line = _remove_comments(clear_comments, line)
 
-        # if "INCLUDE" in line_strip[0:7].upper() or "GDFILE" in line_strip[0:6] or
-        # "IMPORT" in line_strip[0:6]:
         if (
             line.upper().startswith("INCLUDE")
             or line.startswith("GDFILE")
@@ -282,15 +280,16 @@ def inspect_file(
             new_data_file += line
 
             # In the INCLUDE or GDFILE keyword, find the include path and
-            # ignore comments
-            for line in fhandle:
-                line_strip = line.strip()
+            # ignore comments, continuing iterating the same file handle
+            # as in the outer loop:
+            for include_line in fhandle:
+                line_strip = include_line.strip()
 
                 # Remove comments if required
                 line_strip = _remove_comments(clear_comments, line_strip)
-                line = _remove_comments(clear_comments, line)
+                include_line = _remove_comments(clear_comments, include_line)
 
-                if not len(line.strip()) == 0:
+                if not len(include_line.strip()) == 0:
                     if "--" not in line_strip[0:3] and not len(line_strip) == 0:
                         # This is the include file!
                         include_full = line_strip.split("--")[0]
@@ -402,14 +401,14 @@ def inspect_file(
 
                         # Change the include path in the current file being inspected
                         if "'" in include_full or '"' in include_full:
-                            new_data_file += line.replace(
+                            new_data_file += include_line.replace(
                                 include_stripped_in_file,
                                 "%sinclude/%s%s"
                                 % (fmu_include, section, new_include.split("/")[-1]),
                             )
                         else:
 
-                            new_data_file += line.replace(
+                            new_data_file += include_line.replace(
                                 include_stripped_in_file,
                                 "'%sinclude/%s%s'"
                                 % (fmu_include, section, new_include.split("/")[-1]),
