@@ -44,10 +44,10 @@ ALWAYS_KEEP = [
 #  1: Separator in column names
 #  2: Name of new column
 STACK_LIBRARY = {
-    "well": ["W[A-Z]*:.*", ":", "WELL"],
-    "region": ["R[A-Z_]*:.*", ":", "REGION"],
-    "group": ["G[A-Z]*:.*", ":", "GROUP"],
-    "block": ["B[A-Z]*:.*", ":", "BLOCK"],
+    "well": ["W[A-Z0-9]*:.*", ":", "WELL"],
+    "region": ["R[A-Z_0-9]*:.*", ":", "REGION"],
+    "group": ["G[A-Z0-9]*:.*", ":", "GROUP"],
+    "block": ["B[A-Z0-9]*:.*", ":", "BLOCK"],
     "all": [".*:.*", ":", "IDENTIFIER"],
 }
 

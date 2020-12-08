@@ -108,6 +108,18 @@ def test_stack_library():
         assert not stacked[stackargs[2]].dropna().empty
 
 
+def test_numbers_in_vectornames():
+    """Eclipse vectors can have numbers in them, most typical is WBP9, but
+    this applies field, groups as well"""
+    dframe = TESTFRAME.copy()
+
+    dframe["WBP9:A-1"] = range(90, 97)
+
+    regexp, colon, col_name = csv_stack.STACK_LIBRARY["well"]
+    well_stacked = csv_stack.csv_stack(dframe, regexp, colon, col_name)
+    assert "WBP9" in well_stacked
+
+
 def test_csv_no_columns():
     """Test what  happens when we stack on columns that are not in the input"""
     regexp, colon, col_name = csv_stack.STACK_LIBRARY["block"]
