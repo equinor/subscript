@@ -63,6 +63,7 @@ REQUIREMENTS = [
     "ert",
     "matplotlib",
     "numpy",
+    "opm",
     "pandas",
     "pyscal",
     "pyyaml",
