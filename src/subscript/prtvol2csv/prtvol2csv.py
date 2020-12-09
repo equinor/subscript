@@ -1,14 +1,19 @@
+"""Extract volumes from Eclipse PRT files, augmenting with region and zone
+metadata"""
 import re
 import argparse
+import warnings
 import logging
 from pathlib import Path
 
 import yaml
+
 import pandas as pd
 
 import ecl2df
 
 from subscript import getLogger
+from subscript.prtvol2csv.fipmapper import FipMapper
 
 DESCRIPTION = """
 Extract reservoir volumes from Eclipse PRT files, dump to CSV.
@@ -53,7 +58,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """A parser for command line argument parsing and for documentation."""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
@@ -85,7 +90,10 @@ def get_parser():
         default="simulator_volume_region.csv",
     )
     parser.add_argument(
-        "--regions", type=str, help="YAML file containing a fipnum2region dictionary"
+        "--yaml",
+        "--regions",
+        type=str,
+        help="YAML file containing a fipnum2region dictionary",
     )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Be verbose, print the tables"
@@ -94,20 +102,38 @@ def get_parser():
     return parser
 
 
-def prep_output_dir(tablesdir=None, suffix=None):
+def prep_output_dir(tablesdir: str = None, suffix: str = None) -> Path:
     """Ensures an output directory exists, and returns
-    the name of the directory."""
+    the name of the directory.
+
+    This behaviour is deprecated, the user should prepare the directories
+    explicitly. If directories are not in place, a FutureWarning is emitted.
+
+    Args:
+        tablesdir (str): Directory to create. Default is share/results/volumes.
+        suffix (str): If nonempty, added to the results-part in tablesdir.
+
+    Returns:
+        str: The directory that was ensured existed.
+    """
     if not tablesdir:
         if not suffix or suffix == "":
             tablesdir = "share/results/volumes/"  # FMU standard
         else:
             tablesdir = "share/results-" + suffix + "/volumes"
     if not Path(tablesdir).is_dir():
+        warnings.warn(
+            (
+                "Output directories for prtvol2csv should be created upfront. "
+                "Later versions will not create directories for you"
+            ),
+            FutureWarning,
+        )
         Path(tablesdir).mkdir(parents=True)
     return tablesdir
 
 
-def find_prtfile(basefile):
+def find_prtfile(basefile: str) -> str:
     """Convenience for command line execution for locating PRT files.
 
     Given FOO.DATA and FOO.PRT exists in the current directory, these
@@ -138,7 +164,9 @@ def find_prtfile(basefile):
     return prt_file
 
 
-def currently_in_place_from_prt(prt_file, fipname="FIPNUM", date=None):
+def currently_in_place_from_prt(
+    prt_file: str, fipname: str = "FIPNUM", date: str = None
+) -> pd.DataFrame:
     """Extracts currently-in-place volumes from a PRT file
 
     This function uses ecl2df.fipreports, and slices its
@@ -180,11 +208,11 @@ def currently_in_place_from_prt(prt_file, fipname="FIPNUM", date=None):
     return inplace_df
 
 
-def reservoir_volumes_from_prt(prt_file):
+def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
     """Extracts numbers from the table "RESERVOIR VOLUMES" in an Eclipse PRT
     file, example table is::
 
-                                                           ===================================
+                                                          ===================================
                                                           :  RESERVOIR VOLUMES      RM3     :
       :---------:---------------:---------------:---------------:---------------:---------------:
       : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
@@ -241,6 +269,7 @@ def reservoir_volumes_from_prt(prt_file):
                         "HCPV_TOTAL": float(line_split[5]),
                     }
                 )
+
     if not records:
         logger.warning("No RESERVOIR VOLUMES table found in PRT file %s", prt_file)
         logger.warning("Include RPTSOL <newline> FIP=2 'FIPRESV' in Eclipse DATA file")
@@ -275,36 +304,44 @@ def main():
 
     resvolumes_df = reservoir_volumes_from_prt(prt_file)
 
-    ######################################################################
-    # Merge output
-    volumes = pd.concat([simvolumes_df, resvolumes_df], axis=1).fillna(value=0.0)
+    if args.yaml:
+        fipmapper = FipMapper(yamlfile=args.yaml, skipstring="Totals")
+    else:
+        fipmapper = None
 
-    ######################################################################
-    #
-    # Look for a REGION definition in some yaml-file
-    # FIPNUM is always at a finer or equal scale as REGION
-    # FIPNUM to REGION can be a many-to-many mapping
-    # (sums over all REGIONs are thus not always meaningful)
-    # The map is specified with REGION as the index, containing a list over FIPNUMs
-    #
-    # Yaml-file:
-    # region2fipnum:
-    #    'RegionA' : [1,4,6]
-    #    'RegionB' : [2,5]
-    #    'FormationA' : [1,2]
-    #    'Totals' : [1,2,3,4,5,6]
-    #
-    # The FIPNUM-indexed table is augmented with a REGION-column,
-    # containing space-separated list of referenced REGIONs
-    # The REGION-indexed table is augmented with a FIPNUM-column,
-    # containing space-separated list of referenced FIPNUMs
+    volumes = prtvol2df(simvolumes_df, resvolumes_df, fipmapper=fipmapper)
 
-    volumesbyregions = None
-    if args.regions:
-        reg2fip = None
-        with open(args.regions, "r") as yamlfile:
-            reg2fip = yaml.safe_load(yamlfile)
-        if reg2fip and "region2fipnum" in reg2fip:
+    volumes.to_csv(Path(tablesdir) / args.outputfilename)
+    logger.info("Written CSV file %s", str(Path(tablesdir) / args.outputfilename))
+
+    print(volumes)
+
+    deprecated_region_export(volumes.copy(), tablesdir, args)
+
+
+def deprecated_region_export(volumes, tablesdir, args):
+    """This function exports a dataframe where volumes
+    are summed over regions.
+
+    This is now deprecated, as it is bad architecture to export multiple
+    files from this script, it gives awkward command line arguments, and
+    the input to this functionality is not well-designed.
+
+    prtvol2csv should focus on rather exporting rows pr. FIPNUM, and
+    rather add meta-information to the rows. Various groupings should be
+    performed in a visualization application.
+    """
+    if args.yaml:
+        reg2fip = yaml.safe_load(Path(args.yaml).read_text())
+        print(reg2fip)
+        if "region2fipnum" in reg2fip:
+            warnings.warn(
+                "Output pr. region from prtvol2csv will be removed in a later version",
+                FutureWarning,
+            )
+            volumes.drop(
+                ["REGION", "ZONE"], axis="columns", inplace=True, errors="ignore"
+            )
             reg2fipmap = reg2fip["region2fipnum"]
             # Ensure all dictonary keys (region names) are strings:
             reg2fipmap = {str(key): value for key, value in reg2fipmap.items()}
@@ -333,25 +370,33 @@ def main():
                 .set_index("level_0")
             )
             volumesbyregions.index.name = "REGION"
-
             # Also tag the FIPNUM-indexed dataframe with the regions
             # that are involved in a FIPNUM, space-separated
             for fip in fip2regmap:
                 volumes.loc[fip, "REGION"] = " ".join(map(str, fip2regmap[fip]))
+            volumesbyregions.to_csv(Path(tablesdir) / args.regionoutputfilename)
+            logger.info(
+                "Written CSV file %s", str(Path(tablesdir) / args.regionoutputfilename)
+            )
 
-        else:
-            print("Warning: Could not parse yaml file. No region index can be made")
 
-    if args.verbose:
-        print(volumes)
-    volumes.to_csv(Path(tablesdir) / args.outputfilename)
-    print("Written CSV file " + str(Path(tablesdir) / args.outputfilename))
+def prtvol2df(simvolumes_df, resvolumes_df, fipmapper=None):
+    """
+    Concatenate two dataframes (with common index) horizontally,
+    and add REGION and ZONE parameter.
+    """
+    # Concatenate dataframes horizontally. Both are/must be indexed by FIPNUM:
+    volumes = pd.concat([simvolumes_df, resvolumes_df], axis=1).fillna(value=0.0)
 
-    if volumesbyregions is not None:
-        if args.verbose:
-            print(volumesbyregions)
-        volumesbyregions.to_csv(Path(tablesdir) / args.regionoutputfilename)
-        print("Written CSV file " + str(Path(tablesdir) / args.regionoutputfilename))
+    if fipmapper is not None:
+        if fipmapper.has_fip2region:
+            print(volumes.index)
+            volumes["REGION"] = list(map(fipmapper.fip2region, volumes.index))
+        if fipmapper.has_fip2zone:
+            volumes["ZONE"] = list(map(fipmapper.fip2zone, volumes.index))
+    if any(volumes.index < 1):
+        logger.warning("FIPNUM values should be 1 or larger")
+    return volumes
 
 
 if __name__ == "__main__":
