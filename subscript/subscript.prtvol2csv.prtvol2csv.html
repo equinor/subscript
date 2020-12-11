@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>subscript.prtvol2csv.prtvol2csv &mdash; subscript 0.7.3.dev7+gd888068 documentation</title>
+  <title>subscript.prtvol2csv.prtvol2csv &mdash; subscript 0.7.3.dev8+g6c2179f documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.7.3.dev7+gd888068
+                0.7.3.dev8+g6c2179f
               </div>
             
           
@@ -237,6 +237,27 @@ defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt">
+<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">currently_in_place_from_prt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prt_file</span></em>, <em class="sig-param"><span class="n">fipname</span><span class="o">=</span><span class="default_value">'FIPNUM'</span></em>, <em class="sig-param"><span class="n">date</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts currently-in-place volumes from a PRT file</p>
+<p>This function uses ecl2df.fipreports, and slices its
+output for the purpose here.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prt_file</strong> (<em>str</em>) – Path to a PRT to parse</p></li>
+<li><p><strong>fipname</strong> (<em>str</em>) – FIPNUM, FIPZON or similar.</p></li>
+<li><p><strong>date</strong> (<em>str</em>) – If None, first date will be used. If not None,
+it should be an ISO-formatted date string to extract</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.find_prtfile">
 <code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">find_prtfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">basefile</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.find_prtfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience for command line execution for locating PRT files.</p>
@@ -275,37 +296,42 @@ not be located and the input is returned.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="subscript.prtvol2csv.prtvol2csv.perl_runner">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">perl_runner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">perlscript</span></em>, <em class="sig-param"><span class="n">prt_file</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.perl_runner" title="Permalink to this definition">¶</a></dt>
-<dd><p>Run a perl script that writes to a file, and return
-what got written to file.</p>
-<p>The perl script is assumed to write to a filename found
-in its second argument.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>perlscript</strong> (<em>str</em>) – Name of an existing perl script
-assumed to be present in the same directory as __file__
-unless it is an absolute path.</p></li>
-<li><p><strong>prt_file</strong> (<em>str</em>) – First argument to perl script.</p></li>
-<li><p><strong>debug</strong> (<em>bool</em>) – Set to True if temp file written by perl
-should not be deleted (and print the filename).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Output written by perl.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.prep_output_dir">
 <code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">prep_output_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tablesdir</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prep_output_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures an output directory exists, and returns
 the name of the directory.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt">
+<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">reservoir_volumes_from_prt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prt_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracts numbers from the table “RESERVOIR VOLUMES” in an Eclipse PRT
+file, example table is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                     <span class="o">===================================</span>
+                                                    <span class="p">:</span>  <span class="n">RESERVOIR</span> <span class="n">VOLUMES</span>      <span class="n">RM3</span>     <span class="p">:</span>
+<span class="p">:</span><span class="o">---------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span>
+<span class="p">:</span> <span class="n">REGION</span>  <span class="p">:</span>  <span class="n">TOTAL</span> <span class="n">PORE</span>   <span class="p">:</span>  <span class="n">PORE</span> <span class="n">VOLUME</span>  <span class="p">:</span>  <span class="n">PORE</span> <span class="n">VOLUME</span>  <span class="p">:</span> <span class="n">PORE</span> <span class="n">VOLUME</span>   <span class="p">:</span>  <span class="n">PORE</span> <span class="n">VOLUME</span>  <span class="p">:</span>
+<span class="p">:</span>         <span class="p">:</span>   <span class="n">VOLUME</span>      <span class="p">:</span>  <span class="n">CONTAINING</span>   <span class="p">:</span>  <span class="n">CONTAINING</span>   <span class="p">:</span> <span class="n">CONTAINING</span>    <span class="p">:</span>  <span class="n">CONTAINING</span>   <span class="p">:</span>
+<span class="p">:</span>         <span class="p">:</span>               <span class="p">:</span>     <span class="n">OIL</span>       <span class="p">:</span>    <span class="n">WATER</span>      <span class="p">:</span>    <span class="n">GAS</span>        <span class="p">:</span>  <span class="n">HYDRO</span><span class="o">-</span><span class="n">CARBON</span> <span class="p">:</span>
+<span class="p">:</span><span class="o">---------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span><span class="o">---------------</span><span class="p">:</span>
+<span class="p">:</span>   <span class="n">FIELD</span> <span class="p">:</span>     <span class="mf">399202846.</span><span class="p">:</span>      <span class="mf">45224669.</span><span class="p">:</span>     <span class="mf">353978177.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">45224669.</span><span class="p">:</span>
+<span class="p">:</span>       <span class="mi">1</span> <span class="p">:</span>      <span class="mf">78802733.</span><span class="p">:</span>      <span class="mf">17000359.</span><span class="p">:</span>      <span class="mf">61802374.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">17000359.</span><span class="p">:</span>
+<span class="p">:</span>       <span class="mi">2</span> <span class="p">:</span>      <span class="mf">79481140.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">79481140.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>
+<span class="p">:</span>       <span class="mi">3</span> <span class="p">:</span>      <span class="mf">75757104.</span><span class="p">:</span>      <span class="mf">17096867.</span><span class="p">:</span>      <span class="mf">58660238.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">17096867.</span><span class="p">:</span>
+<span class="p">:</span>       <span class="mi">4</span> <span class="p">:</span>      <span class="mf">74929403.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">74929403.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>
+<span class="p">:</span>       <span class="mi">5</span> <span class="p">:</span>      <span class="mf">50120783.</span><span class="p">:</span>      <span class="mf">11127443.</span><span class="p">:</span>      <span class="mf">38993340.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">11127443.</span><span class="p">:</span>
+<span class="p">:</span>       <span class="mi">6</span> <span class="p">:</span>      <span class="mf">40111683.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>      <span class="mf">40111683.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>             <span class="mf">0.</span><span class="p">:</span>
+<span class="o">===========================================================================================</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prt_file</strong> (<em>str</em>) – PRT filename</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
