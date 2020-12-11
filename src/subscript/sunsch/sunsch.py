@@ -25,7 +25,7 @@ from subscript import getLogger
 
 logger = getLogger(__name__)
 
-SUPPORTED_DATEGRIDS = ["monthly", "yearly", "weekly", "biweekly", "bimonthly"]
+SUPPORTED_DATEGRIDS = ["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 
 DESCRIPTION = """Generate Eclipse Schedule file from merges and insertions.
 
