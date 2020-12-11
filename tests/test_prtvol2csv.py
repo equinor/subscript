@@ -1,3 +1,4 @@
+"""Test prtvol2csv, both as library and as command line"""
 import sys
 from pathlib import Path
 
@@ -10,6 +11,39 @@ import yaml
 from subscript.prtvol2csv import prtvol2csv
 
 TESTDATADIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
+
+
+def test_currently_in_place_from_prt(tmpdir):
+    """Test parsing of PRT to find currently in place"""
+    tmpdir.chdir()
+    Path("FOO.PRT").write_text(
+        """
+
+                                                           ===================================
+                                                          :  RESERVOIR VOLUMES      RM3     :
+      :---------:---------------:---------------:---------------:---------------:---------------:
+      : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
+      :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
+      :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
+      :---------:---------------:---------------:---------------:---------------:---------------:
+      :   FIELD :             3.:             4.:             5.:             6.:             7.:
+      :       1 :             8.:             9.:            10.:            11.:            12.:
+      :       2 :            13.:            14.:            15.:            16.:            17.:
+      ===========================================================================================
+    """  # noqa
+    )
+    expected_dframe = pd.DataFrame(
+        columns=["PORV_TOTAL", "HCPV_OIL", "WATER_PORV", "HCPV_GAS", "HCPV_TOTAL"],
+        data=[[8, 9, 10, 11, 12], [13, 14, 15, 16, 17]],
+        index=[1, 2],
+    )
+    expected_dframe.index.name = "FIPNUM"
+
+    pd.testing.assert_frame_equal(
+        prtvol2csv.reservoir_volumes_from_prt("FOO.PRT"),
+        expected_dframe,
+        check_dtype=False,
+    )
 
 
 def test_prtvol2csv(tmpdir):
@@ -44,22 +78,6 @@ def test_find_prtfile(tmpdir):
     assert prtvol2csv.find_prtfile("FOO.DATA") == "FOO.PRT"
     assert prtvol2csv.find_prtfile("FOO.") == "FOO.PRT"
     assert prtvol2csv.find_prtfile("FOO.PRT") == "FOO.PRT"
-
-
-def test_perl_runner(tmpdir):
-    """Test that we can run perl script and return what
-    it writes to disk"""
-    tmpdir.chdir()
-    with open("perlscript.pl", "w") as file_h:
-        file_h.write(
-            """#!/usr/bin/perl
-open(FILE_H, ">", "$ARGV[1]");
-print FILE_H "foo\n";
-close(FILE_H);
-"""
-        )
-    # Need to give full path to perl script for the runner to locate it
-    assert prtvol2csv.perl_runner(tmpdir / "perlscript.pl", "dummy") == "foo\n"
 
 
 @pytest.mark.integration

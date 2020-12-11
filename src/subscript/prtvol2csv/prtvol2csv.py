@@ -1,12 +1,12 @@
-import io
+import re
 import argparse
-import subprocess
-import tempfile
 import logging
 from pathlib import Path
 
 import yaml
 import pandas as pd
+
+import ecl2df
 
 from subscript import getLogger
 
@@ -138,41 +138,115 @@ def find_prtfile(basefile):
     return prt_file
 
 
-def perl_runner(perlscript, prt_file, debug=False):
-    """Run a perl script that writes to a file, and return
-    what got written to file.
+def currently_in_place_from_prt(prt_file, fipname="FIPNUM", date=None):
+    """Extracts currently-in-place volumes from a PRT file
 
-    The perl script is assumed to write to a filename found
-    in its second argument.
+    This function uses ecl2df.fipreports, and slices its
+    output for the purpose here.
 
     Args:
-        perlscript (str): Name of an existing perl script
-            assumed to be present in the same directory as __file__
-            unless it is an absolute path.
-        prt_file (str): First argument to perl script.
-        debug (bool): Set to True if temp file written by perl
-            should not be deleted (and print the filename).
+        prt_file (str): Path to a PRT to parse
+        fipname (str): FIPNUM, FIPZON or similar.
+        date (str): If None, first date will be used. If not None,
+            it should be an ISO-formatted date string to extract
 
     Returns:
-        str: Output written by perl.
+        pd.DataFrame
     """
-    _, tmpfile = tempfile.mkstemp()
-    scriptdir = Path(__file__).absolute().parent
-    if not Path(perlscript).is_absolute():
-        perlscript = scriptdir / perlscript
-    if not Path(perlscript).is_file():
-        logger.error("Could not find perlscript %s", perlscript)
-    subprocess.run(
-        ["/usr/bin/perl", perlscript, prt_file, tmpfile],
-        check=True,
-    )
-    with open(tmpfile) as file_h:
-        perloutput = file_h.read()
-    if debug:
-        logger.debug("Perl script %s dumped to file %s", perlscript, tmpfile)
+    inplace_df = ecl2df.fipreports.df(prt_file, fipname=fipname)
+
+    available_dates = inplace_df.sort_values("DATE")["DATE"].unique()
+    if date is None or date == "first":
+        date_str = available_dates[0]
+    elif date == "last":
+        date_str = available_dates[-1]
     else:
-        Path(tmpfile).unlink()
-    return perloutput
+        date_str = str(date)
+
+    # Filter to requested date:
+    inplace_df = inplace_df[inplace_df["DATE"] == date_str]
+
+    # Filter dataframe to only volumes pr. region, not inter-region flows:
+    inplace_df = inplace_df[inplace_df["DATATYPE"] == "CURRENTLY IN PLACE"]
+
+    # Cleanup dataframe:
+    inplace_df.drop(
+        ["DATATYPE", "TO_REGION", "FIPNAME", "DATE"], axis="columns", inplace=True
+    )
+    inplace_df.set_index("REGION", inplace=True)
+    inplace_df.index.name = "FIPNUM"
+
+    logger.info("Extracted CURRENTLY IN PLACE from %s at date %s", prt_file, date_str)
+    return inplace_df
+
+
+def reservoir_volumes_from_prt(prt_file):
+    """Extracts numbers from the table "RESERVOIR VOLUMES" in an Eclipse PRT
+    file, example table is::
+
+                                                           ===================================
+                                                          :  RESERVOIR VOLUMES      RM3     :
+      :---------:---------------:---------------:---------------:---------------:---------------:
+      : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
+      :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
+      :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
+      :---------:---------------:---------------:---------------:---------------:---------------:
+      :   FIELD :     399202846.:      45224669.:     353978177.:             0.:      45224669.:
+      :       1 :      78802733.:      17000359.:      61802374.:             0.:      17000359.:
+      :       2 :      79481140.:             0.:      79481140.:             0.:             0.:
+      :       3 :      75757104.:      17096867.:      58660238.:             0.:      17096867.:
+      :       4 :      74929403.:             0.:      74929403.:             0.:             0.:
+      :       5 :      50120783.:      11127443.:      38993340.:             0.:      11127443.:
+      :       6 :      40111683.:             0.:      40111683.:             0.:             0.:
+      ===========================================================================================
+
+
+    Args:
+        prt_file (str): PRT filename
+
+    Returns:
+        pd.DataFrame
+    """  # noqa
+    records = []
+    start_matcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
+
+    table_found = (
+        False  # State determining if current line is in our interesting table or not.
+    )
+    with Path(prt_file).open() as f_handle:
+        for line in f_handle:
+            if start_matcher.search(line) is not None:
+                table_found = True
+                continue
+            if table_found and line.strip().startswith("======================="):
+                # PRT table is finished.
+                break
+            if table_found:
+                # Extract lines with only numbers in between colons
+                line_split = [part.strip() for part in line.split(":") if part.strip()]
+                if len(line_split) != 6:
+                    continue
+                try:
+                    int(line_split[0])
+                except ValueError:
+                    # Not the line we are looking for.
+                    continue
+                records.append(
+                    {
+                        "FIPNUM": int(line_split[0]),
+                        "PORV_TOTAL": float(line_split[1]),
+                        "HCPV_OIL": float(line_split[2]),
+                        "WATER_PORV": float(line_split[3]),
+                        "HCPV_GAS": float(line_split[4]),
+                        "HCPV_TOTAL": float(line_split[5]),
+                    }
+                )
+    if not records:
+        logger.warning("No RESERVOIR VOLUMES table found in PRT file %s", prt_file)
+        logger.warning("Include RPTSOL <newline> FIP=2 'FIPRESV' in Eclipse DATA file")
+        return pd.DataFrame()
+
+    return pd.DataFrame(records).set_index("FIPNUM")
 
 
 def main():
@@ -192,70 +266,18 @@ def main():
         logger.error("PRT-file %s does not exist", prt_file)
         return
 
-    simvolumes = perl_runner("extract_vol_from_prtfile.pl", prt_file, args.debug)
-    resvolumes = perl_runner("extract_resvol_from_prtfile.pl", prt_file, args.debug)
-
-    ######################################################################
-    # Parse output from Perl scripts
-    #
-    simvolumes_prt = pd.read_csv(
-        io.StringIO(simvolumes),
-        sep=r"\s+",
-        skiprows=8,
-        usecols=[0, 3, 4, 5, 6, 7, 8, 9, 10],
-        names=[
-            "FIPTYPE",
-            "FIPNUM",
-            "STOIIP_OIL",
-            "ASSOCIATEDOIL_GAS",
-            "STOIIP_TOTAL",
-            "WATER_TOTAL",
-            "GIIP_GAS",
-            "ASSOCIATEDGAS_OIL",
-            "GIIP_TOTAL",
-        ],
-    ).set_index("FIPNUM")
-    # Delete FIPXXX
-    simvolumes_prt = simvolumes_prt[simvolumes_prt.FIPTYPE == "FIPNUM"]
-    simvolumes_prt.drop("FIPTYPE", axis=1, inplace=True)
-
-    simvolumes_prt.to_csv(Path(tablesdir) / args.outputfilename)
-
-    print(
-        "Written CSV file as first pass without reservoir volume data "
-        + str(Path(tablesdir) / args.outputfilename)
+    simvolumes_df = currently_in_place_from_prt(prt_file, "FIPNUM")
+    simvolumes_df.to_csv(Path(tablesdir) / args.outputfilename)
+    logger.info(
+        "Written CURRENTLY_IN_PLACE data to %s",
+        str(Path(tablesdir) / args.outputfilename),
     )
-    print("Now look for reservoir volumes, will overwrite if successful")
 
-    # The perl script extract_resvol_from_prtfile
-    # will repeat the outputted table
-    # in case of FIPXXXX is used in the Eclipse run. Therefore we should
-    # only look for the data that refers to FIPNUM, and that comes first.
-    fipnum_count = len(simvolumes_prt)
-    resvolumes_prt = pd.read_csv(
-        io.StringIO(resvolumes),
-        sep=r"\s+",
-        skiprows=8,
-        nrows=fipnum_count,
-        names=[
-            "FIPNUM",
-            "PORV_TOTAL",
-            "HCPV_OIL",
-            "WATER_PORV",
-            "HCPV_GAS",
-            "HCPV_TOTAL",
-        ],
-    ).set_index("FIPNUM")
-    if resvolumes_prt.empty:
-        # if not FIPRESV is included in RPTSOL in *.DATA, then resvolums are missing
-        resvolumes_prt = None
+    resvolumes_df = reservoir_volumes_from_prt(prt_file)
 
     ######################################################################
     # Merge output
-    #
-    # Set any non-existing valus (Not-a-number) to zero value.
-    #
-    volumes = pd.concat([simvolumes_prt, resvolumes_prt], axis=1).fillna(value=0.0)
+    volumes = pd.concat([simvolumes_df, resvolumes_df], axis=1).fillna(value=0.0)
 
     ######################################################################
     #
