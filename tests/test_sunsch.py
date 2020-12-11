@@ -565,6 +565,19 @@ def test_emptyfiles(tmpdir):
 
 def test_dategrid():
     """Test dategrid generation support in sunsch"""
+    # Daily
+    sch = sunsch.process_sch_config(
+        {
+            "startdate": datetime.date(2021, 1, 1),
+            "enddate": datetime.date(2022, 1, 1),
+            "dategrid": "daily",
+        }
+    )
+    assert len(sch) == 366
+    assert datetime.datetime(2021, 1, 1, 0, 0) in sch.dates
+    assert datetime.datetime(2021, 6, 6, 0, 0) in sch.dates
+    assert datetime.datetime(2022, 1, 1, 0, 0) in sch.dates
+
     # Yearly
     sch = sunsch.process_sch_config(
         {

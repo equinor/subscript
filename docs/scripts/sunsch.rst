@@ -19,12 +19,14 @@ Features in short
 - Configuration in YAML format
 - Merging via DATE keyword
 - Optional clipping any events before or after chosen start and end dates
-- A "date grid" can be inserted. Weekly, biweekly, monthly, bimonthly and yearly
-  are supported. Monthly dates will be rounded to the first of every month.
+- A "date grid" can be inserted. Daily, weekly, biweekly, monthly, bimonthly
+  and yearly are supported. Monthly dates will be rounded to the first of
+  every month.
 - Insertion of small Schedule snippets, opening a well for example. Can
   be inserted either at dates relative a reference date, or at a specific date.
 - Schedule snippets can have parameters that get values when inserted.
-  This is similar to what one could achieve using DESIGN_KW, but with less temporary files.
+  This is similar to what one could achieve using DESIGN_KW, but with less
+  temporary files.
 
 When to use
 ------------
