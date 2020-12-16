@@ -9,7 +9,7 @@ See also
 import os
 
 
-def test_presence_init_py():
+def test_presence_init_py(path_to_subscript):
     """If __init__.py is missing in a directory (in src/subscript/*),
     everything seems to work fine when in py3 except that sphinx-build will not
     build API docs for it"""
@@ -25,8 +25,7 @@ def test_presence_init_py():
         "__pycache__",
     ]
 
-    srcdir = os.path.join(os.path.dirname(__file__), "../src/subscript")
-    os.chdir(srcdir)
+    os.chdir(path_to_subscript)
     subdirs = [
         filepath.path
         for filepath in os.scandir(".")
