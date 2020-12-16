@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>ECLDIFF2ROFF &mdash; subscript 0.7.4.dev1+g3699287 documentation</title>
+  <title>ECLDIFF2ROFF &mdash; subscript 0.7.4.dev2+gc3ba58c documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.7.4.dev1+g3699287
+                0.7.4.dev2+gc3ba58c
               </div>
             
           
@@ -198,6 +198,9 @@
 in an Eclipse restart file, and write the difference pr. cell as
 a 3D grid parameter in ROFF grid format.</p>
 <p>The file extension <code class="docutils literal notranslate"><span class="pre">.roff</span></code> will be added to the OUTPUT argument.</p>
+<p>A file with date pairs must be supplied. This should be a text file with two
+space-separated dates pr. line, dates either in YYYY-MM-DD format (ISO-8601) or
+YYYYMMDD. Empty lines and lines starting with “–” or “#” are ignored.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ecldiff2roff</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">diffdates</span> <span class="n">DIFFDATES</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">outputfilebase</span> <span class="n">OUTPUTFILEBASE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">sep</span> <span class="n">SEP</span><span class="p">]</span>
