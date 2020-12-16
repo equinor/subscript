@@ -12,6 +12,10 @@ in an Eclipse restart file, and write the difference pr. cell as
 a 3D grid parameter in ROFF grid format.
 
 The file extension ``.roff`` will be added to the OUTPUT argument.
+
+A file with date pairs must be supplied. This should be a text file with two
+space-separated dates pr. line, dates either in YYYY-MM-DD format (ISO-8601) or
+YYYYMMDD. Empty lines and lines starting with "--" or "#" are ignored.
 """
 
 CATEGORY = "utility.eclipse"
@@ -97,9 +101,9 @@ def parse_diff_dates(filename):
         filename (str): Existing file
 
     Return:
-        A list of date pairs as tuples. The tuples contain
-            two strings, each string representing the date in YYYYMMDD
-            format.
+        list: A list of date pairs as tuples. The tuples contain
+        two strings, each string representing the date in YYYYMMDD
+        format.
     """
     outputdateformat = "%Y%m%d"  # For xtgeo compatibility
 
