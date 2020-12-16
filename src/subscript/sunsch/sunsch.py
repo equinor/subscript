@@ -18,8 +18,8 @@ import yaml
 from opm.tools import TimeVector
 
 import configsuite
-from configsuite import types
-from configsuite import MetaKeys as MK
+from configsuite import types  # lgtm [py/import-and-import-from]
+from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 
 from subscript import getLogger
 
@@ -470,12 +470,12 @@ def sch_file_nonempty(filename):
                 "You have potentially used PATHS variables in INCLUDE statements?"
             )
             logger.error("This is not supported")
-            raise SystemExit
+            raise SystemExit from err
 
         # Unknown error condition
         logger.error("Could not parse %s", filename)
         logger.error(err)
-        raise SystemExit
+        raise SystemExit from err
 
     except ValueError:
         # This is where we get for files not starting with DATES,
@@ -862,8 +862,9 @@ def main():
                     "%s"
                     "\nEnd auto-converted YAML"
                 ),
-                yaml.dump(_v1_content_to_v2(yaml_config)).strip(),
-                # lgtm [py/call-to-non-callable]
+                yaml.dump(
+                    _v1_content_to_v2(yaml_config)
+                ).strip(),  # lgtm [py/call-to-non-callable]
             )
 
     if args.verbose:

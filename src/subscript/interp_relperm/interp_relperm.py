@@ -1,15 +1,17 @@
 import sys
 import os
 import argparse
+
 import yaml
 import pandas as pd
+
 import pyscal
 from ecl2df import satfunc
 
 
 import configsuite
-from configsuite import types
-from configsuite import MetaKeys as MK
+from configsuite import types  # lgtm [py/import-and-import-from]
+from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 
 
 DESCRIPTION = """Interpolation script for relperm tables.
