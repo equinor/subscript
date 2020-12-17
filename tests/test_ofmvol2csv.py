@@ -126,7 +126,7 @@ def test_find_wellstart_indices(inputlines, expected):
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
                 data=[["A-1", datetime.date(2020, 12, 24), 100]],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # ISO date:
@@ -134,7 +134,7 @@ def test_find_wellstart_indices(inputlines, expected):
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
                 data=[["A-1", datetime.date(2020, 12, 24), 100]],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Well name with space, no quoutes. Trailing space ignored.
@@ -142,7 +142,7 @@ def test_find_wellstart_indices(inputlines, expected):
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
                 data=[["NO A-1", datetime.date(2020, 12, 24), 100]],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Well name with space, quouted.
@@ -150,7 +150,7 @@ def test_find_wellstart_indices(inputlines, expected):
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
                 data=[["NO A-1", datetime.date(2020, 12, 24), 100]],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Well name with space, quouted v2. Conserve spaces
@@ -159,7 +159,7 @@ def test_find_wellstart_indices(inputlines, expected):
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
                 data=[["  NO A-1 W  ", datetime.date(2020, 12, 24), 100]],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # More rows:
@@ -170,7 +170,7 @@ def test_find_wellstart_indices(inputlines, expected):
                     ["A-1", datetime.date(2020, 12, 24), 100],
                     ["A-1", datetime.date(2020, 12, 25), 200],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # More rows, DAYS is hours-pr-day (efficiency factor):
@@ -186,7 +186,7 @@ def test_find_wellstart_indices(inputlines, expected):
                     ["A-1", datetime.date(2020, 12, 24), 100, 24.0],
                     ["A-1", datetime.date(2020, 12, 25), 200, 23.0],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # More rows, special case for hours-pr-day for injectors
@@ -202,7 +202,7 @@ def test_find_wellstart_indices(inputlines, expected):
                     ["A-1", datetime.date(2020, 12, 24), 100, 24.0],
                     ["A-1", datetime.date(2020, 12, 25), 200, 23.0],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Test that we guess DD.MM.YYYY by default.
@@ -216,7 +216,7 @@ def test_find_wellstart_indices(inputlines, expected):
                 data=[
                     ["A-1", datetime.date(1987, 2, 1), 8.1, 100],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Pandas will try MM.DD.YYYY if DD.MM.YYYY is unfeasible:
@@ -230,7 +230,7 @@ def test_find_wellstart_indices(inputlines, expected):
                 data=[
                     ["A-1", datetime.date(1987, 1, 20), 8.1, 100],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Pandas will mix (!!) MM.DD.YYYY if DD.MM.YYYY when necessary..
@@ -246,7 +246,7 @@ def test_find_wellstart_indices(inputlines, expected):
                     ["A-1", datetime.date(1987, 1, 20), 8.1, 100],
                     ["A-1", datetime.date(1987, 1, 21), 9.1, 200],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # More columns:
@@ -262,7 +262,7 @@ def test_find_wellstart_indices(inputlines, expected):
                     ["A-1", datetime.date(2020, 12, 24), 100, 10000],
                     ["A-1", datetime.date(2020, 12, 25), 200, 20000],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Check that output is sorted on DATE:
@@ -273,7 +273,7 @@ def test_find_wellstart_indices(inputlines, expected):
                     ["A-1", datetime.date(2020, 12, 24), 100],
                     ["A-1", datetime.date(2020, 12, 25), 200],
                 ],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
         (
             # Empty dataset
@@ -284,11 +284,13 @@ def test_find_wellstart_indices(inputlines, expected):
             pd.DataFrame(
                 columns=["WELL", "DATE", "DAYS", "OIL"],
                 data=[],
-            ).set_index(["WELL", "DATE"]),
+            ),
         ),
     ],
 )
 def test_parse_well(inputlines, expected):
+    expected["DATE"] = pd.to_datetime(expected["DATE"])
+    expected.set_index(["WELL", "DATE"], inplace=True)
     # Assume there is DATE line in the test input
     inputlines = ofmvol2csv.cleanse_ofm_lines(inputlines)
     colnames = ofmvol2csv.extract_columnnames(inputlines)
