@@ -44,7 +44,7 @@ CATEGORY = "utility.transformation"
 WORKFLOW_EXAMPLE = """
 Add a file named e.g. ``ert/bin/workflows/CSV_STACK_WELLS`` with the contents::
 
-  CSV_STACK \"<CASEDIR>/share/results/tables/unsmry--montly.csv\" "--split" well "--keepminimal"
+  CSV_STACK "<CASEDIR>/share/results/tables/unsmry--montly.csv" "--split" well "--keepminimal"
 
 assuming you already have a CSV file in the given path that you want to stack.
 
@@ -61,14 +61,10 @@ successful runs::
 
 # List of columns that will always be kept, case insensitive:
 ALWAYS_KEEP = [
-    "Realization",
-    "Realisation",
-    "RunName",
-    "Real",
-    "Iteration",
-    "Iter",
-    "Ensemble",
-    "Date",
+    "REAL",
+    "ITER",
+    "ENSEMBLE",
+    "DATE",
 ]
 
 # Library of columns that we are able to split.
@@ -130,6 +126,7 @@ def get_parser() -> argparse.ArgumentParser:
         default="stacked.csv",
     )
     parser.add_argument(
+        "-s",
         "--split",
         type=str,
         help="Type of column to be split/unpivoted/stacked. Choose from the "
@@ -146,7 +143,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--keepminimal",
         action="store_true",
         help=(
-            "Keep only REAL, ENSEMBLE, DATE and unpivoted columns. "
+            "Keep only REAL, ENSEMBLE, ITER, DATE and unpivoted columns. "
             "Implies dropping constant columns"
         ),
         default=False,
