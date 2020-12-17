@@ -15,6 +15,7 @@ def expected_jobs(path_to_subscript):
     """ dictionary of installed jobs with location to config"""
     expected_job_names = [
         "CSV2OFMVOL",
+        "CSV_STACK",
         "ECLCOMPRESS",
         "ECLDIFF2ROFF",
         "ECLGRID2ROFF",
