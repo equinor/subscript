@@ -112,7 +112,7 @@ class CsvStack(ErtScript):
         csv_stack_main(args, support_magics=False)
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter,
@@ -126,9 +126,7 @@ def get_parser():
         "-o",
         "--output",
         type=str,
-        help=(
-            "Name of output csv file. " "Use - or to have the output dumped to stdout."
-        ),
+        help="Name of output csv file. Use - to write to stdout.",
         default="stacked.csv",
     )
     parser.add_argument(
@@ -170,21 +168,21 @@ def get_parser():
     return parser
 
 
-def main():
+def main() -> None:
     """Function for command line invocation"""
     parser = get_parser()
     args = parser.parse_args()
     csv_stack_main(args, support_magics=True)
 
 
-def csv_stack_main(args, support_magics=False):
+def csv_stack_main(args: argparse.Namespace, support_magics: bool = False) -> None:
     """A main function to be used both from the command line, and
     when used as an ERT plugin (ERT workflow).
 
     This function writes to disk or to stdout.
 
     Args:
-        args: Namespace with command line arguments
+        args (argparse.Namespace): Namespace with command line arguments
         support_magics (bool): If True, it is possible to read and write to
             stdin/stdout. Should not be set when used as ERT workflow.
     """
@@ -222,7 +220,9 @@ def csv_stack_main(args, support_magics=False):
     stacked.to_csv(output, index=False)
 
 
-def drop_constants(dframe: pd.DataFrame, keepminimal: bool, stackmatcher: Pattern):
+def drop_constants(
+    dframe: pd.DataFrame, keepminimal: bool, stackmatcher: Pattern
+) -> pd.DataFrame:
     """Drop/purge/remove columns from the dataframe that we don't want
     to include in a stacking operation (stacking can blow up the dataframe size)
 
@@ -259,7 +259,7 @@ def drop_constants(dframe: pd.DataFrame, keepminimal: bool, stackmatcher: Patter
 
 def csv_stack(
     dframe: pd.DataFrame, stackmatcher: Pattern, stackseparator: str, newcolumn: str
-):
+) -> pd.DataFrame:
     """Reshape an incoming dataframe by stacking/pivoting.
 
     The dataframe object will be modified in-place.
@@ -329,7 +329,7 @@ def csv_stack(
 
 
 @hook_implementation
-def legacy_ertscript_workflow(config):
+def legacy_ertscript_workflow(config) -> None:
     """Hook the CsvStack class into ERT with the name CSV_STACK,
     and inject documentation"""
     workflow = config.add_workflow(CsvStack, "CSV_STACK")
