@@ -100,7 +100,7 @@ class CustomFormatter(
 
 class CsvStack(ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,
-    to be used as a ERT workflow (wrapping the command line utility)"""
+    to be used as an ERT workflow (wrapping the command line utility)"""
 
     # pylint: disable=too-few-public-methods
     def run(self, *args):
