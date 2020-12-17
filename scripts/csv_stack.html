@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>CSV_STACK &mdash; subscript 0.7.4.dev4+g8e0331c documentation</title>
+  <title>CSV_STACK &mdash; subscript 0.7.4.dev5+ge52216c documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.7.4.dev4+g8e0331c
+                0.7.4.dev5+ge52216c
               </div>
             
           
@@ -195,19 +195,17 @@
             
   <div class="section" id="csv-stack">
 <h1>CSV_STACK<a class="headerlink" href="#csv-stack" title="Permalink to this headline">¶</a></h1>
-<p><p>Stack wells in a CSV exported file.</p>
-<p>All columns in your data set with a colon “:” in it, will
-be split such that the string after the colon will become
-a column value instead of its own column. Thus all
-columns called WOPT:A-1, WOPT:A-2, WOPT:A-3 etc will be merged
-into one column called WOPT, and you will have a column name
-called “WELL” that contains A-1, A-2, or A-3 as values.</p>
-<p>If importing the produced stackedversion.csv into Spotfire,
-you may then view and filter WOPT and friends by wellname, instead
-of selecting individual columns.</p>
+<p><p>Stack columns in a CSV exported file.</p>
+<p>All columns in your data set with a colon “:” in it, will be split such that the
+string after the colon will become a column value instead of its own column.
+Thus all columns called WOPT:A-1, WOPT:A-2, WOPT:A-3 etc will be merged into one
+column called WOPT, and you will have a column name called “WELL” that contains
+A-1, A-2, or A-3 as values.</p>
+<p>If importing the output CSV into Spotfire, you may then view and filter WOPT and
+friends by wellname, instead of selecting individual columns.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv_stack</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">split</span> <span class="n">SPLIT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keepconstantcolumns</span><span class="p">]</span>
-                 <span class="p">[</span><span class="o">--</span><span class="n">keepminimal</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv_stack</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SPLIT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keepconstantcolumns</span><span class="p">]</span>
+                 <span class="p">[</span><span class="o">--</span><span class="n">keepminimal</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
                  <span class="n">csvfile</span>
 </pre></div>
 </div>
@@ -215,7 +213,7 @@ of selecting individual columns.</p>
 <h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
-<dd><p>input csv file. If you type stdin or -, it will read from stdin</p>
+<dd><p>Input CSV file. If you use -, it will read from stdin</p>
 </dd>
 </dl>
 </div>
@@ -223,11 +221,11 @@ of selecting individual columns.</p>
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>name of output csv file. Use - or stdout to have the output dumped to stdout.</p>
+<dd><p>Name of output csv file. Use - to write to stdout.</p>
 <p>Default: “stacked.csv”</p>
 </dd>
-<dt><kbd>--split</kbd></dt>
-<dd><p>type of column to be split/unpivoted/stacked. Choose from the the predefined set: well, region, group, block, all</p>
+<dt><kbd>-s, --split</kbd></dt>
+<dd><p>Type of column to be split/unpivoted/stacked. Choose from the the predefined set: well, region, group, block, all</p>
 <p>Default: “well”</p>
 </dd>
 <dt><kbd>--keepconstantcolumns</kbd></dt>
@@ -235,7 +233,11 @@ of selecting individual columns.</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>--keepminimal</kbd></dt>
-<dd><p>Keep only REAL, ENSEMBLE, DATE and unpivoted columns</p>
+<dd><p>Keep only REAL, ENSEMBLE, ITER, DATE and unpivoted columns. Implies dropping constant columns</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Be verbose</p>
 <p>Default: False</p>
 </dd>
 </dl>
