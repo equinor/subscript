@@ -68,7 +68,7 @@ ALWAYS_KEEP = [
     "Iteration",
     "Iter",
     "Ensemble",
-    "date",
+    "Date",
 ]
 
 # Library of columns that we are able to split.
