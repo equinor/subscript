@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>subscript.runrms &mdash; subscript 0.7.4.dev6+g49e8e8c documentation</title>
+  <title>subscript.prtvol2csv.fipmapper &mdash; subscript 0.7.4.dev6+g49e8e8c documentation</title>
   
 
   
@@ -37,8 +37,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="subscript.runrms.runrms" href="subscript.runrms.runrms.html" />
-    <link rel="prev" title="subscript.restartthinner.restartthinner" href="subscript.restartthinner.restartthinner.html" /> 
+    <link rel="next" title="subscript.prtvol2csv.prtvol2csv" href="subscript.prtvol2csv.prtvol2csv.html" />
+    <link rel="prev" title="subscript.prtvol2csv" href="subscript.prtvol2csv.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -142,13 +142,13 @@
 <li class="toctree-l3"><a class="reference internal" href="subscript.pack_sim.html"><code class="docutils literal notranslate"><span class="pre">subscript.pack_sim</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.params2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.params2csv</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.pvt2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.pvt2csv</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="subscript.prtvol2csv.html#submodules">Submodules</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.pvt2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.pvt2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities</span></code></a></li>
@@ -206,13 +206,15 @@
         
           <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code></li>
+          <li><a href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a> &raquo;</li>
+        
+      <li><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv.fipmapper</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/subscript/subscript.runrms.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/subscript/subscript.prtvol2csv.fipmapper.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -225,21 +227,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-subscript.runrms">
-<span id="subscript-runrms"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code><a class="headerlink" href="#module-subscript.runrms" title="Permalink to this headline">¶</a></h1>
-<div class="contents local topic" id="contents">
-<ul class="simple">
-<li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
+  <div class="section" id="module-subscript.prtvol2csv.fipmapper">
+<span id="subscript-prtvol2csv-fipmapper"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv.fipmapper</span></code><a class="headerlink" href="#module-subscript.prtvol2csv.fipmapper" title="Permalink to this headline">¶</a></h1>
+<p>The FipMapper class, mapping region/zones in RMS to FIPxxx in Eclipse.</p>
+<p>This API should be considered private to prtvol2csv until it has moved somewhere
+else</p>
+<dl class="py function">
+<dt id="subscript.prtvol2csv.fipmapper.invert_map">
+<code class="sig-prename descclassname">subscript.prtvol2csv.fipmapper.</code><code class="sig-name descname">invert_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dictmap</span><span class="p">:</span> <span class="n">dict</span></em>, <em class="sig-param"><span class="n">join_on</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">','</span></em>, <em class="sig-param"><span class="n">skipstring</span><span class="p">:</span> <span class="n">Union<span class="p">[</span>list<span class="p">, </span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#subscript.prtvol2csv.fipmapper.invert_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert a dictionary.</p>
+<p>When input is many-to-one, the keys will be joined with the supplied join
+string. Returned values inside dictionary will always be strings if joined,
+if not joined, the value type is unchanged.</p>
+<p>When the input is one-to-many,</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dictmap</strong> (<em>dict</em>) – </p></li>
+<li><p><strong>join_on</strong> (<em>str</em>) – </p></li>
+<li><p><strong>skipstring</strong> – List of strings which will be ignored (e.g. “Totals”).</p></li>
 </ul>
-</div>
-<div class="section" id="submodules">
-<h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="subscript.runrms.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms.runrms</span></code></a></li>
-</ul>
-</div>
-</div>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Inverted map</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 
@@ -250,10 +267,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="subscript.runrms.runrms.html" class="btn btn-neutral float-right" title="subscript.runrms.runrms" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="subscript.prtvol2csv.prtvol2csv.html" class="btn btn-neutral float-right" title="subscript.prtvol2csv.prtvol2csv" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="subscript.restartthinner.restartthinner.html" class="btn btn-neutral float-left" title="subscript.restartthinner.restartthinner" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="subscript.prtvol2csv.html" class="btn btn-neutral float-left" title="subscript.prtvol2csv" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

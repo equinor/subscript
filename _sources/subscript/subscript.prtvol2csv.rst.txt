@@ -13,6 +13,7 @@ Submodules
 
 .. toctree::
 
+   subscript.prtvol2csv.fipmapper
    subscript.prtvol2csv.prtvol2csv
 
 .. currentmodule:: subscript.prtvol2csv
