@@ -314,8 +314,6 @@ def main():
     volumes.to_csv(Path(tablesdir) / args.outputfilename)
     logger.info("Written CSV file %s", str(Path(tablesdir) / args.outputfilename))
 
-    print(volumes)
-
     deprecated_region_export(volumes.copy(), tablesdir, args)
 
 
@@ -333,7 +331,6 @@ def deprecated_region_export(volumes, tablesdir, args):
     """
     if args.yaml:
         reg2fip = yaml.safe_load(Path(args.yaml).read_text())
-        print(reg2fip)
         if "region2fipnum" in reg2fip:
             warnings.warn(
                 "Output pr. region from prtvol2csv will be removed in a later version",
@@ -390,7 +387,6 @@ def prtvol2df(simvolumes_df, resvolumes_df, fipmapper=None):
 
     if fipmapper is not None:
         if fipmapper.has_fip2region:
-            print(volumes.index)
             volumes["REGION"] = list(map(fipmapper.fip2region, volumes.index))
         if fipmapper.has_fip2zone:
             volumes["ZONE"] = list(map(fipmapper.fip2zone, volumes.index))

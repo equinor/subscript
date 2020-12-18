@@ -149,7 +149,6 @@ class FipMapper:
         """
         if isinstance(fip, list):
             return list(map(self.fip2region, fip))
-        print(self._mapdata)
         assert "fipnum2region" in self._mapdata, "No data provided for fip2region"
         try:
             return self._mapdata["fipnum2region"][fip]
