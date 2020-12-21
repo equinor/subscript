@@ -13,7 +13,15 @@ logger = subscript.getLogger(__name__)
 DESCRIPTION = """Collect ERT RFT observations and merge with CSV output
 from GENDATA_RFT. Dump to CSV file for visualization in Webviz.
 
-Only works with a single report step pr RFT measurement.
+Observation are found in ``*.obs`` files in the ``OBSDIR`` argument. From the
+observation filename, both the wellname and "report_step" are extracted,
+assuming a filename syntax ``<wellname>_<report_step>.obs`` where the
+report_step is less than 10. If filenames are not like this, report_step is
+interpreted to 1.
+
+"report_step" in this context refers to the ``GEN_DATA``
+keyword in the ERT config and the ``RESTART`` argument for
+``GENERAL_OBSERVATION`` in the ERT config.
 """
 
 CATEGORY = "utility.transformation"
@@ -59,13 +67,58 @@ def get_parser():
     return parser
 
 
+def split_wellname_reportstep(wellname_reportstep):
+    """Split a string that might contain both a wellname and a report step,
+    at least it should contain a wellname.
+
+    The reportstep is a number at the end, following an underscore.
+
+    This function is needed and complex due differing standards on whether
+    the report step should be present in the filename or not.
+
+    Reporsteps larger than 9 is not supported, this is a compromise.
+
+    Examples::
+
+        "F_A-3" gives (F_A-3, 1)
+        "F_A-4_1" gives (F_A-4, 1)
+        "F_A-4_2" gives (F_A-4, 2)
+        A-4 gives (A-4, 1)
+        A-5_99 gives (A-5_99, 1)  # report steps more than 10 not supported.
+        "R_A4_1" gives (R_A4, 1)
+        "R_A4" gives (R_A4, 1)
+        "R_A_4" gives (R_A, 4)  # Warning, this is probaly unintended!
+
+    Args
+        wellname_reportstep (str)
+
+    Returns
+        tuple: wellname and reportstep. Reportstep defaulted to 1 if not found
+    """
+    components = wellname_reportstep.split("_")
+    if len(components[-1]) > 1:
+        return ("_".join(components), 1)
+    try:
+        report_step = int(components[-1])
+        return ("_".join(components[:-1]), report_step)
+    except ValueError:
+        return ("_".join(components), 1)
+
+
 def get_observations(obsdir="", filepattern="*.obs"):
     """
     Gather observation data from a directory of input filenames, or later
     from ERT storage api.
 
-    Reads all files matching `*.obs` in the given directory.
-    *This means that multiple report steps are not supported*.
+    Reads all files matching `*.obs` in the given directory.  From the
+    observation filename, both the wellname and "report_step" is extracted,
+    assuming a filename syntax ``<wellname>_<report_step>.obs`` where the
+    report_step is less than 10. If filenames are not like this, report_step is
+    interpreted to 1.
+
+    "report_step" in this context refers to the ``GEN_DATA`` keyword in the ERT
+    config and the ``RESTART`` argument for ``GENERAL_OBSERVATION`` in the ERT
+    config.
 
     The dataframe will have the columns:
 
@@ -101,9 +154,10 @@ def get_observations(obsdir="", filepattern="*.obs"):
     for obsfilename in glob.glob(os.path.join(obsdir, filepattern)):
         # Warning: Deducing the wellname this way will fail for
         # exotic filepatterns.
-        wellname = os.path.basename(obsfilename).split(filepattern.replace("*", ""))[
-            0:-1
-        ][0]
+        wellname_reportstep = os.path.basename(obsfilename).split(
+            filepattern.replace("*", "")
+        )[0:-1][0]
+        (wellname, report_step) = split_wellname_reportstep(wellname_reportstep)
         try:
             wellobs = (
                 pd.read_csv(
@@ -115,8 +169,8 @@ def get_observations(obsdir="", filepattern="*.obs"):
                 )
                 .reset_index()
                 .rename({"index": "order"}, axis="columns")
-                .assign(well=wellname)
-            )[["order", "well", "observed", "error"]].dropna()
+                .assign(well=wellname, report_step=report_step)
+            )[["order", "well", "report_step", "observed", "error"]].dropna()
             if not wellobs.empty:
                 obs_dfs.append(wellobs)
         except ValueError:
@@ -125,7 +179,11 @@ def get_observations(obsdir="", filepattern="*.obs"):
             )
 
     if obs_dfs:
-        return pd.concat(obs_dfs)
+        return (
+            pd.concat(obs_dfs)
+            .sort_values(["well", "order", "report_step"])
+            .reset_index(drop=True)
+        )
     logger.warning("No observation data was parsed from %s", obsdir)
     return pd.DataFrame()
 
