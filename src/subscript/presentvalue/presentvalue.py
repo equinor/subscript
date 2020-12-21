@@ -467,7 +467,7 @@ def prepare_econ_table(
         econ_df.columns = econ_df.columns.map(str.strip)
         if "discountrate" in econ_df:
             if len(econ_df["discountrate"]) > 1:
-                raise ValueError("Discountrate must be constant")
+                raise ValueError("discountrate must be constant")
         # assert first column is year.
     else:
         # Make a default dataframe if nothing provided.
