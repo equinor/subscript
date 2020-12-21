@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>subscript.merge_rft_ertobs.merge_rft_ertobs &mdash; subscript 0.7.4.dev6+g49e8e8c documentation</title>
+  <title>subscript.merge_rft_ertobs.merge_rft_ertobs &mdash; subscript 0.7.4.dev7+ge3bf752 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.7.4.dev6+g49e8e8c
+                0.7.4.dev7+ge3bf752
               </div>
             
           
@@ -240,8 +240,14 @@ and raw description formatter</p>
 <code class="sig-prename descclassname">subscript.merge_rft_ertobs.merge_rft_ertobs.</code><code class="sig-name descname">get_observations</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obsdir</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">filepattern</span><span class="o">=</span><span class="default_value">'*.obs'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.merge_rft_ertobs.merge_rft_ertobs.get_observations" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gather observation data from a directory of input filenames, or later
 from ERT storage api.</p>
-<p>Reads all files matching <cite>*.obs</cite> in the given directory.
-<em>This means that multiple report steps are not supported</em>.</p>
+<p>Reads all files matching <cite>*.obs</cite> in the given directory.  From the
+observation filename, both the wellname and “report_step” is extracted,
+assuming a filename syntax <code class="docutils literal notranslate"><span class="pre">&lt;wellname&gt;_&lt;report_step&gt;.obs</span></code> where the
+report_step is less than 10. If filenames are not like this, report_step is
+interpreted to 1.</p>
+<p>“report_step” in this context refers to the <code class="docutils literal notranslate"><span class="pre">GEN_DATA</span></code> keyword in the ERT
+config and the <code class="docutils literal notranslate"><span class="pre">RESTART</span></code> argument for <code class="docutils literal notranslate"><span class="pre">GENERAL_OBSERVATION</span></code> in the ERT
+config.</p>
 <p>The dataframe will have the columns:</p>
 <dl class="simple">
 <dt>order</dt><dd><p>order of measurements as they appeared in the obsfile.</p>
@@ -290,6 +296,34 @@ from filename might fail.</p></li>
 <code class="sig-prename descclassname">subscript.merge_rft_ertobs.merge_rft_ertobs.</code><code class="sig-name descname">merge_rft_ertobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gendatacsv</span></em>, <em class="sig-param"><span class="n">obsdir</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.merge_rft_ertobs.merge_rft_ertobs.merge_rft_ertobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function for merge_rft_ertobs named arguments.</p>
 <p>Arguments correspond to argparse documentation</p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="subscript.merge_rft_ertobs.merge_rft_ertobs.split_wellname_reportstep">
+<code class="sig-prename descclassname">subscript.merge_rft_ertobs.merge_rft_ertobs.</code><code class="sig-name descname">split_wellname_reportstep</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wellname_reportstep</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.merge_rft_ertobs.merge_rft_ertobs.split_wellname_reportstep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split a string that might contain both a wellname and a report step,
+at least it should contain a wellname.</p>
+<p>The reportstep is a number at the end, following an underscore.</p>
+<p>This function is needed and complex due differing standards on whether
+the report step should be present in the filename or not.</p>
+<p>Reporsteps larger than 9 is not supported, this is a compromise.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;F_A-3&quot;</span> <span class="n">gives</span> <span class="p">(</span><span class="n">F_A</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="s2">&quot;F_A-4_1&quot;</span> <span class="n">gives</span> <span class="p">(</span><span class="n">F_A</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="s2">&quot;F_A-4_2&quot;</span> <span class="n">gives</span> <span class="p">(</span><span class="n">F_A</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">A</span><span class="o">-</span><span class="mi">4</span> <span class="n">gives</span> <span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">A</span><span class="o">-</span><span class="mi">5_99</span> <span class="n">gives</span> <span class="p">(</span><span class="n">A</span><span class="o">-</span><span class="mi">5_99</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># report steps more than 10 not supported.</span>
+<span class="s2">&quot;R_A4_1&quot;</span> <span class="n">gives</span> <span class="p">(</span><span class="n">R_A4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="s2">&quot;R_A4&quot;</span> <span class="n">gives</span> <span class="p">(</span><span class="n">R_A4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="s2">&quot;R_A_4&quot;</span> <span class="n">gives</span> <span class="p">(</span><span class="n">R_A</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># Warning, this is probaly unintended!</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>Args</dt><dd><p>wellname_reportstep (str)</p>
+</dd>
+<dt>Returns</dt><dd><p>tuple: wellname and reportstep. Reportstep defaulted to 1 if not found</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

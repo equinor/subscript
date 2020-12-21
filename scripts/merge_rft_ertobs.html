@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>MERGE_RFT_ERTOBS &mdash; subscript 0.7.4.dev6+g49e8e8c documentation</title>
+  <title>MERGE_RFT_ERTOBS &mdash; subscript 0.7.4.dev7+ge3bf752 documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.7.4.dev6+g49e8e8c
+                0.7.4.dev7+ge3bf752
               </div>
             
           
@@ -203,7 +203,14 @@ and has examples in the ERT documentation.</p>
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <p><p>Collect ERT RFT observations and merge with CSV output
 from GENDATA_RFT. Dump to CSV file for visualization in Webviz.</p>
-<p>Only works with a single report step pr RFT measurement.</p>
+<p>Observation are found in <code class="docutils literal notranslate"><span class="pre">*.obs</span></code> files in the <code class="docutils literal notranslate"><span class="pre">OBSDIR</span></code> argument. From the
+observation filename, both the wellname and “report_step” are extracted,
+assuming a filename syntax <code class="docutils literal notranslate"><span class="pre">&lt;wellname&gt;_&lt;report_step&gt;.obs</span></code> where the
+report_step is less than 10. If filenames are not like this, report_step is
+interpreted to 1.</p>
+<p>”report_step” in this context refers to the <code class="docutils literal notranslate"><span class="pre">GEN_DATA</span></code>
+keyword in the ERT config and the <code class="docutils literal notranslate"><span class="pre">RESTART</span></code> argument for
+<code class="docutils literal notranslate"><span class="pre">GENERAL_OBSERVATION</span></code> in the ERT config.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">merge_rft_ertobs</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="n">gendatacsv</span> <span class="n">obsdir</span>
 </pre></div>
