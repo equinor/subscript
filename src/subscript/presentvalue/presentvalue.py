@@ -423,8 +423,19 @@ def get_yearly_summary(
     sum_df = ecl2df.summary.df(
         eclfiles, column_keys=[oilvector, gasvector, gasinjvector], time_index="yearly"
     )
-    sum_df.columns = ["OPT", "GPT", "GIT"]
+    sum_df.rename(
+        {oilvector: "OPT", gasvector: "GPT", gasinjvector: "GIT"},
+        axis="columns",
+        inplace=True,
+    )
     sum_df = sum_df.reset_index()
+
+    if "GIT" not in sum_df:
+        sum_df["GIT"] = 0
+    if "GPT" not in sum_df:
+        sum_df["GPT"] = 0
+    if "OPT" not in sum_df:
+        sum_df["OPT"] = 0
     sum_df["YEAR"] = pd.to_datetime(sum_df["DATE"]).dt.year
 
     sum_df["OPR"] = sum_df["OPT"].shift(-1) - sum_df["OPT"]
@@ -456,7 +467,7 @@ def prepare_econ_table(
         econ_df.columns = econ_df.columns.map(str.strip)
         if "discountrate" in econ_df:
             if len(econ_df["discountrate"]) > 1:
-                raise ValueError("Discoutrate must be constant")
+                raise ValueError("discountrate must be constant")
         # assert first column is year.
     else:
         # Make a default dataframe if nothing provided.
@@ -483,8 +494,8 @@ def prepare_econ_table(
         )
         raise ValueError(msg)
 
-    if len(econ_df) > len(required_columns):
-        logger.warning("Superfluous columns in econonical input")
+    if len(econ_df.columns) > len(required_columns):
+        logger.warning("Superfluous columns in economical input")
 
     return econ_df
 

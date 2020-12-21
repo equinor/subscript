@@ -8,6 +8,8 @@ import pytest
 import numpy as np
 import pandas as pd
 
+import ecl
+import ecl2df
 from subscript.presentvalue import presentvalue
 
 ECLDIR = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
@@ -308,6 +310,81 @@ def test_main(tmpdir):
     parametersline = open(parameterstxt_fname).readlines()[0].strip()
     assert parametersline.split()[0] == "PresentValue"
     assert round(float(parametersline.split()[1]), 1) == 11653.9
+
+
+def test_no_gasinj(tmpdir):
+    """Test that summary files with no gas injection works
+    (missing GIT is the same as zero GIT)"""
+    tmpdir.chdir()
+    smry = pd.DataFrame(
+        [
+            {"DATE": "2030-01-01", "FOPT": 0, "FGPT": 0},
+            {"DATE": "2031-01-01", "FOPT": 1000, "FGPT": 0},
+        ]
+    )
+    smry["DATE"] = pd.to_datetime(smry["DATE"])
+    smry.set_index("DATE")
+    eclsum = ecl2df.summary.df2eclsum(smry, "NOGASINJ")
+    ecl.summary.EclSum.fwrite(eclsum)
+    econ_df = presentvalue.prepare_econ_table(
+        oilprice=100, gasprice=0, usdtonok=10, discountrate=0
+    )
+    assert np.isclose(
+        presentvalue.presentvalue_main("NOGASINJ", econ_df, discountto=2030)[
+            "PresentValue"
+        ],
+        presentvalue.BARRELSPRCUBIC,
+    )
+
+
+def test_no_gas(tmpdir):
+    """Test that summary files with no gas prod/injection works
+    (missing GPT is the same as zero GPT)"""
+    tmpdir.chdir()
+    smry = pd.DataFrame(
+        [
+            {"DATE": "2030-01-01", "FOPT": 0},
+            {"DATE": "2031-01-01", "FOPT": 1000},
+        ]
+    )
+    smry["DATE"] = pd.to_datetime(smry["DATE"])
+    smry.set_index("DATE")
+    eclsum = ecl2df.summary.df2eclsum(smry, "NOGAS")
+    ecl.summary.EclSum.fwrite(eclsum)
+    econ_df = presentvalue.prepare_econ_table(
+        oilprice=100, gasprice=0, usdtonok=10, discountrate=0
+    )
+    assert np.isclose(
+        presentvalue.presentvalue_main("NOGAS", econ_df, discountto=2030)[
+            "PresentValue"
+        ],
+        presentvalue.BARRELSPRCUBIC,
+    )
+
+
+def test_no_oil(tmpdir):
+    """Test that summary files with only gas prod/injection works"""
+
+    tmpdir.chdir()
+    smry = pd.DataFrame(
+        [
+            {"DATE": "2030-01-01", "FGPT": 0},
+            {"DATE": "2031-01-01", "FGPT": 1000},
+        ]
+    )
+    smry["DATE"] = pd.to_datetime(smry["DATE"])
+    smry.set_index("DATE")
+    eclsum = ecl2df.summary.df2eclsum(smry, "NOOIL")
+    ecl.summary.EclSum.fwrite(eclsum)
+    econ_df = presentvalue.prepare_econ_table(
+        oilprice=0, gasprice=10, usdtonok=10, discountrate=0
+    )
+    assert np.isclose(
+        presentvalue.presentvalue_main("NOOIL", econ_df, discountto=2030)[
+            "PresentValue"
+        ],
+        0.01,
+    )
 
 
 @pytest.mark.integration
