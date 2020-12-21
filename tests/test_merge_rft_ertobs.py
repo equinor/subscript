@@ -10,6 +10,7 @@ import pytest
 
 from subscript import getLogger
 from subscript.merge_rft_ertobs.merge_rft_ertobs import (
+    split_wellname_reportstep,
     get_observations,
     merge_rft_ertobs,
 )
@@ -51,8 +52,21 @@ def test_get_observations(drogondata):
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
     dframe = get_observations("rft")
-    assert set(dframe["well"]) == {"R_A2", "R_A3", "R_A4", "R_A5", "R_A6"}
-    assert {"order", "error", "well"}.issubset(set(dframe.columns))
+    expected = pd.DataFrame(
+        columns=["order", "well", "report_step", "observed", "error"],
+        data=[
+            [0, "R_A2", 1, 299.23, 3.0],
+            [0, "R_A3", 1, 298.52, 3.0],
+            [1, "R_A3", 1, 280.43, 3.0],
+            [0, "R_A4", 1, 288.60, 3.0],
+            [1, "R_A4", 1, 282.13, 3.0],
+            [0, "R_A5", 1, 278.70, 3.0],
+            [1, "R_A5", 1, 286.55, 3.0],
+            [0, "R_A6", 1, 280.85, 3.0],
+            [1, "R_A6", 1, 286.41, 3.0],
+        ],
+    )
+    pd.testing.assert_frame_equal(dframe, expected)
 
 
 @pytest.mark.parametrize(
@@ -75,6 +89,25 @@ def test_get_observations_invalid(obsstring, validlength, tmpdir):
     with open("foo.obs", "w") as file_h:
         file_h.write(obsstring)
     assert len(get_observations(".")) == validlength
+
+
+@pytest.mark.parametrize(
+    "well_step, expected",
+    [
+        ("", ("", 1)),
+        ("foo", ("foo", 1)),
+        ("F_A-3", ("F_A-3", 1)),
+        ("F_A-4_1", ("F_A-4", 1)),
+        ("F_A-4_2", ("F_A-4", 2)),
+        ("A-4", ("A-4", 1)),
+        ("A-5_99", ("A-5_99", 1)),  # report steps more than 10 not supported.
+        ("R_A4_1", ("R_A4", 1)),
+        ("R_A4", ("R_A4", 1)),
+        ("R_A_4", ("R_A", 4)),  # Warning, this is probably unintended!
+    ],
+)
+def test_split_wellname_reportstep(well_step, expected):
+    assert split_wellname_reportstep(well_step) == expected
 
 
 def test_merge_drogon(drogondata):
@@ -130,7 +163,15 @@ def test_endpoint(drogondata):
     )
     dframe = pd.read_csv("mergedrft.csv")
     assert not dframe.empty
-    assert {"pressure", "observed", "error", "well", "time"}.issubset(dframe.columns)
+    assert {
+        "pressure",
+        "observed",
+        "error",
+        "well",
+        "report_step",
+        "report_step",
+        "time",
+    }.issubset(dframe.columns)
 
 
 @pytest.mark.integration
@@ -160,4 +201,6 @@ def test_ert_hook(drogondata):
 
     dframe = pd.read_csv("mergedrft.csv")
     assert not dframe.empty
-    assert {"pressure", "observed", "error", "well", "time"}.issubset(dframe.columns)
+    assert {"pressure", "observed", "error", "well", "report_step", "time"}.issubset(
+        dframe.columns
+    )
