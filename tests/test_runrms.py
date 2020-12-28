@@ -15,6 +15,10 @@ TESTRMS2 = pathlib.Path("tests/data/reek/rms/reek.rms11.1.0").resolve().as_posix
 TESTSETUP = pathlib.Path("tests/testdata_runrms/runrms.yml").resolve().as_posix()
 
 
+def foobar():
+    pass
+
+
 def test_main_no_project():
     """Will only see effect of this when running pytest -s"""
     print(rr.main(["--dryrun", "--setup", TESTSETUP]))
