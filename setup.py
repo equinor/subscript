@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """Setup for subscript packages"""
 from glob import glob
 from os.path import splitext, basename
