@@ -4,6 +4,7 @@ import sys
 import os
 import codecs
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -367,16 +368,21 @@ def test_main(tmpdir):
     assert opm.io.Parser().parse_string(compressedstr, parsecontext)
 
 
-def test_binary_file(tmpdir):
-    """Test that a binary file will be skipped"""
-    tmpdir.chdir()
-    binfile = "binfile.bin"
-    with open(binfile, "wb") as file_h:
-        # Random byte sequence that is not valid as UTF-8:
-        file_h.write(bytearray([10, 0, 1, 2, 4, 5, 250, 255, 155]))
-    origbytes = open(binfile, "rb").read()
-    main_eclcompress(binfile, None)
-    assert open(binfile, "rb").read() == origbytes
+@pytest.mark.skipif(sys.version_info < (3, 7), reason="Requires Python 3.7 or higher")
+def test_binary_file():
+    """Test that a random binary file is untouched by eclcompress"""
+    binfile = "wrong.grdecl"
+    Path(binfile).write_bytes(os.urandom(100))
+    bytes_before = Path(binfile).read_bytes()
+    proc_result = subprocess.run(
+        "eclcompress --verbose  " + binfile, check=True, shell=True, capture_output=True
+    )
+    proc_output = proc_result.stdout.decode() + proc_result.stderr.decode()
+    bytes_after = Path(binfile).read_bytes()
+    assert bytes_before == bytes_after
+    assert (
+        "No Eclipse keywords found to compress in wrong.grdecl, skipping" in proc_output
+    )
 
 
 def test_iso8859(tmpdir):
