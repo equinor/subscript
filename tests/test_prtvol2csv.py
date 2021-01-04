@@ -202,6 +202,9 @@ def test_prtvol2df(tmpdir):
     assert prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="z2f_int.yml"))[
         "ZONE"
     ].values == ["Upper"]
+    prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="z2f_int.yml")).to_csv(
+        "foo.csv"
+    )
 
     # Both zone and regions at the same time:
     volumes = prtvol2csv.prtvol2df(
@@ -286,6 +289,28 @@ def test_prtvol2csv_regions(tmpdir):
 
 
 @pytest.mark.integration
+@pytest.mark.skipif(
+    sys.version_info < (3, 7), reason="Test function requires Python 3.7 or higher"
+)
+def test_prtvol2csv_backwards_compat(tmpdir):
+    """Test that we  have managed to keep backwards compatibility at least in
+    the deprecation period"""
+    prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
+    tmpdir.chdir()
+    result = subprocess.run(
+        ["prtvol2csv", str(prtfile)],
+        check=True,
+        capture_output=True,
+    )
+    assert "You MUST set the directory option to" in result.stderr.decode()
+    assert (
+        "Output directories for prtvol2csv should be created upfront"
+        in result.stderr.decode()
+    )
+    assert Path("share/results/volumes/simulator_volume_fipnum.csv").is_file()
+
+
+@pytest.mark.integration
 def test_prtvol2csv_regions_typemix(tmpdir):
     """Test region support, getting data from yaml"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
@@ -328,3 +353,82 @@ def test_prtvol2csv_noresvol(tmpdir):
     assert not dframe.empty
     assert len(dframe) == 6
     assert "PORV_TOTAL" not in dframe
+
+
+@pytest.mark.integration
+def test_ert_forward_model(tmpdir):
+    tmpdir.chdir()
+
+    prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
+
+    Path("FOO.DATA").write_text("--Empty")
+
+    yamlexample = {
+        "region2fipnum": {
+            "RegionA": [1, 4, 6],
+            8: [2, 5],
+        }
+    }
+    Path("regions.yml").write_text(yaml.dump(yamlexample))
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE FOO.DATA",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALIZATIONS 1",
+                "RUNPATH .",
+                "",
+                (
+                    "FORWARD_MODEL PRTVOL2CSV("
+                    "<DATAFILE>="
+                    + str(prtfile)
+                    + ', <REGIONS>=regions.yml, <DIR>=".",<OUTPUTFILENAME>=sim.csv)'  # noqa
+                ),
+            ]
+        )
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("sim.csv").is_file()
+
+
+@pytest.mark.integration
+def test_ert_forward_model_backwards_compat_deprecation(tmpdir):
+    """Test that the deprecated behaviour still works for backwards compat"""
+    tmpdir.chdir()
+
+    prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
+
+    Path("FOO.DATA").write_text("--Empty")
+
+    yamlexample = {
+        "region2fipnum": {
+            "RegionA": [1, 4, 6],
+            8: [2, 5],
+        }
+    }
+    Path("regions.yml").write_text(yaml.dump(yamlexample))
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE FOO.DATA",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALIZATIONS 1",
+                "RUNPATH .",
+                "",
+                (
+                    "FORWARD_MODEL PRTVOL2CSV("
+                    "<DATAFILE>=" + str(prtfile) + ")"  # noqa
+                ),
+            ]
+        )
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("share/results/volumes/simulator_volume_fipnum.csv").is_file()
+    stderr = Path("PRTVOL2CSV.stderr.0").read_text()
+    assert "You MUST set the directory option" in stderr
+    assert (
+        "FutureWarning: Output directories for prtvol2csv should be created upfront"
+        in stderr
+    )
