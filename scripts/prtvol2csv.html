@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>PRTVOL2CSV &mdash; subscript 0.7.5.dev2+g786f5aa documentation</title>
+  <title>PRTVOL2CSV &mdash; subscript 0.7.5.dev3+g1e5bacd documentation</title>
   
 
   
@@ -64,7 +64,7 @@
             
             
               <div class="version">
-                0.7.5.dev2+g786f5aa
+                0.7.5.dev3+g1e5bacd
               </div>
             
           
@@ -113,7 +113,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PRTVOL2CSV</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#region-support">Region-support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#eclipse-prt-volumetric-data">Eclipse PRT volumetric data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#region-and-zone-support">Region and zone support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#example-output">Example output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
@@ -194,23 +197,14 @@
             
   <div class="section" id="prtvol2csv">
 <h1>PRTVOL2CSV<a class="headerlink" href="#prtvol2csv" title="Permalink to this headline">¶</a></h1>
-<p><p>Extract reservoir volumes from Eclipse PRT files, dump to CSV.</p>
-<p>The data from the ascii table “FIELD TOTALS” will be parsed at
-initial time step (day 0), and if found, the table called
-“RESERVOIR VOLUMES”. The latter table will only be written
-by Eclipse if you have:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RPTSOL</span>
-  <span class="n">FIP</span><span class="o">=</span><span class="mi">2</span> <span class="s1">&#39;FIPRESV&#39;</span> <span class="o">/</span>
-</pre></div>
-</div>
-<p>You can supply a region2fipnum data structure in a YAML-file
-which will cause a secondary CSV file to be generated, where
-fipnum data are summed up to user specified regions.</p>
+<p><p>Extract reservoir volumes pr FIPNUM from Eclipse PRT files and dump to CSV.</p>
+<p>If a yaml file is specified through options, it is possible to add columns
+with region and zone information to each FIPNUM. The YAML file must contain
+the keys “region2fipnum” and/or “zone2fipnum”.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">prtvol2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">suffix</span> <span class="n">SUFFIX</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="nb">dir</span> <span class="n">DIR</span><span class="p">]</span>
-                  <span class="p">[</span><span class="o">--</span><span class="n">outputfilename</span> <span class="n">OUTPUTFILENAME</span><span class="p">]</span>
-                  <span class="p">[</span><span class="o">--</span><span class="n">regionoutputfilename</span> <span class="n">REGIONOUTPUTFILENAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">yaml</span> <span class="n">YAML</span><span class="p">]</span>
-                  <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">prtvol2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">outputfilename</span> <span class="n">OUTPUTFILENAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">yaml</span> <span class="n">YAML</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                  <span class="p">[</span><span class="o">--</span><span class="nb">dir</span> <span class="n">DIR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">regionoutputfilename</span> <span class="n">REGIONOUTPUTFILENAME</span><span class="p">]</span>
+                  <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
                   <span class="n">DATAfile</span>
 </pre></div>
 </div>
@@ -225,27 +219,23 @@ fipnum data are summed up to user specified regions.</p>
 <div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
-<dt><kbd>--suffix</kbd></dt>
-<dd><p>Resultdirectory suffix.</p>
-<p>Default: “”</p>
-</dd>
-<dt><kbd>--dir</kbd></dt>
-<dd><p>Output directory. Default is FMU standard, share/results/volumes. Will be created if necessary.</p>
-</dd>
 <dt><kbd>--outputfilename</kbd></dt>
-<dd><p>Output filename in result directory</p>
+<dd><p>CSV filename to write, including path. Directory must exist.</p>
 <p>Default: “simulator_volume_fipnum.csv”</p>
 </dd>
-<dt><kbd>--regionoutputfilename</kbd></dt>
-<dd><p>Filename for regrouped region volume output</p>
-<p>Default: “simulator_volume_region.csv”</p>
-</dd>
 <dt><kbd>--yaml, --regions</kbd></dt>
-<dd><p>YAML file containing a fipnum2region dictionary</p>
+<dd><p>YAML file containing a fipnum2region and/or fipnum2zone dictionary (or the reverse maps region2fipnum/zone2fipnum).</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose, print the tables</p>
 <p>Default: False</p>
+</dd>
+<dt><kbd>--dir</kbd></dt>
+<dd><p>This option is deprecated and MUST be set to “.” for future compatibility.</p>
+</dd>
+<dt><kbd>--regionoutputfilename</kbd></dt>
+<dd><p>Deprecated option. Do not use, will be removed later. Filename for regrouped region volume output.</p>
+<p>Default: “simulator_volume_region.csv”</p>
 </dd>
 <dt><kbd>--debug</kbd></dt>
 <dd><p>Debug mode</p>
@@ -253,42 +243,184 @@ fipnum data are summed up to user specified regions.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="region-support">
-<h2>Region-support<a class="headerlink" href="#region-support" title="Permalink to this headline">¶</a></h2>
-<p>The script supports aggregating volumes from the FIPNUMs in Eclipse
-to a “region” definition in use by e.g. RMS. The FIPNUM is assumed
-to be at a finer or equal scale as REGION - thus FIPNUM to REGION
-can be a many-to-one mapping.</p>
-<p>The YAML file for the mapping between FIPNUM and regions must be
+<div class="section" id="eclipse-prt-volumetric-data">
+<h2>Eclipse PRT volumetric data<a class="headerlink" href="#eclipse-prt-volumetric-data" title="Permalink to this headline">¶</a></h2>
+<p>The script will read numbers from the line with <code class="docutils literal notranslate"><span class="pre">CURRENTLY</span> <span class="pre">IN</span> <span class="pre">PLACE</span></code> in Eclipse PRT files:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                                               =================================
+                                               : FIPNUM  REPORT REGION    1    :
+                                               :     PAV =        305.89  BARSA:
+                                               :     PORV=     78815548.   RM3 :
+                          :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                          :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+:-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+:CURRENTLY IN PLACE       :     10656981.                    10656981.:      59957809. :            0.   1960884420.    1960884420.:
+:-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+:OUTFLOW TO OTHER REGIONS :            0.                           0.:             0. :            0.            0.             0.:
+:OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+:MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+:-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+:ORIGINALLY IN PLACE      :     10656981.                    10656981.:      59957809. :            0.   1960884420.    1960884420.:
+:-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+====================================================================================================================================
+</pre></div>
+</div>
+<p>Additionally, if the Eclipse DATA file includes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RPTSOL</span>
+  <span class="n">FIP</span><span class="o">=</span><span class="mi">2</span> <span class="s1">&#39;FIPRESV&#39;</span> <span class="o">/</span>
+</pre></div>
+</div>
+<p>the PRT-file will also contain a table with pore volumes pr. phase and pr.
+FIPNUM, which will be added to the exported table.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                                                    ===================================
+                                                    :  RESERVOIR VOLUMES      RM3     :
+:---------:---------------:---------------:---------------:---------------:---------------:
+: REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
+:         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
+:         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
+:---------:---------------:---------------:---------------:---------------:---------------:
+:   FIELD :     399202846.:      45224669.:     353978177.:             0.:      45224669.:
+:       1 :      78802733.:      17000359.:      61802374.:             0.:      17000359.:
+:       2 :      79481140.:             0.:      79481140.:             0.:             0.:
+===========================================================================================
+</pre></div>
+</div>
+</div>
+<div class="section" id="region-and-zone-support">
+<h2>Region and zone support<a class="headerlink" href="#region-and-zone-support" title="Permalink to this headline">¶</a></h2>
+<p>Each row in the exported CSV can be augmented with the corresponding Region and
+Zone the particular FIPNUM belongs to. This is accomplished by supplying a YAML
+file which defines the map between regions and/or zones to FIPNUM.</p>
+<p>The YAML file for the mapping between FIPNUM and regions can be
 structured like in this example:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span>
-  <span class="nt">RegionA</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">6</span>
-  <span class="nt">RegionB</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+  <span class="nt">RegionA</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">3</span><span class="p p-Indicator">]</span>
+  <span class="nt">RegionB</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
+<span class="nt">zone2fipnum</span><span class="p">:</span>
+  <span class="nt">Upper</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">]</span>
+  <span class="nt">Mid</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">]</span>
+  <span class="nt">Lower</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
-<p>When is provided, a column named <code class="docutils literal notranslate"><span class="pre">REGION</span></code> will appear
-in the output CSV file (from the argument <code class="docutils literal notranslate"><span class="pre">--regionoutputfilename</span></code>), and
-with volumes summed over included FIPNUMs (if more than one).</p>
-<p>The FIPNUM column will then contain a space-separated list of FIPNUM values
-that were included in the REGION.</p>
-<p>The FIPNUM indexed table (the standard output from this script) will be augmented
-by an extra REGION column with space-separated regions pointing to each
-individual FIPNUM.</p>
-<p>Regions can be overlapping, so for also gettiing out Totals (or subset of totals)
-you can achieve that using custom region names. Here shown also with a more
-condensed yaml syntax:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span>
-  <span class="nt">RegionA</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
-  <span class="nt">RegionB</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">]</span>
-  <span class="nt">FormationA</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">]</span>
-  <span class="nt">Totals</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">3</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
+<p>It is possible to supply inverse maps instead (they will be inverted if needed):</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span>
+  <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionA</span>
+  <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionA</span>
+  <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionA</span>
+  <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionB</span>
+  <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionB</span>
+  <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionB</span>
+<span class="nt">fipnum2zone</span><span class="p">:</span>
+  <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
+  <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mid</span>
+  <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
+  <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
+  <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mid</span>
+  <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
 </pre></div>
 </div>
+<p>The keys <code class="docutils literal notranslate"><span class="pre">region2fipnum</span></code> etc. can be at the root level of the yaml file, or
+inside the <code class="docutils literal notranslate"><span class="pre">global</span></code> section. It is possible to reuse the fmu-config generated
+yaml file.</p>
+</div>
+<div class="section" id="example-output">
+<h2>Example output<a class="headerlink" href="#example-output" title="Permalink to this headline">¶</a></h2>
+<p>This example table is from a case where pore volumes are included, and a yaml
+file has been supplied defining the map from zones and regions to FIPNUM:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Example output CSV from prtvol2csv</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>FIPNUM</p></th>
+<th class="head"><p>STOIIP_OIL</p></th>
+<th class="head"><p>ASSOCIATEDOIL_GAS</p></th>
+<th class="head"><p>STOIIP_TOTAL</p></th>
+<th class="head"><p>WATER_TOTAL</p></th>
+<th class="head"><p>GIIP_GAS</p></th>
+<th class="head"><p>ASSOCIATEDGAS_OIL</p></th>
+<th class="head"><p>GIIP_TOTAL</p></th>
+<th class="head"><p>PORV_TOTAL</p></th>
+<th class="head"><p>HCPV_OIL</p></th>
+<th class="head"><p>WATER_PORV</p></th>
+<th class="head"><p>HCPV_GAS</p></th>
+<th class="head"><p>HCPV_TOTAL</p></th>
+<th class="head"><p>REGION</p></th>
+<th class="head"><p>ZONE</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>10656981.0</p></td>
+<td><p>0.0</p></td>
+<td><p>10656981.0</p></td>
+<td><p>59957809.0</p></td>
+<td><p>0.0</p></td>
+<td><p>1960884420.0</p></td>
+<td><p>1960884420.0</p></td>
+<td><p>78802733.0</p></td>
+<td><p>17000359.0</p></td>
+<td><p>61802374.0</p></td>
+<td><p>0.0</p></td>
+<td><p>17000359.0</p></td>
+<td><p>Westlands</p></td>
+<td><p>Valyzar</p></td>
+</tr>
+<tr class="row-odd"><td><p>2</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>77110073.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>79481140.0</p></td>
+<td><p>0.0</p></td>
+<td><p>79481140.0</p></td>
+<td><p>0.0</p></td>
+<td><p>0.0</p></td>
+<td><p>Eastlands</p></td>
+<td><p>Valyzar</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://equinor.github.io/ecl2df/usage/fipreports.html">https://equinor.github.io/ecl2df/usage/fipreports.html</a> can be used to extract
+more information from  the PRT files.</p></li>
+</ul>
 </div>
 </div>
 
