@@ -16,19 +16,11 @@ from subscript import getLogger
 from subscript.prtvol2csv.fipmapper import FipMapper
 
 DESCRIPTION = """
-Extract reservoir volumes from Eclipse PRT files, dump to CSV.
+Extract reservoir volumes pr FIPNUM from Eclipse PRT files and dump to CSV.
 
-The data from the ascii table "FIELD TOTALS" will be parsed at
-initial time step (day 0), and if found, the table called
-"RESERVOIR VOLUMES". The latter table will only be written
-by Eclipse if you have::
-
-  RPTSOL
-    FIP=2 'FIPRESV' /
-
-You can supply a region2fipnum data structure in a YAML-file
-which will cause a secondary CSV file to be generated, where
-fipnum data are summed up to user specified regions.
+If a yaml file is specified through options, it is possible to add columns
+with region and zone information to each FIPNUM. The YAML file must contain
+the keys "region2fipnum" and/or "zone2fipnum".
 """
 
 CATEGORY = "utility.eclipse"
@@ -36,10 +28,15 @@ CATEGORY = "utility.eclipse"
 EXAMPLES = """
 .. code-block:: console
 
-  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>)
+  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>, <REGIONS>=regions.yml, <DIR>=., <OUTPUTFILENAME>=simulator_volume_fipnum.csv)
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
-basename relative to ``RUNPATH``.
+basename relative to ``RUNPATH`` and ``regions.yml`` is a YAML file defining
+the map from regions and/or zones to FIPNUM.
+
+Using anything else than "." in the ``DIR`` argument is deprecated. To write to a CSV
+file in a specific directory, add the path in the ``OUTPUTFILENAME`` argument.
+The directory to export to must exist.
 """  # noqa
 
 logger = getLogger(__name__)
@@ -65,38 +62,47 @@ def get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("DATAfile", type=str, help="Name of Eclipse DATA file")
     parser.add_argument(
-        "--suffix", type=str, help="Resultdirectory suffix.", default=""
+        "--outputfilename",
+        type=str,
+        help="CSV filename to write, including path. Directory must exist.",
+        default="simulator_volume_fipnum.csv",  # FMU standard
+    )
+    parser.add_argument(
+        "--yaml",
+        "--regions",  # Deprecated option name
+        type=str,
+        help=(
+            "YAML file containing a fipnum2region and/or fipnum2zone dictionary "
+            "(or the reverse maps region2fipnum/zone2fipnum)."
+        ),
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Be verbose, print the tables"
+    )
+    parser.add_argument(
+        "--suffix",
+        type=str,
+        help=argparse.SUPPRESS,
+        default=""
+        # DEPRECATED option.
     )
     parser.add_argument(
         "--dir",
         type=str,
         help=(
-            "Output directory. Default is FMU standard, "
-            "share/results/volumes. "
-            "Will be created if necessary."
+            'This option is deprecated and MUST be set to "." for future '
+            "compatibility."
         ),
         default=None,
     )
     parser.add_argument(
-        "--outputfilename",
-        type=str,
-        help="Output filename in result directory",
-        default="simulator_volume_fipnum.csv",  # FMU standard
-    )
-    parser.add_argument(
         "--regionoutputfilename",
         type=str,
-        help="Filename for regrouped region volume output",
+        help=(
+            "Deprecated option. Do not use, will be removed later. "
+            "Filename for regrouped region volume output."
+        ),
         default="simulator_volume_region.csv",
-    )
-    parser.add_argument(
-        "--yaml",
-        "--regions",
-        type=str,
-        help="YAML file containing a fipnum2region dictionary",
-    )
-    parser.add_argument(
-        "-v", "--verbose", action="store_true", help="Be verbose, print the tables"
     )
     parser.add_argument("--debug", action="store_true", help="Debug mode")
     return parser
@@ -283,6 +289,11 @@ def main():
     args = get_parser().parse_args()
 
     tablesdir = prep_output_dir(args.dir, args.suffix)
+
+    if args.dir != ".":
+        logger.warning(
+            "You MUST set the directory option to '.' for future compatibility"
+        )
 
     if args.verbose:
         logger.setLevel(logging.INFO)
