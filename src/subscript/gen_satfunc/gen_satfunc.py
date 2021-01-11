@@ -1,11 +1,16 @@
 import argparse
 import os
 import sys
+import logging
 
 import pyscal
+import subscript
 
 # Non-conforming names are in use here, as they follow a different norm.
 # pylint: disable=invalid-name
+
+
+logger = subscript.getLogger(__name__)
 
 
 def get_parser():
@@ -27,6 +32,8 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
+    logger.setLevel(logging.INFO)
+
     if not os.path.isfile(args.config_file):
         sys.exit("Could not find the configuration file: %s" % args.config_file)
 
@@ -42,8 +49,7 @@ def main():
                 relperm_input = [float(i) for i in relperm_input]
 
                 if len(relperm_input) < 9:
-                    print("ERROR: Too few relperm parameters in line:")
-                    print("  " + line)
+                    logger.error("Too few relperm parameters in line:\n%s", line)
                     raise ValueError("Erroneous relperm parameters")
 
                 # Unpack parameter list to explicitly named parameters:
@@ -59,8 +65,7 @@ def main():
                 wo.add_LET_water(Lw, Ew, Tw, krwend=Krwo)
 
                 if 10 < len(relperm_input) < 15:
-                    print("ERROR: Too few parameter for pc in line")
-                    print("  " + line)
+                    logger.error("Too few parameter for pc in line:\n%s", line)
                     raise ValueError("Erroneous pc parameters")
 
                 if len(relperm_input) == 15:
@@ -72,23 +77,23 @@ def main():
                 output += wo.SWOF(header=False)
 
             elif tmp[0:7] == "COMMENT":
-                print("Printing comment")
+                logger.info("Printing comment")
                 comment = tmp[8:].split("--")[0]
                 output = output + "--" + comment + "\n"
             elif tmp[0:4] == "SWOF":
-                print("Generating SWOF table")
+                logger.info("Generating SWOF table")
                 output = output + "SWOF\n"
             elif tmp[0:4] == "SGOF":
-                print("Generating SGOF table")
+                logger.info("Generating SGOF table")
                 output = output + "SGOF\n"
             else:
                 raise ValueError('Error while interpreting line: "%s"' % line.strip())
 
-    print("Writing output file...")
+    logger.info("Writing output file...")
     with open(args.output_file, "w") as fh:
         fh.write(output)
 
-    print("Done")
+    logger.info("Done")
 
 
 if __name__ == "__main__":
