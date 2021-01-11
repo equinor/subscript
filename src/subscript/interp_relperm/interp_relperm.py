@@ -1,16 +1,21 @@
 import sys
 import os
+import logging
 import argparse
+
 import yaml
 import pandas as pd
-import pyscal
-from ecl2df import satfunc
 
+import pyscal
+
+from ecl2df import satfunc
+import subscript
 
 import configsuite
 from configsuite import types
 from configsuite import MetaKeys as MK
 
+logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """Interpolation script for relperm tables.
 Script reads base/high/low SWOF and SGOF tables from files and
@@ -440,6 +445,13 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
+    logger.setLevel(logging.INFO)
+
+    # Mute expected warnings from ecl2df.inferdims, we get these
+    # because we don't tell the module how many SATNUMs there are in
+    # input files, which is slightly fragile for opm to parse.
+    logging.getLogger("ecl2df.inferdims").setLevel(logging.ERROR)
+
     # parse the config file
     if not os.path.isfile(args.configfile):
         sys.exit("No such file:" + args.configfile)
@@ -476,7 +488,7 @@ def process_config(cfg, root_path=""):
     cfg_suite = configsuite.ConfigSuite(cfg, cfg_schema, deduce_required=True)
 
     if not cfg_suite.valid:
-        print("Sorry, the configuration is invalid.")
+        logger.error("Sorry, the configuration is invalid.")
         sys.exit(cfg_suite.errors)
 
     # set default values
@@ -546,9 +558,9 @@ def process_config(cfg, root_path=""):
         for interpolant in interpolants:
             fileh.write(interpolant.gasoil.SGOF(header=False))
 
-    print(
-        "Done; interpolated relperm curves written to file: ",
-        cfg_suite.snapshot.result_file,
+    logger.info(
+        "Done; interpolated relperm curves written to file: %s",
+        str(cfg_suite.snapshot.result_file),
     )
 
 

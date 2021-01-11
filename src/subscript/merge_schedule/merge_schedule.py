@@ -65,11 +65,11 @@ def main():
     sch = sunsch.process_sch_config(sunsch_config)
 
     if os.path.exists(args.outputfile) and not args.force:
-        print("ERROR: Not overwriting existing file {}".format(args.outputfile))
+        logger.error("Not overwriting existing file %s", args.outputfile)
     else:
         with open(args.outputfile, "w") as outfile:
             outfile.write(str(sch))
-        print("Wrote {} dates to {}".format(len(sch), args.outputfile))
+        logger.info("Wrote %s dates to %s", str(len(sch)), args.outputfile)
         # len(sch) includes the sometimes empty content before the first DATES..
 
 
