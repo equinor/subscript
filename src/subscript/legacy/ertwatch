@@ -34,7 +34,7 @@ while : ; do
         echo $divisor 
  
         laststatus=`tail -n 1 STATUS`
-	if [[ $laststatus == RMS* ]] ; then
+	    if [[ $laststatus == RMS* ]] ; then
             logfile=`ls -tr rms/model/*.log | tail -n 1`
             if [ -e $logfile ] ; then
 
@@ -58,7 +58,7 @@ while : ; do
         for stderrfile in $stderrfiles ; do
             if [ $stderrfile -nt jobs.json ] ; then
                 echo $stderrfile
-                cat $stderrfile
+                tail -n 10 $stderrfile
                 echo $divisor
             fi
         done
