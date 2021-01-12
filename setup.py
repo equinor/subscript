@@ -5,7 +5,6 @@ from glob import glob
 from os.path import splitext, basename
 
 import setuptools
-from setuptools import find_packages
 
 
 SSCRIPTS = [
@@ -111,7 +110,7 @@ setuptools.setup(
     license="Not open source (violating TR1621)",
     platforms="any",
     include_package_data=True,
-    packages=find_packages("src"),
+    packages=setuptools.find_packages("src"),
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
     install_requires=REQUIREMENTS,

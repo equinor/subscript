@@ -12,8 +12,8 @@ from ecl2df import satfunc
 import subscript
 
 import configsuite
-from configsuite import types
-from configsuite import MetaKeys as MK
+from configsuite import types  # lgtm [py/import-and-import-from]
+from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 
 logger = subscript.getLogger(__name__)
 
