@@ -73,7 +73,9 @@ def xcritical(mystring):
 
 def get_parser():
     """Make a parser for command line arguments and for documentation"""
-    prs = argparse.ArgumentParser(description=DESCRIPTION)
+    prs = argparse.ArgumentParser(
+        description=DESCRIPTION, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     # positional:
     prs.add_argument("project", type=str, nargs="?", help="RMS project name")
