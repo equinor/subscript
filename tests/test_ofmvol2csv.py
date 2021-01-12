@@ -299,6 +299,66 @@ def test_parse_well(inputlines, expected):
 
 
 @pytest.mark.parametrize(
+    "inputlines, expected",
+    [
+        (
+            # Separate well input:
+            [
+                "*DATE *OPR",
+                "*NAME A-1",
+                "2020-12-25 200",
+                "*NAME A-2",
+                "2020-12-25 100",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 25), 200],
+                    ["A-2", datetime.date(2020, 12, 25), 100],
+                ],
+            ),
+        ),
+        (
+            # Well encoded as a column in the table
+            [
+                "",
+                "*WELL  *DATE *OPR",
+                "--  comment",
+                "A-1 2020-12-25 200",
+                '"A-2" 25.12.2020 100',
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 25), 200],
+                    ["A-2", datetime.date(2020, 12, 25), 100],
+                ],
+            ),
+        ),
+        (
+            # Well encoded as second column in the table
+            [
+                "*DATE *WELL *OPR",
+                "2020-12-25 A-1 200",
+                "2020-12-25 A-2 100",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 25), 200],
+                    ["A-2", datetime.date(2020, 12, 25), 100],
+                ],
+            ),
+        ),
+    ],
+)
+def test_process_volstr(inputlines, expected):
+    expected.set_index(["WELL", "DATE"], inplace=True)
+    dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
+    pd.testing.assert_frame_equal(dframe, expected)
+
+
+@pytest.mark.parametrize(
     "inputlines, expected_error",
     [
         (
