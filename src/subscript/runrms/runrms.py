@@ -73,7 +73,9 @@ def xcritical(mystring):
 
 def get_parser():
     """Make a parser for command line arguments and for documentation"""
-    prs = argparse.ArgumentParser(description=DESCRIPTION)
+    prs = argparse.ArgumentParser(
+        description=DESCRIPTION, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
     # positional:
     prs.add_argument("project", type=str, nargs="?", help="RMS project name")
@@ -341,8 +343,9 @@ class RunRMS:
 
         # test pythonpath
         pypathtest = self.setup[rmssection][proposed_version].get(
-            "pythonpath_test", None
+            "pythonpathtest", None
         )
+
         if pypathtest:
             self.testpythonpath = self._process_pypath(pypathtest)
 
@@ -360,7 +363,7 @@ class RunRMS:
           - /some/main/python3.6/site-packages
           - /some/other/python3.6/site-packages
 
-        Each folder is checked for existence, and ommitted if folder is not present.
+        Each folder is checked for existence, and omitted if folder is not present.
         If the final list is empty, a warning is made. In the case above, the
         following will be returned:
 
@@ -368,6 +371,11 @@ class RunRMS:
 
         """
         pypathlist = []
+
+        if not isinstance(pypath, list):
+            # Allow both string and list syntax in yml:
+            pypath = [pypath]
+
         if isinstance(pypath, list):
             for pyp in pypath:
                 pyp = pyp.replace("<PLATFORM>", self.osver)
@@ -382,7 +390,7 @@ class RunRMS:
                     xwarn(f"Proposed {pypath} does not exist!")
 
         if not pypathlist:
-            xwarn("No valid in-house PYTHONPATHS are provied")
+            xwarn("No valid in-house PYTHONPATHS are provided")
             return None
 
         return ":".join(pypathlist)
@@ -529,8 +537,14 @@ class RunRMS:
         pythonpathlist = []
 
         if not self.args.nopy:
-            if self.args.testpylib and self.testpythonpath:
-                pythonpathlist.append(self.testpythonpath)
+            if self.args.testpylib:
+                if self.testpythonpath:
+                    pythonpathlist.append(self.testpythonpath)
+                else:
+                    logger.error(
+                        "Test python path asked for, but pythonpathtest in yml is %s",
+                        self.testpythonpath,
+                    )
             if self.pythonpath:
                 pythonpathlist.append(self.pythonpath)
             if self.args.incsyspy:
