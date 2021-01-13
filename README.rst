@@ -4,6 +4,9 @@
 .. image:: https://img.shields.io/lgtm/alerts/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
     :target: https://lgtm.com/projects/g/equinor/subscript/alerts/
 
+.. image:: https://codecov.io/gh/equinor/subscript/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/equinor/subscript
+
 .. image:: https://img.shields.io/lgtm/grade/python/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
     :target: https://lgtm.com/projects/g/equinor/subscript/context:python
 
