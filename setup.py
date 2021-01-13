@@ -86,6 +86,7 @@ TEST_REQUIREMENTS = [
     "check-manifest",
     "flake8",
     "pytest",
+    "pytest-cov",
     "rstcheck",
 ]
 DOCS_REQUIREMENTS = [

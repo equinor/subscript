@@ -173,10 +173,10 @@ def check_consecutive_dates(data):
         )
         if len(datedeltas) > 1 and checkprod > 0.1:
             logger.warning(
-                "Warning: Uneven date intervals for well %s, check these rows:",
+                "Warning: Uneven date intervals for well %s, check these rows:\n%s",
                 str(well),
+                str(checkrows),
             )
-            logger.warning(str(checkrows))
         if int(datedeltas[0]) != 1:
             logger.warning("Dates are not daily-consecutive for well %s", str(well))
             logger.warning("Most common timedelta is: %s", str(dominantdelta))
