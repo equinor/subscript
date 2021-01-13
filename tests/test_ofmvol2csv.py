@@ -350,9 +350,20 @@ def test_parse_well(inputlines, expected):
                 ],
             ),
         ),
+        (
+            # Empty dataset
+            [
+                "*WELL *DATE *Days *Oil",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "DAYS", "OIL"],
+                data=[],
+            ),
+        ),
     ],
 )
 def test_process_volstr(inputlines, expected):
+    expected["DATE"] = pd.to_datetime(expected["DATE"])
     expected.set_index(["WELL", "DATE"], inplace=True)
     dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
     pd.testing.assert_frame_equal(dframe, expected)

@@ -301,7 +301,7 @@ def process_volstr(volstr):
         volstr (str)
 
     Returns:
-        pd.DataFrame: Indexed by WELL and DATE
+        pd.DataFrame: Indexed by WELL and DATE.
     """
     filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
@@ -310,22 +310,23 @@ def process_volstr(volstr):
         raise ValueError("No columns found, one line must contain *DATE")
     logger.info("Columns found: %s", str(columnnames))
 
-    # For the OFM syntax with each well in a separate text block:
+    frames = []
+
     if "WELL" not in columnnames:
-        wellframes = []
+        # For the OFM syntax with each well in a separate text block:
         for wellchunk in split_list(filelines, find_wellstart_indices(filelines))[1:]:
             # wellchunk zero does not contain data:            --------->        ^^^^
             wellframe = parse_well(wellchunk, columnnames)
             if not wellframe.empty:
-                wellframes.append(wellframe)
-        if wellframes:
-            return pd.concat(wellframes, sort=False).sort_index()
-        return pd.DataFrame()
+                frames.append(wellframe)
+    else:
+        # For the OFM syntax with WELL as a table attribute:
+        data_start_row = [idx for idx, line in enumerate(filelines) if "WELL" in line][
+            0
+        ]
+        frames.append(parse_ofmtable(filelines[data_start_row:], columnnames))
 
-    # For the OFM syntax with WELL as a table attribute:
-    data_start_row = [idx for idx, line in enumerate(filelines) if "WELL" in line][0]
-    data = parse_ofmtable(filelines[data_start_row:], columnnames)
-    return data
+    return pd.concat(frames, sort=False).sort_index()
 
 
 def ofmvol2csv_main(volfiles, output, includefileorigin=False):
