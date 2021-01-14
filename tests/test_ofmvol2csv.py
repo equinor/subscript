@@ -282,15 +282,16 @@ def test_find_wellstart_indices(inputlines, expected):
                 "*NAME A-1",
             ],
             pd.DataFrame(
-                columns=["WELL", "DATE", "DAYS", "OIL"],
+                columns=[],
                 data=[],
             ),
         ),
     ],
 )
 def test_parse_well(inputlines, expected):
-    expected["DATE"] = pd.to_datetime(expected["DATE"])
-    expected.set_index(["WELL", "DATE"], inplace=True)
+    if "DATE" in expected:
+        expected["DATE"] = pd.to_datetime(expected["DATE"])
+        expected.set_index(["WELL", "DATE"], inplace=True)
     # Assume there is DATE line in the test input
     inputlines = ofmvol2csv.cleanse_ofm_lines(inputlines)
     colnames = ofmvol2csv.extract_columnnames(inputlines)
@@ -360,11 +361,33 @@ def test_parse_well(inputlines, expected):
                 data=[],
             ),
         ),
+        (
+            # Another empty dataset:
+            ["*METRIC", "*DAILY", "*DATE *OIL"],
+            pd.DataFrame(
+                columns=[],
+                data=[],
+            ),
+        ),
+        (
+            [
+                "*METRIC",
+                "*DAILY",
+                "*DATE *OIL",
+                "*NAME A-4",
+                "2010-01-01  1000",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OIL"],
+                data=[["A-4", datetime.date(2010, 1, 1), 1000]],
+            ),
+        ),
     ],
 )
 def test_process_volstr(inputlines, expected):
-    expected["DATE"] = pd.to_datetime(expected["DATE"])
-    expected.set_index(["WELL", "DATE"], inplace=True)
+    if "DATE" in expected:
+        expected["DATE"] = pd.to_datetime(expected["DATE"])
+        expected.set_index(["WELL", "DATE"], inplace=True)
     dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
     pd.testing.assert_frame_equal(dframe, expected)
 

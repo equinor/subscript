@@ -233,8 +233,9 @@ def parse_well(well_lines, columnnames):
     data = parse_ofmtable(well_lines, columnnames)
 
     data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
-    data = data.reset_index().set_index(["WELL", "DATE"]).sort_index()
-    return data
+    if not data.empty:
+        return data.reset_index().set_index(["WELL", "DATE"]).sort_index()
+    return pd.DataFrame()
 
 
 def parse_ofmtable(ofmstring, columnnames):
@@ -316,9 +317,7 @@ def process_volstr(volstr):
         # For the OFM syntax with each well in a separate text block:
         for wellchunk in split_list(filelines, find_wellstart_indices(filelines))[1:]:
             # wellchunk zero does not contain data:            --------->        ^^^^
-            wellframe = parse_well(wellchunk, columnnames)
-            if not wellframe.empty:
-                frames.append(wellframe)
+            frames.append(parse_well(wellchunk, columnnames))
     else:
         # For the OFM syntax with WELL as a table attribute:
         data_start_row = [idx for idx, line in enumerate(filelines) if "WELL" in line][
@@ -326,7 +325,9 @@ def process_volstr(volstr):
         ]
         frames.append(parse_ofmtable(filelines[data_start_row:], columnnames))
 
-    return pd.concat(frames, sort=False).sort_index()
+    if frames:
+        return pd.concat(frames, sort=False).sort_index()
+    return pd.DataFrame()
 
 
 def ofmvol2csv_main(volfiles, output, includefileorigin=False):
