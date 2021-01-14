@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.ofmvol2csv.ofmvol2csv &mdash; subscript 0.7.5.dev12+g0318bd6 documentation</title>
+  <title>subscript.ofmvol2csv.ofmvol2csv &mdash; subscript 0.7.5.dev13+gafc50e3 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.7.5.dev12+g0318bd6
+                0.7.5.dev13+gafc50e3
               </div>
             
           
@@ -336,6 +336,22 @@ volfile filename for each row of data.</p></li>
 </dd></dl>
 
 <dl class="py function">
+<dt id="subscript.ofmvol2csv.ofmvol2csv.parse_ofmtable">
+<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">parse_ofmtable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ofmstring</span></em>, <em class="sig-param"><span class="n">columnnames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.parse_ofmtable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse an OFM table from a list of lines, either called once
+pr. well, or all data in one go with wellname as a table column.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ofmstring</strong> (<em>list</em>) – OFM data as multiline string or list of strings.</p></li>
+<li><p><strong>columnnames</strong> (<em>list</em>) – Strings with columnnames to extract.
+Other columns will be ignored.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.parse_well">
 <code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">parse_well</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">well_lines</span></em>, <em class="sig-param"><span class="n">columnnames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.parse_well" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a list of lines with OFM data for only one well
@@ -383,12 +399,17 @@ Other columns will be ignored.</p></li>
 <code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">process_volstr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volstr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.process_volstr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a volstring (typically a vol-file read into a string with
 newline characters)</p>
+<p>Two different data syntaxes are supported. Either each well
+is given in separate blocks of lines, then there is a “<a href="#id1"><span class="problematic" id="id2">*</span></a>NAME” line
+that gives the well name.</p>
+<p>The alternative syntax has wellname encoded in the table as any other
+parameter, in the “<a href="#id3"><span class="problematic" id="id4">*</span></a>WELL” column.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>volstr</strong> (<em>str</em>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Indexed by WELL and DATE</p>
+<dd class="field-even"><p>Indexed by WELL and DATE.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
