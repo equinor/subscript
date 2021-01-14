@@ -32,9 +32,13 @@ MENU = """1. Convert a TO A and b to B from Sw = aJ^b to Sw=(J/A)^(1/B)
 
 def get_parser():
     """Make a dummy parser for the command line for the sake of docs."""
-    return argparse.ArgumentParser(
-        description=DESCRIPTION, epilog="Interactive menu:\n\n" + MENU
+    parser = argparse.ArgumentParser(
+        description=DESCRIPTION,
+        epilog="Interactive menu:\n\n" + MENU,
+        formatter_class=argparse.RawTextHelpFormatter,
     )
+    parser.add_argument("--dryrun", action="store_true", help=argparse.SUPPRESS)
+    return parser
 
 
 def menu():
@@ -111,7 +115,7 @@ def convert_normal2inverse(aval, bval):
     return aval2, bval2
 
 
-def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
+def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax, show=True):
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-locals
     # Pylint rationale: Readability of this function would not improve with
@@ -157,13 +161,17 @@ def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax):
     plt.xlabel("$S_w$")
     plt.ylabel("Height above FWL")
     plt.text(1.2, 15, "$\\phi=$")
-    plt.show()
+    if show:
+        plt.show()
 
 
 def main():
     """Entry point from command line"""
 
-    get_parser().parse_args()
+    parser = get_parser()
+    args = parser.parse_args()
+
+    show = not args.dryrun
 
     option, _inverse, av, bv, poro, perm, swirra, desc, hmax = menu()
 
@@ -201,7 +209,9 @@ def main():
             av = newav
             bv = newbv
 
-        plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax)
+        plotting(
+            option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax, show=show
+        )
 
     print("\nThat's all folks")
 
