@@ -281,7 +281,6 @@ def test_df2vol(dframe, expected_lines):
     dframe = dframe.rename(columns=csv2ofmvol.PDMCOLS2VOL)
 
     backagain_df = ofmvol2csv.process_volstr(volstr)
-
     if dframe.empty:
         assert backagain_df.empty
     else:

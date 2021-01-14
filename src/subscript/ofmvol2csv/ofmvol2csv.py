@@ -142,7 +142,7 @@ def extract_columnnames(filelines):
         list: The column names (strings) that is found, including the first DATE.
         The star prefix for each column is removed.
     """
-    columnnamelines = [x for x in filelines if x.startswith("*DATE")]
+    columnnamelines = [line for line in filelines if "*DATE" in line]
 
     if not columnnamelines:
         return []
@@ -230,19 +230,42 @@ def parse_well(well_lines, columnnames):
         raise ValueError
     wellname = well_lines[0].replace("*NAME", "").strip().strip("'").strip('"')
 
-    stringbuf = io.StringIO()
-    stringbuf.write("\n".join(well_lines))
-    stringbuf.seek(0)
+    data = parse_ofmtable(well_lines, columnnames)
+
+    data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
+    if not data.empty:
+        return data.reset_index().set_index(["WELL", "DATE"]).sort_index()
+    return pd.DataFrame()
+
+
+def parse_ofmtable(ofmstring, columnnames):
+    """Parse an OFM table from a list of lines, either called once
+    pr. well, or all data in one go with wellname as a table column.
+
+    Args:
+        ofmstring (list): OFM data as multiline string or list of strings.
+        columnnames (list): Strings with columnnames to extract.
+            Other columns will be ignored.
+    """
+    if isinstance(ofmstring, list):
+        ofmstring = "\n".join(ofmstring)
+
+    assert "DATE" in columnnames
+
     data = pd.read_table(
-        stringbuf,
+        io.StringIO(ofmstring),
         skiprows=1,
         sep=r"\s+",
         names=columnnames,
         error_bad_lines=False,
     )
+
     data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
-    data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
-    data = data.set_index(["WELL", "DATE"]).sort_index()
+
+    if "WELL" in data and "DATE" in data:
+        data = data.set_index(["WELL", "DATE"]).sort_index()
+    else:
+        data = data.set_index(["DATE"]).sort_index()
     return data
 
 
@@ -268,27 +291,42 @@ def process_volstr(volstr):
     """Parse a volstring (typically a vol-file read into a string with
     newline characters)
 
+    Two different data syntaxes are supported. Either each well
+    is given in separate blocks of lines, then there is a "*NAME" line
+    that gives the well name.
+
+    The alternative syntax has wellname encoded in the table as any other
+    parameter, in the "*WELL" column.
+
     Args:
         volstr (str)
 
     Returns:
-        pd.DataFrame: Indexed by WELL and DATE
+        pd.DataFrame: Indexed by WELL and DATE.
     """
     filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
     columnnames = extract_columnnames(filelines)
     if not columnnames:
-        raise ValueError("No columns found, one line must start with *DATE")
+        raise ValueError("No columns found, one line must contain *DATE")
     logger.info("Columns found: %s", str(columnnames))
 
-    wellframes = []
-    for wellchunk in split_list(filelines, find_wellstart_indices(filelines))[1:]:
-        # wellchunk zero does not contain data:            --------->        ^^^^
-        wellframe = parse_well(wellchunk, columnnames)
-        if not wellframe.empty:
-            wellframes.append(wellframe)
-    if wellframes:
-        return pd.concat(wellframes, sort=False).sort_index()
+    frames = []
+
+    if "WELL" not in columnnames:
+        # For the OFM syntax with each well in a separate text block:
+        for wellchunk in split_list(filelines, find_wellstart_indices(filelines))[1:]:
+            # wellchunk zero does not contain data:            --------->        ^^^^
+            frames.append(parse_well(wellchunk, columnnames))
+    else:
+        # For the OFM syntax with WELL as a table attribute:
+        data_start_row = [idx for idx, line in enumerate(filelines) if "WELL" in line][
+            0
+        ]
+        frames.append(parse_ofmtable(filelines[data_start_row:], columnnames))
+
+    if frames:
+        return pd.concat(frames, sort=False).sort_index()
     return pd.DataFrame()
 
 

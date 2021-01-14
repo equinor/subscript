@@ -282,19 +282,113 @@ def test_find_wellstart_indices(inputlines, expected):
                 "*NAME A-1",
             ],
             pd.DataFrame(
-                columns=["WELL", "DATE", "DAYS", "OIL"],
+                columns=[],
                 data=[],
             ),
         ),
     ],
 )
 def test_parse_well(inputlines, expected):
-    expected["DATE"] = pd.to_datetime(expected["DATE"])
-    expected.set_index(["WELL", "DATE"], inplace=True)
+    if "DATE" in expected:
+        expected["DATE"] = pd.to_datetime(expected["DATE"])
+        expected.set_index(["WELL", "DATE"], inplace=True)
     # Assume there is DATE line in the test input
     inputlines = ofmvol2csv.cleanse_ofm_lines(inputlines)
     colnames = ofmvol2csv.extract_columnnames(inputlines)
     dframe = ofmvol2csv.parse_well(inputlines[1:], colnames)
+    pd.testing.assert_frame_equal(dframe, expected)
+
+
+@pytest.mark.parametrize(
+    "inputlines, expected",
+    [
+        (
+            # Separate well input:
+            [
+                "*DATE *OPR",
+                "*NAME A-1",
+                "2020-12-25 200",
+                "*NAME A-2",
+                "2020-12-25 100",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 25), 200],
+                    ["A-2", datetime.date(2020, 12, 25), 100],
+                ],
+            ),
+        ),
+        (
+            # Well encoded as a column in the table
+            [
+                "",
+                "*WELL  *DATE *OPR",
+                "--  comment",
+                "A-1 2020-12-25 200",
+                '"A-2" 25.12.2020 100',
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 25), 200],
+                    ["A-2", datetime.date(2020, 12, 25), 100],
+                ],
+            ),
+        ),
+        (
+            # Well encoded as second column in the table
+            [
+                "*DATE *WELL *OPR",
+                "2020-12-25 A-1 200",
+                "2020-12-25 A-2 100",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OPR"],
+                data=[
+                    ["A-1", datetime.date(2020, 12, 25), 200],
+                    ["A-2", datetime.date(2020, 12, 25), 100],
+                ],
+            ),
+        ),
+        (
+            # Empty dataset
+            [
+                "*WELL *DATE *Days *Oil",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "DAYS", "OIL"],
+                data=[],
+            ),
+        ),
+        (
+            # Another empty dataset:
+            ["*METRIC", "*DAILY", "*DATE *OIL"],
+            pd.DataFrame(
+                columns=[],
+                data=[],
+            ),
+        ),
+        (
+            [
+                "*METRIC",
+                "*DAILY",
+                "*DATE *OIL",
+                "*NAME A-4",
+                "2010-01-01  1000",
+            ],
+            pd.DataFrame(
+                columns=["WELL", "DATE", "OIL"],
+                data=[["A-4", datetime.date(2010, 1, 1), 1000]],
+            ),
+        ),
+    ],
+)
+def test_process_volstr(inputlines, expected):
+    if "DATE" in expected:
+        expected["DATE"] = pd.to_datetime(expected["DATE"])
+        expected.set_index(["WELL", "DATE"], inplace=True)
+    dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
     pd.testing.assert_frame_equal(dframe, expected)
 
 
