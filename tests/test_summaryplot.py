@@ -1,47 +1,58 @@
-import os
-import sys
-
 import subprocess
+from pathlib import Path
 
 import pytest
 
-from subscript.summaryplot import summaryplot
+
+DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 
 
-def test_summaryplotter():
-    """Test multiple command line invocations"""
-    eclipsedeck = os.path.join(
-        os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.DATA"
-    )
-
-    cmdopts_to_check = [
-        # Ensure vector names are at the tail of the lists here
+@pytest.mark.parametrize(
+    "cmd_args",
+    [
         ["FOPR"],
+        ["-H", "FOPR"],
+        ["--hist", "FOPR"],
         ["--colourby", "FOO", "FOPT"],
         ["--logcolourby", "FOO", "FOPT"],
-        ["SWAT:30,50,10", "FOPT"],
+        ["SWAT:30,50,10"],
         ["-e", "FOPT"],
-        ["--nolegend", "-v", "FOPT"],
+        ["--nolegend", "FOPT"],
+        ["--verbose", "FOPT"],
         ["--maxlabels", "100", "--verbose", "FOPR"],
         ["--maxlabels", "0", "--verbose", "FOPR"],
         ["--normalize", "FWCT"],
         ["--normalize", "--singleplot", "FGPR", "FOPR"],
-    ]
-    for cmdopt in cmdopts_to_check:
-        print("Trying combination " + str(cmdopt))
-        sys.argv = ["summaryplot", "--dumpimages"] + cmdopt + [eclipsedeck]
-        summaryplot.main()
-        pngfn = "summaryplotdump.png"
-        pdffn = "summaryplotdump.pdf"
+    ],
+)
+def test_summaryplotter(cmd_args, tmpdir):
+    """Test multiple command line invocations"""
+    tmpdir.chdir()
+    result = subprocess.run(
+        ["summaryplot", "--dumpimages"] + cmd_args + [str(DATAFILE)],
+        check=True,
+    )
+    assert result.returncode == 0
+    assert Path("summaryplotdump.png").exists()
+    assert Path("summaryplotdump.pdf").exists()
 
-        assert os.path.exists(pngfn)
-        assert os.path.exists(pdffn)
 
-        if os.path.exists(pngfn):
-            os.unlink(pngfn)
-
-        if os.path.exists(pdffn):
-            os.unlink(pdffn)
+@pytest.mark.parametrize(
+    "cmd_args",
+    [
+        ["FOPR", "NOTEXISTING.DATA"],
+        ["WOPT:NONE", str(DATAFILE)],
+        ["--colourby", "FOO", "--logcolourby", "BAR", "FOPT", str(DATAFILE)],
+        ["--colourby", "FOO", "--ensemblemode", "FOPT", str(DATAFILE)],
+    ],
+)
+def test_sysexit(cmd_args, tmpdir):
+    """Run command line arguments that should end in failure code"""
+    tmpdir.chdir()
+    result = subprocess.run(["summaryplot", "--dumpimages"] + cmd_args, shell=True)
+    assert result.returncode > 0
+    assert not Path("summaryplotdump.png").exists()
+    assert not Path("summaryplotdump.pdf").exists()
 
 
 @pytest.mark.integration
