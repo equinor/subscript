@@ -23,6 +23,40 @@ def test_autoconvert():
     assert str(num) == "3.4343e-07"
 
 
+def test_choice_1():
+    result = subprocess.run(
+        ["sw_model_utilities"], check=True, input=b"1\n1\n1\n", stdout=subprocess.PIPE
+    )
+    assert "Inverse values are: A=1.0" in result.stdout.decode()
+    assert "B=1.0" in result.stdout.decode()
+
+
+def test_choice_2():
+    result = subprocess.run(
+        ["sw_model_utilities"], check=True, input=b"2\n1\n1\n", stdout=subprocess.PIPE
+    )
+    assert "Normal values are: a=1.0" in result.stdout.decode()
+    assert "b=1.0" in result.stdout.decode()
+
+
+def test_choice_3():
+    subprocess.run(
+        ["sw_model_utilities", "--dryrun"],
+        check=True,
+        input=b"3\n1\n10\n0.1\n200\n0.1\nTest curve\n0.1\n-0.2\n",
+        stdout=subprocess.PIPE,
+    )
+
+
+def test_choice_4():
+    subprocess.run(
+        ["sw_model_utilities", "--dryrun"],
+        check=True,
+        input=b"4\n1\n10\n0.1\n200\n0.1\nTest curve\n0.1\n-0.2\n",
+        stdout=subprocess.PIPE,
+    )
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""

@@ -349,7 +349,7 @@ def test_csv_stack_ert_workflow(tmpdir):
 
     Path("CSV_STACK_WELLS").write_text(
         (
-            'CSV_STACK "<CASEDIR>/share/results/tables/unsmry--monthly.csv"'
+            'CSV_STACK "<CASEDIR>/share/results/tables/unsmry--monthly.csv" '
             '"--split" well "--output" stacked.csv "--keepconstantcolumns"'
         )
     )
