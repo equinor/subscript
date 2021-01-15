@@ -205,7 +205,6 @@ def summaryplotter(
                     parameterfile,
                 )
                 parametervalues.append(0.0)
-        # print parametervalues
 
         # Normalize parametervalues to [0,1]:
         minvalue = np.min(parametervalues)
@@ -247,8 +246,6 @@ def summaryplotter(
                 colourby = None
                 logcolourby = None
 
-        # print normalizedparametervalues
-
         # Build a colour map from all the values, from min to max.
 
     if normalize and histvectors:
@@ -265,7 +262,7 @@ def summaryplotter(
     restartvectors = []
     wildcard_in_use = False
     for vector in vectors:
-        matchingvectors = summaryfiles[0].keys(vector)
+        matchingvectors = list(summaryfiles[0].keys(vector))
         if len(matchingvectors) > 1:
             wildcard_in_use = True
         if not matchingvectors:
