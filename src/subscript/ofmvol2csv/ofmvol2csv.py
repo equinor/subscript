@@ -26,7 +26,7 @@ Use this to::
 See also the utility csv2ofmvol.
 """
 
-CATEGORY = "modeling.production"
+CATEGORY = "modelling.production"
 
 
 class CustomFormatter(

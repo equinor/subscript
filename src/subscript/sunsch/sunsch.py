@@ -37,7 +37,7 @@ Command line options override configuration in YAML.
 Output will not be generated unless the produced data is valid in
 Eclipse, checking provided by OPM."""
 
-CATEGORY = "modeling.production"
+CATEGORY = "modelling.production"
 
 EXAMPLES = """
 .. code-block:: console
