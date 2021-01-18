@@ -93,7 +93,7 @@ EPILOGUE = """
 
 """
 
-CATEGORY = "modeling.reservoir"
+CATEGORY = "modelling.reservoir"
 
 EXAMPLES = """
 .. code-block:: console

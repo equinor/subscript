@@ -34,7 +34,7 @@ def expected_jobs(path_to_subscript):
 
 
 # Avoid category inflation. Add to this list when it makes sense:
-ACCEPTED_JOB_CATEGORIES = ["modeling", "utility"]
+ACCEPTED_JOB_CATEGORIES = ["modelling", "utility"]
 
 
 def test_hook_implementations(expected_jobs):
