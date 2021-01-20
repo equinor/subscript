@@ -367,7 +367,7 @@ def deprecated_region_export(volumes, tablesdir, args):
             volumesbyregions = {}
             for reg in reg2fipmap:
                 volumesbyregions[reg] = pd.DataFrame(
-                    volumes.loc[reg2fipmap[reg]].sum()
+                    volumes.loc[volumes.index.intersection(reg2fipmap[reg])].sum()
                 ).transpose()
                 # Space separated list of fipnums involved in this region
                 volumesbyregions[reg]["FIPNUM"] = " ".join(map(str, reg2fipmap[reg]))

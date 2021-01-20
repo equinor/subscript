@@ -215,6 +215,20 @@ def test_prtvol2df(tmpdir):
     assert volumes["REGION"].values == ["West"]
     assert volumes["ZONE"].values == ["Upper"]
 
+    # fipnummaps referring to non-existing fipnums:
+    volumes = prtvol2csv.prtvol2df(
+        simv,
+        resv,
+        FipMapper(
+            mapdata={
+                "fipnum2region": {1: "West", 50: "Antarctica"},
+                "zone2fipnum": {"Upper": 1, "Mantel": 100},
+            }
+        ),
+    )
+    assert "Antarctica" not in volumes["REGION"]
+    assert "Mantel" not in volumes["ZONE"]
+
     # Simple global_master_config support:
     Path("global_master_config.yml").write_text(
         yaml.dump({"global": {"zone2fipnum": {"Upper": 1}}})
