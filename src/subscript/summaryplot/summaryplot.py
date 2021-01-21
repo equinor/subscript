@@ -613,6 +613,26 @@ def main():
     logging.info("Summaryfiles: %s", str(summaryfiles))
     logging.info("Vectors: %s", str(vectors))
 
+    # If user only wants to dump image to file, then do only that:
+    if args.dumpimages:
+        print("Dumping plot to summaryplotdump.png and summaryplotdump.pdf")
+        summaryplotter(
+            summaryfiles=summaryfiles,
+            datafiles=datafiles,
+            vectors=vectors,
+            colourby=args.colourby,
+            maxlabels=args.maxlabels,
+            logcolourby=args.logcolourby,
+            parameterfiles=parameterfiles,
+            histvectors=args.hist,
+            normalize=args.normalize,
+            singleplot=args.singleplot,
+            nolegend=args.nolegend,
+            dumpimages=args.dumpimages,
+            ensemblemode=args.ensemblemode,
+        )
+        return
+
     plotprocess = Process(
         target=summaryplotter,
         kwargs=dict(
@@ -632,13 +652,6 @@ def main():
         ),
     )
     plotprocess.start()
-
-    # If user only wants to dump image to file, then do only that:
-    if args.dumpimages:
-        print("Dumping plot to summaryplotdump.png and summaryplotdump.pdf")
-        plotprocess.join()
-        plotprocess.terminate()
-        return
 
     # Give out a "menu" (text-based) only if we are running in foreground:
     if os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):

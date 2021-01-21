@@ -87,6 +87,7 @@ TEST_REQUIREMENTS = [
     "flake8",
     "pytest",
     "pytest-cov",
+    "pytest-mock",
     "rstcheck",
 ]
 DOCS_REQUIREMENTS = [
