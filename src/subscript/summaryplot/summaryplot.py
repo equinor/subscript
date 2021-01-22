@@ -93,7 +93,7 @@ def get_parser():
         "-c",
         "--colourby",
         type=str,
-        help="Colourize curves by the a value found in parameters.txt",
+        help="Colourize curves by a value found in parameters.txt",
     )
     parser.add_argument(
         "--logcolourby",

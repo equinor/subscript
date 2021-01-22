@@ -17,6 +17,7 @@ DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"
         ["--colourby", "FOO", "FOPT"],
         ["--logcolourby", "FOO", "FOPT"],
         ["SWAT:30,50,10"],
+        ["SOIL:30,50,10"],
         ["-e", "FOPT"],
         ["--nolegend", "FOPT"],
         ["--verbose", "FOPT"],
@@ -30,7 +31,9 @@ def test_summaryplotter(cmd_args, tmpdir, mocker):
     """Test multiple command line invocations"""
     tmpdir.chdir()
     mocker.patch(
-        "sys.argv", ["summaryplot", "--dumpimages"] + cmd_args + [str(DATAFILE)]
+        "sys.argv",
+        ["summaryplot", "--dumpimages"] + cmd_args + [str(DATAFILE), str(DATAFILE)],
+        # DATAFILE is repeated, or else colourby will not be triggered.
     )
     summaryplot.main()
     assert Path("summaryplotdump.png").exists()
