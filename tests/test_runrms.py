@@ -1,4 +1,4 @@
-"""Test runrms script, but manual interactive testing is also needed"""
+"""Test runrms script, but manual interactive testing is also needed."""
 import subprocess
 import os
 import stat
@@ -15,23 +15,18 @@ TESTRMS2 = pathlib.Path("tests/data/reek/rms/reek.rms11.1.0").resolve().as_posix
 TESTSETUP = pathlib.Path("tests/testdata_runrms/runrms.yml").resolve().as_posix()
 
 
-def foobar():
-    pass
-
-
 def test_main_no_project():
-    """Will only see effect of this when running pytest -s"""
+    """Will only see effect of this when running pytest -s."""
     print(rr.main(["--dryrun", "--setup", TESTSETUP]))
 
 
 def test_main_projects():
-    """Will only see effect of this when running pytest -s"""
+    """Will only see effect of this when running pytest -s."""
     print(rr.main([TESTRMS2, "--dryrun", "--setup", TESTSETUP]))
 
 
 def test_do_parse_args(tmpdir):
-    """Test runrms parsing args"""
-
+    """Test runrms parsing args."""
     runner = rr.RunRMS()
 
     runner.runloggerfile = tmpdir.mkdir("runner1").join("runrms_usage.log")
@@ -47,12 +42,12 @@ def test_do_parse_args(tmpdir):
 
 @pytest.mark.integration
 def test_integration():
-    """Test that the endpoint is installed"""
+    """Test that the endpoint is installed."""
     assert subprocess.check_output(["runrms", "-h"])
 
 
 def test_scan_rms(tmpdir):
-    """Scan master files in RMS"""
+    """Scan master files in RMS."""
     runner = rr.RunRMS()
 
     runner.runloggerfile = tmpdir.mkdir("runner2").join("runrms_usage.log")
@@ -68,6 +63,7 @@ def test_scan_rms(tmpdir):
     reason="The executable disable_komodo_exec is not available",
 )
 def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
+    """Testing integration with Komodo."""
     with tmpdir.as_cwd():
         with open("rms_fake", "w") as fhandle:
             fhandle.write(
