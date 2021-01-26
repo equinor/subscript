@@ -1,0 +1,7 @@
+black>=20.8b0
+check-manifest
+flake8
+pytest
+pytest-cov
+pytest-mock
+rstcheck

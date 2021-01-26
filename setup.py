@@ -81,22 +81,12 @@ SETUP_REQUIREMENTS = [
     "check-manifest",
 ]
 
-TEST_REQUIREMENTS = [
-    "black>=20.8b0",
-    "check-manifest",
-    "flake8",
-    "pytest",
-    "pytest-cov",
-    "pytest-mock",
-    "rstcheck",
-]
-DOCS_REQUIREMENTS = [
-    "sphinx",
-    "sphinx-argparse",
-    "sphinx_rtd_theme",
-    "autoapi",
-]
-EXTRAS_REQUIRE = {"tests": TEST_REQUIREMENTS, "docs": DOCS_REQUIREMENTS}
+with open("test_requirements.txt") as f:
+    test_requirements = f.read().splitlines()
+with open("docs_requirements.txt") as f:
+    docs_requirements = f.read().splitlines()
+
+EXTRAS_REQUIRE = {"tests": test_requirements, "docs": docs_requirements}
 
 setuptools.setup(
     name="subscript",
