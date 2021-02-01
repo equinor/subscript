@@ -69,7 +69,7 @@ REQUIREMENTS = [
     "pyscal",
     "pyyaml",
     "scipy",
-    "segyio>1.8.0, <1.9.2",  # 1.9.3 fails on Py3.8
+    "segyio",
     "xlrd",
     "xtgeo",
 ]
@@ -92,14 +92,14 @@ setuptools.setup(
     name="subscript",
     description="Next-gen resscript",
     author="Equinor",
-    author_email="pgdr@equinor.com",
+    author_email="havb@equinor.com",
     url="https://github.com/equinor/subscript",
     project_urls={
-        "Documentation": "https://subscript.readthedocs.io/",
+        "Documentation": "https://equinor.github.io/subscript",
         "Issue Tracker": "https://github.com/equinor/subscript/issues",
     },
     keywords=[],
-    license="Not open source (violating TR1621)",
+    license="GPLv3",
     platforms="any",
     include_package_data=True,
     packages=setuptools.find_packages("src"),
