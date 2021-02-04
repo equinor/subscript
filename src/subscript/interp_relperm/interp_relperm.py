@@ -11,7 +11,7 @@ import pyscal
 from ecl2df import satfunc
 import subscript
 
-import configsuite
+import configsuite  # lgtm [py/import-and-import-from]
 from configsuite import types  # lgtm [py/import-and-import-from]
 from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 
