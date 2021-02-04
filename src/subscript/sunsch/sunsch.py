@@ -7,6 +7,7 @@ hence the name. Later, this library has been merged into opm-common
 """
 
 import os
+import sys
 import datetime
 import tempfile
 import argparse
@@ -849,10 +850,10 @@ def main():
             # Only Py2 gets here.
             valid = False
         if not valid:
-            logger.warning(
+            logger.error(
                 (
-                    "Your configuration is DEPRECATED, "
-                    "switch to new format.\n"
+                    "Your configuration syntax is UNSUPPORTED, "
+                    "switch to new format:\n"
                     "The keys 'init' and 'merge' are "
                     "now merged into a key called 'files'\n"
                     "and the insert statements all start "
@@ -866,6 +867,8 @@ def main():
                     _v1_content_to_v2(yaml_config)
                 ).strip(),  # lgtm [py/call-to-non-callable]
             )
+            logger.error("Exiting script, no schedule file written")
+            sys.exit(1)
 
     if args.verbose:
         logger.setLevel(logging.INFO)
