@@ -292,11 +292,11 @@ def process_volstr(volstr):
     newline characters)
 
     Two different data syntaxes are supported. Either each well
-    is given in separate blocks of lines, then there is a "*NAME" line
+    is given in separate blocks of lines, then there is a ``*NAME`` line
     that gives the well name.
 
     The alternative syntax has wellname encoded in the table as any other
-    parameter, in the "*WELL" column.
+    parameter, in the ``*WELL`` column.
 
     Args:
         volstr (str)
