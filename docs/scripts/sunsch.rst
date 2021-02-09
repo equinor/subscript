@@ -132,24 +132,6 @@ Sunsch is installed as a forward model in ERT. A typical configuration could loo
 
 (if you don't need to templatize your sunsch configuration, you can simplify)
 
-ERT usage Python 2
-^^^^^^^^^^^^^^^^^^
-
-If you are on Python 2, you need to define a job config file for ``SUNSCH`` and load
-that job definition, the file ``ert/bin/jobs/SUNSCH`` should read::
-
-  EXECUTABLE sunsch
-  ARGLIST    "--verbose" <config>
-  MIN_ARG    1
-  MAX_ARG    1
-  ARG_TYPE 0 STRING
-
-and you need::
-
-  INSTALL_JOB SUNSCH ../bin/jobs/SUNSCH
-
-in your ert config.
-
 Caveats
 -------
 
