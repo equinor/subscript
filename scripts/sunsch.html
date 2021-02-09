@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>SUNSCH &mdash; subscript 0.7.6.dev4+g04a41e7 documentation</title>
+  <title>SUNSCH &mdash; subscript 0.7.6.dev5+g05d4aee documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.7.6.dev4+g04a41e7
+                0.7.6.dev5+g05d4aee
               </div>
             
           
@@ -125,10 +125,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#when-to-use">When to use</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#yaml-file-syntax">Yaml file syntax</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#yaml-example">YAML example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#ert-usage">ERT usage</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ert-usage-python-2">ERT usage Python 2</a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="#ert-usage">ERT usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#caveats">Caveats</a></li>
 </ul>
 </li>
@@ -392,23 +389,6 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 </pre></div>
 </div>
 <p>(if you don’t need to templatize your sunsch configuration, you can simplify)</p>
-<div class="section" id="ert-usage-python-2">
-<h3>ERT usage Python 2<a class="headerlink" href="#ert-usage-python-2" title="Permalink to this headline">¶</a></h3>
-<p>If you are on Python 2, you need to define a job config file for <code class="docutils literal notranslate"><span class="pre">SUNSCH</span></code> and load
-that job definition, the file <code class="docutils literal notranslate"><span class="pre">ert/bin/jobs/SUNSCH</span></code> should read:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">EXECUTABLE</span> <span class="n">sunsch</span>
-<span class="n">ARGLIST</span>    <span class="s2">&quot;--verbose&quot;</span> <span class="o">&lt;</span><span class="n">config</span><span class="o">&gt;</span>
-<span class="n">MIN_ARG</span>    <span class="mi">1</span>
-<span class="n">MAX_ARG</span>    <span class="mi">1</span>
-<span class="n">ARG_TYPE</span> <span class="mi">0</span> <span class="n">STRING</span>
-</pre></div>
-</div>
-<p>and you need:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INSTALL_JOB</span> <span class="n">SUNSCH</span> <span class="o">../</span><span class="nb">bin</span><span class="o">/</span><span class="n">jobs</span><span class="o">/</span><span class="n">SUNSCH</span>
-</pre></div>
-</div>
-<p>in your ert config.</p>
-</div>
 </div>
 <div class="section" id="caveats">
 <h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h2>
