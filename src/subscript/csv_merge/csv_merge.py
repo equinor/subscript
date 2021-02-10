@@ -158,7 +158,7 @@ def get_ertwf_parser():
 
 def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
     """
-    Load CSV files from disk, tag them and return DataFrame
+    Load CSV files from disk. Tag each row with filename origin.
 
     Args:
         csvfiles (list): List of strings with pathnames to CSV files
@@ -168,6 +168,9 @@ def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
         memoryconservative (bool): If true, one dataframe will
             be read from disk and merged at a time. Slower, but
             requires less memory than loading every dataframe up front.
+
+    Returns:
+        pd.Dataframe
     """
     if not tags:
         tags = {}
@@ -176,7 +179,14 @@ def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
         merged_df = pd.DataFrame()
         for idx, csvfname in enumerate(csvfiles):
             logger.info(" - Loading %s", csvfname)
-            dframe = pd.read_csv(csvfname)
+            try:
+                dframe = pd.read_csv(csvfname)
+            except pd.errors.EmptyDataError:
+                logger.warning("Empty file %s, ignored", csvfname)
+                dframe = pd.DataFrame()
+            except FileNotFoundError:
+                logger.warning("File %s not found, ignored", csvfname)
+                dframe = pd.DataFrame()
             for tag in tags:
                 if len(tags[tag]) == len(csvfiles):
                     if tag not in dframe:
@@ -196,7 +206,14 @@ def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
         dfs = []
         for csvfile in csvfiles:
             logger.info(" - Loading %s", csvfile)
-            dfs.append(pd.read_csv(csvfile))
+            try:
+                dfs.append(pd.read_csv(csvfile))
+            except pd.errors.EmptyDataError:
+                logger.warning("Empty file %s, ignored", csvfile)
+                dfs.append(pd.DataFrame())
+            except FileNotFoundError:
+                logger.warning("File %s not found, ignored", csvfile)
+                dfs.append(pd.DataFrame())
         for idx, dframe in enumerate(dfs):
             for tag in tags:
                 if len(tags[tag]) == len(csvfiles):
