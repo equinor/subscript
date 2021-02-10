@@ -140,6 +140,53 @@ def test_main_merge(tmpdir):
     assert set(merged["FILETYPE"].unique()) == set([test_csv_1, test_csv_2])
 
 
+def test_empty_files(tmpdir):
+    """Test behaviour when some files are missing or are empty"""
+
+    # Empty but existing file:
+    pd.DataFrame().to_csv("real1.csv", index=False)
+    pd.DataFrame([{"FOO": 1.0}]).to_csv("real2.csv", index=False)
+    merged_df = csv_merge.merge_csvfiles(
+        ["real1.csv", "real2.csv"], tags={"FILENAME": ["real1.csv", "real2.csv"]}
+    )
+    pd.testing.assert_frame_equal(
+        merged_df,
+        pd.DataFrame([{"FOO": 1.0, "FILENAME": "real2.csv"}]),
+        check_like=True,
+    )
+    # Same check, but in memoryconservative mode (different code path)
+    merged_df = csv_merge.merge_csvfiles(
+        ["real1.csv", "real2.csv"],
+        tags={"FILENAME": ["real1.csv", "real2.csv"]},
+        memoryconservative=True,
+    )
+    pd.testing.assert_frame_equal(
+        merged_df,
+        pd.DataFrame([{"FOO": 1.0, "FILENAME": "real2.csv"}]),
+        check_like=True,
+    )
+
+    # Non-existing file:
+    merged_df = csv_merge.merge_csvfiles(
+        ["real2.csv", "real3.csv"], tags={"FILENAME": ["real2.csv", "real3.csv"]}
+    )
+    pd.testing.assert_frame_equal(
+        merged_df,
+        pd.DataFrame([{"FOO": 1.0, "FILENAME": "real2.csv"}]),
+        check_like=True,
+    )
+    merged_df = csv_merge.merge_csvfiles(
+        ["real2.csv", "real3.csv"],
+        tags={"FILENAME": ["real2.csv", "real3.csv"]},
+        memoryconservative=True,
+    )
+    pd.testing.assert_frame_equal(
+        merged_df,
+        pd.DataFrame([{"FOO": 1.0, "FILENAME": "real2.csv"}]),
+        check_like=True,
+    )
+
+
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(tmpdir):
