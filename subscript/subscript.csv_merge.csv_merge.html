@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.csv_merge.csv_merge &mdash; subscript 0.7.6.dev5+g05d4aee documentation</title>
+  <title>subscript.csv_merge.csv_merge &mdash; subscript 0.7.6.dev6+gcaab471 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.7.6.dev5+g05d4aee
+                0.7.6.dev6+gcaab471
               </div>
             
           
@@ -295,7 +295,7 @@ and inject documentation</p>
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.merge_csvfiles">
 <code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">merge_csvfiles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">csvfiles</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memoryconservative</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.merge_csvfiles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Load CSV files from disk, tag them and return DataFrame</p>
+<dd><p>Load CSV files from disk. Tag each row with filename origin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -307,6 +307,9 @@ corresponding to the csvfiles.</p></li>
 be read from disk and merged at a time. Slower, but
 requires less memory than loading every dataframe up front.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pd.Dataframe</p>
 </dd>
 </dl>
 </dd></dl>
