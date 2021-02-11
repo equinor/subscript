@@ -1,6 +1,4 @@
-"""
-Merge multiple CSV files.
-"""
+"""Merge multiple CSV files."""
 
 import os
 import sys
@@ -75,7 +73,7 @@ class CsvMerge(ErtScript):
 
 
 def get_parser():
-    """Construct parser object for csvMergeEnsembles"""
+    """Construct parser object for csv_merge"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter,
         description="""
@@ -244,12 +242,6 @@ def taglist(strings, regexp_str):
     if any(values):
         return values
     return []
-
-
-def main_deprecated():
-    """Entry point for the old command line name csvMergeEnsembles"""
-    logger.warning("csvMergeEnsembles has been renamed to csv_merge, please change")
-    main()
 
 
 def main():
