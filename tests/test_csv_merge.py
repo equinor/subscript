@@ -1,4 +1,4 @@
-"""Test csvMergeEnsembles aka csv_merge"""
+"""Test csv_merge"""
 import os
 import sys
 import subprocess
@@ -63,7 +63,7 @@ def test_taglist():
 
 
 def test_main_merge(tmpdir):
-    """Test command line interface for csvMergeEnsembles/csv_merge"""
+    """Test command line interface for csv_merge"""
 
     assert os.system("csv_merge -h") == 0
 
@@ -93,7 +93,7 @@ def test_main_merge(tmpdir):
 
     # Test --dropconstantcolumns
     sys.argv = [
-        "csvMergeEnsembles",
+        "csv_merge",
         test_csv_1,
         test_csv_2,
         "--dropconstantcolumns",
@@ -110,7 +110,7 @@ def test_main_merge(tmpdir):
 
     # Test --memoryconservative
     sys.argv = [
-        "csvMergeEnsembles",
+        "csv_merge",
         test_csv_1,
         test_csv_2,
         "--memoryconservative",
