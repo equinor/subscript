@@ -235,7 +235,7 @@
 <span id="subscript-bjobsusers-bjobsusers"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers.bjobsusers</span></code><a class="headerlink" href="#module-subscript.bjobsusers.bjobsusers" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.call_bjobs">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">call_bjobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">'RUN'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_bjobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">call_bjobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RUN'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_bjobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the system bjobs utility</p>
 <p>Filter on a specific status, and to only the username
 and the nodecount</p>
@@ -263,7 +263,7 @@ the number of allocated cores to the job.</p>
 
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.call_finger">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">call_finger</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_finger" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">call_finger</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_finger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the system utility ‘finger’ on a specific username</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
@@ -279,7 +279,7 @@ Example return value:</p>
 
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.get_jobs">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">get_jobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span></em>, <em class="sig-param"><span class="n">bjobs_function</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.get_jobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">get_jobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bjobs_function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.get_jobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a Pandas dataframe out of the bjobs output</p>
 <p>Sums the cpu/core usage pr. user.</p>
 <dl class="field-list simple">
@@ -302,25 +302,25 @@ Only one row pr username. Sorted descending by ncpu.</p>
 
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.get_parser">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.get_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepare a parser for argument parsing and documentation</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.main">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>For invocation on command line</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.show_status">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">show_status</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">status</span><span class="o">=</span><span class="default_value">'RUN'</span></em>, <em class="sig-param"><span class="n">title</span><span class="o">=</span><span class="default_value">'Running'</span></em>, <em class="sig-param"><span class="n">umax</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.show_status" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">show_status</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RUN'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Running'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">umax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.show_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print job statistics to console user</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.bjobsusers.bjobsusers.userinfo">
-<code class="sig-prename descclassname">subscript.bjobsusers.bjobsusers.</code><code class="sig-name descname">userinfo</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">finger_function</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.userinfo" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></code><code class="sig-name descname"><span class="pre">userinfo</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.userinfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get information on a user based on the username</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

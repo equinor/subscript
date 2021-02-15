@@ -238,7 +238,7 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format</p>
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.block_df2obsdict">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">block_df2obsdict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">block_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.block_df2obsdict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">block_df2obsdict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.block_df2obsdict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a dictionary structure suitable for yaml
 for block observations in dataframe representation</p>
 <dl class="field-list simple">
@@ -257,7 +257,7 @@ for block observations in dataframe representation</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.convert_dframe_date_to_str">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">convert_dframe_date_to_str</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.convert_dframe_date_to_str" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">convert_dframe_date_to_str</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.convert_dframe_date_to_str" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the DATE column in a dataframe to a string.
 Replace “NaT” (Not-a-Time) with np.nan after conversion</p>
 <p>Returns a copy of the dataframe if something is modified</p>
@@ -277,7 +277,7 @@ Replace “NaT” (Not-a-Time) with np.nan after conversion</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.df2ertobs">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">df2ertobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.df2ertobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">df2ertobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.df2ertobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a complete set of ERT observations from a dataframe
 with potentially all classes of observations.</p>
 <p>The order of observation classes is hardcoded.</p>
@@ -298,7 +298,7 @@ dataframe.</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.df2obsdict">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">df2obsdict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.df2obsdict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">df2obsdict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.df2obsdict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a dictionary structure of all observations, this data structure
 is designed to look good in yaml, and is supported by WebViz and
 fmu-ensemble.</p>
@@ -314,7 +314,7 @@ fmu-ensemble.</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.df2resinsight_df">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">df2resinsight_df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.df2resinsight_df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">df2resinsight_df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.df2resinsight_df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a dataframe observation representation supported by ResInsight.</p>
 <p>Only a subset of the observations can be written to this representation.</p>
 <p>See <a class="reference external" href="https://resinsight.org/import/observeddata">https://resinsight.org/import/observeddata</a></p>
@@ -334,7 +334,7 @@ imported into the ResInsight application</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.dfblock2ertobs">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">dfblock2ertobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfblock2ertobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">dfblock2ertobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfblock2ertobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write BLOCK_OBSERVATION from dataframe rows as ERT observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -352,7 +352,7 @@ representation</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.dfgeneral2ertobs">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">dfgeneral2ertobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfgeneral2ertobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">dfgeneral2ertobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfgeneral2ertobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write GENERAL_OBSERVATION from dataframe rows as ERT observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -370,7 +370,7 @@ representation</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.dfhistory2ertobs">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">dfhistory2ertobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfhistory2ertobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">dfhistory2ertobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfhistory2ertobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write HISTORY_OBSERVATION from dataframe rows as ERT observations</p>
 <p>The SEGMENT structure is a little bit peculiar, as its presence means
 an extra DEFAULT segment is present in the internal dataframe representation.</p>
@@ -390,7 +390,7 @@ representation</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.dfsummary2ertobs">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">dfsummary2ertobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfsummary2ertobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">dfsummary2ertobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.dfsummary2ertobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Write SUMMARY_OBSERVATION as ERT observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -408,7 +408,7 @@ representation</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.writers.summary_df2obsdict">
-<code class="sig-prename descclassname">subscript.fmuobs.writers.</code><code class="sig-name descname">summary_df2obsdict</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">smry_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.summary_df2obsdict" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></code><code class="sig-name descname"><span class="pre">summary_df2obsdict</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">smry_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.summary_df2obsdict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a dictionary structure suitable for yaml
 for summary observations in dataframe representation</p>
 <p>At level 2 in the obs-dict, “key” is the Eclipse summary vector name

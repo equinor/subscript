@@ -236,11 +236,11 @@
 <p>Merge multiple CSV files.</p>
 <dl class="py class">
 <dt id="subscript.csv_merge.csv_merge.CsvMerge">
-<em class="property">class </em><code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">CsvMerge</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ert</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.CsvMerge" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">CsvMerge</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ert</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.CsvMerge" title="Permalink to this definition">¶</a></dt>
 <dd><p>A class with a run() function that can be registered as an ERT plugin</p>
 <dl class="py method">
 <dt id="subscript.csv_merge.csv_merge.CsvMerge.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.CsvMerge.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.CsvMerge.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse with a simplified command line parser, for ERT only,
 call csv_merge_main()</p>
 </dd></dl>
@@ -249,52 +249,52 @@ call csv_merge_main()</p>
 
 <dl class="py class">
 <dt id="subscript.csv_merge.csv_merge.CustomFormatter">
-<em class="property">class </em><code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">CustomFormatter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prog</span></em>, <em class="sig-param"><span class="n">indent_increment</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">max_help_position</span><span class="o">=</span><span class="default_value">24</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.CustomFormatter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">CustomFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.CustomFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple inheritance used for argparse to get both
 defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.csv_merge_main">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">csv_merge_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">csvfiles</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">filecolumn</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">memoryconservative</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">dropconstantcolumns</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.csv_merge_main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">csv_merge_main</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filecolumn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memoryconservative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropconstantcolumns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.csv_merge_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>A “main” function that can be used both from the command line,
 and from an ERT workflow</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.get_ertwf_parser">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">get_ertwf_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.get_ertwf_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">get_ertwf_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.get_ertwf_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternative parser used for CSV_MERGE ERT workflow job</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.get_parser">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.get_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct parser object for csvMergeEnsembles</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.legacy_ertscript_workflow">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">legacy_ertscript_workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.legacy_ertscript_workflow" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.legacy_ertscript_workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook the CsvMerge class into ERT with the name CSV_MERGE,
 and inject documentation</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.main">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point from command line</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.main_deprecated">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">main_deprecated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.main_deprecated" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">main_deprecated</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.main_deprecated" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point for the old command line name csvMergeEnsembles</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.merge_csvfiles">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">merge_csvfiles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">csvfiles</span></em>, <em class="sig-param"><span class="n">tags</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">memoryconservative</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.merge_csvfiles" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">merge_csvfiles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memoryconservative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.merge_csvfiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load CSV files from disk. Tag each row with filename origin.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -316,7 +316,7 @@ requires less memory than loading every dataframe up front.</p></li>
 
 <dl class="py function">
 <dt id="subscript.csv_merge.csv_merge.taglist">
-<code class="sig-prename descclassname">subscript.csv_merge.csv_merge.</code><code class="sig-name descname">taglist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">strings</span></em>, <em class="sig-param"><span class="n">regexp_str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.taglist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></code><code class="sig-name descname"><span class="pre">taglist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regexp_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.taglist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Apply a regexp string to a list of strings
 and return a list of the matches.</p>
 <p>The list may contain None for strings where there are no matches.

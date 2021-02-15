@@ -237,14 +237,14 @@
 metadata</p>
 <dl class="py class">
 <dt id="subscript.prtvol2csv.prtvol2csv.CustomFormatter">
-<em class="property">class </em><code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">CustomFormatter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prog</span></em>, <em class="sig-param"><span class="n">indent_increment</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">max_help_position</span><span class="o">=</span><span class="default_value">24</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.CustomFormatter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">CustomFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.CustomFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple inheritance used for argparse to get both
 defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">currently_in_place_from_prt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prt_file</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">fipname</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="default_value">'FIPNUM'</span></em>, <em class="sig-param"><span class="n">date</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">currently_in_place_from_prt</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'FIPNUM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts currently-in-place volumes from a PRT file</p>
 <p>This function uses ecl2df.fipreports, and slices its
 output for the purpose here.</p>
@@ -265,7 +265,7 @@ it should be an ISO-formatted date string to extract</p></li>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.deprecated_region_export">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">deprecated_region_export</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volumes</span></em>, <em class="sig-param"><span class="n">tablesdir</span></em>, <em class="sig-param"><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.deprecated_region_export" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">deprecated_region_export</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volumes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tablesdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.deprecated_region_export" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function exports a dataframe where volumes
 are summed over regions.</p>
 <p>This is now deprecated, as it is bad architecture to export multiple
@@ -278,7 +278,7 @@ performed in a visualization application.</p>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.find_prtfile">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">find_prtfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">basefile</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.find_prtfile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">find_prtfile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">basefile</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">str</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.find_prtfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convenience for command line execution for locating PRT files.</p>
 <p>Given FOO.DATA and FOO.PRT exists in the current directory, these</p>
 <blockquote>
@@ -304,19 +304,19 @@ not be located and the input is returned.</p>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.get_parser">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; argparse.ArgumentParser<a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.get_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">argparse.ArgumentParser</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>A parser for command line argument parsing and for documentation.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.main">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function for command line invocation</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.prep_output_dir">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">prep_output_dir</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tablesdir</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em>, <em class="sig-param"><span class="n">suffix</span><span class="p">:</span> <span class="n">Optional<span class="p">[</span>str<span class="p">]</span></span> <span class="o">=</span> <span class="default_value">None</span></em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prep_output_dir" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">prep_output_dir</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tablesdir</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pathlib.Path</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prep_output_dir" title="Permalink to this definition">¶</a></dt>
 <dd><p>Ensures an output directory exists, and returns
 the name of the directory.</p>
 <p>This behaviour is deprecated, the user should prepare the directories
@@ -339,14 +339,14 @@ explicitly. If directories are not in place, a FutureWarning is emitted.</p>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.prtvol2df">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">prtvol2df</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">simvolumes_df</span></em>, <em class="sig-param"><span class="n">resvolumes_df</span></em>, <em class="sig-param"><span class="n">fipmapper</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prtvol2df" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">prtvol2df</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simvolumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resvolumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipmapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prtvol2df" title="Permalink to this definition">¶</a></dt>
 <dd><p>Concatenate two dataframes (with common index) horizontally,
 and add REGION and ZONE parameter.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt">
-<code class="sig-prename descclassname">subscript.prtvol2csv.prtvol2csv.</code><code class="sig-name descname">reservoir_volumes_from_prt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prt_file</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span> &#x2192; pandas.core.frame.DataFrame<a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></code><code class="sig-name descname"><span class="pre">reservoir_volumes_from_prt</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extracts numbers from the table “RESERVOIR VOLUMES” in an Eclipse PRT
 file, example table is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                    <span class="o">===================================</span>

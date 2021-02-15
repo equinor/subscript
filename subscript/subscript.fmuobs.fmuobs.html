@@ -237,14 +237,14 @@
 history matching</p>
 <dl class="py class">
 <dt id="subscript.fmuobs.fmuobs.CustomFormatter">
-<em class="property">class </em><code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">CustomFormatter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prog</span></em>, <em class="sig-param"><span class="n">indent_increment</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">max_help_position</span><span class="o">=</span><span class="default_value">24</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.CustomFormatter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">CustomFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.CustomFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple inheritance used for argparse to get both defaults
 and raw description formatter</p>
 </dd></dl>
 
 <dl class="py class">
 <dt id="subscript.fmuobs.fmuobs.FmuObs">
-<em class="property">class </em><code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">FmuObs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ert</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.FmuObs" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">FmuObs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ert</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.FmuObs" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class defines the ERT workflow hook.</p>
 <p>It is constructed to work identical to the command line except</p>
 <blockquote>
@@ -256,7 +256,7 @@ interference with the ERT comment characters “–”.</p></li>
 </div></blockquote>
 <dl class="py method">
 <dt id="subscript.fmuobs.fmuobs.FmuObs.run">
-<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.FmuObs.run" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">run</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.FmuObs.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Pass the ERT workflow arguments on to the same parser as the command
 line.</p>
 </dd></dl>
@@ -265,7 +265,7 @@ line.</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.autoparse_file">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">autoparse_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.autoparse_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">autoparse_file</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.autoparse_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detects the observation file format for a given filename. This
 is done by attempting to parse its content and giving up on
 exceptions.</p>
@@ -290,7 +290,7 @@ element is a dataframe or a dict (if input was yaml).</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.dump_results">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">dump_results</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dframe</span></em>, <em class="sig-param"><span class="n">csvfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yamlfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resinsightfile</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ertfile</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.dump_results" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">dump_results</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csvfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yamlfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resinsightfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ertfile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.dump_results" title="Permalink to this definition">¶</a></dt>
 <dd><p>Dump dataframe with ERT observations to CSV and/or YML
 format to disk. Writes to stdout if filenames are “-“. Skips
 export if filenames are empty or None.</p>
@@ -309,13 +309,13 @@ export if filenames are empty or None.</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.fmuobs">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">fmuobs</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">inputfile</span></em>, <em class="sig-param"><span class="n">ertobs</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">yml</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">resinsight</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">csv</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbose</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">starttime</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">includedir</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.fmuobs" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">fmuobs</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ertobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yml</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resinsight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includedir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.fmuobs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternative to main() with named arguments</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.get_parser">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.get_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return a parser for the command line client, and for
 generating help text. The description, defaults and help-text for
 each argument is shared with the parser for the ERT workflow</p>
@@ -323,20 +323,20 @@ each argument is shared with the parser for the ERT workflow</p>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.legacy_ertscript_workflow">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">legacy_ertscript_workflow</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.legacy_ertscript_workflow" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.legacy_ertscript_workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>A hook for usage of this script in an ERT workflow,
 using the legacy hook format.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.main">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Command line client, parse command line arguments and execute the tool.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.fmuobs.fmuobs.validate_internal_dframe">
-<code class="sig-prename descclassname">subscript.fmuobs.fmuobs.</code><code class="sig-name descname">validate_internal_dframe</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs_df</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.validate_internal_dframe" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.fmuobs.fmuobs.</span></code><code class="sig-name descname"><span class="pre">validate_internal_dframe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obs_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.fmuobs.validate_internal_dframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Validate the internal dataframe format for observations.</p>
 <p>Will log warnings and/or errors if anything found.</p>
 <dl class="field-list simple">

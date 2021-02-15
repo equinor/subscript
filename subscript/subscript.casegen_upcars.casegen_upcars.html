@@ -246,27 +246,27 @@ based on sugar-cube representation of fracture.</p>
 </ul>
 <dl class="py function">
 <dt id="subscript.casegen_upcars.casegen_upcars.get_parser">
-<code class="sig-prename descclassname">subscript.casegen_upcars.casegen_upcars.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.get_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.casegen_upcars.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns an Argparse parser for parsing
 arguments and generating documentation</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.casegen_upcars.casegen_upcars.get_value">
-<code class="sig-prename descclassname">subscript.casegen_upcars.casegen_upcars.</code><code class="sig-name descname">get_value</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_value</span></em>, <em class="sig-param"><span class="n">args_value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.get_value" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.casegen_upcars.</span></code><code class="sig-name descname"><span class="pre">get_value</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.get_value" title="Permalink to this definition">¶</a></dt>
 <dd><p>Override the value read from configuration file
 with the one from command line argument</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.casegen_upcars.casegen_upcars.main">
-<code class="sig-prename descclassname">subscript.casegen_upcars.casegen_upcars.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.casegen_upcars.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry subroutine</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.casegen_upcars.casegen_upcars.mask_token">
-<code class="sig-prename descclassname">subscript.casegen_upcars.casegen_upcars.</code><code class="sig-name descname">mask_token</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stream_buffer</span></em>, <em class="sig-param"><span class="n">unique_token</span><span class="o">=</span><span class="default_value">'#|{}^'</span></em>, <em class="sig-param"><span class="n">unmask</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.mask_token" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.casegen_upcars.</span></code><code class="sig-name descname"><span class="pre">mask_token</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stream_buffer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_token</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#|{}^'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unmask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars.mask_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Replace ‘&lt; ‘ with some unique token and vice versa
 Jinja2 has flexibility so that it allows white space in the variable template
 This creates some issue when user have a comment with ‘&lt; ‘

@@ -235,14 +235,14 @@
 <span id="subscript-ofmvol2csv-ofmvol2csv"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.ofmvol2csv.ofmvol2csv</span></code><a class="headerlink" href="#module-subscript.ofmvol2csv.ofmvol2csv" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.CustomFormatter">
-<em class="property">class </em><code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">CustomFormatter</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">prog</span></em>, <em class="sig-param"><span class="n">indent_increment</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">max_help_position</span><span class="o">=</span><span class="default_value">24</span></em>, <em class="sig-param"><span class="n">width</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.CustomFormatter" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">CustomFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.CustomFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple inheritance used for argparse to get both
 defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.cleanse_ofm_lines">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">cleanse_ofm_lines</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filelines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.cleanse_ofm_lines" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">cleanse_ofm_lines</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filelines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.cleanse_ofm_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Cleanup a list of lines:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Remove</span> <span class="n">comment</span> <span class="n">lines</span>
 <span class="o">*</span> <span class="n">Remove</span> <span class="n">empty</span> <span class="n">lines</span>
@@ -265,7 +265,7 @@ defaults and raw description formatter</p>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.extract_columnnames">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">extract_columnnames</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filelines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.extract_columnnames" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">extract_columnnames</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filelines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.extract_columnnames" title="Permalink to this definition">¶</a></dt>
 <dd><p>Look for lines starting with <cite>*DATE</cite>, these signify the columns
 available in the current file being read.</p>
 <p>If multiple lines with this information is found, a ValueError is raised,
@@ -286,7 +286,7 @@ The star prefix for each column is removed.</p>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.find_wellstart_indices">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">find_wellstart_indices</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filelines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.find_wellstart_indices" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">find_wellstart_indices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filelines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.find_wellstart_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Locate the indices of the lines that start with the identifier
 for a new well, the string <code class="docutils literal notranslate"><span class="pre">*NAME</span></code>.</p>
 <dl class="field-list simple">
@@ -304,20 +304,20 @@ for a new well, the string <code class="docutils literal notranslate"><span clas
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.get_parser">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">get_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.get_parser" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a parser for the command line utility ofmvol2csv and for
 its documentation</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.main">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point if called from command line</p>
 </dd></dl>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.ofmvol2csv_main">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">ofmvol2csv_main</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volfiles</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">includefileorigin</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.ofmvol2csv_main" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">ofmvol2csv_main</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">includefileorigin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.ofmvol2csv_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a set of volfiles (or wildcard patterns) into one CSV file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -337,7 +337,7 @@ volfile filename for each row of data.</p></li>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.parse_ofmtable">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">parse_ofmtable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ofmstring</span></em>, <em class="sig-param"><span class="n">columnnames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.parse_ofmtable" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">parse_ofmtable</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ofmstring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columnnames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.parse_ofmtable" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse an OFM table from a list of lines, either called once
 pr. well, or all data in one go with wellname as a table column.</p>
 <dl class="field-list simple">
@@ -353,7 +353,7 @@ Other columns will be ignored.</p></li>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.parse_well">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">parse_well</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">well_lines</span></em>, <em class="sig-param"><span class="n">columnnames</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.parse_well" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">parse_well</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">well_lines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columnnames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.parse_well" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a list of lines with OFM data for only one well
 into a DataFrame</p>
 <p>The list of input strings provided must have been cleaned upfront,
@@ -379,7 +379,7 @@ Other columns will be ignored.</p></li>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.process_volfile">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">process_volfile</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.process_volfile" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">process_volfile</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.process_volfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a single OFM vol-file and return a DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -396,7 +396,7 @@ Other columns will be ignored.</p></li>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.process_volstr">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">process_volstr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">volstr</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.process_volstr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">process_volstr</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">volstr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.process_volstr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse a volstring (typically a vol-file read into a string with
 newline characters)</p>
 <p>Two different data syntaxes are supported. Either each well
@@ -419,7 +419,7 @@ parameter, in the <code class="docutils literal notranslate"><span class="pre">*
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.split_list">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">split_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">linelist</span></em>, <em class="sig-param"><span class="n">splitidxs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.split_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">split_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">linelist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">splitidxs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.split_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split a list of lines into chunks, where each chunck
 is a list of lines with each chunk only containing data for
 one well</p>
@@ -448,7 +448,7 @@ are ignored.</p></li>
 
 <dl class="py function">
 <dt id="subscript.ofmvol2csv.ofmvol2csv.unify_dateformat">
-<code class="sig-prename descclassname">subscript.ofmvol2csv.ofmvol2csv.</code><code class="sig-name descname">unify_dateformat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lines</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.unify_dateformat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname"><span class="pre">subscript.ofmvol2csv.ofmvol2csv.</span></code><code class="sig-name descname"><span class="pre">unify_dateformat</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lines</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ofmvol2csv.ofmvol2csv.unify_dateformat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Some OFM files have day, month year in separate columns.</p>
 <p>This function catches one variant of this, with day-month-year
 in the first three columns. The column data is string-formatted into
