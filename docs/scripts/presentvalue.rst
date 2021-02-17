@@ -50,3 +50,23 @@ The script can be used to produce yearly difference profiles for the chosen oil
 and gas vectors and including discounted values. This is accomplished by
 combining the ``--basedatafiles`` and ``--verbose``. The table output you get
 from the script can be copied into Excel or anywhere else.
+
+Financial computations
+----------------------
+
+If you provide ``costs`` in the economical input, you will get some additional
+financial measures computed:
+
+BEP1
+  Break even computation, computing the oil price needed for zero present value,
+  assuming gas price (in MNOK/Gsm3) is 0.0035288 * oil price (in usd/bbl).
+
+BEP2
+  Break even computation assuming the gas prices are completely independent from
+  the oil price, and the gas price in the economical table is used directly.
+
+IRR
+  Internal rate of return.
+
+CEI
+  The present value divided by the present value from years with negative cash flow.
