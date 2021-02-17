@@ -270,7 +270,7 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
                         "FIPNUM": int(line_split[0]),
                         "PORV_TOTAL": float(line_split[1]),
                         "HCPV_OIL": float(line_split[2]),
-                        "WATER_PORV": float(line_split[3]),
+                        "WATPV_TOTAL": float(line_split[3]),
                         "HCPV_GAS": float(line_split[4]),
                         "HCPV_TOTAL": float(line_split[5]),
                     }
