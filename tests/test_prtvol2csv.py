@@ -34,7 +34,7 @@ def test_currently_in_place_from_prt(tmpdir):
     """  # noqa
     )
     expected_dframe = pd.DataFrame(
-        columns=["PORV_TOTAL", "HCPV_OIL", "WATER_PORV", "HCPV_GAS", "HCPV_TOTAL"],
+        columns=["PORV_TOTAL", "HCPV_OIL", "WATPV_TOTAL", "HCPV_GAS", "HCPV_TOTAL"],
         data=[[8, 9, 10, 11, 12], [13, 14, 15, 16, 17]],
         index=[1, 2],
     )
@@ -76,7 +76,7 @@ def test_prtvol2csv(tmpdir):
                 4: 6976894.0,
                 5: 0.0,
             },
-            "WATER_TOTAL": {
+            "WIIP_TOTAL": {
                 0: 59957809.0,
                 1: 77110073.0,
                 2: 56914143.0,
@@ -117,7 +117,7 @@ def test_prtvol2csv(tmpdir):
                 4: 11127443.0,
                 5: 0.0,
             },
-            "WATER_PORV": {
+            "WATPV_TOTAL": {
                 0: 61802374.0,
                 1: 79481140.0,
                 2: 58660238.0,
@@ -271,13 +271,13 @@ def test_prtvol2csv_regions(tmpdir):
             "STOIIP_OIL": {0: 10656981.0, 1: 6976894.0, 2: 28353970.0},
             "ASSOCIATEDOIL_GAS": {0: 0.0, 1: 0.0, 2: 0.0},
             "STOIIP_TOTAL": {0: 10656981.0, 1: 6976894.0, 2: 28353970.0},
-            "WATER_TOTAL": {0: 171576825.0, 1: 114944632.0, 2: 343435600.0},
+            "WIIP_TOTAL": {0: 171576825.0, 1: 114944632.0, 2: 343435600.0},
             "GIIP_GAS": {0: 0.0, 1: 0.0, 2: 0.0},
             "ASSOCIATEDGAS_OIL": {0: 1960884420.0, 1: 1283748490.0, 2: 5217130300.0},
             "GIIP_TOTAL": {0: 1960884420.0, 1: 1283748490.0, 2: 5217130300.0},
             "PORV_TOTAL": {0: 193843819.0, 1: 129601923.0, 2: 399202846.0},
             "HCPV_OIL": {0: 17000359.0, 1: 11127443.0, 2: 45224669.0},
-            "WATER_PORV": {0: 176843460.0, 1: 118474480.0, 2: 353978178.0},
+            "WATPV_TOTAL": {0: 176843460.0, 1: 118474480.0, 2: 353978178.0},
             "HCPV_GAS": {0: 0.0, 1: 0.0, 2: 0.0},
             "HCPV_TOTAL": {0: 17000359.0, 1: 11127443.0, 2: 45224669.0},
             "FIPNUM": {0: "1 4 6", 1: "2 5", 2: "1 2 3 4 5 6"},
