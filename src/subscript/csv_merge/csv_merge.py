@@ -130,12 +130,6 @@ Do not assume anything on the ordering of columns after merging.
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="More verbose output"
     )
-    parser.add_argument(
-        "-q",
-        "--quiet",
-        help=argparse.SUPPRESS,
-        # Deprecated (and default). Use --verbose if more output is wanted.
-    )
     return parser
 
 
