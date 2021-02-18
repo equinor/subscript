@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>PRESENTVALUE &mdash; subscript 0.7.6.dev7+ga1fa38f documentation</title>
+  <title>PRESENTVALUE &mdash; subscript 0.7.6.dev8+g2a592c9 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.7.6.dev7+ga1fa38f
+                0.7.6.dev8+g2a592c9
               </div>
             
           
@@ -118,6 +118,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#economic-input">Economic input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#difference-profiles">Difference profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#financial-computations">Financial computations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
@@ -326,6 +327,23 @@ as:</p>
 and gas vectors and including discounted values. This is accomplished by
 combining the <code class="docutils literal notranslate"><span class="pre">--basedatafiles</span></code> and <code class="docutils literal notranslate"><span class="pre">--verbose</span></code>. The table output you get
 from the script can be copied into Excel or anywhere else.</p>
+</div>
+<div class="section" id="financial-computations">
+<h2>Financial computations<a class="headerlink" href="#financial-computations" title="Permalink to this headline">¶</a></h2>
+<p>If you provide <code class="docutils literal notranslate"><span class="pre">costs</span></code> in the economical input, you will get some additional
+financial measures computed:</p>
+<dl class="simple">
+<dt>BEP1</dt><dd><p>Break even computation, computing the oil price needed for zero present value,
+assuming gas price (in MNOK/Gsm3) is 0.0035288 * oil price (in usd/bbl).</p>
+</dd>
+<dt>BEP2</dt><dd><p>Break even computation assuming the gas prices are completely independent from
+the oil price, and the gas price in the economical table is used directly.</p>
+</dd>
+<dt>IRR</dt><dd><p>Internal rate of return.</p>
+</dd>
+<dt>CEI</dt><dd><p>The present value divided by the present value from years with negative cash flow.</p>
+</dd>
+</dl>
 </div>
 </div>
 
