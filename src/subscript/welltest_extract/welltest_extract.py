@@ -232,7 +232,7 @@ def get_weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list, sep=','):
+def to_csv(filen, field_list, header_list, sep=","):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
     """
@@ -246,7 +246,7 @@ def to_csv(filen, field_list, header_list, sep=','):
     for i in range(len(field_list[0])):
         fileh.write("%0.10f" % field_list[0][i])
         for field in field_list[1:]:
-            fileh.write(sep+"%0.10f" % field[i])
+            fileh.write(sep + "%0.10f" % field[i])
         fileh.write("\n")
     fileh.close()
 
@@ -314,33 +314,33 @@ def main():
     else:
         super_time = get_supertime(time, wgpr, bu_start_ind, bu_end_ind)
 
-    #print("Supertime (length %d) = " % len(super_time))
-    #print(super_time)
-    #print("\n")
+    # print("Supertime (length %d) = " % len(super_time))
+    # print(super_time)
+    # print("\n")
 
     # Calculate delta pressure             - lag 1 only
     dp = np.diff(wbhp[bu_start_ind + 1 : bu_end_ind + 1])
-    #print("dp (length %d) = " % len(dp))
-    #print(dp)
-    #print("\n")
+    # print("dp (length %d) = " % len(dp))
+    # print(dp)
+    # print("\n")
 
     # Calculate delta superpositioned time - lag 1 only
     dspt = np.diff(super_time)  # Supertime at Tn is not defined.
-    #print("dspt (length dsupertime %d) = " % len(dspt))
-    #print(dspt)
-    #print("\n")
+    # print("dspt (length dsupertime %d) = " % len(dspt))
+    # print(dspt)
+    # print("\n")
 
     # Cumulative time used from start of build-up
     cum_time = time[bu_start_ind + 1 : bu_end_ind + 1] - time[bu_start_ind]
-    #print("cumulative time in build up of interest (length %d) = " % len(cum_time))
-    #print(cum_time)
-    #print("\n")
+    # print("cumulative time in build up of interest (length %d) = " % len(cum_time))
+    # print(cum_time)
+    # print("\n")
 
     dpdspt_weighted_lag1 = get_weighted_avg_press_time_derivative_lag1(dp, dspt)
     print(
         "dpdspt_weighted_lag1 (length dpdspt_weighted = %d" % len(dpdspt_weighted_lag1)
     )
-    #print(dpdspt_weighted_lag1)
+    # print(dpdspt_weighted_lag1)
 
     dpdspt_weighted_lag2 = get_weighted_avg_press_time_derivative_lag2(
         dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
@@ -349,7 +349,7 @@ def main():
         "dpdspt_weighted_lag2 (length dpdspt_weighted_alg2 = %d"
         % len(dpdspt_weighted_lag2)
     )
-    #print(dpdspt_weighted_lag2)
+    # print(dpdspt_weighted_lag2)
 
     to_csv(
         outf_prefix + "_dpds_l1.csv",
@@ -376,18 +376,18 @@ def main():
         [time[: bu_end_ind + 1], wwpr[: bu_end_ind + 1]],
         ["Hours", "WWPR"],
     )
-    if main_phase == 'OIL':
+    if main_phase == "OIL":
         to_csv(
             outf_prefix + "_wopr.csv",
             [time[: bu_end_ind + 1], wopr[: bu_end_ind + 1]],
             ["Hours", "WOPR"],
-    )
-    if main_phase == 'GAS':
+        )
+    if main_phase == "GAS":
         to_csv(
             outf_prefix + "_wgpr.csv",
             [time[: bu_end_ind + 1], wgpr[: bu_end_ind + 1]],
             ["Hours", "WGPR"],
-    )
+        )
 
 
 if __name__ == "__main__":
