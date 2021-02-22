@@ -26,6 +26,7 @@ import termios
 import difflib
 import logging
 import argparse
+from pathlib import Path
 from multiprocessing import Process
 
 import matplotlib.pyplot
@@ -189,9 +190,8 @@ def summaryplotter(
         # and put the associated values in a vector
         for parameterfile in parameterfiles:
             valuefound = False
-            if os.path.isfile(parameterfile):
-                filename = open(parameterfile)
-                for line in filename:
+            if Path(parameterfile).exists():
+                for line in Path(parameterfile).read_text().splitlines():
                     linecontents = line.split()
                     parameternames.append(linecontents[0])
                     if linecontents[0] == colourbyparametername:
@@ -583,16 +583,16 @@ def split_vectorsdatafiles(vectorsdatafiles):
             summaryfiles.append(sumfn)
 
             # Try to load a corresponding parameter-file for colouring data
-            parameterfile = (
-                os.path.dirname(os.path.realpath(vecdata)) + "/../../parameters.txt"
-            )
-            if os.path.isfile(parameterfile):
-                parameterfiles.append(parameterfile)
-            else:
-                parameterfiles.append("")
-            # (we don't care yet if it exists or not)
-
+            paths_to_check = [
+                Path(vecdata).absolute().parent / relpath / "parameters.txt"
+                for relpath in ["../..", "../", "."]
+            ]
+            for path in paths_to_check:
+                if path.exists():
+                    parameterfiles.append(str(path.resolve()))
+                    break
         except IOError:
+            # If we get here, we assume it was an Eclipse vector name.
             vectors.append(vecdata)
     return (summaryfiles, datafiles, vectors, parameterfiles)
 

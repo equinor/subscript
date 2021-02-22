@@ -1,5 +1,8 @@
 import subprocess
 from pathlib import Path
+import shutil
+
+import ecl
 
 import pytest
 
@@ -57,6 +60,67 @@ def test_sysexit(cmd_args, tmpdir, mocker):
         summaryplot.main()
     assert not Path("summaryplotdump.png").exists()
     assert not Path("summaryplotdump.pdf").exists()
+
+
+def test_splitvectorsdatafiles():
+    result = summaryplot.split_vectorsdatafiles(["FOPT", "FOPR", str(DATAFILE)])
+    assert isinstance(result[0][0], ecl.summary.EclSum)
+    print(result)
+    assert result[1:] == (
+        [str(DATAFILE)],
+        ["FOPT", "FOPR"],
+        [str(DATAFILE.parent.parent.parent / "parameters.txt")],
+    )
+
+    # Summary vector order is preserved
+    assert summaryplot.split_vectorsdatafiles(["FOPR", "FOPT", str(DATAFILE)])[2] == (
+        ["FOPR", "FOPT"]
+    )
+
+    # Mix vectors and datafiles:
+    assert summaryplot.split_vectorsdatafiles(["FOPR", str(DATAFILE), "FOPT"])[2] == (
+        ["FOPR", "FOPT"]
+    )
+
+
+def test_find_parameterstxt_in_current(tmpdir):
+    tmpdir.chdir()
+    shutil.copy(DATAFILE, "FOO.DATA")
+    shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "FOO.UNSMRY")
+    shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "FOO.SMSPEC")
+    Path("parameters.txt").write_text("FOO 1")
+    print(summaryplot.split_vectorsdatafiles(["FOO.DATA"]))
+    assert summaryplot.split_vectorsdatafiles(["FOO.DATA"])[3] == [
+        str(Path("FOO.DATA").absolute().parent / "parameters.txt")
+    ]
+
+
+def test_find_parameterstxt_two_levels_up(tmpdir):
+    tmpdir.chdir()
+    tmpdir.mkdir("eclipse")
+    tmpdir.mkdir("eclipse/model")
+    shutil.copy(DATAFILE, "eclipse/model/FOO.DATA")
+    shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/model/FOO.UNSMRY")
+    shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "eclipse/model/FOO.SMSPEC")
+    Path("parameters.txt").write_text("FOO 1")
+    assert summaryplot.split_vectorsdatafiles(["eclipse/model/FOO.DATA"])[3] == [
+        str(
+            Path("eclipse/model/FOO.DATA").absolute().parent.parent.parent
+            / "parameters.txt"
+        )
+    ]
+
+
+def test_find_parameterstxt_one_level_up(tmpdir):
+    tmpdir.chdir()
+    tmpdir.mkdir("eclipse")
+    shutil.copy(DATAFILE, "eclipse/FOO.DATA")
+    shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/FOO.UNSMRY")
+    shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "eclipse/FOO.SMSPEC")
+    Path("parameters.txt").write_text("FOO 1")
+    assert summaryplot.split_vectorsdatafiles(["eclipse/FOO.DATA"])[3] == [
+        str(Path("eclipse/FOO.DATA").absolute().parent.parent / "parameters.txt")
+    ]
 
 
 @pytest.mark.integration
