@@ -155,9 +155,10 @@ def get_supertime(time, rate, bu_start_ind, bu_end_ind):
 
 def get_weighted_avg_press_time_derivative_lag1(dp, dspt):
     """
-    Compute weighted average of pressure time derivative. Only one time step to each side. Lag1
+    Compute weighted average of pressure time derivative,
+    one time step to each side. Lag1
 
-            Formula: (  (dp_f/dspt_f)*dspt_b + (dp_b/dspt_b)*dspt_f )/(dspt_f + dspt_b)
+    Formula: (  (dp_f/dspt_f)*dspt_b + (dp_b/dspt_b)*dspt_f )/(dspt_f + dspt_b)
 
     spt is SuperPositionedTime and dspt is delta spt
     """
@@ -220,7 +221,8 @@ def get_weighted_avg_press_time_derivative_lag2(
     dpdspt_lag2_forward = dp_lag2_forward / dspt_lag2_forward
     dpdspt_lag2_backward = dp_lag2_backward / dspt_lag2_backward
 
-    # To get right values in denominator. It has value 1 above, to avoid division on zero.
+    # To get right values in denominator. It has value 1 above,
+    # to avoid division on zero.
     dspt_lag2_forward[0] = 0
     dspt_lag2_backward[-1] = 0
 
@@ -291,7 +293,7 @@ def main():
 
     if buildup_nr > len(buildup_indices):
         sys.stderr.write(
-            "There are only %d build ups detected for well %s. You asked for number %d\n"
+            "There are %d build ups detected for well %s. You asked for nr %d\n"
             % (len(buildup_indices), well_name, buildup_nr)
         )
         sys.exit(1)
