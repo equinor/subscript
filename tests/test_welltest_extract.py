@@ -22,9 +22,45 @@ def test_main(tmpdir):
     tmpdir.chdir()
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
-    sys.argv = ["welltest_extract", datafilepath, "55_33-1", "blabla"]
+
+    # defaults only
+    sys.argv = ["welltest_extract", datafilepath, "55_33-1"]
     welltest_extract.main()
-    assert os.path.exists("blabla_wbhp.csv")
+    assert os.path.exists("wbhp.csv")
+    os.unlink("wbhp.csv")
+
+    # test --outfilessufix
+    sys.argv = [
+        "welltest_extract",
+        datafilepath,
+        "55_33-1",
+        "--outfilessufix",
+        "blabla",
+    ]
+    welltest_extract.main()
+    assert os.path.exists("wbhp_blabla.csv")
+    os.unlink("wbhp_blabla.csv")
+
+    # test --outputdirectory
+    sys.argv = [
+        "welltest_extract",
+        datafilepath,
+        "55_33-1",
+        "--outputdirectory",
+        "blabla",
+    ]
+    with pytest.raises(FileNotFoundError, match=r".*No such outputdirectory.*"):
+        welltest_extract.main()
+
+    os.mkdir("blabla")
+    welltest_extract.main()
+    assert os.path.exists("./blabla/wbhp.csv")
+    os.unlink("blabla/wbhp.csv")
+
+    # test --pahse
+    sys.argv = ["welltest_extract", datafilepath, "55_33-1", "--phase", "GAS"]
+    welltest_extract.main()
+    assert os.path.exists("wgpr.csv")
 
 
 def test_get_summary_vec():
@@ -58,7 +94,7 @@ def test_get_buildup_indices():
 
 
 def test_get_supertime():
-    """ Test that superpositied time is calcuated correctly """
+    """ Test that superpositied time is calculated correctly """
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
@@ -75,7 +111,7 @@ def test_get_supertime():
 
 
 def test_get_weighted_avg_press_time_derivative_lag1():
-    """ Test that weighted_avg_press_time_derivative_lag1 is calcuated correctly """
+    """ Test that weighted_avg_press_time_derivative_lag1 is calculated correctly """
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)

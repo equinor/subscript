@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys
+import os
 import argparse
 import numpy as np
 from ecl.summary import EclSum
@@ -58,26 +59,35 @@ def get_parser():
         help="Eclipse case to extract from",
     )
     parser.add_argument(
-        "well_name",
+        "wellname",
         type=str,
         help="Name of well to extract results from",
     )
     parser.add_argument(
-        "out_files_prefix",
+        "--outfilessufix",
         type=str,
-        help="Prefix to be added to result files, can contain a path",
+        help='Sufix to be added to result files. Default: ""',
+        default="",
     )
     parser.add_argument(
         "-n",
         "--buildup_nr",
         type=int,
-        help="Buildup number, indicating which buildup to extract. Counting from 1 ",
+        help="Buildup nr, eg which buildup to extract. Counting from 1. Default: 1 ",
         default=1,
+    )
+    parser.add_argument(
+        "-o",
+        "--outputdirectory",
+        type=str,
+        help="Directory to put the output files. Detault: .",
+        default="./",
     )
     parser.add_argument(
         "--phase",
         type=str,
-        help="Main fluid phase in test (OIL/GAS)",
+        choices=["OIL", "GAS"],
+        help="Main fluid phase in test (OIL/GAS). Default: OIL",
         default="OIL",
         required=False,
     )
@@ -316,10 +326,20 @@ def main():
     args = get_parser().parse_args()
 
     eclcase = args.eclcase
-    well_name = args.well_name
+    well_name = args.wellname
     buildup_nr = args.buildup_nr
     main_phase = args.phase
-    outf_prefix = args.out_files_prefix
+    outf_sufix = args.outfilessufix
+    outdir = args.outputdirectory
+
+    if outf_sufix and not outf_sufix.startswith("_"):
+        outf_sufix = "_" + outf_sufix
+
+    if outdir == "":
+        outdir = "./"
+
+    if not os.path.exists(outdir):
+        raise FileNotFoundError("No such outputdirectory:", outdir)
 
     summary = EclSum(eclcase)
 
@@ -408,39 +428,39 @@ def main():
     # print(dpdspt_weighted_lag2)
 
     to_csv(
-        outf_prefix + "_dpds_l1.csv",
+        outdir + "/dpds_lag1" + outf_sufix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
         ["Hours", "dpd(supt)_w"],
     )
     to_csv(
-        outf_prefix + "_dpds_l2.csv",
+        outdir + "/dpds_lag2" + outf_sufix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
         ["Hours", "dpd(supt)_w2"],
     )
     to_csv(
-        outf_prefix + "_sspt.csv",
+        outdir + "/sspt" + outf_sufix + ".csv",
         [super_time],
         ["Superpositioned_time"],
     )
     to_csv(
-        outf_prefix + "_wbhp.csv",
+        outdir + "/wbhp" + outf_sufix + ".csv",
         [time[: bu_end_ind + 1], wbhp[: bu_end_ind + 1]],
         ["Hours", "WBHP"],
     )
     to_csv(
-        outf_prefix + "_wwpr.csv",
+        outdir + "/wwpr" + outf_sufix + ".csv",
         [time[: bu_end_ind + 1], wwpr[: bu_end_ind + 1]],
         ["Hours", "WWPR"],
     )
     if main_phase == "OIL":
         to_csv(
-            outf_prefix + "_wopr.csv",
+            outdir + "/wopr" + outf_sufix + ".csv",
             [time[: bu_end_ind + 1], wopr[: bu_end_ind + 1]],
             ["Hours", "WOPR"],
         )
     if main_phase == "GAS":
         to_csv(
-            outf_prefix + "_wgpr.csv",
+            outdir + "/wgpr" + outf_sufix + ".csv",
             [time[: bu_end_ind + 1], wgpr[: bu_end_ind + 1]],
             ["Hours", "WGPR"],
         )
