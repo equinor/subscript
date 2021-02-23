@@ -21,12 +21,12 @@ Required summary vectors in sim deck:
 """
 
 Script is a rewrite of a legacy script originally developed and improved by:
- * Jon Saetrom
- * Bjoern Kaare Hegstad
+ * Jon Sætrom
+ * Bjørn Kåre Hegstad
  * Cecile Otterlei
  * Hodjat Moradi
 
-AUTHOR: Eivind Smoergrav
+AUTHOR: Eivind Smørgrav
 
 TODO
  - Support pseudo pressure vs time relevant for gas and gas condensate fields.
@@ -43,6 +43,9 @@ TODO
 def get_parser():
     """
     Define the argparse parser
+
+    Returns:
+        parser (argparse.ArgumentParser)
     """
     parser = argparse.ArgumentParser(
         description=DESCRIPTION,
@@ -68,9 +71,8 @@ def get_parser():
         "-n",
         "--buildup_nr",
         type=int,
-        help="Buildup number, indicating which build up to extract. Counting from 1 ",
+        help="Buildup number, indicating which buildup to extract. Counting from 1 ",
         default=1,
-        required=False,
     )
     parser.add_argument(
         "--phase",
@@ -86,8 +88,12 @@ def get_summary_vec(summary, key):
     """
     Read vector corresponding to key from summary instance
 
-    Return:
-    vec  : np.array
+    Args:
+       summary: (ecl.summary.EclSum)
+       key: (str)
+
+    Returns:
+        vec  : np.array
     """
 
     try:
@@ -102,8 +108,16 @@ def get_buildup_indices(rates):
     Go through the simulated rate and identify bu periods, as defined by zero flow.
 
     Returns:
-    buildup_incices     : list of indices associated with start of the build ups
-    buildup_end_incices : list of indices associated with end of the build ups
+    buildup_incices     : list of indices associated with start of the buildups
+    buildup_end_incices : list of indices associated with end of the buildups
+
+    Args:
+       rates: np.array
+
+    Returns:
+       buildup_indices (list)
+       buildup_end_indices (list)
+
 
     """
 
@@ -128,9 +142,16 @@ def get_buildup_indices(rates):
 
 def get_supertime(time, rate, bu_start_ind, bu_end_ind):
     """
-    Calculate supertime as
+    Calculate supertime
 
-    Return: supertime - np.array
+    Args:
+        time (np.array)
+        rate (np.array)
+        bu_start_ind (int)
+        bu_end_ind (int)
+
+    Returns:
+        supertime (np.array)
     """
 
     rdiff = np.diff(rate)
@@ -161,6 +182,14 @@ def get_weighted_avg_press_time_derivative_lag1(dp, dspt):
     Formula: (  (dp_f/dspt_f)*dspt_b + (dp_b/dspt_b)*dspt_f )/(dspt_f + dspt_b)
 
     spt is SuperPositionedTime and dspt is delta spt
+
+    Args:
+        dp (np.array)
+        dspt (np.array)
+
+    Returns:
+        dpdspt_weighted (np.array)
+
     """
 
     dpdspt = dp / dspt
@@ -192,6 +221,17 @@ def get_weighted_avg_press_time_derivative_lag2(
 
     """
     Compute weighted average using LAG 2 for pressure time derivative
+
+    Args:
+        dp (np.array)
+        dspt (np.array)
+        supertime (np.array)
+        wbhp (np.array)
+        bu_start_ind (int)
+        bu_end_ind (int)
+
+    Returns:
+        dpdspt_weighted_lag2 (np.array)
     """
 
     spt_raw = super_time
@@ -237,6 +277,14 @@ def get_weighted_avg_press_time_derivative_lag2(
 def to_csv(filen, field_list, header_list, sep=","):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
+
+    Args:
+        filen (str)
+        field_list (list of np.array)
+        header_list (list of str)
+        sep (str)
+    Returns:
+        pass
     """
 
     fileh = open(filen, "w")
@@ -256,6 +304,12 @@ def to_csv(filen, field_list, header_list, sep=","):
 def main():
     """
     Main entry point for the script
+
+    Args:
+
+    Returns:
+        pass
+
     """
 
     print("Running the " + sys.argv[0])
@@ -284,9 +338,9 @@ def main():
     else:
         buildup_indices, buildup_end_indices = get_buildup_indices(wgpr)
 
-    print("Time step number for start of each build-up period " + str(buildup_indices))
+    print("Time step number for start of each buildup period " + str(buildup_indices))
     print(
-        "Time step number for end   of each build-up period "
+        "Time step number for end   of each buildup period "
         + str(buildup_end_indices)
         + "\n"
     )
@@ -300,14 +354,14 @@ def main():
     else:
         bu_start_ind = buildup_indices[buildup_nr - 1]
         print(
-            "The time step for the start of the %d'th build-up period is %d"
+            "The time step for the start of the %d'th buildup period is %d"
             % (buildup_nr, bu_start_ind)
         )
 
-    # Find end of build_up period.
+    # Find end of buildup period.
     bu_end_ind = buildup_end_indices[buildup_nr - 1]
     print(
-        "The time step for the end of the %d'th build-up period is %d"
+        "The time step for the end of the %d'th buildup period is %d"
         % (buildup_nr, bu_end_ind)
     )
 
@@ -332,9 +386,9 @@ def main():
     # print(dspt)
     # print("\n")
 
-    # Cumulative time used from start of build-up
+    # Cumulative time used from start of buildup
     cum_time = time[bu_start_ind + 1 : bu_end_ind + 1] - time[bu_start_ind]
-    # print("cumulative time in build up of interest (length %d) = " % len(cum_time))
+    # print("cumulative time in buildup of interest (length %d) = " % len(cum_time))
     # print(cum_time)
     # print("\n")
 

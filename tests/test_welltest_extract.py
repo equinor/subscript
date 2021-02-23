@@ -24,7 +24,7 @@ def test_main(tmpdir):
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     sys.argv = ["welltest_extract", datafilepath, "55_33-1", "blabla"]
     welltest_extract.main()
-    assert os.path.exists("out_wbhp")
+    assert os.path.exists("blabla_wbhp.csv")
 
 
 def test_get_summary_vec():
@@ -41,7 +41,7 @@ def test_get_summary_vec():
 
 
 def test_get_buildup_indices():
-    """Test that build up periods are identified correct """
+    """Test that buildup periods are identified correct """
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
