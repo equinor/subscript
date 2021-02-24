@@ -51,6 +51,7 @@ EXAMPLES = """
 
 """
 
+
 def get_parser():
     """
     Define the argparse parser
