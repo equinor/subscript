@@ -1,5 +1,4 @@
 import os
-import sys
 import subprocess
 import pytest
 import numpy as np
@@ -17,38 +16,32 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test invocation from command line"""
     tmpdir.chdir()
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
 
     # defaults only
-    sys.argv = ["welltest_dpds", datafilepath, "55_33-1"]
+    mocker.patch("sys.argv", ["welltest_dpds", datafilepath, "55_33-1"])
     welltest_dpds.main()
     assert os.path.exists("wbhp.csv")
     os.unlink("wbhp.csv")
 
-    # test --outfilessufix
-    sys.argv = [
-        "welltest_dpds",
-        datafilepath,
-        "55_33-1",
-        "--outfilessufix",
-        "blabla",
-    ]
+    # test --outfilessuffix
+    mocker.patch(
+        "sys.argv",
+        ["welltest_dpds", datafilepath, "55_33-1", "--outfilessuffix", "blabla"],
+    )
     welltest_dpds.main()
     assert os.path.exists("wbhp_blabla.csv")
     os.unlink("wbhp_blabla.csv")
 
     # test --outputdirectory
-    sys.argv = [
-        "welltest_dpds",
-        datafilepath,
-        "55_33-1",
-        "--outputdirectory",
-        "blabla",
-    ]
+    mocker.patch(
+        "sys.argv",
+        ["welltest_dpds", datafilepath, "55_33-1", "--outputdirectory", "blabla"],
+    )
     with pytest.raises(FileNotFoundError, match=r".*No such outputdirectory.*"):
         welltest_dpds.main()
 
@@ -57,8 +50,10 @@ def test_main(tmpdir):
     assert os.path.exists("./blabla/wbhp.csv")
     os.unlink("blabla/wbhp.csv")
 
-    # test --pahse
-    sys.argv = ["welltest_dpds", datafilepath, "55_33-1", "--phase", "GAS"]
+    # test --phase
+    mocker.patch(
+        "sys.argv", ["welltest_dpds", datafilepath, "55_33-1", "--phase", "GAS"]
+    )
     welltest_dpds.main()
     assert os.path.exists("wgpr.csv")
 
@@ -78,6 +73,31 @@ def test_get_summary_vec():
 
 def test_get_buildup_indices():
     """Test that buildup periods are identified correct """
+
+    wbhp = np.array([1, 0])
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
+    assert bu_start == [1]
+    assert bu_end == [1]
+
+    wbhp = np.array([0, 1])
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
+    assert bu_start == []
+    assert bu_end == []
+
+    wbhp = np.array([0, 1, 0])
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
+    assert bu_start == [2]
+    assert bu_end == [2]
+
+    wbhp = np.array([0, 1, 0, 1, 0, 0])
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
+    assert bu_start == [2, 4]
+    assert bu_end == [2, 5]
+
+    wbhp = np.array([0, 1, 0, 1, 0, 0, 1])
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
+    assert bu_start == [2, 4]
+    assert bu_end == [2, 5]
 
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)

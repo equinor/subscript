@@ -14,10 +14,18 @@ Required summary vectors in sim deck:
   -days,
   -wbhp:well_name,
   -wwpr:well_name,
-  -wopr:well_name if main_phase == OIL
-  -wgpr:well_name if main_phase == GAS
+  -wopr:well_name if --phase == OIL
+  -wgpr:well_name if --phase == GAS
 
-Outputs pressure vs superpositioned time derivative
+Outputs the following files according to naming convention:
+  outputdirectory/key_outfilesuffix.csv
+  - dpds_lag1 eg superpositioned time derivative of pressure lag 1
+  - dpds_lag2 eg superpositioned time derivative of pressure lag 2
+  - sspt superpositioned time
+  - wbhp vs cum time
+  - wwpr vs cum time
+  - wopr vs cum time if --phase == OIL
+  - wgpr vs cum time if --phase == GAS
 
 """
 
@@ -36,10 +44,9 @@ TODO
  - Make error handling more robust, eg:
      - check if all necessary vectors are present wbhp, wopr or wgpr, wwpr is optional
 - decide how the output files should be handled, there are many and messy as of now
-- make an ERT JOB
-- submit to subscript and ert handle in komodo
-- old script did not exist(1) with invalid input, but reported nans in the outfiles,
-  which is very bad practice. Discuss with users
+     - suggestion unify all the ones with two columns into one csv file
+     - arg options to define which vectors to output
+     - lift the wwpr requirement, not used, but legacy script  outputted it
 """
 
 CATEGORY = "modelling.reservoir"
@@ -48,6 +55,9 @@ EXAMPLES = """
 .. code-block:: console
 
  FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
+
+ FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS,
+    <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFIX>=OP_1_1)
 
 """
 
@@ -75,9 +85,9 @@ def get_parser():
         help="Name of well to extract results from",
     )
     parser.add_argument(
-        "--outfilessufix",
+        "--outfilessuffix",
         type=str,
-        help='Sufix to be added to result files. Default: ""',
+        help='Suffix to be added to result files. Default: ""',
         default="",
     )
     parser.add_argument(
@@ -129,8 +139,8 @@ def get_buildup_indices(rates):
     Go through the simulated rate and identify bu periods, as defined by zero flow.
 
     Returns:
-    buildup_incices     : list of indices associated with start of the buildups
-    buildup_end_incices : list of indices associated with end of the buildups
+    buildup_incices     : list of indices associated with start of buildups
+    buildup_end_incices : list of indices associated with end of buildups
 
     Args:
        rates: np.array
@@ -149,7 +159,7 @@ def get_buildup_indices(rates):
     for i, rate in enumerate(rates):
         if rate == 0 and last > 0.0:
             buildup_indices.append(i)
-        if rate > 0 and last == 0:
+        if rate > 0 and last == 0 and not i == 0:
             buildup_end_indices.append(i - 1)
         if i == len(rates) - 1 and rate == 0:
             buildup_end_indices.append(i)
@@ -320,6 +330,7 @@ def to_csv(filen, field_list, header_list, sep=","):
             fileh.write(sep + "%0.10f" % field[i])
         fileh.write("\n")
     fileh.close()
+    print("Writing file:" + filen)
 
 
 def main():
@@ -333,18 +344,22 @@ def main():
 
     """
 
-    print("Running the " + sys.argv[0])
     args = get_parser().parse_args()
 
     eclcase = args.eclcase
     well_name = args.wellname
     buildup_nr = args.buildup_nr
     main_phase = args.phase
-    outf_sufix = args.outfilessufix
+    outf_suffix = args.outfilessuffix
     outdir = args.outputdirectory
 
-    if outf_sufix and not outf_sufix.startswith("_"):
-        outf_sufix = "_" + outf_sufix
+    print("*" * 60)
+    print("Running the " + sys.argv[0] + " script")
+    print("Extracting results from well:", well_name)
+    print()
+
+    if outf_suffix and not outf_suffix.startswith("_"):
+        outf_suffix = "_" + outf_suffix
 
     if outdir == "":
         outdir = "./"
@@ -369,12 +384,13 @@ def main():
     else:
         buildup_indices, buildup_end_indices = get_buildup_indices(wgpr)
 
-    print("Time step number for start of each buildup period " + str(buildup_indices))
-    print(
-        "Time step number for end   of each buildup period "
-        + str(buildup_end_indices)
-        + "\n"
-    )
+    print("Identified %d buildup periods:" % (len(buildup_indices)))
+    print("Starting at time steps:" + str(buildup_indices) + " Corresponding to:")
+    for i in buildup_indices:
+        print("  %0.5f Hours" % (time[i]))
+    print("Ending at time step:" + str(buildup_end_indices) + " Corresponding to: ")
+    for i in buildup_end_indices:
+        print("  %0.5f Hours" % (time[i]))
 
     if buildup_nr > len(buildup_indices):
         sys.stderr.write(
@@ -385,93 +401,68 @@ def main():
     else:
         bu_start_ind = buildup_indices[buildup_nr - 1]
         print(
-            "The time step for the start of the %d'th buildup period is %d"
-            % (buildup_nr, bu_start_ind)
+            "Selected buildup period is nr %d, starting at: %0.5f Hours"
+            % (buildup_nr, time[buildup_indices[buildup_nr - 1]])
         )
+    print()
 
     # Find end of buildup period.
     bu_end_ind = buildup_end_indices[buildup_nr - 1]
-    print(
-        "The time step for the end of the %d'th buildup period is %d"
-        % (buildup_nr, bu_end_ind)
-    )
 
     if main_phase == "OIL":
         super_time = get_supertime(time, wopr, bu_start_ind, bu_end_ind)
     else:
         super_time = get_supertime(time, wgpr, bu_start_ind, bu_end_ind)
 
-    # print("Supertime (length %d) = " % len(super_time))
-    # print(super_time)
-    # print("\n")
-
     # Calculate delta pressure             - lag 1 only
     dp = np.diff(wbhp[bu_start_ind + 1 : bu_end_ind + 1])
-    # print("dp (length %d) = " % len(dp))
-    # print(dp)
-    # print("\n")
 
     # Calculate delta superpositioned time - lag 1 only
     dspt = np.diff(super_time)  # Supertime at Tn is not defined.
-    # print("dspt (length dsupertime %d) = " % len(dspt))
-    # print(dspt)
-    # print("\n")
 
     # Cumulative time used from start of buildup
     cum_time = time[bu_start_ind + 1 : bu_end_ind + 1] - time[bu_start_ind]
-    # print("cumulative time in buildup of interest (length %d) = " % len(cum_time))
-    # print(cum_time)
-    # print("\n")
 
     dpdspt_weighted_lag1 = get_weighted_avg_press_time_derivative_lag1(dp, dspt)
-    print(
-        "dpdspt_weighted_lag1 (length dpdspt_weighted = %d" % len(dpdspt_weighted_lag1)
-    )
-    # print(dpdspt_weighted_lag1)
 
     dpdspt_weighted_lag2 = get_weighted_avg_press_time_derivative_lag2(
         dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
     )
-    print(
-        "dpdspt_weighted_lag2 (length dpdspt_weighted_alg2 = %d"
-        % len(dpdspt_weighted_lag2)
-    )
-    # print(dpdspt_weighted_lag2)
 
     to_csv(
-        outdir + "/dpds_lag1" + outf_sufix + ".csv",
+        outdir + "/dpds_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
         ["Hours", "dpd(supt)_w"],
     )
     to_csv(
-        outdir + "/dpds_lag2" + outf_sufix + ".csv",
+        outdir + "/dpds_lag2" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
         ["Hours", "dpd(supt)_w2"],
     )
     to_csv(
-        outdir + "/sspt" + outf_sufix + ".csv",
+        outdir + "/sspt" + outf_suffix + ".csv",
         [super_time],
         ["Superpositioned_time"],
     )
     to_csv(
-        outdir + "/wbhp" + outf_sufix + ".csv",
+        outdir + "/wbhp" + outf_suffix + ".csv",
         [time[: bu_end_ind + 1], wbhp[: bu_end_ind + 1]],
         ["Hours", "WBHP"],
     )
     to_csv(
-        outdir + "/wwpr" + outf_sufix + ".csv",
+        outdir + "/wwpr" + outf_suffix + ".csv",
         [time[: bu_end_ind + 1], wwpr[: bu_end_ind + 1]],
         ["Hours", "WWPR"],
     )
     if main_phase == "OIL":
         to_csv(
-            outdir + "/wopr" + outf_sufix + ".csv",
+            outdir + "/wopr" + outf_suffix + ".csv",
             [time[: bu_end_ind + 1], wopr[: bu_end_ind + 1]],
             ["Hours", "WOPR"],
         )
     if main_phase == "GAS":
         to_csv(
-            outdir + "/wgpr" + outf_sufix + ".csv",
+            outdir + "/wgpr" + outf_suffix + ".csv",
             [time[: bu_end_ind + 1], wgpr[: bu_end_ind + 1]],
             ["Hours", "WGPR"],
         )
