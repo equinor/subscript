@@ -822,3 +822,28 @@ def test_e300_keywords():
 def test_integration():
     """Test that the endpoint is installed"""
     assert subprocess.check_output(["sunsch", "-h"])
+
+
+@pytest.mark.integration
+def test_ert_forward_model(tmpdir):
+    """Test that the ERT forward model configuration is correct"""
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    os.chdir("testdata_sunsch")
+
+    Path("FOO.DATA").write_text("--Empty")
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE FOO.DATA",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALIZATIONS 1",
+                "RUNPATH .",
+                "",
+                "FORWARD_MODEL SUNSCH(<config>=config_v2.yml)",
+            ]
+        )
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("schedule.inc").is_file()
