@@ -9,7 +9,6 @@ from ecl.summary import EclSum
 
 DESCRIPTION = """
 Script to extract simulated welltest results from simulator output.
-Outputs pressure vs superpositioned time derivative
 
 Required summary vectors in sim deck:
   -days,
@@ -17,6 +16,9 @@ Required summary vectors in sim deck:
   -wwpr:well_name,
   -wopr:well_name if main_phase == OIL
   -wgpr:well_name if main_phase == GAS
+
+Outputs pressure vs superpositioned time derivative
+
 """
 
 """
@@ -40,6 +42,14 @@ TODO
   which is very bad practice. Discuss with users
 """
 
+CATEGORY = "modelling.reservoir"
+
+EXAMPLES = """
+.. code-block:: console
+
+ FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
+
+"""
 
 def get_parser():
     """
