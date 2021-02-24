@@ -4,7 +4,7 @@ import subprocess
 import pytest
 import numpy as np
 from ecl.summary import EclSum
-from subscript.welltest_extract import welltest_extract
+from subscript.welltest_dpds import welltest_dpds
 
 ECLDIR = os.path.join(os.path.dirname(__file__), "data/welltest/eclipse/model")
 ECLCASE = "DROGON_DST_PLT-0"
@@ -13,7 +13,7 @@ ECLCASE = "DROGON_DST_PLT-0"
 @pytest.mark.integration
 def test_integration():
     """Test that endpoint is installed"""
-    assert subprocess.check_output(["welltest_extract", "-h"])
+    assert subprocess.check_output(["welltest_dpds", "-h"])
 
 
 @pytest.mark.integration
@@ -24,42 +24,42 @@ def test_main(tmpdir):
     datafilepath = os.path.join(ECLDIR, ECLCASE)
 
     # defaults only
-    sys.argv = ["welltest_extract", datafilepath, "55_33-1"]
-    welltest_extract.main()
+    sys.argv = ["welltest_dpds", datafilepath, "55_33-1"]
+    welltest_dpds.main()
     assert os.path.exists("wbhp.csv")
     os.unlink("wbhp.csv")
 
     # test --outfilessufix
     sys.argv = [
-        "welltest_extract",
+        "welltest_dpds",
         datafilepath,
         "55_33-1",
         "--outfilessufix",
         "blabla",
     ]
-    welltest_extract.main()
+    welltest_dpds.main()
     assert os.path.exists("wbhp_blabla.csv")
     os.unlink("wbhp_blabla.csv")
 
     # test --outputdirectory
     sys.argv = [
-        "welltest_extract",
+        "welltest_dpds",
         datafilepath,
         "55_33-1",
         "--outputdirectory",
         "blabla",
     ]
     with pytest.raises(FileNotFoundError, match=r".*No such outputdirectory.*"):
-        welltest_extract.main()
+        welltest_dpds.main()
 
     os.mkdir("blabla")
-    welltest_extract.main()
+    welltest_dpds.main()
     assert os.path.exists("./blabla/wbhp.csv")
     os.unlink("blabla/wbhp.csv")
 
     # test --pahse
-    sys.argv = ["welltest_extract", datafilepath, "55_33-1", "--phase", "GAS"]
-    welltest_extract.main()
+    sys.argv = ["welltest_dpds", datafilepath, "55_33-1", "--phase", "GAS"]
+    welltest_dpds.main()
     assert os.path.exists("wgpr.csv")
 
 
@@ -69,10 +69,10 @@ def test_get_summary_vec():
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
     with pytest.raises(KeyError, match=r".*No such key.*"):
-        welltest_extract.get_summary_vec(summary, "no_well")
-        welltest_extract.get_summary_vec(summary, "NOVEC:55_33-1")
+        welltest_dpds.get_summary_vec(summary, "no_well")
+        welltest_dpds.get_summary_vec(summary, "NOVEC:55_33-1")
 
-    wopr = welltest_extract.get_summary_vec(summary, "WOPR:55_33-1")
+    wopr = welltest_dpds.get_summary_vec(summary, "WOPR:55_33-1")
     assert len(wopr) == 556
 
 
@@ -82,13 +82,13 @@ def test_get_buildup_indices():
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
 
-    wbhp = welltest_extract.get_summary_vec(summary, "WBHP:55_33-1")
-    bu_start, bu_end = welltest_extract.get_buildup_indices(wbhp)
+    wbhp = welltest_dpds.get_summary_vec(summary, "WBHP:55_33-1")
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
     assert bu_start == []
     assert bu_end == []
 
-    wopr = welltest_extract.get_summary_vec(summary, "WOPR:55_33-1")
-    bu_start, bu_end = welltest_extract.get_buildup_indices(wopr)
+    wopr = welltest_dpds.get_summary_vec(summary, "WOPR:55_33-1")
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(wopr)
     assert bu_start == [7, 260]
     assert bu_end == [254, 555]
 
@@ -99,11 +99,11 @@ def test_get_supertime():
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
 
-    rate = welltest_extract.get_summary_vec(summary, "WOPR:55_33-1")
+    rate = welltest_dpds.get_summary_vec(summary, "WOPR:55_33-1")
     time = np.array(summary.days) * 24.0
-    bu_start, bu_end = welltest_extract.get_buildup_indices(rate)
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(rate)
 
-    supertime = welltest_extract.get_supertime(time, rate, bu_start[0], bu_end[0])
+    supertime = welltest_dpds.get_supertime(time, rate, bu_start[0], bu_end[0])
 
     assert len(supertime) == 247
     assert supertime[0] == pytest.approx(-9.83777733)
@@ -116,17 +116,17 @@ def test_get_weighted_avg_press_time_derivative_lag1():
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
 
-    wbhp = welltest_extract.get_summary_vec(summary, "WBHP:55_33-1")
-    rate = welltest_extract.get_summary_vec(summary, "WOPR:55_33-1")
+    wbhp = welltest_dpds.get_summary_vec(summary, "WBHP:55_33-1")
+    rate = welltest_dpds.get_summary_vec(summary, "WOPR:55_33-1")
     time = np.array(summary.days) * 24.0
-    bu_start, bu_end = welltest_extract.get_buildup_indices(rate)
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(rate)
 
-    supertime = welltest_extract.get_supertime(time, rate, bu_start[0], bu_end[0])
+    supertime = welltest_dpds.get_supertime(time, rate, bu_start[0], bu_end[0])
 
     d_press = np.diff(wbhp[bu_start[0] + 1 : bu_end[0] + 1])
     dspt = np.diff(supertime)
 
-    dpdspt = welltest_extract.get_weighted_avg_press_time_derivative_lag1(d_press, dspt)
+    dpdspt = welltest_dpds.get_weighted_avg_press_time_derivative_lag1(d_press, dspt)
 
     assert len(dpdspt) == 247
     assert dpdspt[0] == pytest.approx(0.46972867)
@@ -139,16 +139,16 @@ def test_get_weighted_avg_press_time_derivative_lag2():
     datafilepath = os.path.join(ECLDIR, ECLCASE)
     summary = EclSum(datafilepath)
 
-    wbhp = welltest_extract.get_summary_vec(summary, "WBHP:55_33-1")
-    rate = welltest_extract.get_summary_vec(summary, "WOPR:55_33-1")
+    wbhp = welltest_dpds.get_summary_vec(summary, "WBHP:55_33-1")
+    rate = welltest_dpds.get_summary_vec(summary, "WOPR:55_33-1")
     time = np.array(summary.days) * 24.0
-    bu_start, bu_end = welltest_extract.get_buildup_indices(rate)
+    bu_start, bu_end = welltest_dpds.get_buildup_indices(rate)
 
-    supertime = welltest_extract.get_supertime(time, rate, bu_start[0], bu_end[0])
+    supertime = welltest_dpds.get_supertime(time, rate, bu_start[0], bu_end[0])
 
     d_press = np.diff(wbhp[bu_start[0] + 1 : bu_end[0] + 1])
     dspt = np.diff(supertime)
-    dpdspt_w_lag2 = welltest_extract.get_weighted_avg_press_time_derivative_lag2(
+    dpdspt_w_lag2 = welltest_dpds.get_weighted_avg_press_time_derivative_lag2(
         d_press,
         dspt,
         supertime,
