@@ -26,6 +26,7 @@ def expected_jobs(path_to_subscript):
         "OFMVOL2CSV",
         "PRTVOL2CSV",
         "SUNSCH",
+        "WELLTEST_DPDS",
     ]
     return {
         name: path.join(path_to_subscript, "config_jobs", name)
