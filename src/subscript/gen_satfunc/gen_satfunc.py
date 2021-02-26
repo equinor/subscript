@@ -1,7 +1,7 @@
-import argparse
-import os
 import sys
+import argparse
 import logging
+from pathlib import Path
 
 import pyscal
 import subscript
@@ -34,8 +34,8 @@ def main():
 
     logger.setLevel(logging.INFO)
 
-    if not os.path.isfile(args.config_file):
-        sys.exit("Could not find the configuration file: %s" % args.config_file)
+    if not Path(args.config_file).exists():
+        sys.exit(f"Could not find the configuration file: {args.config_file}")
 
     output = ""
 
@@ -90,8 +90,8 @@ def main():
                 raise ValueError('Error while interpreting line: "%s"' % line.strip())
 
     logger.info("Writing output file...")
-    with open(args.output_file, "w") as fh:
-        fh.write(output)
+
+    Path(args.output_file).write_text(output)
 
     logger.info("Done")
 

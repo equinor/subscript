@@ -1,9 +1,8 @@
 """NPV calculation of oil and gas production income"""
-
-import os
 import datetime
 import logging
 import argparse
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -217,11 +216,9 @@ def get_paramfilename(eclfile):
         "../parameters.txt",
         "../../parameters.txt",
     ]:
-        parampath = os.path.join(
-            os.path.dirname(os.path.realpath(eclfile)), paramcandidate
-        )
-        if os.path.exists(parampath):
-            return parampath
+        parampath = Path(eclfile).absolute().parent / paramcandidate
+        if parampath.exists():
+            return str(parampath)
     return ""
 
 

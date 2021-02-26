@@ -1,9 +1,8 @@
 """Test the merge_schedule application, which is just another command-line
 frontend to sunsch"""
-import os
-import sys
 import shutil
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -24,43 +23,49 @@ def test_integration():
 def datadir(tmpdir):
     """A fixture that provides selected input files, copied from sunsch's
     testdata"""
-    testdatadir = os.path.join(os.path.dirname(__file__), "testdata_sunsch")
+    testdatadir = Path(__file__).absolute().parent / "testdata_sunsch"
     tmpdir.chdir()
     wanted_files = ["mergeme.sch", "initwithdates.sch", "merge2.sch"]
     for filename in wanted_files:
-        shutil.copy(os.path.join(testdatadir, filename), filename)
+        shutil.copy(testdatadir / filename, filename)
     yield
 
 
-def test_main(datadir):
+def test_main(datadir, mocker):
     """Test command line merge_schedule"""
 
-    sys.argv = [
-        "merge_schedule",
-        "--verbose",
-        "mergeme.sch",
-        "merge2.sch",
-        "merged.sch",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "merge_schedule",
+            "--verbose",
+            "mergeme.sch",
+            "merge2.sch",
+            "merged.sch",
+        ],
+    )
     merge_schedule.main()
 
-    assert os.path.exists("merged.sch")
+    assert Path("merged.sch").exists()
     assert len(open("merged.sch").readlines()) == 32
 
 
-def test_initwithdates(datadir):
+def test_initwithdates(datadir, mocker):
     """Test that the first file can contain statements prior to the first
     DATES"""
 
-    sys.argv = [
-        "merge_schedule",
-        "--verbose",
-        "initwithdates.sch",
-        "merge2.sch",
-        "merged.sch",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "merge_schedule",
+            "--verbose",
+            "initwithdates.sch",
+            "merge2.sch",
+            "merged.sch",
+        ],
+    )
     merge_schedule.main()
-    assert os.path.exists("merged.sch")
+    assert Path("merged.sch").exists()
     merged = open("merged.sch").read()
     assert merged.count("\n") == 28
     assert "BAR-FOO" in merged  # This magic string is first in initwithdates
@@ -71,66 +76,81 @@ def test_initwithdates(datadir):
     assert merged.find("YES") > merged.find("NO")
 
 
-def test_dummy_1(datadir):
+def test_dummy_1(datadir, mocker):
     """Test that the first file can contain statements prior to the
     first DATES, and when we don't do any merges (dummy situation)"""
-    sys.argv = ["merge_schedule", "--verbose", "initwithdates.sch", "merged.sch"]
+    mocker.patch(
+        "sys.argv", ["merge_schedule", "--verbose", "initwithdates.sch", "merged.sch"]
+    )
     merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 12
 
 
-def test_dummy2(datadir):
+def test_dummy2(datadir, mocker):
     """Another dummy situation"""
-    sys.argv = ["merge_schedule", "--verbose", "merge2.sch", "merged.sch"]
+    mocker.patch(
+        "sys.argv", ["merge_schedule", "--verbose", "merge2.sch", "merged.sch"]
+    )
     merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 16
 
 
-def test_statements_prior_to_dates(datadir):
+def test_statements_prior_to_dates(datadir, mocker):
     """When we have to files with statements prior to DATES, it is not
     obvious what the users means. Sunsch has chosen to group these to
     a single block that occurs together before the first occurence of any
     DATES in the final output"""
-    sys.argv = [
-        "merge_schedule",
-        "--verbose",
-        "merge2.sch",
-        "initwithdates.sch",
-        "merged.sch",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "merge_schedule",
+            "--verbose",
+            "merge2.sch",
+            "initwithdates.sch",
+            "merged.sch",
+        ],
+    )
     merge_schedule.main()
     merged_str = open("merged.sch").read()
     assert merged_str.find("BAR-FOO") < merged_str.find("DATES")
 
 
-def test_force(datadir):
+def test_force(datadir, mocker):
     """Test that --force is working"""
-    with open("existing.sch", "w") as fhandle:
-        fhandle.write("bogus")
-    sys.argv = ["merge_schedule", "mergeme.sch", "merge2.sch", "existing.sch"]
+    Path("existing.sch").write_text("bogus")
+    mocker.patch(
+        "sys.argv", ["merge_schedule", "mergeme.sch", "merge2.sch", "existing.sch"]
+    )
     merge_schedule.main()
     assert len(open("existing.sch").readlines()) == 1
-    sys.argv = [
-        "merge_schedule",
-        "mergeme.sch",
-        "merge2.sch",
-        "existing.sch",
-        "--force",
-    ]
+
+    mocker.patch(
+        "sys.argv",
+        [
+            "merge_schedule",
+            "mergeme.sch",
+            "merge2.sch",
+            "existing.sch",
+            "--force",
+        ],
+    )
     merge_schedule.main()
     assert len(open("existing.sch").readlines()) == 32
 
 
-def test_clip_end(datadir):
+def test_clip_end(datadir, mocker):
     """Test --clip_end"""
-    sys.argv = [
-        "merge_schedule",
-        "mergeme.sch",
-        "merge2.sch",
-        "merged.sch",
-        "--force",
-        "--clip_end",
-        "2025-01-01",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "merge_schedule",
+            "mergeme.sch",
+            "merge2.sch",
+            "merged.sch",
+            "--force",
+            "--clip_end",
+            "2025-01-01",
+        ],
+    )
     merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 21

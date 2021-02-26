@@ -1,7 +1,6 @@
 """Test csv_merge"""
-import os
-import sys
 import subprocess
+from pathlib import Path
 
 import pytest
 import pandas as pd
@@ -62,10 +61,10 @@ def test_taglist():
     assert csv_merge.taglist(files4, csv_merge.ENSEMBLE_REGEXP) == []
 
 
-def test_main_merge(tmpdir):
+def test_main_merge(tmpdir, mocker):
     """Test command line interface for csv_merge"""
 
-    assert os.system("csv_merge -h") == 0
+    assert subprocess.check_output(["csv_merge", "-h"])
 
     tmpdir.chdir()
 
@@ -81,7 +80,9 @@ def test_main_merge(tmpdir):
         columns=["REAL", "BAR", "CONST"], data=[[0, 30, 1], [1, 40, 1]]
     ).to_csv(test_csv_2, index=False)
 
-    sys.argv = ["csv_merge", test_csv_1, test_csv_2, "-v", "-o", merged_csv]
+    mocker.patch(
+        "sys.argv", ["csv_merge", test_csv_1, test_csv_2, "-v", "-o", merged_csv]
+    )
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
 
@@ -92,15 +93,18 @@ def test_main_merge(tmpdir):
     assert len(merged["FILENAME"].unique()) == 2
 
     # Test --dropconstantcolumns
-    sys.argv = [
-        "csv_merge",
-        test_csv_1,
-        test_csv_2,
-        "--dropconstantcolumns",
-        "-v",
-        "-o",
-        merged_csv,
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv_merge",
+            test_csv_1,
+            test_csv_2,
+            "--dropconstantcolumns",
+            "-v",
+            "-o",
+            merged_csv,
+        ],
+    )
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
 
@@ -109,31 +113,37 @@ def test_main_merge(tmpdir):
     assert len(merged.columns) == 4
 
     # Test --memoryconservative
-    sys.argv = [
-        "csv_merge",
-        test_csv_1,
-        test_csv_2,
-        "--memoryconservative",
-        "-v",
-        "-o",
-        merged_csv,
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv_merge",
+            test_csv_1,
+            test_csv_2,
+            "--memoryconservative",
+            "-v",
+            "-o",
+            merged_csv,
+        ],
+    )
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
     assert len(merged) == 4
     assert len(merged.columns) == 5
 
     # Test --filecolumn
-    sys.argv = [
-        "csv_merge",
-        test_csv_1,
-        test_csv_2,
-        "--filecolumn",
-        "FILETYPE",
-        "-v",
-        "-o",
-        merged_csv,
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv_merge",
+            test_csv_1,
+            test_csv_2,
+            "--filecolumn",
+            "FILETYPE",
+            "-v",
+            "-o",
+            merged_csv,
+        ],
+    )
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
     assert "FILETYPE" in merged
@@ -192,15 +202,12 @@ def test_empty_files(tmpdir):
 def test_ert_hook(tmpdir):
     """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
     realizations"""
-    os.makedirs("realization-0/iter-0")
-    os.makedirs("realization-1/iter-0")
-    with open("realization-0/iter-0/foo.csv", "w") as f_handle:
-        f_handle.write("FOO\nreal0")
-    with open("realization-1/iter-0/foo.csv", "w") as f_handle:
-        f_handle.write("FOO\nreal1")
+    Path("realization-0/iter-0").mkdir(parents=True)
+    Path("realization-1/iter-0").mkdir(parents=True)
+    Path("realization-0/iter-0/foo.csv").write_text("FOO\nreal0")
+    Path("realization-1/iter-0/foo.csv").write_text("FOO\nreal1")
 
-    with open("MERGE_FOO", "w") as wf_handle:
-        wf_handle.write("CSV_MERGE realization-*/iter-*/foo.csv merged.csv")
+    Path("MERGE_FOO").write_text("CSV_MERGE realization-*/iter-*/foo.csv merged.csv")
 
     ert_config = [
         "ECLBASE FOO.DATA",
@@ -213,12 +220,11 @@ def test_ert_hook(tmpdir):
     ]
 
     ert_config_fname = "test.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config))
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
-    assert os.path.exists("merged.csv")
+    assert Path("merged.csv").exists()
     dframe = pd.read_csv("merged.csv")
     assert set(dframe["REAL"].astype(str).values) == {"0", "1"}
     assert set(dframe["FOO"].values) == {"real0", "real1"}

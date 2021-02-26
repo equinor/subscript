@@ -1,5 +1,5 @@
 import os
-import sys
+from pathlib import Path
 
 import subprocess
 import filecmp
@@ -7,7 +7,7 @@ import pytest
 
 from subscript.pack_sim import pack_sim
 
-ECLDIR = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
+ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 ECLCASE = "2_R001_REEK-0.DATA"
 
 # pylint: disable=protected-access
@@ -20,16 +20,16 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test invocation from command line"""
     tmpdir.chdir()
 
-    datafilepath = os.path.join(ECLDIR, ECLCASE)
-    sys.argv = ["pack_sim", datafilepath, "."]
+    datafilepath = ECLDIR / ECLCASE
+    mocker.patch("sys.argv", ["pack_sim", str(datafilepath), "."])
     pack_sim.main()
 
-    assert os.path.exists(ECLCASE)
-    assert os.path.exists("include")
+    assert Path(ECLCASE).exists()
+    assert Path("include").exists()
 
 
 def test_binary_file_detection(tmpdir):
@@ -41,13 +41,11 @@ def test_binary_file_detection(tmpdir):
     tmp_data_file = "TMP.DATA"
     egrid_file = "2_R001_REEK-0.EGRID"
 
-    test_str = "GDFILE\n'%s' /" % egrid_file
-    with open("TMP.DATA", "w") as fhandle:
-        fhandle.write(test_str)
+    Path("TMP.DATA").write_text(f"GDFILE\n'{egrid_file}' /")
 
     os.mkdir(packing_path)
     os.mkdir(packing_path + "/include")
-    pack_sim.inspect_file(tmp_data_file, ECLDIR + "/", packing_path, "", "", False)
+    pack_sim.inspect_file(tmp_data_file, str(ECLDIR) + "/", packing_path, "", "", False)
 
     assert filecmp.cmp(
         "%s/%s" % (ECLDIR, egrid_file), "%s/include/%s" % (packing_path, egrid_file)
@@ -61,35 +59,33 @@ def test_empty_file_inspection(tmpdir):
 
     empty_include_file = "empty.inc"
 
-    packing_path = "./packed"
-    os.mknod(empty_include_file)
+    packing_path = Path("packed")
+    Path(empty_include_file).write_text("")
 
     os.mkdir(packing_path)
-    os.mkdir(packing_path + "/include")
+    os.mkdir(packing_path / "include")
 
     include_text = pack_sim.inspect_file(
-        empty_include_file, ECLDIR + "/", packing_path, "", "", False
+        empty_include_file, str(ECLDIR) + "/", str(packing_path), "", "", False
     )
 
     assert isinstance(include_text, str)
     assert len(include_text) == 0
 
 
-def test_strip_comments(tmpdir):
+def test_strip_comments(tmpdir, mocker):
     """Test that we can strip comments"""
     tmpdir.chdir()
 
-    datafilepath = os.path.join(ECLDIR, ECLCASE)
+    datafilepath = ECLDIR / ECLCASE
     size_with_comments = os.stat(datafilepath).st_size
-    sys.argv = ["pack_sim", "-c", os.path.join(ECLDIR, ECLCASE), "."]
+    mocker.patch("sys.argv", ["pack_sim", "-c", str(ECLDIR / ECLCASE), "."])
     pack_sim.main()
     size_no_comments = os.stat(ECLCASE).st_size
     assert size_no_comments < size_with_comments
-    assert "--" not in "".join(open(ECLCASE).readlines())
+    assert "--" not in Path(ECLCASE).read_text()
     for includefile in os.listdir("include"):
-        assert "--" not in "".join(
-            open(os.path.join("include", includefile)).readlines()
-        )
+        assert "--" not in (Path("include") / includefile).read_text()
 
 
 def test_replace_paths():

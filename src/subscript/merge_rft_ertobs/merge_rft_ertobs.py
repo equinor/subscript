@@ -1,7 +1,6 @@
-import os
-import glob
 import argparse
 import logging
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -151,10 +150,10 @@ def get_observations(obsdir="", filepattern="*.obs"):
         raise ValueError("Do not include paths in filepattern")
 
     obs_dfs = []
-    for obsfilename in glob.glob(os.path.join(obsdir, filepattern)):
+    for obsfilename in Path(obsdir).glob(filepattern):
         # Warning: Deducing the wellname this way will fail for
         # exotic filepatterns.
-        wellname_reportstep = os.path.basename(obsfilename).split(
+        wellname_reportstep = Path(obsfilename).name.split(
             filepattern.replace("*", "")
         )[0:-1][0]
         (wellname, report_step) = split_wellname_reportstep(wellname_reportstep)
