@@ -6,6 +6,7 @@ import datetime
 import tempfile
 import shutil
 import argparse
+from pathlib import Path
 
 import pandas
 import numpy
@@ -42,9 +43,9 @@ def find_libecl_app(toolname):
     candidates = [toolname + extension for extension in extensions]
     for candidate in candidates:
         for path in os.environ["PATH"].split(os.pathsep):
-            candidatepath = os.path.join(path, candidate)
-            if os.path.isfile(candidatepath):
-                return candidatepath
+            candidatepath = Path(path) / candidate
+            if candidatepath.exists():
+                return str(candidatepath)
     raise IOError(toolname + " not found in path, PATH=" + str(os.environ["PATH"]))
 
 
@@ -80,38 +81,46 @@ def ecl_repacker(rstfilename, slicerstindices, quiet):
         find_libecl_app("ecl_unpack")
         find_libecl_app("ecl_pack")
     except IOError:
-        print(
+        sys.exit(
             "ERROR: ecl_unpack.x and/or ecl_pack.x not found.\n"
             "These tools are required and must be installed separately"
         )
-        sys.exit(1)
+
     # Take special care if the UNRST file we get in is not in current directory
-    if os.path.dirname(rstfilename) != "":
-        os.chdir(os.path.dirname(rstfilename))
-    tempdir = tempfile.mkdtemp(dir=".")
-    os.rename(
-        os.path.basename(rstfilename),
-        os.path.join(tempdir, os.path.basename(rstfilename)),
-    )
-    os.chdir(tempdir)
-    os.system(find_libecl_app("ecl_unpack") + " " + os.path.basename(rstfilename) + out)
-    unpackedfiles = glob.glob("*.X*")
-    for file in unpackedfiles:
-        if int(file.split(".X")[1]) not in slicerstindices:
-            os.remove(file)
-    os.system(find_libecl_app("ecl_pack") + " *.X*" + out)
-    # We are inside the tmp directory, move file one step up:
-    os.rename(
-        os.path.join(os.getcwd(), os.path.basename(rstfilename)),
-        os.path.join(os.getcwd(), "../", os.path.basename(rstfilename)),
-    )
-    os.chdir(os.path.join(os.getcwd(), "../"))
-    shutil.rmtree(tempdir)
+    cwd = os.getcwd()
+    rstfilepath = Path(rstfilename).parent
+    try:
+        os.chdir(Path(rstfilename).parent)
+        tempdir = tempfile.mkdtemp(dir=".")
+        os.rename(
+            os.path.basename(rstfilename),
+            os.path.join(tempdir, os.path.basename(rstfilename)),
+        )
+        os.chdir(tempdir)
+        os.system(
+            find_libecl_app("ecl_unpack") + " " + os.path.basename(rstfilename) + out
+        )
+        unpackedfiles = glob.glob("*.X*")
+        for file in unpackedfiles:
+            if int(file.split(".X")[1]) not in slicerstindices:
+                os.remove(file)
+        os.system(find_libecl_app("ecl_pack") + " *.X*" + out)
+        # We are inside the tmp directory, move file one step up:
+        os.rename(
+            os.path.join(os.getcwd(), os.path.basename(rstfilename)),
+            os.path.join(os.getcwd(), "../", os.path.basename(rstfilename)),
+        )
+    finally:
+        os.chdir(cwd)
+        shutil.rmtree(rstfilepath / tempdir)
 
 
 def get_restart_indices(rstfilename):
     """Extract a list of RST indices for a filename"""
-    return EclFile.file_report_list(rstfilename)
+    if Path(rstfilename).exists():
+        # This function segfaults if file does not exist
+        return EclFile.file_report_list(str(rstfilename))
+    raise FileNotFoundError(f"{rstfilename} not found")
 
 
 def restartthinner(filename, numberofslices, quiet=False, dryrun=True, keep=False):
