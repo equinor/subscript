@@ -9,44 +9,49 @@ from ecl.summary import EclSum
 
 DESCRIPTION = """
 Script to extract simulated welltest results from simulator output.
+Typically used to compare with output from a welltest analyis, eg using Cappa
 
 Required summary vectors in sim deck:
-  -days,
-  -wbhp:well_name,
-  -wwpr:well_name,
-  -wopr:well_name if --phase == OIL
-  -wgpr:well_name if --phase == GAS
+  * wbhp:well_name
+  * wopr:well_name if phase == OIL
+  * wgpr:well_name if phase == GAS
 
-Outputs the following files according to naming convention:
-  outputdirectory/key_outfilesuffix.csv
-  - dpds_lag1 eg superpositioned time derivative of pressure lag 1
-  - dpds_lag2 eg superpositioned time derivative of pressure lag 2
-  - sspt superpositioned time
-  - wbhp vs cum time
-  - wwpr vs cum time
-  - wopr vs cum time if --phase == OIL
-  - wgpr vs cum time if --phase == GAS
+Outputs the following files:
+  * dpds_lag1 eg superpositioned time derivative of pressure lag 1
+  * dpds_lag2 eg superpositioned time derivative of pressure lag 2
+  * sspt superpositioned time
 
+according to the naming convention; outputdirectory/key_outfilesuffix.csv
+
+And a uinfied csv file with the following vectors:
+  * wbhp vs cum time
+  * wwpr vs cum time
+  * wopr vs cum time if phase == OIL
+  * wgpr vs cum time if phase == GAS
+
+according to the naming convention; outputdirectory/welltest_output_outfilesuffix.csv
 """
 
 """
-
 Script is a rewrite of a legacy script originally developed and improved by:
  * Jon Sætrom
  * Bjørn Kåre Hegstad
  * Cecile Otterlei
  * Hodjat Moradi
 
-AUTHOR: Eivind Smørgrav
+AUTHOR:
+ * Eivind Smørgrav
 
-TODO
- - Support pseudo pressure vs time relevant for gas and gas condensate fields.
- - Make error handling more robust, eg:
-     - check if all necessary vectors are present wbhp, wopr or wgpr, wwpr is optional
-- decide how the output files should be handled, there are many and messy as of now
-     - suggestion unify all the ones with two columns into one csv file
-     - arg options to define which vectors to output
-     - lift the wwpr requirement, not used, but legacy script  outputted it
+To do:
+ * Support pseudo pressure vs time relevant for gas and gas condensate fields.
+ * Make error handling more robust, eg:
+     * check if all necessary vectors are present wbhp, wopr or wgpr, wwpr is optional
+ * decide how the output files should be handled, there are many and messy as of now
+     * suggestion unify all the ones with two columns into one csv file
+     * arg options to define which vectors to output
+     * lift the wwpr requirement, not used, but legacy script  outputted it
+
+:meta private:
 """
 
 CATEGORY = "modelling.reservoir"
@@ -102,7 +107,7 @@ def get_parser():
         "--outputdirectory",
         type=str,
         help="Directory to put the output files. Detault: .",
-        default="./",
+        default=".",
     )
     parser.add_argument(
         "--phase",
@@ -115,23 +120,27 @@ def get_parser():
     return parser
 
 
-def get_summary_vec(summary, key):
+def get_summary_vec(summary, key, required=True):
     """
     Read vector corresponding to key from summary instance
 
     Args:
        summary: (ecl.summary.EclSum)
        key: (str)
+       required: (bool)
 
     Returns:
         vec  : np.array
+
     """
 
     try:
         return summary.numpy_vector(key)
     except KeyError:
         print("No such key in summary file:" + key)
-        raise
+        if required:
+            raise
+    return np.array([])
 
 
 def get_buildup_indices(rates):
@@ -148,7 +157,6 @@ def get_buildup_indices(rates):
     Returns:
        buildup_indices (list)
        buildup_end_indices (list)
-
 
     """
 
@@ -183,6 +191,7 @@ def get_supertime(time, rate, bu_start_ind, bu_end_ind):
 
     Returns:
         supertime (np.array)
+
     """
 
     rdiff = np.diff(rate)
@@ -263,6 +272,7 @@ def get_weighted_avg_press_time_derivative_lag2(
 
     Returns:
         dpdspt_weighted_lag2 (np.array)
+
     """
 
     spt_raw = super_time
@@ -316,6 +326,7 @@ def to_csv(filen, field_list, header_list, sep=","):
         sep (str)
     Returns:
         pass
+
     """
 
     fileh = open(filen, "w")
@@ -327,7 +338,10 @@ def to_csv(filen, field_list, header_list, sep=","):
     for i in range(len(field_list[0])):
         fileh.write("%0.10f" % field_list[0][i])
         for field in field_list[1:]:
-            fileh.write(sep + "%0.10f" % field[i])
+            try:
+                fileh.write(sep + "%0.10f" % field[i])
+            except:
+                fileh.write(sep)
         fileh.write("\n")
     fileh.close()
     print("Writing file:" + filen)
@@ -355,29 +369,32 @@ def main():
 
     print("*" * 60)
     print("Running the " + sys.argv[0] + " script")
-    print("Extracting results from well:", well_name)
+    print("Extracting results from eclcase:", eclcase)
+    print("Extracting result from well:", well_name)
     print()
 
     if outf_suffix and not outf_suffix.startswith("_"):
         outf_suffix = "_" + outf_suffix
 
-    if outdir == "":
-        outdir = "./"
+    if not outdir.endswith("/"):
+        outdir = outdir + "/"
 
     if not os.path.exists(outdir):
         raise FileNotFoundError("No such outputdirectory:", outdir)
 
     summary = EclSum(eclcase)
-
+    time = np.array(summary.days) * 24.0
     wbhp = get_summary_vec(summary, "WBHP:" + well_name)
-    wwpr = get_summary_vec(summary, "WWPR:" + well_name)
-    wopr = None
-    wgpr = None
+
     if main_phase == "OIL":
         wopr = get_summary_vec(summary, "WOPR:" + well_name)
+        wgpr = get_summary_vec(summary, "WGPR:" + well_name, required=False)
     else:
+        wopr = get_summary_vec(summary, "WOPR:" + well_name, required=False)
         wgpr = get_summary_vec(summary, "WGPR:" + well_name)
-    time = np.array(summary.days) * 24.0
+
+    wwpr = get_summary_vec(summary, "WWPR:" + well_name, required=False)
+    wabc = get_summary_vec(summary, "WABC:" + well_name, required=False)
 
     if main_phase == "OIL":
         buildup_indices, buildup_end_indices = get_buildup_indices(wopr)
@@ -430,42 +447,39 @@ def main():
     )
 
     to_csv(
-        outdir + "/dpds_lag1" + outf_suffix + ".csv",
+        outdir + "dpds_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
         ["Hours", "dpd(supt)_w"],
     )
     to_csv(
-        outdir + "/dpds_lag2" + outf_suffix + ".csv",
+        outdir + "dpds_lag2" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
         ["Hours", "dpd(supt)_w2"],
     )
     to_csv(
-        outdir + "/sspt" + outf_suffix + ".csv",
+        outdir + "sspt" + outf_suffix + ".csv",
         [super_time],
         ["Superpositioned_time"],
     )
-    to_csv(
-        outdir + "/wbhp" + outf_suffix + ".csv",
-        [time[: bu_end_ind + 1], wbhp[: bu_end_ind + 1]],
-        ["Hours", "WBHP"],
-    )
-    to_csv(
-        outdir + "/wwpr" + outf_suffix + ".csv",
-        [time[: bu_end_ind + 1], wwpr[: bu_end_ind + 1]],
-        ["Hours", "WWPR"],
-    )
+
+    header_list = ["Hours", "WBHP", "WOPR", "WGPR", "WWPR"]
+    field_list = [time[: bu_end_ind + 1], wbhp[: bu_end_ind + 1]]
     if main_phase == "OIL":
-        to_csv(
-            outdir + "/wopr" + outf_suffix + ".csv",
-            [time[: bu_end_ind + 1], wopr[: bu_end_ind + 1]],
-            ["Hours", "WOPR"],
-        )
+        field_list.append(wopr[: bu_end_ind + 1])
+    else:
+        field_list.append(wopr)
+
     if main_phase == "GAS":
-        to_csv(
-            outdir + "/wgpr" + outf_suffix + ".csv",
-            [time[: bu_end_ind + 1], wgpr[: bu_end_ind + 1]],
-            ["Hours", "WGPR"],
-        )
+        field_list.append(wgpr[: bu_end_ind + 1])
+    else:
+        field_list.append(wgpr)
+
+    if len(wwpr) > 0:
+        field_list.append(wwpr[: bu_end_ind + 1])
+    else:
+        field_list.append(wwpr)
+
+    to_csv(outdir + "welltest_output" + outf_suffix + ".csv", field_list, header_list)
 
 
 if __name__ == "__main__":
