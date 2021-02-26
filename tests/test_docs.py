@@ -7,6 +7,7 @@ See also
 """
 
 import os
+from pathlib import Path
 
 
 def test_presence_init_py(path_to_subscript):
@@ -27,10 +28,10 @@ def test_presence_init_py(path_to_subscript):
 
     os.chdir(path_to_subscript)
     subdirs = [
-        filepath.path
+        Path(filepath.path)
         for filepath in os.scandir(".")
         if filepath.is_dir() and filepath.name.replace("./", "") not in exceptions
     ]
 
     for subdir in subdirs:
-        assert os.path.exists(os.path.join(subdir, "__init__.py"))
+        assert (subdir / "__init__.py").exists()

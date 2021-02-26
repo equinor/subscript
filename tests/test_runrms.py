@@ -2,7 +2,7 @@
 import subprocess
 import os
 import stat
-import pathlib
+from pathlib import Path
 import shutil
 
 import pytest
@@ -10,9 +10,9 @@ import pytest
 from subscript.runrms import runrms as rr
 
 # the resolve().as_posix() for pytest tmpdir fixture (workaround)
-TESTRMS1 = pathlib.Path("tests/data/reek/rms/reek.rms10.1.3").resolve().as_posix()
-TESTRMS2 = pathlib.Path("tests/data/reek/rms/reek.rms11.1.0").resolve().as_posix()
-TESTSETUP = pathlib.Path("tests/testdata_runrms/runrms.yml").resolve().as_posix()
+TESTRMS1 = Path("tests/data/reek/rms/reek.rms10.1.3").resolve().as_posix()
+TESTRMS2 = Path("tests/data/reek/rms/reek.rms11.1.0").resolve().as_posix()
+TESTSETUP = Path("tests/testdata_runrms/runrms.yml").resolve().as_posix()
 
 
 def test_main_no_project():
@@ -65,9 +65,8 @@ def test_scan_rms(tmpdir):
 def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
     """Testing integration with Komodo."""
     with tmpdir.as_cwd():
-        with open("rms_fake", "w") as fhandle:
-            fhandle.write(
-                """\
+        Path("rms_fake").write_text(
+            """\
 #!/usr/bin/env python3
 import os
 import sys
@@ -106,7 +105,7 @@ if errors:
     sys.exit(1)
 sys.exit(0)
 """
-            )
+        )
 
         st = os.stat("rms_fake")
         os.chmod("rms_fake", st.st_mode | stat.S_IEXEC)

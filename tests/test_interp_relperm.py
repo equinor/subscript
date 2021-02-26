@@ -1,6 +1,6 @@
 import os
-import sys
 import subprocess
+from pathlib import Path
 
 import yaml
 import configsuite
@@ -14,27 +14,25 @@ from ecl2df import satfunc
 
 from subscript.interp_relperm import interp_relperm
 
-TESTDATA = os.path.join(os.path.dirname(__file__), "testdata_interp_relperm")
-# TESTDATA = pathlib.Path(__file__).resolve().parent / "testdata_interp_relperm"
+TESTDATA = Path(__file__).absolute().parent / "testdata_interp_relperm"
 
 
 def test_get_cfg_schema():
     """Test the configsuite schema"""
-    cfg_filen = os.path.join(str(TESTDATA), "cfg.yml")
+    cfg_filen = TESTDATA / "cfg.yml"
 
-    with open(cfg_filen, "r") as ymlfile:
-        cfg = yaml.safe_load(ymlfile)
+    cfg = yaml.safe_load(cfg_filen.read_text())
 
     # add root-path to all include files
     if "base" in cfg.keys():
         for idx in range(len(cfg["base"])):
-            cfg["base"][idx] = os.path.join(str(TESTDATA), cfg["base"][idx])
+            cfg["base"][idx] = str(TESTDATA / cfg["base"][idx])
     if "high" in cfg.keys():
         for idx in range(len(cfg["high"])):
-            cfg["high"][idx] = os.path.join(str(TESTDATA), cfg["high"][idx])
+            cfg["high"][idx] = str(TESTDATA / cfg["high"][idx])
     if "low" in cfg.keys():
         for idx in range(len(cfg["low"])):
-            cfg["low"][idx] = os.path.join(str(TESTDATA), cfg["low"][idx])
+            cfg["low"][idx] = str(TESTDATA / cfg["low"][idx])
 
     schema = interp_relperm.get_cfg_schema()
     suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
@@ -57,7 +55,7 @@ def test_schema_errors():
     assert not parsed_cfg.valid
     assert "Valid file name" in str(parsed_cfg.errors)
 
-    os.chdir(str(TESTDATA))
+    os.chdir(TESTDATA)
 
     parsed_cfg = configsuite.ConfigSuite(
         cfg, interp_relperm.get_cfg_schema(), deduce_required=True
@@ -183,8 +181,8 @@ def test_schema_errors():
 def test_tables_to_dataframe():
     """Test that tables in Eclipse format can be converted
     into dataframes (using ecl2df)"""
-    swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
-    sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
+    swoffn = TESTDATA / "swof_base.inc"
+    sgoffn = TESTDATA / "sgof_base.inc"
 
     tables_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -207,18 +205,18 @@ def test_tables_to_dataframe():
 
 def test_make_interpolant():
     """Test that we are able to make an interpolant from inc files"""
-    swoffn = os.path.join(str(TESTDATA), "swof_base.inc")
-    sgoffn = os.path.join(str(TESTDATA), "sgof_base.inc")
+    swoffn = TESTDATA / "swof_base.inc"
+    sgoffn = TESTDATA / "sgof_base.inc"
 
     base_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(str(TESTDATA), "swof_pes.inc")
-    sgoffn = os.path.join(str(TESTDATA), "sgof_pes.inc")
+    swoffn = TESTDATA / "swof_pes.inc"
+    sgoffn = TESTDATA / "sgof_pes.inc"
 
     low_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
-    swoffn = os.path.join(str(TESTDATA), "swof_opt.inc")
-    sgoffn = os.path.join(str(TESTDATA), "sgof_opt.inc")
+    swoffn = TESTDATA / "swof_opt.inc"
+    sgoffn = TESTDATA / "sgof_opt.inc"
 
     high_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
 
@@ -238,17 +236,20 @@ def test_make_interpolant():
     assert "SGOF" in interpolant.gasoil.SGOF()
 
 
-def test_args(tmpdir):
+def test_args(tmpdir, mocker):
     """Test that we can parse args on the command line"""
     tmpdir.chdir()
 
-    test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
+    test_cfg = TESTDATA / "cfg.yml"
 
-    sys.argv = [__file__, "--configfile", test_cfg, "--root-path", str(TESTDATA)]
+    mocker.patch(
+        "sys.argv",
+        [__file__, "--configfile", str(test_cfg), "--root-path", str(TESTDATA)],
+    )
 
     interp_relperm.main()
 
-    assert os.path.exists("outfilen.inc")
+    assert Path("outfilen.inc").exists()
 
 
 def test_mock(tmpdir):
@@ -439,19 +440,18 @@ def test_integration():
     assert subprocess.check_output(["interp_relperm", "-h"])
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test invocation from command line"""
     tmpdir.chdir()
 
-    assert os.system("interp_relperm -h") == 0
+    assert subprocess.check_output(["interp_relperm", "-h"])
 
-    test_cfg = os.path.join(str(TESTDATA), "cfg.yml")
+    test_cfg = TESTDATA / "cfg.yml"
 
-    sys.argv = [__file__, "-c", test_cfg, "-r", str(TESTDATA)]
-
+    mocker.patch("sys.argv", [__file__, "-c", str(test_cfg), "-r", str(TESTDATA)])
     interp_relperm.main()
 
-    assert os.path.exists("outfilen.inc")
+    assert Path("outfilen.inc").exists()
 
 
 if __name__ == "__main__":

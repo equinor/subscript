@@ -1,6 +1,4 @@
-import os
-import sys
-
+from pathlib import Path
 import subprocess
 import pytest
 
@@ -9,22 +7,18 @@ import pandas as pd
 from subscript.params2csv import params2csv
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test invocation from command line"""
     tmpdir.chdir()
-    with open("parameters1.txt", "w") as f_handle:
-        f_handle.write("FOO     100\n")
-        f_handle.write("BAR com\n")
-        f_handle.write("BOGUS\n")
-        f_handle.write("CONSTANT 1\n")
+    Path("parameters1.txt").write_text(
+        "\n".join(["FOO     100", "BAR com", "BOGUS", "CONSTANT 1"])
+    )
 
-    with open("parameters2.txt", "w") as f_handle:
-        f_handle.write("FOO 200\n")
-        f_handle.write("BAR dot\n")
-        f_handle.write("CONSTANT 1\n")
-        f_handle.write("ONLYIN2 2\n")
+    Path("parameters2.txt").write_text(
+        "\n".join(["FOO 200", "BAR dot", "CONSTANT 1", "ONLYIN2 2"])
+    )
 
-    sys.argv = ["params2csv", "parameters1.txt", "parameters2.txt"]
+    mocker.patch("sys.argv", ["params2csv", "parameters1.txt", "parameters2.txt"])
     params2csv.main()
 
     result = pd.read_csv("params.csv")
@@ -36,10 +30,12 @@ def test_main(tmpdir):
     assert set(result["filename"].values) == set(["parameters1.txt", "parameters2.txt"])
 
     # Test the cleaning mode:
-    sys.argv = ["params2csv", "--clean", "parameters1.txt", "parameters2.txt"]
+    mocker.patch(
+        "sys.argv", ["params2csv", "--clean", "parameters1.txt", "parameters2.txt"]
+    )
     params2csv.main()
-    assert os.path.exists("parameters2.txt.backup")
-    assert os.path.exists("parameters1.txt.backup")
+    assert Path("parameters2.txt.backup").exists()
+    assert Path("parameters1.txt.backup").exists()
 
     cleanedparams1 = open("parameters1.txt").readlines()
     cleanedparams2 = open("parameters2.txt").readlines()
@@ -53,7 +49,10 @@ def test_main(tmpdir):
     assert any(["BOGUS" in x for x in cleanedparams2])
 
     # Check that we allow a file not to exist:
-    sys.argv = ["params2csv", "parameters1.txt", "parametersFOO.txt", "parameters2.txt"]
+    mocker.patch(
+        "sys.argv",
+        ["params2csv", "parameters1.txt", "parametersFOO.txt", "parameters2.txt"],
+    )
     params2csv.main()
     result = pd.read_csv("params.csv")
     assert "FOO" in result
@@ -64,30 +63,27 @@ def test_main(tmpdir):
     assert set(result["filename"].values) == set(["parameters1.txt", "parameters2.txt"])
 
 
-def test_spaces_in_values(tmpdir):
+def test_spaces_in_values(tmpdir, mocker):
     """Test that we support spaces in values in parameters.txt
     if they are quoted properly"""
     tmpdir.chdir()
-    with open("parameters.txt", "w") as f_handle:
-        f_handle.write('somekey "value with spaces"')
+    Path("parameters.txt").write_text('somekey "value with spaces"')
     # Single-qoutes:
-    with open("parameters2.txt", "w") as f_handle:
-        f_handle.write("somekey 'value with spaces'")
+    Path("parameters2.txt").write_text("somekey 'value with spaces'")
 
-    sys.argv = ["params2csv", "--keepconstantcolumns", "parameters.txt"]
+    mocker.patch("sys.argv", ["params2csv", "--keepconstantcolumns", "parameters.txt"])
     params2csv.main()
     result = pd.read_csv("params.csv")
     assert "somekey" in result
     assert result["somekey"].values[0] == "value with spaces"
 
 
-def test_spaces_in_values_single_quotes(tmpdir):
+def test_spaces_in_values_single_quotes(tmpdir, mocker):
     """Test that single quotes can also be used to support spaces in values"""
     tmpdir.chdir()
-    with open("parameters.txt", "w") as f_handle:
-        f_handle.write('somekey "value with spaces"')
+    Path("parameters.txt").write_text('somekey "value with spaces"')
 
-    sys.argv = ["params2csv", "--keepconstantcolumns", "parameters.txt"]
+    mocker.patch("sys.argv", ["params2csv", "--keepconstantcolumns", "parameters.txt"])
     params2csv.main()
     result = pd.read_csv("params.csv")
     assert "somekey" in result

@@ -2,6 +2,7 @@ import sys
 import os
 import logging
 import argparse
+from pathlib import Path
 
 import yaml
 import pandas as pd
@@ -105,7 +106,7 @@ EXAMPLES = """
 
 @configsuite.validator_msg("Valid file name")
 def _is_filename(fname):
-    return os.path.isfile(fname)
+    return Path(fname).exists()
 
 
 @configsuite.validator_msg("Valid interpolator list")
@@ -453,11 +454,9 @@ def main():
     logging.getLogger("ecl2df.inferdims").setLevel(logging.ERROR)
 
     # parse the config file
-    if not os.path.isfile(args.configfile):
+    if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
-    else:
-        with open(args.configfile, "r") as ymlfile:
-            cfg = yaml.safe_load(ymlfile)
+    cfg = yaml.safe_load(Path(args.configfile).read_text())
     process_config(cfg, args.root_path)
 
 

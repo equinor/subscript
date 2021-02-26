@@ -3,8 +3,8 @@ other formats, and test the ERT hook"""
 
 import os
 import io
-import sys
 import subprocess
+from pathlib import Path
 
 import pandas as pd
 import yaml
@@ -20,6 +20,20 @@ from subscript.fmuobs.fmuobs import (
 from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
+TESTDATA_DIR = Path(__file__).absolute().parent / "testdata_fmuobs"
+
+
+@pytest.fixture()
+def readonly_testdata_dir():
+    """When used as a fixture, the test function will run in the testdata
+    directory. Do not write new or temporary files in here"""
+    cwd = os.getcwd()
+    try:
+        os.chdir(TESTDATA_DIR)
+        yield
+    finally:
+        os.chdir(cwd)
+
 
 @pytest.mark.parametrize(
     "filename, expected_format",
@@ -32,11 +46,9 @@ from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
     ],
 )
-def test_autoparse_file(filename, expected_format):
+def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
     """Test that the included observation file formats in the test suite
     are correctly recognized"""
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
-    os.chdir(testdata_dir)
     assert autoparse_file(filename)[0] == expected_format
 
 
@@ -81,8 +93,7 @@ def test_autoparse_string(string, expected_format, tmpdir):
     (or not recognized at all). The filetype detector code has very mild
     requirements on dataframe validitiy."""
     tmpdir.chdir()
-    with open("inputfile.txt", "w") as f_handle:
-        f_handle.write(string)
+    Path("inputfile.txt").write_text(string)
     assert autoparse_file("inputfile.txt")[0] == expected_format
 
 
@@ -97,12 +108,10 @@ def test_autoparse_string(string, expected_format, tmpdir):
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
-def test_roundtrip_ertobs(filename):
+def test_roundtrip_ertobs(filename, readonly_testdata_dir):
     """Test converting all included test data sets into ERT observations
     (as strings) and then parsing it, ensuring that we end up in the
     same place"""
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
-    os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
 
     # Convert to ERT obs format and back again:
@@ -168,7 +177,7 @@ def test_roundtrip_ertobs(filename):
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
-def test_roundtrip_yaml(filename):
+def test_roundtrip_yaml(filename, readonly_testdata_dir):
     """Test converting all test data sets in testdir into yaml and back again.
 
     Due to yaml supporting a subset of features in the internal dataframe format
@@ -176,8 +185,6 @@ def test_roundtrip_yaml(filename):
 
     Also pay attention to the way the yaml parser creates LABEL data.
     """
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
-    os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
 
     # Reduce to the subset supported by yaml:
@@ -215,13 +222,11 @@ def test_roundtrip_yaml(filename):
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
-def test_roundtrip_resinsight(filename):
+def test_roundtrip_resinsight(filename, readonly_testdata_dir):
     """Test converting all test data sets in testdir into resinsight and back again.
 
     ResInsight only supports SUMMARY_OBSERVATION.
     """
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
-    os.chdir(testdata_dir)
     dframe = autoparse_file(filename)[1]
 
     # Reduce to the subset supported by yaml:
@@ -257,48 +262,47 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_commandline(tmpdir, monkeypatch):
+def test_commandline(tmpdir, mocker):
     """Test the executable versus on the ERT doc observation data
     and compare to precomputed CSV and YML.
 
     When code changes, updates to the CSV and YML might
     be necessary.
     """
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
     tmpdir.chdir()
-    arguments = [
-        "fmuobs",
-        "--includedir",
-        str(testdata_dir),
-        "--verbose",
-        "--csv",
-        "output.csv",
-        "--yml",
-        "output.yml",
-        "--resinsight",
-        "ri_output.csv",
-        os.path.join(testdata_dir, "ert-doc.obs"),
-    ]
-    monkeypatch.setattr(sys, "argv", arguments)
+    mocker.patch(
+        "sys.argv",
+        [
+            "fmuobs",
+            "--includedir",
+            str(TESTDATA_DIR),
+            "--verbose",
+            "--csv",
+            "output.csv",
+            "--yml",
+            "output.yml",
+            "--resinsight",
+            "ri_output.csv",
+            str(TESTDATA_DIR / "ert-doc.obs"),
+        ],
+    )
     main()
-    assert os.path.exists("output.csv")
-    assert os.path.exists("output.yml")
-    assert os.path.exists("ri_output.csv")
+    assert Path("output.csv").exists()
+    assert Path("output.yml").exists()
+    assert Path("ri_output.csv").exists()
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
-    reference_dframe_from_disk = pd.read_csv(os.path.join(testdata_dir, "ert-doc.csv"))
+    reference_dframe_from_disk = pd.read_csv(TESTDATA_DIR / "ert-doc.csv")
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
     )
 
-    dict_from_yml_on_disk = yaml.safe_load(open("output.yml"))
-    reference_dict_from_yml = yaml.safe_load(
-        open(os.path.join(testdata_dir, "ert-doc.yml"))
-    )
+    dict_from_yml_on_disk = yaml.safe_load(Path("output.yml").read_text())
+    reference_dict_from_yml = yaml.safe_load((TESTDATA_DIR / "ert-doc.yml").read_text())
     assert dict_from_yml_on_disk == reference_dict_from_yml
 
     ri_from_csv_on_disk = pd.read_csv("ri_output.csv")
-    reference_ri_from_disk = pd.read_csv(os.path.join(testdata_dir, "ri-obs.csv"))
+    reference_ri_from_disk = pd.read_csv(TESTDATA_DIR / "ri-obs.csv")
     pd.testing.assert_frame_equal(
         # Enforce correct column order
         ri_from_csv_on_disk,
@@ -309,10 +313,10 @@ def test_commandline(tmpdir, monkeypatch):
     arguments = [
         "fmuobs",
         "--includedir",
-        str(testdata_dir),
+        str(TESTDATA_DIR),
         "--csv",
         "-",  # fmuobs.__MAGIC_STDOUT__
-        os.path.join(testdata_dir, "ert-doc.obs"),
+        str(TESTDATA_DIR / "ert-doc.obs"),
     ]
     run_result = subprocess.run(arguments, check=True, stdout=subprocess.PIPE)
     dframe_from_stdout = pd.read_csv(io.StringIO(run_result.stdout.decode("utf-8")))
@@ -327,21 +331,18 @@ def test_ert_workflow_hook(tmpdir):
     """Mock an ERT config with FMUOBS as a workflow and run it"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    testdata_dir = os.path.join(os.path.dirname(__file__), "testdata_fmuobs")
-    obs_file = os.path.join(testdata_dir, "ert-doc.obs")
+    obs_file = TESTDATA_DIR / "ert-doc.obs"
     tmpdir.chdir()
 
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("FOO.DATA").write_text("--Empty")
 
-    with open("wf_fmuobs", "w") as file_h:
-        file_h.write(
-            'FMUOBS "--verbose" '
-            + obs_file
-            + ' "--yaml" ert-obs.yml "--resinsight" ri-obs.csv "--includedir" '
-            + testdata_dir
-            + "\n"
-        )
+    Path("wf_fmuobs").write_text(
+        'FMUOBS "--verbose" '
+        + str(obs_file)
+        + ' "--yaml" ert-obs.yml "--resinsight" ri-obs.csv "--includedir" '
+        + str(TESTDATA_DIR)
+        + "\n"
+    )
 
     ert_config = [
         "ECLBASE FOO.DATA",
@@ -353,10 +354,9 @@ def test_ert_workflow_hook(tmpdir):
     ]
 
     ert_config_fname = "test.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config))
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
-    assert os.path.exists("ert-obs.yml")
-    assert os.path.exists("ri-obs.csv")
+    assert Path("ert-obs.yml").exists()
+    assert Path("ri-obs.csv").exists()

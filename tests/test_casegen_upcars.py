@@ -1,29 +1,35 @@
 """Test that casegen_upcars is installed and launched with given demo cases"""
-import os
 import subprocess
 import shutil
+from pathlib import Path
 
 import pandas as pd
 
 import opm.io
 
+import pytest
+
+from subscript.casegen_upcars import casegen_upcars
+
 TESTDATA = "testdata_casegen_upcars"
-DATADIR = os.path.join(os.path.dirname(__file__), TESTDATA)
+DATADIR = Path(__file__).absolute().parent / TESTDATA
 
 
+@pytest.mark.integration
 def test_installed():
     """Test that the endpoint is installed, use -h as it required one parameter"""
     assert subprocess.check_output(["casegen_upcars", "-h"])
 
 
-def test_demo_small_scale(tmpdir):
+def test_demo_small_scale(tmpdir, mocker):
     """Test casegen_upcars on demo_small_scale.yaml"""
     tmpdir.chdir()
     shutil.copytree(DATADIR, TESTDATA)
     tmpdir.join(TESTDATA).chdir()
 
     base_name = "TEST_SMALL"
-    assert subprocess.check_output(
+    mocker.patch(
+        "sys.argv",
         [
             "casegen_upcars",
             "demo_small_scale.yaml",
@@ -31,15 +37,16 @@ def test_demo_small_scale(tmpdir):
             "dump_value.tmpl",
             "--base",
             base_name,
-        ]
+        ],
     )
+    casegen_upcars.main()
 
     # check that all output files are generated
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
     ):
-        assert os.path.exists(pre + base_name + suf)
+        assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
             assert opm.io.Parser().parse(pre + base_name + suf)
 
@@ -53,14 +60,15 @@ def test_demo_small_scale(tmpdir):
     assert data_frame.Values["lz"] == 1.03
 
 
-def test_demo_large_scale(tmpdir):
+def test_demo_large_scale(tmpdir, mocker):
     """Test casegen_upcars on demo_large_scale.yaml"""
     tmpdir.chdir()
     shutil.copytree(DATADIR, TESTDATA)
     tmpdir.join(TESTDATA).chdir()
 
     base_name = "TEST_SMALL"
-    assert subprocess.check_output(
+    mocker.patch(
+        "sys.argv",
         [
             "casegen_upcars",
             "demo_large_scale.yaml",
@@ -68,15 +76,16 @@ def test_demo_large_scale(tmpdir):
             "dump_value.tmpl",
             "--base",
             base_name,
-        ]
+        ],
     )
+    casegen_upcars.main()
 
     # check that all output files are generated
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
     ):
-        assert os.path.exists(pre + base_name + suf)
+        assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
             assert opm.io.Parser().parse(str(pre + base_name + suf))
 

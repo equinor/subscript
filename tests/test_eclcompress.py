@@ -2,7 +2,6 @@
 
 import sys
 import os
-import codecs
 import subprocess
 from pathlib import Path
 
@@ -390,8 +389,9 @@ def test_iso8859(tmpdir):
     not trigger bugs (and is written back as utf-8)"""
     tmpdir.chdir()
     nastyfile = "nastyfile.inc"
-    with codecs.open(nastyfile, "w", "ISO-8859-1") as file_h:
-        file_h.write(u"-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
+    Path(nastyfile).write_text(
+        "-- Gullfaks Sør\nPORO\n 1 1 1 1/\n", encoding="ISO-8859-1"
+    )
     main_eclcompress(nastyfile, None)
     assert "4*1" in open(nastyfile).read()  # Outputted file is always UTF-8
 
@@ -400,8 +400,7 @@ def test_utf8(tmpdir):
     """Test that we can parse and write a file with utf-8 chars"""
     tmpdir.chdir()
     nastyfile = "nastyfile.inc"
-    with open(nastyfile, "w") as file_h:
-        file_h.write("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
+    Path(nastyfile).write_text("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
     main_eclcompress(nastyfile, None)
     assert "4*1" in open(nastyfile).read()
 
