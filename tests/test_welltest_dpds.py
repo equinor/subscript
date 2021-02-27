@@ -25,8 +25,8 @@ def test_main(tmpdir, mocker):
     # defaults only
     mocker.patch("sys.argv", ["welltest_dpds", datafilepath, "55_33-1"])
     welltest_dpds.main()
-    assert os.path.exists("wbhp.csv")
-    os.unlink("wbhp.csv")
+    assert os.path.exists("welltest_output.csv")
+    os.unlink("welltest_output.csv")
 
     # test --outfilessuffix
     mocker.patch(
@@ -34,8 +34,8 @@ def test_main(tmpdir, mocker):
         ["welltest_dpds", datafilepath, "55_33-1", "--outfilessuffix", "blabla"],
     )
     welltest_dpds.main()
-    assert os.path.exists("wbhp_blabla.csv")
-    os.unlink("wbhp_blabla.csv")
+    assert os.path.exists("welltest_output_blabla.csv")
+    os.unlink("welltest_output_blabla.csv")
 
     # test --outputdirectory
     mocker.patch(
@@ -47,15 +47,15 @@ def test_main(tmpdir, mocker):
 
     os.mkdir("blabla")
     welltest_dpds.main()
-    assert os.path.exists("./blabla/wbhp.csv")
-    os.unlink("blabla/wbhp.csv")
+    assert os.path.exists("./blabla/welltest_output.csv")
+    os.unlink("blabla/welltest_output.csv")
 
     # test --phase
     mocker.patch(
         "sys.argv", ["welltest_dpds", datafilepath, "55_33-1", "--phase", "GAS"]
     )
     welltest_dpds.main()
-    assert os.path.exists("wgpr.csv")
+    assert os.path.exists("welltest_output.csv")
 
 
 def test_get_summary_vec():
