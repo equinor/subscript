@@ -9,7 +9,7 @@ from ecl.summary import EclSum
 
 DESCRIPTION = """
 Script to extract simulated welltest results from simulator output.
-Typically used to compare with output from a welltest analyis, eg using Cappa
+Typically used to compare with output from a welltest analysis, eg using Cappa
 
 Required summary vectors in sim deck:
   * wbhp:well_name
@@ -24,10 +24,11 @@ Outputs the following files:
 according to the naming convention; outputdirectory/key_outfilesuffix.csv
 
 And a uinfied csv file with the following vectors:
+  * cum time
   * wbhp vs cum time
+  * wopr vs cum time
+  * wgpr vs cum time
   * wwpr vs cum time
-  * wopr vs cum time if phase == OIL
-  * wgpr vs cum time if phase == GAS
 
 according to the naming convention; outputdirectory/welltest_output_outfilesuffix.csv
 """
