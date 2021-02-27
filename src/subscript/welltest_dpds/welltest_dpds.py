@@ -17,9 +17,9 @@ Required summary vectors in sim deck:
   * wgpr:well_name if phase == GAS
 
 Outputs the following files:
-  * dpds_lag1 eg superpositioned time derivative of pressure lag 1
-  * dpds_lag2 eg superpositioned time derivative of pressure lag 2
-  * sspt superpositioned time
+  * dpdspt_lag1 eg superpositioned time derivative of pressure lag 1
+  * dpdspt_lag2 eg superpositioned time derivative of pressure lag 2
+  * spt superpositioned time
 
 according to the naming convention; outputdirectory/key_outfilesuffix.csv
 
@@ -44,12 +44,7 @@ AUTHOR:
 
 To do:
  * Support pseudo pressure vs time relevant for gas and gas condensate fields.
- * Make error handling more robust, eg:
-     * check if all necessary vectors are present wbhp, wopr or wgpr, wwpr is optional
- * decide how the output files should be handled, there are many and messy as of now
-     * suggestion unify all the ones with two columns into one csv file
-     * arg options to define which vectors to output
-     * lift the wwpr requirement, not used, but legacy script  outputted it
+ * Add cli option to output other vectors in csv file
 
 :meta private:
 """
@@ -315,7 +310,7 @@ def get_weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list, sep=","):
+def to_csv(filen, field_list, header_list, start=0, end=None, sep=","):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -323,6 +318,8 @@ def to_csv(filen, field_list, header_list, sep=","):
         filen (str)
         field_list (list of np.array)
         header_list (list of str)
+        start (int)
+        end (int)
         sep (str)
     Returns:
         pass
@@ -335,12 +332,12 @@ def to_csv(filen, field_list, header_list, sep=","):
     for header in header_list[1:]:
         fileh.write(sep + header)
     fileh.write("\n")
-    for i in range(len(field_list[0])):
+    for i in range(len(field_list[0][start:end])):
         fileh.write("%0.10f" % field_list[0][i])
         for field in field_list[1:]:
-            try:
+            if len(field):
                 fileh.write(sep + "%0.10f" % field[i])
-            except:
+            else:
                 fileh.write(sep)
         fileh.write("\n")
     fileh.close()
@@ -394,7 +391,6 @@ def main():
         wgpr = get_summary_vec(summary, "WGPR:" + well_name)
 
     wwpr = get_summary_vec(summary, "WWPR:" + well_name, required=False)
-    wabc = get_summary_vec(summary, "WABC:" + well_name, required=False)
 
     if main_phase == "OIL":
         buildup_indices, buildup_end_indices = get_buildup_indices(wopr)
@@ -447,39 +443,31 @@ def main():
     )
 
     to_csv(
-        outdir + "dpds_lag1" + outf_suffix + ".csv",
+        outdir + "dpdspt_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
         ["Hours", "dpd(supt)_w"],
     )
     to_csv(
-        outdir + "dpds_lag2" + outf_suffix + ".csv",
+        outdir + "dpdspt_lag2" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
         ["Hours", "dpd(supt)_w2"],
     )
     to_csv(
-        outdir + "sspt" + outf_suffix + ".csv",
+        outdir + "spt" + outf_suffix + ".csv",
         [super_time],
         ["Superpositioned_time"],
     )
 
     header_list = ["Hours", "WBHP", "WOPR", "WGPR", "WWPR"]
-    field_list = [time[: bu_end_ind + 1], wbhp[: bu_end_ind + 1]]
-    if main_phase == "OIL":
-        field_list.append(wopr[: bu_end_ind + 1])
-    else:
-        field_list.append(wopr)
+    field_list = [time, wbhp, wopr, wgpr, wwpr]
 
-    if main_phase == "GAS":
-        field_list.append(wgpr[: bu_end_ind + 1])
-    else:
-        field_list.append(wgpr)
-
-    if len(wwpr) > 0:
-        field_list.append(wwpr[: bu_end_ind + 1])
-    else:
-        field_list.append(wwpr)
-
-    to_csv(outdir + "welltest_output" + outf_suffix + ".csv", field_list, header_list)
+    to_csv(
+        outdir + "welltest_output" + outf_suffix + ".csv",
+        field_list,
+        header_list,
+        start=0,
+        end=bu_end_ind + 1,
+    )
 
 
 if __name__ == "__main__":
