@@ -34,6 +34,7 @@ SSCRIPTS = [
     "sw_model_utilities = subscript.sw_model_utilities.sw_model_utilities:main",
     "sunsch = subscript.sunsch.sunsch:main",
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
+    "welltest_dpds = subscript.welltest_dpds.welltest_dpds:main",
 ]
 
 ERTPLUGINS = [
