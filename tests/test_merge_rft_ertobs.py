@@ -2,6 +2,7 @@ import os
 import logging
 import shutil
 import subprocess
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -31,11 +32,8 @@ logger.setLevel(logging.INFO)
 def drogondata(tmpdir):
     """Prepare a directory with Drogon testdata"""
     # pylint: disable=unused-argument
-    drogondir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "testdata_merge_rft_ertobs/drogon"
-    )
-
-    drogondest = os.path.join(tmpdir.strpath, "drogondata")
+    drogondir = Path(__file__).absolute().parent / "testdata_merge_rft_ertobs/drogon"
+    drogondest = tmpdir / "drogondata"
     shutil.copytree(drogondir, drogondest)
     cwd = os.getcwd()
     os.chdir(drogondest)
@@ -86,8 +84,7 @@ def test_get_observations(drogondata):
 def test_get_observations_invalid(obsstring, validlength, tmpdir):
     """Check observation parsing"""
     tmpdir.chdir()
-    with open("foo.obs", "w") as file_h:
-        file_h.write(obsstring)
+    Path("foo.obs").write_text(obsstring)
     assert len(get_observations(".")) == validlength
 
 
@@ -145,8 +142,7 @@ def test_extra_obs_file(drogondata):
     """Test that we will not bail on a stray file"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    with open("rft/FOO.obs", "w") as file_h:
-        file_h.write("FOBOBAR")
+    Path("rft/FOO.obs").write_text("FOBOBAR")
     dframe = merge_rft_ertobs("gendata_rft.csv", "rft")
     assert len(dframe) == 9
 
@@ -180,8 +176,7 @@ def test_ert_hook(drogondata):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    with open("DROGON.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("DROGON.DATA").write_text("--Empty")
     ert_config = [
         "ECLBASE DROGON.DATA",
         "QUEUE_SYSTEM LOCAL",
@@ -194,8 +189,7 @@ def test_ert_hook(drogondata):
     ]
 
     ert_config_fname = "mergetest.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config))
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 

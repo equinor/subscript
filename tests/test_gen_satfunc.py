@@ -1,6 +1,5 @@
-import os
-import sys
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -23,29 +22,27 @@ def test_integration():
     assert subprocess.check_output(["gen_satfunc", "-h"])
 
 
-def test_gen_satfunc(tmpdir):
+def test_gen_satfunc(tmpdir, mocker):
     """Test the main function and its args handling"""
     tmpdir.chdir()
 
-    with open("relperm.conf", "w") as file_h:
-        file_h.write(EXAMPLE)
+    Path("relperm.conf").write_text(EXAMPLE)
 
-    sys.argv = ["gen_satfunc", "relperm.conf", "swof.inc"]
+    mocker.patch("sys.argv", ["gen_satfunc", "relperm.conf", "swof.inc"])
     gen_satfunc.main()
 
-    assert os.path.exists("swof.inc")
-    assert len(open("swof.inc").readlines()) > 50
+    assert Path("swof.inc").exists()
+    assert len(Path("swof.inc").read_text().splitlines()) > 50
 
-    with open("relpermpc.conf", "w") as file_h:
-        file_h.write(
-            """
+    Path("relpermpc.conf").write_text(
+        """
 SWOF
 RELPERM 4 2 1   3 2 1   0.15 0.10 0.5 20 100 0.2 0.22 -0.5 30
 """
-        )
-    sys.argv = ["gen_satfunc", "relpermpc.conf", "swofpc.inc"]
+    )
+    mocker.patch("sys.argv", ["gen_satfunc", "relpermpc.conf", "swofpc.inc"])
     gen_satfunc.main()
-    assert os.path.exists("swofpc.inc")
-    swofpclines = open("swofpc.inc").readlines()
+    assert Path("swofpc.inc").exists()
+    swofpclines = Path("swofpc.inc").read_text().splitlines()
     assert len(swofpclines) > 20
     assert any(["sigma_costau=30" in x for x in swofpclines])

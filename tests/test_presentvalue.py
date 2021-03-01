@@ -1,6 +1,5 @@
-import os
-import sys
 import shutil
+from pathlib import Path
 
 import subprocess
 import pytest
@@ -12,7 +11,7 @@ import ecl
 import ecl2df
 from subscript.presentvalue import presentvalue
 
-ECLDIR = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
+ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 
 
 @pytest.mark.parametrize(
@@ -43,23 +42,19 @@ def test_get_paramfilename(tmpdir):
     tmpdir.mkdir("foo1/foo2")
     tmpdir.mkdir("foo1/foo2/foo3")
 
-    def touch(f_name, string):
-        with open(f_name, "w") as f_handle:
-            f_handle.write(string)
-
     assert presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA") == ""
 
-    touch("foo1/parameters.txt", "foo1")
+    Path("foo1/parameters.txt").write_text("foo1")
     assert (
         open(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read() == "foo1"
     )
 
-    touch("foo1/foo2/parameters.txt", "foo2")
+    Path("foo1/foo2/parameters.txt").write_text("foo2")
     assert (
         open(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read() == "foo2"
     )
 
-    touch("foo1/foo2/foo3/parameters.txt", "foo3")
+    Path("foo1/foo2/foo3/parameters.txt").write_text("foo3")
     assert (
         open(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read() == "foo3"
     )
@@ -82,8 +77,7 @@ def test_prepare_econ_table_simpletest():
 def test_prepare_econ_table_csv(tmpdir):
     """Testing loading economics data from a CSV file"""
     tmpdir.chdir()
-    with open("econ.csv", "w") as f_handle:
-        f_handle.write("year, oilprice, gasprice, costs\n2030, 60, 2, 100")
+    Path("econ.csv").write_text("year, oilprice, gasprice, costs\n2030, 60, 2, 100")
 
     with pytest.raises(ValueError):
         # usdtonok is not present:
@@ -275,7 +269,7 @@ def test_calc_pv_irr():
     assert presentvalue.calc_pv_irr(results["IRR"] * 2, IRR_DF, 2100) < 0.0
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test the main functionality of presentvalue as endpoint script, writing
     back results to parameters.txt in the original runpath"""
     tmpdir.chdir()
@@ -289,23 +283,21 @@ def test_main(tmpdir):
 
     parameterstxt_fname = "parameters.txt"
 
-    # Remove the potential copy we have got in our tmpdir:
-    if os.path.exists(parameterstxt_fname):
-        os.unlink(parameterstxt_fname)
-
     # Create an empty file called parameters.txt, otherwise
     # the presentvalue script will not write to it.
-    with open(parameterstxt_fname, "w"):
-        pass
-    sys.argv = [
-        "presentvalue",
-        "--writetoparams",
-        "--cutoffyear",
-        "2003",
-        "--discountto",
-        "2001",
-        "2_R001_REEK-0.DATA",
-    ]
+    Path(parameterstxt_fname).write_text("")
+    mocker.patch(
+        "sys.argv",
+        [
+            "presentvalue",
+            "--writetoparams",
+            "--cutoffyear",
+            "2003",
+            "--discountto",
+            "2001",
+            "2_R001_REEK-0.DATA",
+        ],
+    )
     presentvalue.main()
     parametersline = open(parameterstxt_fname).readlines()[0].strip()
     assert parametersline.split()[0] == "PresentValue"
@@ -390,4 +382,4 @@ def test_no_oil(tmpdir):
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
-    subprocess.check_output(["presentvalue", "-h"])
+    assert subprocess.check_output(["presentvalue", "-h"])

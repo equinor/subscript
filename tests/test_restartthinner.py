@@ -1,46 +1,94 @@
-import sys
 import os
 import shutil
+from pathlib import Path
 
 import subprocess
 import pytest
 
 from subscript.restartthinner import restartthinner
 
+ECLDIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
 
-def test_main(tmpdir):
-    """Basic testing of the command line application"""
+UNRST_FNAME = "2_R001_REEK-0.UNRST"
 
-    ecldir = os.path.join(os.path.dirname(__file__), "data/reek/eclipse/model")
 
-    unrst_fname = "2_R001_REEK-0.UNRST"
-
-    shutil.copyfile(ecldir + "/" + unrst_fname, str(tmpdir.join(unrst_fname)))
+def test_dryrun(tmpdir, mocker):
+    """Test dry-run"""
+    shutil.copyfile(ECLDIR / UNRST_FNAME, tmpdir.join(UNRST_FNAME))
 
     tmpdir.chdir()
 
-    orig_rstindices = restartthinner.get_restart_indices(unrst_fname)
+    orig_rstindices = restartthinner.get_restart_indices(UNRST_FNAME)
     assert len(orig_rstindices) == 4
 
-    sys.argv = ["restartthinner", "-d", "-n", "2", unrst_fname]
+    mocker.patch("sys.argv", ["restartthinner", "-d", "-n", "2", UNRST_FNAME])
     restartthinner.main()
 
     # Check that dry run did not do anything
-    assert os.path.exists(unrst_fname)
-    assert len(orig_rstindices) == len(restartthinner.get_restart_indices(unrst_fname))
+    assert Path(UNRST_FNAME).exists()
+    assert len(orig_rstindices) == len(restartthinner.get_restart_indices(UNRST_FNAME))
 
-    # Now go down to two points, this should give us the first and last.
-    sys.argv = ["restartthinner", "-n", "2", unrst_fname, "--keep"]
+
+def test_first_and_last(tmpdir, mocker):
+    """Ask for two restart points, this should give us the first and last."""
+    shutil.copyfile(ECLDIR / UNRST_FNAME, tmpdir.join(UNRST_FNAME))
+
+    orig_rstindices = restartthinner.get_restart_indices(UNRST_FNAME)
+
+    tmpdir.chdir()
+    mocker.patch("sys.argv", ["restartthinner", "-n", "2", UNRST_FNAME, "--keep"])
     restartthinner.main()
 
-    assert os.path.exists(unrst_fname)
-    assert os.path.exists(unrst_fname + ".orig")  # The backed up file
+    assert Path(UNRST_FNAME).exists()
+    assert Path(UNRST_FNAME + ".orig").exists()  # The backed up file
 
-    new_rstindices = restartthinner.get_restart_indices(unrst_fname)
+    new_rstindices = restartthinner.get_restart_indices(UNRST_FNAME)
     assert len(new_rstindices) == 2
     assert new_rstindices[0] == orig_rstindices[0]
     assert new_rstindices[-1] == orig_rstindices[-1]
-    assert len(restartthinner.get_restart_indices(unrst_fname + ".orig")) == 4
+    assert len(restartthinner.get_restart_indices(UNRST_FNAME + ".orig")) == 4
+
+
+def test_subdirectory(tmpdir, mocker):
+    """Check that we can thin an UNRST file two directory levels down"""
+    tmpdir.chdir()
+
+    subdir = Path("eclipse/model")
+    subdir.mkdir(parents=True)
+
+    shutil.copyfile(ECLDIR / UNRST_FNAME, subdir / UNRST_FNAME)
+    orig_rstindices = restartthinner.get_restart_indices(subdir / UNRST_FNAME)
+
+    mocker.patch(
+        "sys.argv", ["restartthinner", "-n", "3", str(subdir / UNRST_FNAME), "--keep"]
+    )
+    print(os.getcwd())
+    restartthinner.main()
+    print(os.getcwd())
+
+    assert (subdir / UNRST_FNAME).exists()
+    assert (subdir / (UNRST_FNAME + ".orig")).exists()  # The backed up file
+
+    new_rstindices = restartthinner.get_restart_indices(subdir / UNRST_FNAME)
+    assert len(new_rstindices) == 3
+    assert new_rstindices[0] == orig_rstindices[0]
+    assert new_rstindices[-1] == orig_rstindices[-1]
+    assert (
+        len(restartthinner.get_restart_indices(subdir / (UNRST_FNAME + ".orig"))) == 4
+    )
+
+
+def test_get_restart_indices_filenotfound(tmpdir):
+    """EclFile.file_report_list segfaults unless the code is careful"""
+    with pytest.raises(FileNotFoundError, match="foo"):
+        restartthinner.get_restart_indices("foo")
+    with pytest.raises(FileNotFoundError, match="foo"):
+        restartthinner.get_restart_indices(Path("foo"))
+
+    tmpdir.chdir()
+    Path("FOO.UNRST").write_text("this is not an unrst file")
+    with pytest.raises(TypeError, match="which is not a restart file"):
+        restartthinner.get_restart_indices("FOO.UNRST")
 
 
 @pytest.mark.integration
