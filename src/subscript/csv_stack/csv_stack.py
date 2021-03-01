@@ -2,6 +2,7 @@
 ERT workflow and ERT forward model"""
 import sys
 import re
+import warnings
 import logging
 import argparse
 from typing import Pattern
@@ -163,6 +164,12 @@ def get_parser() -> argparse.ArgumentParser:
     )
 
     return parser
+
+
+def deprecated_main() -> None:
+    """Function to display deprecation warning before going to main()"""
+    warnings.warn("csvStack is deprecated. Use csv_stack", FutureWarning)
+    main()
 
 
 def main() -> None:
