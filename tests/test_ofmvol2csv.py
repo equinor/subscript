@@ -3,6 +3,7 @@ import sys
 import datetime
 import shutil
 import subprocess
+from pathlib import Path
 
 import pandas as pd
 
@@ -429,7 +430,7 @@ def test_cmdline():
 
 @pytest.fixture
 def datadir(tmpdir):
-    data = os.path.join(os.path.dirname(__file__), "testdata_ofmvol2csv")
+    data = Path(__file__).absolute().parent / "testdata_ofmvol2csv"
     tmpdir.chdir()
     shutil.copytree(data, "data")
     os.chdir("data")
@@ -490,7 +491,7 @@ def test_cmdline_globbing(datadir):
 def test_no_files(tmpdir):
     tmpdir.chdir()
     ofmvol2csv.ofmvol2csv_main("bogus*.vol", "volfiles.csv")
-    assert not os.path.exists("volfiles.csv")
+    assert not Path("volfiles.csv").exists()
 
 
 def test_roundtrip(datadir):
@@ -533,5 +534,6 @@ def test_ert_hook(datadir):
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
-    assert os.path.exists("proddata.csv")
+    assert Path("proddata.csv").exists()
+
     assert not pd.read_csv("proddata.csv").empty

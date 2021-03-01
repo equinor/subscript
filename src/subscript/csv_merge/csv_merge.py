@@ -32,7 +32,7 @@ EXAMPLES = """
 Add a file named e.g. ``ert/bin/workflows/MERGE_SATFUNC`` with the contents::
 
   MAKE_DIRECTORY <CASEDIR>/share/results/tables/
-  CSV_MERGE <CASEDIR>/realization-*/iter-*/share/results/tables/satfunc.csv <CASEDIR>/share/results/tables/satfunc.csv
+  CSV_MERGE "<CASEDIR>/realization-*/iter-*/share/results/tables/satfunc.csv" "<CASEDIR>/share/results/tables/satfunc.csv"
 
 (where ``<CASEDIR>`` typically points to ``/scratch/..``).
 

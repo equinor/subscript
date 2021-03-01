@@ -1,8 +1,8 @@
 """Module for parsing and writing ERT observation files into/from an
 equivalent DataFrame representation"""
-import os
 import re
 import datetime
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -70,12 +70,11 @@ def expand_includes(input_str, cwd="."):
     """
     match = INCLUDE_RE.search(input_str)
     while match:
-        include_filename = os.path.join(cwd, match.groups()[1])
+        include_filename = Path(cwd) / Path(match.groups()[1])
         logger.info(
             "Injecting include file: %s into observation file", include_filename
         )
-        with open(include_filename) as f_handle:
-            include_txt = f_handle.read()
+        include_txt = include_filename.read_text()
         input_str = input_str.replace("".join(match.groups()), include_txt)
         match = INCLUDE_RE.search(input_str)
     return input_str

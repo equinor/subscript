@@ -1,8 +1,7 @@
-import sys
-import os
 import re
 import subprocess
 import datetime
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -369,12 +368,14 @@ def test_cvs2volstr():
     assert len(dupdata) == len(data)
 
 
-def test_main(datadir):
+def test_main(datadir, mocker):
     """Test command line interface"""
     # Test installation
-    assert os.system("csv2ofmvol -h") == 0
+    assert subprocess.check_output(["csv2ofmvol", "-h"])
 
-    sys.argv = ["csv2ofmvol", "prodA3.csv", "prodA4.csv", "-o", "outfile.vol"]
+    mocker.patch(
+        "sys.argv", ["csv2ofmvol", "prodA3.csv", "prodA4.csv", "-o", "outfile.vol"]
+    )
     csv2ofmvol.main()
     vollines = open("outfile.vol").readlines()
     assert sum(["*NAME" in line for line in vollines]) == 2
@@ -388,30 +389,26 @@ def test_emptyfile(tmpdir):
     """Verify behaviour on empty input"""
     tmpdir.chdir()
     # All empty file.
-    with open("empty.csv", "w") as file_h:
-        file_h.write("")
+    Path("empty.csv").write_text("")
     with pytest.raises(pd.errors.EmptyDataError):
         csv2ofmvol.csv2ofmvol_main("empty.csv", "empty.vol")
-    assert not os.path.exists("empty.vol")
+    assert not Path("empty.vol").exists()
 
     # CSV file with wrong columns:
-    with open("columns.csv", "w") as file_h:
-        file_h.write("FOO")
+    Path("columns.csv").write_text("FOO")
     with pytest.raises(ValueError, match="WELL not found in dataset"):
         csv2ofmvol.csv2ofmvol_main("columns.csv", "columns.vol")
-    assert not os.path.exists("columns.vol")
+    assert not Path("columns.vol").exists()
 
     # CSV file with index columns:
-    with open("indexcols.csv", "w") as file_h:
-        file_h.write("DATE,WELL")
+    Path("indexcols.csv").write_text("DATE,WELL")
     with pytest.raises(ValueError, match="No supported data columns provided"):
         csv2ofmvol.csv2ofmvol_main("indexcols.csv", "columns.vol")
 
     # CSV file with index columns and one data column
-    with open("oilcol.csv", "w") as file_h:
-        file_h.write("DATE,WELL,OIL")
+    Path("oilcol.csv").write_text("DATE,WELL,OIL")
     csv2ofmvol.csv2ofmvol_main("oilcol.csv", "oilcol.vol")
-    lines = open("oilcol.vol").readlines()
+    lines = Path("oilcol.vol").read_text().splitlines()
     assert len(lines) == 6  # comments + three header lines (metric, daily, date+oil)
 
 
@@ -430,8 +427,7 @@ def test_ert_hook(datadir):
     """Mock an ERT config with CSV2OFMVOL as a FORWARD_MODEL and run it"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("FOO.DATA").write_text("--Empty")
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
@@ -441,14 +437,12 @@ def test_ert_hook(datadir):
     ]
 
     ert_config_fname = "test.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config))
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
-    assert os.path.exists("proddata.vol")
-    with open("proddata.vol") as file_h:
-        lines = file_h.readlines()
+    assert Path("proddata.vol").exists()
+    lines = Path("proddata.vol").read_text().splitlines()
     assert any("A-3" in line for line in lines)
     assert any("A-4" in line for line in lines)
     assert any("2012-01-01" in line for line in lines)
