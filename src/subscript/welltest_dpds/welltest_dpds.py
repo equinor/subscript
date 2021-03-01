@@ -9,7 +9,7 @@ from ecl.summary import EclSum
 
 DESCRIPTION = """
 Script to extract simulated welltest results. Typically used to compare with welltest
-analysis, from eg using Kappa.
+analysis, from eg Kappa.
 
 Required summary vectors in sim deck:
   * wbhp:well_name
