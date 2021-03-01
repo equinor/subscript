@@ -8,8 +8,8 @@ from ecl.summary import EclSum
 
 
 DESCRIPTION = """
-Script to extract simulated welltest results from simulator output.
-Typically used to compare with output from a welltest analysis, eg using Cappa
+Script to extract simulated welltest results. Typically used to compare with welltest
+analysis, from eg using Kappa.
 
 Required summary vectors in sim deck:
   * wbhp:well_name
@@ -23,7 +23,7 @@ Outputs the following files:
 
 according to the naming convention; outputdirectory/key_outfilesuffix.csv
 
-And a uinfied csv file with the following vectors:
+And a unified csv file with the following vectors:
   * cum time
   * wbhp vs cum time
   * wopr vs cum time
@@ -34,7 +34,7 @@ according to the naming convention; outputdirectory/welltest_output_outfilesuffi
 """
 
 """
-Script is a rewrite of a legacy script originally developed and improved by:
+Script is a rewrite of legacy script originally developed and improved by:
  * Jon Sætrom
  * Bjørn Kåre Hegstad
  * Cecile Otterlei
@@ -63,6 +63,18 @@ EXAMPLES = """
 """
 
 
+class CustomFormatter(
+    argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
+):
+    """
+    Multiple inheritance used for argparse to get both
+    defaults and raw description formatter
+    """
+
+    # pylint: disable=unnecessary-pass
+    pass
+
+
 def get_parser():
     """
     Define the argparse parser
@@ -70,9 +82,10 @@ def get_parser():
     Returns:
         parser (argparse.ArgumentParser)
     """
+
     parser = argparse.ArgumentParser(
         description=DESCRIPTION,
-        formatter_class=argparse.RawTextHelpFormatter,
+        formatter_class=CustomFormatter,
     )
 
     parser.add_argument(
@@ -88,35 +101,35 @@ def get_parser():
     parser.add_argument(
         "--outfilessuffix",
         type=str,
-        help='Suffix to be added to result files. Default: ""',
+        help="Suffix to be added to result files.",
         default="",
     )
     parser.add_argument(
         "-n",
         "--buildup_nr",
         type=int,
-        help="Buildup nr, eg which buildup to extract. Counting from 1. Default: 1 ",
+        help="Buildup nr, eg which buildup to extract. Counting from 1.",
         default=1,
     )
     parser.add_argument(
         "-o",
         "--outputdirectory",
         type=str,
-        help="Directory to put the output files. Detault: .",
+        help="Directory to put the output files.",
         default=".",
     )
     parser.add_argument(
         "--phase",
         type=str,
         choices=["OIL", "GAS"],
-        help="Main fluid phase in test (OIL/GAS). Default: OIL",
+        help="Main fluid phase in test (OIL/GAS).",
         default="OIL",
         required=False,
     )
     return parser
 
 
-def get_summary_vec(summary, key, required=True):
+def summary_vec(summary, key, required=True):
     """
     Read vector corresponding to key from summary instance
 
@@ -143,16 +156,12 @@ def get_buildup_indices(rates):
     """
     Go through the simulated rate and identify bu periods, as defined by zero flow.
 
-    Returns:
-    buildup_incices     : list of indices associated with start of buildups
-    buildup_end_incices : list of indices associated with end of buildups
-
     Args:
        rates: np.array
 
     Returns:
-       buildup_indices (list)
-       buildup_end_indices (list)
+       buildup_indices : (list) indices associated with start of buildups
+       buildup_end_indices : (list) indices associated with end of buildups
 
     """
 
@@ -161,11 +170,11 @@ def get_buildup_indices(rates):
 
     last = 0
     for i, rate in enumerate(rates):
-        if rate == 0 and last > 0.0:
+        if np.isclose(rate, 0) and last > 0.0:
             buildup_indices.append(i)
-        if rate > 0 and last == 0 and not i == 0:
+        if rate > 0 and np.isclose(last, 0) and not i == 0:
             buildup_end_indices.append(i - 1)
-        if i == len(rates) - 1 and rate == 0:
+        if i == len(rates) - 1 and np.isclose(rate, 0):
             buildup_end_indices.append(i)
         last = rate
 
@@ -175,7 +184,7 @@ def get_buildup_indices(rates):
     return buildup_indices, buildup_end_indices
 
 
-def get_supertime(time, rate, bu_start_ind, bu_end_ind):
+def supertime(time, rate, bu_start_ind, bu_end_ind):
     """
     Calculate supertime
 
@@ -210,7 +219,7 @@ def get_supertime(time, rate, bu_start_ind, bu_end_ind):
     return super_time[1:]
 
 
-def get_weighted_avg_press_time_derivative_lag1(dp, dspt):
+def weighted_avg_press_time_derivative_lag1(dp, dspt):
     """
     Compute weighted average of pressure time derivative,
     one time step to each side. Lag1
@@ -251,7 +260,7 @@ def get_weighted_avg_press_time_derivative_lag1(dp, dspt):
     return dpdspt_weighted
 
 
-def get_weighted_avg_press_time_derivative_lag2(
+def weighted_avg_press_time_derivative_lag2(
     dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
 ):
 
@@ -311,7 +320,7 @@ def get_weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list, start=0, end=None, sep=","):
+def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -336,7 +345,7 @@ def to_csv(filen, field_list, header_list, start=0, end=None, sep=","):
     for i in range(len(field_list[0][start:end])):
         fileh.write("%0.10f" % field_list[0][i])
         for field in field_list[1:]:
-            if len(field):
+            if len(field) != 0:
                 fileh.write(sep + "%0.10f" % field[i])
             else:
                 fileh.write(sep)
@@ -382,16 +391,16 @@ def main():
 
     summary = EclSum(eclcase)
     time = np.array(summary.days) * 24.0
-    wbhp = get_summary_vec(summary, "WBHP:" + well_name)
+    wbhp = summary_vec(summary, "WBHP:" + well_name)
 
     if main_phase == "OIL":
-        wopr = get_summary_vec(summary, "WOPR:" + well_name)
-        wgpr = get_summary_vec(summary, "WGPR:" + well_name, required=False)
+        wopr = summary_vec(summary, "WOPR:" + well_name)
+        wgpr = summary_vec(summary, "WGPR:" + well_name, required=False)
     else:
-        wopr = get_summary_vec(summary, "WOPR:" + well_name, required=False)
-        wgpr = get_summary_vec(summary, "WGPR:" + well_name)
+        wopr = summary_vec(summary, "WOPR:" + well_name, required=False)
+        wgpr = summary_vec(summary, "WGPR:" + well_name)
 
-    wwpr = get_summary_vec(summary, "WWPR:" + well_name, required=False)
+    wwpr = summary_vec(summary, "WWPR:" + well_name, required=False)
 
     if main_phase == "OIL":
         buildup_indices, buildup_end_indices = get_buildup_indices(wopr)
@@ -424,9 +433,9 @@ def main():
     bu_end_ind = buildup_end_indices[buildup_nr - 1]
 
     if main_phase == "OIL":
-        super_time = get_supertime(time, wopr, bu_start_ind, bu_end_ind)
+        super_time = supertime(time, wopr, bu_start_ind, bu_end_ind)
     else:
-        super_time = get_supertime(time, wgpr, bu_start_ind, bu_end_ind)
+        super_time = supertime(time, wgpr, bu_start_ind, bu_end_ind)
 
     # Calculate delta pressure             - lag 1 only
     dp = np.diff(wbhp[bu_start_ind + 1 : bu_end_ind + 1])
@@ -437,21 +446,21 @@ def main():
     # Cumulative time used from start of buildup
     cum_time = time[bu_start_ind + 1 : bu_end_ind + 1] - time[bu_start_ind]
 
-    dpdspt_weighted_lag1 = get_weighted_avg_press_time_derivative_lag1(dp, dspt)
+    dpdspt_weighted_lag1 = weighted_avg_press_time_derivative_lag1(dp, dspt)
 
-    dpdspt_weighted_lag2 = get_weighted_avg_press_time_derivative_lag2(
+    dpdspt_weighted_lag2 = weighted_avg_press_time_derivative_lag2(
         dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
     )
 
     to_csv(
         outdir + "dpdspt_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
-        ["Hours", "dpd(supt)_w"],
+        ["HOURS", "dpd(supt)_w"],
     )
     to_csv(
         outdir + "dpdspt_lag2" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
-        ["Hours", "dpd(supt)_w2"],
+        ["HOURS", "dpd(supt)_w2"],
     )
     to_csv(
         outdir + "spt" + outf_suffix + ".csv",
@@ -459,7 +468,14 @@ def main():
         ["Superpositioned_time"],
     )
 
-    header_list = ["Hours", "WBHP", "WOPR", "WGPR", "WWPR"]
+    header_list = [
+        "HOURS",
+        "WBHP:" + well_name,
+        "WOPR:" + well_name,
+        "WGPR:" + well_name,
+        "WWPR:" + well_name,
+    ]
+
     field_list = [time, wbhp, wopr, wgpr, wwpr]
 
     to_csv(
