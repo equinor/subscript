@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.casegen_upcars.udf &mdash; subscript 0.8.1.dev1+g67af6f3 documentation</title>
+  <title>subscript.welltest_dpds.welltest_dpds &mdash; subscript 0.8.1.dev1+g67af6f3 documentation</title>
   
 
   
@@ -39,8 +39,7 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="subscript.casegen_upcars.udf_arg_parser" href="subscript.casegen_upcars.udf_arg_parser.html" />
-    <link rel="prev" title="subscript.casegen_upcars.model" href="subscript.casegen_upcars.model.html" /> 
+    <link rel="prev" title="subscript.welltest_dpds" href="subscript.welltest_dpds.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -128,10 +127,7 @@
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="subscript.casegen_upcars.html#submodules">Submodules</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge</span></code></a></li>
@@ -157,7 +153,10 @@
 <li class="toctree-l3"><a class="reference internal" href="subscript.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.version.html"><code class="docutils literal notranslate"><span class="pre">subscript.version</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.vfp2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.vfp2csv</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="subscript.welltest_dpds.html#submodules">Submodules</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -212,15 +211,15 @@
         
           <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
         
-          <li><a href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a> &raquo;</li>
+          <li><a href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a> &raquo;</li>
         
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code></li>
+      <li><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/subscript/subscript.casegen_upcars.udf.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/subscript/subscript.welltest_dpds.welltest_dpds.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -233,50 +232,156 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-subscript.casegen_upcars.udf">
-<span id="subscript-casegen-upcars-udf"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code><a class="headerlink" href="#module-subscript.casegen_upcars.udf" title="Permalink to this headline">¶</a></h1>
-<p>Supporting functions/class for casegen_upcars</p>
-<dl class="py function">
-<dt id="subscript.casegen_upcars.udf.compact_list">
-<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">compact_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.compact_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate a compact representation of list value
-Useful in Eclipse context to make smaller file size and faster file writing
-For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">compact_list</span><span class="p">([</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="mi">4</span><span class="o">*</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="o">*</span><span class="mi">1</span>
-</pre></div>
-</div>
+  <div class="section" id="module-subscript.welltest_dpds.welltest_dpds">
+<span id="subscript-welltest-dpds-welltest-dpds"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code><a class="headerlink" href="#module-subscript.welltest_dpds.welltest_dpds" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="subscript.welltest_dpds.welltest_dpds.CustomFormatter">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">CustomFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.CustomFormatter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiple inheritance used for argparse to get both
+defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="subscript.casegen_upcars.udf.conversion">
-<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">conversion</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">variable</span></em>, <em class="sig-param"><span class="pre">conversion_func=&lt;class</span> <span class="pre">'float'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.conversion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert value/list to anything using conversion function
-:param variable: any value/list to convert
-:return: converted value/list of value</p>
+<dt id="subscript.welltest_dpds.welltest_dpds.get_buildup_indices">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">get_buildup_indices</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.get_buildup_indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Go through the simulated rate and identify bu periods, as defined by zero flow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rates</strong> – np.array</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) indices associated with start of buildups
+buildup_end_indices : (list) indices associated with end of buildups</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>buildup_indices</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="subscript.casegen_upcars.udf.flatten">
-<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">flatten</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.flatten" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flatten multi-dimension iterable, ensure returning value is a list</p>
+<dt id="subscript.welltest_dpds.welltest_dpds.get_parser">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.get_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Define the argparse parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>parser (argparse.ArgumentParser)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="subscript.casegen_upcars.udf.iter_flatten">
-<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">iter_flatten</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.iter_flatten" title="Permalink to this definition">¶</a></dt>
-<dd><p>Flatten multi-dimension iterable</p>
+<dt id="subscript.welltest_dpds.welltest_dpds.main">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main entry point for the script</p>
+<p>Args:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pass</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="subscript.casegen_upcars.udf.listify">
-<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">listify</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversion_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.listify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return list of source with length of count if source is not already a list</p>
+<dt id="subscript.welltest_dpds.welltest_dpds.summary_vec">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">summary_vec</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.summary_vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read vector corresponding to key from summary instance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>summary</strong> – (ecl.summary.EclSum)</p></li>
+<li><p><strong>key</strong> – (str)</p></li>
+<li><p><strong>required</strong> – (bool)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>np.array</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>vec</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="subscript.casegen_upcars.udf.uniform_dist">
-<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">uniform_dist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_nr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.uniform_dist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate uniform distribution which range from low - high</p>
+<dt id="subscript.welltest_dpds.welltest_dpds.supertime">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">supertime</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_start_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_end_ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.supertime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate supertime</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>rate</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>bu_start_ind</strong> (<em>int</em>) – </p></li>
+<li><p><strong>bu_end_ind</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>supertime (np.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="subscript.welltest_dpds.welltest_dpds.to_csv">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">to_csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">',</span> <span class="pre">'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.to_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dump vectors to csv file. Handles arbitrarly number of fields</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filen</strong> (<em>str</em>) – </p></li>
+<li><p><strong>field_list</strong> (<em>list of np.array</em>) – </p></li>
+<li><p><strong>header_list</strong> (<em>list of str</em>) – </p></li>
+<li><p><strong>start</strong> (<em>int</em>) – </p></li>
+<li><p><strong>end</strong> (<em>int</em>) – </p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>pass</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag1">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag1</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute weighted average of pressure time derivative,
+one time step to each side. Lag1</p>
+<p>Formula: (  (dp_f/dspt_f)*dspt_b + (dp_b/dspt_b)*dspt_f )/(dspt_f + dspt_b)</p>
+<p>spt is SuperPositionedTime and dspt is delta spt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dp</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>dspt</strong> (<em>np.array</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dpdspt_weighted (np.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2">
+<code class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></code><code class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag2</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">super_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wbhp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_start_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_end_ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute weighted average using LAG 2 for pressure time derivative</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dp</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>dspt</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>supertime</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>wbhp</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>bu_start_ind</strong> (<em>int</em>) – </p></li>
+<li><p><strong>bu_end_ind</strong> (<em>int</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>dpdspt_weighted_lag2 (np.array)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -287,8 +392,7 @@ For example:</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="subscript.casegen_upcars.udf_arg_parser.html" class="btn btn-neutral float-right" title="subscript.casegen_upcars.udf_arg_parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="subscript.casegen_upcars.model.html" class="btn btn-neutral float-left" title="subscript.casegen_upcars.model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="subscript.welltest_dpds.html" class="btn btn-neutral float-left" title="subscript.welltest_dpds" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

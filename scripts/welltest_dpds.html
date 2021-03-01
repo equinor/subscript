@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>PACK_SIM &mdash; subscript 0.8.1.dev1+g67af6f3 documentation</title>
+  <title>WELLTEST_DPDS &mdash; subscript 0.8.1.dev1+g67af6f3 documentation</title>
   
 
   
@@ -39,8 +39,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="PARAMS2CSV" href="params2csv.html" />
-    <link rel="prev" title="OFMVOL2CSV" href="ofmvol2csv.html" /> 
+    <link rel="next" title="subscript" href="../subscript/subscript.html" />
+    <link rel="prev" title="VFP2CSV" href="vfp2csv.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -110,11 +110,7 @@
 <li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="merge_schedule.html">MERGE_SCHEDULE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PACK_SIM</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
@@ -125,7 +121,11 @@
 <li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
-<li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">WELLTEST_DPDS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Python modules</span></p>
 <ul>
@@ -178,13 +178,13 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>PACK_SIM</li>
+      <li>WELLTEST_DPDS</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/scripts/pack_sim.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/scripts/welltest_dpds.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -197,40 +197,72 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="pack-sim">
-<h1>PACK_SIM<a class="headerlink" href="#pack-sim" title="Permalink to this headline">¶</a></h1>
-<a class="reference internal image-reference" href="../_images/Pack_sim_overview.png"><img alt="../_images/Pack_sim_overview.png" src="../_images/Pack_sim_overview.png" style="width: 80%;" /></a>
-<p><p>The script pack_sim will read trough a data file and copy all
-include files to one include directory in the so-called packing
-directory. It will also generate a new DATA file in the packing
-directory with relative include paths. This way a simulation model can
-be quickly packed to be, for example, distributed to a partner
-company.  The script also works with include files in include files.</p>
+  <div class="section" id="welltest-dpds">
+<h1>WELLTEST_DPDS<a class="headerlink" href="#welltest-dpds" title="Permalink to this headline">¶</a></h1>
+<p><p>Script to extract simulated welltest results. Typically used to compare with welltest
+analysis, from eg Kappa.</p>
+<dl class="simple">
+<dt>Required summary vectors in sim deck:</dt><dd><ul class="simple">
+<li><p>wbhp:well_name</p></li>
+<li><p>wopr:well_name if phase == OIL</p></li>
+<li><p>wgpr:well_name if phase == GAS</p></li>
+</ul>
+</dd>
+<dt>Outputs the following files:</dt><dd><ul class="simple">
+<li><p>dpdspt_lag1 : cumtime and superpositioned time derivative of pressure lag 1</p></li>
+<li><p>dpdspt_lag2 : cumtime and superpositioned time derivative of pressure lag 2</p></li>
+<li><p>spt superpositioned time</p></li>
+</ul>
+</dd>
+</dl>
+<p>according to the naming convention; outputdirectory/key_outfilesuffix.csv</p>
+<dl class="simple">
+<dt>And a unified csv file with the following vectors:</dt><dd><ul class="simple">
+<li><p>cum time</p></li>
+<li><p>wbhp vs cum time</p></li>
+<li><p>wopr vs cum time</p></li>
+<li><p>wgpr vs cum time</p></li>
+<li><p>wwpr vs cum time</p></li>
+</ul>
+</dd>
+</dl>
+<p>according to the naming convention; outputdirectory/welltest_output_outfilesuffix.csv</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pack_sim</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">fmu</span><span class="p">]</span> <span class="n">ECLIPSE_CASE</span> <span class="n">PACKING_PATH</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">welltest_dpds</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">outfilessuffix</span> <span class="n">OUTFILESSUFFIX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">BUILDUP_NR</span><span class="p">]</span>
+                     <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIRECTORY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">phase</span> <span class="p">{</span><span class="n">OIL</span><span class="p">,</span><span class="n">GAS</span><span class="p">}]</span>
+                     <span class="n">eclcase</span> <span class="n">wellname</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments">
 <h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
-<dt><kbd>ECLIPSE_CASE</kbd></dt>
-<dd><p>Name of the Eclipse case to be packed</p>
+<dt><kbd>eclcase</kbd></dt>
+<dd><p>Eclipse case to extract from</p>
 </dd>
-<dt><kbd>PACKING_PATH</kbd></dt>
-<dd><p>Path towards the directory where the packed simulation model should end up.</p>
+<dt><kbd>wellname</kbd></dt>
+<dd><p>Name of well to extract results from</p>
 </dd>
 </dl>
 </div>
 <div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
-<dt><kbd>-c, --clearcomments</kbd></dt>
-<dd><p>Set this switch (only -c, no further input required) to clear all comments during packing.</p>
-<p>Default: False</p>
+<dt><kbd>--outfilessuffix</kbd></dt>
+<dd><p>Suffix to be added to result files.</p>
+<p>Default: “”</p>
 </dd>
-<dt><kbd>-fmu, --fmu</kbd></dt>
-<dd><p>Set this switch (only -fmu, no further input required) to save the the Eclipse model in standard fmu file structure (model/ and include/grid, include/props, etc folders)</p>
-<p>Default: False</p>
+<dt><kbd>-n, --buildup_nr</kbd></dt>
+<dd><p>Buildup nr, eg which buildup to extract. Counting from 1.</p>
+<p>Default: 1</p>
+</dd>
+<dt><kbd>-o, --outputdirectory</kbd></dt>
+<dd><p>Directory to put the output files.</p>
+<p>Default: “.”</p>
+</dd>
+<dt><kbd>--phase</kbd></dt>
+<dd><p>Possible choices: OIL, GAS</p>
+<p>Main fluid phase in test (OIL/GAS).</p>
+<p>Default: “OIL”</p>
 </dd>
 </dl>
 </div>
@@ -242,8 +274,8 @@ company.  The script also works with include files in include files.</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="params2csv.html" class="btn btn-neutral float-right" title="PARAMS2CSV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="ofmvol2csv.html" class="btn btn-neutral float-left" title="OFMVOL2CSV" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../subscript/subscript.html" class="btn btn-neutral float-right" title="subscript" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="vfp2csv.html" class="btn btn-neutral float-left" title="VFP2CSV" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

@@ -40,5 +40,6 @@ Submodules
    subscript.sw_model_utilities
    subscript.version
    subscript.vfp2csv
+   subscript.welltest_dpds
 
 .. currentmodule:: subscript
