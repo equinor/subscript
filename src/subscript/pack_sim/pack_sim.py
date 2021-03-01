@@ -639,7 +639,7 @@ def pack_simulation(ecl_case, packing_path, clear_comments, fmu):
     print("")
     print("*********************************************************************")
     if warnings == 0:
-        print("SUCCESFULLY PACKED SIMULATION MODEL IN %s" % packing_path)
+        print("SUCCESSFULLY PACKED SIMULATION MODEL IN %s" % packing_path)
     else:
         print(
             "PACKED SIMULATION MODEL WITH %s WARNING(S) IN %s"
