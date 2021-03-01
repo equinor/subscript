@@ -17,8 +17,8 @@ Required summary vectors in sim deck:
   * wgpr:well_name if phase == GAS
 
 Outputs the following files:
-  * dpdspt_lag1 eg superpositioned time derivative of pressure lag 1
-  * dpdspt_lag2 eg superpositioned time derivative of pressure lag 2
+  * dpdspt_lag1 : cumtime and superpositioned time derivative of pressure lag 1
+  * dpdspt_lag2 : cumtime and superpositioned time derivative of pressure lag 2
   * spt superpositioned time
 
 according to the naming convention; outputdirectory/key_outfilesuffix.csv
