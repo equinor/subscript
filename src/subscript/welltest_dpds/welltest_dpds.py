@@ -4,6 +4,8 @@ import sys
 import os
 import argparse
 import numpy as np
+import pandas as pd
+from scipy.interpolate import interp1d
 from ecl.summary import EclSum
 
 
@@ -16,21 +18,24 @@ Required summary vectors in sim deck:
   * wopr:well_name if phase == OIL
   * wgpr:well_name if phase == GAS
 
-Outputs the following files:
+Outputs the following files, according to the naming convention
+outputdirectory/fname_outfilesuffix.csv:
   * dpdspt_lag1 : cumtime and superpositioned time derivative of pressure lag 1
   * dpdspt_lag2 : cumtime and superpositioned time derivative of pressure lag 2
   * spt superpositioned time
+  * welltest : a unified csv file with the following vectors:
+    * cum time
+    * wbhp vs cum time
+    * wopr vs cum time
+    * wgpr vs cum time
+    * wwpr vs cum time
 
-according to the naming convention; outputdirectory/key_outfilesuffix.csv
+If option -gen_data_result_file is invoked, the following files to be used with
+GEN_OBS in ERT are produced:
+  * dpdspt_lag1_gendobs : spt time derivative of pressure lag 1
+  * dpdspt_lag2_gendobs : spt time derivative of pressure lag 2
+  * wbhp_genobs : wbhp
 
-And a unified csv file with the following vectors:
-  * cum time
-  * wbhp vs cum time
-  * wopr vs cum time
-  * wgpr vs cum time
-  * wwpr vs cum time
-
-according to the naming convention; outputdirectory/welltest_output_outfilesuffix.csv
 """
 
 """
@@ -124,6 +129,15 @@ def get_parser():
         choices=["OIL", "GAS"],
         help="Main fluid phase in test (OIL/GAS).",
         default="OIL",
+        required=False,
+    )
+    parser.add_argument(
+        "--gen_data_result_file",
+        type=str,
+        help="File with welltest results used to define time steps, "
+        + "typically exported from Saphir. If present, additional files "
+        + "to be used as GEN_DATA in ERT are produced",
+        default=None,
         required=False,
     )
     return parser
@@ -320,7 +334,7 @@ def weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
+def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=", "):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -338,10 +352,11 @@ def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
 
     fileh = open(filen, "w")
 
-    fileh.write(header_list[0])
-    for header in header_list[1:]:
-        fileh.write(sep + header)
-    fileh.write("\n")
+    if header_list[0]:
+        fileh.write(header_list[0])
+        for header in header_list[1:]:
+            fileh.write(sep + header)
+        fileh.write("\n")
     for i in range(len(field_list[0][start:end])):
         fileh.write("%0.10f" % field_list[0][i])
         for field in field_list[1:]:
@@ -352,6 +367,44 @@ def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
         fileh.write("\n")
     fileh.close()
     print("Writing file:" + filen)
+
+
+def gendata_vec(filen, vec, time):
+    """
+    Adjust vector to time axis defined by observation file.
+    Used to create output compatible with ERTs GEN_OBS file format
+    and directy comparable with output from eg Kappa Saphir.
+    Note; csv files exported from Saphir are separated with /t
+    and contain headers with space which makes parsing fragile.
+
+    Args:
+        filen : (str) Name of csv file to extract time axis from
+        vec   : (np.array) Vector to remap onto the axis
+        time  : (np.array) Original time axis
+    Returns:
+        gen_data : (np.array)
+
+    """
+
+    if not os.path.exists(filen):
+        raise FileNotFoundError("No such file:", filen)
+
+    df = pd.read_csv(filen, sep="\t")
+    obs_time = df["dTime"][1:None].dropna().to_numpy(dtype=float)
+
+    gen_data = np.zeros(len(obs_time))
+
+    interp = interp1d(time, vec)
+
+    for i, t in enumerate(obs_time):
+        if t < time[0]:
+            gen_data[i] = vec[0]
+        elif t > time[-1]:
+            gen_data[i] = vec[-1]
+        else:
+            gen_data[i] = interp(t)
+
+    return gen_data
 
 
 def main():
@@ -373,6 +426,7 @@ def main():
     main_phase = args.phase
     outf_suffix = args.outfilessuffix
     outdir = args.outputdirectory
+    gendata_resultf = args.gen_data_result_file
 
     print("*" * 60)
     print("Running the " + sys.argv[0] + " script")
@@ -387,7 +441,8 @@ def main():
         outdir = outdir + "/"
 
     if not os.path.exists(outdir):
-        raise FileNotFoundError("No such outputdirectory:", outdir)
+        os.mkdir(outdir)
+        print("Creating outputdirectory:", outdir)
 
     summary = EclSum(eclcase)
     time = np.array(summary.days) * 24.0
@@ -452,6 +507,25 @@ def main():
         dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
     )
 
+    if gendata_resultf:
+        dpdspt_w1_gendata = gendata_vec(gendata_resultf, dpdspt_weighted_lag1, cum_time)
+        dpdspt_w2_gendata = gendata_vec(gendata_resultf, dpdspt_weighted_lag2, cum_time)
+        wbhp_gendata = gendata_vec(
+            gendata_resultf, wbhp[bu_start_ind + 1 : bu_end_ind + 1], cum_time
+        )
+
+        to_csv(
+            outdir + "dpdspt_lag1_genobs" + outf_suffix + ".csv",
+            [dpdspt_w1_gendata],
+        )
+        to_csv(
+            outdir + "dpdspt_lag2_genobs" + outf_suffix + ".csv",
+            [dpdspt_w2_gendata],
+        )
+        to_csv(
+            outdir + "wbhp_genobs" + outf_suffix + ".csv",
+            [wbhp_gendata],
+        )
     to_csv(
         outdir + "dpdspt_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],

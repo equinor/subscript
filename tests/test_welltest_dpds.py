@@ -40,15 +40,11 @@ def test_main(tmpdir, mocker):
     # test --outputdirectory
     mocker.patch(
         "sys.argv",
-        ["welltest_dpds", datafilepath, "55_33-1", "--outputdirectory", "blabla"],
+        ["welltest_dpds", datafilepath, "55_33-1", "-o", "blabla"],
     )
-    with pytest.raises(FileNotFoundError, match=r".*No such outputdirectory.*"):
-        welltest_dpds.main()
 
-    os.mkdir("blabla")
     welltest_dpds.main()
     assert os.path.exists("./blabla/welltest_output.csv")
-    os.unlink("blabla/welltest_output.csv")
 
     # test --phase
     mocker.patch(
@@ -182,3 +178,23 @@ def test_get_weighted_avg_press_time_derivative_lag2():
     assert len(dpdspt_w_lag2) == 247
     assert dpdspt_w_lag2[0] == pytest.approx(0.43083638)
     assert dpdspt_w_lag2[-1] == pytest.approx(0.12729989)
+
+
+def test_gendata_vec(tmpdir):
+    mockfcont = """
+    Time\tdTime
+    (hr)\t(hr)
+    0\t0
+    1\t1
+    """
+    fileh = open("index.txt", "w")
+    fileh.write(mockfcont)
+    fileh.close()
+
+    vec = np.array([0, 0.5, 1, 2])
+    time = np.array([0, 1, 2, 3])
+    gendata_vec = welltest_dpds.gendata_vec("index.txt", vec, time)
+    os.unlink("index.txt")
+
+    assert len(gendata_vec) == 2
+    assert gendata_vec[1] == pytest.approx(0.5)
