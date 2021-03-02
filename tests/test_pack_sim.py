@@ -138,3 +138,15 @@ def test_md5sum(tmpdir):
 
     # Check that the result is hexadecimal using int(x, 16)
     int(pack_sim._md5checksum("foo.txt"), 16)
+
+
+def test_utf8(tmpdir):
+    """Test that no errors are triggered when UTF-8 input is provided"""
+    tmpdir.chdir()
+    datafile_str = """RUNSPEC
+TITLE
+Smørbukk Sør
+"""
+    Path("FOO.DATA").write_text(datafile_str)
+    pack_sim.pack_simulation("FOO.DATA", "somedir", True, False)
+    assert Path("somedir/FOO.DATA").read_text() == datafile_str
