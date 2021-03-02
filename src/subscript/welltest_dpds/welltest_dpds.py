@@ -18,23 +18,14 @@ Required summary vectors in sim deck:
   * wopr:well_name if phase == OIL
   * wgpr:well_name if phase == GAS
 
-Outputs the following files, according to the naming convention
-outputdirectory/fname_outfilesuffix.csv:
-  * dpdspt_lag1 : cumtime and superpositioned time derivative of pressure lag 1
-  * dpdspt_lag2 : cumtime and superpositioned time derivative of pressure lag 2
-  * spt superpositioned time
-  * welltest : a unified csv file with the following vectors:
-    * cum time
-    * wbhp vs cum time
-    * wopr vs cum time
-    * wgpr vs cum time
-    * wwpr vs cum time
-
-If option -gen_data_result_file is invoked, the following files to be used with
-GEN_OBS in ERT are produced:
-  * dpdspt_lag1_gendobs : spt time derivative of pressure lag 1
-  * dpdspt_lag2_gendobs : spt time derivative of pressure lag 2
-  * wbhp_genobs : wbhp
+Outputs files according to naming convention outputdirectory/fname_outfilesuffix.csv:
+  * dpdspt_lag1; cumtime and superpositioned time derivative of pressure lag 1
+  * dpdspt_lag2; cumtime and superpositioned time derivative of pressure lag 2
+  * spt; superpositioned time
+  * welltest; unified csv file with vectors: cumtime, wbhp, wopr, wgpr, wwpr
+  * dpdspt_lag1_gendobs; if --genobs_resultfile is invoked
+  * dpdspt_lag2_gendobs; if --genobs_resultfile is invoked
+  * wbhp_genobs; if --gen_obs_result_file is invoked
 
 """
 
@@ -132,11 +123,13 @@ def get_parser():
         required=False,
     )
     parser.add_argument(
-        "--gen_data_result_file",
+        "--genobs_resultfile",
         type=str,
-        help="File with welltest results used to define time steps, "
-        + "typically exported from Saphir. If present, additional files "
-        + "to be used as GEN_DATA in ERT are produced",
+        help=(
+            "File with welltest results used to define time steps, "
+            "typically exported from Saphir. If present, additional files "
+            "to be used as GEN_OBS in ERT are produced"
+        ),
         default=None,
         required=False,
     )
@@ -203,13 +196,13 @@ def supertime(time, rate, bu_start_ind, bu_end_ind):
     Calculate supertime
 
     Args:
-        time (np.array)
-        rate (np.array)
-        bu_start_ind (int)
-        bu_end_ind (int)
+       time (np.array)
+       rate (np.array)
+       bu_start_ind (int)
+       bu_end_ind (int)
 
     Returns:
-        supertime (np.array)
+       supertime (np.array)
 
     """
 
@@ -369,7 +362,7 @@ def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=", "):
     print("Writing file:" + filen)
 
 
-def gendata_vec(filen, vec, time):
+def genobs_vec(filen, vec, time):
     """
     Adjust vector to time axis defined by observation file.
     Used to create output compatible with ERTs GEN_OBS file format
@@ -426,13 +419,16 @@ def main():
     main_phase = args.phase
     outf_suffix = args.outfilessuffix
     outdir = args.outputdirectory
-    gendata_resultf = args.gen_data_result_file
+    genobs_resultf = args.genobs_resultfile
 
     print("*" * 60)
     print("Running the " + sys.argv[0] + " script")
     print("Extracting results from eclcase:", eclcase)
     print("Extracting result from well:", well_name)
     print()
+
+    if genobs_resultf == "None":
+        genobs_resultf = None
 
     if outf_suffix and not outf_suffix.startswith("_"):
         outf_suffix = "_" + outf_suffix
@@ -507,11 +503,11 @@ def main():
         dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
     )
 
-    if gendata_resultf:
-        dpdspt_w1_gendata = gendata_vec(gendata_resultf, dpdspt_weighted_lag1, cum_time)
-        dpdspt_w2_gendata = gendata_vec(gendata_resultf, dpdspt_weighted_lag2, cum_time)
-        wbhp_gendata = gendata_vec(
-            gendata_resultf, wbhp[bu_start_ind + 1 : bu_end_ind + 1], cum_time
+    if genobs_resultf:
+        dpdspt_w1_gendata = genobs_vec(genobs_resultf, dpdspt_weighted_lag1, cum_time)
+        dpdspt_w2_gendata = genobs_vec(genobs_resultf, dpdspt_weighted_lag2, cum_time)
+        wbhp_gendata = genobs_vec(
+            genobs_resultf, wbhp[bu_start_ind + 1 : bu_end_ind + 1], cum_time
         )
 
         to_csv(

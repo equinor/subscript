@@ -180,7 +180,7 @@ def test_get_weighted_avg_press_time_derivative_lag2():
     assert dpdspt_w_lag2[-1] == pytest.approx(0.12729989)
 
 
-def test_gendata_vec(tmpdir):
+def test_obsdata_vec(tmpdir):
     mockfcont = """
     Time\tdTime
     (hr)\t(hr)
@@ -193,8 +193,8 @@ def test_gendata_vec(tmpdir):
 
     vec = np.array([0, 0.5, 1, 2])
     time = np.array([0, 1, 2, 3])
-    gendata_vec = welltest_dpds.gendata_vec("index.txt", vec, time)
+    genobs_vec = welltest_dpds.genobs_vec("index.txt", vec, time)
     os.unlink("index.txt")
 
-    assert len(gendata_vec) == 2
-    assert gendata_vec[1] == pytest.approx(0.5)
+    assert len(genobs_vec) == 2
+    assert genobs_vec[1] == pytest.approx(0.5)
