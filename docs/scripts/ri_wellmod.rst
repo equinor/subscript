@@ -27,7 +27,7 @@ Here ``DROGON-0`` is an initialized Eclipse case (i.e., the files DROGON-0.INIT 
 DROGON-0.EGRID/DROGON-0.GRID exist), and wells.rsp is a ResInsight project with wells
 and completions defined:
 
-.. figure:: ../_static/resinsight_wells_project_example.png
+.. figure:: images/resinsight_wells_project_example.png
    :figwidth: 85%
    :alt: Example wells project
 

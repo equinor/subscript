@@ -35,6 +35,7 @@ SSCRIPTS = [
     "sunsch = subscript.sunsch.sunsch:main",
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
     "welltest_dpds = subscript.welltest_dpds.welltest_dpds:main",
+    "ri_wellmod = subscript.ri_wellmod.ri_wellmod:main"
 ]
 
 ERTPLUGINS = [
@@ -72,6 +73,8 @@ REQUIREMENTS = [
     "segyio",
     "xlrd",
     "xtgeo",
+    "protobuf",
+    "rips",
 ]
 
 SETUP_REQUIREMENTS = [
