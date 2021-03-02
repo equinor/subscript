@@ -208,9 +208,10 @@ def test_get_weighted_avg_press_time_derivative_lag2():
     assert dpdspt_w_lag2[-1] == pytest.approx(0.12729989)
 
 
-def test_genobs_vec():
+def test_genobs_vec(tmpdir):
     """ Test genobs_vec """
 
+    tmpdir.chdir()
     mockcsv = """
     Time\tdTime
     (hr)\t(hr)
@@ -227,8 +228,10 @@ def test_genobs_vec():
     assert genobs_vec[1] == pytest.approx(0.5)
 
 
-def test_to_csv():
+def test_to_csv(tmpdir):
     """ Test to_csv """
+
+    tmpdir.chdir()
 
     vec = np.array([0, 0.5, 1, 2])
     welltest_dpds.to_csv("mock.csv", [vec])
