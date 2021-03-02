@@ -1,0 +1,238 @@
+from pathlib import Path
+import subprocess
+import pytest
+
+from subscript.ri_wellmod import ri_wellmod
+
+SCRIPTNAME = "ri_wellmod"
+DROGON_RUNPATH = Path("/project/res/share/subscript/tests/data/drogon")
+DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
+
+try:
+    # pylint: disable=unused-import
+    import ert_shared  # noqa
+
+    HAVE_ERT = True
+except ImportError:
+    HAVE_ERT = False
+
+
+def file_contains(filename, string_to_find):
+    """
+    Utility function to check if a file contains a given string.
+    """
+    if not Path(filename).exists():
+        return False
+
+    with open(filename) as fhandle:
+        filetext = fhandle.read()
+        return filetext.find(string_to_find) >= 0
+
+
+@pytest.mark.integration
+def test_integration():
+    """Test that endpoint is installed"""
+    assert subprocess.check_output(["ri_wellmod", "-h"])
+
+
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
+    reason="Could not find a ResInsight install or Drogon data",
+)
+def test_main_initcase(tmpdir, mocker):
+    """Test well data generation from init case"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(DROGON_RUNPATH / "eclipse/model/DROGON-0_NOSIM")
+    outfile = "welldefs_initcase.sch"
+
+    mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile])
+    ri_wellmod.main()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+
+
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
+)
+def test_main_inputcase(tmpdir, mocker):
+    """Test well data generation from input case"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    grid_name = str(DATAPATH / "drogon_include/grid/drogon.grid.grdecl")
+    perm_name = str(DATAPATH / "drogon_include/grid/drogon.perm.grdecl")
+    ntg_name = str(DATAPATH / "drogon_include/grid/drogon.ntg.grdecl")
+    outfile = "welldefs_inputcase.sch"
+
+    mocker.patch(
+        "sys.argv",
+        [
+            SCRIPTNAME,
+            proj_name,
+            grid_name,
+            "--property_files",
+            perm_name,
+            ntg_name,
+            "-o",
+            outfile,
+        ],
+    )
+    ri_wellmod.main()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+
+
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
+    reason="Could not find a ResInsight install or Drogon data",
+)
+def test_drogon_mswdef(tmpdir, mocker):
+    """Test multi-segment well data generation"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(DROGON_RUNPATH / "eclipse/model/DROGON-0_NOSIM")
+    outfile = "welldefs_msw.sch"
+
+    mocker.patch(
+        "sys.argv",
+        [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "-msw", "A4,A2,R*"],
+    )
+    ri_wellmod.main()
+
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+
+
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
+    reason="Could not find a ResInsight install or Drogon data",
+)
+def test_drogon_lgr(tmpdir, mocker):
+    """Test creation of LGR"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(DROGON_RUNPATH / "eclipse/model/DROGON-0_NOSIM_LGR")
+    outfile = "welldefs_lgr.sch"
+
+    mocker.patch(
+        "sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "-msw", "A4"]
+    )
+    ri_wellmod.main()
+
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+
+
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
+    reason="Could not find a ResInsight install or Drogon data",
+)
+def test_main_lgr_cmdline(tmpdir, mocker):
+    """Test creation of LGR"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(DROGON_RUNPATH / "eclipse/model/DROGON-0_NOSIM")
+    outfile = "welldefs_lgr.sch"
+    lgr_outfile = "lgr_defs.inc"
+
+    mocker.patch(
+        "sys.argv",
+        [
+            SCRIPTNAME,
+            proj_name,
+            init_case_name,
+            "-o",
+            outfile,
+            "-msw",
+            "A4,A2",
+            "-lo",
+            lgr_outfile,
+            "--lgr",
+            "A4:3,3,1",
+        ],
+    )
+    ri_wellmod.main()
+
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+    assert Path(lgr_outfile).exists() and file_contains(lgr_outfile, "CARFIN")
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(
+    not HAVE_ERT or not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
+    reason="Requires ERT and ResInsight to be installed, and Drogon data",
+)
+def test_ert_forward_model(tmpdir):
+    """Test that the ERT hook can run on a mocked case"""
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(DROGON_RUNPATH / "eclipse/model/DROGON-0_NOSIM")
+    outfile = "welldefs_lgr.sch"
+
+    with open("FOO.DATA", "w") as file_h:
+        file_h.write("--Empty")
+    ert_config = [
+        "ECLBASE FOO.DATA",
+        "QUEUE_SYSTEM LOCAL",
+        "NUM_REALIZATIONS 1",
+        "RUNPATH .",
+        "FORWARD_MODEL RI_WELLMOD("
+        + "<RI_PROJECT>={},".format(proj_name)
+        + "<ECLBASE>={},".format(init_case_name)
+        + "<OUTPUTFILE>={},".format(outfile)
+        + "<MSW>='A4'"
+        + ")",
+    ]
+
+    ert_config_fname = "riwmtest.ert"
+    with open(ert_config_fname, "w") as file_h:
+        file_h.write("\n".join(ert_config))
+
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+
+    assert Path(outfile).exists()
+
+
+# REEK TESTS
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
+)
+def test_main_initcase_reek(tmpdir, mocker):
+    """Test well data generation from init case on Reek"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "ri_reek_wells.rsp")
+    init_case_name = str(DATAPATH / "../data/reek/eclipse/model/2_R001_REEK-0")
+    outfile = "welldefs_initcase_reek.sch"
+
+    mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile])
+    ri_wellmod.main()
+    assert Path(outfile).exists() and file_contains(outfile, "OP_1")
+
+
+# This one requires a GUI (for now) and only works locally
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
+    reason="Could not find a ResInsight install or Drogon data",
+)
+def test_main_lgr_reek(tmpdir, mocker):
+    """Test creation of LGR on Reek"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "ri_reek_wells.rsp")
+    init_case_name = str(DATAPATH / "../data/reek/eclipse/model/2_R001_REEK-0")
+    outfile = "welldefs_lgr_reek.sch"
+
+    mocker.patch(
+        "sys.argv",
+        [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "--lgr", "OP_1:5,5,1"],
+    )
+    ri_wellmod.main()
+
+    assert Path(outfile).exists() and file_contains(outfile, "OP_1")
