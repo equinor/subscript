@@ -2,8 +2,10 @@ import os
 import subprocess
 import pytest
 import numpy as np
+import pandas as pd
 from ecl.summary import EclSum
 from subscript.welltest_dpds import welltest_dpds
+from pathlib import Path
 
 ECLDIR = os.path.join(os.path.dirname(__file__), "data/welltest/eclipse/model")
 ECLCASE = "DROGON_DST_PLT-0"
@@ -26,7 +28,6 @@ def test_main(tmpdir, mocker):
     mocker.patch("sys.argv", ["welltest_dpds", datafilepath, "55_33-1"])
     welltest_dpds.main()
     assert os.path.exists("welltest_output.csv")
-    os.unlink("welltest_output.csv")
 
     # test --outfilessuffix
     mocker.patch(
@@ -35,14 +36,16 @@ def test_main(tmpdir, mocker):
     )
     welltest_dpds.main()
     assert os.path.exists("welltest_output_blabla.csv")
-    os.unlink("welltest_output_blabla.csv")
 
     # test --outputdirectory
     mocker.patch(
         "sys.argv",
         ["welltest_dpds", datafilepath, "55_33-1", "-o", "blabla"],
     )
+    with pytest.raises(FileNotFoundError, match=r".*No such outputdirectory.*"):
+        welltest_dpds.main()
 
+    os.mkdir("blabla")
     welltest_dpds.main()
     assert os.path.exists("./blabla/welltest_output.csv")
 
@@ -50,6 +53,31 @@ def test_main(tmpdir, mocker):
     mocker.patch(
         "sys.argv", ["welltest_dpds", datafilepath, "55_33-1", "--phase", "GAS"]
     )
+    welltest_dpds.main()
+    assert os.path.exists("welltest_output.csv")
+    os.unlink("welltest_output.csv")
+
+    # test --genobs_resultfile
+    mocker.patch(
+        "sys.argv",
+        [
+            "welltest_dpds",
+            datafilepath,
+            "55_33-1",
+            "--genobs_resultfile",
+            "results.txt",
+        ],
+    )
+    with pytest.raises(FileNotFoundError, match=r".*No such file.*"):
+        welltest_dpds.main()
+
+    mockcsv = """
+    Time\tdTime
+    (hr)\t(hr)
+    0\t0
+    1\t1
+    """
+    Path("results.txt").write_text(mockcsv)
     welltest_dpds.main()
     assert os.path.exists("welltest_output.csv")
 
@@ -180,21 +208,45 @@ def test_get_weighted_avg_press_time_derivative_lag2():
     assert dpdspt_w_lag2[-1] == pytest.approx(0.12729989)
 
 
-def test_obsdata_vec(tmpdir):
-    mockfcont = """
+def test_genobs_vec():
+    """ Test genobs_vec """
+
+    mockcsv = """
     Time\tdTime
     (hr)\t(hr)
     0\t0
     1\t1
     """
-    fileh = open("index.txt", "w")
-    fileh.write(mockfcont)
-    fileh.close()
+    Path("index.txt").write_text(mockcsv)
 
     vec = np.array([0, 0.5, 1, 2])
     time = np.array([0, 1, 2, 3])
     genobs_vec = welltest_dpds.genobs_vec("index.txt", vec, time)
-    os.unlink("index.txt")
 
     assert len(genobs_vec) == 2
     assert genobs_vec[1] == pytest.approx(0.5)
+
+
+def test_to_csv():
+    """ Test to_csv """
+
+    vec = np.array([0, 0.5, 1, 2])
+    welltest_dpds.to_csv("mock.csv", [vec])
+    assert os.path.exists("mock.csv")
+    lines = open("mock.csv", "r").readlines()
+    assert 4 == len(lines)
+
+    welltest_dpds.to_csv("mock.csv", [vec], ["vec"])
+    assert os.path.exists("mock.csv")
+    lines = open("mock.csv", "r").readlines()
+    assert 5 == len(lines)
+
+    vecb = np.array([1, 0.5, 3, 100])
+    welltest_dpds.to_csv("mock.csv", [vec, vecb], ["vec", "vecb"])
+    assert os.path.exists("mock.csv")
+    lines = open("mock.csv", "r").readlines()
+    assert 5 == len(lines)
+
+    df = pd.read_csv("mock.csv", skipinitialspace=True)
+    assert df["vec"].size == 4
+    assert pytest.approx(df["vecb"].iloc[-1] == 100)

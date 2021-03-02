@@ -437,8 +437,7 @@ def main():
         outdir = outdir + "/"
 
     if not os.path.exists(outdir):
-        os.mkdir(outdir)
-        print("Creating outputdirectory:", outdir)
+        raise FileNotFoundError("No such outputdirectory:", outdir)
 
     summary = EclSum(eclcase)
     time = np.array(summary.days) * 24.0
