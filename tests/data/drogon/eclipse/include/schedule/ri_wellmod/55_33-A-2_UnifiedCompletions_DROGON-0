@@ -1,0 +1,24 @@
+WELSPECS
+-- Well  Grp  I   J   RefDepth  Type  DrainRad  GasInEq  AutoShut  XFlow  FluidPVT  HydSDens  FluidInPlReg
+   A2    OP   22  30  1*        OIL   0.0       STD      STOP      YES    0         SEG       0            /
+    /
+COMPDAT
+-- Well   I    J    K1   K2   Status   SAT   TR            DIAM      KH            S         Df   DIR
+-- ---- Completions for completion type Perforation ----
+-- Perforation Completion : MD In: 1692.81 - MD Out: 1694.59 Transmissibility: 12.7788
+   A2     22   30   1    1    OPEN     1*    1.277885E+1   0.24130   2.517023E+3   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1694.59 - MD Out: 1696.38 Transmissibility: 10.7727
+   A2     22   30   2    2    OPEN     1*    1.077265E+1   0.24130   2.121007E+3   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1696.38 - MD Out: 1698.17 Transmissibility: 9.66437
+   A2     22   30   3    3    OPEN     1*    9.664374E+0   0.24130   1.902015E+3   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1698.17 - MD Out: 1699.96 Transmissibility: 7.99646
+   A2     22   30   4    4    OPEN     1*    7.996465E+0   0.24130   1.573109E+3   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1699.96 - MD Out: 1701.75 Transmissibility: 5.831
+   A2     22   30   5    5    OPEN     1*    5.830998E+0   0.24130   1.146627E+3   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1701.75 - MD Out: 1703.55 Transmissibility: 4.77187
+   A2     22   30   6    6    OPEN     1*    4.771868E+0   0.24130   9.379784E+2   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1703.55 - MD Out: 1705.37 Transmissibility: 2.14033
+   A2     22   30   7    7    OPEN     1*    2.140330E+0   0.24130   4.205195E+2   5.00000   1*   'Z' /
+-- Perforation Completion : MD In: 1705.37 - MD Out: 1706 Transmissibility: 0.528355
+   A2     22   30   8    8    OPEN     1*    5.283549E-1   0.24130   1.037676E+2   5.00000   1*   'Z' /
+    /

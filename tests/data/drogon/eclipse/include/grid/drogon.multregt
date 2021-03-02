@@ -1,0 +1,6 @@
+MULTREGT
+--REGIONS    MULTIPLIER         DIRECTION
+ 1   2      1  'Z'   / -- Tran mult between Valysar and Therys
+ 1   3      1   'Z'   / -- Tran mult between Valysar and Volon
+ 2   3      1    'Z'   / -- Tran mult between Therys and Volon
+/
