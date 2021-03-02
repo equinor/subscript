@@ -3,8 +3,8 @@
     <DocumentFileName>wells.rsp</DocumentFileName>
     <ProjectFileVersionString>2020.10.1</ProjectFileVersionString>
     <ReferencedExternalFiles>
-        $PathId_001$ ./trajectories/wells.dat;
-        $PathId_002$ ./trajectories/rft_wells.dat;
+        $PathId_001$ ./drogon_trajectories/wells.dat;
+        $PathId_002$ ./drogon_trajectories/rft_wells.dat;
     </ReferencedExternalFiles>
     <OilFields>
         <ResInsightOilField>
