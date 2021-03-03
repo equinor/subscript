@@ -54,7 +54,7 @@ EXAMPLES = """
  FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
 
  FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS,
-    <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFIX>=OP_1_1)
+    <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1)
 
 """
 
@@ -524,12 +524,12 @@ def main():
     to_csv(
         outdir + "dpdspt_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
-        ["HOURS", "dpd(supt)_w"],
+        ["Hours", "dpd(supt)_w"],
     )
     to_csv(
         outdir + "dpdspt_lag2" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
-        ["HOURS", "dpd(supt)_w2"],
+        ["Hours", "dpd(supt)_w2"],
     )
     to_csv(
         outdir + "spt" + outf_suffix + ".csv",
@@ -538,7 +538,7 @@ def main():
     )
 
     header_list = [
-        "HOURS",
+        "Hours",
         "WBHP:" + well_name,
         "WOPR:" + well_name,
         "WGPR:" + well_name,
