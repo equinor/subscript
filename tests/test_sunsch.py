@@ -71,6 +71,20 @@ def test_main(tmpdir, caplog, mocker):
     assert "BAR-FOO" in "".join(open(outfile).readlines())
 
 
+def test_cmdlineoverride(tmpdir, mocker):
+    """Test that command line options can override configuration file"""
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    tmpdir.join("testdata_sunsch").chdir()
+
+    mocker.patch(
+        "sys.argv", ["sunsch", "--output", "subdir/schedule.inc", "config_v2.yml"]
+    )
+    with pytest.warns(FutureWarning, match="Implicit mkdir"):
+        sunsch.main()
+    assert Path("subdir/schedule.inc").exists()
+
+
 def test_main_configv1(tmpdir, caplog, mocker):
     """Test command line sunsch, loading a yaml file.
 

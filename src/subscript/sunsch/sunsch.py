@@ -6,13 +6,14 @@ This script was originally based on a library named sunbeam,
 hence the name. Later, this library has been merged into opm-common
 """
 
-import os
 import sys
 import datetime
 import tempfile
 import argparse
 import textwrap
 import logging
+import warnings
+from pathlib import Path
 
 import yaml
 
@@ -54,7 +55,7 @@ def _is_valid_dategrid(dategrid_str):
 
 @configsuite.validator_msg("Is filename an existing file")
 def _is_existing_file(filename):
-    return os.path.exists(filename)
+    return Path(filename).exists()
 
 
 @configsuite.transformation_msg("Defaults and v1-vs-v2 handling of config")
@@ -884,11 +885,16 @@ def main():
         print(schedule)
     else:
         logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
-        dirname = os.path.dirname(config.snapshot.output)
-        if dirname and not os.path.exists(dirname):
-            logger.debug("mkdir %s", dirname)
-            os.makedirs(dirname)
-        open(config.snapshot.output, "w").write(schedule)
+        dirname = Path(config.snapshot.output).parent
+        if dirname and not dirname.exists():
+            warnings.warn(
+                f"Implicit mkdir of directory {str(dirname)} is deprecated and "
+                f"will be removed later. Please ensure {str(dirname)} exists before "
+                "calling sunsch.",
+                FutureWarning,
+            )
+            dirname.mkdir()
+        Path(config.snapshot.output).write_text(schedule)
 
 
 if __name__ == "__main__":
