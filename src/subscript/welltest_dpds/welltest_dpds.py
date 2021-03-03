@@ -344,7 +344,7 @@ def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):
 
     fileh = open(filen, "w")
 
-    if header_list != None:
+    if header_list:
         fileh.write(header_list[0])
         for header in header_list[1:]:
             fileh.write(sep + header)
