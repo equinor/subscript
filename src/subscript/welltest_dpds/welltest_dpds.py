@@ -11,7 +11,7 @@ from ecl.summary import EclSum
 
 DESCRIPTION = """
 Script to extract simulated welltest results. Typically used to compare with welltest
-analysis, from eg Kappa.
+analysis, from eg Kappa Saphir.
 
 Required summary vectors in sim deck:
   * wbhp:well_name
@@ -128,10 +128,9 @@ def get_parser():
         help=(
             "File with welltest results used to define time steps, "
             "typically exported from Saphir. If present, additional files "
-            "to be used as GEN_OBS in ERT are produced"
+            "to be used with GENERAL_OBSERVATION in ERT are produced"
         ),
         default=None,
-        required=False,
     )
     return parser
 
@@ -327,7 +326,7 @@ def weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=","):
+def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -345,7 +344,7 @@ def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=","):
 
     fileh = open(filen, "w")
 
-    if header_list[0]:
+    if header_list != None:
         fileh.write(header_list[0])
         for header in header_list[1:]:
             fileh.write(sep + header)
@@ -365,13 +364,13 @@ def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=","):
 def genobs_vec(filen, vec, time):
     """
     Adjust vector to time axis defined by observation file.
-    Used to create output compatible with ERTs GEN_OBS file format
-    and directy comparable with output from eg Kappa Saphir.
-    Note; csv files exported from Saphir are separated with /t
+    Used to create output compatible with ERTs GENERAL_OBSERVATION
+    file format and directy comparable with output from eg Kappa Saphir.
+    Note; csv files exported from Saphir are separated with \t
     and contain headers with space which makes parsing fragile.
 
     Args:
-        filen : (str) Name of csv file to extract time axis from
+        filen : (str) csv file to extract time axis from, using colomn dTime
         vec   : (np.array) Vector to remap onto the axis
         time  : (np.array) Original time axis
     Returns:
