@@ -11,10 +11,12 @@ SCRIPTNAME = "ri_wellmod"
 RUNPATH = Path(os.path.dirname(__file__)) / "data/drogon"
 DATAPATH = Path(os.path.dirname(__file__)) / "testdata_ri_wellmod"
 
+
 @pytest.mark.integration
 def test_integration():
     """Test that endpoint is installed"""
     assert subprocess.check_output(["ri_wellmod", "-h"])
+
 
 @pytest.mark.integration
 def test_main_initcase(tmpdir, mocker):
@@ -29,6 +31,7 @@ def test_main_initcase(tmpdir, mocker):
     ri_wellmod.main()
     assert os.path.exists(outfile)
 
+
 @pytest.mark.integration
 def test_main_inputcase(tmpdir, mocker):
     """Test well data generation from input case"""
@@ -41,9 +44,10 @@ def test_main_inputcase(tmpdir, mocker):
     outfile = "welldefs_inputcase.sch"
 
     mocker.patch("sys.argv", [SCRIPTNAME, proj_name, grid_name,
-                "--property_files", perm_name, ntg_name, "-o", outfile])
+                              "--property_files", perm_name, ntg_name, "-o", outfile])
     ri_wellmod.main()
     assert os.path.exists(outfile)
+
 
 @pytest.mark.integration
 def test_main_mswdef(tmpdir, mocker):
@@ -55,10 +59,11 @@ def test_main_mswdef(tmpdir, mocker):
     outfile = "welldefs_msw.sch"
 
     mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile,
-        "-msw", "A4,A2,R*"])
+                              "-msw", "A4,A2,R*"])
     ri_wellmod.main()
 
     assert os.path.exists(outfile)
+
 
 @pytest.mark.integration
 def test_main_lgr(tmpdir, mocker):
@@ -70,7 +75,7 @@ def test_main_lgr(tmpdir, mocker):
     outfile = "welldefs_lgr.sch"
 
     mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile,
-        "-msw", "A4"])
+                              "-msw", "A4"])
     ri_wellmod.main()
 
     assert os.path.exists(outfile)
@@ -86,9 +91,8 @@ def test_main_lgr_cmdline(tmpdir, mocker):
     outfile = "welldefs_lgr.sch"
     lgr_outfile = "lgr_defs.inc"
 
-
     mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile,
-        "-msw", "A4,A2", "-lo", lgr_outfile, "--lgr", "A4:3,3,1"])
+                              "-msw", "A4,A2", "-lo", lgr_outfile, "--lgr", "A4:3,3,1"])
     ri_wellmod.main()
 
     assert os.path.exists(outfile)
