@@ -327,7 +327,7 @@ def weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=", "):
+def to_csv(filen, field_list, header_list=[None], start=0, end=None, sep=","):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -524,12 +524,12 @@ def main():
     to_csv(
         outdir + "dpdspt_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
-        ["Hours", "dpd(supt)_w"],
+        ["HOURS", "dpd(supt)_w"],
     )
     to_csv(
         outdir + "dpdspt_lag2" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag2],
-        ["Hours", "dpd(supt)_w2"],
+        ["HOURS", "dpd(supt)_w2"],
     )
     to_csv(
         outdir + "spt" + outf_suffix + ".csv",
@@ -538,7 +538,7 @@ def main():
     )
 
     header_list = [
-        "Hours",
+        "HOURS",
         "WBHP:" + well_name,
         "WOPR:" + well_name,
         "WGPR:" + well_name,
