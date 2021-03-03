@@ -23,9 +23,9 @@ Outputs files according to naming convention outputdirectory/fname_outfilesuffix
   * dpdspt_lag2; cumtime and superpositioned time derivative of pressure lag 2
   * spt; superpositioned time
   * welltest; unified csv file with vectors: cumtime, wbhp, wopr, wgpr, wwpr
-  * dpdspt_lag1_gendobs; if --genobs_resultfile is invoked
-  * dpdspt_lag2_gendobs; if --genobs_resultfile is invoked
-  * wbhp_genobs; if --gen_obs_result_file is invoked
+  * dpdspt_lag1_gendobs_suffix_bunr; if --genobs_resultfile is invoked
+  * dpdspt_lag2_gendobs_suffix_burn; if --genobs_resultfile is invoked
+  * wbhp_genobs_suffix_bunr; if --gen_obs_result_file is invoked
 
 """
 
@@ -509,15 +509,15 @@ def main():
         )
 
         to_csv(
-            outdir + "dpdspt_lag1_genobs" + outf_suffix + ".csv",
+            outdir + "dpdspt_lag1_genobs" + outf_suffix + "_" + str(buildup_nr),
             [dpdspt_w1_gendata],
         )
         to_csv(
-            outdir + "dpdspt_lag2_genobs" + outf_suffix + ".csv",
+            outdir + "dpdspt_lag2_genobs" + outf_suffix + "_" + str(buildup_nr),
             [dpdspt_w2_gendata],
         )
         to_csv(
-            outdir + "wbhp_genobs" + outf_suffix + ".csv",
+            outdir + "wbhp_genobs" + outf_suffix + "_" + str(buildup_nr),
             [wbhp_gendata],
         )
     to_csv(
