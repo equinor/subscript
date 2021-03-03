@@ -1,6 +1,8 @@
 """Test the convert_grid_format script"""
 
-import os
+from pathlib import Path
+import subprocess
+
 import pytest
 
 import xtgeo
@@ -10,37 +12,62 @@ import subscript.convert_grid_format.convert_grid_format as cgf
 
 logger = getLogger(__name__)
 
-RFILE1 = os.path.join(
-    os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.EGRID"
+RFILE1 = (
+    Path(__file__).absolute().parent
+    / "data"
+    / "reek"
+    / "eclipse"
+    / "model"
+    / "2_R001_REEK-0.EGRID"
 )
-RFILE2 = os.path.join(
-    os.path.dirname(__file__), "data/reek/eclipse/model/2_R001_REEK-0.UNRST"
+RFILE2 = (
+    Path(__file__).absolute().parent
+    / "data"
+    / "reek"
+    / "eclipse"
+    / "model"
+    / "2_R001_REEK-0.UNRST"
 )
 
 
-def test_convert_grid_format_egrid(tmpdir):
+def test_convert_grid_format_egrid(tmpdir, mocker):
     """Convert an ECLIPSE egrid to roff"""
 
-    outfile = os.path.join(str(tmpdir), "reek_grid.roff")
+    outfile = tmpdir / "reek_grid.roff"
 
-    cgf.main(["--file", RFILE1, "--output", outfile, "--mode", "grid", "--standardfmu"])
+    mocker.patch(
+        "sys.argv",
+        [
+            "convert_grid_format",
+            "--file",
+            str(RFILE1),
+            "--output",
+            str(outfile),
+            "--mode",
+            "grid",
+            "--standardfmu",
+        ],
+    )
+    cgf.main()
 
     # check number of active cells
-    geogrid = xtgeo.Grid(outfile)
+    geogrid = xtgeo.Grid(str(outfile))
     assert geogrid.nactive == 35817
 
 
-def test_convert_grid_format_restart(tmpdir):
+def test_convert_grid_format_restart(tmpdir, mocker):
     """Convert an ECLIPSE SOIL from restart to roff"""
 
-    outfile = os.path.join(str(tmpdir), "reek_grid.roff")
+    outfile = tmpdir / "reek_grid.roff"
 
-    cgf.main(
+    mocker.patch(
+        "sys.argv",
         [
+            "convert_grid_format",
             "--file",
-            RFILE2,
+            str(RFILE2),
             "--output",
-            outfile,
+            str(outfile),
             "--mode",
             "restart",
             "--propnames",
@@ -48,12 +75,13 @@ def test_convert_grid_format_restart(tmpdir):
             "--dates",
             "20000701",
             "--standardfmu",
-        ]
+        ],
     )
+    cgf.main()
 
-    actual_outfile = os.path.join(str(tmpdir), "reek_grid--soil--20000701.roff")
+    actual_outfile = tmpdir / "reek_grid--soil--20000701.roff"
 
-    gprop = xtgeo.GridProperty(actual_outfile)
+    gprop = xtgeo.GridProperty(str(actual_outfile))
 
     assert gprop.values.mean() == pytest.approx(0.0857, abs=0.001)
 
@@ -80,10 +108,10 @@ def test_convert_grid_format_restart(tmpdir):
         ),
     ],
 )
-def test_datesfile(dates, date_mode, expected_files, tmpdir):
+def test_datesfile(dates, date_mode, expected_files, tmpdir, mocker):
     """Test invocation with a filename to the dates"""
 
-    outfile = os.path.join(str(tmpdir), "reek_grid.roff")
+    outfile = tmpdir / "reek_grid.roff"
 
     assert date_mode in {"space", "colon", "file"}
 
@@ -99,12 +127,14 @@ def test_datesfile(dates, date_mode, expected_files, tmpdir):
     else:
         raise ValueError
 
-    cgf.main(
+    mocker.patch(
+        "sys.argv",
         [
+            "convert_grid_format",
             "--file",
-            RFILE2,
+            str(RFILE2),
             "--output",
-            outfile,
+            str(outfile),
             "--mode",
             "restart",
             "--propnames",
@@ -112,12 +142,14 @@ def test_datesfile(dates, date_mode, expected_files, tmpdir):
             "--dates",
             dateargument,
             "--standardfmu",
-        ]
+        ],
     )
+    cgf.main()
     for expected_file in expected_files:
-        assert os.path.exists(os.path.join(str(tmpdir), expected_file))
+        assert (tmpdir / expected_file).exists()
 
 
-def test_installed():
+@pytest.mark.integration
+def test_integration():
     """Test that the endpoint is installed"""
-    assert os.system("convert_grid_format") == 0
+    assert subprocess.check_output(["convert_grid_format", "-h"])

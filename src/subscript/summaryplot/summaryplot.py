@@ -39,6 +39,10 @@ from ecl.summary import EclSum
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 
+import subscript
+
+logger = subscript.getLogger(__name__)
+
 register_matplotlib_converters()
 
 DESCRIPTION = """
@@ -154,18 +158,18 @@ def summaryplotter(
     parametervalues = []  # Vector of values pr. realization for colouring
 
     if datafiles and not summaryfiles:
-        logging.info("Reloading summary files from disk")
+        logger.info("Reloading summary files from disk")
         summaryfiles = [EclSum(datafile) for datafile in datafiles]
 
     if maxlabels == 0:
         nolegend = True
 
     if colourby and logcolourby:
-        logging.error("Can't colour non-log and log at the same time")
+        logger.error("Can't colour non-log and log at the same time")
         sys.exit(1)
 
     if (colourby or logcolourby) and ensemblemode:
-        logging.error("Can't colour by ensemble and by parameter at the same time")
+        logger.error("Can't colour by ensemble and by parameter at the same time")
         sys.exit(1)
 
     if (colourby or logcolourby) and not nolegend:
@@ -174,7 +178,7 @@ def summaryplotter(
     if (colourby or logcolourby) and len(summaryfiles) < 2:
         colourby = False
         logcolourby = False
-        logging.warning("Not colouring by parameter when only one DATA file is loaded")
+        logger.warning("Not colouring by parameter when only one DATA file is loaded")
 
     minvalue = 0.0
     maxvalue = 0.0
@@ -182,10 +186,10 @@ def summaryplotter(
     if colourby or logcolourby:
         if colourby:
             colourbyparametername = colourby
-            logging.info("Colouring by parameter %s", colourby)
+            logger.info("Colouring by parameter %s", colourby)
         if logcolourby:
             colourbyparametername = logcolourby
-            logging.info("Colouring logarithmically by parameter %s", logcolourby)
+            logger.info("Colouring logarithmically by parameter %s", logcolourby)
         # Try to load parameters.txt for each datafile,
         # and put the associated values in a vector
         for parameterfile in parameterfiles:
@@ -199,7 +203,7 @@ def summaryplotter(
                         valuefound = True
                         break
             if not valuefound:
-                logging.warning(
+                logger.warning(
                     "%s was not found in parameter-file %s",
                     str(colourbyparametername),
                     parameterfile,
@@ -210,7 +214,7 @@ def summaryplotter(
         minvalue = np.min(parametervalues)
         maxvalue = np.max(parametervalues)
         if (maxvalue - minvalue) < 0.000001:
-            logging.warning(
+            logger.warning(
                 "No data found to colour by, are you sure you typed %s correctly?",
                 colourbyparametername,
             )
@@ -249,7 +253,7 @@ def summaryplotter(
         # Build a colour map from all the values, from min to max.
 
     if normalize and histvectors:
-        logging.warning("Historical data is not normalized equally to simulated data")
+        logger.warning("Historical data is not normalized equally to simulated data")
 
     if not summaryfiles:
         print("Error: No summary files found")
@@ -269,13 +273,13 @@ def summaryplotter(
             # Check if it is a restart vector with syntax
             # <vector>:<i>,<j>,<k> aka SOIL:40,31,33
             if re.match(r"^[A-Z]+:[0-9]+,[0-9]+,[0-9]+$", vector):
-                logging.info("Found restart vector %s", vector)
+                logger.info("Found restart vector %s", vector)
                 restartvectors.append(vector)
             else:
-                logging.warning("No summary or restart vectors matched %s", vector)
+                logger.warning("No summary or restart vectors matched %s", vector)
         matchedsummaryvectors.extend(summaryfiles[0].keys(vector))
     if wildcard_in_use:
-        logging.info(
+        logger.info(
             "Summary vectors after wildcard expansion: %s", str(matchedsummaryvectors)
         )
 
@@ -286,17 +290,17 @@ def summaryplotter(
             rstfile = rstfile + ".UNRST"
             gridfile = datafile.replace(".DATA", "")
             gridfile = gridfile + ".EGRID"  # What about .GRID??
-            logging.info("Loading grid and restart file %s", rstfile)
+            logger.info("Loading grid and restart file %s", rstfile)
             # TODO: Allow some of the rstfiles to be missing
             # TODO: Handle missing rstfiles gracefully
             rst = EclFile(rstfile)
             grid = EclGrid(gridfile)
             rstfiles.append(rst)
             gridfiles.append(grid)
-            logging.info("RST loading done")
+            logger.info("RST loading done")
 
     if (len(matchedsummaryvectors) + len(restartvectors)) == 0:
-        logging.error("Error: No vectors to plot")
+        logger.error("Error: No vectors to plot")
         sys.exit(1)
 
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
@@ -305,7 +309,7 @@ def summaryplotter(
     restartvectordata = {}
     restartvectordates = {}
     for rstvec in restartvectors:
-        logging.info("Getting data for %s...", rstvec)
+        logger.info("Getting data for %s...", rstvec)
         match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", rstvec)
         dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
         (ijk) = (
@@ -430,7 +434,7 @@ def summaryplotter(
                         values = [i * 1 / maxvalue for i in values]
                         sumlabel = histvec + " " + str(maxvalue)
                     else:
-                        logging.warning(
+                        logger.warning(
                             "Could not normalize %s, maxvalue is %g", histvec, maxvalue
                         )
 
@@ -466,7 +470,7 @@ def summaryplotter(
                         values = [i * 1 / maxvalue for i in values]
                         sumlabel = sumlabel + " " + str(maxvalue)
                     else:
-                        logging.warning(
+                        logger.warning(
                             "Could not normalize %s, maxvalue is %g", vector, maxvalue
                         )
 
@@ -605,13 +609,13 @@ def main():
     args = parser.parse_args()
 
     if args.verbose:
-        logging.basicConfig(level=logging.INFO)
+        logger.setLevel(logging.INFO)
 
     (summaryfiles, datafiles, vectors, parameterfiles) = split_vectorsdatafiles(
         args.VECTORSDATAFILES
     )
-    logging.info("Summaryfiles: %s", str(summaryfiles))
-    logging.info("Vectors: %s", str(vectors))
+    logger.info("Summaryfiles: %s", str(summaryfiles))
+    logger.info("Vectors: %s", str(vectors))
 
     # If user only wants to dump image to file, then do only that:
     if args.dumpimages:

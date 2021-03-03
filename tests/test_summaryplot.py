@@ -17,8 +17,6 @@ DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"
         ["FOPR"],
         ["-H", "FOPR"],
         ["--hist", "FOPR"],
-        ["--colourby", "FOO", "FOPT"],
-        ["--logcolourby", "FOO", "FOPT"],
         ["SWAT:30,50,10"],
         ["SOIL:30,50,10"],
         ["-e", "FOPT"],
@@ -39,6 +37,75 @@ def test_summaryplotter(cmd_args, tmpdir, mocker):
         # DATAFILE is repeated, or else colourby will not be triggered.
     )
     summaryplot.main()
+    assert Path("summaryplotdump.png").exists()
+    assert Path("summaryplotdump.pdf").exists()
+
+
+@pytest.mark.parametrize(
+    "cmd_args",
+    [
+        ["--colourby", "FOO", "FOPT"],
+        ["--logcolourby", "FOO", "FOPT"],
+        ["--colourby", "FOO", "--normalize", "--singleplot", "FGPR", "FOPR"],
+        ["--logcolourby", "FOO", "--normalize", "--singleplot", "FGPR", "FOPR"],
+    ],
+)
+def test_two_datafiles(cmd_args, tmpdir, mocker):
+    """Mock two different runs. Need different values in parameters.txt
+    to trigger particular test lines."""
+    tmpdir.chdir()
+    Path("realization-0").mkdir()
+    Path("realization-1").mkdir()
+    for filename in DATAFILE.parent.glob("*"):
+        if not filename.is_dir():
+            shutil.copy(filename, "realization-0/")
+            shutil.copy(filename, "realization-1/")
+
+    Path("realization-0/parameters.txt").write_text("FOO 1\nSAME 10")
+    Path("realization-1/parameters.txt").write_text("FOO 2\nSAME 10")
+    mocker.patch(
+        "sys.argv",
+        ["summaryplot", "--dumpimages"]
+        + cmd_args
+        + [
+            str(Path("realization-0") / DATAFILE.name),
+            str(Path("realization-1") / DATAFILE.name),
+        ],
+    )
+    summaryplot.main()
+    assert Path("summaryplotdump.png").exists()
+    assert Path("summaryplotdump.pdf").exists()
+
+
+@pytest.mark.parametrize(
+    "cmd_args, match",
+    [
+        (
+            ["--colourby", "FOO", "FOPT", str(DATAFILE)],
+            "Not colouring by parameter when only one DATA file is loaded",
+        ),
+        (
+            ["--colourby", "BAR", "FOPT", str(DATAFILE), str(DATAFILE)],
+            "are you sure you typed BAR correctly?",
+        ),
+        (
+            ["--normalize", "-H", "FOPT", str(DATAFILE)],
+            "Historical data is not normalized equally to simulated data",
+        ),
+        (
+            # This test is not really a warning, just testing that we have INFO
+            # logging turned on when in verbose mode
+            ["--verbose", "FOPT", str(DATAFILE)],
+            "INFO",
+        ),
+    ],
+)
+def test_warnings(cmd_args, match, tmpdir, mocker, caplog):
+    """Run command line arguments that give warning"""
+    tmpdir.chdir()
+    mocker.patch("sys.argv", ["summaryplot", "--dumpimages"] + cmd_args)
+    summaryplot.main()
+    assert match in caplog.text
     assert Path("summaryplotdump.png").exists()
     assert Path("summaryplotdump.pdf").exists()
 

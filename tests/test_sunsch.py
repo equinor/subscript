@@ -12,10 +12,22 @@ import pytest  # noqa: F401
 import configsuite
 from subscript.sunsch import sunsch
 
-DATADIR = os.path.join(os.path.dirname(__file__), "testdata_sunsch")
+DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"
 
 
-def test_main(tmpdir, caplog):
+@pytest.fixture
+def readonly_datadir():
+    """When used as a fixture, the test function will run in the testdata
+    directory. Do not write new or temporary files in here"""
+    cwd = os.getcwd()
+    try:
+        os.chdir(DATADIR)
+        yield
+    finally:
+        os.chdir(cwd)
+
+
+def test_main(tmpdir, caplog, mocker):
     """Test command line sunsch, loading a yaml file"""
 
     tmpdir.chdir()
@@ -24,12 +36,10 @@ def test_main(tmpdir, caplog):
 
     outfile = "schedule.inc"  # also in config_v2.yml
 
-    if os.path.exists(outfile):
-        os.unlink(outfile)
-    sys.argv = ["sunsch", "config_v2.yml"]
+    mocker.patch("sys.argv", ["sunsch", "config_v2.yml"])
     sunsch.main()
     assert "DEPRECATED" not in caplog.text
-    assert os.path.exists(outfile)
+    assert Path(outfile).exists()
 
     schlines = open(outfile).readlines()
     assert len(schlines) > 70
@@ -61,7 +71,7 @@ def test_main(tmpdir, caplog):
     assert "BAR-FOO" in "".join(open(outfile).readlines())
 
 
-def test_main_configv1(tmpdir, caplog):
+def test_main_configv1(tmpdir, caplog, mocker):
     """Test command line sunsch, loading a yaml file.
 
     This is run on a v1 config file, which will be autoconverted to v2.
@@ -73,7 +83,7 @@ def test_main_configv1(tmpdir, caplog):
     shutil.copytree(DATADIR, "testdata_sunsch")
     tmpdir.join("testdata_sunsch").chdir()
 
-    sys.argv = ["sunsch", "config_v1.yml"]
+    mocker.patch("sys.argv", ["sunsch", "config_v1.yml"])
     with pytest.raises(SystemExit):
         sunsch.main()
 
@@ -87,8 +97,7 @@ def test_config_schema(tmpdir):
     )
     assert not cfg_suite.valid  # file missing
 
-    with open("existingfile.sch", "w") as handle:
-        handle.write("foo")
+    Path("existingfile.sch").write_text("foo")
     cfg_suite = configsuite.ConfigSuite(
         cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
     )
@@ -143,8 +152,9 @@ def test_v1_to_v2():
 def test_templating(tmpdir):
     """Test templating"""
     tmpdir.chdir()
-    with open("template.tmpl", "w") as handle:
-        handle.write("WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/")
+    Path("template.tmpl").write_text(
+        "WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/"
+    )
 
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
@@ -205,8 +215,7 @@ def test_templating(tmpdir):
     # Sunsch lets this though, but logs an error.
 
     # Let the template file be empty:
-    with open("empty.tmpl", "w") as handle:
-        handle.write("")
+    Path("empty.tmpl").write_text("")
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "insert": [
@@ -221,10 +230,9 @@ def test_templating(tmpdir):
     assert str(sch) == ""
 
 
-def test_days_integer():
+def test_days_integer(readonly_datadir):
     """Test that we can insert stuff a certain number of days
     after startup"""
-    os.chdir(DATADIR)
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
@@ -242,10 +250,9 @@ def test_days_integer():
     assert datetime.datetime(2020, 1, 11, 0, 0, 0) in sch.dates
 
 
-def test_days_float():
+def test_days_float(readonly_datadir):
     """Test that we can insert stuff a certain number of
     floating point days after startup"""
-    os.chdir(DATADIR)
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
@@ -270,12 +277,8 @@ def test_days_float():
     assert "11 'JAN' 2020/" in str(sch)
 
 
-def test_dateclip():
+def test_dateclip(readonly_datadir):
     """Test dateclipping"""
-
-    # This test function do not write to this directory:
-    os.chdir(DATADIR)
-
     # Clip dates after enddate:
     sunschconf = {
         "startdate": datetime.date(1900, 1, 1),
@@ -334,7 +337,7 @@ def test_dateclip():
     assert datetime.datetime(2000, 1, 1, 0, 0) not in sch.dates
 
 
-def test_nonisodate():
+def test_nonisodate(readonly_datadir):
     """Test behaviour when users use non-ISO-dates"""
     sunschconf = {
         "startdate": "01-01-2020",  # Look, this is not how to write dates!
@@ -374,7 +377,7 @@ def test_merge_include_nonexist(tmpdir):
     in the insert section.
     """
     tmpdir.chdir()
-    open("mergewithexistinginclude.sch", "w").write(
+    Path("mergewithexistinginclude.sch").write_text(
         """
 DATES
   1 'JAN' 2030 /
@@ -384,7 +387,7 @@ INCLUDE
   'something.sch' /
 """
     )
-    open("something.sch", "w").write(
+    Path("something.sch").write_text(
         """
 WRFTPLT
   2 /
@@ -400,7 +403,7 @@ WRFTPLT
     assert "WRFTPLT" in str(sch)
 
     # Now if it does not exist:
-    open("mergewithnonexistinginclude.sch", "w").write(
+    Path("mergewithnonexistinginclude.sch").write_text(
         """
 DATES
   1 'JAN' 2030 /
@@ -435,7 +438,7 @@ def test_merge_paths_in_use(tmpdir, caplog):
     These variables are defined in the DATA file and outside
     sunsch's scope, but we should ensure a proper error message"""
     tmpdir.chdir()
-    open("pathsinclude.sch", "w").write(
+    Path("pathsinclude.sch").write_text(
         """
 DATES
   1 'JAN' 2030 /
@@ -455,7 +458,7 @@ INCLUDE
     assert "PATHS variables in INCLUDE" in caplog.text
 
 
-def test_merge():
+def test_merge(readonly_datadir):
     """Test that merge can be both a list and a string, that
     allows both syntaxes in yaml:
 
@@ -467,8 +470,6 @@ def test_merge():
       - filename1.sch
       - filename2.sch
     """
-    os.chdir(DATADIR)
-
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["mergeme.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert "WRFTPLT" in str(sch)
@@ -481,24 +482,19 @@ def test_sch_file_nonempty(tmpdir):
     """Test that we can detect empty files"""
     tmpdir.chdir()
 
-    with open("empty.sch", "w") as file_h:
-        file_h.write("")
+    Path("empty.sch").write_text("")
     assert not sunsch.sch_file_nonempty("empty.sch")
 
-    with open("commentonly.sch", "w") as file_h:
-        file_h.write("-- an Eclipse comment")
+    Path("commentonly.sch").write_text("-- an Eclipse comment")
     assert not sunsch.sch_file_nonempty("commentonly.sch")
 
-    with open("dates.sch", "w") as file_h:
-        file_h.write("DATES\n 1 NOV 2080 / \n/")
+    Path("dates.sch").write_text("DATES\n 1 NOV 2080 / \n/")
     assert sunsch.sch_file_nonempty("dates.sch")
 
-    with open("wconprod.sch", "w") as file_h:
-        file_h.write("WCONPROD\n A ORAT 0 / \n/")
+    Path("wconprod.sch").write_text("WCONPROD\n A ORAT 0 / \n/")
     assert sunsch.sch_file_nonempty("wconprod.sch")
 
-    with open("bogus.sch", "w") as file_h:
-        file_h.write("BOGUSrn A ORAT 0 / \n/")
+    Path("bogus.sch").write_text("BOGUSrn A ORAT 0 / \n/")
     # Such a bogus file will give errors later, but
     # it should be treated as nonempty to be able
     # to catch the error elsewhere.
@@ -509,14 +505,12 @@ def test_emptyfiles(tmpdir):
     """Test that we don't crash when we try to include files
     which are empty (or only contains comments)"""
     tmpdir.chdir()
-    with open("empty.sch", "w") as file_h:
-        file_h.write("")
+    Path("empty.sch").write_text("")
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["empty.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert str(sch) == ""
 
-    with open("commentonly.sch", "w") as file_h:
-        file_h.write("-- an Eclipse comment")
+    Path("commentonly.sch").write_text("-- an Eclipse comment")
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["commentonly.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert str(sch) == ""
@@ -763,7 +757,7 @@ def test_long_udq_lines(tmpdir):
     # avoid that.
     inputstr = """UDQ
 
-DEFINE FU_PWRI1 WWIR 'A_01' + WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_05' + WWIR 'A_06' + WWIR 'A_07' + WWIR 'A_08' + WWIR 'A_09' + WWIR 'A_10'  + WWIR 'A_11' + WWIR 'A_12' + WWIR 'A_13' + WWIR 'A_14' + WWIR 'A_15'/
+DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_05' + WWIR 'A_06' + WWIR 'A_07' + WWIR 'A_08' + WWIR 'A_09' + WWIR 'A_10'  + WWIR 'A_11' + WWIR 'A_12' + WWIR 'A_13' + WWIR 'A_14' + WWIR 'A_15'/
 
 /"""  # noqa
     assert len(inputstr.split("\n")) == 5  # Avoid editor-spoiled test.
@@ -796,19 +790,16 @@ DEFINE FU_PWRI1 WWIR 'A_01' + WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_
     assert "' A" not in schstr_noquotes
 
 
-def test_file_startswith_dates():
+def test_file_startswith_dates(readonly_datadir):
     """Test file_startswith_dates function"""
-    os.chdir(DATADIR)
-
     assert not sunsch.file_startswith_dates("emptyinit.sch")
     assert not sunsch.file_startswith_dates("initwithdates.sch")
     assert sunsch.file_startswith_dates("mergeme.sch")
     assert sunsch.file_startswith_dates("merge2.sch")
 
 
-def test_e300_keywords():
+def test_e300_keywords(readonly_datadir):
     """Test a keyword newly added to opm-common"""
-    os.chdir(os.path.join(os.path.dirname(__file__), "testdata_sunsch"))
     sunschconf = {
         "startdate": datetime.date(1900, 1, 1),
         "enddate": datetime.date(2020, 1, 1),
@@ -822,3 +813,28 @@ def test_e300_keywords():
 def test_integration():
     """Test that the endpoint is installed"""
     assert subprocess.check_output(["sunsch", "-h"])
+
+
+@pytest.mark.integration
+def test_ert_forward_model(tmpdir):
+    """Test that the ERT forward model configuration is correct"""
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    os.chdir("testdata_sunsch")
+
+    Path("FOO.DATA").write_text("--Empty")
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE FOO.DATA",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALIZATIONS 1",
+                "RUNPATH .",
+                "",
+                "FORWARD_MODEL SUNSCH(<config>=config_v2.yml)",
+            ]
+        )
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("schedule.inc").is_file()

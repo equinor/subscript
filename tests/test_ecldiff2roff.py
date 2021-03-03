@@ -2,6 +2,7 @@ import os
 import logging
 import shutil
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -40,17 +41,14 @@ logger.setLevel(logging.INFO)
 def test_dateparsing(datetxt, expected, tmpdir):
     """Test parsing of dates"""
     # pylint: disable=unused-argument
-    with open("datediff.txt", "w") as file_h:
-        file_h.write(datetxt)
+    Path("datediff.txt").write_text(datetxt)
     assert ecldiff2roff.parse_diff_dates("datediff.txt") == expected
 
 
 @pytest.fixture
 def reek_data(tmpdir):
     """Prepare a data directory with Reek Eclipse binary output"""
-    reekdir = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "data/reek/eclipse/model"
-    )
+    reekdir = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 
     # This UNRST file contains the report steps and DATES:
     #     0:  2000-01-01
@@ -58,7 +56,7 @@ def reek_data(tmpdir):
     #    13:  2001-02-01
     #    19:  2001-08-01
 
-    reekdest = os.path.join(tmpdir.strpath, "reekdata")
+    reekdest = tmpdir / "reekdata"
     shutil.copytree(reekdir, reekdest, copy_function=os.symlink)
     cwd = os.getcwd()
     os.chdir(reekdest)
@@ -163,28 +161,23 @@ def test_mainfunction(
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
     # pylint: disable=too-many-arguments
-    with open("datediff.txt", "w") as file_h:
-        file_h.write(diffdates)
+    Path("datediff.txt").write_text(diffdates)
 
     ecldiff2roff.ecldiff2roff_main(
         eclroot, prop, "datediff.txt", outputfilebase, sep, datesep, datefmt
     )
     for expected_file in expected_files:
-        assert os.path.exists(expected_file)
+        assert Path(expected_file).exists()
 
 
 def test_errors(reek_data):
     """Test errors from the module"""
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
-    with open("validdates.txt", "w") as file_h:
-        file_h.write("2000-01-01 2000-07-01")
 
-    with open("invaliddates.txt", "w") as file_h:
-        file_h.write("1860-01-01 2000-07-01")
-
-    with open("singledate.txt", "w") as file_h:
-        file_h.write("2000-07-01")
+    Path("validdates.txt").write_text("2000-01-01 2000-07-01")
+    Path("invaliddates.txt").write_text("1860-01-01 2000-07-01")
+    Path("singledate.txt").write_text("2000-07-01")
 
     with pytest.raises(OSError):
         ecldiff2roff.ecldiff2roff_main("NOTEXISTING", "SGAS", "validdates.txt")
@@ -203,20 +196,24 @@ def test_errors(reek_data):
 
 
 @pytest.mark.integration
+def test_commandline(reek_data, mocker):
+    """Test the command line API"""
+    Path("validdates.txt").write_text("2000-01-01 2000-07-01")
+
+    mocker.patch("sys.argv", ["ecldiff2roff", "2_R001_REEK-0", "SGAS"])
+    ecldiff2roff.main()  # (gives message: Nothing to do)
+
+    mocker.patch(
+        "sys.argv",
+        ["ecldiff2roff", "2_R001_REEK-0", "SGAS", "--diffdates", "validdates.txt"],
+    )
+    ecldiff2roff.main()
+    assert Path("eclgrid--sgas--20000101_20000701.roff").exists()
+
+
+@pytest.mark.integration
 def test_integration(reek_data):
     """Test that endpoint is installed and works"""
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
     assert subprocess.check_output(["ecldiff2roff", "-h"])
-
-    with open("validdates.txt", "w") as file_h:
-        file_h.write("2000-01-01 2000-07-01")
-
-    subprocess.run("ecldiff2roff 2_R001_REEK-0 SGAS", shell=True, check=True)
-
-    subprocess.run(
-        "ecldiff2roff 2_R001_REEK-0 SGAS --diffdates validdates.txt",
-        shell=True,
-        check=True,
-    )
-    assert os.path.exists("eclgrid--sgas--20000101_20000701.roff")
