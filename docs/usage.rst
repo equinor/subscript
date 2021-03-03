@@ -1,10 +1,3 @@
-*********
-subscript
-*********
-
-Subscript is Equinors collection of scripts used for subsurface reservoir
-modelling.
-
 Using subscript
 ===============
 
@@ -15,6 +8,7 @@ computers, and are available in every users path when Komodo is activated::
 
 Remove the ``.csh`` from the line above if you are using *bash* (recommended).
 
-Other users can install using Python setuptools as a developer. Some subscript
-tools depend on software only on Equinor Linux computers and these will not
-work.
+For installation on non-Equinor computers, create and activate a Python3
+virtual environment and run::
+
+  pip install git+https://github.com/equinor/subscript
