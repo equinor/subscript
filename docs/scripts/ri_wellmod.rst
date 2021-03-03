@@ -83,7 +83,7 @@ Syntax
 ------
 
 .. argparse::
-   :module: mypy.ri_wellmod.ri_wellmod
+   :module: subscript.ri_wellmod.ri_wellmod
    :func: _build_argument_parser
    :prog: ri_wellmod
 
