@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import sys
-import os
+from pathlib import Path
 import argparse
 import numpy as np
 import pandas as pd
@@ -379,7 +379,7 @@ def genobs_vec(filen, vec, time):
 
     """
 
-    if not os.path.exists(filen):
+    if not Path(filen).exists():
         raise FileNotFoundError("No such file:", filen)
 
     df = pd.read_csv(filen, sep="\t")
@@ -436,7 +436,7 @@ def main():
     if not outdir.endswith("/"):
         outdir = outdir + "/"
 
-    if not os.path.exists(outdir):
+    if not Path(outdir).exists():
         raise FileNotFoundError("No such outputdirectory:", outdir)
 
     summary = EclSum(eclcase)
