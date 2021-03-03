@@ -19,7 +19,7 @@ DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"
 def readonly_datadir():
     """When used as a fixture, the test function will run in the testdata
     directory. Do not write new or temporary files in here"""
-    cwd = os.getcwd()
+    cwd = Path.cwd()
     try:
         os.chdir(DATADIR)
         yield
@@ -69,6 +69,20 @@ def test_main(tmpdir, caplog, mocker):
 
     # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
     assert "BAR-FOO" in "".join(open(outfile).readlines())
+
+
+def test_cmdlineoverride(tmpdir, mocker):
+    """Test that command line options can override configuration file"""
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, "testdata_sunsch")
+    tmpdir.join("testdata_sunsch").chdir()
+
+    mocker.patch(
+        "sys.argv", ["sunsch", "--output", "subdir/schedule.inc", "config_v2.yml"]
+    )
+    with pytest.warns(FutureWarning, match="Implicit mkdir"):
+        sunsch.main()
+    assert Path("subdir/schedule.inc").exists()
 
 
 def test_main_configv1(tmpdir, caplog, mocker):
