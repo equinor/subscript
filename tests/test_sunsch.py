@@ -27,13 +27,20 @@ def readonly_datadir():
         os.chdir(cwd)
 
 
-def test_main(tmpdir, caplog, mocker):
-    """Test command line sunsch, loading a yaml file"""
-
+@pytest.fixture
+def testdata(tmpdir):
     tmpdir.chdir()
+    cwd = os.getcwd()
     shutil.copytree(DATADIR, "testdata_sunsch")
-    tmpdir.join("testdata_sunsch").chdir()
+    try:
+        os.chdir("testdata_sunsch")
+        yield
+    finally:
+        os.chdir(cwd)
 
+
+def test_main(testdata, caplog, mocker):
+    """Test command line sunsch, loading a yaml file"""
     outfile = "schedule.inc"  # also in config_v2.yml
 
     mocker.patch("sys.argv", ["sunsch", "config_v2.yml"])
@@ -71,12 +78,8 @@ def test_main(tmpdir, caplog, mocker):
     assert "BAR-FOO" in "".join(open(outfile).readlines())
 
 
-def test_cmdlineoverride(tmpdir, mocker):
+def test_cmdline_output(testdata, mocker):
     """Test that command line options can override configuration file"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, "testdata_sunsch")
-    tmpdir.join("testdata_sunsch").chdir()
-
     mocker.patch(
         "sys.argv", ["sunsch", "--output", "subdir/schedule.inc", "config_v2.yml"]
     )
@@ -85,18 +88,83 @@ def test_cmdlineoverride(tmpdir, mocker):
     assert Path("subdir/schedule.inc").exists()
 
 
-def test_main_configv1(tmpdir, caplog, mocker):
+def test_cmdline_startdate(testdata, mocker):
+    """Test that --startdate on command line overrides config"""
+    mocker.patch("sys.argv", ["sunsch", "--startdate", "2020-01-01", "config_v2.yml"])
+    sunsch.main()
+    assert "2018" not in Path("schedule.inc").read_text()
+
+
+def test_cmdline_enddate(testdata, mocker):
+    """Test that --enddate on command line overrides config"""
+    mocker.patch("sys.argv", ["sunsch", "--enddate", "2020-01-01", "config_v2.yml"])
+    sunsch.main()
+    assert "2021" not in Path("schedule.inc").read_text()
+
+
+def test_cmdline_refdate(testdata, mocker):
+    """Test that --refdate on command line overrides config"""
+    # Baseline run, proving refdate follows refdate in config yaml:
+    mocker.patch("sys.argv", ["sunsch", "config_v2.yml"])
+    sunsch.main()
+    # 40 days after refdate, which is 2018-01-01 in yaml:
+    assert "10 'FEB' 2018" in Path("schedule.inc").read_text()
+
+    mocker.patch("sys.argv", ["sunsch", "--refdate", "2019-01-01", "config_v2.yml"])
+    sunsch.main()
+    # It  should not be 40 days after startdate,
+    assert "10 'FEB' 2018" not in Path("schedule.inc").read_text()
+    # but 40 days after command line refdate:
+    assert "10 'FEB' 2019" in Path("schedule.inc").read_text()
+
+
+def test_cmdline_dategrid(testdata, mocker):
+    """Test that dategrid can be overridden on command line"""
+    mocker.patch("sys.argv", ["sunsch", "--dategrid", "daily", "config_v2.yml"])
+    sunsch.main()
+    assert "6 'JAN' 2017" in Path("schedule.inc").read_text()
+    assert "7 'JAN' 2017" in Path("schedule.inc").read_text()
+    assert "8 'JAN' 2017" in Path("schedule.inc").read_text()
+    assert "9 'JAN' 2017" in Path("schedule.inc").read_text()
+
+
+def test_dump_stdout(testdata, mocker):
+    """Test that we can write to stdout"""
+    result = subprocess.run(
+        ["sunsch", "--output", "-", "config_v2.yml"], check=True, stdout=subprocess.PIPE
+    )
+    assert "1 'FEB' 2020" in result.stdout.decode()
+    assert "subscript" not in result.stdout.decode()
+
+    # Verify that INFO logging is not included while writing to stdout:
+    result = subprocess.run(
+        ["sunsch", "--verbose", "--output", "-", "config_v2.yml"],
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    assert "1 'FEB' 2020" in result.stdout.decode()
+    # (we would accept log messages to stderr)
+    assert "INFO:subscript" not in result.stdout.decode()
+
+    # Verify that DEBUG logging is not included while writing to stdout:
+    result = subprocess.run(
+        ["sunsch", "--debug", "--output", "-", "config_v2.yml"],
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    assert "1 'FEB' 2020" in result.stdout.decode()
+    # (we would accept log messages to stderr)
+    assert "INFO:subscript" not in result.stdout.decode()
+    assert "DEBUG:subscript" not in result.stdout.decode()
+
+
+def test_main_configv1(testdata, caplog, mocker):
     """Test command line sunsch, loading a yaml file.
 
     This is run on a v1 config file, which will be autoconverted to v2.
 
     This format is to be deprecated, and should be removed in the future
     """
-
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, "testdata_sunsch")
-    tmpdir.join("testdata_sunsch").chdir()
-
     mocker.patch("sys.argv", ["sunsch", "config_v1.yml"])
     with pytest.raises(SystemExit):
         sunsch.main()
@@ -289,6 +357,25 @@ def test_days_float(readonly_datadir):
     assert datetime.datetime(2020, 1, 11, 21, 36, 0) in sch.dates
     # Rounding is downwards:
     assert "11 'JAN' 2020/" in str(sch)
+
+
+def test_starttime(readonly_datadir):
+    sunschconf = {
+        "starttime": datetime.datetime(2020, 2, 1, 0, 0, 0),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "11 'FEB' 2020" in str(sch)
+
+    sunschconf = {
+        "starttime": datetime.datetime(2020, 2, 1, 23, 59, 59),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    # Dates are rounded down, clock-times are not supported
+    assert "11 'FEB' 2020" in str(sch)
 
 
 def test_dateclip(readonly_datadir):
@@ -628,6 +715,16 @@ def test_dategrid():
     assert max(sch.dates) == datetime.datetime(2021, 1, 1, 0, 0)
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
 
+    # Unknown dategrid
+    with pytest.raises(ValueError, match="Unsupported dategrid interval"):
+        sch = sunsch.process_sch_config(
+            {
+                "startdate": datetime.date(2020, 1, 1),
+                "enddate": datetime.date(2021, 1, 1),
+                "dategrid": "biyearly",
+            }
+        )
+
 
 def test_wrap_long_lines():
     """Test that lines that are excessively long gets wrapped.
@@ -830,12 +927,8 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_ert_forward_model(tmpdir):
+def test_ert_forward_model(testdata):
     """Test that the ERT forward model configuration is correct"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, "testdata_sunsch")
-    os.chdir("testdata_sunsch")
-
     Path("FOO.DATA").write_text("--Empty")
 
     Path("test.ert").write_text(

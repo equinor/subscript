@@ -13,6 +13,7 @@ import argparse
 import textwrap
 import logging
 import warnings
+import dateutil.parser
 from pathlib import Path
 
 import yaml
@@ -26,6 +27,8 @@ from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 from subscript import getLogger
 
 logger = getLogger(__name__)
+
+__MAGIC_STDOUT__ = "-"  # When used as a filename on the command line
 
 SUPPORTED_DATEGRIDS = ["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 
@@ -806,11 +809,11 @@ def main():
     if args.output:
         cli_config["output"] = args.output
     if args.startdate:
-        cli_config["startdate"] = args.startdate
+        cli_config["startdate"] = dateutil.parser.isoparse(args.startdate).date()
     if args.enddate:
-        cli_config["enddate"] = args.enddate
-    if args.enddate:
-        cli_config["refdate"] = args.refdate
+        cli_config["enddate"] = dateutil.parser.isoparse(args.enddate).date()
+    if args.refdate:
+        cli_config["refdate"] = dateutil.parser.isoparse(args.refdate).date()
     if args.dategrid:
         cli_config["dategrid"] = args.dategrid
 
@@ -871,7 +874,7 @@ def main():
             logger.error("Exiting script, no schedule file written")
             sys.exit(1)
 
-    if args.verbose:
+    if args.verbose and config.snapshot.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.INFO)
     if args.debug:
         logger.setLevel(logging.DEBUG)
@@ -881,7 +884,7 @@ def main():
         str(process_sch_config(config.snapshot)), maxchars=128, warn=True
     )
 
-    if config.snapshot.output == "-":
+    if config.snapshot.output == __MAGIC_STDOUT__:
         print(schedule)
     else:
         logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
