@@ -20,7 +20,7 @@ Example 1
 
 To create well definitions in a file with the default name ``welldefs.sch``::
 
-    > ri_wellmod.py wells.rsp DROGON-0 
+    > ri_wellmod wells.rsp DROGON-0
 
 
 Here ``DROGON-0`` is an initialized Eclipse case (i.e., the files DROGON-0.INIT and 
@@ -39,9 +39,9 @@ Example 2
 
 By default multi-segment well definitions are not created, but may be requested for 
 some or all wells using a command-line argument. E.g., to add MSW data for the well
-``A44`` and any wells starting with ``C``::
+``A44`` and any wells starting with ``C`` based on a NOSIM case::
 
-    > ri_wellmod.py wells.rsp DROGON-0 --msw_wells A4,C*
+    > ri_wellmod wells.rsp DROGON-0_NOSIM --msw_wells A4,C*
 
 
 Example 3
@@ -51,9 +51,33 @@ Instead of using an initialized Eclipse case an input GRDECL case may be used. T
 create meaningful connection factors PERMX/PERMY/PERMZ and NTG (if non-unit) must 
 be specified, either in the GRDECL file or in separate files, as in this exapmle::
 
-    > ri_wellmod.py wells.rsp ../include/grid/drogon.grid.grdecl \
+    > ri_wellmod wells.rsp ../include/grid/drogon.grid.grdecl \
       --property_files ../include/grid/drogon.perm.grdecl ../include/grid/drogon.ntg.grdecl 
 
+Example 4
+^^^^^^^^^
+
+ResInsight supports local grid refinement, and will automatically create WELSPECL/COMPDATL/COMPSEGL 
+when given an initialized Eclipse case with LGR(s)::
+
+   > ri_wellmod wells.rsp DROGON-0_NOSIM_LGR -msw A4 -o wells_lgr.sch 
+
+
+Example 5
+^^^^^^^^^
+
+It is also possible to create local LGRs surrounding each well, and this may be specified on the
+script command line. The following example adds a 3x3x2 refinement to the region of cells 
+perforated by the well A4 and a 1x1x3 refinement around A6::
+
+   > ri_wellmod wells.rsp DROGON-0_NOSIM --lgr A4:3,3,2 A6:1,1,3 -msw A4 \ 
+    --lgr_output_file lgr_definitions.inc
+
+The corresponding CARFIN keywords are found in a separate file (here ``lgr_definitions.inc``), to
+be included in the GRID section of the Eclipse .DATA file.
+
+.. note:: The command-line LGR creation currently only works for init cases and in GUI mode, but 
+     this will be fixed with the next release (March 2021).
 
 Syntax
 ------

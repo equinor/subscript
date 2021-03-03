@@ -6,14 +6,18 @@
 
 
 """
-import sys
 import argparse
 import os.path
 import fnmatch
 import shutil
 import xml.dom.minidom
+import re
+import logging
 
 import rips
+
+from subscript import getLogger
+logger = getLogger(__name__)
 
 RI_HOME = '/prog/ResInsight'
 DEFAULT_VERSION='2020.10.1'
@@ -65,8 +69,8 @@ def _build_argument_parser():
     parser.add_argument(
         '--output_file',
         '-o',
-        default='welldefs.sch',
-        help='Ouptput file (default=welldefs.sch)'
+        default='well_defs.sch',
+        help='Output file (default=well_defs.sch)'
     )
     parser.add_argument(
         '--tmpfolder',
@@ -87,6 +91,19 @@ def _build_argument_parser():
         default=None,
         help='Optional comma-separated list of wells (wildcards allowed) to generate msw \
             well definitions for (default=none)'
+    )
+    parser.add_argument(
+        '--lgr',
+        '-l',
+        nargs='*',
+        help="Optional list of LGR specs: WELLNAME:REF_I,REF_J,REF_K \
+          (wildcards allowed in well names)"
+    )
+    parser.add_argument(
+        '--lgr_output_file',
+        '-lo',
+        default='well_lgr_defs.inc',
+        help="Well LGR output file (default=well_lgr_defs.sch)"
     )
     parser.add_argument(
         '--time_step',
@@ -136,9 +153,18 @@ def is_init_case(ecl_case):
     has_init = os.path.exists(ecl_name + ".INIT")
     return has_grid and has_init
 
+def has_restart_file(ecl_case):
+    """
+    Check if ecl_case has a restart file
+    (Currently required for LGR creation, to be fixed in next ResInsight release )
+    """
+    ecl_name = os.path.splitext(ecl_case)[0]
+    return os.path.exists(ecl_name + ".UNRST") or os.path.exists(ecl_name + ".X0000")
+
+
 def rsp_extract_export_names(well_project, well_path_names):
     """
-    Extract export well names from ResInsight project 
+    Extract export well names from ResInsight project
 
     :param well_project: ResInsight project (rsp) file
     :param well_path_names: List of well names (as returned by the RI instance)
@@ -149,10 +175,33 @@ def rsp_extract_export_names(well_project, well_path_names):
     name_nodes = doc.getElementsByTagName('WellNameForExport')
     export_names = [node.childNodes[0].nodeValue for node in name_nodes]
     if len(export_names) != len(well_path_names):
-        print("ERROR: Could not find export names for all wells - returning empty dict")
+        logger.error("Could not find export names for all wells - returning empty dict")
         return {}
 
     return dict(zip(export_names, well_path_names))
+
+def decode_lgr_spec(spec):
+    """
+    Decode LGR spec and return as parsed tuple
+
+    :param spec: LGR spec in the format 'wname,ref_i,ref_j,ref_k'
+
+    :return: Tuple (str, int, int, int) if well-formed, None if not
+    """
+    tokens = re.split(',|:',spec.strip())
+    if len(tokens)!=4:
+        logger.warning("Malformed LGR spec string: %s", spec)
+        return None
+    wname = tokens[0]
+    try:
+        ref_i = int(tokens[1])
+        ref_j = int(tokens[2])
+        ref_k = int(tokens[3])
+    except ValueError:
+        logger.warning("Unable to integer valued refinements from LGR spec %s", spec)
+        return None
+
+    return (wname, ref_i, ref_j, ref_k)
 
 
 def main():
@@ -170,86 +219,125 @@ def main():
     input_property_files = args.property_files
     tmp_output_folder = args.tmpfolder
     output_file = args.output_file
+    lgr_output_file = args.lgr_output_file
     wells = args.wells
     msw_wells = args.msw_wells
+    lgr_specs = args.lgr
+
     time_step = args.time_step
     version = args.version
 
+    if debug:
+        logger.setLevel(logging.DEBUG)
+    elif verbose:
+        logger.setLevel(logging.INFO)
+    elif silent:
+        logger.setLevel(logging.CRITICAL)
+
     ecl_case_name = os.path.splitext(ecl_case)[0]
     command_line_parameters = []
+    console_mode = True
     init_case = is_init_case(ecl_case_name)
+
+    # Until fix in next ResInsight release: Exit if requesting lgr without .UNRST
+    # Also requires GUI versions
+    if lgr_specs is not None and len(lgr_specs) > 0:
+        if not (init_case and has_restart_file(ecl_case_name)):
+            logger.error("Can currently only create LGRs for init cases with restart file present \
+            (to be fixed in March2021 ResInsight release)")
+            return 1
+        else:
+            console_mode = False
+
+    # Input cases must be loaded by a cmdline workaround
     if not init_case:
         command_line_parameters += ['--project', well_project]
         command_line_parameters += ['--case', ecl_case]
         command_line_parameters += input_property_files
-        if debug:
-            print("INFO: Command line parameters are: ", command_line_parameters)
 
-    # @TODO Detect if this is an initialized case (GRID/EGRID + INIT), otherwise assumed input case
+        logger.debug("Command line parameters are: %s", command_line_parameters)
+        logger.info("Launching ResInsight: %s", RI_EXE(version))
 
-    if verbose or debug:
-        print("Launching ResInsight: {}".format(RI_EXE(version)))
 
-    resinsight = rips.Instance.launch(resinsight_executable=RI_EXE(version), console=True,
+    resinsight = rips.Instance.launch(resinsight_executable=RI_EXE(version), console=console_mode,
       command_line_parameters=command_line_parameters)
 
     if resinsight is None:
-        print("ERROR: Could not launch ResInsight - \
-            please check the executable {}.".format(RI_EXE(version)))
+        logger.error("Could not launch ResInsight - \
+            please check the executable %s.", RI_EXE(version))
         return 1
 
     try:
         resinsight.set_export_folder("COMPLETIONS", tmp_output_folder)
 
         if init_case:
-            proj = resinsight.project.open(well_project)            
+            proj = resinsight.project.open(well_project)
             case = proj.load_case(ecl_case_name + ".EGRID")
         else:
             proj = resinsight.project
-            case = proj.cases()[0]
+            case = proj.cases()[-1]
 
-        ri_case_name = proj.cases()[0].name
-        #case.export_well_path_completions(time_step, well_path_names, file_split="UNIFIED_FILE")
-        #case.name = "ECLIPSE" # NO EFFECT, UNFORTUNATELY...
+        ri_case_name = proj.cases()[-1].name
+        logger.debug("Working on the case named %s...", ri_case_name)
 
         all_well_path_names = [w.name for w in proj.well_paths()]
         exportname2wellpathname = rsp_extract_export_names(well_project, all_well_path_names)
         export_well_names = exportname2wellpathname.keys()
 
+        well_path_names = all_well_path_names
         if wells is not None:
             well_patterns = [x.strip() for x in wells.split(sep=',')]
             export_well_names = select_matching_strings(well_patterns, export_well_names)
             well_path_names = [exportname2wellpathname[well] for well in export_well_names]
 
+        # Need to gather all wells with LGR and call 'create_lgr_for_completions' once, else
+        # the previous LGRs will be deleted on the next call
+        lgr_well_path_names = []
+        if lgr_specs is not None and len(lgr_specs) > 0:
+            for lgr_spec in lgr_specs:
+                spec_tuple = decode_lgr_spec(lgr_spec)
+                if spec_tuple is None:
+                    logger.warning("Malformed LGR spec %s ignored", lgr_spec)
+                    continue
+
+                logger.info("Creating LGR from %s: ", lgr_spec)
+                wname, ref_i, ref_j, ref_k = spec_tuple
+                lgr_export_well_names = select_matching_strings([wname], export_well_names)
+                lgr_well_path_names.extend([
+                    exportname2wellpathname[ewname] for ewname in lgr_export_well_names
+                    ])
+
+            logger.debug("Trying to create LGR at time step %d for the well paths %s",
+                time_step, lgr_well_path_names)
+            case.create_lgr_for_completion(time_step, lgr_well_path_names, ref_i, ref_j, ref_k,
+                split_type="LGR_PER_WELL")
 
         case.export_well_path_completions(time_step, well_path_names, file_split="SPLIT_ON_WELL")
 
-        if debug:
-            print("Completion files for case {} exported \
-                to folder {}.".format(ecl_case_name, tmp_output_folder))
+        logger.debug("Completion files for case %s exported \
+                to folder %s.", ecl_case_name, tmp_output_folder)
 
         resinsight.exit()
 
     except Exception as any_exception:  # pylint: disable=broad-except
         resinsight.exit()
-        print("ERROR: Unknown exception trying to run ResInsight - check logs..: {}".format(
-            any_exception))
+        logger.error("Unknown exception trying to run ResInsight - check logs..: %s",
+            any_exception)
+
         return 1
 
     # Gather ResInsight-generated output files in a single output file
-
-
     msw_well_names = []
     if msw_wells is not None:
         msw_well_patterns = [x.strip() for x in msw_wells.split(sep=',')]
-        if debug:
-            print("DEBUG: Looking for the following MSW wells: {}".format(msw_well_patterns))
+
+        logger.debug("Looking for the following MSW wells: %s", msw_well_patterns)
+
         msw_well_exportnames = select_matching_strings(msw_well_patterns, export_well_names)
         msw_well_names = [exportname2wellpathname[msw] for msw in msw_well_exportnames]
-        if debug:
-            print("DEBUG: Found the following MSW wells: {}".format(msw_well_names))
 
-    
+        logger.debug("Found the following MSW wells: %s", msw_well_names)
+
     def get_exported_perf_filename(well_name, ri_case_name):
         """
         Get file name of exported perforation completion file
@@ -264,32 +352,73 @@ def main():
         perf_fn = well_name + "_UnifiedCompletions_MSW_" + ri_case_name
         return os.path.join(tmp_output_folder, perf_fn)
 
+    def get_lgr_spec_filename(lgr_well_path):
+        """
+        Get file name of exported LGR for a given well path
+        """
+        lgr_spec_fn = "LGR_" + lgr_well_path + ".dat"
+        return os.path.join(tmp_output_folder, lgr_spec_fn)
+
+
     ri_case_name = ri_case_name.replace('.','_')
     with open(output_file, 'w') as out_fd:
         for well in well_path_names:
             perf_fn = get_exported_perf_filename(well, ri_case_name)
-            if os.path.exists(perf_fn):            
+
+            # Need to check if LGR perfs exists, in case of non-LGR wells intersecting well LGRs
+            perf_fn_exists = False
+            lgr_perf_fn = perf_fn + "_LGR"
+            if os.path.exists(lgr_perf_fn):
+                perf_fn = lgr_perf_fn
+                perf_fn_exists = True
+
+            if perf_fn_exists or os.path.exists(perf_fn):
                 with open(perf_fn, 'r') as perf_fd:
                     shutil.copyfileobj(perf_fd, out_fd)
-            elif debug:
-                print("WARNING: No completion file found for well {}".format(well))
-                print("         Expected file: {}".format(perf_fn))
+            else:
+                logger.debug("No completion file found for well %s", well)
+                logger.debug("   Expected file: %s", perf_fn)
+                logger.debug("   (This could just mean no completions intersect the grid")
 
             if well in msw_well_names:
                 msw_fn = get_exported_msw_filename(well, ri_case_name)
                 if os.path.exists(msw_fn):
                     with open(msw_fn, 'r') as msw_fd:
                         shutil.copyfileobj(msw_fd, out_fd)
-                elif debug:
-                    print("WARNING: No msw completion file found for well {}".format(well))
-                    print("         Expected file: {}".format(msw_fn))
+                else:
+                    logger.debug("No msw completion file found for well %s", well)
+                    logger.debug("   Expected file: %s", msw_fn)
+                    logger.debug("   (This could just mean no completions intersect the grid")
 
+    logger.info("Completions exported to %s", output_file)
     if not silent:
-        print("INFO: Completions exported to {}".format(output_file))
+        print("""
+    Completions exported to {}
+
+""".format(output_file))
+
+    # Finally, collect LGR files
+    if lgr_specs is not None and len(lgr_specs) > 0:
+        with open(lgr_output_file, 'w') as out_fd:
+            for lgr_well_path in lgr_well_path_names:
+                lgr_spec_fn = get_lgr_spec_filename(lgr_well_path)
+                if os.path.exists(lgr_spec_fn):
+                    with open(lgr_spec_fn, 'r') as lgr_fd:
+                        # shutil.copyfileobj(lgr_fd, out_fd)
+                        # Ugly hack to get around 'multiple-wells-in-lgr' - using 5 as limit..
+                        txt = lgr_fd.read()
+                        print(txt.replace(' /\n', '    5 /\n'), file=out_fd)
+                else:
+                    logger.debug("No LGR spec file found for well path %s", lgr_well_path)
+
+        logger.info("LGR specifications exported to %s", lgr_output_file)
+        if not silent:
+            print("""
+    Well LGR definitions exported to {}
+            """.format(lgr_output_file))
 
     return 0
 
 
 if __name__ == '__main__':
-    #sys.exit(main())
     main()

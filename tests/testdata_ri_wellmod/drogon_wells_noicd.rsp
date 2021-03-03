@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ResInsightProject>
-    <DocumentFileName>wells.rsp</DocumentFileName>
+    <DocumentFileName>drogon_wells.rsp</DocumentFileName>
     <ProjectFileVersionString>2020.10.1</ProjectFileVersionString>
     <ReferencedExternalFiles>
         $PathId_001$ ./drogon_trajectories/wells.dat;
