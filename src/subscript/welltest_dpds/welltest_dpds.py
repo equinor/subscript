@@ -1,36 +1,32 @@
 #!/usr/bin/env python
 
 import sys
-import os
+from pathlib import Path
 import argparse
 import numpy as np
+import pandas as pd
+from scipy.interpolate import interp1d
 from ecl.summary import EclSum
 
 
 DESCRIPTION = """
 Script to extract simulated welltest results. Typically used to compare with welltest
-analysis, from eg Kappa.
+analysis, from eg Kappa Saphir.
 
 Required summary vectors in sim deck:
   * wbhp:well_name
   * wopr:well_name if phase == OIL
   * wgpr:well_name if phase == GAS
 
-Outputs the following files:
-  * dpdspt_lag1 : cumtime and superpositioned time derivative of pressure lag 1
-  * dpdspt_lag2 : cumtime and superpositioned time derivative of pressure lag 2
-  * spt superpositioned time
+Outputs files according to naming convention outputdirectory/fname_outfilesuffix.csv:
+  * dpdspt_lag1; cumtime and superpositioned time derivative of pressure lag 1
+  * dpdspt_lag2; cumtime and superpositioned time derivative of pressure lag 2
+  * spt; superpositioned time
+  * welltest; unified csv file with vectors: cumtime, wbhp, wopr, wgpr, wwpr
+  * dpdspt_lag1_gendobs_suffix_bunr; if --genobs_resultfile is invoked
+  * dpdspt_lag2_gendobs_suffix_burn; if --genobs_resultfile is invoked
+  * wbhp_genobs_suffix_bunr; if --gen_obs_result_file is invoked
 
-according to the naming convention; outputdirectory/key_outfilesuffix.csv
-
-And a unified csv file with the following vectors:
-  * cum time
-  * wbhp vs cum time
-  * wopr vs cum time
-  * wgpr vs cum time
-  * wwpr vs cum time
-
-according to the naming convention; outputdirectory/welltest_output_outfilesuffix.csv
 """
 
 """
@@ -58,7 +54,7 @@ EXAMPLES = """
  FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
 
  FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS,
-    <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFIX>=OP_1_1)
+    <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1)
 
 """
 
@@ -126,6 +122,16 @@ def get_parser():
         default="OIL",
         required=False,
     )
+    parser.add_argument(
+        "--genobs_resultfile",
+        type=str,
+        help=(
+            "File with welltest results used to define time steps, "
+            "typically exported from Saphir. If present, additional files "
+            "to be used with GENERAL_OBSERVATION in ERT are produced"
+        ),
+        default=None,
+    )
     return parser
 
 
@@ -189,13 +195,13 @@ def supertime(time, rate, bu_start_ind, bu_end_ind):
     Calculate supertime
 
     Args:
-        time (np.array)
-        rate (np.array)
-        bu_start_ind (int)
-        bu_end_ind (int)
+       time (np.array)
+       rate (np.array)
+       bu_start_ind (int)
+       bu_end_ind (int)
 
     Returns:
-        supertime (np.array)
+       supertime (np.array)
 
     """
 
@@ -320,7 +326,7 @@ def weighted_avg_press_time_derivative_lag2(
     return dpdspt_weighted_lag2
 
 
-def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
+def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -338,10 +344,11 @@ def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
 
     fileh = open(filen, "w")
 
-    fileh.write(header_list[0])
-    for header in header_list[1:]:
-        fileh.write(sep + header)
-    fileh.write("\n")
+    if header_list:
+        fileh.write(header_list[0])
+        for header in header_list[1:]:
+            fileh.write(sep + header)
+        fileh.write("\n")
     for i in range(len(field_list[0][start:end])):
         fileh.write("%0.10f" % field_list[0][i])
         for field in field_list[1:]:
@@ -352,6 +359,44 @@ def to_csv(filen, field_list, header_list, start=0, end=None, sep=", "):
         fileh.write("\n")
     fileh.close()
     print("Writing file:" + filen)
+
+
+def genobs_vec(filen, vec, time):
+    """
+    Adjust vector to time axis defined by observation file.
+    Used to create output compatible with ERTs GENERAL_OBSERVATION
+    file format and directy comparable with output from eg Kappa Saphir.
+    Note; csv files exported from Saphir are separated with \t
+    and contain headers with space which makes parsing fragile.
+
+    Args:
+        filen : (str) csv file to extract time axis from, using colomn dTime
+        vec   : (np.array) Vector to remap onto the axis
+        time  : (np.array) Original time axis
+    Returns:
+        gen_data : (np.array)
+
+    """
+
+    if not Path(filen).exists():
+        raise FileNotFoundError("No such file:", filen)
+
+    df = pd.read_csv(filen, sep="\t")
+    obs_time = df["dTime"][1:None].dropna().to_numpy(dtype=float)
+
+    gen_data = np.zeros(len(obs_time))
+
+    interp = interp1d(time, vec)
+
+    for i, t in enumerate(obs_time):
+        if t < time[0]:
+            gen_data[i] = vec[0]
+        elif t > time[-1]:
+            gen_data[i] = vec[-1]
+        else:
+            gen_data[i] = interp(t)
+
+    return gen_data
 
 
 def main():
@@ -373,6 +418,7 @@ def main():
     main_phase = args.phase
     outf_suffix = args.outfilessuffix
     outdir = args.outputdirectory
+    genobs_resultf = args.genobs_resultfile
 
     print("*" * 60)
     print("Running the " + sys.argv[0] + " script")
@@ -380,13 +426,16 @@ def main():
     print("Extracting result from well:", well_name)
     print()
 
+    if genobs_resultf == "None":
+        genobs_resultf = None
+
     if outf_suffix and not outf_suffix.startswith("_"):
         outf_suffix = "_" + outf_suffix
 
     if not outdir.endswith("/"):
         outdir = outdir + "/"
 
-    if not os.path.exists(outdir):
+    if not Path(outdir).exists():
         raise FileNotFoundError("No such outputdirectory:", outdir)
 
     summary = EclSum(eclcase)
@@ -452,6 +501,25 @@ def main():
         dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
     )
 
+    if genobs_resultf:
+        dpdspt_w1_gendata = genobs_vec(genobs_resultf, dpdspt_weighted_lag1, cum_time)
+        dpdspt_w2_gendata = genobs_vec(genobs_resultf, dpdspt_weighted_lag2, cum_time)
+        wbhp_gendata = genobs_vec(
+            genobs_resultf, wbhp[bu_start_ind + 1 : bu_end_ind + 1], cum_time
+        )
+
+        to_csv(
+            outdir + "dpdspt_lag1_genobs" + outf_suffix + "_" + str(buildup_nr),
+            [dpdspt_w1_gendata],
+        )
+        to_csv(
+            outdir + "dpdspt_lag2_genobs" + outf_suffix + "_" + str(buildup_nr),
+            [dpdspt_w2_gendata],
+        )
+        to_csv(
+            outdir + "wbhp_genobs" + outf_suffix + "_" + str(buildup_nr),
+            [wbhp_gendata],
+        )
     to_csv(
         outdir + "dpdspt_lag1" + outf_suffix + ".csv",
         [cum_time, dpdspt_weighted_lag1],
