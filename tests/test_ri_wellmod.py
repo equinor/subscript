@@ -18,7 +18,10 @@ def test_integration():
     assert subprocess.check_output(["ri_wellmod", "-h"])
 
 
-@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.exists("/prog/ResInsight"),
+    reason="Could not find a ResInsight install at the expected location",
+)
 def test_main_initcase(tmpdir, mocker):
     """Test well data generation from init case"""
     tmpdir.chdir()
@@ -32,7 +35,10 @@ def test_main_initcase(tmpdir, mocker):
     assert os.path.exists(outfile)
 
 
-@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.exists("/prog/ResInsight"),
+    reason="Could not find a ResInsight install at the expected location",
+)
 def test_main_inputcase(tmpdir, mocker):
     """Test well data generation from input case"""
     tmpdir.chdir()
@@ -60,7 +66,10 @@ def test_main_inputcase(tmpdir, mocker):
     assert os.path.exists(outfile)
 
 
-@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.exists("/prog/ResInsight"),
+    reason="Could not find a ResInsight install at the expected location",
+)
 def test_main_mswdef(tmpdir, mocker):
     """Test multi-segment well data generation"""
     tmpdir.chdir()
@@ -78,7 +87,10 @@ def test_main_mswdef(tmpdir, mocker):
     assert os.path.exists(outfile)
 
 
-@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.exists("/prog/ResInsight"),
+    reason="Could not find a ResInsight install at the expected location",
+)
 def test_main_lgr(tmpdir, mocker):
     """Test creation of LGR"""
     tmpdir.chdir()
@@ -95,7 +107,10 @@ def test_main_lgr(tmpdir, mocker):
     assert os.path.exists(outfile)
 
 
-@pytest.mark.integration
+@pytest.mark.skipif(
+    not os.path.exists("/prog/ResInsight"),
+    reason="Could not find a ResInsight install at the expected location",
+)
 def test_main_lgr_cmdline(tmpdir, mocker):
     """Test creation of LGR"""
     tmpdir.chdir()

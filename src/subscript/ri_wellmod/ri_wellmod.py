@@ -13,10 +13,52 @@ import shutil
 import xml.dom.minidom
 import re
 import logging
+from datetime import datetime
 
 import rips
 
 from subscript import getLogger
+
+DESCRIPTION = """
+``ri_wellmod`` is a utility to generate Eclipse well model definitions
+(WELSPECS/WELSPECL, COMPDAT/COMPDATL, WELSEGS, COMPSEGS) using ResInsight. The script
+takes as input a ResInsight project with wells and completions defined, in addition to
+an Eclipse case (either an initialized case or an input case with grid and PERMX|Y|Z
+and NTG defined in the GRDECL format).
+
+.. note:: Well names specified as command line arguments are assumed to refer to the
+   Eclipse well names, i.e., the completion export names as defined in the ResInsight
+   wells project.
+"""
+
+CATEGORY = "modelling.reservoir"
+
+EXAMPLES = """
+.. code-blck:: console
+
+ FORWARD_MODEL RI_WELLMOD(<RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp, # noqa: E501
+                          <ECLBASE>=<ECLBASE>,
+                          <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch)
+
+ FORWARD_MODEL RI_WELLMOD(<RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp, # noqa: E501
+                          <ECLBASE>=<ECLBASE>,
+                          <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
+                          <MSW>="A2;A4;'R*')
+
+ FORWARD_MODEL RI_WELLMOD(<RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp, # noqa: E501
+                          <ECLBASE>=<ECLBASE>,
+                          <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
+                          <MSW>="A4",
+                          <XARG0>="--lgr",
+                          <XARG1>="A4:3;3;1")
+
+
+.. note:: More examples and options may be seen in the subscript docs for the script
+   ``ri_wellmod``, just replace ',' by ';' and note that spaces cannot be part of
+   argument strings, so you may need to use <XARGn> for the individual parts.
+
+"""
+
 
 logger = getLogger(__name__)
 
@@ -24,7 +66,8 @@ RI_HOME = "/prog/ResInsight"
 DEFAULT_VERSION = "2020.10.1"
 
 
-def RI_EXE(version):
+def get_resinsight_exe(version):
+    """Return the path to the ResInsight install for a given version"""
     return RI_HOME + "/resinsight_" + version + "_RHEL7/ResInsight"
 
 
@@ -62,12 +105,13 @@ def _build_argument_parser():
     parser.add_argument(
         "--tmpfolder",
         "-tmp",
-        default="ri_completions",
+        default="resinsight/ri_completions",
         help="Output folder (default=tmp_ri_completions)",
     )
     parser.add_argument(
         "--wells",
         "-w",
+        nargs="+",
         default=None,
         help="Optional comma-separated list of wells (wildcards allowed) to generate completions \
             for (default=all wells in project)",
@@ -75,6 +119,7 @@ def _build_argument_parser():
     parser.add_argument(
         "--msw_wells",
         "-msw",
+        nargs="+",
         default=None,
         help="Optional comma-separated list of wells (wildcards allowed) to generate msw \
             well definitions for (default=none)",
@@ -83,7 +128,7 @@ def _build_argument_parser():
         "--lgr",
         "-l",
         nargs="*",
-        help="Optional list of LGR specs: WELLNAME:REF_I,REF_J,REF_K \
+        help="Optional list of comma-separated LGR specs: WELLNAME:REF_I,REF_J,REF_K \
           (wildcards allowed in well names)",
     )
     parser.add_argument(
@@ -103,6 +148,11 @@ def _build_argument_parser():
         "-v",
         default=DEFAULT_VERSION,
         help="Optional ResInsight version to use (default=" + DEFAULT_VERSION + ")",
+    )
+    parser.add_argument(
+        "--dummy",
+        action="store_true",
+        help="Dummy argument to get around the ERT-FM-empty-default-argument problem.",
     )
 
     return parser
@@ -173,13 +223,13 @@ def rsp_extract_export_names(well_project, well_path_names):
 
 def decode_lgr_spec(spec):
     """
-    Decode LGR spec and return as parsed tuple
+    Decode LGR spec and return as parsed tuple. For ERT FM replace ',' by ';'.
 
-    :param spec: LGR spec in the format 'wname,ref_i,ref_j,ref_k'
+    :param spec: LGR spec in the format 'wname:ref_i,ref_j,ref_k'
 
     :return: Tuple (str, int, int, int) if well-formed, None if not
     """
-    tokens = re.split(",|:", spec.strip())
+    tokens = re.split(",|:|;", spec.strip())
     if len(tokens) != 4:
         logger.warning("Malformed LGR spec string: %s", spec)
         return None
@@ -193,6 +243,13 @@ def decode_lgr_spec(spec):
         return None
 
     return (wname, ref_i, ref_j, ref_k)
+
+
+def split_arg_string(arg_string):
+    """
+    Split an arg string of formats 'str1,str2,str3' or 'str1|str2|str3'
+    """
+    return [tok.strip() for tok in re.split(r",|;", arg_string.strip())]
 
 
 def main():
@@ -217,6 +274,9 @@ def main():
 
     time_step = args.time_step
     version = args.version
+
+    # Use time stamp to ensure unique output folders
+    tmp_output_folder = os.path.join(tmp_output_folder, str(datetime.now()))
 
     if debug:
         logger.setLevel(logging.DEBUG)
@@ -249,10 +309,10 @@ def main():
         command_line_parameters += input_property_files
 
         logger.debug("Command line parameters are: %s", command_line_parameters)
-        logger.info("Launching ResInsight: %s", RI_EXE(version))
+        logger.info("Launching ResInsight: %s", get_resinsight_exe(version))
 
     resinsight = rips.Instance.launch(
-        resinsight_executable=RI_EXE(version),
+        resinsight_executable=get_resinsight_exe(version),
         console=console_mode,
         command_line_parameters=command_line_parameters,
     )
@@ -261,7 +321,7 @@ def main():
         logger.error(
             "Could not launch ResInsight - \
             please check the executable %s.",
-            RI_EXE(version),
+            get_resinsight_exe(version),
         )
         return 1
 
@@ -286,7 +346,10 @@ def main():
 
         well_path_names = all_well_path_names
         if wells is not None:
-            well_patterns = [x.strip() for x in wells.split(sep=",")]
+            well_patterns = []
+            for well_spec in wells:
+                well_patterns.extend(split_arg_string(well_spec))
+
             export_well_names = select_matching_strings(
                 well_patterns, export_well_names
             )
@@ -355,7 +418,9 @@ def main():
     # Gather ResInsight-generated output files in a single output file
     msw_well_names = []
     if msw_wells is not None:
-        msw_well_patterns = [x.strip() for x in msw_wells.split(sep=",")]
+        msw_well_patterns = []
+        for msw_pattern in msw_wells:
+            msw_well_patterns.extend(split_arg_string(msw_pattern))
 
         logger.debug("Looking for the following MSW wells: %s", msw_well_patterns)
 
