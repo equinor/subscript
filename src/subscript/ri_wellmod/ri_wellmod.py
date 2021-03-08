@@ -1,13 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-#
 """
  ri_wellmod.py
 
 
 """
 import argparse
-import os.path
+from pathlib import Path
+
 import fnmatch
 import shutil
 import xml.dom.minidom
@@ -16,7 +14,7 @@ import logging
 from datetime import datetime
 
 import rips
-
+import grpc
 from subscript import getLogger
 
 DESCRIPTION = """
@@ -36,21 +34,28 @@ CATEGORY = "modelling.reservoir"
 EXAMPLES = """
 .. code-blck:: console
 
- FORWARD_MODEL RI_WELLMOD(<RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp, # noqa: E501
-                          <ECLBASE>=<ECLBASE>,
-                          <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch)
+ FORWARD_MODEL RI_WELLMOD(
+    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
+    <ECLBASE>=<ECLBASE>,
+    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch)
 
- FORWARD_MODEL RI_WELLMOD(<RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp, # noqa: E501
-                          <ECLBASE>=<ECLBASE>,
-                          <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-                          <MSW>="A2;A4;'R*')
+ FORWARD_MODEL RI_WELLMOD(
+    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
+    <ECLBASE>=<ECLBASE>,
+    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
+    <MSW>="A2;A4;'R*')
 
- FORWARD_MODEL RI_WELLMOD(<RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp, # noqa: E501
-                          <ECLBASE>=<ECLBASE>,
-                          <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-                          <MSW>="A4",
-                          <XARG0>="--lgr",
-                          <XARG1>="A4:3;3;1")
+ FORWARD_MODEL RI_WELLMOD(
+    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
+    <ECLBASE>=<ECLBASE>,
+    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
+    <MSW>="A4",
+    <XARG0>="--lgr",
+    <XARG1>="A4:3;3;1")
+
+
+.. warning:: Remember to remove line breaks in argument list if copying the examples
+   into your own ERT config.
 
 
 .. note:: More examples and options may be seen in the subscript docs for the script
@@ -66,12 +71,34 @@ RI_HOME = "/prog/ResInsight"
 DEFAULT_VERSION = "2020.10.1"
 
 
-def get_resinsight_exe(version):
-    """Return the path to the ResInsight install for a given version"""
-    return RI_HOME + "/resinsight_" + version + "_RHEL7/ResInsight"
+class CustomFormatter(
+    argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
+):
+    """
+    Multiple inheritance used for argparse to get both
+    defaults and raw description formatter
+    """
+
+    # pylint: disable=unnecessary-pass
+    pass
 
 
-def _build_argument_parser():
+def get_resinsight_exe(version=DEFAULT_VERSION):
+    """
+    Return the path to a valid ResInsight install, False if not found.
+    """
+    ri_exe = shutil.which("ResInsight")
+    if ri_exe is not None:
+        return ri_exe
+
+    ri_exe = Path(RI_HOME + "/resinsight_" + version + "_RHEL7/ResInsight")
+    if ri_exe.exists():
+        return ri_exe
+
+    return False
+
+
+def get_parser():
     """
     Utility function to build the cmdline argument parser using argparse
     (https://docs.python.org/3/library/argparse.html)
@@ -160,7 +187,7 @@ def _build_argument_parser():
 
 def select_matching_strings(pattern_list, string_list):
     """
-    Utility function to select mathching strings (fnmath wildcard style)
+    Utility function to select mathching strings (fnmatch wildcard style)
 
     :param pattern_list: List of fnmatch-style patterns
     :param string_list: List of strings to check for match
@@ -183,13 +210,16 @@ def is_init_case(ecl_case):
     """
     Check if input Eclipse case name corresponds to an initialized Eclipse run.
 
-    :param ecl_case: Run name to check (file name with suffix ok)
+    :param ecl_case: Run name (or path) to check (file name with suffix ok)
 
     :return: True/False
     """
-    ecl_name = os.path.splitext(ecl_case)[0]
-    has_grid = os.path.exists(ecl_name + ".EGRID") or os.path.exists(ecl_name + ".GRID")
-    has_init = os.path.exists(ecl_name + ".INIT")
+    ecl_path = Path(ecl_case)
+    has_grid = (
+        ecl_path.with_suffix(".EGRID").exists()
+        or ecl_path.with_suffix(".GRID").exists()
+    )
+    has_init = ecl_path.with_suffix(".INIT").exists()
     return has_grid and has_init
 
 
@@ -198,8 +228,11 @@ def has_restart_file(ecl_case):
     Check if ecl_case has a restart file
     (Currently required for LGR creation, to be fixed in next ResInsight release )
     """
-    ecl_name = os.path.splitext(ecl_case)[0]
-    return os.path.exists(ecl_name + ".UNRST") or os.path.exists(ecl_name + ".X0000")
+    ecl_path = Path(ecl_case)
+    return (
+        ecl_path.with_suffix(".UNRST").exists()
+        or ecl_path.with_suffix(".X0000").exists()
+    )
 
 
 def rsp_extract_export_names(well_project, well_path_names):
@@ -256,7 +289,7 @@ def main():
     """
     Main function
     """
-    parser = _build_argument_parser()
+    parser = get_parser()
     args = parser.parse_args()
 
     debug = args.debug
@@ -276,7 +309,7 @@ def main():
     version = args.version
 
     # Use time stamp to ensure unique output folders
-    tmp_output_folder = os.path.join(tmp_output_folder, str(datetime.now()))
+    tmp_output_folder = Path(tmp_output_folder) / str(datetime.now())
 
     if debug:
         logger.setLevel(logging.DEBUG)
@@ -285,15 +318,15 @@ def main():
     elif silent:
         logger.setLevel(logging.CRITICAL)
 
-    ecl_case_name = os.path.splitext(ecl_case)[0]
+    ecl_path = Path(ecl_case)
     command_line_parameters = []
     console_mode = True
-    init_case = is_init_case(ecl_case_name)
+    init_case = is_init_case(ecl_path)
 
     # Until fix in next ResInsight release: Exit if requesting lgr without .UNRST
     # Also requires GUI versions
     if lgr_specs is not None and len(lgr_specs) > 0:
-        if not (init_case and has_restart_file(ecl_case_name)):
+        if not (init_case and has_restart_file(ecl_path)):
             logger.error(
                 "Can currently only create LGRs for init cases with restart file present \
             (to be fixed in March2021 ResInsight release)"
@@ -311,11 +344,22 @@ def main():
         logger.debug("Command line parameters are: %s", command_line_parameters)
         logger.info("Launching ResInsight: %s", get_resinsight_exe(version))
 
-    resinsight = rips.Instance.launch(
-        resinsight_executable=get_resinsight_exe(version),
-        console=console_mode,
-        command_line_parameters=command_line_parameters,
-    )
+    # Try twice - occationally times out on busy compute nodes
+    try:
+        resinsight = rips.Instance.launch(
+            resinsight_executable=get_resinsight_exe(version),
+            console=console_mode,
+            command_line_parameters=command_line_parameters,
+        )
+    except Exception as any_exception:  # pylint: disable=broad-except
+        logger.warning(
+            "ResInsight cannot start - error %s - will try once more..", any_exception
+        )
+        resinsight = rips.Instance.launch(
+            resinsight_executable=get_resinsight_exe(version),
+            console=console_mode,
+            command_line_parameters=command_line_parameters,
+        )
 
     if resinsight is None:
         logger.error(
@@ -330,7 +374,7 @@ def main():
 
         if init_case:
             proj = resinsight.project.open(well_project)
-            case = proj.load_case(ecl_case_name + ".EGRID")
+            case = proj.load_case(str(ecl_path.with_suffix(".EGRID")))
         else:
             proj = resinsight.project
             case = proj.cases()[-1]
@@ -400,11 +444,15 @@ def main():
         logger.debug(
             "Completion files for case %s exported \
                 to folder %s.",
-            ecl_case_name,
+            (ecl_path.parent / ecl_path.stem),
             tmp_output_folder,
         )
 
         resinsight.exit()
+
+    except grpc.RpcError as grpc_error:
+        resinsight.exit()
+        logger.error("Server exception while running ResInsight: %s", grpc_error)
 
     except Exception as any_exception:  # pylint: disable=broad-except
         resinsight.exit()
@@ -436,21 +484,27 @@ def main():
         Get file name of exported perforation completion file
         """
         perf_fn = well_name + "_UnifiedCompletions_" + ri_case_name
-        return os.path.join(tmp_output_folder, perf_fn)
+        perf_fn = perf_fn.replace("/", "_")
+        perf_fn = perf_fn.replace(" ", "_")
+        return Path(tmp_output_folder) / perf_fn
 
     def get_exported_msw_filename(well_name, ri_case_name):
         """
         Get file name of exported msw completion file
         """
         perf_fn = well_name + "_UnifiedCompletions_MSW_" + ri_case_name
-        return os.path.join(tmp_output_folder, perf_fn)
+        perf_fn = perf_fn.replace("/", "_")
+        perf_fn = perf_fn.replace(" ", "_")
+        return Path(tmp_output_folder) / perf_fn
 
     def get_lgr_spec_filename(lgr_well_path):
         """
         Get file name of exported LGR for a given well path
         """
         lgr_spec_fn = "LGR_" + lgr_well_path + ".dat"
-        return os.path.join(tmp_output_folder, lgr_spec_fn)
+        lgr_spec_fn = lgr_spec_fn.replace("/", "_")
+        lgr_spec_fn = lgr_spec_fn.replace(" ", "_")
+        return Path(tmp_output_folder) / lgr_spec_fn
 
     ri_case_name = ri_case_name.replace(".", "_")
     with open(output_file, "w") as out_fd:
@@ -461,11 +515,11 @@ def main():
             # well LGRs, or in case of LGRs present in the init case
             perf_fn_exists = False
             lgr_perf_fn = perf_fn + "_LGR"
-            if os.path.exists(lgr_perf_fn):
+            if Path(lgr_perf_fn).exists():
                 perf_fn = lgr_perf_fn
                 perf_fn_exists = True
 
-            if perf_fn_exists or os.path.exists(perf_fn):
+            if perf_fn_exists or Path(perf_fn).exists():
                 with open(perf_fn, "r") as perf_fd:
                     shutil.copyfileobj(perf_fd, out_fd)
             else:
@@ -477,7 +531,7 @@ def main():
 
             if well in msw_well_names:
                 msw_fn = get_exported_msw_filename(well, ri_case_name)
-                if os.path.exists(msw_fn):
+                if Path(msw_fn).exists():
                     with open(msw_fn, "r") as msw_fd:
                         shutil.copyfileobj(msw_fd, out_fd)
                 else:
@@ -503,7 +557,7 @@ def main():
         with open(lgr_output_file, "w") as out_fd:
             for lgr_well_path in lgr_well_path_names:
                 lgr_spec_fn = get_lgr_spec_filename(lgr_well_path)
-                if os.path.exists(lgr_spec_fn):
+                if Path(lgr_spec_fn).exists():
                     with open(lgr_spec_fn, "r") as lgr_fd:
                         # shutil.copyfileobj(lgr_fd, out_fd)
                         # Ugly hack to get around 'multiple-wells-in-lgr'

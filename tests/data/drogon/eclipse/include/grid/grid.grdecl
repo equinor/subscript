@@ -1,7 +1,12 @@
+-- File compressed with eclcompress at 2021-03-08 10:17:26.250057
+-- Compression ratio 1.4 (higher is better, 1 is no compression)
+
 MAPAXES
-   0.45606369E+06   0.59394410E+07   0.45606369E+06   0.59265510E+07
-   0.46748934E+06   0.59265510E+07
+
+  0.45606369E+06 0.59394410E+07 0.45606369E+06 0.59265510E+07 0.46748934E+06
+  0.59265510E+07
 /
 SPECGRID
-          46          73          29           1
+
+  46 73 29 1
 /

@@ -29,13 +29,13 @@ SSCRIPTS = [
     "prtvol2csv = subscript.prtvol2csv.prtvol2csv:main",
     "pvt2csv = subscript.pvt2csv.pvt2csv:main",
     "restartthinner = subscript.restartthinner.restartthinner:main",
+    "ri_wellmod = subscript.ri_wellmod.ri_wellmod:main",
     "runrms = subscript.runrms.runrms:main",
     "summaryplot = subscript.summaryplot.summaryplot:main",
     "sw_model_utilities = subscript.sw_model_utilities.sw_model_utilities:main",
     "sunsch = subscript.sunsch.sunsch:main",
     "vfp2csv = subscript.vfp2csv.vfp2csv:main",
     "welltest_dpds = subscript.welltest_dpds.welltest_dpds:main",
-    "ri_wellmod = subscript.ri_wellmod.ri_wellmod:main",
 ]
 
 ERTPLUGINS = [
@@ -67,14 +67,14 @@ REQUIREMENTS = [
     "numpy",
     "opm",
     "pandas",
+    "protobuf",
     "pyscal",
     "pyyaml",
+    "rips",
     "scipy",
     "segyio",
     "xlrd",
     "xtgeo",
-    "protobuf",
-    "rips",
 ]
 
 SETUP_REQUIREMENTS = [

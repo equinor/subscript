@@ -84,7 +84,7 @@ Syntax
 
 .. argparse::
    :module: subscript.ri_wellmod.ri_wellmod
-   :func: _build_argument_parser
+   :func: get_parser
    :prog: ri_wellmod
 
 See explanation above.

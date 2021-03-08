@@ -1,5 +1,3 @@
-import os
-import os.path
 from pathlib import Path
 
 import subprocess
@@ -8,8 +6,8 @@ import pytest
 from subscript.ri_wellmod import ri_wellmod
 
 SCRIPTNAME = "ri_wellmod"
-RUNPATH = Path(os.path.dirname(__file__)) / "data/drogon"
-DATAPATH = Path(os.path.dirname(__file__)) / "testdata_ri_wellmod"
+RUNPATH = Path(__file__).parent / "data/drogon"
+DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
 
 
 @pytest.mark.integration
@@ -19,8 +17,8 @@ def test_integration():
 
 
 @pytest.mark.skipif(
-    not os.path.exists("/prog/ResInsight"),
-    reason="Could not find a ResInsight install at the expected location",
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
 )
 def test_main_initcase(tmpdir, mocker):
     """Test well data generation from init case"""
@@ -32,21 +30,21 @@ def test_main_initcase(tmpdir, mocker):
 
     mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile])
     ri_wellmod.main()
-    assert os.path.exists(outfile)
+    assert Path(outfile).exists()
 
 
 @pytest.mark.skipif(
-    not os.path.exists("/prog/ResInsight"),
-    reason="Could not find a ResInsight install at the expected location",
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
 )
 def test_main_inputcase(tmpdir, mocker):
     """Test well data generation from input case"""
     tmpdir.chdir()
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
-    grid_name = str(RUNPATH / "eclipse/include/grid/drogon.grid.grdecl")
-    perm_name = str(RUNPATH / "eclipse/include/grid/drogon.perm.grdecl")
-    ntg_name = str(RUNPATH / "eclipse/include/grid/drogon.ntg.grdecl")
+    grid_name = str(DATAPATH / "drogon_include/grid/drogon.grid.grdecl")
+    perm_name = str(DATAPATH / "drogon_include/grid/drogon.perm.grdecl")
+    ntg_name = str(DATAPATH / "drogon_include/grid/drogon.ntg.grdecl")
     outfile = "welldefs_inputcase.sch"
 
     mocker.patch(
@@ -63,12 +61,12 @@ def test_main_inputcase(tmpdir, mocker):
         ],
     )
     ri_wellmod.main()
-    assert os.path.exists(outfile)
+    assert Path(outfile).exists()
 
 
 @pytest.mark.skipif(
-    not os.path.exists("/prog/ResInsight"),
-    reason="Could not find a ResInsight install at the expected location",
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
 )
 def test_main_mswdef(tmpdir, mocker):
     """Test multi-segment well data generation"""
@@ -84,12 +82,12 @@ def test_main_mswdef(tmpdir, mocker):
     )
     ri_wellmod.main()
 
-    assert os.path.exists(outfile)
+    assert Path(outfile).exists()
 
 
 @pytest.mark.skipif(
-    not os.path.exists("/prog/ResInsight"),
-    reason="Could not find a ResInsight install at the expected location",
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
 )
 def test_main_lgr(tmpdir, mocker):
     """Test creation of LGR"""
@@ -104,12 +102,12 @@ def test_main_lgr(tmpdir, mocker):
     )
     ri_wellmod.main()
 
-    assert os.path.exists(outfile)
+    assert Path(outfile).exists()
 
 
 @pytest.mark.skipif(
-    not os.path.exists("/prog/ResInsight"),
-    reason="Could not find a ResInsight install at the expected location",
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
 )
 def test_main_lgr_cmdline(tmpdir, mocker):
     """Test creation of LGR"""
@@ -138,5 +136,5 @@ def test_main_lgr_cmdline(tmpdir, mocker):
     )
     ri_wellmod.main()
 
-    assert os.path.exists(outfile)
-    assert os.path.exists(lgr_outfile)
+    assert Path(outfile).exists()
+    assert Path(lgr_outfile).exists()
