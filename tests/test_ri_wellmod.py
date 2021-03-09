@@ -8,6 +8,14 @@ SCRIPTNAME = "ri_wellmod"
 RUNPATH = Path("/project/res/share/subscript/tests/data/drogon")
 DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
 
+try:
+    # pylint: disable=unused-import
+    import ert_shared  # noqa
+
+    HAVE_ERT = True
+except ImportError:
+    HAVE_ERT = False
+
 
 @pytest.mark.integration
 def test_integration():
@@ -137,3 +145,39 @@ def test_main_lgr_cmdline(tmpdir, mocker):
 
     assert Path(outfile).exists()
     assert Path(lgr_outfile).exists()
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_forward_model(tmpdir):
+    """Test that the ERT hook can run on a mocked case"""
+    # pylint: disable=redefined-outer-name
+    # pylint: disable=unused-argument
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(RUNPATH / "eclipse/model/DROGON-0_NOSIM")
+    outfile = "welldefs_lgr.sch"
+
+    with open("FOO.DATA", "w") as file_h:
+        file_h.write("--Empty")
+    ert_config = [
+        "ECLBASE FOO.DATA",
+        "QUEUE_SYSTEM LOCAL",
+        "NUM_REALIZATIONS 1",
+        "RUNPATH .",
+        "FORWARD_MODEL RI_WELLMOD("
+        + "<RI_PROJECT>={},".format(proj_name)
+        + "<ECLBASE>={},".format(init_case_name)
+        + "<OUTPUTFILE>={},".format(outfile)
+        + "<MSW>='A4'"
+        + ")",
+    ]
+
+    ert_config_fname = "riwmtest.ert"
+    with open(ert_config_fname, "w") as file_h:
+        file_h.write("\n".join(ert_config))
+
+    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+
+    assert Path(outfile).exists()
