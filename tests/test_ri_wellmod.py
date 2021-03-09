@@ -148,7 +148,10 @@ def test_main_lgr_cmdline(tmpdir, mocker):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+@pytest.mark.skipif(
+    not HAVE_ERT or not ri_wellmod.get_resinsight_exe() or not RUNPATH.exists(),
+    reason="Requires ERT and ResInsight to be installed",
+)
 def test_ert_forward_model(tmpdir):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
