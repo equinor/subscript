@@ -5,5 +5,3 @@ pytest
 pytest-cov
 pytest-mock
 rstcheck
-
-

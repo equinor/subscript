@@ -1,17 +1,11 @@
-"""
- ri_wellmod.py
-
-
-"""
 import argparse
 from pathlib import Path
-
+import tempfile
 import fnmatch
 import shutil
 import xml.dom.minidom
 import re
 import logging
-from datetime import datetime
 
 import rips
 import grpc
@@ -32,7 +26,7 @@ and NTG defined in the GRDECL format).
 CATEGORY = "modelling.reservoir"
 
 EXAMPLES = """
-.. code-blck:: console
+.. code-block:: console
 
  FORWARD_MODEL RI_WELLMOD(
     <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
@@ -54,7 +48,7 @@ EXAMPLES = """
     <XARG1>="A4:3;3;1")
 
 
-.. warning:: Remember to remove line breaks in argument list if copying the examples
+.. warning:: Remember to remove line breaks in argument list of copying the examples
    into your own ERT config.
 
 
@@ -105,7 +99,7 @@ def get_parser():
     """
 
     description = """
-  Script description.
+Utility script for creating Eclipse well definitions using ResInsight.
 """
     parser = argparse.ArgumentParser(description=description)
 
@@ -171,15 +165,15 @@ def get_parser():
         help="Optional selection of time step to use for completion export (default=0)",
     )
     parser.add_argument(
-        "--version",
-        "-v",
+        "--resinsight_version",
+        "-rv",
         default=DEFAULT_VERSION,
         help="Optional ResInsight version to use (default=" + DEFAULT_VERSION + ")",
     )
     parser.add_argument(
         "--dummy",
         action="store_true",
-        help="Dummy argument to get around the ERT-FM-empty-default-argument problem.",
+        help=argparse.SUPPRESS,
     )
 
     return parser
@@ -306,10 +300,11 @@ def main():
     lgr_specs = args.lgr
 
     time_step = args.time_step
-    version = args.version
+    version = args.resinsight_version
 
-    # Use time stamp to ensure unique output folders
-    tmp_output_folder = Path(tmp_output_folder) / str(datetime.now())
+    # Use tempfile.mkdtemp to ensure unique output folders
+    tmp_output_folder = tempfile.mkdtemp(dir=tmp_output_folder)
+    tmp_output_folder = Path(tmp_output_folder)
 
     if debug:
         logger.setLevel(logging.DEBUG)
@@ -332,8 +327,8 @@ def main():
             (to be fixed in March2021 ResInsight release)"
             )
             return 1
-        else:
-            console_mode = False
+
+        console_mode = False
 
     # Input cases must be loaded by a cmdline workaround
     if not init_case:

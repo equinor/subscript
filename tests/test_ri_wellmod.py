@@ -6,7 +6,7 @@ import pytest
 from subscript.ri_wellmod import ri_wellmod
 
 SCRIPTNAME = "ri_wellmod"
-RUNPATH = Path(__file__).parent / "data/drogon"
+RUNPATH = Path("/project/res/share/subscript/tests/data/drogon")
 DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
 
 
@@ -17,7 +17,7 @@ def test_integration():
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(),
+    not ri_wellmod.get_resinsight_exe() or not RUNPATH.exists(),
     reason="Could not find a ResInsight install",
 )
 def test_main_initcase(tmpdir, mocker):
@@ -65,7 +65,7 @@ def test_main_inputcase(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(),
+    not ri_wellmod.get_resinsight_exe() or not RUNPATH.exists(),
     reason="Could not find a ResInsight install",
 )
 def test_main_mswdef(tmpdir, mocker):
@@ -86,7 +86,7 @@ def test_main_mswdef(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(),
+    not ri_wellmod.get_resinsight_exe() or not RUNPATH.exists(),
     reason="Could not find a ResInsight install",
 )
 def test_main_lgr(tmpdir, mocker):
@@ -106,7 +106,7 @@ def test_main_lgr(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(),
+    not ri_wellmod.get_resinsight_exe() or not RUNPATH.exists(),
     reason="Could not find a ResInsight install",
 )
 def test_main_lgr_cmdline(tmpdir, mocker):

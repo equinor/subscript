@@ -87,7 +87,3 @@ Syntax
    :func: get_parser
    :prog: ri_wellmod
 
-See explanation above.
-
-.. warning:: Always QC results of a script: The user is responsible for the
-	     output of a script.
