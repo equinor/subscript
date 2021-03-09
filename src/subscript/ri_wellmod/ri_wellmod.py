@@ -303,8 +303,9 @@ def main():
     version = args.resinsight_version
 
     # Use tempfile.mkdtemp to ensure unique output folders
-    tmp_output_folder = tempfile.mkdtemp(dir=tmp_output_folder)
     tmp_output_folder = Path(tmp_output_folder)
+    tmp_output_folder.mkdir(parents=True, exist_ok=True)
+    tmp_output_folder = tempfile.mkdtemp(dir=tmp_output_folder)
 
     if debug:
         logger.setLevel(logging.DEBUG)
@@ -365,7 +366,7 @@ def main():
         return 1
 
     try:
-        resinsight.set_export_folder("COMPLETIONS", tmp_output_folder)
+        resinsight.set_export_folder("COMPLETIONS", str(tmp_output_folder))
 
         if init_case:
             proj = resinsight.project.open(well_project)
@@ -509,7 +510,7 @@ def main():
             # Need to check if LGR perfs exists, in case of non-LGR wells intersecting
             # well LGRs, or in case of LGRs present in the init case
             perf_fn_exists = False
-            lgr_perf_fn = perf_fn + "_LGR"
+            lgr_perf_fn = perf_fn.joinpath("_LGR")
             if Path(lgr_perf_fn).exists():
                 perf_fn = lgr_perf_fn
                 perf_fn_exists = True
