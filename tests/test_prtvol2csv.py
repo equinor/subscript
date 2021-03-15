@@ -238,6 +238,19 @@ def test_prtvol2df(tmpdir):
     )["ZONE"].values == ["Upper"]
 
 
+def test_webviz_regiontofipnum_format():
+    simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
+    resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
+    Path("webviz_fip.yml").write_text(
+        yaml.dump(
+            {"FIPNUM": {"groups": {"REGION": {"West": [1]}, "ZONE": {"Volon": [1]}}}}
+        )
+    )
+    dframe = prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="webviz_fip.yml"))
+    assert dframe["ZONE"].values == ["Volon"]
+    assert dframe["REGION"].values == ["West"]
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
@@ -347,6 +360,47 @@ def test_prtvol2csv_regions_typemix(tmpdir):
     assert "RegionA" in dframe["REGION"].values
     assert "8" in dframe["REGION"].values
     assert len(dframe) == 2
+
+
+@pytest.mark.integration
+def test_prtvol2csv_webvizyaml(tmpdir, mocker):
+    """Test region2fipnum-map in webviz-yaml-format"""
+    tmpdir.chdir()
+
+    prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
+
+    webvizmap = {
+        "FIPNUM": {
+            "groups": {
+                "REGION": {"RegionA": [1, 3, 5], "RegionB": [2, 4, 6]},
+                "ZONE": {
+                    "Upper": [1, 2],
+                    "Middle": [3, 4],
+                    "Lower": [5, 6],
+                },
+            }
+        }
+    }
+    Path("regions.yml").write_text(yaml.dump(webvizmap))
+    mocker.patch(
+        "sys.argv",
+        ["prtvol2csv", str(prtfile), "--regions", "regions.yml", "--dir", "."],
+    )
+    prtvol2csv.main()
+    dframe = pd.read_csv("simulator_volume_fipnum.csv")
+    pd.testing.assert_frame_equal(
+        dframe[["FIPNUM", "REGION", "ZONE"]],
+        pd.DataFrame(
+            [
+                {"FIPNUM": 1, "REGION": "RegionA", "ZONE": "Upper"},
+                {"FIPNUM": 2, "REGION": "RegionB", "ZONE": "Upper"},
+                {"FIPNUM": 3, "REGION": "RegionA", "ZONE": "Middle"},
+                {"FIPNUM": 4, "REGION": "RegionB", "ZONE": "Middle"},
+                {"FIPNUM": 5, "REGION": "RegionA", "ZONE": "Lower"},
+                {"FIPNUM": 6, "REGION": "RegionB", "ZONE": "Lower"},
+            ]
+        ),
+    )
 
 
 @pytest.mark.integration
