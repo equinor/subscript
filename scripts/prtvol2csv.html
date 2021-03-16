@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>PRTVOL2CSV &mdash; subscript 0.8.1.dev9+g5a6d5c7 documentation</title>
+  <title>PRTVOL2CSV &mdash; subscript 0.8.1.dev11+g9a24b9c documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.8.1.dev9+g5a6d5c7
+                0.8.1.dev11+g9a24b9c
               </div>
             
           
@@ -327,6 +327,20 @@ structured like in this example:</p>
 <p>The keys <code class="docutils literal notranslate"><span class="pre">region2fipnum</span></code> etc. can be at the root level of the yaml file, or
 inside the <code class="docutils literal notranslate"><span class="pre">global</span></code> section. It is possible to reuse the fmu-config generated
 yaml file.</p>
+<p>You may also use the same YAML file as used for the <code class="docutils literal notranslate"><span class="pre">webviz-subsurface</span></code> plugin
+“ReservoirSimulationTimeSeriesRegional”, the same configuration as above would then look
+like</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span>
+  <span class="nt">groups</span><span class="p">:</span>
+    <span class="nt">REGION</span><span class="p">:</span>
+      <span class="nt">RegionA</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">3</span><span class="p p-Indicator">]</span>
+      <span class="nt">RegionB</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
+    <span class="nt">ZONE</span><span class="p">:</span>
+      <span class="nt">Upper</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">]</span>
+      <span class="nt">Mid</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">]</span>
+      <span class="nt">Lower</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="example-output">
 <h2>Example output<a class="headerlink" href="#example-output" title="Permalink to this headline">¶</a></h2>
