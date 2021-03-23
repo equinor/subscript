@@ -1,31 +1,38 @@
-.. include:: intro.rst
+*********
+Subscript
+*********
+
+Subscript is an Equinor collection of scripts used for subsurface reservoir
+modelling.
+
+.. include::
+   usage.rst
+
+.. toctree::
+   :glob:
+   :maxdepth: 1
+
+   contribution.rst
+   history.rst
 
 .. toctree::
    :hidden:
-
-   self
-
-.. toctree::
    :maxdepth: 1
    :glob:
-   :hidden:
+   :caption: Scripts
 
    scripts/*
 
 .. toctree::
    :hidden:
    :maxdepth: 10
-   :caption: Python modules
+   :caption: Python API
 
    subscript/subscript
 
-.. include:: contribution.rst
-
-.. include:: history.rst
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
