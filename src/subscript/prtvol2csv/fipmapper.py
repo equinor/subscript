@@ -2,9 +2,9 @@
 
 This API should be considered private to prtvol2csv until it has moved somewhere
 else"""
-import yaml
 from typing import Union
 from pathlib import Path
+import yaml
 
 from subscript import getLogger
 
@@ -65,6 +65,10 @@ class FipMapper:
         if yamldata is not None and "global" in yamldata:
             # This is a fmu-config file.
             self._fipdata_from_fmuconfigyaml(yamldata)
+
+        # Webviz YML format:
+        if yamldata is not None and "FIPNUM" in yamldata:
+            self._fipdata_from_webvizyaml(yamldata)
 
         assert isinstance(self._mapdata, dict), "FipMapper needs a dictionary"
 
@@ -137,6 +141,18 @@ class FipMapper:
         """
         self._get_explicit_mapdata(yamldict["global"])
 
+    def _fipdata_from_webvizyaml(self, yamldict: dict):
+        """This function loads the Webviz yaml syntax for
+        REGION/ZONE to FIPNUM mapping,
+
+        The syntax is defined in
+        https://github.com/equinor/webviz-subsurface/blob/master/webviz_subsurface/plugins/_reservoir_simulation_timeseries_regional.py#L1422
+
+        Args:
+            yamldict (dict):
+        """
+        self._get_explicit_mapdata(webviz_to_prtvol2csv(yamldict))
+
     def fip2region(self, fip: Union[list, int]) -> Union[list, str]:
         """Maps FIP(NUM) integers to Region strings.
 
@@ -200,6 +216,26 @@ class FipMapper:
         except KeyError:
             logger.warning("The zone belonging to FIPNUM %s is unknown", str(fip))
             return None
+
+
+def webviz_to_prtvol2csv(webvizdict: dict):
+    """Convert a dict representation of a region/zone map in the Webviz format
+    to the prtvol2csv format"""
+    if "FIPNUM" in webvizdict and isinstance(webvizdict["FIPNUM"], dict):
+        prtvoldict = dict()
+        if "groups" in webvizdict["FIPNUM"]:
+            if "REGION" in webvizdict["FIPNUM"]["groups"]:
+                prtvoldict["region2fipnum"] = webvizdict["FIPNUM"]["groups"]["REGION"]
+            if "ZONE" in webvizdict["FIPNUM"]["groups"]:
+                prtvoldict["zone2fipnum"] = webvizdict["FIPNUM"]["groups"]["ZONE"]
+        else:
+            # The "groups" level might go away:
+            if "REGION" in webvizdict["FIPNUM"]:
+                prtvoldict["region2fipnum"] = webvizdict["FIPNUM"]["REGION"]
+            if "ZONE" in webvizdict["FIPNUM"]:
+                prtvoldict["zone2fipnum"] = webvizdict["FIPNUM"]["ZONE"]
+        return prtvoldict
+    return {}
 
 
 def invert_map(

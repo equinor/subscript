@@ -47,13 +47,14 @@ def test_currently_in_place_from_prt(tmpdir):
     )
 
 
-def test_prtvol2csv(tmpdir):
+def test_prtvol2csv(tmpdir, mocker):
     """Test invocation from command line"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
     tmpdir.chdir()
-    sys.argv = ["prtvol2csv", "--debug", str(prtfile)]
-    prtvol2csv.main()
+    with pytest.warns(FutureWarning, match="Output directories"):
+        mocker.patch("sys.argv", ["prtvol2csv", "--debug", str(prtfile)])
+        prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
 
     expected = pd.DataFrame.from_dict(
@@ -149,8 +150,7 @@ def test_find_prtfile(tmpdir):
     assert prtvol2csv.find_prtfile("FOO.") == "FOO."
 
     # When we have some files there, it works:
-    with open("FOO.PRT", "w") as file_h:
-        file_h.write("dummy")
+    Path("FOO.PRT").write_text("dummy")
     assert prtvol2csv.find_prtfile("FOO") == "FOO.PRT"
     assert prtvol2csv.find_prtfile("FOO.DATA") == "FOO.PRT"
     assert prtvol2csv.find_prtfile("FOO.") == "FOO.PRT"
@@ -238,6 +238,19 @@ def test_prtvol2df(tmpdir):
     )["ZONE"].values == ["Upper"]
 
 
+def test_webviz_regiontofipnum_format():
+    simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
+    resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
+    Path("webviz_fip.yml").write_text(
+        yaml.dump(
+            {"FIPNUM": {"groups": {"REGION": {"West": [1]}, "ZONE": {"Volon": [1]}}}}
+        )
+    )
+    dframe = prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="webviz_fip.yml"))
+    assert dframe["ZONE"].values == ["Volon"]
+    assert dframe["REGION"].values == ["West"]
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
@@ -248,7 +261,7 @@ def test_integration():
     sys.version_info < (3, 7), reason="Test function requires Python 3.7 or higher"
 )
 @pytest.mark.integration
-def test_prtvol2csv_regions(tmpdir):
+def test_prtvol2csv_regions(tmpdir, mocker):
     """Test region support, getting data from yaml.
 
     The functionality of writing CSV data grouped by regions will
@@ -284,16 +297,13 @@ def test_prtvol2csv_regions(tmpdir):
         }
     )
     tmpdir.chdir()
-    with open("regions.yml", "w") as reg_fh:
-        reg_fh.write(yaml.dump(yamlexample))
-    result = subprocess.run(
-        ["prtvol2csv", str(prtfile), "--regions", "regions.yml"],
-        check=True,
-        capture_output=True,
-    )
-    output = result.stdout.decode() + result.stderr.decode()
-    assert "FutureWarning" in output
-    prtvol2csv.main()
+    Path("regions.yml").write_text(yaml.dump(yamlexample))
+    with pytest.warns(FutureWarning):
+        mocker.patch(
+            "sys.argv", ["prtvol2csv", str(prtfile), "--regions", "regions.yml"]
+        )
+        prtvol2csv.main()
+
     dframe = pd.read_csv("share/results/volumes/simulator_volume_region.csv")
     print("Computed:")
     print(dframe)
@@ -325,7 +335,7 @@ def test_prtvol2csv_backwards_compat(tmpdir):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_regions_typemix(tmpdir):
+def test_prtvol2csv_regions_typemix(tmpdir, mocker):
     """Test region support, getting data from yaml"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -338,8 +348,12 @@ def test_prtvol2csv_regions_typemix(tmpdir):
 
     tmpdir.chdir()
     Path("regions.yml").write_text(yaml.dump(yamlexample))
-    sys.argv = ["prtvol2csv", str(prtfile), "--regions", "regions.yml"]
-    prtvol2csv.main()
+    mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--regions", "regions.yml"])
+    with pytest.warns(FutureWarning, match="Output pr. region"):
+        mocker.patch(
+            "sys.argv", ["prtvol2csv", str(prtfile), "--regions", "regions.yml"]
+        )
+        prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_region.csv")
     assert not dframe.empty
     assert "REGION" in dframe
@@ -350,7 +364,48 @@ def test_prtvol2csv_regions_typemix(tmpdir):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_noresvol(tmpdir):
+def test_prtvol2csv_webvizyaml(tmpdir, mocker):
+    """Test region2fipnum-map in webviz-yaml-format"""
+    tmpdir.chdir()
+
+    prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
+
+    webvizmap = {
+        "FIPNUM": {
+            "groups": {
+                "REGION": {"RegionA": [1, 3, 5], "RegionB": [2, 4, 6]},
+                "ZONE": {
+                    "Upper": [1, 2],
+                    "Middle": [3, 4],
+                    "Lower": [5, 6],
+                },
+            }
+        }
+    }
+    Path("regions.yml").write_text(yaml.dump(webvizmap))
+    mocker.patch(
+        "sys.argv",
+        ["prtvol2csv", str(prtfile), "--regions", "regions.yml", "--dir", "."],
+    )
+    prtvol2csv.main()
+    dframe = pd.read_csv("simulator_volume_fipnum.csv")
+    pd.testing.assert_frame_equal(
+        dframe[["FIPNUM", "REGION", "ZONE"]],
+        pd.DataFrame(
+            [
+                {"FIPNUM": 1, "REGION": "RegionA", "ZONE": "Upper"},
+                {"FIPNUM": 2, "REGION": "RegionB", "ZONE": "Upper"},
+                {"FIPNUM": 3, "REGION": "RegionA", "ZONE": "Middle"},
+                {"FIPNUM": 4, "REGION": "RegionB", "ZONE": "Middle"},
+                {"FIPNUM": 5, "REGION": "RegionA", "ZONE": "Lower"},
+                {"FIPNUM": 6, "REGION": "RegionB", "ZONE": "Lower"},
+            ]
+        ),
+    )
+
+
+@pytest.mark.integration
+def test_prtvol2csv_noresvol(tmpdir, mocker):
     """Test when FIPRESV is not included
 
     Perform the test by just fiddling with the test PRT file
@@ -358,11 +413,11 @@ def test_prtvol2csv_noresvol(tmpdir):
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
     tmpdir.chdir()
-    prtlines = open(prtfile).read().replace("RESERVOIR VOLUMES", "foobar volumes")
-    with open("MODIFIED.PRT", "w") as mod_fh:
-        mod_fh.write(prtlines)
-    sys.argv = ["prtvol2csv", "MODIFIED.PRT"]
-    prtvol2csv.main()
+    prtlines = Path(prtfile).read_text().replace("RESERVOIR VOLUMES", "foobar volumes")
+    Path("MODIFIED.PRT").write_text(prtlines)
+    mocker.patch("sys.argv", ["prtvol2csv", "MODIFIED.PRT"])
+    with pytest.warns(FutureWarning, match="Output directories"):
+        prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
     assert not dframe.empty
     assert len(dframe) == 6

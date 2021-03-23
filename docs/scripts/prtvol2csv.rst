@@ -101,6 +101,22 @@ The keys ``region2fipnum`` etc. can be at the root level of the yaml file, or
 inside the ``global`` section. It is possible to reuse the fmu-config generated
 yaml file.
 
+You may also use the same YAML file as used for the ``webviz-subsurface`` plugin
+"ReservoirSimulationTimeSeriesRegional", the same configuration as above would then look
+like
+
+.. code-block:: yaml
+
+   FIPNUM:
+     groups:
+       REGION:
+         RegionA: [1, 2, 3]
+         RegionB: [4, 5, 6]
+       ZONE:
+         Upper: [1, 4]
+         Mid: [2, 5]
+         Lower: [3, 6]
+
 Example output
 --------------
 
@@ -116,4 +132,3 @@ See also
 
 * https://equinor.github.io/ecl2df/usage/fipreports.html can be used to extract
   more information from  the PRT files.
-
