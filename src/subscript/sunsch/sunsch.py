@@ -876,7 +876,7 @@ def main():
 
     if args.verbose and config.snapshot.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.INFO)
-    if args.debug:
+    if args.debug and config.snapshot.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.DEBUG)
 
     # Generate the schedule section, as a string:
