@@ -10,6 +10,7 @@ import setuptools
 SSCRIPTS = [
     "bjobsusers = subscript.bjobsusers.bjobsusers:main",
     "casegen_upcars = subscript.casegen_upcars.casegen_upcars:main",
+    "check_swatinit = subscript.check_swatinit.check_swatinit:main",
     "convert_grid_format = subscript.convert_grid_format.convert_grid_format:main",
     "csv2ofmvol = subscript.csv2ofmvol.csv2ofmvol:main",
     "csvStack = subscript.csv_stack.csv_stack:deprecated_main",
@@ -67,6 +68,7 @@ REQUIREMENTS = [
     "pandas",
     "pyscal",
     "pyyaml",
+    "seaborn",
     "scipy",
     "segyio",
     "xlrd",
