@@ -2,7 +2,71 @@
 Contributing to subscript
 =========================
 
-* The code is hosted on https://github.com/equinor/subscript
+Getting started on Equinor Linux computers
+------------------------------------------
+
+On Equinor Linux computers, is is recommended to run with the Komodo
+environment, which will provide an analogue to ``virtualenv`` for making a
+virtual environment.
+
+Follow instructions on
+https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html for
+activating a Komodo release, and perform the instructions for extending Komodo
+in order a functioning ``pip`` tool.
+
+Getting started as a developer
+------------------------------
+
+The first thing to do, is to create a fork of subscript to your personal github
+account. Go to https://github.com/equinor/subscript and click the "Fork"
+button.
+
+Clone your fork to your local computer:
+
+.. code-block:: console
+
+  git clone git@github.com:<youraccount>/subscript
+  cd subscript
+
+Then add the upstream repository:
+
+.. code-block:: console
+
+  git remote add upstream git@github.com:equinor/subscript
+
+This requires a valid login setup with SSH keys for you github account, needed
+for write access.
+
+After cloning, you need a Python virtual environment in which you install
+subscript and its dependencies. If you develop on a non-Equinor computer you
+should use `komodoenv` as outlined above, if not, you can create a new virtual
+environment for subscript using the commands:
+
+.. code-block:: console
+
+  python3 -m venv venv-subscript
+  source venv-subscript/bin/activate
+
+and then run ``pip`` :
+
+.. code-block:: console
+
+  pip install -e .[tests,docs]
+
+to install subscript in "edit"-mode together will all the dependencies for
+subscript, its test suite and documentation.
+
+A good start is to verify that all tests pass after having cloned the
+repository, which you can do by running:
+
+.. code-block:: console
+
+  pytest
+
+
+Repository conventions
+----------------------
+
 * Each tool has its own subdirectory under ``src/subscript``.
 * Use ``setup.py`` for installing endpoints that users should have in their ``$PATH``
 * Use ``argparse``, and with a specific ``get_parser()`` function to facilitate ``sphinx-argparse``
@@ -17,13 +81,15 @@ Contributing to subscript
 * For a new script, write a new file ``docs/scripts/scriptname.rst`` describing
   the script. Use sphinx-argparse to document the command line syntax.
 
+
+
 Maintenance responsibility
 --------------------------
 
 * Equinor (PETEC Reservoir Toolbox) maintains the repository infrastructure,
-  monitoring that automated tests pass on updated dependencies, and ensures
+  monitors that automated tests pass on updated dependencies, and ensures
   deploy to Komodo is active.
-* Maintenance responsibility for each admitted scripts (response to bug reports
+* Maintenance responsibility for each admitted script (response to bug reports
   and adaptations to changes in dependencies) belongs to the Product Owner
   in Equinor.
 * Scripts/changes admitted from actors external to Equinor will be maintained
@@ -35,23 +101,16 @@ Open source
 
 Subscript is both open source and closed source. The twin repository
 ``subscript-internal`` holds similar infrastructure but with scripts that are
-excepted from the Open Source requirement in TR1621. Internal or confidental
+exempted from the Open Source requirement in TR1621. Internal or confidental
 data should never be submitted to subscript. For each open script, there must
 be accompanying public test data.
 
 Code style
 ----------
 
-* PEP8 is the rule for naming of files, functions, classes, etc.
-
-  * Convert old code from camelCase style to snake_style.
-  * Keep old script names with camelCase as both camelCase (for backward compatibility)
-    and snake_case
-  * The latter will be done by entry points pointing to same script,
-    see e.g. csvStack/csv_stack in setup.py
-  * Be compliant
-  * Exception to PEP8 is maximum width at 88 instead of PEP8's 79; as
-    88 is the `black` default
+* PEP8 is the rule for naming of files, functions, classes, etc. Exception to
+  PEP8 is maximum width at 88 instead of PEP8's 79; as 88 is the ``black``
+  default
 
 * Use the black formatter to format your code
 
@@ -74,16 +133,16 @@ Code style
     pylint would clearly make the code worse or not work at all. Do not use it to
     increase pylint score.
 
+* Use "pre-commit" to enforce compliance before commit. Install using ``pip install pre-commit``
+  and then run ``pre-commit install`` in the repository root. This will save you from
+  pushing code that will fail the code style tests required before merge.
+
 Building documentation
 ----------------------
 
-Install the development requirements::
+Assuming the developer instructions above, run the following command to to
+build the documentation for subscript::
 
-  pip install .[tests]
+  python setup.py build_sphinx
 
-Then, to build the documentation for subscript run the following command::
-
-  sphinx-build -W -b html -nv docs/ build/docs
-
-And now you can find the start page of the documentation in the
-build folder: ``build/docs/index.html``
+and then point your browser to the file ``build/docs/index.html``.

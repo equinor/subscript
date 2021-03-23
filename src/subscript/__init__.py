@@ -1,3 +1,4 @@
+import sys
 import logging
 
 try:
@@ -10,12 +11,25 @@ except pkg_resources.DistributionNotFound:
 
 def getLogger(module_name="subscript"):
     # pylint: disable=invalid-name
-    """Provide a unified logger for subscript
+    """Provides a unified logger for subscript scripts.
 
-    In particular, the module names for each tool has
-    the module name mentioned twice. Ensure we remove
-    the double name, e.g. subscript.csv_merge.csv_merge
-    should be mapped to subscript.csv_merge
+    Scripts in subscript are encouraged to use logging.info() instead of
+    print().
+
+    The logger name will typically be "subscript.prtvol2csv" for the command
+    line tool prtvol2csv.
+
+    Subscript scripts can set the level of the entire logger, through the
+    setLevel() function. The default level is WARNING. Subscript scripts
+    typically accept a --verbose argparse option to set the log level to INFO,
+    and a --debug option to set to
+
+    Logging output is split by logging levels (split between WARNING and ERROR)
+    to stdout and stderr, each log occurs in only one of the streams. This
+    deviates from Unix standard, but is accepted here because few to none
+    subscript tool are meant to have their stdout piped into another
+    application by default (some of them can, then the programmer and user must
+    be careful with log levels).
 
     Args:
         module_name (str): A suggested name for the logger, usually
@@ -24,13 +38,27 @@ def getLogger(module_name="subscript"):
     Returns:
         A logger object
     """
-    logging.basicConfig()  # Ensure at least one handler is available
-
     if not module_name:
-        return logging.getLogger("subscript")
+        return getLogger("subscript")
 
     compressed_name = []
     for elem in module_name.split("."):
         if len(compressed_name) == 0 or elem != compressed_name[-1]:
             compressed_name.append(elem)
-    return logging.getLogger(".".join(compressed_name))
+
+    logger = logging.getLogger(".".join(compressed_name))
+
+    formatter = logging.Formatter("%(levelname)s:%(name)s:%(message)s")
+
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.addFilter(lambda record: record.levelno < logging.ERROR)
+    stdout_handler.setFormatter(formatter)
+
+    stderr_handler = logging.StreamHandler(sys.stderr)
+    stderr_handler.addFilter(lambda record: record.levelno >= logging.ERROR)
+    stderr_handler.setFormatter(formatter)
+
+    logger.addHandler(stdout_handler)
+    logger.addHandler(stderr_handler)
+
+    return logger

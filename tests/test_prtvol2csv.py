@@ -321,12 +321,14 @@ def test_prtvol2csv_backwards_compat(tmpdir):
     the deprecation period"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
     tmpdir.chdir()
+
     result = subprocess.run(
         ["prtvol2csv", str(prtfile)],
         check=True,
         capture_output=True,
     )
-    assert "You MUST set the directory option to" in result.stderr.decode()
+    output = result.stdout.decode() + result.stderr.decode()
+    assert "You MUST set the directory option to" in output
     assert (
         "Output directories for prtvol2csv should be created upfront"
         in result.stderr.decode()
@@ -495,8 +497,9 @@ def test_ert_forward_model_backwards_compat_deprecation(tmpdir):
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
     assert Path("share/results/volumes/simulator_volume_fipnum.csv").is_file()
+    stdout = Path("PRTVOL2CSV.stdout.0").read_text()
     stderr = Path("PRTVOL2CSV.stderr.0").read_text()
-    assert "You MUST set the directory option" in stderr
+    assert "You MUST set the directory option" in stdout
     assert (
         "FutureWarning: Output directories for prtvol2csv should be created upfront"
         in stderr
