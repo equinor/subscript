@@ -6,13 +6,15 @@ This script was originally based on a library named sunbeam,
 hence the name. Later, this library has been merged into opm-common
 """
 
-import os
 import sys
 import datetime
 import tempfile
 import argparse
 import textwrap
 import logging
+import warnings
+import dateutil.parser
+from pathlib import Path
 
 import yaml
 
@@ -25,6 +27,8 @@ from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 from subscript import getLogger
 
 logger = getLogger(__name__)
+
+__MAGIC_STDOUT__ = "-"  # When used as a filename on the command line
 
 SUPPORTED_DATEGRIDS = ["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 
@@ -54,7 +58,7 @@ def _is_valid_dategrid(dategrid_str):
 
 @configsuite.validator_msg("Is filename an existing file")
 def _is_existing_file(filename):
-    return os.path.exists(filename)
+    return Path(filename).exists()
 
 
 @configsuite.transformation_msg("Defaults and v1-vs-v2 handling of config")
@@ -805,11 +809,11 @@ def main():
     if args.output:
         cli_config["output"] = args.output
     if args.startdate:
-        cli_config["startdate"] = args.startdate
+        cli_config["startdate"] = dateutil.parser.isoparse(args.startdate).date()
     if args.enddate:
-        cli_config["enddate"] = args.enddate
-    if args.enddate:
-        cli_config["refdate"] = args.refdate
+        cli_config["enddate"] = dateutil.parser.isoparse(args.enddate).date()
+    if args.refdate:
+        cli_config["refdate"] = dateutil.parser.isoparse(args.refdate).date()
     if args.dategrid:
         cli_config["dategrid"] = args.dategrid
 
@@ -870,9 +874,9 @@ def main():
             logger.error("Exiting script, no schedule file written")
             sys.exit(1)
 
-    if args.verbose:
+    if args.verbose and config.snapshot.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.INFO)
-    if args.debug:
+    if args.debug and config.snapshot.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.DEBUG)
 
     # Generate the schedule section, as a string:
@@ -880,15 +884,20 @@ def main():
         str(process_sch_config(config.snapshot)), maxchars=128, warn=True
     )
 
-    if config.snapshot.output == "-":
+    if config.snapshot.output == __MAGIC_STDOUT__:
         print(schedule)
     else:
         logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
-        dirname = os.path.dirname(config.snapshot.output)
-        if dirname and not os.path.exists(dirname):
-            logger.debug("mkdir %s", dirname)
-            os.makedirs(dirname)
-        open(config.snapshot.output, "w").write(schedule)
+        dirname = Path(config.snapshot.output).parent
+        if dirname and not dirname.exists():
+            warnings.warn(
+                f"Implicit mkdir of directory {str(dirname)} is deprecated and "
+                f"will be removed later. Please ensure {str(dirname)} exists before "
+                "calling sunsch.",
+                FutureWarning,
+            )
+            dirname.mkdir()
+        Path(config.snapshot.output).write_text(schedule)
 
 
 if __name__ == "__main__":
