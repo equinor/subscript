@@ -54,7 +54,7 @@ def main():
 
     if args.verbose:
         # Set the root logger to INFO, will be inherited by sunsch
-        logging.getLogger().setLevel(logging.INFO)
+        logger.setLevel(logging.INFO)
 
     logger.info("# Sending the following YAML configuration to sunsch:")
     logger.info(yaml.dump(sunsch_config))
