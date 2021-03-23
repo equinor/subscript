@@ -32,7 +32,6 @@ Submodules
    subscript.params2csv
    subscript.presentvalue
    subscript.prtvol2csv
-   subscript.pvt2csv
    subscript.restartthinner
    subscript.runrms
    subscript.summaryplot
