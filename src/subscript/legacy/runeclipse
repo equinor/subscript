@@ -219,8 +219,8 @@ if ( !-f $exe64 ) {
 }
 
 #
-# Forward stdout to rootname.OUT for versions 2019.3 and younger for consitancy with eclrun
-# Link .LOG -> .OUT for backwards compatibility
+# Forward stdout to rootname.OUT for versions 2019.3 and younger for consistancy with eclrun
+# Symlink rootname.LOG -> rootname.OUT for backwards compatibility
 #
 
 my $stdout_file = "$rootname.LOG";
