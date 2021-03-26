@@ -218,6 +218,18 @@ if ( !-f $exe64 ) {
     $testversion = 1;
 }
 
+#
+# Forward stdout to rootname.OUT for versions 2019.3 and younger for consitancy with eclrun
+# Link .LOG -> .OUT for backwards compatibility
+#
+
+my $stdout_file = "$rootname.LOG";
+if (($version_year > 2019 ) || ($version eq "2019.3" )) {
+    $stdout_file = "$rootname.OUT";
+    if ($interactive != 1){
+	symlink ($stdout_file, "$rootname.LOG");
+    }
+}
 
 #
 # Build batchfile:
@@ -273,16 +285,16 @@ sub submit_batch {
         if ($parallel) {    # Submit parallel batch job:
             if ($span) {
                 $bsub =
-"bsub -L /bin/csh -q $que_name -n $parallel -o $workdir/$rootname.LOG -J \"$progname $rootname\" -R \"select[$architectures] rusage[mem=$memoryreq:swap=$swapreq] same[type:model] span[hosts=1]\"  $batchfilename";
+"bsub -L /bin/csh -q $que_name -n $parallel -o $workdir/$stdout_file -J \"$progname $rootname\" -R \"select[$architectures] rusage[mem=$memoryreq:swap=$swapreq] same[type:model] span[hosts=1]\"  $batchfilename";
             }
             else {
                 $bsub =
-"bsub -L /bin/csh -q $que_name -n $parallel -o $workdir/$rootname.LOG -J \"$progname $rootname\" -R \"select[$architectures] rusage[mem=$memoryreq:swap=$swapreq] same[type:model]\"  $batchfilename";
+"bsub -L /bin/csh -q $que_name -n $parallel -o $workdir/$stdout_file -J \"$progname $rootname\" -R \"select[$architectures] rusage[mem=$memoryreq:swap=$swapreq] same[type:model]\"  $batchfilename";
             }
         }
         else {              # Submit serial job:
             $bsub =
-"bsub  -L /bin/csh -q $que_name -o $workdir/$rootname.LOG -J \"$progname $rootname\" -R \"select[$architectures] rusage[mem=$memoryreq:swap=$swapreq]\"  $batchfilename";
+"bsub  -L /bin/csh -q $que_name -o $workdir/$stdout_file -J \"$progname $rootname\" -R \"select[$architectures] rusage[mem=$memoryreq:swap=$swapreq]\"  $batchfilename";
         }
         my $bsubmess = `$bsub`;
 
@@ -398,7 +410,7 @@ sub build_batch {
         print BATCHFIL "\n";
     }
     else {
-        print BATCHFIL "> $rootname.LOG 2> $rootname.ERR\n";
+        print BATCHFIL "> $stdout_file 2> $rootname.ERR\n";
     }
     print BATCHFIL "$rootname\n";
     print BATCHFIL "$rootname\n";
@@ -483,7 +495,7 @@ sub build_parallel_batch {
     }
     else {
         print BATCHFIL
-"\$mpicommand -machinefile \$machinefile -np $parallel \$executable $rootname > $rootname.LOG 2> $rootname.ERR \n";
+"\$mpicommand -machinefile \$machinefile -np $parallel \$executable $rootname > $stdout_file 2> $rootname.ERR \n";
     }
     print BATCHFIL "rm -f \$machinefile\n";
     print BATCHFIL "if [ -f ECL.CFG ] ; then\n";
