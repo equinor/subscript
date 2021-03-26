@@ -422,7 +422,7 @@ sub build_batch {
 
     if ($testversion) {
         print BATCHFIL
-"echo \"*** NOTE THAT $version IS STILL A TEST VERSION IN Statoil ****\"\n";
+"echo \"*** NOTE THAT $version IS STILL A TEST VERSION IN Equinor ****\"\n";
     }
 
     close(BATCHFIL);
