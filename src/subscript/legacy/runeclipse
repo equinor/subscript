@@ -219,7 +219,7 @@ if ( !-f $exe64 ) {
 }
 
 #
-# Forward stdout to rootname.OUT for versions 2019.3 and younger for consistancy with eclrun
+# Forward stdout to rootname.OUT for versions 2019.3 and younger for consistency with eclrun
 # Symlink rootname.LOG -> rootname.OUT for backwards compatibility
 #
 
