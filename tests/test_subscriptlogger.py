@@ -21,6 +21,16 @@ def test_subscriptlogger_name():
         == "subscript.eclcompress.somesubmodule"
     )
 
+    assert subscript.getLogger("subscript_internal").name == "subscript"
+    assert (
+        subscript.getLogger("subscript_internal.completor").name
+        == "subscript.completor"
+    )
+    assert (
+        subscript.getLogger("subscript_internal.completor.sub").name
+        == "subscript.completor.sub"
+    )
+
 
 def test_default_logger_levels(capsys):
     """Verify that the intended usage of this logger have expected results"""
