@@ -6,7 +6,6 @@ See also
 * test_hook_implementations.py which runs rstcheck on inline rst docs generated for ERT.
 """
 
-import os
 from pathlib import Path
 
 
@@ -26,11 +25,12 @@ def test_presence_init_py(path_to_subscript):
         "__pycache__",
     ]
 
-    os.chdir(path_to_subscript)
     subdirs = [
-        Path(filepath.path)
-        for filepath in os.scandir(".")
-        if filepath.is_dir() and filepath.name.replace("./", "") not in exceptions
+        filepath
+        for filepath in Path(path_to_subscript).glob("*")
+        if filepath.is_dir()
+        and filepath.name.replace("./", "") not in exceptions
+        and list(Path(filepath).glob("*.py"))
     ]
 
     for subdir in subdirs:
