@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>SUNSCH &mdash; subscript 0.9.1.dev1+gf9d1d39 documentation</title>
@@ -96,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Scripts</span></p>
+<p><span class="caption-text">Scripts</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
@@ -135,7 +136,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
@@ -205,7 +206,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="sunsch">
+  <section id="sunsch">
 <h1>SUNSCH<a class="headerlink" href="#sunsch" title="Permalink to this headline">¶</a></h1>
 <p>Sunsch is a tool to build your final Schedule section to Eclipse. This can be done
 through merging multiple partial Schedule files, or inserting small Schedule commands
@@ -223,15 +224,15 @@ Eclipse, checking provided by OPM.</p>
               <span class="n">config</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments">
+<section id="Positional Arguments">
 <h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>config</kbd></dt>
 <dd><p>Config file in YAML format for Schedule merging</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments">
+</section>
+<section id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -259,7 +260,7 @@ Eclipse, checking provided by OPM.</p>
 <dd><p>Interval for extra DATES to be inserted.</p>
 </dd>
 </dl>
-</div>
+</section>
 <p><p>YAML-file components:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">startdate</span> <span class="o">-</span> <span class="n">YYYY</span><span class="o">-</span><span class="n">MM</span><span class="o">-</span><span class="n">DD</span> <span class="k">for</span> <span class="n">the</span> <span class="n">initial</span> <span class="n">date</span> <span class="n">of</span> <span class="n">the</span> <span class="n">simulation</span> <span class="p">(</span><span class="n">START</span> <span class="n">keyword</span><span class="p">)</span>
 <span class="n">files</span> <span class="o">-</span> <span class="nb">list</span> <span class="n">of</span> <span class="n">filenames</span> <span class="n">to</span> <span class="n">be</span> <span class="n">merged</span><span class="o">.</span> <span class="n">Optional</span>
@@ -284,7 +285,7 @@ Eclipse, checking provided by OPM.</p>
 </pre></div>
 </div>
 </p>
-<div class="section" id="features-in-short">
+<section id="features-in-short">
 <h2>Features in short<a class="headerlink" href="#features-in-short" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Configuration in YAML format</p></li>
@@ -299,8 +300,8 @@ be inserted either at dates relative a reference date, or at a specific date.</p
 This is similar to what one could achieve using DESIGN_KW, but with less
 temporary files.</p></li>
 </ul>
-</div>
-<div class="section" id="when-to-use">
+</section>
+<section id="when-to-use">
 <h2>When to use<a class="headerlink" href="#when-to-use" title="Permalink to this headline">¶</a></h2>
 <p>The tool is designed for FMU runs. It can be used both for the history section
 and for prediction, but probably has its most relevant usage in sensitivities
@@ -309,8 +310,8 @@ application, in that the exported text file from Schlumberger Schedule can be
 further processed with this tool. If RMS10/11 is in use already for well
 planning and Schedule export, the need for this tool is less, and one should
 possibly try not to use both unless needed.</p>
-</div>
-<div class="section" id="yaml-file-syntax">
+</section>
+<section id="yaml-file-syntax">
 <h2>Yaml file syntax<a class="headerlink" href="#yaml-file-syntax" title="Permalink to this headline">¶</a></h2>
 <p>Write a configuration file in YAML format, describing which Schedule files you
 are starting from and which you want to merge in, and any other directives to
@@ -355,8 +356,8 @@ varying rates). The Schedule file to be inserted should then have <code class="d
 could also accomplish this using DESIGN_KW and producing many files to be
 inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 <p>See the example below for how the insert statement is used.</p>
-</div>
-<div class="section" id="yaml-example">
+</section>
+<section id="yaml-example">
 <h2>YAML example<a class="headerlink" href="#yaml-example" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1995-06-01</span>
 <span class="nt">refdate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2022-01-01</span>
@@ -382,8 +383,8 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
     <span class="nt">substitute</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="nt"> ORAT</span><span class="p">:</span> <span class="nv">3000</span><span class="p p-Indicator">,</span><span class="nt"> GRAT</span><span class="p">:</span> <span class="nv">400000</span><span class="p p-Indicator">}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="ert-usage">
+</section>
+<section id="ert-usage">
 <h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this headline">¶</a></h2>
 <p>Sunsch is installed as a forward model in ERT. A typical configuration could look like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="p">[</span> <span class="n">various</span> <span class="n">DESIGN_KW</span> <span class="n">statements</span> <span class="n">producing</span> <span class="nb">input</span> <span class="n">files</span> <span class="n">to</span> <span class="n">sunsch</span><span class="p">]</span>
@@ -392,8 +393,8 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 </pre></div>
 </div>
 <p>(if you don’t need to templatize your sunsch configuration, you can simplify)</p>
-</div>
-<div class="section" id="caveats">
+</section>
+<section id="caveats">
 <h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Any comments (starting with <code class="docutils literal notranslate"><span class="pre">--</span></code> in the source files) are lost in the final
@@ -408,8 +409,8 @@ to not-yet-existing files), use a string insertion in the insert section.</p></l
 circumstances), will not be accepted by sunsch (only when using string
 insertion)</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

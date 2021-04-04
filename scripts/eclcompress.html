@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>ECLCOMPRESS &mdash; subscript 0.9.1.dev1+gf9d1d39 documentation</title>
@@ -96,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Scripts</span></p>
+<p><span class="caption-text">Scripts</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
@@ -135,7 +136,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
@@ -205,7 +206,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="eclcompress">
+  <section id="eclcompress">
 <h1>ECLCOMPRESS<a class="headerlink" href="#eclcompress" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">eclcompress</span></code> is a command line utility to compress Eclipse grid files using
 the Eclipse syntax <code class="docutils literal notranslate"><span class="pre">number*value</span></code> so that the dataset:</p>
@@ -227,7 +228,7 @@ to specifying a file list like:</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> option is recommended to see what happens, and is default when
 run via ERT.</p>
-<div class="section" id="command-line">
+<section id="command-line">
 <h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline">¶</a></h2>
 <p><p>Apply run-length encoding to Eclipse input files, such
 that consecutive numbers like “1 1 1 1” are compressed to “4*1”.
@@ -240,15 +241,15 @@ compressed versions.</p>
                    <span class="p">[</span><span class="n">grdeclfiles</span> <span class="p">[</span><span class="n">grdeclfiles</span> <span class="o">...</span><span class="p">]]</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments">
+<section id="Positional Arguments">
 <h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>grdeclfiles</kbd></dt>
 <dd><p>List of Eclipse grdecl files to compress, supporting wildcards. If no files are given, a default wildcard list will be used. Wildcards should be enclosed in quotes when called on the command line.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments">
+</section>
+<section id="Named Arguments">
 <h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
 <dl class="option-list">
 <dt><kbd>--dryrun</kbd></dt>
@@ -270,11 +271,11 @@ compressed versions.</p>
 <dd><p>Regular expression to determine which Eclipse keyword to recognize. Default is minimium two and maximum 8 A-Z letters.</p>
 </dd>
 </dl>
-</div>
+</section>
 <p><p>Default list of files to compress is eclipse/include/grid/* eclipse/include/regions/* eclipse/include/props/*</p>
 </p>
-</div>
-<div class="section" id="ert-usage">
+</section>
+<section id="ert-usage">
 <h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this headline">¶</a></h2>
 <p>Eclcompress is available as a pre-installed forward model in ERT. In your ERT
 config, include:</p>
@@ -286,8 +287,8 @@ add that using the FILES argument to the forward model:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">FORWARD_MODEL ECLCOMPRESS(&lt;FILES&gt;=custom-file-list.txt)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="notes">
+</section>
+<section id="notes">
 <h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Existing whitespace (spaces and end-of-lines and such) are not preserved,
@@ -310,14 +311,14 @@ same factor as the compression factor.</p></li>
 length 8 are attempted compressed. If you have other odd keyword names, you
 can specify them directly or as a regular expression as a command line option.</p></li>
 </ul>
-</div>
-<div class="section" id="possible-improvements">
+</section>
+<section id="possible-improvements">
 <h2>Possible improvements<a class="headerlink" href="#possible-improvements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Support for comments inside data sections.</p></li>
 </ul>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

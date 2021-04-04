@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>CSV_STACK &mdash; subscript 0.9.1.dev1+gf9d1d39 documentation</title>
@@ -96,7 +97,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Scripts</span></p>
+<p><span class="caption-text">Scripts</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
@@ -130,7 +131,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
@@ -200,7 +201,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="csv-stack">
+  <section id="csv-stack">
 <h1>CSV_STACK<a class="headerlink" href="#csv-stack" title="Permalink to this headline">¶</a></h1>
 <p><p>Stack columns in a CSV exported file.</p>
 <p>All columns in your data set with a colon “:” in it, will be split such that the
@@ -216,15 +217,15 @@ friends by wellname, instead of selecting individual columns.</p>
                  <span class="n">csvfile</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments">
+<section id="Positional Arguments">
 <h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Input CSV file. If you use -, it will read from stdin</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments">
+</section>
+<section id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -248,8 +249,8 @@ friends by wellname, instead of selecting individual columns.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="example">
+</section>
+<section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>If a CSV file contains:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">REALIZATION</span><span class="p">,</span> <span class="n">DATE</span><span class="p">,</span> <span class="n">poro</span><span class="p">,</span> <span class="n">WOPT</span><span class="p">:</span><span class="n">A1</span><span class="p">,</span> <span class="n">WOPT</span><span class="p">:</span><span class="n">A2</span><span class="p">,</span> <span class="n">RPR</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">RPR</span><span class="p">:</span><span class="mi">2</span>
@@ -290,8 +291,8 @@ This can be accomplished by an option, see below. You may also stack on
 well parameters and region parameters at the same time.</p>
 <p>Be careful stacking large datasets (gigabytes), the memory usage during
 stacking and filesize can blow up.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>

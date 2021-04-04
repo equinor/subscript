@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Contributing to subscript &mdash; subscript 0.9.1.dev1+gf9d1d39 documentation</title>
@@ -105,7 +106,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Scripts</span></p>
+<p><span class="caption-text">Scripts</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="scripts/bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/casegen_upcars.html">CASEGEN_UPCARS</a></li>
@@ -134,7 +135,7 @@
 <li class="toctree-l1"><a class="reference internal" href="scripts/vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Python API</span></p>
+<p><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
@@ -204,9 +205,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="contributing-to-subscript">
+  <section id="contributing-to-subscript">
 <h1>Contributing to subscript<a class="headerlink" href="#contributing-to-subscript" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="getting-started-on-equinor-linux-computers">
+<section id="getting-started-on-equinor-linux-computers">
 <h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this headline">¶</a></h2>
 <p>On Equinor Linux computers, is is recommended to run with the Komodo
 environment, which will provide an analogue to <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> for making a
@@ -215,8 +216,8 @@ virtual environment.</p>
 <a class="reference external" href="https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html">https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html</a> for
 activating a Komodo release, and perform the instructions for extending Komodo
 in order a functioning <code class="docutils literal notranslate"><span class="pre">pip</span></code> tool.</p>
-</div>
-<div class="section" id="getting-started-as-a-developer">
+</section>
+<section id="getting-started-as-a-developer">
 <h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this headline">¶</a></h2>
 <p>The first thing to do, is to create a fork of subscript to your personal github
 account. Go to <a class="reference external" href="https://github.com/equinor/subscript">https://github.com/equinor/subscript</a> and click the “Fork”
@@ -251,8 +252,8 @@ repository, which you can do by running:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="repository-conventions">
+</section>
+<section id="repository-conventions">
 <h2>Repository conventions<a class="headerlink" href="#repository-conventions" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Each tool has its own subdirectory under <code class="docutils literal notranslate"><span class="pre">src/subscript</span></code>.</p></li>
@@ -269,8 +270,8 @@ must be fixed.</p></li>
 <li><p>For a new script, write a new file <code class="docutils literal notranslate"><span class="pre">docs/scripts/scriptname.rst</span></code> describing
 the script. Use sphinx-argparse to document the command line syntax.</p></li>
 </ul>
-</div>
-<div class="section" id="maintenance-responsibility">
+</section>
+<section id="maintenance-responsibility">
 <h2>Maintenance responsibility<a class="headerlink" href="#maintenance-responsibility" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Equinor (PETEC Reservoir Toolbox) maintains the repository infrastructure,
@@ -283,16 +284,16 @@ in Equinor.</p></li>
 by Equinor.</p></li>
 <li><p>Unmaintained scripts that fail to pass tests will be removed.</p></li>
 </ul>
-</div>
-<div class="section" id="open-source">
+</section>
+<section id="open-source">
 <h2>Open source<a class="headerlink" href="#open-source" title="Permalink to this headline">¶</a></h2>
 <p>Subscript is both open source and closed source. The twin repository
 <code class="docutils literal notranslate"><span class="pre">subscript-internal</span></code> holds similar infrastructure but with scripts that are
 exempted from the Open Source requirement in TR1621. Internal or confidental
 data should never be submitted to subscript. For each open script, there must
 be accompanying public test data.</p>
-</div>
-<div class="section" id="code-style">
+</section>
+<section id="code-style">
 <h2>Code style<a class="headerlink" href="#code-style" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>PEP8 is the rule for naming of files, functions, classes, etc. Exception to
@@ -326,8 +327,8 @@ increase pylint score.</p></li>
 and then run <code class="docutils literal notranslate"><span class="pre">pre-commit</span> <span class="pre">install</span></code> in the repository root. This will save you from
 pushing code that will fail the code style tests required before merge.</p></li>
 </ul>
-</div>
-<div class="section" id="building-documentation">
+</section>
+<section id="building-documentation">
 <h2>Building documentation<a class="headerlink" href="#building-documentation" title="Permalink to this headline">¶</a></h2>
 <p>Assuming the developer instructions above, run the following command to to
 build the documentation for subscript:</p>
@@ -335,8 +336,8 @@ build the documentation for subscript:</p>
 </pre></div>
 </div>
 <p>and then point your browser to the file <code class="docutils literal notranslate"><span class="pre">build/docs/index.html</span></code>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
            </div>
