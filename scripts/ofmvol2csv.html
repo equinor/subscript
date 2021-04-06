@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>OFMVOL2CSV &mdash; subscript 0.9.1.dev1+gf9d1d39 documentation</title>
@@ -97,7 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
 </ul>
-<p><span class="caption-text">Scripts</span></p>
+<p class="caption"><span class="caption-text">Scripts</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
@@ -133,7 +132,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
-<p><span class="caption-text">Python API</span></p>
+<p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
@@ -203,7 +202,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="ofmvol2csv">
+  <div class="section" id="ofmvol2csv">
 <h1>OFMVOL2CSV<a class="headerlink" href="#ofmvol2csv" title="Permalink to this headline">¶</a></h1>
 <p><p>Parse output from Oilfield Manager (OFM) (or similar)
 containing production data pr. well into one CSV file. Date formats
@@ -213,15 +212,15 @@ dd.mm.yyyy and YYYY-MM-DD (recommended) are supported.</p>
                   <span class="n">volfiles</span> <span class="p">[</span><span class="n">volfiles</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
+<div class="section" id="Positional Arguments">
 <h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>volfiles</kbd></dt>
 <dd><p>Filenames with volumetric data. Glob-style wildcards are supported</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments">
+</div>
+<div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
@@ -237,7 +236,7 @@ dd.mm.yyyy and YYYY-MM-DD (recommended) are supported.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
+</div>
 <p><p>Use this to:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Do</span> <span class="n">QC</span> <span class="ow">and</span> <span class="n">analysis</span> <span class="n">on</span> <span class="n">your</span> <span class="n">historical</span> <span class="n">production</span> <span class="ow">in</span> <span class="n">Spotfire</span>
 <span class="o">*</span> <span class="n">Be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">utilize</span> <span class="n">Pandas</span> <span class="k">for</span> <span class="n">production</span> <span class="n">data</span> <span class="n">transformation</span>
@@ -248,7 +247,7 @@ dd.mm.yyyy and YYYY-MM-DD (recommended) are supported.</p>
 </div>
 <p>See also the utility csv2ofmvol.</p>
 </p>
-<section id="example">
+<div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>If you have a <code class="docutils literal notranslate"><span class="pre">vol</span></code>-file with this data:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*METRIC</span>
@@ -280,8 +279,8 @@ dd.mm.yyyy and YYYY-MM-DD (recommended) are supported.</p>
 <span class="go">WELL_A,2003-08-27,0.0,0.0,0.0,115339.77,24.0</span>
 </pre></div>
 </div>
-</section>
-<section id="modifying-production-data">
+</div>
+<div class="section" id="modifying-production-data">
 <h2>Modifying production data<a class="headerlink" href="#modifying-production-data" title="Permalink to this headline">¶</a></h2>
 <p>The reason for converting <em>vol</em>-files to CSV is to be able
 to utilize Pandas or other tools that reads CSV to for example
@@ -299,13 +298,13 @@ modify production data.</p>
 <span class="n">oildata</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;oilproducers.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="from-csv-to-vol-again">
+</div>
+<div class="section" id="from-csv-to-vol-again">
 <h2>From CSV to vol again<a class="headerlink" href="#from-csv-to-vol-again" title="Permalink to this headline">¶</a></h2>
 <p>See the subscript utility <code class="docutils literal notranslate"><span class="pre">csv2ofmvol</span></code> to convert your modified CSV file
 back to a vol-file again, for import into RMS for example.</p>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>

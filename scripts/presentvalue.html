@@ -4,8 +4,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  <meta name="generator" content="Docutils 0.17: http://docutils.sourceforge.net/" />
-
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>PRESENTVALUE &mdash; subscript 0.9.1.dev1+gf9d1d39 documentation</title>
@@ -97,7 +96,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
 </ul>
-<p><span class="caption-text">Scripts</span></p>
+<p class="caption"><span class="caption-text">Scripts</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
@@ -134,7 +133,7 @@
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
-<p><span class="caption-text">Python API</span></p>
+<p class="caption"><span class="caption-text">Python API</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
@@ -204,7 +203,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="presentvalue">
+  <div class="section" id="presentvalue">
 <h1>PRESENTVALUE<a class="headerlink" href="#presentvalue" title="Permalink to this headline">¶</a></h1>
 <p><p>Calculated present value of oil and gas streams from an Eclipse
 simulation. Optional yearly costs, and optional variation in prices.</p>
@@ -220,15 +219,15 @@ simulation. Optional yearly costs, and optional variation in prices.</p>
                     <span class="n">datafiles</span> <span class="p">[</span><span class="n">datafiles</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
+<div class="section" id="Positional Arguments">
 <h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>datafiles</kbd></dt>
 <dd><p>Input Eclipse DATA files</p>
 </dd>
 </dl>
-</section>
-<section id="Named Arguments">
+</div>
+<div class="section" id="Named Arguments">
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>--oilprice</kbd></dt>
@@ -291,8 +290,8 @@ simulation. Optional yearly costs, and optional variation in prices.</p>
 <p>Default: False</p>
 </dd>
 </dl>
-</section>
-<section id="example">
+</div>
+<div class="section" id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
 <p>The simplest usage if you have a finished simulation named <code class="docutils literal notranslate"><span class="pre">MYSIMULATION.DATA</span></code>
 is the following statement:</p>
@@ -302,8 +301,8 @@ is the following statement:</p>
 </div>
 <p>where the presentvalue is expressed in MNOK for the year you
 are discounting to (current year by default).</p>
-</section>
-<section id="economic-input">
+</div>
+<div class="section" id="economic-input">
 <h2>Economic input<a class="headerlink" href="#economic-input" title="Permalink to this headline">¶</a></h2>
 <p>Price parameters can be given as constant values (check the current default by
 typing presentvalue –help), or if you need something more fancy, as a yearly
@@ -324,15 +323,15 @@ as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ presentvalue --econtable econtable.csv MYSIMULATION.DATA
 </pre></div>
 </div>
-</section>
-<section id="difference-profiles">
+</div>
+<div class="section" id="difference-profiles">
 <h2>Difference profiles<a class="headerlink" href="#difference-profiles" title="Permalink to this headline">¶</a></h2>
 <p>The script can be used to produce yearly difference profiles for the chosen oil
 and gas vectors and including discounted values. This is accomplished by
 combining the <code class="docutils literal notranslate"><span class="pre">--basedatafiles</span></code> and <code class="docutils literal notranslate"><span class="pre">--verbose</span></code>. The table output you get
 from the script can be copied into Excel or anywhere else.</p>
-</section>
-<section id="financial-computations">
+</div>
+<div class="section" id="financial-computations">
 <h2>Financial computations<a class="headerlink" href="#financial-computations" title="Permalink to this headline">¶</a></h2>
 <p>If you provide <code class="docutils literal notranslate"><span class="pre">costs</span></code> in the economical input, you will get some additional
 financial measures computed:</p>
@@ -348,8 +347,8 @@ the oil price, and the gas price in the economical table is used directly.</p>
 <dt>CEI</dt><dd><p>The present value divided by the present value from years with negative cash flow.</p>
 </dd>
 </dl>
-</section>
-</section>
+</div>
+</div>
 
 
            </div>
