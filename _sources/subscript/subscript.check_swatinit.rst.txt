@@ -1,0 +1,21 @@
+============================
+``subscript.check_swatinit``
+============================
+
+.. automodule:: subscript.check_swatinit
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.check_swatinit.check_swatinit
+   subscript.check_swatinit.constants
+   subscript.check_swatinit.pillarmodel
+   subscript.check_swatinit.plotter
+
+.. currentmodule:: subscript.check_swatinit

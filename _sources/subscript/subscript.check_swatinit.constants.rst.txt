@@ -1,0 +1,10 @@
+======================================
+``subscript.check_swatinit.constants``
+======================================
+
+.. automodule:: subscript.check_swatinit.constants
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.check_swatinit.constants

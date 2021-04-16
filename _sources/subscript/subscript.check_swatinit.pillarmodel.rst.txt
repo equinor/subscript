@@ -1,0 +1,10 @@
+========================================
+``subscript.check_swatinit.pillarmodel``
+========================================
+
+.. automodule:: subscript.check_swatinit.pillarmodel
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.check_swatinit.pillarmodel

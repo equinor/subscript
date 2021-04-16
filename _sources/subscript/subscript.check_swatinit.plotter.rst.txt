@@ -1,0 +1,10 @@
+====================================
+``subscript.check_swatinit.plotter``
+====================================
+
+.. automodule:: subscript.check_swatinit.plotter
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.check_swatinit.plotter
