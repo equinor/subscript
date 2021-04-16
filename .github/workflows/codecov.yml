@@ -23,6 +23,14 @@ jobs:
       with:
         python-version: 3.7
 
+    - name: Install OPM-flow (for testing)
+      run: |
+        sudo apt-get install software-properties-common
+        sudo apt-add-repository ppa:opm/ppa
+        sudo apt-get update
+        sudo apt-get install mpi-default-bin
+        sudo apt-get install libopm-simulators-bin
+
     - name: Install subscript and test dependencies
       run: |
         pip install pip -U

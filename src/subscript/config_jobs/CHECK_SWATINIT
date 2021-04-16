@@ -1,0 +1,8 @@
+EXECUTABLE check_swatinit
+
+DEFAULT <OUTPUT> check_swatinit.csv
+
+ARG_TYPE 0 STRING
+ARG_TYPE 1 STRING
+
+ARGLIST "--output" <OUTPUT> <DATAFILE>
