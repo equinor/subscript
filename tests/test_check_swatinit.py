@@ -161,6 +161,7 @@ REEK_DATAFILE = (
         (
             [
                 {
+                    # SWATINIT 1 below contact
                     "SWATINIT": 1,
                     "SWAT": 0.8,
                     "Z": 1100,
@@ -169,6 +170,54 @@ REEK_DATAFILE = (
                 }
             ],
             __SWATINIT_1__,
+        ),
+        # Tests with GWC instead of GOC/OWC:
+        (
+            [
+                {
+                    # SWATINIT 1 below contact:
+                    "SWATINIT": 1,
+                    "SWAT": 0.8,
+                    "Z": 1100,
+                    "GWC": 1000,
+                    "OIP_INIT": -5,
+                }
+            ],
+            __SWATINIT_1__,
+        ),
+        (
+            [
+                {
+                    "SWATINIT": 0.4,
+                    "SWAT": 0.4,
+                    "Z": 1000,
+                    "GWC": 1100,
+                }
+            ],
+            __PC_SCALED__,
+        ),
+        (
+            [
+                {
+                    "SWATINIT": 0.4,
+                    "SWAT": 0.4,
+                    "Z": 1200,
+                    "GWC": 1100,
+                    "OIP_INIT": -2,
+                }
+            ],
+            __PC_SCALED__,
+        ),
+        (
+            [
+                {
+                    "SWATINIT": 0.4,
+                    "SWAT": 1,
+                    "Z": 1200,
+                    "GWC": 1100,
+                }
+            ],
+            __HC_BELOW_FWL__,
         ),
     ],
 )
@@ -179,10 +228,10 @@ def test_qc_flag(propslist, expected_flag):
         qc_frame["SWL"] = np.nan
     if "SWAT" not in qc_frame:
         qc_frame["SWAT"] = np.nan
+    if "OWC" not in qc_frame and "GWC" not in qc_frame:
+        qc_frame["OWC"] = np.nan
     if "Z" not in qc_frame:
         qc_frame["Z"] = np.nan
-    if "OWC" not in qc_frame:
-        qc_frame["OWC"] = np.nan
     if "PPCW" not in qc_frame:
         qc_frame["PPCW"] = np.nan
     if "PCW" not in qc_frame:
@@ -400,9 +449,13 @@ def test_reek(tmpdir, mocker):
         ],
     )
     main()
-    assert Path("foo.csv").exists()
+    qc_frame = pd.read_csv("foo.csv")
     assert Path("scatter.png").exists()
     assert Path("volplot.png").exists()
+
+    # Check that we never get -1e20 from libecl in any data:
+    assert np.isclose(qc_frame.select_dtypes("number").min().min(), -7097, atol=1)
+    assert np.isclose(qc_frame.select_dtypes("number").max().max(), 5938824, atol=1)
 
     mocker.patch(
         "sys.argv",
