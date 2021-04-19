@@ -652,6 +652,8 @@ def test_pc_scaled_above_gwc(simulator, tmpdir):
     )
     qc_frame = run_reservoir_simulator(simulator, model)
     assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+    assert np.isclose(qc_frame["PPCW"][0], 16.913918)
+    assert np.isclose(qc_frame["PC"][0], 9.396621)
 
 
 def test_no_swatinit(tmpdir, mocker, caplog):
