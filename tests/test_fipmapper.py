@@ -52,3 +52,38 @@ def test_fipmapper():
     assert mapper.region2fip("West-Brent") == 1
     assert mapper.region2fip(["West-Brent"]) == [1]
     assert mapper.region2fip(["West-Brent", "East-Sognefjord"]) == [1, 2]
+
+
+@pytest.mark.parametrize(
+    "input_dict, expected_dict",
+    [
+        ({}, {}),
+        ({"FIPNUM": {}}, {}),
+        ({"FIPNUM": 0}, {}),
+        ({"FIPNUM": {"groups": {}}}, {}),
+        ({"FOO": 0}, {}),
+        # First test with the webviz format @march 2021, with "groups"
+        # as a required level:
+        (
+            {"FIPNUM": {"groups": {"REGION": {"west": 1}}}},
+            {"region2fipnum": {"west": 1}},
+        ),
+        (
+            {"FIPNUM": {"groups": {"REGION": {"west": [1]}, "ZONE": {"lower": [2]}}}},
+            {"region2fipnum": {"west": [1]}, "zone2fipnum": {"lower": [2]}},
+        ),
+        # The "groups" level might disappear in webviz format, so ensure
+        # we also support that when/if it happens:
+        (
+            {"FIPNUM": {"REGION": {"west": 1}}},
+            {"region2fipnum": {"west": 1}},
+        ),
+        (
+            {"FIPNUM": {"REGION": {"west": [1]}, "ZONE": {"lower": [2]}}},
+            {"region2fipnum": {"west": [1]}, "zone2fipnum": {"lower": [2]}},
+        ),
+    ],
+)
+def test_webviz_to_prtvol2csv(input_dict, expected_dict):
+    print(fipmapper.webviz_to_prtvol2csv(input_dict))
+    assert fipmapper.webviz_to_prtvol2csv(input_dict) == expected_dict
