@@ -4,8 +4,8 @@ simulators on mocked reservoir models
 This code is not critical to run in a CI context, as it would only uncover
 changes in simulators, not the tool check_swatinit.
 
-It is unfortunate and/or interesting that the simulators flow and Eclipse100 do
-not yield the same results.
+flow and Eclipse100 does not always yield exactly the same results, for
+which this test code has separate code paths for asserts.
 """
 
 import os

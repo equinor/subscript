@@ -235,6 +235,9 @@ def make_qc_gridframe(eclfiles):
     # Circumvent bug in ecl2df that will pick SWL from both INIT and restart file:
     grid_df = grid_df.loc[:, ~grid_df.columns.duplicated()]
 
+    # This will be unneccessary from ecl2df 0.13.0:
+    grid_df = grid_df.where(grid_df > -1e20 + 1e13)
+
     if "SWL" not in grid_df:
         logger.warning("SWL not found in model. Using SWL=0.")
         logger.warning("Consider adding FILLEPS to the PROPS section")
@@ -387,7 +390,6 @@ def qc_flag(qc_frame):
     # feature request:
     qc_col.fillna(__UNKNOWN__, inplace=True)
 
-    print(qc_frame[(qc_col == __UNKNOWN__) & (qc_frame["Z"] < 1600)])
     return qc_col
 
 
