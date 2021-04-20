@@ -57,8 +57,12 @@ are:
   volumetric change, but check the maximum capillary pressure pr SATNUM in each
   EQLNUM to ensure extreme values were not necessary.
 
-``WATER``
-  SWATINIT was 1 in the water zone, and SWAT is set to 1. All good.
+``FINE_EQUIL``
+  If item 9 in EQUIL is nonzero (default in Eclipse 100 is -5), then
+  initialization in Eclipse happens in a vertically refined model for the
+  reservoir cell. Capillary pressure is still scaled, but water might be added
+  or lost. The estimated scaling of capillary pressure and estimated capillary
+  pressure by check_swatinit is only approximate.
 
 ``SWL_TRUNC``
   If SWL, as given to Eclipse through SWOF or through the SWL keyword, is larger
@@ -82,16 +86,15 @@ are:
   item #9 in EQUIL is zero, this should be expected for cells below the
   contact. For nonzero item #9, it can also happen for cells with SWAT < 1.
 
-``EQUIL_INIT``
-  If item 9 in EQUIL is nonzero (default in Eclipse 100 is -5), then
-  initialization in Eclipse happens in a vertically subdivided reservoir cell.
-  Capillary pressure is still scaled, but water might be added or lost.
-
 ``PPCWMAX``
   If the DATA file includes the PPCWMAX keyword, there will be an upper limit
   to how much scaling is allowed in order to match SWATINIT.  When this limit
   is hit, SWAT in Eclipse will be less than SWATINIT and water is lost. If you
   need to use PPCWMAX you should revisit the modelling.
+
+``WATER``
+  SWATINIT was 1 in the water zone, and SWAT is set to 1.
+
 
 Example text output
 -------------------
@@ -102,7 +105,7 @@ Example text output
   VOLUME                     3203.1103 Mrm3
   PORV                        571.1770 Mrm3
   SWATINIT_WVOL               504.6057 Mrm3           HC:   66.571 Mrm3
-  + EQUIL_INIT                  0.0000 Mrm3   0.00 %         0.00 %
+  + FINE_EQUIL                  0.0000 Mrm3   0.00 %         0.00 %
   + HC_BELOW_FWL                0.6500 Mrm3   0.13 %        -0.98 %
   + PPCWMAX                     0.0000 Mrm3   0.00 %         0.00 %
   + SWATINIT_1                  0.0000 Mrm3   0.00 %        -0.00 %
@@ -156,7 +159,10 @@ Example plots
    :width: 70%
 
    A waterfall chart illustrating what contributes to the change from SWATINIT
-   to SWAT. This plot is obtained by adding the ``--volplot`` command line option
+   to SWAT. This plot is obtained by adding the ``--volplot`` command line option.
+   The numbers inside the plot is the percentage change in terms of reservoir
+   volumes, blue numbers are with respect to SWATINIT_WVOL and green numbers
+   are with respect to initial hydrocarbon volumes.
 
 
 .. figure:: images/check_swatinit_scatter.png

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>CHECK_SWATINIT &mdash; subscript 0.9.1.dev3+g00eefd9 documentation</title>
+  <title>CHECK_SWATINIT &mdash; subscript 0.9.1.dev4+g06a0874 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.9.1.dev3+g00eefd9
+                0.9.1.dev4+g06a0874
               </div>
             
           
@@ -258,7 +258,11 @@ are:</p>
 volumetric change, but check the maximum capillary pressure pr SATNUM in each
 EQLNUM to ensure extreme values were not necessary.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">WATER</span></code></dt><dd><p>SWATINIT was 1 in the water zone, and SWAT is set to 1. All good.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">FINE_EQUIL</span></code></dt><dd><p>If item 9 in EQUIL is nonzero (default in Eclipse 100 is -5), then
+initialization in Eclipse happens in a vertically refined model for the
+reservoir cell. Capillary pressure is still scaled, but water might be added
+or lost. The estimated scaling of capillary pressure and estimated capillary
+pressure by check_swatinit is only approximate.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">SWL_TRUNC</span></code></dt><dd><p>If SWL, as given to Eclipse through SWOF or through the SWL keyword, is larger
 than SWATINIT, SWAT will be reset to SWL. Compared to SWATINIT, extra water
@@ -279,14 +283,12 @@ unless a capillary pressure function with negative values is in SWOF/SWFN. If
 item #9 in EQUIL is zero, this should be expected for cells below the
 contact. For nonzero item #9, it can also happen for cells with SWAT &lt; 1.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">EQUIL_INIT</span></code></dt><dd><p>If item 9 in EQUIL is nonzero (default in Eclipse 100 is -5), then
-initialization in Eclipse happens in a vertically subdivided reservoir cell.
-Capillary pressure is still scaled, but water might be added or lost.</p>
-</dd>
 <dt><code class="docutils literal notranslate"><span class="pre">PPCWMAX</span></code></dt><dd><p>If the DATA file includes the PPCWMAX keyword, there will be an upper limit
 to how much scaling is allowed in order to match SWATINIT.  When this limit
 is hit, SWAT in Eclipse will be less than SWATINIT and water is lost. If you
 need to use PPCWMAX you should revisit the modelling.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">WATER</span></code></dt><dd><p>SWATINIT was 1 in the water zone, and SWAT is set to 1.</p>
 </dd>
 </dl>
 </div>
@@ -296,7 +298,7 @@ need to use PPCWMAX you should revisit the modelling.</p>
 <span class="go">VOLUME                     3203.1103 Mrm3</span>
 <span class="go">PORV                        571.1770 Mrm3</span>
 <span class="go">SWATINIT_WVOL               504.6057 Mrm3           HC:   66.571 Mrm3</span>
-<span class="go">+ EQUIL_INIT                  0.0000 Mrm3   0.00 %         0.00 %</span>
+<span class="go">+ FINE_EQUIL                  0.0000 Mrm3   0.00 %         0.00 %</span>
 <span class="go">+ HC_BELOW_FWL                0.6500 Mrm3   0.13 %        -0.98 %</span>
 <span class="go">+ PPCWMAX                     0.0000 Mrm3   0.00 %         0.00 %</span>
 <span class="go">+ SWATINIT_1                  0.0000 Mrm3   0.00 %        -0.00 %</span>
@@ -343,7 +345,10 @@ cells when item #9 in EQUIL is nonzero.</p>
 <div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/check_swatinit_volplot.png"><img alt="../_images/check_swatinit_volplot.png" src="../_images/check_swatinit_volplot.png" style="width: 70%;" /></a>
 <p class="caption"><span class="caption-text">A waterfall chart illustrating what contributes to the change from SWATINIT
-to SWAT. This plot is obtained by adding the <code class="docutils literal notranslate"><span class="pre">--volplot</span></code> command line option</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+to SWAT. This plot is obtained by adding the <code class="docutils literal notranslate"><span class="pre">--volplot</span></code> command line option.
+The numbers inside the plot is the percentage change in terms of reservoir
+volumes, blue numbers are with respect to SWATINIT_WVOL and green numbers
+are with respect to initial hydrocarbon volumes.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id3">
 <a class="reference internal image-reference" href="../_images/check_swatinit_scatter.png"><img alt="../_images/check_swatinit_scatter.png" src="../_images/check_swatinit_scatter.png" style="width: 90%;" /></a>
