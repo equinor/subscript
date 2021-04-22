@@ -352,18 +352,15 @@ def test_swatinit_1_far_above_contact(simulator, tmpdir):
         # PPCW is the input Pc:
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
 
-        # The capillary pressure can't be computed though (should not
-        # set it to zero when we are above the contact)
-        assert np.isnan(qc_frame["PC"][0])
-
         assert np.isclose(qc_vols[__SWATINIT_1__], (1 - 1) * qc_frame["PORV"])
     else:
-        assert np.isclose(qc_frame["PC"][0], 3.0)
         # E100 ignores SWATINIT and sets the saturation to SWL:
         assert np.isclose(qc_frame["SWAT"][0], 0.1)
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
         # Negative number means water is lost:
         assert np.isclose(qc_vols[__SWATINIT_1__], -(1 - 0.1) * qc_frame["PORV"])
+    # Not possible to compute PC, it should be Nan:
+    assert np.isnan(qc_frame["PC"][0])
 
     # Bigger reservoir model, so that OWC is within the grid, should
     # not make a difference:
