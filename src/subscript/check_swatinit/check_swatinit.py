@@ -123,10 +123,6 @@ def check_applicability(eclfiles):
             "RPTRST not found in DATA-file, UNRST file is expected to be missing"
         )
 
-    if "SWLPC" in deck:
-        logger.warning("SWLPC found in DATA file")
-        logger.warning("Not supported by check_swatinit. Do not trust output")
-
     try:
         eclfiles.get_rstfile()
     except FileNotFoundError as exception:
@@ -240,8 +236,8 @@ def make_qc_gridframe(eclfiles):
             "PCW",
             "PPCW",
             "SWL",
-            "SWU",  # It is a feature request to process this
-            "SWLPC",  # Extract in case it is there, but it is not supported yet.
+            "SWLPC",
+            "SWU",
         ],
         rstdates="first",
     )
@@ -256,12 +252,6 @@ def make_qc_gridframe(eclfiles):
         logger.warning("SWL not found in model. Using SWL=0.")
         logger.warning("Consider adding FILLEPS to the PROPS section")
         grid_df["SWL"] = 0.0
-
-    if "SWU" in grid_df and (grid_df["SWU"] - 1).abs().sum() > 0:
-        logger.warning("SWU is less than 1, not yet supported by check_swatinit")
-
-    if "SWLPC" in grid_df and (grid_df["SWL"] - grid_df["SWLPC"]).abs().sum() > 0:
-        raise ValueError("SWLPC is in the data, but not supported by check_swatinit")
 
     deck = eclfiles.get_ecldeck()
     if "SWATINIT" in deck:
@@ -378,6 +368,16 @@ def qc_flag(qc_frame):
         np.isclose(qc_frame["SWATINIT"], 1) & (qc_frame["Z"] < qc_frame[contact])
     ] = __SWATINIT_1__
 
+    # If SWU is less than 1, SWATINIT is ignored whenever it is equal or larger
+    # than SWU. Behaviour is the same as SWATINIT=1; SWATINIT is ignored, and thus
+    # the same flag is reused:
+    if "SWU" in qc_frame:
+        qc_col[
+            (qc_frame["SWU"] < 1)
+            & ~np.isclose(qc_frame["SWATINIT"], qc_frame["SWAT"])
+            & (qc_frame["SWATINIT"] >= qc_frame["SWU"])
+        ] = __SWATINIT_1__
+
     # SWATINIT=1 below contact but with SWAT < 1, can happen with OIP_INIT:
     if "OIP_INIT" in qc_frame:
         qc_col[
@@ -401,7 +401,18 @@ def qc_flag(qc_frame):
         & (qc_frame["Z"] > qc_frame[contact])
     ] = __WATER__
 
-    qc_col[qc_frame["SWL"] > qc_frame["SWATINIT"]] = __SWL_TRUNC__
+    qc_col[
+        np.isclose(qc_frame["SWAT"], qc_frame["SWL"])
+        & (qc_frame["SWL"] > qc_frame["SWATINIT"])
+    ] = __SWL_TRUNC__
+
+    if "SWLPC" in qc_frame:
+        # SWLPC is not supported by OPM-flow, therefore we also check
+        # that SWAT == SWLPC before assigning this:
+        qc_col[
+            np.isclose(qc_frame["SWAT"], qc_frame["SWLPC"])
+            & (qc_frame["SWLPC"] > qc_frame["SWATINIT"])
+        ] = __SWL_TRUNC__
 
     # Tag the remainder with "unknown", when/if this happens, it is a bug or a
     # feature request:
@@ -450,13 +461,15 @@ def qc_volumes(qc_frame):
     return watergains
 
 
-def _evaluate_pc(swats, scale_vert, swls, satfunc, sat_name="SW", pc_name="PCOW"):
+def _evaluate_pc(swats, scale_vert, swls, swus, satfunc, sat_name="SW", pc_name="PCOW"):
     """Evaluate pc as a function of saturation on a scaled Pc-curve
 
     Args:
         swats (list): floats with water saturation values
         scale_vert (list): floats with vertical scalers for pc
-        swls (list): List of SWL values for horizontal scaling
+        swls (list): List of SWL values for horizontal scaling.
+            If the model is using SWLPC, supply those values instead.
+        swus (list): List of SWU values for horizontal scaling.
         satfunc (pd.DataFrame): Dataframe representing un-scaled
             capillary pressure curve
         sat_name (str): Column name for the column in the dataframe with the
@@ -465,21 +478,21 @@ def _evaluate_pc(swats, scale_vert, swls, satfunc, sat_name="SW", pc_name="PCOW"
             values.
 
     Returns:
-        pd.Series: computed capillary pressure values.
+        list: computed capillary pressure values.
     """
     p_cap = []
     sw_min = satfunc[sat_name].min()
     sw_max = satfunc[sat_name].max()
     if swls is None:
         swls = [sw_min] * len(swats)
-    for swat, pc_scaling, swl in zip(swats, scale_vert, swls):
+    if swus is None:
+        swus = [sw_max] * len(swats)
+    for swat, pc_scaling, swl, swu in zip(swats, scale_vert, swls, swus):
         p_cap.append(
             np.interp(
                 swat,
                 swl
-                + (satfunc[sat_name].values - sw_min)
-                / (sw_max - sw_min)
-                * (sw_max - swl),
+                + (satfunc[sat_name].values - sw_min) / (sw_max - sw_min) * (swu - swl),
                 satfunc[pc_name].values * pc_scaling,
             )
         )
@@ -496,13 +509,18 @@ def compute_pc(qc_frame, satfunc_df):
     Likewise, we are not getting arbitrarily negative Pc values below contact
     for the same reason, only slightly negative for an oil-wet curve.
 
+    Note: If SWLPC is present in the dataframe, it will be used instead
+    of SWL. As OPM-flow outputs SWLPC in the INIT files but otherwise
+    ignores SWLPC, this will result in an incorrect PC estimate for OPM-flow
+    when SWLPC is in use.
+
     Args:
         qc_frame (pd.DataFrame)
         satfunc_df (pd.DataFrame)
 
     Returns:
         pd.Series, with capillary pressure values in bars (given Eclipse unit
-            is METRIC)
+        is METRIC)
     """
     p_cap = pd.Series(index=qc_frame.index, dtype=np.float64)
     p_cap[:] = np.nan
@@ -511,14 +529,21 @@ def compute_pc(qc_frame, satfunc_df):
         return p_cap
 
     for satnum, satnum_frame in qc_frame.groupby("SATNUM"):
-        if "SWL" in satnum_frame:
+        if "SWLPC" in satnum_frame:
+            swls = satnum_frame["SWLPC"].values
+        elif "SWL" in satnum_frame:
             swls = satnum_frame["SWL"].values
         else:
             swls = None
+        if "SWU" in satnum_frame:
+            swus = satnum_frame["SWU"].values
+        else:
+            swus = None
         p_cap[satnum_frame.index] = _evaluate_pc(
             satnum_frame["SWAT"].values,
             satnum_frame["PC_SCALING"].values,
             swls,
+            swus,
             satfunc_df[satfunc_df["SATNUM"] == satnum],
         )
     # Fix needed for OPM-flow above contact:
