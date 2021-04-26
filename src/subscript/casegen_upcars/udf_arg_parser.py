@@ -3,7 +3,7 @@
 
 
 def fill_parser_fracture(parser):
-    """ Set arguments parser for fracture related  """
+    """Set arguments parser for fracture related"""
     parser.add_argument(
         "--noBoundaryFracture",
         action="store_true",
@@ -213,7 +213,7 @@ def fill_parser_fracture(parser):
 
 
 def fill_parser_vugs(parser):
-    """ Set arguments parser for vugs related  """
+    """Set arguments parser for vugs related"""
     # Vug1 - Near fracture vugs
     parser.add_argument(
         "--distanceVug1ToFracture",

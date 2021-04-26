@@ -62,7 +62,7 @@ def get_parser():
 
 
 def main():
-    """ Entry subroutine """
+    """Entry subroutine"""
     dictionary = {}
     arg_parse = get_parser()
     parser = arg_parse.parse_args()
