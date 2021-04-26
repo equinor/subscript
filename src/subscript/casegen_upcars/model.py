@@ -12,7 +12,7 @@ from .udf import listify, TERMINALCOLORS, uniform_dist
 
 
 def fracture_idx(matrix_elements, fracture_cell_count, boundary_fracture):
-    """ Return list of start of fracture cell index """
+    """Return list of start of fracture cell index"""
     result = []
     if boundary_fracture:
         offset = 0
@@ -456,7 +456,7 @@ class Model:
             ] = -(_i + 1)
 
     def _build_grid(self):
-        """ Create the mesh xv, yv and zv """
+        """Create the mesh xv, yv and zv"""
         if self._a * self._b * self._c == 0.0:
             self.dict_info["ModelDescription"] = "Slab with tilting angle {}".format(
                 self._tilt
@@ -550,7 +550,7 @@ class Model:
     def calculate_avg_prop(
         self, matrix_property, streak_property, fracture_property, vug_property
     ):
-        """ Calculate the average properties """
+        """Calculate the average properties"""
         props = self._create_property(
             "", matrix_property, streak_property, fracture_property, vug_property
         )
@@ -593,7 +593,7 @@ class Model:
         vug_property,
     ):
         # pylint: disable=too-many-arguments
-        """ Distribute property in the cell with anisotropy in fracture property """
+        """Distribute property in the cell with anisotropy in fracture property"""
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(self._streak_k), (
             "Number of input " + keyword + " is not equal to number of streaks"
@@ -629,7 +629,7 @@ class Model:
         return props
 
     def set_layers_property(self, keyword, matrix_property, streak_property):
-        """ Store matrix and streak property """
+        """Store matrix and streak property"""
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(self._streak_k), (
             "Number of input " + keyword + " is not equal to number of streaks"
@@ -639,12 +639,12 @@ class Model:
         self._matrix_props[keyword] = matrix_property
 
     def set_fracture_property(self, keyword, value):
-        """ Store fracture property """
+        """Store fracture property"""
         keyword = keyword.upper()
         self._fracture_props[keyword] = value
 
     def set_fracture_anisotropy_property(self, keyword, values_x, values_y):
-        """ Store fracture anisotropy property """
+        """Store fracture anisotropy property"""
         values_x = listify(values_x, self._n_faults_x)
         values_y = listify(values_y, self._n_faults_y)
         assert len(values_x) == self._n_faults_x, (
@@ -659,18 +659,18 @@ class Model:
         self._fracture_props[keyword + "Y"] = values_y
 
     def set_throws(self, throws):
-        """ Store throws information """
+        """Store throws information"""
         self._throws = throws
 
     def clear_throws(self):
-        """ Clear throws information """
+        """Clear throws information"""
         self._throws = []
 
     def export_props(
         self, filename, keyword, matrix_prop, streak_prop, frac_props, vug_prop
     ):
         # pylint: disable=too-many-arguments
-        """ Print out grid property to Eclipse format file """
+        """Print out grid property to Eclipse format file"""
         buffer_ = io.StringIO()
         print(
             "-- Property file generated using CaseGenerator "
@@ -693,7 +693,7 @@ class Model:
         buffer_.close()
 
     def _get_surface_idx(self, _i, _j):
-        """ Return cell index of the surface """
+        """Return cell index of the surface"""
         offset = (_i - 1) * 2 + (_j - 1) * (4 * self._total_nx)
         return [
             offset,
@@ -703,7 +703,7 @@ class Model:
         ]
 
     def export_grdecl(self, filename):
-        """ Print out COORD, ZCORN, MULTX, MULTY and MULTPV to GRDECL file """
+        """Print out COORD, ZCORN, MULTX, MULTY and MULTPV to GRDECL file"""
         surface = np.repeat(self._zv[0], 2)[1:-1]
         for idx in range(1, self._total_ny + 1):
             surface = np.append(
@@ -836,7 +836,7 @@ class Model:
 
     def bounded_box(self, i_1, i_2, j_1, j_2, k_1, k_2):
         # pylint: disable=too-many-arguments
-        """ Make sure the box is within model domain """
+        """Make sure the box is within model domain"""
         return [
             max(i_1, 0),
             min(i_2, self._total_nx - 1),
@@ -885,7 +885,7 @@ class Model:
         near_streak_vug_multpv,
         near_streak_vug_dispersion_factor,
     ):
-        """ Distribute all three types of vugs """
+        """Distribute all three types of vugs"""
         if (
             near_fracture_vug_fraction_dist[1]
             + random_vug_fraction_dist[1]
