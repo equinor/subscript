@@ -7,10 +7,24 @@ import pandas as pd
 from subscript.check_swatinit.constants import (
     __FINE_EQUIL__,
     __HC_BELOW_FWL__,
+    __PC_SCALED__,
     __PPCWMAX__,
     __SWATINIT_1__,
     __SWL_TRUNC__,
+    __WATER__,
 )
+
+
+SNS_PAL = seaborn.color_palette("tab10")
+QC_PALETTE = {
+    __FINE_EQUIL__: SNS_PAL[8],
+    __HC_BELOW_FWL__: SNS_PAL[5],
+    __PC_SCALED__: SNS_PAL[2],
+    __PPCWMAX__: SNS_PAL[9],
+    __SWATINIT_1__: SNS_PAL[6],
+    __SWL_TRUNC__: SNS_PAL[3],
+    __WATER__: SNS_PAL[0],
+}
 
 
 def plot_qc_panels(qc_frame, eqlnum=None, show=False):
@@ -73,7 +87,9 @@ def swat_depth(qc_frame, axis=None, hue="QC_FLAG"):
     """Make a SWAT vs depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
-    seaborn.scatterplot(x="SWAT", y="Z", data=qc_frame, hue=hue, alpha=0.5)
+    seaborn.scatterplot(
+        x="SWAT", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
+    )
     bottom, _ = pyplot.ylim()
     pyplot.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
@@ -84,7 +100,9 @@ def swatinit_depth(qc_frame, axis=None, hue="QC_FLAG"):
     """Make a swatinit vs depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
-    seaborn.scatterplot(x="SWATINIT", y="Z", data=qc_frame, hue=hue, alpha=0.5)
+    seaborn.scatterplot(
+        x="SWATINIT", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
+    )
     bottom, _ = pyplot.ylim()
     pyplot.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
@@ -95,7 +113,9 @@ def pressure_depth(qc_frame, axis=None, hue="QC_FLAG"):
     """Make a pressure vs. depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
-    seaborn.scatterplot(x="PRESSURE", y="Z", data=qc_frame, hue=hue, alpha=0.5)
+    seaborn.scatterplot(
+        x="PRESSURE", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
+    )
     bottom, _ = pyplot.ylim()
     pyplot.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
@@ -106,7 +126,9 @@ def pc_depth(qc_frame, axis=None, hue="QC_FLAG"):
     """Make a pc vs depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
-    seaborn.scatterplot(x="PC", y="Z", data=qc_frame, hue=hue, alpha=0.5)
+    seaborn.scatterplot(
+        x="PC", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
+    )
     bottom, _ = pyplot.ylim()
     pyplot.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
@@ -163,25 +185,32 @@ def wvol_waterfall(qc_vols):
     step[1::3] = np.nan
     blank.loc["SWAT_WVOL"] = 0
 
-    fig = trans.plot(kind="bar", stacked=True, legend=None, bottom=blank)
+    fig = trans.plot(kind="bar", alpha=0.7, stacked=True, legend=None, bottom=blank)
     fig.plot(step.index, step.values, "k")
     pyplot.gcf().subplots_adjust(bottom=0.25)
 
-    span = blank.max() - blank[1:-1].min()
+    blanktrans = blank.values + trans["volume"].values
+    span = blank.max() - blanktrans[1:-1].min()
+
+    if np.isclose(span, 0.0):
+        span = blank.max()
 
     # Calculate percent changed relative to SWATINIT_WVOL
     for number, qc_flag in enumerate(index[1:]):
         change = qc_vols[qc_flag] / qc_vols["SWATINIT_WVOL"]
         pyplot.gca().annotate(
             f"{change*100:3.2f}%",
-            (number + 1, blank[number + 1] + qc_vols[qc_flag] + span / 20),
+            (
+                number + 1,
+                blanktrans[number] + max(0, qc_vols[qc_flag]) + span / 20,
+            ),
             horizontalalignment="center",
             color="C0",
         )
         hc_change = -qc_vols[qc_flag] / swatinit_hcvol
         pyplot.gca().annotate(
             f"{hc_change*100:3.2f}%",
-            (number + 1, blank[number + 1] + qc_vols[qc_flag] + 4 * span / 20),
+            (number + 1, blanktrans[number] + max(0, qc_vols[qc_flag]) + 4 * span / 20),
             horizontalalignment="center",
             color="C2",
         )
@@ -202,5 +231,5 @@ def wvol_waterfall(qc_vols):
         color="C2",
     )
 
-    pyplot.ylim((blank[1:-1].min() - span, blank.max() + span))
+    pyplot.ylim((max(0.0, blank[1:-1].min() - span), blank.max() + span))
     pyplot.xticks(rotation=45)
