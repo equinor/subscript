@@ -21,6 +21,8 @@ class PillarModel:
         swatinit=None,
         satnum=None,  # one value pr. cell
         swl=None,  # first saturation in swof, one pr. satnum
+        swlpc=None,  # swl scaler for pc only, leaving kr unmodified
+        swu=None,  # maximum saturation in swof, one pr. satnum
         maxpc=None,  # max pc in SWOF
         minpc=None,  # pc at sw=1 in SWOF
         ppcwmax=None,  # PPCWMAX keyword.
@@ -67,6 +69,20 @@ class PillarModel:
             self.swl = swl
         # SWL is pr. SATNUM, not pr. cell in this class
         assert len(self.swl) == max(self.satnum)
+
+        if swlpc is None:
+            self.swlpc = None
+        else:
+            self.swlpc = swlpc
+            # SWLPC is pr. cell
+            assert len(self.swlpc) == self.cells
+
+        if swu is None:
+            self.swu = [1] * max(self.satnum)
+        else:
+            self.swu = swu
+        # SWU is pr. SATNUM, not pr. cell in this class
+        assert len(self.swu) == max(self.satnum)
 
         if maxpc is None:
             self.maxpc = [3] * max(self.satnum)
@@ -220,7 +236,7 @@ class PillarModel:
         return np.interp(
             p_cap,
             [self.minpc[satnum - 1] * scaling, self.maxpc[satnum - 1] * scaling],
-            [1, self.swl[satnum - 1]],
+            [self.swu[satnum - 1], self.swl[satnum - 1]],
         )
 
     def props(self):
@@ -242,7 +258,7 @@ class PillarModel:
                 string += "SWOF\n"
                 string += "-- SW KRW KROW PC\n"
                 string += f"{self.swl[satnum]:g} 0 1 {self.maxpc[satnum]:g}\n"
-                string += f"1.0 1.0 0.0 {self.minpc[satnum]:g}\n/\n"
+                string += f"{self.swu[satnum]:g} 1.0 0.0 {self.minpc[satnum]:g}\n/\n"
 
         if "GAS" in self.phases and "OIL" in self.phases:
             for satnum in range(len(self.swl)):
@@ -256,13 +272,17 @@ class PillarModel:
                 string += "SWFN\n"
                 string += "-- SW KRW PC\n"
                 string += f"{self.swl[satnum]:g} 0 {self.maxpc[satnum]:g}\n"
-                string += f"1.0 1.0 {self.minpc[satnum]:g}\n/\n"
+                string += f"{self.swu[satnum]:g} 1.0 {self.minpc[satnum]:g}\n/\n"
 
             for satnum in range(len(self.swl)):
                 string += "SGFN\n"
                 string += "-- SG KRG PC\n"
                 string += "0 0 0\n"
                 string += f"{1 - self.swl[satnum]:g} 1.0 0.0\n/\n"
+
+        if self.swlpc is not None:
+            string += "SWLPC\n"
+            string += _wrap("  ".join(map(str, self.swlpc)) + "/") + "\n"
 
         string += """\n
 DENSITY

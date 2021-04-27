@@ -41,9 +41,14 @@ REEK_DATAFILE = (
 @pytest.mark.parametrize(
     "propslist, expected_flag",
     [
-        ([{"SWL": 0.3, "SWATINIT": 0.1}], __SWL_TRUNC__),
+        ([{"SWL": 0.3, "SWATINIT": 0.1}], __UNKNOWN__),
+        ([{"SWL": 0.3, "SWAT": 0.3, "SWATINIT": 0.1}], __SWL_TRUNC__),
         (
             [{"SWATINIT": 0.9, "SWAT": 1.0, "Z": 1000, "OWC": 900}],
+            __HC_BELOW_FWL__,
+        ),
+        (
+            [{"SWATINIT": 0.9, "SWAT": 1.0, "Z": 899.99991, "OWC": 900}],
             __HC_BELOW_FWL__,
         ),
         ([{"SWAT": 0.3, "SWATINIT": 0.3}], __PC_SCALED__),
@@ -65,6 +70,10 @@ REEK_DATAFILE = (
         ),  # Not enough information
         (
             [{"SWATINIT": 1, "Z": 100, "OWC": 900}],
+            __SWATINIT_1__,
+        ),
+        (
+            [{"SWATINIT": 1, "Z": 900.00001, "OWC": 900}],
             __SWATINIT_1__,
         ),
         (
@@ -224,6 +233,58 @@ REEK_DATAFILE = (
             ],
             __HC_BELOW_FWL__,
         ),
+        (
+            [
+                {
+                    "SWATINIT": 0.9,
+                    "SWAT": 0.9,
+                    "SWU": 0.95,
+                    "Z": 1100,
+                    "OWC": 1200,
+                }
+            ],
+            __PC_SCALED__,
+        ),
+        (
+            [
+                {
+                    "SWATINIT": 0.9,
+                    "SWAT": 0.5,
+                    "SWU": 0.9,
+                    "Z": 1100,
+                    "OWC": 1200,
+                }
+            ],
+            __SWATINIT_1__,
+        ),
+        (
+            [
+                {
+                    "SWATINIT": 0.9,
+                    "SWAT": 0.5,
+                    "SWU": 0.7,
+                    "Z": 1100,
+                    "OWC": 1200,
+                }
+            ],
+            __SWATINIT_1__,
+        ),
+        (
+            [
+                {
+                    "SWATINIT": 0.9,
+                    "SWAT": 0.7,
+                    "SWU": 0.7,
+                    # What if below contact? Not sure what makes the most
+                    # sense and if this is attainable from simulators:
+                    "Z": 1300,
+                    "OWC": 1200,
+                }
+            ],
+            __SWATINIT_1__,
+        ),
+        ([{"SWL": 0.3, "SWAT": 0.1, "SWLPC": 0.05, "SWATINIT": 0.1}], __PC_SCALED__),
+        ([{"SWL": 0.3, "SWAT": 0.4, "SWLPC": 0.4, "SWATINIT": 0.1}], __SWL_TRUNC__),
     ],
 )
 def test_qc_flag(propslist, expected_flag):
@@ -288,28 +349,36 @@ def test_qc_volumes(propslist, expected_dict):
 
 
 @pytest.mark.parametrize(
-    "swats, scale_vert, swls, expected_pc",
+    "swats, scale_vert, swls, swus, expected_pc",
     [
-        ([0], [1], None, [3]),
-        ([0.1], [1], None, [3]),
-        ([1], [1], None, [0]),
-        ([0, 1], [1, 1], None, [3, 0]),
-        ([2], [1], None, [0]),  # constant extrapolation
-        ([0.55], [1], None, [1.5]),
-        ([0.55], [2], None, [3]),
-        ([0.55], [2], [0], [3 - 3 / 10.0]),
-        ([0], [1], [0], [3]),
-        ([0.1], [1], [0], [3 - 3 / 10.0]),
-        ([1], [1], [0], [0]),
-        ([0.5], [1], [0.5], [3]),
+        # First without any SWL/SWU scaling:
+        ([0], [1], None, None, [3]),
+        ([0.1], [1], None, None, [3]),
+        ([1], [1], None, None, [0]),
+        ([0, 1], [1, 1], None, None, [3, 0]),
+        ([2], [1], None, None, [0]),  # constant extrapolation
+        ([0.55], [1], None, None, [1.5]),
+        ([0.55], [2], None, None, [3]),
+        # Test SWL scaling:
+        ([0.55], [2], [0], None, [3 - 3 / 10.0]),
+        ([0], [1], [0], None, [3]),
+        ([0.1], [1], [0], None, [3 - 3 / 10.0]),
+        ([1], [1], [0], None, [0]),
+        ([0.5], [1], [0.5], None, [3]),
+        # Test SWU scaling:
+        ([0.5], [1], None, [0.5], [0]),
+        ([0.5], [10], None, [0.5], [0]),
+        ([0.5], [1], [0.3], [0.5], [0]),
+        ([0.1], [1], None, [0.5], [3]),
+        ([0.1], [1], [0], [0.9], [3 - 1 / 3]),
     ],
 )
-def test_evaluate_pc(swats, scale_vert, swls, expected_pc):
+def test_evaluate_pc(swats, scale_vert, swls, swus, expected_pc):
     """Test that we can evaluate capillary pressure from a saturation table
     when we also allow the pc in the table to be scaled as Eclipse is doing it"""
     satfunc_df = pd.DataFrame([{"SW": 0.1, "PCOW": 3}, {"SW": 1, "PCOW": 0}])
     assert np.isclose(
-        _evaluate_pc(swats, scale_vert, swls, satfunc_df), expected_pc
+        _evaluate_pc(swats, scale_vert, swls, swus, satfunc_df), expected_pc
     ).all()
 
 

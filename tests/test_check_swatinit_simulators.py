@@ -607,6 +607,96 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
+def test_swu(simulator, tmpdir):
+    """Test SWATINIT < SWU < 1.
+
+    Both flow and Eclipse will scale the PC curve according to
+    SWU and SWATINIT."""
+    tmpdir.chdir()
+    model = PillarModel(
+        cells=1,
+        apex=900,  # pc is around 1.443238 here.
+        owc=[1000],
+        swatinit=[0.9],
+        swu=[0.95],
+        maxpc=[3.0],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    # All good when SWU > SWATINIT
+    assert np.isclose(qc_frame["SWAT"][0], 0.9)
+    if "flow" in simulator:
+        assert np.isclose(qc_frame["PC"][0], 1.442738)
+        assert np.isclose(qc_frame["PC_SCALING"], 8.175515)
+    else:
+        # These PC values are the same for all SWU between SWATINIT and 1
+        assert np.isclose(qc_frame["PC"][0], 1.443238)
+        # But PPCW goes to infinity as SWU approaches SWATINIT
+        assert np.isclose(qc_frame["PC_SCALING"], 8.178345)
+    assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_swu_equal_swatinit(simulator, tmpdir):
+    """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
+
+    Eclipse will ignore SWATINIT because it is equal to SWU.
+    """
+    model = PillarModel(
+        cells=1,
+        apex=900,  # pc is around 1.443238 here.
+        owc=[1000],
+        swatinit=[0.9],
+        swu=[0.9],  # Behaviour in Eclipse is discontinuous at swu=swatinit
+        maxpc=[3.0],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    swat_from_pc_input = model.evaluate_sw(1.443238)
+    assert np.isclose(swat_from_pc_input, 0.51513567)
+    if "flow" in simulator:
+        assert np.isclose(qc_frame["SWAT"][0], 0.9)
+        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+    else:
+        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
+        # There is no scaling when SWATINIT==SWU:
+        assert np.isclose(qc_frame["PC_SCALING"][0], 1)
+        assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
+    print(qc_frame)
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_swu_lessthan_swatinit(simulator, tmpdir):
+    """Test SWU equal to SWATINIT
+
+    In Eclipse this looks like the same situation as SWATINIT_1,
+    SWATINIT is totally ignored. In flow, it looks like the SWU
+    value (which here is the SWOF table endpoint) is ignored
+    """
+    model = PillarModel(
+        cells=1,
+        apex=900,  # pc is around 1.443238 here.
+        owc=[1000],
+        swatinit=[0.9],
+        swu=[0.8],
+        maxpc=[3.0],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    swat_from_pc_input = model.evaluate_sw(1.443238)
+    assert np.isclose(swat_from_pc_input, 0.463244)
+    if "flow" in simulator:
+        assert np.isclose(qc_frame["SWAT"][0], 0.9)
+        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+        # Flow does not scale the PC:
+        assert np.isclose(qc_frame["PC_SCALING"], 1.0)
+        assert np.isclose(qc_frame["PPCW"], 3.0)
+    else:
+        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
+        # There is no scaling when SWU < SWATINIT:
+        assert np.isclose(qc_frame["PC_SCALING"][0], 1)
+        assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
+    print(qc_frame)
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_1_below_contact(simulator, tmpdir):
     """An all-good scenario, below contact, water-wet, ask for water, we get water."""
     tmpdir.chdir()
@@ -630,6 +720,83 @@ def test_swatinit_1_below_contact(simulator, tmpdir):
 
     qc_vols = qc_volumes(qc_frame)
     assert np.isclose(qc_vols[__WATER__], 0.0)
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_swlpc_trunc(simulator, tmpdir):
+    """SWAT truncated by SWLPC is the same as being truncated by SWL"""
+    tmpdir.chdir()
+    model = PillarModel(
+        cells=1,
+        apex=1000,
+        owc=[1020],
+        swatinit=[0.1],
+        swl=[0.0],
+        swlpc=[0.8],
+        maxpc=[3.0],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    print(qc_frame)
+    if "eclipse" in simulator:
+        assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
+    else:
+        # SWLPC is not supported by flow, the SWLPC data is effectively ignored.
+        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_swlpc_correcting_swl(simulator, tmpdir):
+    """SWLPC should be allowed to override SWL, so that
+    if an SWL value would trigger SWL_TRUNC, we can save the day by SWLPC"""
+    tmpdir.chdir()
+    model = PillarModel(
+        cells=1,
+        apex=1000,
+        owc=[1020],
+        swatinit=[0.1],
+        swl=[0.4],
+        swlpc=[0.0],
+        maxpc=[3.0],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    print(qc_frame)
+    if "eclipse" in simulator:
+        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+    else:
+        # SWLPC is not supported by flow, the SWLPC data is effectively ignored.
+        assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_swlpc_scaling(simulator, tmpdir):
+    """Test that PC is scaled differently when SWLPC is included"""
+    tmpdir.chdir()
+    model = PillarModel(
+        cells=1,
+        apex=1000,
+        owc=[1020],
+        swatinit=[0.5],
+        swl=[0.0],
+        swlpc=[0.4],
+        maxpc=[1.0],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    print(qc_frame)
+    assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+    if "flow" in simulator:
+        # SWLPC is partly supported by flow, the SWLPC data affects PC:
+        # assert np.isclose(qc_frame["PC"], 0.224777)  # without SWLPC
+
+        # check_swatinit's PC estimate assumes the SWLPC is in use, and this
+        # perturbs the PC estimate, it should have been 0.224777:
+        assert np.isclose(qc_frame["PC"], 0.374628)
+        assert np.isclose(qc_frame["PC_SCALING"], 0.449553)
+    else:
+        assert np.isclose(qc_frame["PC"], 0.224276)  # this is independent of SWLPC
+        # Without SWLPC, pc_scaling is 0.448552, but when SWLPC=0.4
+        # the curve is pushed to the right before it is scaled vertically, and
+        # then it must be pushed further down:
+        assert np.isclose(qc_frame["PC_SCALING"], 0.269131)
 
 
 @pytest.mark.parametrize("simulator", filter(None, [find_eclipse_simulator()]))
