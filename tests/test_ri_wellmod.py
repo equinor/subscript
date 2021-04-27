@@ -198,7 +198,7 @@ def test_ert_forward_model(tmpdir):
     assert Path(outfile).exists()
 
 
-# REEK TESTS 
+# REEK TESTS
 @pytest.mark.skipif(
     not ri_wellmod.get_resinsight_exe(),
     reason="Could not find a ResInsight install",
