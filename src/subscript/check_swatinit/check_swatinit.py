@@ -69,7 +69,7 @@ def main():
 
         if args.output != "":
             logger.info("Exporting CSV to %s", args.output)
-            qc_frame.to_csv(args.output, index=False)
+            reorder_dframe_for_nonnans(qc_frame).to_csv(args.output, index=False)
 
     if "SWATINIT" not in qc_frame:
         print("Model did not use SWATINIT")
@@ -84,7 +84,15 @@ def main():
     print()
     print(human_report_pc_scaling(qc_frame))
 
-    if args.eqlnum not in qc_frame["EQLNUM"].values:
+    if args.volplot or args.volplotfile:
+        plotter.wvol_waterfall(qc_vols)
+    if args.volplot:
+        pyplot.show()
+    if args.volplotfile:
+        print(f"Dumping volume plot to {args.volplotfile}")
+        pyplot.savefig(args.volplotfile)
+
+    if (args.plotfile or args.plot) and args.eqlnum not in qc_frame["EQLNUM"].values:
         sys.exit(f"Error: EQLNUM {args.eqlnum} does not exist in grid. No plotting.")
     if args.plot or args.plotfile:
         plotter.plot_qc_panels(qc_frame[qc_frame["EQLNUM"] == args.eqlnum])
@@ -93,14 +101,6 @@ def main():
     if args.plotfile:
         print(f"Dumping plot to {args.plotfile}")
         pyplot.savefig(args.plotfile)
-
-    if args.volplot or args.volplotfile:
-        plotter.wvol_waterfall(qc_vols)
-    if args.volplot:
-        pyplot.show()
-    if args.volplotfile:
-        print(f"Dumping volume plot to {args.volplotfile}")
-        pyplot.savefig(args.volplotfile)
 
 
 def check_applicability(eclfiles):
@@ -138,6 +138,17 @@ def check_applicability(eclfiles):
         sys.exit(
             "No UNRST file found. This is required to get the initial water saturation"
         )
+
+
+def reorder_dframe_for_nonnans(dframe):
+    """Reorder a dataframe so that rows with less NaN comes first, this
+    will aid data analysis application to deduce correct datatypes for
+    columns"""
+    null_count = "__NULL_COUNT__"
+    dframe[null_count] = dframe.isnull().sum(axis=1)
+    return (
+        dframe.sort_values(null_count).drop(null_count, axis=1).reset_index(drop=True)
+    )
 
 
 def human_report_qc_vols(qc_vols):
@@ -195,12 +206,14 @@ def human_report_pc_scaling(qc_frame):
     string = ""
     string += "Maximal values:\n"
     string += "---------------\n"
-    string += str(qc_frame.groupby("SATNUM").max()[["PCOW_MAX"]])
+    string += qc_frame.groupby("SATNUM").max()[["PCOW_MAX"]].to_string()
     string += "\n"
-    string += str(qc_frame.groupby(["EQLNUM", "SATNUM"]).max()[["PPCW", "PC_SCALING"]])
+    string += (
+        qc_frame.groupby(["EQLNUM", "SATNUM"]).max()[["PPCW", "PC_SCALING"]].to_string()
+    )
     string += "\n\n"
-    string += "EQUIL initialization option #9):\n"
-    string += str(qc_frame.groupby("EQLNUM").max()[["OIP_INIT"]].astype(int))
+    string += "EQUIL initialization option #9:\n"
+    string += qc_frame.groupby("EQLNUM").max()[["OIP_INIT"]].astype(int).to_string()
     return string
 
 
@@ -227,6 +240,7 @@ def make_qc_gridframe(eclfiles):
             "PCW",
             "PPCW",
             "SWL",
+            "SWU",  # It is a feature request to process this
             "SWLPC",  # Extract in case it is there, but it is not supported yet.
         ],
         rstdates="first",
@@ -242,6 +256,9 @@ def make_qc_gridframe(eclfiles):
         logger.warning("SWL not found in model. Using SWL=0.")
         logger.warning("Consider adding FILLEPS to the PROPS section")
         grid_df["SWL"] = 0.0
+
+    if "SWU" in grid_df and (grid_df["SWU"] - 1).abs().sum() > 0:
+        logger.warning("SWU is less than 1, not yet supported by check_swatinit")
 
     if "SWLPC" in grid_df and (grid_df["SWL"] - grid_df["SWLPC"]).abs().sum() > 0:
         raise ValueError("SWLPC is in the data, but not supported by check_swatinit")
@@ -510,6 +527,14 @@ def compute_pc(qc_frame, satfunc_df):
     else:
         contact = "GWC"
 
+    # When SWATINIT=SWL=SWAT, PPCW as reported by Eclipse is the
+    # same as PCOW_MAX, and we cannot use it to compute PC, remove it:
+    if "SWL" in qc_frame:
+        p_cap[
+            np.isclose(qc_frame["SWAT"], qc_frame["SWL"])
+            & np.isclose(qc_frame["PC_SCALING"], 1)
+        ] = np.nan
+
     if "QC_FLAG" in qc_frame:
         p_cap[
             (qc_frame["QC_FLAG"] == __SWATINIT_1__)
@@ -562,11 +587,7 @@ def merge_equil(grid_df, equil_df):
     assert (
         not pd.isnull(equil_df).any().any()
     ), f"BUG: NaNs in equil dataframe:\n{equil_df}"
-    grid_df = grid_df.merge(
-        equil_df,
-        on="EQLNUM",
-        how="left",
-    )
+    grid_df = grid_df.merge(equil_df, on="EQLNUM", how="left")
     return grid_df
 
 
@@ -627,26 +648,6 @@ def get_parser():
         help="Output filename for CSV that can be used for QC in other tools",
     )
     parser.add_argument(
-        "--plot",
-        action="store_true",
-        help=(
-            "Show scatter QC plots with one dot pr. reservoir cell in a given EQLNUM "
-            "region, use together with the --eqlnum option"
-        ),
-    )
-    parser.add_argument(
-        "--eqlnum",
-        type=int,
-        default=1,
-        help=(
-            "Which EQLNUM to plot for in scatter plots. Defaults to 1. "
-            "Does not affect CSV output"
-        ),
-    )
-    parser.add_argument(
-        "--plotfile", type=str, help="PNG filename for where to dump a QC plot."
-    )
-    parser.add_argument(
         "--volplot",
         action="store_true",
         help=(
@@ -658,6 +659,26 @@ def get_parser():
         "--volplotfile",
         type=str,
         help="PNG filename for where to dump a waterfall chart.",
+    )
+    parser.add_argument(
+        "--plot",
+        action="store_true",
+        help=(
+            "Show scatter QC plots with one dot pr. reservoir cell in a given EQLNUM "
+            "region, use together with the --eqlnum option"
+        ),
+    )
+    parser.add_argument(
+        "--plotfile", type=str, help="PNG filename for where to dump a QC plot."
+    )
+    parser.add_argument(
+        "--eqlnum",
+        type=int,
+        default=1,
+        help=(
+            "Which EQLNUM to plot for in scatter plots. Defaults to 1. "
+            "Does not affect CSV output"
+        ),
     )
     return parser
 
