@@ -319,13 +319,26 @@ def main():
     console_mode = True
     init_case = is_init_case(ecl_path)
 
+    # Check that any input case has 'grdecl' extension for case and props
+    if not init_case:
+        input_files = [ecl_case]
+        if input_property_files is not None:
+            input_files.extend(input_property_files)
+        for input_file in input_files:
+            if Path(input_file).suffix.upper() != ".GRDECL":
+                logger.error(
+                    "Input files must have the extension '.grdecl' or '.GRDECL' for \
+                        ResInsight to recognize it as an Eclipse input property file."
+                )
+                return 1
+
     # Until fix in next ResInsight release: Exit if requesting lgr without .UNRST
     # Also requires GUI versions
     if lgr_specs is not None and len(lgr_specs) > 0:
         if not (init_case and has_restart_file(ecl_path)):
             logger.error(
                 "Can currently only create LGRs for init cases with restart file present \
-            (to be fixed in March2021 ResInsight release)"
+            (to be fixed in April 2021 ResInsight release)"
             )
             return 1
 
@@ -510,10 +523,11 @@ def main():
             # Need to check if LGR perfs exists, in case of non-LGR wells intersecting
             # well LGRs, or in case of LGRs present in the init case
             perf_fn_exists = False
-            lgr_perf_fn = perf_fn.joinpath("_LGR")
+            lgr_perf_fn = Path(str(perf_fn) + "_LGR")
             if Path(lgr_perf_fn).exists():
                 perf_fn = lgr_perf_fn
                 perf_fn_exists = True
+                logger.debug("Found LGR completion file %s", lgr_perf_fn)
 
             if perf_fn_exists or Path(perf_fn).exists():
                 with open(perf_fn, "r") as perf_fd:

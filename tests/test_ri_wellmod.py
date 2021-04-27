@@ -17,6 +17,18 @@ except ImportError:
     HAVE_ERT = False
 
 
+def file_contains(filename, string_to_find):
+    """
+    Utility function to check if a file contains a given string.
+    """
+    if not Path(filename).exists():
+        return False
+
+    with open(filename) as fhandle:
+        filetext = fhandle.read()
+        return filetext.find(string_to_find) >= 0
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that endpoint is installed"""
@@ -37,7 +49,7 @@ def test_main_initcase(tmpdir, mocker):
 
     mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile])
     ri_wellmod.main()
-    assert Path(outfile).exists()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
 
 
 @pytest.mark.skipif(
@@ -68,7 +80,7 @@ def test_main_inputcase(tmpdir, mocker):
         ],
     )
     ri_wellmod.main()
-    assert Path(outfile).exists()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
 
 
 @pytest.mark.skipif(
@@ -89,7 +101,7 @@ def test_main_mswdef(tmpdir, mocker):
     )
     ri_wellmod.main()
 
-    assert Path(outfile).exists()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
 
 
 @pytest.mark.skipif(
@@ -109,7 +121,7 @@ def test_main_lgr(tmpdir, mocker):
     )
     ri_wellmod.main()
 
-    assert Path(outfile).exists()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
 
 
 @pytest.mark.skipif(
@@ -143,8 +155,8 @@ def test_main_lgr_cmdline(tmpdir, mocker):
     )
     ri_wellmod.main()
 
-    assert Path(outfile).exists()
-    assert Path(lgr_outfile).exists()
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+    assert Path(lgr_outfile).exists() and file_contains(lgr_outfile, "CARFIN")
 
 
 @pytest.mark.integration
@@ -184,3 +196,42 @@ def test_ert_forward_model(tmpdir):
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert Path(outfile).exists()
+
+
+# REEK TESTS 
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
+)
+def test_main_initcase_reek(tmpdir, mocker):
+    """Test well data generation from init case on Reek"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "ri_reek_wells.rsp")
+    init_case_name = str(DATAPATH / "../data/reek/eclipse/model/2_R001_REEK-0")
+    outfile = "welldefs_initcase_reek.sch"
+
+    mocker.patch("sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile])
+    ri_wellmod.main()
+    assert Path(outfile).exists() and file_contains(outfile, "OP_1")
+
+
+@pytest.mark.skipif(
+    not ri_wellmod.get_resinsight_exe(),
+    reason="Could not find a ResInsight install",
+)
+def test_main_lgr_reek(tmpdir, mocker):
+    """Test creation of LGR on Reek"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "ri_reek_wells.rsp")
+    init_case_name = str(DATAPATH / "../data/reek/eclipse/model/2_R001_REEK-0")
+    outfile = "welldefs_lgr_reek.sch"
+
+    mocker.patch(
+        "sys.argv",
+        [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "--lgr", "OP_1:5,5,1"],
+    )
+    ri_wellmod.main()
+
+    assert Path(outfile).exists() and file_contains(outfile, "OP_1")
