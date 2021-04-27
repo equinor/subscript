@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.check_swatinit.check_swatinit &mdash; subscript 0.9.1.dev8+gde4594a documentation</title>
+  <title>subscript.check_swatinit.check_swatinit &mdash; subscript 0.9.1.dev9+g589f045 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.9.1.dev8+gde4594a
+                0.9.1.dev9+g589f045
               </div>
             
           
@@ -262,6 +262,10 @@ SWAT at time zero and a scaled capillary pressure curve.</p>
 back-calculate it like this.</p>
 <p>Likewise, we are not getting arbitrarily negative Pc values below contact
 for the same reason, only slightly negative for an oil-wet curve.</p>
+<p>Note: If SWLPC is present in the dataframe, it will be used instead
+of SWL. As OPM-flow outputs SWLPC in the INIT files but otherwise
+ignores SWLPC, this will result in an incorrect PC estimate for OPM-flow
+when SWLPC is in use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -270,11 +274,8 @@ for the same reason, only slightly negative for an oil-wet curve.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><dl class="simple">
-<dt>pd.Series, with capillary pressure values in bars (given Eclipse unit</dt><dd><p>is METRIC)</p>
-</dd>
-</dl>
-</p>
+<dd class="field-even"><p>pd.Series, with capillary pressure values in bars (given Eclipse unit
+is METRIC)</p>
 </dd>
 </dl>
 </dd></dl>
