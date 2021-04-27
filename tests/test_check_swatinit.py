@@ -1,6 +1,8 @@
 import subprocess
 from pathlib import Path
 
+from matplotlib import pyplot
+
 import numpy as np
 import pandas as pd
 
@@ -17,11 +19,14 @@ from subscript.check_swatinit.check_swatinit import (
     __WATER__,
     _evaluate_pc,
     compute_pc,
+    main,
     merge_equil,
     qc_flag,
     qc_volumes,
-    main,
+    reorder_dframe_for_nonnans,
 )
+
+from subscript.check_swatinit.plotter import wvol_waterfall
 
 REEK_DATAFILE = (
     Path(__file__).absolute().parent
@@ -407,6 +412,13 @@ SATFUNC_DF = pd.DataFrame([{"SW": 0.1, "PCOW": 3}, {"SW": 1, "PCOW": 0}]).assign
             SATFUNC_DF,
             np.nan,
         ),
+        # When SWATINIT=SWL=SWAT, the PPCW reported by Eclipse is incorrect (it is equal
+        # to PCOW_MAX), and computed PC should not be there:
+        (
+            [{"SATNUM": 1, "SWATINIT": 0.1, "SWAT": 0.1, "SWL": 0.1, "PC_SCALING": 1}],
+            SATFUNC_DF,
+            np.nan,
+        ),
     ],
 )
 def test_compute_pc(propslist, satfunc_df, expected_pc):
@@ -428,6 +440,182 @@ def test_compute_pc(propslist, satfunc_df, expected_pc):
             assert pd.isnull(pc_series.values[0])
         else:
             assert pc_series.values[0] == expected_pc
+
+
+def test_eqlnum2(tmpdir, mocker):
+    """What if a model does not have EQLNUM=1 cells present"""
+    tmpdir.chdir()
+    pd.DataFrame(
+        [
+            # This dataframe is a minimum dataset for check_swatinit
+            # to run.
+            {
+                "EQLNUM": 2,
+                "Z": 1000,
+                "SWATINIT": 0.9,
+                "PORV": 100,
+                "SWAT": 0.8,
+                "VOLUME": 80,
+                "QC_FLAG": __PC_SCALED__,
+                "SATNUM": 2,
+                "PCOW_MAX": 2,
+                "PPCW": 4,
+                "PC_SCALING": 2,
+                "OIP_INIT": 0,
+            }
+        ]
+    ).to_csv("foo.csv")
+
+    # Should not error:
+    mocker.patch("sys.argv", ["check_swatinit", "foo.csv"])
+    main()
+
+    # But default plotting should error:
+    mocker.patch("sys.argv", ["check_swatinit", "foo.csv", "--plot"])
+    with pytest.raises(SystemExit, match="EQLNUM 1 does not exist in grid"):
+        main()
+
+
+@pytest.mark.parametrize(
+    "inputrows, expected",
+    [
+        ([{}], [{}]),
+        ([{"FOO": 1}], [{"FOO": 1}]),
+        ([{"FOO": np.nan}], [{"FOO": np.nan}]),
+        ([{"FOO": np.nan}, {"FOO": 1}], [{"FOO": 1}, {"FOO": np.nan}]),
+        (
+            [{"FOO": 2, "PC": np.nan}, {"FOO": 1, "PC": 2}],
+            [{"FOO": 1, "PC": 2}, {"FOO": 2, "PC": np.nan}],
+        ),
+    ],
+)
+def test_reorder_dframe_for_nonnans(inputrows, expected):
+    """Test that rows with less NaNs will be prioritized through the reorder function"""
+    pd.testing.assert_frame_equal(
+        reorder_dframe_for_nonnans(pd.DataFrame(inputrows)), pd.DataFrame(expected)
+    )
+
+
+@pytest.mark.plot
+def test_volplot_negative_bars():
+    qc_frame = pd.DataFrame(
+        [
+            # This dataframe is a minimum dataset for check_swatinit
+            # to run.
+            {
+                "EQLNUM": 1,
+                "Z": 1000,
+                "SWATINIT": 0.9,
+                "PORV": 100,
+                "SWAT": 0.8,
+                "VOLUME": 80,
+                "QC_FLAG": __SWL_TRUNC__,
+                "SATNUM": 1,
+                "PCOW_MAX": 2,
+                "PPCW": 4,
+                "PC_SCALING": 2,
+                "OIP_INIT": 0,
+            }
+        ]
+    )
+
+    wvol_waterfall(qc_volumes(qc_frame))
+
+    print("Verify that all annotations are visible")
+    pyplot.show()
+
+
+@pytest.mark.plot
+def test_volplot_zerospan():
+    # Test when there is no difference from SWATINIT to SWAT:
+    qc_frame = pd.DataFrame(
+        [
+            {
+                "EQLNUM": 1,
+                "Z": 1000,
+                "SWATINIT": 0.9,
+                "PORV": 100000,
+                "SWAT": 0.9,
+                "VOLUME": 80,
+                "QC_FLAG": __SWL_TRUNC__,
+                "SATNUM": 1,
+                "PCOW_MAX": 2,
+                "PPCW": 4,
+                "PC_SCALING": 2,
+                "OIP_INIT": 0,
+            }
+        ]
+    )
+    wvol_waterfall(qc_volumes(qc_frame))
+
+    print("Verify that all annotations are visible and placed wisely")
+    pyplot.show()
+
+
+@pytest.mark.plot
+def test_volplot_largenegative():
+    qc_frame = pd.DataFrame(
+        [
+            {
+                "EQLNUM": 1,
+                "Z": 1000,
+                "SWATINIT": 0.9,
+                "PORV": 100000,
+                "SWAT": 0.2,
+                "VOLUME": 80,
+                "QC_FLAG": __SWL_TRUNC__,
+                "SATNUM": 1,
+                "PCOW_MAX": 2,
+                "PPCW": 4,
+                "PC_SCALING": 2,
+                "OIP_INIT": 0,
+            }
+        ]
+    )
+    wvol_waterfall(qc_volumes(qc_frame))
+
+    print("Verify that all annotations are visible and placed wisely")
+    pyplot.show()
+
+
+@pytest.mark.plot
+def test_volplot_manynegative():
+    qc_frame = pd.DataFrame(
+        [
+            {
+                "EQLNUM": 1,
+                "Z": 1000,
+                "SWATINIT": 0.9,
+                "PORV": 100000,
+                "SWAT": 0.2,
+                "VOLUME": 80,
+                "QC_FLAG": __SWL_TRUNC__,
+                "SATNUM": 1,
+                "PCOW_MAX": 2,
+                "PPCW": 4,
+                "PC_SCALING": 2,
+                "OIP_INIT": 0,
+            },
+            {
+                "EQLNUM": 1,
+                "Z": 1000,
+                "SWATINIT": 0.9,
+                "PORV": 100000,
+                "SWAT": 0.2,
+                "VOLUME": 80,
+                "QC_FLAG": __SWATINIT_1__,
+                "SATNUM": 1,
+                "PCOW_MAX": 2,
+                "PPCW": 4,
+                "PC_SCALING": 2,
+                "OIP_INIT": 0,
+            },
+        ]
+    )
+    wvol_waterfall(qc_volumes(qc_frame))
+
+    print("Verify that y limits in particular are correct")
+    pyplot.show()
 
 
 def test_reek(tmpdir, mocker):
