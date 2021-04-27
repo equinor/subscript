@@ -341,6 +341,7 @@ def test_swatinit_1_far_above_contact(simulator, tmpdir):
     model = PillarModel(
         cells=1, apex=1000, owc=[2000], swatinit=[1], swl=[0.1], maxpc=[3.0]
     )
+
     qc_frame = run_reservoir_simulator(simulator, model)
 
     qc_vols = qc_volumes(qc_frame)
@@ -375,12 +376,11 @@ def test_swatinit_1_far_above_contact(simulator, tmpdir):
         assert np.isclose(qc_frame["SWAT"][0], 1)
         # PPCW is the input Pc:
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
-        assert np.isnan(qc_frame["PC"][0])
     else:
         # E100 ignores SWATINIT and sets the saturation to SWL:
         assert np.isclose(qc_frame["SWAT"][0], 0.1)
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
-        assert np.isclose(qc_frame["PC"][0], 3.0)
+    assert np.isnan(qc_frame["PC"][0])
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
