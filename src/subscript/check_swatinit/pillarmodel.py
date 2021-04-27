@@ -241,7 +241,7 @@ class PillarModel:
             for satnum in range(len(self.swl)):
                 string += "SWOF\n"
                 string += "-- SW KRW KROW PC\n"
-                string += f"{self.swl[satnum]:g} 0 1 {self.maxpc[satnum]:g} \n"
+                string += f"{self.swl[satnum]:g} 0 1 {self.maxpc[satnum]:g}\n"
                 string += f"1.0 1.0 0.0 {self.minpc[satnum]:g}\n/\n"
 
         if "GAS" in self.phases and "OIL" in self.phases:
@@ -250,6 +250,19 @@ class PillarModel:
                 string += "-- SG KRG KROG PC\n"
                 string += "0 0 1 0 \n"
                 string += f"{1-self.swl[satnum]:g} 1.0 0.0 0\n/\n"
+
+        if "GAS" in self.phases and "OIL" not in self.phases:
+            for satnum in range(len(self.swl)):
+                string += "SWFN\n"
+                string += "-- SW KRW PC\n"
+                string += f"{self.swl[satnum]:g} 0 {self.maxpc[satnum]:g}\n"
+                string += f"1.0 1.0 {self.minpc[satnum]:g}\n/\n"
+
+            for satnum in range(len(self.swl)):
+                string += "SGFN\n"
+                string += "-- SG KRG PC\n"
+                string += "0 0 0\n"
+                string += f"{1 - self.swl[satnum]:g} 1.0 0.0\n/\n"
 
         string += """\n
 DENSITY

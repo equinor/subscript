@@ -235,6 +235,9 @@ def make_qc_gridframe(eclfiles):
     # Circumvent bug in ecl2df that will pick SWL from both INIT and restart file:
     grid_df = grid_df.loc[:, ~grid_df.columns.duplicated()]
 
+    # This will be unneccessary from ecl2df 0.13.0:
+    grid_df = grid_df.where(grid_df > -1e20 + 1e13)
+
     if "SWL" not in grid_df:
         logger.warning("SWL not found in model. Using SWL=0.")
         logger.warning("Consider adding FILLEPS to the PROPS section")
@@ -312,9 +315,14 @@ def qc_flag(qc_frame):
 
     qc_col = pd.Series(index=qc_frame.index, dtype=str)
 
+    if "OWC" in qc_frame:
+        contact = "OWC"
+    else:
+        contact = "GWC"
+
     # SWATINIT ignored, water is lost if pc > 0, lost and/or gained if oil-wet pc-curve
     qc_col[
-        (qc_frame["SWATINIT"] < 1) & (qc_frame["Z"] > qc_frame["OWC"])
+        (qc_frame["SWATINIT"] < 1) & (qc_frame["Z"] > qc_frame[contact])
     ] = __HC_BELOW_FWL__
 
     # SWATINIT accepted and PC is scaled.
@@ -350,14 +358,14 @@ def qc_flag(qc_frame):
 
     # SWATINIT=1 above contact:
     qc_col[
-        np.isclose(qc_frame["SWATINIT"], 1) & (qc_frame["Z"] < qc_frame["OWC"])
+        np.isclose(qc_frame["SWATINIT"], 1) & (qc_frame["Z"] < qc_frame[contact])
     ] = __SWATINIT_1__
 
     # SWATINIT=1 below contact but with SWAT < 1, can happen with OIP_INIT:
     if "OIP_INIT" in qc_frame:
         qc_col[
             (~np.isclose(qc_frame["OIP_INIT"], 0))
-            & (qc_frame["Z"] > qc_frame["OWC"])
+            & (qc_frame["Z"] > qc_frame[contact])
             & (np.isclose(qc_frame["SWATINIT"], 1))
             & (~np.isclose(qc_frame["SWATINIT"], qc_frame["SWAT"]))
         ] = __SWATINIT_1__
@@ -373,7 +381,7 @@ def qc_flag(qc_frame):
     qc_col[
         np.isclose(qc_frame["SWATINIT"], 1)
         & np.isclose(qc_frame["SWAT"], 1)
-        & (qc_frame["Z"] > qc_frame["OWC"])
+        & (qc_frame["Z"] > qc_frame[contact])
     ] = __WATER__
 
     qc_col[qc_frame["SWL"] > qc_frame["SWATINIT"]] = __SWL_TRUNC__
@@ -382,7 +390,6 @@ def qc_flag(qc_frame):
     # feature request:
     qc_col.fillna(__UNKNOWN__, inplace=True)
 
-    print(qc_frame[(qc_col == __UNKNOWN__) & (qc_frame["Z"] < 1600)])
     return qc_col
 
 
@@ -498,11 +505,16 @@ def compute_pc(qc_frame, satfunc_df):
             satfunc_df[satfunc_df["SATNUM"] == satnum],
         )
     # Fix needed for OPM-flow above contact:
+    if "OWC" in qc_frame:
+        contact = "OWC"
+    else:
+        contact = "GWC"
+
     if "QC_FLAG" in qc_frame:
         p_cap[
             (qc_frame["QC_FLAG"] == __SWATINIT_1__)
             & (p_cap == 0)
-            & (qc_frame["Z"] < qc_frame["OWC"])
+            & (qc_frame["Z"] < qc_frame[contact])
         ] = np.nan
     return p_cap
 

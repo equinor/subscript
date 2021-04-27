@@ -7,5 +7,5 @@ import subscript
 
 @pytest.fixture
 def path_to_subscript():
-    """ path to installed subscript module."""
+    """path to installed subscript module."""
     return path.dirname(subscript.__file__)

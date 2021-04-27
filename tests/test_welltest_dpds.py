@@ -94,7 +94,7 @@ def test_summary_vec():
 
 
 def test_get_buildup_indices():
-    """Test that buildup periods are identified correct """
+    """Test that buildup periods are identified correct"""
 
     wbhp = np.array([1, 0])
     bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
@@ -135,7 +135,7 @@ def test_get_buildup_indices():
 
 
 def test_supertime():
-    """ Test that superpositied time is calculated correctly """
+    """Test that superpositied time is calculated correctly"""
 
     summary = EclSum(DATAFILEPATH)
 
@@ -151,7 +151,7 @@ def test_supertime():
 
 
 def test_weighted_avg_press_time_derivative_lag1():
-    """ Test that weighted_avg_press_time_derivative_lag1 is calculated correctly """
+    """Test that weighted_avg_press_time_derivative_lag1 is calculated correctly"""
 
     summary = EclSum(DATAFILEPATH)
 
@@ -173,7 +173,7 @@ def test_weighted_avg_press_time_derivative_lag1():
 
 
 def test_get_weighted_avg_press_time_derivative_lag2():
-    """ Test that weighted_avg_press_time_derivative_lag2 is calcuated correctly """
+    """Test that weighted_avg_press_time_derivative_lag2 is calcuated correctly"""
 
     summary = EclSum(DATAFILEPATH)
 
@@ -203,7 +203,7 @@ def test_get_weighted_avg_press_time_derivative_lag2():
 
 
 def test_genobs_vec(tmpdir):
-    """ Test genobs_vec """
+    """Test genobs_vec"""
 
     tmpdir.chdir()
     mockcsv = """
@@ -223,7 +223,7 @@ def test_genobs_vec(tmpdir):
 
 
 def test_to_csv(tmpdir):
-    """ Test to_csv """
+    """Test to_csv"""
 
     tmpdir.chdir()
 

@@ -12,7 +12,7 @@ import subscript.hook_implementations.jobs
 
 @pytest.fixture
 def expected_jobs(path_to_subscript):
-    """ dictionary of installed jobs with location to config"""
+    """dictionary of installed jobs with location to config"""
     expected_job_names = [
         "CHECK_SWATINIT",
         "CSV2OFMVOL",
