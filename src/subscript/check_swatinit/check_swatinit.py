@@ -327,9 +327,14 @@ def qc_flag(qc_frame):
     else:
         contact = "GWC"
 
+    # Eclipse and libecl does not calculate cell centres to the same decimals.
+    # Add some tolerance when testing towards fluid contacts.
+    contacttolerance = 1e-4
+
     # SWATINIT ignored, water is lost if pc > 0, lost and/or gained if oil-wet pc-curve
     qc_col[
-        (qc_frame["SWATINIT"] < 1) & (qc_frame["Z"] > qc_frame[contact])
+        (qc_frame["SWATINIT"] < 1)
+        & (qc_frame["Z"] > qc_frame[contact] - contacttolerance)
     ] = __HC_BELOW_FWL__
 
     # SWATINIT accepted and PC is scaled.
@@ -365,7 +370,8 @@ def qc_flag(qc_frame):
 
     # SWATINIT=1 above contact:
     qc_col[
-        np.isclose(qc_frame["SWATINIT"], 1) & (qc_frame["Z"] < qc_frame[contact])
+        np.isclose(qc_frame["SWATINIT"], 1)
+        & (qc_frame["Z"] < qc_frame[contact] + contacttolerance)
     ] = __SWATINIT_1__
 
     # If SWU is less than 1, SWATINIT is ignored whenever it is equal or larger
@@ -382,7 +388,7 @@ def qc_flag(qc_frame):
     if "OIP_INIT" in qc_frame:
         qc_col[
             (~np.isclose(qc_frame["OIP_INIT"], 0))
-            & (qc_frame["Z"] > qc_frame[contact])
+            & (qc_frame["Z"] > qc_frame[contact] - contacttolerance)
             & (np.isclose(qc_frame["SWATINIT"], 1))
             & (~np.isclose(qc_frame["SWATINIT"], qc_frame["SWAT"]))
         ] = __SWATINIT_1__

@@ -47,6 +47,10 @@ REEK_DATAFILE = (
             [{"SWATINIT": 0.9, "SWAT": 1.0, "Z": 1000, "OWC": 900}],
             __HC_BELOW_FWL__,
         ),
+        (
+            [{"SWATINIT": 0.9, "SWAT": 1.0, "Z": 899.99991, "OWC": 900}],
+            __HC_BELOW_FWL__,
+        ),
         ([{"SWAT": 0.3, "SWATINIT": 0.3}], __PC_SCALED__),
         (
             [{"SWATINIT": 0.9, "SWAT": 0.8, "PPCW": 100, "PPCWMAX": 100}],
@@ -66,6 +70,10 @@ REEK_DATAFILE = (
         ),  # Not enough information
         (
             [{"SWATINIT": 1, "Z": 100, "OWC": 900}],
+            __SWATINIT_1__,
+        ),
+        (
+            [{"SWATINIT": 1, "Z": 900.00001, "OWC": 900}],
             __SWATINIT_1__,
         ),
         (
