@@ -216,8 +216,9 @@ def test_main_initcase_reek(tmpdir, mocker):
     assert Path(outfile).exists() and file_contains(outfile, "OP_1")
 
 
+# This one requires a GUI (for now) and only works locally
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(),
+    not ri_wellmod.get_resinsight_exe() or not RUNPATH.exists(),
     reason="Could not find a ResInsight install",
 )
 def test_main_lgr_reek(tmpdir, mocker):
