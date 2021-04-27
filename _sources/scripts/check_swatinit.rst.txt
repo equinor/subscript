@@ -71,13 +71,15 @@ are:
   significant volumes, revise the modelling.
 
 ``SWATINIT_1``
-  When SWATINIT is 1 above the contact, Eclipse will ignore SWATINIT in the cell
-  and not touch the capillary pressure function. This will typically result in extra
-  hydrocarbons added to the model for a normal capillary pressure function. This
-  could be ok as long as the porosities and/or permeabilities of these cells are
-  small. If it is not, you should look into if there are upscaling issues for
-  this cell. In situations with nonzero item #9 in EQUIL, this can also occur
-  below the contact.
+  When SWATINIT is 1 above the contact, Eclipse will ignore SWATINIT in the
+  cell and not touch the capillary pressure function. This will typically
+  result in extra hydrocarbons added to the model for a normal capillary
+  pressure function. This could be ok as long as the porosities and/or
+  permeabilities of these cells are small. If it is not, you should look into
+  if there are upscaling issues for this cell. In situations with nonzero item
+  #9 in EQUIL, this can also occur below the contact. If SWU is included in the
+  model and less than 1, cells where SWATINIT is equal or larger than SWU will
+  also be flagged as SWATINIT_1 as the behaviour is the same.
 
 ``HC_BELOW_FWL``
   If SWATINIT is less than 1 below the contact provided in EQUIL, Eclipse will
@@ -96,12 +98,24 @@ are:
   SWATINIT was 1 in the water zone, and SWAT is set to 1.
 
 
-Example text output
--------------------
+Text output from check_swatinit
+-------------------------------
+
+When run interactively in a terminal on an Eclipse case, check_swatinit will
+print a text output summarizing the results from flagging each cell into
+distinct QC categories.  The table below sums the water volume changes from
+SWATINIT to SWAT for each QC category, in terms of *reservoir* volumes, i.e. no
+conversion to surface conditions. The percentages are with respect the
+SWATINIT_WVOL (i.e. the water volume that SWATINIT requested).
+
+To the right in the output, the corresponding hydrocarbon porevolumes under
+*reservoir* conditions are given. The number 66.571 is SWATINIT_WVOL
+substracted from PORV, and then the percentages below are the volumetric change
+in water volume with respect to this hydrocarbon pore volume.
 
 .. code-block:: console
 
-  $ check_swatinit DROGON.DATA
+  $ check_swatinit DROGON-EXAMPLE.DATA
   VOLUME                     3203.1103 Mrm3
   PORV                        571.1770 Mrm3
   SWATINIT_WVOL               504.6057 Mrm3           HC:   66.571 Mrm3
@@ -121,6 +135,23 @@ Example text output
                       PPCW  PC_SCALING
   EQLNUM SATNUM
   1      1       22.626438    0.136527
+
+
+The maximal values tables then gives the maximum capillary pressure as present
+in the input SWOF/SWFN table (the number PCOW_MAX) for each SATNUM.  The number
+PPCW in the next table is the corresponding number after Eclipse has scaled the
+capillary pressure, and you can find here that PPCW = PCOW_MAX * PC_SCALING. In
+the ideal case (no error from upscaling etc), PC_SCALING would be 1 in all
+cells. Since PC_SCALING is less than 1 it means that capillary pressure had to
+be downscaled by at least a factor ~10 in every cell, meaning that the
+capillary pressure input curve should be revisited.
+
+Use also the scatter plot through the ``--plot`` option to get an impression
+of which capillary pressures ranges are present in your reservoir model.
+
+More often, PC_SCALING and PPCW will be large, with scaling larger than 1.
+Still, this table only prints the maximal values, and if severe PC_SCALING only
+occurs in a few cells, it could still be acceptable.
 
 
 Outputted CSV file
@@ -159,15 +190,15 @@ Example plots
    :width: 70%
 
    A waterfall chart illustrating what contributes to the change from SWATINIT
-   to SWAT. This plot is obtained by adding the ``--volplot`` command line option.
-   The numbers inside the plot is the percentage change in terms of reservoir
-   volumes, blue numbers are with respect to SWATINIT_WVOL and green numbers
-   are with respect to initial hydrocarbon volumes.
+   to SWAT. This plot is obtained by adding the ``--volplot`` command line
+   option.  The numbers inside the plot are the percentage changes in terms of
+   reservoir volumes, blue numbers are with respect to SWATINIT_WVOL and green
+   numbers are with respect to initial hydrocarbon volumes.
 
 
 .. figure:: images/check_swatinit_scatter.png
    :align: center
-   :width: 90%
+   :width: 98%
 
    A panel of reservoir properties versus depth, coloured by the QC_FLAG, for a
    specific EQLNUM. Use the command line option ``--plot`` together with

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>CHECK_SWATINIT &mdash; subscript 0.9.1.dev6+gdceec47 documentation</title>
+  <title>CHECK_SWATINIT &mdash; subscript 0.9.1.dev8+gde4594a documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.9.1.dev6+gdceec47
+                0.9.1.dev8+gde4594a
               </div>
             
           
@@ -103,7 +103,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CHECK_SWATINIT</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-eclipse-keyword-swatinit">The Eclipse keyword SWATINIT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cell-by-cell-outcome-of-water-initialization">Cell by cell outcome of water initialization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#example-text-output">Example text output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#text-output-from-check-swatinit">Text output from check_swatinit</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#outputted-csv-file">Outputted CSV file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-plots">Example plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-syntax">Command line syntax</a><ul>
@@ -269,13 +269,15 @@ than SWATINIT, SWAT will be reset to SWL. Compared to SWATINIT, extra water
 is added to the model and hydrocarbons are lost. If this amounts to
 significant volumes, revise the modelling.</p>
 </dd>
-<dt><code class="docutils literal notranslate"><span class="pre">SWATINIT_1</span></code></dt><dd><p>When SWATINIT is 1 above the contact, Eclipse will ignore SWATINIT in the cell
-and not touch the capillary pressure function. This will typically result in extra
-hydrocarbons added to the model for a normal capillary pressure function. This
-could be ok as long as the porosities and/or permeabilities of these cells are
-small. If it is not, you should look into if there are upscaling issues for
-this cell. In situations with nonzero item #9 in EQUIL, this can also occur
-below the contact.</p>
+<dt><code class="docutils literal notranslate"><span class="pre">SWATINIT_1</span></code></dt><dd><p>When SWATINIT is 1 above the contact, Eclipse will ignore SWATINIT in the
+cell and not touch the capillary pressure function. This will typically
+result in extra hydrocarbons added to the model for a normal capillary
+pressure function. This could be ok as long as the porosities and/or
+permeabilities of these cells are small. If it is not, you should look into
+if there are upscaling issues for this cell. In situations with nonzero item
+#9 in EQUIL, this can also occur below the contact. If SWU is included in the
+model and less than 1, cells where SWATINIT is equal or larger than SWU will
+also be flagged as SWATINIT_1 as the behaviour is the same.</p>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">HC_BELOW_FWL</span></code></dt><dd><p>If SWATINIT is less than 1 below the contact provided in EQUIL, Eclipse will
 ignore it and not scale the capillary pressure function. SWAT will be 1,
@@ -292,9 +294,19 @@ need to use PPCWMAX you should revisit the modelling.</p>
 </dd>
 </dl>
 </div>
-<div class="section" id="example-text-output">
-<h2>Example text output<a class="headerlink" href="#example-text-output" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>check_swatinit DROGON.DATA
+<div class="section" id="text-output-from-check-swatinit">
+<h2>Text output from check_swatinit<a class="headerlink" href="#text-output-from-check-swatinit" title="Permalink to this headline">¶</a></h2>
+<p>When run interactively in a terminal on an Eclipse case, check_swatinit will
+print a text output summarizing the results from flagging each cell into
+distinct QC categories.  The table below sums the water volume changes from
+SWATINIT to SWAT for each QC category, in terms of <em>reservoir</em> volumes, i.e. no
+conversion to surface conditions. The percentages are with respect the
+SWATINIT_WVOL (i.e. the water volume that SWATINIT requested).</p>
+<p>To the right in the output, the corresponding hydrocarbon porevolumes under
+<em>reservoir</em> conditions are given. The number 66.571 is SWATINIT_WVOL
+substracted from PORV, and then the percentages below are the volumetric change
+in water volume with respect to this hydrocarbon pore volume.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>check_swatinit DROGON-EXAMPLE.DATA
 <span class="go">VOLUME                     3203.1103 Mrm3</span>
 <span class="go">PORV                        571.1770 Mrm3</span>
 <span class="go">SWATINIT_WVOL               504.6057 Mrm3           HC:   66.571 Mrm3</span>
@@ -316,6 +328,19 @@ need to use PPCWMAX you should revisit the modelling.</p>
 <span class="go">1      1       22.626438    0.136527</span>
 </pre></div>
 </div>
+<p>The maximal values tables then gives the maximum capillary pressure as present
+in the input SWOF/SWFN table (the number PCOW_MAX) for each SATNUM.  The number
+PPCW in the next table is the corresponding number after Eclipse has scaled the
+capillary pressure, and you can find here that PPCW = PCOW_MAX * PC_SCALING. In
+the ideal case (no error from upscaling etc), PC_SCALING would be 1 in all
+cells. Since PC_SCALING is less than 1 it means that capillary pressure had to
+be downscaled by at least a factor ~10 in every cell, meaning that the
+capillary pressure input curve should be revisited.</p>
+<p>Use also the scatter plot through the <code class="docutils literal notranslate"><span class="pre">--plot</span></code> option to get an impression
+of which capillary pressures ranges are present in your reservoir model.</p>
+<p>More often, PC_SCALING and PPCW will be large, with scaling larger than 1.
+Still, this table only prints the maximal values, and if severe PC_SCALING only
+occurs in a few cells, it could still be acceptable.</p>
 </div>
 <div class="section" id="outputted-csv-file">
 <h2>Outputted CSV file<a class="headerlink" href="#outputted-csv-file" title="Permalink to this headline">¶</a></h2>
@@ -345,13 +370,13 @@ cells when item #9 in EQUIL is nonzero.</p>
 <div class="figure align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/check_swatinit_volplot.png"><img alt="../_images/check_swatinit_volplot.png" src="../_images/check_swatinit_volplot.png" style="width: 70%;" /></a>
 <p class="caption"><span class="caption-text">A waterfall chart illustrating what contributes to the change from SWATINIT
-to SWAT. This plot is obtained by adding the <code class="docutils literal notranslate"><span class="pre">--volplot</span></code> command line option.
-The numbers inside the plot is the percentage change in terms of reservoir
-volumes, blue numbers are with respect to SWATINIT_WVOL and green numbers
-are with respect to initial hydrocarbon volumes.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
+to SWAT. This plot is obtained by adding the <code class="docutils literal notranslate"><span class="pre">--volplot</span></code> command line
+option.  The numbers inside the plot are the percentage changes in terms of
+reservoir volumes, blue numbers are with respect to SWATINIT_WVOL and green
+numbers are with respect to initial hydrocarbon volumes.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
 </div>
 <div class="figure align-center" id="id3">
-<a class="reference internal image-reference" href="../_images/check_swatinit_scatter.png"><img alt="../_images/check_swatinit_scatter.png" src="../_images/check_swatinit_scatter.png" style="width: 90%;" /></a>
+<a class="reference internal image-reference" href="../_images/check_swatinit_scatter.png"><img alt="../_images/check_swatinit_scatter.png" src="../_images/check_swatinit_scatter.png" style="width: 98%;" /></a>
 <p class="caption"><span class="caption-text">A panel of reservoir properties versus depth, coloured by the QC_FLAG, for a
 specific EQLNUM. Use the command line option <code class="docutils literal notranslate"><span class="pre">--plot</span></code> together with
 <code class="docutils literal notranslate"><span class="pre">--eqlnum</span></code> to obtain this.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
@@ -361,9 +386,8 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
 <h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Permalink to this headline">¶</a></h2>
 <p><p>QC tool for SWATINIT vs SWAT in Eclipse runs</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">check_swatinit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">plot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">eqlnum</span> <span class="n">EQLNUM</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">plotfile</span> <span class="n">PLOTFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplot</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">volplotfile</span> <span class="n">VOLPLOTFILE</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">check_swatinit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplotfile</span> <span class="n">VOLPLOTFILE</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">plot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">plotfile</span> <span class="n">PLOTFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">eqlnum</span> <span class="n">EQLNUM</span><span class="p">]</span>
                       <span class="n">DATAFILE</span>
 </pre></div>
 </div>
@@ -382,23 +406,23 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
 <dd><p>Output filename for CSV that can be used for QC in other tools</p>
 <p>Default: “”</p>
 </dd>
-<dt><kbd>--plot</kbd></dt>
-<dd><p>Show scatter QC plots with one dot pr. reservoir cell in a given EQLNUM region, use together with the –eqlnum option</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>--eqlnum</kbd></dt>
-<dd><p>Which EQLNUM to plot for in scatter plots. Defaults to 1. Does not affect CSV output</p>
-<p>Default: 1</p>
-</dd>
-<dt><kbd>--plotfile</kbd></dt>
-<dd><p>PNG filename for where to dump a QC plot.</p>
-</dd>
 <dt><kbd>--volplot</kbd></dt>
 <dd><p>Display a waterfall chart with the water saturation volumes from SWATINIT to SWAT</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>--volplotfile</kbd></dt>
 <dd><p>PNG filename for where to dump a waterfall chart.</p>
+</dd>
+<dt><kbd>--plot</kbd></dt>
+<dd><p>Show scatter QC plots with one dot pr. reservoir cell in a given EQLNUM region, use together with the –eqlnum option</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--plotfile</kbd></dt>
+<dd><p>PNG filename for where to dump a QC plot.</p>
+</dd>
+<dt><kbd>--eqlnum</kbd></dt>
+<dd><p>Which EQLNUM to plot for in scatter plots. Defaults to 1. Does not affect CSV output</p>
+<p>Default: 1</p>
 </dd>
 </dl>
 </div>
