@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
 import subprocess
 import pytest
+
 
 from subscript.ri_wellmod import ri_wellmod
 
@@ -15,6 +17,13 @@ try:
     HAVE_ERT = True
 except ImportError:
     HAVE_ERT = False
+
+
+def has_display():
+    """
+    Check if an X display is available
+    """
+    return "DISPLAY" in os.environ and os.environ["DISPLAY"]
 
 
 def file_contains(filename, string_to_find):
@@ -125,8 +134,10 @@ def test_drogon_lgr(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
-    reason="Could not find a ResInsight install or Drogon data",
+    not ri_wellmod.get_resinsight_exe()
+    or not DROGON_RUNPATH.exists()
+    or not has_display(),
+    reason="Could not find a ResInsight install, Drogon data or an X display",
 )
 def test_main_lgr_cmdline(tmpdir, mocker):
     """Test creation of LGR"""
@@ -216,10 +227,10 @@ def test_main_initcase_reek(tmpdir, mocker):
     assert Path(outfile).exists() and file_contains(outfile, "OP_1")
 
 
-# This one requires a GUI (for now) and only works locally
+# This one requires a GUI (for now)
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe() or not DROGON_RUNPATH.exists(),
-    reason="Could not find a ResInsight install or Drogon data",
+    not ri_wellmod.get_resinsight_exe() or not has_display(),
+    reason="Could not find a ResInsight install or an X display",
 )
 def test_main_lgr_reek(tmpdir, mocker):
     """Test creation of LGR on Reek"""
