@@ -159,6 +159,8 @@ class PillarModel:
 
         string += self.props() + "\n"
 
+        string += self.regions() + "\n"
+
         string += self.solution() + "\n"
 
         string += self.schedule() + "\n"
@@ -170,13 +172,13 @@ class PillarModel:
         string = ""
         string += "RUNSPEC\n\n"
 
-        string += f"DIMENS\n 1 1 {self.cells} /\n\n"
+        string += f"DIMENS\n  1 1 {self.cells} /\n\n"
 
         string += "\n".join(list(self.phases)) + "\n\n"
 
-        string += "START\n1 'JAN' 2000 /\n\n"
-        string += f"TABDIMS\n {max(self.satnum)} /\n\n"
-        string += f"EQLDIMS\n {max(self.eqlnum)} /\n\n"
+        string += "START\n  1 'JAN' 2000 /\n\n"
+        string += f"TABDIMS\n  {max(self.satnum)} /\n\n"
+        string += f"EQLDIMS\n  {max(self.eqlnum)} /\n\n"
 
         string += f"{self.unifout}\n\n"
         return string
@@ -184,10 +186,10 @@ class PillarModel:
     def grid(self):
         """Make a string for the GRID section"""
         string = "GRID\n\n"
-        string += "DX\n " + _wrap(" ".join(["100"] * self.cells) + "/") + "\n"
-        string += "DY\n " + _wrap(" ".join(["100"] * self.cells) + "/") + "\n"
-        string += "DZ\n " + _wrap(" ".join(map(str, self.cellheights)) + "/") + "\n"
-        string += "TOPS\n " + _wrap(" ".join(map(str, self.tops)) + "/") + "\n"
+        string += "DX\n" + _wrap(" ".join(["100"] * self.cells) + "/") + "\n"
+        string += "DY\n" + _wrap(" ".join(["100"] * self.cells) + "/") + "\n"
+        string += "DZ\n" + _wrap(" ".join(map(str, self.cellheights)) + "/") + "\n"
+        string += "TOPS\n" + _wrap(" ".join(map(str, self.tops)) + "/") + "\n"
 
         string += "PORO\n"
         string += _wrap("  ".join(map(str, self.poro)) + "/") + "\n"
@@ -239,6 +241,18 @@ class PillarModel:
             [self.swu[satnum - 1], self.swl[satnum - 1]],
         )
 
+    def regions(self):
+        """Make a string for the REGIONS section"""
+        string = "REGIONS\n\n"
+
+        string += "SATNUM\n"
+        string += _wrap("  ".join(map(str, self.satnum)) + "/") + "\n"
+
+        string += "EQLNUM\n"
+        string += _wrap("  ".join(map(str, self.eqlnum)) + "/") + "\n"
+
+        return string
+
     def props(self):
         """Make a string for the PROPS section"""
         string = "PROPS\n\n"
@@ -247,38 +261,44 @@ class PillarModel:
             string += "PPCWMAX\n"
             assert isinstance(self.ppcwmax, list)
             assert len(self.ppcwmax) == max(self.satnum)
-            string += "\n".join([f"  {value:g} NO /" for value in self.ppcwmax]) + "\n"
+            string += (
+                "\n".join([f"  {value:g} NO /" for value in self.ppcwmax]) + "\n\n"
+            )
 
         if any(self.swatinit):
             string += "SWATINIT\n"
-            string += " " + _wrap(" ".join(map(str, self.swatinit)) + "/") + "\n"
+            string += _wrap(" ".join(map(str, self.swatinit)) + "/") + "\n"
 
         if "OIL" in self.phases:
-            for satnum in range(len(self.swl)):
-                string += "SWOF\n"
+            for satnum_idx, satnum in enumerate(range(len(self.swl))):
+                if satnum_idx == 0:
+                    string += "SWOF\n"
                 string += "-- SW KRW KROW PC\n"
-                string += f"{self.swl[satnum]:g} 0 1 {self.maxpc[satnum]:g}\n"
-                string += f"{self.swu[satnum]:g} 1.0 0.0 {self.minpc[satnum]:g}\n/\n"
+                string += f"  {self.swl[satnum]:g} 0 1 {self.maxpc[satnum]:g}\n"
+                string += f"  {self.swu[satnum]:g} 1.0 0.0 {self.minpc[satnum]:g}\n/\n"
 
         if "GAS" in self.phases and "OIL" in self.phases:
-            for satnum in range(len(self.swl)):
-                string += "SGOF\n"
+            for satnum_idx, satnum in enumerate(range(len(self.swl))):
+                if satnum_idx == 0:
+                    string += "SGOF\n"
                 string += "-- SG KRG KROG PC\n"
-                string += "0 0 1 0 \n"
-                string += f"{1-self.swl[satnum]:g} 1.0 0.0 0\n/\n"
+                string += "  0 0 1 0 \n"
+                string += f"  {1-self.swl[satnum]:g} 1.0 0.0 0\n/\n"
 
         if "GAS" in self.phases and "OIL" not in self.phases:
-            for satnum in range(len(self.swl)):
-                string += "SWFN\n"
+            for satnum_idx, satnum in enumerate(range(len(self.swl))):
+                if satnum_idx == 0:
+                    string += "SWFN\n"
                 string += "-- SW KRW PC\n"
-                string += f"{self.swl[satnum]:g} 0 {self.maxpc[satnum]:g}\n"
-                string += f"{self.swu[satnum]:g} 1.0 {self.minpc[satnum]:g}\n/\n"
+                string += f"  {self.swl[satnum]:g} 0 {self.maxpc[satnum]:g}\n"
+                string += f"  {self.swu[satnum]:g} 1.0 {self.minpc[satnum]:g}\n/\n"
 
-            for satnum in range(len(self.swl)):
-                string += "SGFN\n"
+            for satnum_idx, satnum in enumerate(range(len(self.swl))):
+                if satnum_idx == 0:
+                    string += "SGFN\n"
                 string += "-- SG KRG PC\n"
-                string += "0 0 0\n"
-                string += f"{1 - self.swl[satnum]:g} 1.0 0.0\n/\n"
+                string += "  0 0 0\n"
+                string += f"  {1 - self.swl[satnum]:g} 1.0 0.0\n/\n"
 
         if self.swlpc is not None:
             string += "SWLPC\n"
@@ -294,18 +314,18 @@ PVTW
         if "OIL" in self.phases:
             string += """
 PVDO
-   10 1   1
-   150 0.9 1 /
+  10 1   1
+  150 0.9 1 /
 
 """
         if "GAS" in self.phases:
             string += """
 PVDG
-   100 1 1
-   150 0.9 1 /
+  100 1 1
+  150 0.9 1 /
 
 """
-        string += "ROCK\n 100 0.0001 /\n\n"
+        string += "ROCK\n  100 0.0001 /\n\n"
 
         string += self.filleps + "\n"  # Needed to get SWL in INIT file.
         return string
@@ -319,7 +339,7 @@ PVDG
             "-- datum pressure_datum owc/gwc pc@owc goc pc@goc item7 item8 oip_init\n"
         )
         for eqlnum in range(max(self.eqlnum)):
-            string += f"1000 100 {self.owc[eqlnum]} 0 {self.goc[eqlnum]} "
+            string += f"  1000 100 {self.owc[eqlnum]} 0 {self.goc[eqlnum]} "
             string += f"1* 1* 1* {self.oip_init}/\n"
         string += "\n"
 
@@ -331,9 +351,14 @@ PVDG
         # pylint: disable=no-self-use
         """Make a string for the SCHEDULE section"""
         string = "SCHEDULE\n\n"
-        string += "TSTEP \n 1 / \n"
+        string += "TSTEP \n  1 / \n"
         return string
 
 
 def _wrap(longstring):
-    return "\n".join(textwrap.wrap(longstring)) + "\n"
+    return (
+        "\n".join(
+            textwrap.wrap(longstring, initial_indent="  ", subsequent_indent="  ")
+        )
+        + "\n"
+    )
