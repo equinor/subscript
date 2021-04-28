@@ -22,6 +22,7 @@ from subscript.fmuobs.parsers import (
     split_by_sep_in_masked_string,
     smrydictlist2df,
     blockdictlist2df,
+    generaldictlist2df,
     obsdict2df,
 )
 
@@ -852,6 +853,61 @@ def test_blockdictlist2df(blocklist, expected_df):
         expected_df["DATE"] = pd.to_datetime(expected_df["DATE"])
     pd.testing.assert_frame_equal(
         blockdictlist2df(blocklist).sort_index(axis=1),
+        expected_df.sort_index(axis=1),
+        check_dtype=False,
+    )
+
+
+# generaldictlist2df
+@pytest.mark.parametrize(
+    "generallist, expected_df",
+    [
+        ([{}], pd.DataFrame()),
+        (
+            [{"label": "GEN_OBS1"}],
+            pd.DataFrame([{"CLASS": "GENERAL_OBSERVATION", "LABEL": "GEN_OBS1"}]),
+        ),
+        (
+            [{"label": "GEN_OBS1"}, {"label": "GEN_OBS2"}],
+            pd.DataFrame(
+                [
+                    {"CLASS": "GENERAL_OBSERVATION", "LABEL": "GEN_OBS1"},
+                    {"CLASS": "GENERAL_OBSERVATION", "LABEL": "GEN_OBS2"},
+                ]
+            ),
+        ),
+        #################################################################
+        (
+            [
+                {
+                    "CLASS": "GENERAL_OBSERVATION",
+                    "LABEL": "GEN_OBS1",
+                    "DATA": "SOME_FIELD",
+                    "INDEX_LIST": "0,3,9",
+                    "RESTART": 20,
+                    "OBS_FILE": "some_file.txt",
+                }
+            ],
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS1",
+                        "DATA": "SOME_FIELD",
+                        "INDEX_LIST": "0,3,9",
+                        "RESTART": 20,
+                        "OBS_FILE": "some_file.txt",
+                    },
+                ]
+            ),
+        ),
+    ],
+)
+def test_generaldictlist2df(generallist, expected_df):
+    """Test converting general observations in dict (yaml) format into
+    internal dataframe format"""
+    pd.testing.assert_frame_equal(
+        generaldictlist2df(generallist).sort_index(axis=1),
         expected_df.sort_index(axis=1),
         check_dtype=False,
     )

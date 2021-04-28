@@ -183,7 +183,14 @@ def dfgeneral2ertobs(obs_df):
             "ERROR_COVAR",
         ]:
             if dataname in row and not pd.isnull(row[dataname]):
-                ertobs_str += "    " + dataname + " = " + str(row[dataname]) + ";\n"
+                value = row[dataname]
+                try:
+                    # Ensure integers are printed as integers
+                    if int(value) == float(value):
+                        value = int(value)
+                except ValueError:
+                    pass
+                ertobs_str += "    " + dataname + " = " + str(value) + ";\n"
         ertobs_str += "};\n"
 
     # Remove empty curly braces and return
@@ -350,6 +357,22 @@ def block_df2obsdict(block_df):
     return block_obs_list
 
 
+def general_df2obsdict(general_df):
+    """Generate a dictionary structure suitable for yaml
+    for general observations in dataframe representation
+
+    Args:
+        general_df (pd.DataFrame)
+
+    Returns:
+        list: List of dictionaries
+    """
+    general_obs_list = []
+    for _, row in general_df.iterrows():
+        general_obs_list.append(lowercase_dictkeys(row.dropna().to_dict()))
+    return general_obs_list
+
+
 def df2obsdict(obs_df):
     """Generate a dictionary structure of all observations, this data structure
     is designed to look good in yaml, and is supported by WebViz and
@@ -375,6 +398,12 @@ def df2obsdict(obs_df):
     if "BLOCK_OBSERVATION" in obs_df["CLASS"].values:
         obsdict[CLASS_SHORTNAME["BLOCK_OBSERVATION"]] = block_df2obsdict(
             obs_df.set_index("CLASS").loc[["BLOCK_OBSERVATION"]]
+        )
+
+    # Process GENERAL_OBSERVATION:
+    if "GENERAL_OBSERVATION" in obs_df["CLASS"].values:
+        obsdict[CLASS_SHORTNAME["GENERAL_OBSERVATION"]] = general_df2obsdict(
+            obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]]
         )
 
     return obsdict

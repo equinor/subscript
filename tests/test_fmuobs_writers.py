@@ -19,6 +19,7 @@ from subscript.fmuobs.writers import (
     summary_df2obsdict,
     convert_dframe_date_to_str,
     block_df2obsdict,
+    general_df2obsdict,
     df2resinsight_df,
 )
 from subscript.fmuobs.parsers import ertobs2df
@@ -302,7 +303,7 @@ def test_dfhistory2ertobs(obs_df, expected_str):
                         "CLASS": "GENERAL_OBSERVATION",
                         "LABEL": "GEN_OBS1",
                         "DATA": "RFT_BH67",
-                        "RESTART": 20,
+                        "RESTART": 20.0,
                         "OBS_FILE": "some_file.txt",
                         "INDEX_LIST": "1,2,3,4",
                         "ERROR_COVAR": "e_covar.txt",
@@ -375,7 +376,7 @@ BLOCK_OBSERVATION RFT_2006_OP1
 HISTORY_OBSERVATION WOPR:P1;
 GENERAL_OBSERVATION GEN_OBS1 {
     DATA = RFT_BH67;
-    RESTART = 20.0;
+    RESTART = 20;
 };""",
         ),
     ],
@@ -496,6 +497,88 @@ def test_block_df2obsdict(obs_df, expected_dict):
     """Test converting from dataframe representation for BLOCK/rft observations
     to the dictionary representation designed for yaml output"""
     assert block_df2obsdict(obs_df) == expected_dict
+
+
+# test_general_df2obsdict()
+@pytest.mark.parametrize(
+    "general_df, expected_listofdict",
+    [
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS1",
+                        "DATA": "SOME_FIELD",
+                        "RESTART": 20,
+                        "OBS_FILE": "some_file.txt",
+                    }
+                ]
+            ),
+            [
+                {
+                    "class": "GENERAL_OBSERVATION",
+                    "label": "GEN_OBS1",
+                    "data": "SOME_FIELD",
+                    "restart": 20,
+                    "obs_file": "some_file.txt",
+                }
+            ],
+        ),
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS1",
+                        "DATA": "SOME_FIELD",
+                        "INDEX_LIST": "0,3,9",
+                        "RESTART": 20,
+                        "OBS_FILE": "some_file.txt",
+                    },
+                ]
+            ),
+            [
+                {
+                    "class": "GENERAL_OBSERVATION",
+                    "label": "GEN_OBS1",
+                    "data": "SOME_FIELD",
+                    "index_list": "0,3,9",
+                    "restart": 20,
+                    "obs_file": "some_file.txt",
+                }
+            ],
+        ),
+        (
+            pd.DataFrame(
+                [
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS1",
+                    },
+                    {
+                        "CLASS": "GENERAL_OBSERVATION",
+                        "LABEL": "GEN_OBS2",
+                    },
+                ]
+            ),
+            [
+                {
+                    "class": "GENERAL_OBSERVATION",
+                    "label": "GEN_OBS1",
+                },
+                {
+                    "class": "GENERAL_OBSERVATION",
+                    "label": "GEN_OBS2",
+                },
+            ],
+        ),
+    ],
+)
+def test_general_df2obsdict(general_df, expected_listofdict):
+    """Test converting from dataframe representation for GENERAL observations
+    to the dictionary representation designed for yaml output"""
+    assert general_df2obsdict(general_df) == expected_listofdict
 
 
 @pytest.mark.parametrize(

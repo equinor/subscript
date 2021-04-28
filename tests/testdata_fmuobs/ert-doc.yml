@@ -63,3 +63,13 @@ smry:
     error: 10.0
     label: SEP_TEST_2008
     value: 213.0
+general:
+ - label: GEN_OBS1
+   data: SOME_FIELD
+   restart: 20.0
+   obs_file: some_file.txt
+ - label: GEN_OBS2
+   data: SOME_FIELD
+   index_list: "0,3,9"
+   restart: 20.0
+   obs_file: some_file.txt

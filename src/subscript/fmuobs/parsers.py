@@ -504,7 +504,7 @@ def smrydictlist2df(smrylist):
 
 def blockdictlist2df(blocklist):
     """Parse a list structure (subpart of yaml syntax) of block observations
-    into  dataframe format
+    into dataframe format
 
     The internal dataframe format uses "LABEL" and "OBS" as unique keys
     for individual observations. These are constructed if not present.
@@ -550,6 +550,24 @@ def blockdictlist2df(blocklist):
     return dframe
 
 
+def generaldictlist2df(generallist):
+    """Parse a list structure (subpart of yaml syntax) of general observations
+    into dataframe format
+
+    Args:
+         generallist (list): List of dictionaries with GENERAL_OBSERVATIONs
+
+    Returns:
+        pd.DataFrame
+    """
+    rows = []
+    for obs in filter(None, generallist):
+        rowdict = {"CLASS": "GENERAL_OBSERVATION"}
+        rowdict.update(uppercase_dictkeys(obs))
+        rows.append(rowdict)
+    return pd.DataFrame(rows)
+
+
 def obsdict2df(obsdict):
     """Convert an observation dictionary (with YAML file format structure)
     into the internal dataframe representation
@@ -569,4 +587,6 @@ def obsdict2df(obsdict):
         dframes.append(smrydictlist2df(obsdict["smry"]))
     if "rft" in obsdict:
         dframes.append(blockdictlist2df(obsdict["rft"]))
+    if "general" in obsdict:
+        dframes.append(generaldictlist2df(obsdict["general"]))
     return pd.concat(dframes, ignore_index=True)
