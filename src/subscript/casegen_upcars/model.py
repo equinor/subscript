@@ -568,7 +568,7 @@ class Model:
         if isinstance(fracture_property, int):
             data_type = np.int16
         else:
-            data_type = np.float
+            data_type = float
         props = np.empty(
             (self._total_nx, self._total_ny, self._total_nz), dtype=data_type
         )
@@ -613,7 +613,7 @@ class Model:
         if isinstance(fracture_x_property, int):
             data_type = np.int16
         else:
-            data_type = np.float
+            data_type = float
         props = np.empty(
             (self._total_nx, self._total_ny, self._total_nz), dtype=data_type
         )
