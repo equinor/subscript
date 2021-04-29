@@ -10,6 +10,17 @@ from subscript.summaryplot import summaryplot
 
 DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"
 
+SCRIPTNAME = "summaryplot"
+
+
+def get_plot_cmds(plot):
+    """Helper function for running tests interactively with plots flashing to screen"""
+    if plot:
+        print("Close plot window, then press q to continue")
+        return [SCRIPTNAME]
+    else:
+        return [SCRIPTNAME, "--dumpimages"]
+
 
 @pytest.mark.parametrize(
     "cmd_args",
@@ -28,17 +39,18 @@ DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"
         ["--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_summaryplotter(cmd_args, tmpdir, mocker):
+def test_summaryplotter(cmd_args, tmpdir, mocker, plot):
     """Test multiple command line invocations"""
     tmpdir.chdir()
     mocker.patch(
         "sys.argv",
-        ["summaryplot", "--dumpimages"] + cmd_args + [str(DATAFILE), str(DATAFILE)],
+        get_plot_cmds(plot) + cmd_args + [str(DATAFILE), str(DATAFILE)],
         # DATAFILE is repeated, or else colourby will not be triggered.
     )
     summaryplot.main()
-    assert Path("summaryplotdump.png").exists()
-    assert Path("summaryplotdump.pdf").exists()
+    if not plot:
+        assert Path("summaryplotdump.png").exists()
+        assert Path("summaryplotdump.pdf").exists()
 
 
 @pytest.mark.parametrize(
@@ -50,7 +62,7 @@ def test_summaryplotter(cmd_args, tmpdir, mocker):
         ["--logcolourby", "FOO", "--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_two_datafiles(cmd_args, tmpdir, mocker):
+def test_two_datafiles(cmd_args, tmpdir, mocker, plot):
     """Mock two different runs. Need different values in parameters.txt
     to trigger particular test lines."""
     tmpdir.chdir()
@@ -65,7 +77,7 @@ def test_two_datafiles(cmd_args, tmpdir, mocker):
     Path("realization-1/parameters.txt").write_text("FOO 2\nSAME 10")
     mocker.patch(
         "sys.argv",
-        ["summaryplot", "--dumpimages"]
+        get_plot_cmds(plot)
         + cmd_args
         + [
             str(Path("realization-0") / DATAFILE.name),
@@ -73,8 +85,9 @@ def test_two_datafiles(cmd_args, tmpdir, mocker):
         ],
     )
     summaryplot.main()
-    assert Path("summaryplotdump.png").exists()
-    assert Path("summaryplotdump.pdf").exists()
+    if not plot:
+        assert Path("summaryplotdump.png").exists()
+        assert Path("summaryplotdump.pdf").exists()
 
 
 @pytest.mark.parametrize(
@@ -103,7 +116,7 @@ def test_two_datafiles(cmd_args, tmpdir, mocker):
 def test_warnings(cmd_args, match, tmpdir, mocker, caplog):
     """Run command line arguments that give warning"""
     tmpdir.chdir()
-    mocker.patch("sys.argv", ["summaryplot", "--dumpimages"] + cmd_args)
+    mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages"] + cmd_args)
     summaryplot.main()
     assert match in caplog.text
     assert Path("summaryplotdump.png").exists()
@@ -122,7 +135,7 @@ def test_warnings(cmd_args, match, tmpdir, mocker, caplog):
 def test_sysexit(cmd_args, tmpdir, mocker):
     """Run command line arguments that should end in failure"""
     tmpdir.chdir()
-    mocker.patch("sys.argv", ["summaryplot", "--dumpimages"] + cmd_args)
+    mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages"] + cmd_args)
     with pytest.raises(SystemExit):
         summaryplot.main()
     assert not Path("summaryplotdump.png").exists()
@@ -193,4 +206,4 @@ def test_find_parameterstxt_one_level_up(tmpdir):
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
-    assert subprocess.check_output(["summaryplot", "-h"])
+    assert subprocess.check_output([SCRIPTNAME, "-h"])
