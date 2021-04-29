@@ -41,11 +41,7 @@ By default multi-segment well definitions are not created, but may be requested 
 some or all wells using a command-line argument. E.g., to add MSW data for the well
 ``A44`` and any wells starting with ``C`` based on a NOSIM case::
 
-<<<<<<< HEAD
     > ri_wellmod wells.rsp DROGON-0_NOSIM --msw A4,C*
-=======
-    > ri_wellmod wells.rsp DROGON-0_NOSIM --msw_wells A4,C*
->>>>>>> e08342d9201d583faf7cf6119ec430c709cae761
 
 
 Example 3
@@ -64,11 +60,7 @@ Example 4
 ResInsight supports local grid refinement, and will automatically create WELSPECL/COMPDATL/COMPSEGL
 when given an initialized Eclipse case with LGR(s)::
 
-<<<<<<< HEAD
    > ri_wellmod wells.rsp DROGON-0_NOSIM_LGR --msw A4 -o wells_lgr.sch
-=======
-   > ri_wellmod wells.rsp DROGON-0_NOSIM_LGR -msw A4 -o wells_lgr.sch
->>>>>>> e08342d9201d583faf7cf6119ec430c709cae761
 
 
 Example 5
