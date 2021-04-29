@@ -245,6 +245,10 @@ def make_qc_gridframe(eclfiles):
     # Circumvent bug in ecl2df that will pick SWL from both INIT and restart file:
     grid_df = grid_df.loc[:, ~grid_df.columns.duplicated()]
 
+    # Merge in PPCWMAX from the deck, it is not reported in binary output files:
+    if "PPCWMAX" in eclfiles.get_ecldeck():
+        grid_df["PPCWMAX"] = ppcwmax_gridvector(eclfiles)
+
     # This will be unneccessary from ecl2df 0.13.0:
     grid_df = grid_df.where(grid_df > -1e20 + 1e13)
 
@@ -282,9 +286,6 @@ def make_qc_gridframe(eclfiles):
     grid_df = merge_pc_max(grid_df, satfunc_df)
 
     grid_df = merge_equil(grid_df, ecl2df.equil.df(eclfiles, keywords=["EQUIL"]))
-
-    if "PPCWMAX" in eclfiles.get_ecldeck():
-        grid_df["PPCWMAX"] = ppcwmax_gridvector(eclfiles)
 
     grid_df = augment_grid_frame_qc_vectors(grid_df)
 

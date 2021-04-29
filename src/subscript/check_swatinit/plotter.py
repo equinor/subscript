@@ -11,6 +11,7 @@ from subscript.check_swatinit.constants import (
     __PPCWMAX__,
     __SWATINIT_1__,
     __SWL_TRUNC__,
+    __UNKNOWN__,
     __WATER__,
 )
 
@@ -23,6 +24,7 @@ QC_PALETTE = {
     __PPCWMAX__: SNS_PAL[9],
     __SWATINIT_1__: SNS_PAL[6],
     __SWL_TRUNC__: SNS_PAL[3],
+    __UNKNOWN__: SNS_PAL[1],
     __WATER__: SNS_PAL[0],
 }
 
