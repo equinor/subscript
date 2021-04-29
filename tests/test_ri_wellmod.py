@@ -136,7 +136,8 @@ def test_drogon_lgr(tmpdir, mocker):
     outfile = "welldefs_lgr.sch"
 
     mocker.patch(
-        "sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "--msw", "A4"]
+        "sys.argv",
+        [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "--msw", "A4"],
     )
     ri_wellmod.main()
 
