@@ -116,7 +116,7 @@ def test_drogon_mswdef(tmpdir, mocker):
 
     mocker.patch(
         "sys.argv",
-        [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "-msw", "A4,A2,R*"],
+        [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "--msw", "A4,A2,R*"],
     )
     ri_wellmod.main()
 
@@ -136,7 +136,7 @@ def test_drogon_lgr(tmpdir, mocker):
     outfile = "welldefs_lgr.sch"
 
     mocker.patch(
-        "sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "-msw", "A4"]
+        "sys.argv", [SCRIPTNAME, proj_name, init_case_name, "-o", outfile, "--msw", "A4"]
     )
     ri_wellmod.main()
 
@@ -165,9 +165,9 @@ def test_main_lgr_cmdline(tmpdir, mocker):
             init_case_name,
             "-o",
             outfile,
-            "-msw",
+            "--msw",
             "A4,A2",
-            "-lo",
+            "--lgr_output_file",
             lgr_outfile,
             "--lgr",
             "A4:3,3,1",

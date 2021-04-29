@@ -136,12 +136,12 @@ def find_and_wrap_resinsight_version(version_triplet):
         return False
 
     # First, search for full match, including patch version
-    resinsight_exe = _find_ri_exe(r"*{major}.{minor}.{patch}*")
+    resinsight_exe = _find_ri_exe(f"*{major}.{minor}.{patch}*")
     if not resinsight_exe:
         # Then try to find a matching major.minor
-        resinsight_exe = _find_ri_exe(r"*{major}.{minor}*")
+        resinsight_exe = _find_ri_exe(f"*{major}.{minor}*")
 
-    if resinsight_exe:
+    if not resinsight_exe:
         return False
 
     logger.info("Found ResInsight version: %s", resinsight_exe)
@@ -149,7 +149,7 @@ def find_and_wrap_resinsight_version(version_triplet):
     wrapper_file = tempfile.NamedTemporaryFile(delete=False)
     with open(wrapper_file.name, "w") as fhandle:
         print(WRAPPER_TEMPLATE, file=fhandle)
-        print(f'{resinsight_exe} "$@"')
+        print(f'{resinsight_exe} "$@"', file=fhandle)
         fhandle.flush()
     os.chmod(wrapper_file.name, 0o770)
     wrapper_file.close()
@@ -293,9 +293,8 @@ Utility script for creating Eclipse well definitions using ResInsight.
     )
     parser.add_argument(
         "--tmpfolder",
-        "-tmp",
         default="resinsight/ri_completions",
-        help="Output folder (default=tmp_ri_completions)",
+        help="Output folder (default=resinsight/ri_completions)",
     )
     parser.add_argument(
         "--wells",
@@ -306,8 +305,7 @@ Utility script for creating Eclipse well definitions using ResInsight.
             for (default=all wells in project)",
     )
     parser.add_argument(
-        "--msw_wells",
-        "-msw",
+        "--msw",
         nargs="+",
         default=None,
         help="Optional comma-separated list of wells (wildcards allowed) to generate msw \
@@ -322,7 +320,6 @@ Utility script for creating Eclipse well definitions using ResInsight.
     )
     parser.add_argument(
         "--lgr_output_file",
-        "-lo",
         default="well_lgr_defs.inc",
         help="Well LGR output file (default=well_lgr_defs.sch)",
     )
