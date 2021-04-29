@@ -38,7 +38,7 @@ EXAMPLES = """
     <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
     <ECLBASE>=<ECLBASE>,
     <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-    <MSW>="A2;A4;'R*')
+    <MSW>="A2;A4;'R*'")
 
  FORWARD_MODEL RI_WELLMOD(
     <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
@@ -49,8 +49,8 @@ EXAMPLES = """
     <XARG1>="A4:3;3;1")
 
 
-.. warning:: Remember to remove line breaks in argument list of copying the examples
-   into your own ERT config.
+.. warning:: Remember to remove line breaks in argument list when copying the
+   examples into your own ERT config.
 
 
 .. note:: More examples and options may be seen in the subscript docs for the script
