@@ -820,6 +820,38 @@ def test_pc_scaled_above_gwc(simulator, tmpdir):
     assert np.isclose(qc_frame["PC"][0], 9.396621)
 
 
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_ppcwmax_gridvector(simulator, tmpdir):
+    """Test that ppcwmax_gridvector maps ppcwmax values correctly in the grid"""
+    tmpdir.chdir()
+    model = PillarModel(cells=3, satnum=[2, 1, 2], ppcwmax=[0.01, 0.02])
+    qc_frame = run_reservoir_simulator(simulator, model)
+    assert qc_frame[qc_frame["SATNUM"] == 1]["PPCWMAX"].unique() == [0.01]
+    assert qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique() == [0.02]
+    if "flow" in simulator:
+        # This will fail when/if flow implements PPCWMAX support
+        assert qc_frame["PPCW"].unique() == [3]
+    else:
+        assert qc_frame[qc_frame["SATNUM"] == 1]["PPCW"].unique() == [0.01]
+        assert qc_frame[qc_frame["SATNUM"] == 2]["PPCW"].unique() == [0.02]
+
+
+@pytest.mark.parametrize("simulator", SIMULATORS)
+def test_ppcwmax_gridvector_eqlnum(simulator, tmpdir):
+    """Test that ppcwmax unrolling also works with EQLNUM (historical bug)"""
+    tmpdir.chdir()
+    model = PillarModel(
+        cells=3,
+        satnum=[2, 1, 2],
+        eqlnum=[3, 2, 1],
+        owc=[1001, 1002, 1003],
+        ppcwmax=[0.01, 0.02],
+    )
+    qc_frame = run_reservoir_simulator(simulator, model)
+    assert qc_frame[qc_frame["SATNUM"] == 1]["PPCWMAX"].unique() == [0.01]
+    assert qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique() == [0.02]
+
+
 def test_no_swatinit(tmpdir, mocker, caplog):
     """Test what check_swatinit does on a case not initialized by SWATINIT"""
     tmpdir.chdir()
