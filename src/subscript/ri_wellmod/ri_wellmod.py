@@ -266,12 +266,12 @@ def get_parser():
     (https://docs.python.org/3/library/argparse.html)
     """
 
-    description = """
-Utility script for creating Eclipse well definitions using ResInsight.
-"""
+    description = (
+        "Utility script for creating Eclipse well definitions using ResInsight."
+    )
     parser = argparse.ArgumentParser(description=description)
 
-    parser.add_argument("--verbose", "-vb", action="store_true", help="Verbose output")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
     parser.add_argument(
         "--silent", "-s", action="store_true", help="Silence non-critical messages"
     )
