@@ -261,6 +261,9 @@ def test_main_lgr_reek(tmpdir, mocker):
 
 
 # Test development version
+@pytest.mark.skipif(
+    not Path(RI_DEV).exists(), reason="No dev-version of ResInsight available"
+)
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 def test_main_lgr_cmdline_dev_version(tmpdir, mocker):
     """Test creation of LGR using development version"""

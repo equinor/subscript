@@ -262,6 +262,38 @@ def launch_resinsight(console_mode, command_line_parameters):
     return resinsight
 
 
+def launch_resinsight_dev(resinsightdev, console_mode, command_line_parameters):
+    """
+    Launch development version of ResInsight
+    """
+    ripath = Path(resinsightdev)
+    if not ripath.exists():
+        logger.error(
+            "Specified development version of ResInsight does not exist: %s",
+            resinsightdev,
+        )
+        return 1
+    ridir = ripath.parent
+    pypath = ridir / Path("Python")
+    if pypath.exists():  # Use development rips, if present
+        sys.path.insert(0, str(ridir))
+        sys.path.insert(0, str(pypath))
+        reload(rips)
+        sys.path.pop(0)
+    try:
+        resinsight = rips.Instance.launch(
+            resinsight_executable=resinsightdev,
+            console=console_mode,
+            command_line_parameters=command_line_parameters,
+        )
+    except Exception as any_exception:  # pylint: disable=broad-except
+        logger.error("Unable to launch development version of ResInsight")
+        logger.error("  (Exception was: %s)", str(any_exception))
+        resinsight = None
+
+    return resinsight
+
+
 def get_parser():
     """
     Utility function to build the cmdline argument parser using argparse
@@ -522,29 +554,9 @@ def main():
 
     # Launch ResInsight
     if resinsightdev:  # Use development version
-        ripath = Path(resinsightdev)
-        if not ripath.exists():
-            logger.error(
-                "Specified development version of ResInsight does not exist: %s",
-                resinsightdev,
-            )
-            return 1
-        ridir = ripath.parent
-        pypath = ridir / Path("Python")
-        if pypath.exists():  # Use development rips, if present
-            sys.path.insert(0, str(ridir))
-            sys.path.insert(0, str(pypath))
-            reload(rips)
-            sys.path.pop(0)
-        try:
-            resinsight = rips.Instance.launch(
-                resinsight_executable=resinsightdev,
-                console=console_mode,
-                command_line_parameters=command_line_parameters,
-            )
-        except Exception as any_exception:  # pylint: disable=broad-except
-            logger.error("Unable to launch development version of ResInsight")
-            logger.error("  (Exception was: %s)", str(any_exception))
+        resinsight = launch_resinsight_dev(
+            resinsightdev, console_mode, command_line_parameters
+        )
     else:  # Launch standard version
         resinsight = launch_resinsight(console_mode, command_line_parameters)
     if not resinsight:
