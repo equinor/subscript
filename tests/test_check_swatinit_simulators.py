@@ -824,16 +824,25 @@ def test_pc_scaled_above_gwc(simulator, tmpdir):
 def test_ppcwmax_gridvector(simulator, tmpdir):
     """Test that ppcwmax_gridvector maps ppcwmax values correctly in the grid"""
     tmpdir.chdir()
-    model = PillarModel(cells=3, satnum=[2, 1, 2], ppcwmax=[0.01, 0.02])
+    model = PillarModel(
+        cells=3,
+        owc=[1050],
+        satnum=[2, 1, 2],
+        maxpc=[0.001, 0.002],
+        ppcwmax=[0.01, 0.02],
+    )
+    # NB: Eclipse errors if PPCWMAX is smaller than maxpc pr. SATNUM. Flow does not.
     qc_frame = run_reservoir_simulator(simulator, model)
-    assert qc_frame[qc_frame["SATNUM"] == 1]["PPCWMAX"].unique() == [0.01]
-    assert qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique() == [0.02]
+    assert np.isclose(qc_frame[qc_frame["SATNUM"] == 1]["PPCWMAX"].unique(), 0.01)
+    assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique(), 0.02)
     if "flow" in simulator:
         # This will fail when/if flow implements PPCWMAX support
-        assert qc_frame["PPCW"].unique() == [3]
+        assert np.isclose(
+            qc_frame["PPCW"].sort_values(), [0.558839, 0.782229, 1.006258]
+        ).all()
     else:
-        assert qc_frame[qc_frame["SATNUM"] == 1]["PPCW"].unique() == [0.01]
-        assert qc_frame[qc_frame["SATNUM"] == 2]["PPCW"].unique() == [0.02]
+        assert np.isclose(qc_frame[qc_frame["SATNUM"] == 1]["PPCW"].unique(), 0.01)
+        assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCW"].unique(), 0.02)
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
@@ -844,7 +853,8 @@ def test_ppcwmax_gridvector_eqlnum(simulator, tmpdir):
         cells=3,
         satnum=[2, 1, 2],
         eqlnum=[3, 2, 1],
-        owc=[1001, 1002, 1003],
+        owc=[1051, 1052, 1053],
+        maxpc=[0.001, 0.002],
         ppcwmax=[0.01, 0.02],
     )
     qc_frame = run_reservoir_simulator(simulator, model)
