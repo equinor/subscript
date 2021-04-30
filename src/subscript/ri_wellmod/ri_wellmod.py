@@ -7,6 +7,8 @@ import shutil
 import xml.dom.minidom
 import re
 import logging
+import sys
+from importlib import reload
 
 import rips
 import grpc
@@ -324,6 +326,10 @@ def get_parser():
         help="Well LGR output file (default=well_lgr_defs.sch)",
     )
     parser.add_argument(
+        "--with-resinsight-dev",
+        help="Use specified development version of ResInsight (full path to binary)",
+    )
+    parser.add_argument(
         "--time_step",
         "-t",
         default=0,
@@ -454,6 +460,7 @@ def main():
     tmp_output_folder = args.tmpfolder
     output_file = args.output_file
     lgr_output_file = args.lgr_output_file
+    resinsightdev = args.with_resinsight_dev
     wells = args.wells
     msw_wells = args.msw
     lgr_specs = args.lgr
@@ -495,15 +502,16 @@ def main():
     #  * No .UNRST
     if lgr_specs is not None and len(lgr_specs) > 0:
         has_display = "DISPLAY" in os.environ and os.environ["DISPLAY"]
-        if not has_display:
+        if not has_display and not resinsightdev:
             logger.error("Currently LGR creation requires an X display (GUI mode).")
+            return 1
         if not (init_case and has_restart_file(ecl_path)):
             logger.error(
                 "Can currently only create LGRs for init cases with restart file."
             )
             return 1
 
-        console_mode = False
+        console_mode = resinsightdev is not None
 
     # Input cases must be loaded by a cmdline workaround
     if not init_case:
@@ -513,7 +521,32 @@ def main():
         logger.debug("Command line parameters are: %s", command_line_parameters)
 
     # Launch ResInsight
-    resinsight = launch_resinsight(console_mode, command_line_parameters)
+    if resinsightdev:  # Use development version
+        ripath = Path(resinsightdev)
+        if not ripath.exists():
+            logger.error(
+                "Specified development version of ResInsight does not exist: %s",
+                resinsightdev,
+            )
+            return 1
+        ridir = ripath.parent
+        pypath = ridir / Path("Python")
+        if pypath.exists():  # Use development rips, if present
+            sys.path.insert(0, str(ridir))
+            sys.path.insert(0, str(pypath))
+            reload(rips)
+            sys.path.pop(0)
+        try:
+            resinsight = rips.Instance.launch(
+                resinsight_executable=resinsightdev,
+                console=console_mode,
+                command_line_parameters=command_line_parameters,
+            )
+        except Exception as any_exception:  # pylint: disable=broad-except
+            logger.error("Unable to launch development version of ResInsight")
+            logger.error("  (Exception was: %s)", str(any_exception))
+    else:  # Launch standard version
+        resinsight = launch_resinsight(console_mode, command_line_parameters)
     if not resinsight:
         logger.error(
             "Could not launch ResInsight - run with debug flag and examine output."

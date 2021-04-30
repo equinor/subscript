@@ -8,6 +8,7 @@ from subscript.ri_wellmod import ri_wellmod
 
 SCRIPTNAME = "ri_wellmod"
 DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
+RI_DEV = "/project/res/x86_64_RH_7/share/resinsight/jenkins_dev/ResInsight"
 
 try:
     # pylint: disable=unused-import
@@ -257,3 +258,39 @@ def test_main_lgr_reek(tmpdir, mocker):
     ri_wellmod.main()
 
     assert Path(outfile).exists() and file_contains(outfile, "OP_1")
+
+
+# Test development version
+@pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
+def test_main_lgr_cmdline_dev_version(tmpdir, mocker):
+    """Test creation of LGR using development version"""
+    tmpdir.chdir()
+
+    proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
+    init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")
+    resinsightdev = RI_DEV
+    outfile = "welldefs_lgr.sch"
+    lgr_outfile = "lgr_defs.inc"
+
+    mocker.patch(
+        "sys.argv",
+        [
+            SCRIPTNAME,
+            proj_name,
+            init_case_name,
+            "-o",
+            outfile,
+            "--with-resinsight-dev",
+            resinsightdev,
+            "--msw",
+            "A4,A2",
+            "--lgr_output_file",
+            lgr_outfile,
+            "--lgr",
+            "A4:3,3,1",
+        ],
+    )
+    ri_wellmod.main()
+
+    assert Path(outfile).exists() and file_contains(outfile, "A4")
+    assert Path(lgr_outfile).exists() and file_contains(lgr_outfile, "CARFIN")
