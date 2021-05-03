@@ -425,7 +425,9 @@ class Model:
                 idx : idx + self._fracture_cell_count,
                 start_fracture_idx:end_fracture_idx,
                 start_fracture_k : end_fracture_k + 1,
-            ] = (_i + 1)
+            ] = (
+                _i + 1
+            )
 
         for _i, idx in enumerate(self._fracture_j):
             fracture_length = max(0.0, min(1.0, self._fracture_length_x[_i])) * self._lx
@@ -489,15 +491,19 @@ class Model:
 
         self._xv, self._yv = np.meshgrid(self._x, self._y)
         if self._a * self._b * self._c != 0.0:
-            self._zv = -self._c * np.sqrt(
-                np.clip(
-                    1.0
-                    - (self._xv - x_mid) ** 2 / self._a ** 2
-                    - (self._yv - y_mid) ** 2 / self._b ** 2,
-                    0,
-                    None,
+            self._zv = (
+                -self._c
+                * np.sqrt(
+                    np.clip(
+                        1.0
+                        - (self._xv - x_mid) ** 2 / self._a ** 2
+                        - (self._yv - y_mid) ** 2 / self._b ** 2,
+                        0,
+                        None,
+                    )
                 )
-            ) + (self._xv - x_mid) * math.tan(math.radians(self._tilt))
+                + (self._xv - x_mid) * math.tan(math.radians(self._tilt))
+            )
         else:
             self._zv = (self._xv - x_mid) * math.tan(math.radians(self._tilt))
         self._zv += self._top - self._zv.min()
