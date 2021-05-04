@@ -12,7 +12,7 @@ import pandas as pd
 import ecl2df
 
 from subscript import getLogger, __version__
-from subscript.prtvol2csv.fipmapper import FipMapper
+from fmu.tools.fipmapper.fipmapper import FipMapper
 
 DESCRIPTION = """
 Extract reservoir volumes pr FIPNUM from Eclipse PRT files and dump to CSV.
