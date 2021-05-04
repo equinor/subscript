@@ -3,6 +3,8 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
+from typing import List
+
 import numpy as np
 import pandas as pd
 
@@ -14,15 +16,15 @@ from subscript.fmuobs.util import CLASS_SHORTNAME, ERT_DATE_FORMAT, lowercase_di
 logger = getLogger(__name__)
 
 
-def dfsummary2ertobs(obs_df):
+def dfsummary2ertobs(obs_df: pd.DataFrame) -> str:
     """Write SUMMARY_OBSERVATION as ERT observations
 
     Args:
-        obs_df (pd.DataFrame): Observations in internal dataframe
+        obs_df: Observations in internal dataframe
             representation
 
     Returns:
-        str: ERT observation format string, multiline
+        ERT observation format string, multiline
     """
     ertobs_str = ""
     smry_df = obs_df[obs_df["CLASS"] == "SUMMARY_OBSERVATION"].copy()
@@ -49,15 +51,15 @@ def dfsummary2ertobs(obs_df):
     return ertobs_str
 
 
-def dfblock2ertobs(obs_df):
+def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
     """Write BLOCK_OBSERVATION from dataframe rows as ERT observations
 
     Args:
-        obs_df (pd.DataFrame): Observations in internal dataframe
+        obs_df: Observations in internal dataframe
             representation
 
     Returns:
-        str: ERT observation format string, multiline
+        ERT observation format string, multiline
     """
     ertobs_str = ""
     block_obs_df = obs_df[obs_df["CLASS"] == "BLOCK_OBSERVATION"].copy()
@@ -106,18 +108,18 @@ def dfblock2ertobs(obs_df):
     return ertobs_str
 
 
-def dfhistory2ertobs(obs_df):
+def dfhistory2ertobs(obs_df: pd.DataFrame) -> str:
     """Write HISTORY_OBSERVATION from dataframe rows as ERT observations
 
     The SEGMENT structure is a little bit peculiar, as its presence means
     an extra DEFAULT segment is present in the internal dataframe representation.
 
     Args:
-        obs_df (pd.DataFrame): Observations in internal dataframe
+        obs_df: Observations in internal dataframe
             representation
 
     Returns:
-        str: ERT observation format string, multiline
+        ERT observation format string, multiline
     """
     ertobs_str = ""
     history_obs_df = obs_df[obs_df["CLASS"] == "HISTORY_OBSERVATION"]
@@ -154,16 +156,16 @@ def dfhistory2ertobs(obs_df):
     return re.compile(r"\s*{\s*}\s*;").sub(";", ertobs_str)
 
 
-def dfgeneral2ertobs(obs_df):
+def dfgeneral2ertobs(obs_df: pd.DataFrame) -> str:
     """Write GENERAL_OBSERVATION from dataframe rows as ERT observations
 
 
     Args:
-        obs_df (pd.DataFrame): Observations in internal dataframe
+        obs_df: Observations in internal dataframe
             representation
 
     Returns:
-        str: ERT observation format string, multiline
+        ERT observation format string, multiline
     """
     ertobs_str = ""
     gen_obs_df = obs_df[obs_df["CLASS"] == "GENERAL_OBSERVATION"]
@@ -190,7 +192,7 @@ def dfgeneral2ertobs(obs_df):
     return re.compile(r"\s*{\s*}\s*;").sub(";", ertobs_str)
 
 
-def df2ertobs(obs_df):
+def df2ertobs(obs_df: pd.DataFrame) -> str:
     """Generate a complete set of ERT observations from a dataframe
     with potentially all classes of observations.
 
@@ -200,10 +202,10 @@ def df2ertobs(obs_df):
     dataframe.
 
     Args:
-        obs_df (pd.DataFrame): Observations in internal dataframe format
+        obs_df: Observations in internal dataframe format
 
     Returns:
-        str: ERT observations as multiline string.
+        ERT observations as multiline string.
     """
     assert isinstance(obs_df, pd.DataFrame)
     ertobs_str = ""
@@ -216,7 +218,7 @@ def df2ertobs(obs_df):
     return ertobs_str
 
 
-def summary_df2obsdict(smry_df):
+def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     """Generate a dictionary structure suitable for yaml
     for summary observations in dataframe representation
 
@@ -230,9 +232,9 @@ def summary_df2obsdict(smry_df):
     a potential column LABEL will be included as "label".
 
     Args:
-        sum_df (pd.DataFrame)
+        sum_df
     Returns:
-        list: List of dictionaries, each dict has "key" and "observation"
+        List of dictionaries, each dict has "key" and "observation"
     """
     assert isinstance(smry_df, pd.DataFrame)
     if "CLASS" in smry_df:
@@ -272,7 +274,7 @@ def summary_df2obsdict(smry_df):
     return smry_obs_list
 
 
-def convert_dframe_date_to_str(dframe):
+def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     """Convert the DATE column in a dataframe to a string.
     Replace "NaT" (Not-a-Time) with np.nan after conversion
 
@@ -295,15 +297,15 @@ def convert_dframe_date_to_str(dframe):
     return dframe
 
 
-def block_df2obsdict(block_df):
+def block_df2obsdict(block_df: pd.DataFrame) -> List[dict]:
     """Generate a dictionary structure suitable for yaml
     for block observations in dataframe representation
 
     Args:
-        block_df (pd.DataFrame)
+        block_df
 
     Returns:
-        list: List of dictionaries, each dict has "well", "date" and
+        List of dictionaries, each dict has "well", "date" and
         "observations"
     """
     assert isinstance(block_df, pd.DataFrame)
@@ -350,7 +352,7 @@ def block_df2obsdict(block_df):
     return block_obs_list
 
 
-def df2obsdict(obs_df):
+def df2obsdict(obs_df: pd.DataFrame) -> dict:
     """Generate a dictionary structure of all observations, this data structure
     is designed to look good in yaml, and is supported by WebViz and
     fmu-ensemble.
@@ -380,7 +382,7 @@ def df2obsdict(obs_df):
     return obsdict
 
 
-def df2resinsight_df(obs_df):
+def df2resinsight_df(obs_df: pd.DataFrame) -> pd.DataFrame:
     """Generate a dataframe observation representation supported by ResInsight.
 
     Only a subset of the observations can be written to this representation.
@@ -391,11 +393,11 @@ def df2resinsight_df(obs_df):
     to the internal dataframe representation.
 
     Args:
-        obs_df (pd.DataFrame): Dataframe representation of observations, this format
+        obs_df: Dataframe representation of observations, this format
             is internal to this module, and is nothing but a flattening
 
     Returns:
-        pd.DataFrame. This can be written directly to disk as CSV and
+        This can be written directly to disk as CSV and
         imported into the ResInsight application"""
 
     ri_column_names = ["DATE", "VECTOR", "VALUE", "ERROR"]

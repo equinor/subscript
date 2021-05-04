@@ -49,7 +49,7 @@ def main():
     allvfpdata.to_csv(args.output, index=False)
 
 
-def vfpfile2df(filename):
+def vfpfile2df(filename: str) -> pd.DataFrame:
     """Process a VFP file (typically outputted from Prosper or similar)
     and organize the data into a dataframe
 

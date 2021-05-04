@@ -3,9 +3,11 @@
 import argparse
 import os
 import sys
+from typing import Optional, List
 
-import xtgeo
-from xtgeo.common import XTGeoDialog
+import xtgeo  # type: ignore
+
+from xtgeo.common import XTGeoDialog  # type: ignore
 
 APPNAME = "convert_grid_format (subscript)"
 
@@ -24,7 +26,7 @@ except ImportError:
     __version__ = "0.0.0"
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Setup an argparse argument parser for parsing arguments
     and making documentation"""
 
@@ -102,7 +104,14 @@ def _do_parse_args(args):
     return args
 
 
-def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
+def _convert_ecl2roff(
+    filename: str,
+    mode: str,
+    outfile: str,
+    option: str,
+    props: str,
+    dates: Optional[str],
+) -> None:
     """Conversion..."""
 
     # pylint: disable=too-many-arguments
@@ -139,12 +148,14 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
             raise SystemExit("STOP. No properties given")
 
         if ":" in props:
-            props = props.split(":")
+            props_list = props.split(":")
         else:
-            props = props.split()
+            props_list = props.split()
 
         fformat = mode
         fformat = fformat.replace("restart", "unrst")
+
+        dates_list: Optional[List[str]]
         if mode == "restart":
             if dates is None:
                 raise SystemExit("STOP. No dates given")
@@ -153,11 +164,11 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
                 with open(dates, "r") as datesfile_h:
                     dates = " ".join(datesfile_h.readlines())
             if ":" in dates:
-                dates = dates.split(":")
+                dates_list = dates.split(":")
             else:
-                dates = dates.split()
+                dates_list = dates.split()
         else:
-            dates = None
+            dates_list = None
 
         if fext in (".UNRST", ".INIT", ""):
 
@@ -166,7 +177,11 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
             usext = ".{}".format(fformat).upper()
 
             myprops.from_file(
-                fname + usext, names=props, dates=dates, fformat=fformat, grid=mygrid
+                fname + usext,
+                names=props_list,
+                dates=dates_list,
+                fformat=fformat,
+                grid=mygrid,
             )
 
             for prop in myprops.props:
@@ -178,7 +193,7 @@ def _convert_ecl2roff(filename, mode, outfile, option, props, dates):
             raise SystemExit("Invalid grid extention")
 
 
-def main(args=None):
+def main(args=None) -> None:
     """Entry-point"""
 
     XTGeoDialog.print_xtgeo_header(APPNAME, __version__)

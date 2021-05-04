@@ -9,6 +9,7 @@ import itertools
 import textwrap
 import argparse
 import re
+from typing import List, Optional, Tuple, Pattern, Union
 
 import subscript
 
@@ -48,7 +49,12 @@ MAGIC_DEFAULT_FILELIST = "__NONE__"
 DENYLIST_KEYWORDS = ["INCLUDE"]  # Due to slashes in filenames
 
 
-def eclcompress(files, keeporiginal=False, dryrun=False, eclkw_regexp=None):
+def eclcompress(
+    files: list,
+    keeporiginal: bool = False,
+    dryrun: bool = False,
+    eclkw_regexp: str = None,
+) -> int:
     """Run-length encode a set of grdecl files.
 
     Files will be modified in-place, backup is optional.
@@ -145,7 +151,7 @@ def eclcompress(files, keeporiginal=False, dryrun=False, eclkw_regexp=None):
     return totalsavings
 
 
-def acceptedvalue(valuestring):
+def acceptedvalue(valuestring: str) -> bool:
     """Return true only for strings that are numbers
     we don't want to try to compress other things
 
@@ -163,7 +169,7 @@ def acceptedvalue(valuestring):
         return False
 
 
-def compress_multiple_keywordsets(keywordsets, filelines):
+def compress_multiple_keywordsets(keywordsets: list, filelines: list) -> list:
     """Apply Eclipse type compression to data in filelines
 
     The list of strings given as input (filelines) is indexed
@@ -243,7 +249,9 @@ def compress_multiple_keywordsets(keywordsets, filelines):
     return compressedlines
 
 
-def find_keyword_sets(filelines, eclkw_regexp=None):
+def find_keyword_sets(
+    filelines: List[str], eclkw_regexp: Optional[Union[str, Pattern[str]]] = None
+) -> List[Tuple[int, int]]:
     """Parse list of strings, looking for Eclipse data sets that we want.
 
     Example:
@@ -314,7 +322,7 @@ def find_keyword_sets(filelines, eclkw_regexp=None):
     return keywordsets
 
 
-def glob_patterns(patterns):
+def glob_patterns(patterns: list) -> list:
     """
     Args:
         patterns (list): List of strings with filename patterns
@@ -351,7 +359,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Setup parser"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION, epilog=EPILOG
@@ -397,7 +405,7 @@ def get_parser():
     return parser
 
 
-def parse_wildcardfile(filename):
+def parse_wildcardfile(filename: str) -> List[str]:
     """Parse a file with one filename wildcard pr. line
 
     If a magic filename is supplied, default list of
@@ -420,7 +428,7 @@ def parse_wildcardfile(filename):
     lines = [line.strip() for line in lines]
     lines = [line.split("#")[0] for line in lines]
     lines = [line.split("--")[0] for line in lines]
-    lines = filter(len, lines)
+    lines = list(filter(len, lines))
     return lines
 
 
@@ -442,8 +450,12 @@ def main():
 
 
 def main_eclcompress(
-    grdeclfiles, wildcardfile, keeporiginal=False, dryrun=False, eclkw_regexp=None
-):
+    grdeclfiles: Union[List[str], str],
+    wildcardfile: str,
+    keeporiginal: bool = False,
+    dryrun: bool = False,
+    eclkw_regexp: Optional[str] = None,
+) -> None:
     """Implements the command line functionality
 
     Args:
@@ -458,7 +470,7 @@ def main_eclcompress(
     # A list of wildcards on the command line should always be compressed:
     if grdeclfiles:
         patterns = grdeclfiles
-        if not isinstance(patterns, list):
+        if isinstance(patterns, str):
             patterns = [patterns]
     else:
         patterns = []

@@ -4,14 +4,15 @@ import os
 import sys
 import signal
 import logging
+from typing import Union, Tuple, Optional
 
 import argparse
 import yaml
 
 import pandas as pd
 
-from ert_shared.plugins.plugin_manager import hook_implementation
-from res.job_queue import ErtScript
+from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
+from res.job_queue import ErtScript  # type: ignore
 
 
 from subscript import getLogger
@@ -82,7 +83,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Return a parser for the command line client, and for
     generating help text. The description, defaults and help-text for
     each argument is shared with the parser for the ERT workflow"""
@@ -143,16 +144,16 @@ def get_parser():
     return parser
 
 
-def validate_internal_dframe(obs_df):
+def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
     """Validate the internal dataframe format for observations.
 
     Will log warnings and/or errors if anything found.
 
     Args:
-        obs_df (pd.DataFrame): Dataframe to validate
+        obs_df: Dataframe to validate
 
     Returns:
-        bool: True if everything is ok (or empty)
+        True if everything is ok (or empty)
     """
     failed = False
     if obs_df.empty:
@@ -189,7 +190,7 @@ def validate_internal_dframe(obs_df):
     return not failed
 
 
-def autoparse_file(filename):
+def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, dict]]:
     """Detects the observation file format for a given filename. This
     is done by attempting to parse its content and giving up on
     exceptions.
@@ -201,7 +202,7 @@ def autoparse_file(filename):
     ERT config file, which is outside the context of fmuobs.
 
     Args:
-        filename (str)
+        filename
 
     Returns:
         tuple: First element is a string in [resinsight, csv, yaml, ert], second
@@ -272,7 +273,7 @@ def autoparse_file(filename):
     return (None, pd.DataFrame)
 
 
-def main():
+def main() -> None:
     """Command line client, parse command line arguments and execute the tool."""
     parser = get_parser()
     args = parser.parse_args()
@@ -290,15 +291,15 @@ def main():
 
 
 def fmuobs(
-    inputfile,
-    ertobs=None,
-    yml=None,
-    resinsight=None,
-    csv=None,
-    verbose=False,
-    debug=False,
-    starttime=None,
-    includedir=None,
+    inputfile: str,
+    ertobs: Optional[str] = None,
+    yml: Optional[str] = None,
+    resinsight: Optional[str] = None,
+    csv: Optional[str] = None,
+    verbose: bool = False,
+    debug: bool = False,
+    starttime: Optional[str] = None,
+    includedir: bool = None,
 ):
     # pylint: disable=too-many-arguments
     """Alternative to main() with named arguments"""
@@ -343,18 +344,22 @@ def fmuobs(
 
 
 def dump_results(
-    dframe, csvfile=None, yamlfile=None, resinsightfile=None, ertfile=None
-):
+    dframe: pd.DataFrame,
+    csvfile: Optional[str] = None,
+    yamlfile: Optional[str] = None,
+    resinsightfile: Optional[str] = None,
+    ertfile: Optional[str] = None,
+) -> None:
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips
     export if filenames are empty or None.
 
     Args:
-        dframe (pd.DataFrame)
-        csvfile (str): Filename
-        yamlfile (str): Filename
-        resinsightfile (str): Filename
-        ertfile (str): Filename
+        dframe
+        csvfile: Filename
+        yamlfile: Filename
+        resinsightfile: Filename
+        ertfile: Filename
     """
 
     if not (csvfile or yamlfile or resinsightfile or ertfile):

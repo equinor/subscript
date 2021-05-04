@@ -1,5 +1,6 @@
 import seaborn
 from matplotlib import pyplot
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -29,7 +30,9 @@ QC_PALETTE = {
 }
 
 
-def plot_qc_panels(qc_frame, eqlnum=None, show=False):
+def plot_qc_panels(
+    qc_frame: pd.DataFrame, eqlnum: int = None, show: bool = False
+) -> None:
     """Make a plotting panel (multiple plots) on cell-based dataframe.
 
     It only makes sense to view one eqlnum at a time.
@@ -68,7 +71,7 @@ def plot_qc_panels(qc_frame, eqlnum=None, show=False):
         pyplot.show()
 
 
-def visual_depth(qc_frame):
+def visual_depth(qc_frame: pd.DataFrame) -> float:
     """Suggest a deep depth limit for what to plot, in order to avoid
     showing too much of a less interesting water zone"""
     assert (
@@ -85,7 +88,9 @@ def visual_depth(qc_frame):
         return qc_frame["Z"].max()
 
 
-def swat_depth(qc_frame, axis=None, hue="QC_FLAG"):
+def swat_depth(
+    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+) -> None:
     """Make a SWAT vs depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
@@ -98,7 +103,9 @@ def swat_depth(qc_frame, axis=None, hue="QC_FLAG"):
     add_contacts_to_plot(qc_frame, axis)
 
 
-def swatinit_depth(qc_frame, axis=None, hue="QC_FLAG"):
+def swatinit_depth(
+    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+) -> None:
     """Make a swatinit vs depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
@@ -111,7 +118,9 @@ def swatinit_depth(qc_frame, axis=None, hue="QC_FLAG"):
     add_contacts_to_plot(qc_frame, axis)
 
 
-def pressure_depth(qc_frame, axis=None, hue="QC_FLAG"):
+def pressure_depth(
+    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+) -> None:
     """Make a pressure vs. depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
@@ -124,7 +133,9 @@ def pressure_depth(qc_frame, axis=None, hue="QC_FLAG"):
     add_contacts_to_plot(qc_frame, axis)
 
 
-def pc_depth(qc_frame, axis=None, hue="QC_FLAG"):
+def pc_depth(
+    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+) -> None:
     """Make a pc vs depth plot on current axis"""
     if axis is None:
         axis = pyplot.gca()
@@ -137,7 +148,7 @@ def pc_depth(qc_frame, axis=None, hue="QC_FLAG"):
     add_contacts_to_plot(qc_frame, axis)
 
 
-def add_contacts_to_plot(qc_frame, axis):
+def add_contacts_to_plot(qc_frame: pd.DataFrame, axis: pyplot.Axes) -> None:
     if "OWC" in qc_frame:
         owc = qc_frame["OWC"].values[0]  # OWC is assumed constant in the dataframe
         axis.axhline(owc, color="black", linestyle="--", linewidth=1)
@@ -152,7 +163,7 @@ def add_contacts_to_plot(qc_frame, axis):
         axis.annotate(f"GWC={gwc:g}", (0, gwc))
 
 
-def wvol_waterfall(qc_vols):
+def wvol_waterfall(qc_vols: Dict[str, float]) -> None:
     """Make a waterfall chart of the computed volumes
 
     Plots on current axis.

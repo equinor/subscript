@@ -28,6 +28,7 @@ import logging
 import argparse
 from pathlib import Path
 from multiprocessing import Process
+from typing import Optional
 
 import matplotlib.pyplot
 import numpy as np
@@ -35,9 +36,9 @@ import numpy as np
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
 
-from ecl.summary import EclSum
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
+from ecl.summary import EclSum  # type: ignore
+from ecl.eclfile import EclFile  # type: ignore
+from ecl.grid import EclGrid  # type: ignore
 
 import subscript
 
@@ -60,7 +61,7 @@ to be a vector to plot. Thus, vectors and datafiles can be mixed.
 EPILOG = ""
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Setup parser for command line options"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -122,40 +123,45 @@ def get_parser():
 
 
 def summaryplotter(
-    summaryfiles=None,
-    datafiles=None,
-    vectors=None,
-    parameterfiles=None,
-    histvectors=False,
-    normalize=False,
-    singleplot=False,
-    nolegend=False,
-    maxlabels=5,
-    ensemblemode=False,
-    dumpimages=False,
-    colourby="",
-    logcolourby="",
+    summaryfiles: list,
+    datafiles: list = None,
+    vectors: Optional[list] = None,
+    parameterfiles: Optional[list] = None,
+    histvectors: bool = False,
+    normalize: bool = False,
+    singleplot: bool = False,
+    nolegend: bool = False,
+    maxlabels: int = 5,
+    ensemblemode: bool = False,
+    dumpimages: bool = False,
+    colourby: Optional[str] = None,
+    logcolourby: Optional[str] = None,
 ):
     # pylint: disable=too-many-arguments
     """
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 
     Args:
-        eclsums (list): List of EclSum objects
-        vectors (list): List of strings, with Eclipse summary vectors
-        histvectors (bool):
-        normalize (bool):
-        singleplot (bool):
-        nolegend (bool):
-        maxlabels (int):
-        ensemblemode (bool):
-        dumpimages (bool):
-        colourby (str):
-        logcolourby (str):
+        eclsums: List of EclSum objects
+        datafiles: List of Eclipse DATA files
+        vectors: List of strings, with Eclipse summary vectors
+        parameterfiles:
+        histvectors:
+        normalize:
+        singleplot:
+        nolegend:
+        maxlabels:
+        ensemblemode:
+        dumpimages:
+        colourby:
+        logcolourby:
     """
     rstfiles = []  # EclRst objects
     gridfiles = []  # EclGrid objects
     parametervalues = []  # Vector of values pr. realization for colouring
+
+    if parameterfiles is None:
+        parameterfiles = []
 
     if datafiles and not summaryfiles:
         logger.info("Reloading summary files from disk")
@@ -176,8 +182,8 @@ def summaryplotter(
         print("Hint: Use --nolegend to skip legend")
 
     if (colourby or logcolourby) and len(summaryfiles) < 2:
-        colourby = False
-        logcolourby = False
+        colourby = None
+        logcolourby = None
         logger.warning("Not colouring by parameter when only one DATA file is loaded")
 
     minvalue = 0.0
@@ -223,10 +229,10 @@ def summaryplotter(
             )
             if suggestion:
                 print("         Maybe you meant " + suggestion[0])
-            colourby = False
-            logcolourby = False
+            colourby = None
+            logcolourby = None
         else:
-            normalizedparametervalues = (parametervalues - minvalue) / (
+            normalizedparametervalues = (np.array(parametervalues) - minvalue) / (
                 maxvalue - minvalue
             )
 
@@ -244,7 +250,7 @@ def summaryplotter(
                 )
                 minvalue = np.min(parametervalues)
                 maxvalue = np.max(parametervalues)
-                normalizedparametervalues = (parametervalues - minvalue) / (
+                normalizedparametervalues = (np.array(parametervalues) - minvalue) / (
                     maxvalue - minvalue
                 )
                 colourby = None
@@ -265,6 +271,8 @@ def summaryplotter(
     matchedsummaryvectors = []
     restartvectors = []
     wildcard_in_use = False
+    if vectors is None:
+        vectors = []
     for vector in vectors:
         matchingvectors = list(summaryfiles[0].keys(vector))
         if len(matchingvectors) > 1:
@@ -282,6 +290,9 @@ def summaryplotter(
         logger.info(
             "Summary vectors after wildcard expansion: %s", str(matchedsummaryvectors)
         )
+
+    if datafiles is None:
+        datafiles = []
 
     # If we have any restart vectors defined, we must also load the restart files
     if restartvectors:
@@ -306,16 +317,19 @@ def summaryplotter(
     # Now it is time to prepare vectors from restart-data, quite time-consuming!!
     # Remember that SOIL should also be supported, but must be calculated on
     # demand from SWAT and SGAS (if present)
+    restartvectordata: dict
+    restartvectordates: dict
     restartvectordata = {}
     restartvectordates = {}
     for rstvec in restartvectors:
         logger.info("Getting data for %s...", rstvec)
         match = re.match(r"^([A-Z]+):([0-9]+),([0-9]+),([0-9]+)$", rstvec)
-        dataname = match.group(1)  # aka SWAT, PRESSURE, SGAS etc..
+        dataname = match.group(1)  # type: ignore
+        # aka SWAT, PRESSURE, SGAS etc..
         (ijk) = (
-            int(match.group(2)) - 1,
-            int(match.group(3)) - 1,
-            int(match.group(4)) - 1,
+            int(match.group(2)) - 1,  # type: ignore
+            int(match.group(3)) - 1,  # type: ignore
+            int(match.group(4)) - 1,  # type: ignore
         )
         # Remember that these indices start on 1, not on zero!
 
@@ -508,6 +522,9 @@ def summaryplotter(
 
         # Add grey major gridlines:
         pyplot.grid(b=True, which="both", color="0.85", linestyle="-")
+
+        if datafiles is None:
+            datafiles = []
 
         for datafile_idx, _ in enumerate(datafiles):
 

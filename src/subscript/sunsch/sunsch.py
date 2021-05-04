@@ -15,10 +15,11 @@ import logging
 import warnings
 import dateutil.parser
 from pathlib import Path
+from typing import List, Union
 
 import yaml
 
-from opm.tools import TimeVector
+from opm.tools import TimeVector  # type: ignore
 
 import configsuite  # lgtm [py/import-and-import-from]
 from configsuite import types  # lgtm [py/import-and-import-from]
@@ -52,17 +53,17 @@ EXAMPLES = """
 
 
 @configsuite.validator_msg("Is dategrid a supported frequency")
-def _is_valid_dategrid(dategrid_str):
+def _is_valid_dategrid(dategrid_str: str):
     return dategrid_str in SUPPORTED_DATEGRIDS
 
 
 @configsuite.validator_msg("Is filename an existing file")
-def _is_existing_file(filename):
+def _is_existing_file(filename: str):
     return Path(filename).exists()
 
 
 @configsuite.transformation_msg("Defaults and v1-vs-v2 handling of config")
-def _defaults_and_v1_format_handling(config):
+def _defaults_and_v1_format_handling(config: dict):
     """Wrapper transformation function.
 
     Only one tranformation can be given to ConfigSuite.
@@ -77,7 +78,7 @@ def _to_string(element):
 
 
 @configsuite.transformation_msg("Shuffle startdate vs refdate")
-def _shuffle_start_refdate(config):
+def _shuffle_start_refdate(config: dict) -> dict:
     """
     Ensure that:
     * startdate is always defined, if not given, it is picked
@@ -106,7 +107,7 @@ def _shuffle_start_refdate(config):
 
 @configsuite.transformation_msg("Convert v1 sunsch format to v2")
 # pylint: disable=invalid-name
-def _v1_content_to_v2(config):
+def _v1_content_to_v2(config: dict) -> dict:
     """
     Process an incoming dictionary with sunsch configuration.
 
@@ -286,30 +287,32 @@ CONFIG_SCHEMA_V2 = {
 }
 
 
-def get_schema():
+def get_schema() -> dict:
     """Return the ConfigSuite schema"""
     return CONFIG_SCHEMA_V2
 
 
-def datetime_from_date(date):
+def datetime_from_date(
+    date: Union[str, datetime.datetime, datetime.date]
+) -> datetime.datetime:
     """Set time to 00:00:00 in a date"""
     if isinstance(date, str):
         raise ValueError("Is the string {} a date?".format(str(date)))
     return datetime.datetime.combine(date, datetime.datetime.min.time())
 
 
-def process_sch_config(conf):
+def process_sch_config(conf) -> TimeVector:
     """Process a Schedule configuration into a opm.tools TimeVector
 
     Recognized keys in the configuration dict: files, startdate, startime,
     refdate, enddate, dategrid, insert
 
     Args:
-        conf (dict or named_dict): Configuration dictionary for the schedule
+        conf: Configuration dictionary for the schedule
             merges and inserts
 
     Returns:
-        opm.io.TimeVector:
+        opm.io.TimeVector
     """
     # At least test code is calling this function with a dict as
     # config - convert it to a configsuite snapshot:
@@ -413,13 +416,15 @@ def process_sch_config(conf):
     # an implicit end-date
     if conf.dategrid:
         dates = dategrid(conf.startdate, enddate, conf.dategrid)
-        for date in dates:
-            schedule.add_keywords(datetime_from_date(date), [""])
+        for _date in dates:
+            schedule.add_keywords(datetime_from_date(_date), [""])
 
     return schedule
 
 
-def load_timevector_from_file(filename, startdate, file_starts_with_dates):
+def load_timevector_from_file(
+    filename: str, startdate: datetime.date, file_starts_with_dates: bool
+) -> TimeVector:
     """
     Load a timevector from a file, and clip dates that are  earlier than startdate.
 
@@ -449,12 +454,12 @@ def load_timevector_from_file(filename, startdate, file_starts_with_dates):
     return tmpschedule
 
 
-def sch_file_nonempty(filename):
+def sch_file_nonempty(filename: str) -> bool:
     """Determine if a file (to be included) has any Eclipse
     keywords at all (excluding comments)
 
     Args:
-        filename (str)
+        filename
 
     Returns:
         bool: False if the file is empty or has only comments.
@@ -489,7 +494,7 @@ def sch_file_nonempty(filename):
     return True
 
 
-def sch_file_starts_with_dates_keyword(filename):
+def sch_file_starts_with_dates_keyword(filename: str) -> bool:
     """Determine if a file (to be included) has
     DATES as its first keyword, or something else.
 
@@ -514,7 +519,7 @@ def sch_file_starts_with_dates_keyword(filename):
     return True
 
 
-def substitute(insert_statement):
+def substitute(insert_statement) -> str:
     """
     Perform key-value substitutions and generate the result
     as a file on disk.
@@ -557,7 +562,7 @@ def substitute(insert_statement):
     return resultfilename
 
 
-def wrap_long_lines(string, maxchars=128, warn=True):
+def wrap_long_lines(string: str, maxchars: int = 128, warn: bool = True) -> str:
     """Wrap long lines in a multiline string.
 
     Short enough lines are not touched.
@@ -597,7 +602,7 @@ def wrap_long_lines(string, maxchars=128, warn=True):
     return wrappedstr.strip()
 
 
-def _remap_v1_insert_to_v2(insert_statement):
+def _remap_v1_insert_to_v2(insert_statement: dict) -> dict:
     """
     Remap a config v1 insert section to how it should look like
     in the v2 config.
@@ -629,6 +634,7 @@ def _remap_v1_insert_to_v2(insert_statement):
         logger.error("BUG: The insert_statement: %s was not v1", str(insert_statement))
         return {}
 
+    v2_insert_statement: dict
     v2_insert_statement = {}
 
     if "string" in filedata:
@@ -657,13 +663,15 @@ def _remap_v1_insert_to_v2(insert_statement):
     return v2_insert_statement
 
 
-def dategrid(startdate, enddate, interval):
-    """Return a list of datetimes at given interval
+def dategrid(
+    startdate: datetime.date, enddate: datetime.date, interval: str
+) -> List[datetime.date]:
+    """Return a list of dates at given interval
 
     Args:
-        startdate (datetime.date): First date in range
-        enddate (datetime.date): Last date in range
-        interval (str): Must be among: 'monthly', 'yearly', 'weekly',
+        startdate: First date in range
+        enddate: Last date in range
+        interval: Must be among: 'monthly', 'yearly', 'weekly',
             'biweekly', 'bimonthly'
 
     Return:

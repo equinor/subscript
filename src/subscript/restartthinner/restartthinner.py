@@ -25,7 +25,7 @@ written to the same filename (keeping the original is optional)
 """
 
 
-def find_libecl_app(toolname):
+def find_libecl_app(toolname: str) -> str:
     """Locate path of apps in libecl.
 
     These have varying suffixes due through the history of libecl Makefiles.
@@ -34,7 +34,7 @@ def find_libecl_app(toolname):
     We prefer .x.
 
     Returns:
-        str: String with path if found.
+        String with path if found.
 
     Raises:
         IOError: if tool can't be found
@@ -49,7 +49,7 @@ def find_libecl_app(toolname):
     raise IOError(toolname + " not found in path, PATH=" + str(os.environ["PATH"]))
 
 
-def date_slicer(slicedates, restartdates, restartindices):
+def date_slicer(slicedates: list, restartdates: list, restartindices: list) -> dict:
     """Make a dict that maps a chosen restart date to a report index"""
     slicedatemap = {}
     for slicedate in slicedates:
@@ -60,7 +60,7 @@ def date_slicer(slicedates, restartdates, restartindices):
     return slicedatemap
 
 
-def ecl_repacker(rstfilename, slicerstindices, quiet):
+def ecl_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
     """
     Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
     utilities are from libecl.
@@ -115,7 +115,7 @@ def ecl_repacker(rstfilename, slicerstindices, quiet):
         shutil.rmtree(rstfilepath / tempdir)
 
 
-def get_restart_indices(rstfilename):
+def get_restart_indices(rstfilename: str) -> list:
     """Extract a list of RST indices for a filename"""
     if Path(rstfilename).exists():
         # This function segfaults if file does not exist
@@ -123,7 +123,13 @@ def get_restart_indices(rstfilename):
     raise FileNotFoundError(f"{rstfilename} not found")
 
 
-def restartthinner(filename, numberofslices, quiet=False, dryrun=True, keep=False):
+def restartthinner(
+    filename: str,
+    numberofslices: int,
+    quiet: bool = False,
+    dryrun: bool = True,
+    keep: bool = False,
+) -> None:
     """
     Thin an existing UNRST file to selected number of restarts.
     """
@@ -176,7 +182,7 @@ def restartthinner(filename, numberofslices, quiet=False, dryrun=True, keep=Fals
     print("Written to " + filename)
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Setup parser"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter, description=DESCRIPTION

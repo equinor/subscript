@@ -3,6 +3,8 @@ import argparse
 import re
 import io
 
+from typing import List, Union
+
 import pandas as pd
 
 from subscript import getLogger as subscriptlogger
@@ -42,7 +44,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Construct a parser for the command line utility ofmvol2csv and for
     its documentation"""
     parser = argparse.ArgumentParser(
@@ -72,7 +74,7 @@ def get_parser():
     return parser
 
 
-def cleanse_ofm_lines(filelines):
+def cleanse_ofm_lines(filelines: List[str]) -> List[str]:
     """Cleanup a list of lines::
 
       * Remove comment lines
@@ -86,8 +88,8 @@ def cleanse_ofm_lines(filelines):
     Return:
         list: One string pr. line
     """
-    filelines = map(
-        str.rstrip, filelines
+    filelines = list(
+        map(str.rstrip, filelines)
     )  # Remove Windows line endings and any whitespace at line end
 
     # Remove comment lines
@@ -101,7 +103,7 @@ def cleanse_ofm_lines(filelines):
     return filelines
 
 
-def unify_dateformat(lines):
+def unify_dateformat(lines: List[str]) -> List[str]:
     """Some OFM files have day, month year in separate columns.
 
     This function catches one variant of this, with day-month-year
@@ -128,7 +130,7 @@ def unify_dateformat(lines):
     return lines
 
 
-def extract_columnnames(filelines):
+def extract_columnnames(filelines: List[str]) -> List[str]:
     """Look for lines starting with `*DATE`, these signify the columns
     available in the current file being read.
 
@@ -136,10 +138,10 @@ def extract_columnnames(filelines):
     as this is not supported.
 
     Args:
-        filelines (list): One string pr. line
+        filelines: One string pr. line
 
     Return:
-        list: The column names (strings) that is found, including the first DATE.
+        The column names (strings) that is found, including the first DATE.
         The star prefix for each column is removed.
     """
     columnnamelines = [line for line in filelines if "*DATE" in line]
@@ -154,7 +156,7 @@ def extract_columnnames(filelines):
     return columnnames
 
 
-def split_list(linelist, splitidxs):
+def split_list(linelist: List[str], splitidxs: List[int]) -> List[List[str]]:
     """Split a list of lines into chunks, where each chunck
     is a list of lines with each chunk only containing data for
     one well
@@ -168,8 +170,8 @@ def split_list(linelist, splitidxs):
       [['a', 'b'], ['c', 'd', 'e'], ['f']]
 
     Arguments:
-        linelist (list): List to divide into chunks.
-        splitidx (list): Indexes (int) at which to split, the index
+        linelis: List to divide into chunks.
+        splitidx: Indexes (int) at which to split, the index
             points to the left edge of the resulting chunk. Repeated indices
             are ignored.
 
@@ -188,15 +190,15 @@ def split_list(linelist, splitidxs):
     return [linelist[i:j] for i, j in zipped if linelist[i:j]]
 
 
-def find_wellstart_indices(filelines):
+def find_wellstart_indices(filelines: List[str]) -> List[int]:
     """Locate the indices of the lines that start with the identifier
     for a new well, the string ``*NAME``.
 
     Args:
-        filelines (list): One string pr. line
+        filelines: One string pr. line
 
     Returns:
-        list: List of integers
+        List of integers
     """
     wellnamelinenumbers = [
         i for i in range(0, len(filelines)) if filelines[i].startswith("*NAME")
@@ -204,7 +206,7 @@ def find_wellstart_indices(filelines):
     return wellnamelinenumbers
 
 
-def parse_well(well_lines, columnnames):
+def parse_well(well_lines: List[str], columnnames: List[str]) -> pd.DataFrame:
     """Parse a list of lines with OFM data for only one well
     into a DataFrame
 
@@ -215,12 +217,12 @@ def parse_well(well_lines, columnnames):
     can be extracted from the lines.
 
     Args:
-        well_lines (list): One line pr. string
-        columnnames (list): Strings with columnnames to extract.
+        well_lines: One line pr. string
+        columnnames: Strings with columnnames to extract.
             Other columns will be ignored.
 
     Returns:
-        pd.DataFrame: Indexed by WELL and DATE.
+        Dataframe indexed by WELL and DATE.
 
     """
 
@@ -238,13 +240,15 @@ def parse_well(well_lines, columnnames):
     return pd.DataFrame()
 
 
-def parse_ofmtable(ofmstring, columnnames):
+def parse_ofmtable(
+    ofmstring: Union[str, List[str]], columnnames: List[str]
+) -> pd.DataFrame:
     """Parse an OFM table from a list of lines, either called once
     pr. well, or all data in one go with wellname as a table column.
 
     Args:
-        ofmstring (list): OFM data as multiline string or list of strings.
-        columnnames (list): Strings with columnnames to extract.
+        ofmstring: OFM data as multiline string or list of strings.
+        columnnames: Strings with columnnames to extract.
             Other columns will be ignored.
     """
     if isinstance(ofmstring, list):
@@ -269,14 +273,14 @@ def parse_ofmtable(ofmstring, columnnames):
     return data
 
 
-def process_volfile(filename):
+def process_volfile(filename: str) -> pd.DataFrame:
     """Parse a single OFM vol-file and return a DataFrame.
 
     Args:
-        filename (str): Path to file on disk
+        filename: Path to file on disk
 
     Returns:
-        pd.DataFrame: Indexed by WELL and DATE.
+        Dataframe indexed by WELL and DATE.
     """
     logger.info("Parsing file %s", filename)
     with open(filename) as file_h:
@@ -287,7 +291,7 @@ def process_volfile(filename):
     return dframe
 
 
-def process_volstr(volstr):
+def process_volstr(volstr: str) -> pd.DataFrame:
     """Parse a volstring (typically a vol-file read into a string with
     newline characters)
 
@@ -299,10 +303,10 @@ def process_volstr(volstr):
     parameter, in the ``*WELL`` column.
 
     Args:
-        volstr (str)
+        volstr
 
     Returns:
-        pd.DataFrame: Indexed by WELL and DATE.
+        Dataframe indexed by WELL and DATE.
     """
     filelines = unify_dateformat(cleanse_ofm_lines(volstr.split("\n")))
 
@@ -330,18 +334,17 @@ def process_volstr(volstr):
     return pd.DataFrame()
 
 
-def ofmvol2csv_main(volfiles, output, includefileorigin=False):
+def ofmvol2csv_main(
+    volfiles: Union[str, List[str]], output: str, includefileorigin: bool = False
+) -> None:
     """Convert a set of volfiles (or wildcard patterns) into one CSV file.
 
     Args:
-        volfiles (list): A string or a list of strings, with filenames and/or
+        volfiles: A string or a list of strings, with filenames and/or
             wildcard patterns.
-        output (str): Filename to write to, in CSV format.
-        includefileorigin (bool): Whether to add a column with the originating
+        output: Filename to write to, in CSV format.
+        includefileorigin: Whether to add a column with the originating
             volfile filename for each row of data.
-
-    Returns:
-        None
     """
     if isinstance(volfiles, str):
         volfiles = [volfiles]
