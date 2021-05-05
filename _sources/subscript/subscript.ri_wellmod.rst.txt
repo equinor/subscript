@@ -1,0 +1,18 @@
+========================
+``subscript.ri_wellmod``
+========================
+
+.. automodule:: subscript.ri_wellmod
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.ri_wellmod.ri_wellmod
+
+.. currentmodule:: subscript.ri_wellmod

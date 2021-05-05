@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Index &mdash; subscript 0.10.2 documentation</title>
+  <title>Index &mdash; subscript 0.10.3.dev3+g7c0177b documentation</title>
   
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.10.2
+                0.10.3.dev3+g7c0177b
               </div>
             
           
@@ -116,6 +116,7 @@
 <li class="toctree-l1"><a class="reference internal" href="scripts/presentvalue.html">PRESENTVALUE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/prtvol2csv.html">PRTVOL2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts/ri_wellmod.html">RI_WELLMOD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/runeclipse.html">RUNECLIPSE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/runrms.html">RUNRMS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts/summaryplot.html">SUMMARYPLOT</a></li>
@@ -330,6 +331,8 @@
 </li>
         <li><a href="subscript/subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.CustomFormatter">(class in subscript.prtvol2csv.prtvol2csv)</a>
 </li>
+        <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.CustomFormatter">(class in subscript.ri_wellmod.ri_wellmod)</a>
+</li>
         <li><a href="subscript/subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.CustomFormatter">(class in subscript.welltest_dpds.welltest_dpds)</a>
 </li>
       </ul></li>
@@ -344,6 +347,8 @@
       <li><a href="subscript/subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.dategrid">dategrid() (in module subscript.sunsch.sunsch)</a>
 </li>
       <li><a href="subscript/subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.datetime_from_date">datetime_from_date() (in module subscript.sunsch.sunsch)</a>
+</li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.decode_lgr_spec">decode_lgr_spec() (in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
       <li><a href="subscript/subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.deprecated_main">deprecated_main() (in module subscript.csv_stack.csv_stack)</a>
 </li>
@@ -422,6 +427,8 @@
       <li><a href="subscript/subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser_vugs">fill_parser_vugs() (in module subscript.casegen_upcars.udf_arg_parser)</a>
 </li>
       <li><a href="subscript/subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.filter_comments">filter_comments() (in module subscript.fmuobs.parsers)</a>
+</li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.find_and_wrap_resinsight_version">find_and_wrap_resinsight_version() (in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
       <li><a href="subscript/subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.find_keyword_sets">find_keyword_sets() (in module subscript.eclcompress.eclcompress)</a>
 </li>
@@ -506,6 +513,8 @@
 </li>
         <li><a href="subscript/subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.get_parser">(in module subscript.restartthinner.restartthinner)</a>
 </li>
+        <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_parser">(in module subscript.ri_wellmod.ri_wellmod)</a>
+</li>
         <li><a href="subscript/subscript.runrms.runrms.html#subscript.runrms.runrms.get_parser">(in module subscript.runrms.runrms)</a>
 </li>
         <li><a href="subscript/subscript.summaryplot.summaryplot.html#subscript.summaryplot.summaryplot.get_parser">(in module subscript.summaryplot.summaryplot)</a>
@@ -521,7 +530,11 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_resinsight_exe">get_resinsight_exe() (in module subscript.ri_wellmod.ri_wellmod)</a>
+</li>
       <li><a href="subscript/subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.get_restart_indices">get_restart_indices() (in module subscript.restartthinner.restartthinner)</a>
+</li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_rips_version_triplet">get_rips_version_triplet() (in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
       <li><a href="subscript/subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.get_scaledpi">get_scaledpi() (subscript.runrms.runrms.RunRMS method)</a>
 </li>
@@ -545,10 +558,12 @@
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="subscript/subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.human_report_pc_scaling">human_report_pc_scaling() (in module subscript.check_swatinit.check_swatinit)</a>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.has_restart_file">has_restart_file() (in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="subscript/subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.human_report_pc_scaling">human_report_pc_scaling() (in module subscript.check_swatinit.check_swatinit)</a>
+</li>
       <li><a href="subscript/subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.human_report_qc_vols">human_report_qc_vols() (in module subscript.check_swatinit.check_swatinit)</a>
 </li>
   </ul></td>
@@ -569,6 +584,8 @@
 </li>
       <li><a href="subscript/subscript.prtvol2csv.fipmapper.html#subscript.prtvol2csv.fipmapper.invert_map">invert_map() (in module subscript.prtvol2csv.fipmapper)</a>
 </li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.is_init_case">is_init_case() (in module subscript.ri_wellmod.ri_wellmod)</a>
+</li>
       <li><a href="subscript/subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.iter_flatten">iter_flatten() (in module subscript.casegen_upcars.udf)</a>
 </li>
   </ul></td>
@@ -585,6 +602,10 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.launch_resinsight">launch_resinsight() (in module subscript.ri_wellmod.ri_wellmod)</a>
+</li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.launch_resinsight_dev">launch_resinsight_dev() (in module subscript.ri_wellmod.ri_wellmod)</a>
+</li>
       <li><a href="subscript/subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.launch_rms">launch_rms() (subscript.runrms.runrms.RunRMS method)</a>
 </li>
       <li><a href="subscript/subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.legacy_ertscript_workflow">legacy_ertscript_workflow() (in module subscript.csv_merge.csv_merge)</a>
@@ -647,6 +668,8 @@
         <li><a href="subscript/subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.main">(in module subscript.prtvol2csv.prtvol2csv)</a>
 </li>
         <li><a href="subscript/subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.main">(in module subscript.restartthinner.restartthinner)</a>
+</li>
+        <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.main">(in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
         <li><a href="subscript/subscript.runrms.runrms.html#subscript.runrms.runrms.main">(in module subscript.runrms.runrms)</a>
 </li>
@@ -793,6 +816,10 @@
 </li>
         <li><a href="subscript/subscript.restartthinner.restartthinner.html#module-subscript.restartthinner.restartthinner">subscript.restartthinner.restartthinner</a>
 </li>
+        <li><a href="subscript/subscript.ri_wellmod.html#module-subscript.ri_wellmod">subscript.ri_wellmod</a>
+</li>
+        <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#module-subscript.ri_wellmod.ri_wellmod">subscript.ri_wellmod.ri_wellmod</a>
+</li>
         <li><a href="subscript/subscript.runrms.html#module-subscript.runrms">subscript.runrms</a>
 </li>
         <li><a href="subscript/subscript.runrms.runrms.html#module-subscript.runrms.runrms">subscript.runrms.runrms</a>
@@ -920,11 +947,13 @@
 </li>
       <li><a href="subscript/subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt">reservoir_volumes_from_prt() (in module subscript.prtvol2csv.prtvol2csv)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="subscript/subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.resinsight_df2df">resinsight_df2df() (in module subscript.fmuobs.parsers)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="subscript/subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.restartthinner">restartthinner() (in module subscript.restartthinner.restartthinner)</a>
+</li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.rsp_extract_export_names">rsp_extract_export_names() (in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
       <li><a href="subscript/subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.CsvMerge.run">run() (subscript.csv_merge.csv_merge.CsvMerge method)</a>
 
@@ -954,6 +983,8 @@
 </li>
       <li><a href="subscript/subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.schedule">schedule() (subscript.check_swatinit.pillarmodel.PillarModel method)</a>
 </li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.select_matching_strings">select_matching_strings() (in module subscript.ri_wellmod.ri_wellmod)</a>
+</li>
       <li><a href="subscript/subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_fracture_anisotropy_property">set_fracture_anisotropy_property() (subscript.casegen_upcars.model.Model method)</a>
 </li>
       <li><a href="subscript/subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_fracture_property">set_fracture_property() (subscript.casegen_upcars.model.Model method)</a>
@@ -971,6 +1002,8 @@
       <li><a href="subscript/subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.smrydictlist2df">smrydictlist2df() (in module subscript.fmuobs.parsers)</a>
 </li>
       <li><a href="subscript/subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.solution">solution() (subscript.check_swatinit.pillarmodel.PillarModel method)</a>
+</li>
+      <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.split_arg_string">split_arg_string() (in module subscript.ri_wellmod.ri_wellmod)</a>
 </li>
       <li><a href="subscript/subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.split_by_sep_in_masked_string">split_by_sep_in_masked_string() (in module subscript.fmuobs.parsers)</a>
 </li>
@@ -1351,6 +1384,20 @@
 
       <ul>
         <li><a href="subscript/subscript.restartthinner.restartthinner.html#module-subscript.restartthinner.restartthinner">module</a>
+</li>
+      </ul></li>
+      <li>
+    subscript.ri_wellmod
+
+      <ul>
+        <li><a href="subscript/subscript.ri_wellmod.html#module-subscript.ri_wellmod">module</a>
+</li>
+      </ul></li>
+      <li>
+    subscript.ri_wellmod.ri_wellmod
+
+      <ul>
+        <li><a href="subscript/subscript.ri_wellmod.ri_wellmod.html#module-subscript.ri_wellmod.ri_wellmod">module</a>
 </li>
       </ul></li>
       <li>

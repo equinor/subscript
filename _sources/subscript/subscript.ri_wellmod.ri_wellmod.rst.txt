@@ -1,0 +1,10 @@
+===================================
+``subscript.ri_wellmod.ri_wellmod``
+===================================
+
+.. automodule:: subscript.ri_wellmod.ri_wellmod
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.ri_wellmod.ri_wellmod
