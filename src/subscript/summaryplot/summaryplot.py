@@ -375,12 +375,8 @@ def summaryplotter(
     )
 
     if colourby or logcolourby:
-        colourmap = matplotlib.colors.LinearSegmentedColormap.from_list(
-            "GreenBlackRed", [(0, 0.6, 0), (0, 0, 0), (0.8, 0, 0)]
-        )
-        matplotlib.cm.register_cmap(name="GreenBlackRedMap", cmap=colourmap)
         colours = list(
-            map(tuple, pyplot.get_cmap("GreenBlackRedMap")(normalizedparametervalues))
+            map(tuple, pyplot.get_cmap("viridis")(normalizedparametervalues))
         )
 
     if colourby or logcolourby:
@@ -388,9 +384,7 @@ def summaryplotter(
         zeromatrix = [[0, 0], [0, 0]]
         step = (maxvalue - minvalue) / 100
         levels = np.arange(minvalue, maxvalue + step, step)
-        invisiblecontourplot = pyplot.contourf(
-            zeromatrix, levels, cmap="GreenBlackRedMap"
-        )
+        invisiblecontourplot = pyplot.contourf(zeromatrix, levels, cmap="viridis")
         pyplot.clf()
         pyplot.close()
 
@@ -399,14 +393,14 @@ def summaryplotter(
         if (not singleplot) or vector == matchedsummaryvectors[0]:
             fig = pyplot.figure()
             if colourby or logcolourby:
-                pyplot.colorbar(invisiblecontourplot)
+                pyplot.colorbar(invisiblecontourplot, ax=pyplot.gca())
             pyplot.xlabel("Date")
 
         # Set background colour outside plot area to white:
         fig.patch.set_facecolor("white")
 
         # Add grey major gridlines:
-        pyplot.grid(b=True, which="both", color="0.65", linestyle="-")
+        pyplot.grid(b=True, which="both", color="0.85", linestyle="-")
 
         if not singleplot:
             if colourby:
@@ -477,10 +471,9 @@ def summaryplotter(
                 pyplot.plot_date(
                     summaryfile.dates,
                     values,
+                    fmt="-",
                     xdate=True,
                     ydate=False,
-                    ls="-",
-                    marker="None",
                     color=cycledcolor,
                     label=sumlabel,
                     linewidth=1.5,
@@ -514,7 +507,7 @@ def summaryplotter(
         fig.patch.set_facecolor("white")
 
         # Add grey major gridlines:
-        pyplot.grid(b=True, which="both", color="0.65", linestyle="-")
+        pyplot.grid(b=True, which="both", color="0.85", linestyle="-")
 
         for datafile_idx, _ in enumerate(datafiles):
 
@@ -541,10 +534,9 @@ def summaryplotter(
             pyplot.plot_date(
                 restartvectordates[rstvec][datafiles[datafile_idx]],
                 values,
+                fmt="-",
                 xdate=True,
                 ydate=False,
-                ls="-",
-                marker="None",
                 color=cycledcolor,
                 label=rstlabel,
                 linewidth=1.5,
@@ -658,7 +650,7 @@ def main():
     plotprocess.start()
 
     # Give out a "menu" (text-based) only if we are running in foreground:
-    if os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno()):
+    if sys.stdout.isatty() and (os.getpgrp() == os.tcgetpgrp(sys.stdout.fileno())):
         filedesc = sys.stdin.fileno()
         old_settings = termios.tcgetattr(filedesc)
         print("Menu: 'q' = quit, 'r' = reload plots")

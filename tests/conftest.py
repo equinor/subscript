@@ -21,6 +21,8 @@ def pytest_addoption(parser):
 
 
 def pytest_collection_modifyitems(config, items):
+    """Allow adding @pytest.mark.plot to a test function to
+    skip it unless --plot is supplied on the pytest command line"""
     if config.getoption("--plot"):
         # Do not skip tests when --plot is supplied on pytest command line
         return
@@ -28,3 +30,10 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "plot" in item.keywords:
             item.add_marker(skip_plot)
+
+
+@pytest.fixture
+def plot(request):
+    """Provide a fixture that tests can use to evaluate whether
+    --plot was present on the command line"""
+    return request.config.getoption("--plot")
