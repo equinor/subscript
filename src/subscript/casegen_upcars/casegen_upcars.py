@@ -172,7 +172,7 @@ def main():
         matrix_satnum = get_value(matrix["SATNUM"], parser.background_satnum)
         matrix_swatinit = get_value(matrix["SWATINIT"], parser.background_swatinit)
 
-        if streaks is not None:
+        if (streaks is not None) and (not parser.no_streak):
             streak_k = conversion(get_value(streaks["k"], parser.streak_nz), int)
             streak_nz = listify(
                 conversion(get_value(streaks["NZ"], parser.streak_nz), int),
