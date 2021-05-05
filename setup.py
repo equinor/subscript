@@ -65,7 +65,7 @@ REQUIREMENTS = [
     "ert",
     "matplotlib",
     "numpy",
-    "opm==2020.10.2",
+    "opm",
     "pandas",
     "protobuf",
     "pyscal",
