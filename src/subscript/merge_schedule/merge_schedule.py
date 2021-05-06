@@ -1,7 +1,7 @@
 import os
-import datetime
 import argparse
 import logging
+import warnings
 
 import dateutil.parser
 import yaml
@@ -50,14 +50,18 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
-    sunsch_config = {"startdate": datetime.date(1900, 1, 1), "files": args.inputfiles}
+    warnings.warn("merge_schedule is deprecated, use sunsch", FutureWarning)
+
+    sunsch_config = {"files": args.inputfiles}
 
     if args.verbose:
         # Set the root logger to INFO, will be inherited by sunsch
         logger.setLevel(logging.INFO)
 
-    logger.info("# Sending the following YAML configuration to sunsch:")
-    logger.info(yaml.dump(sunsch_config))
+    print("Add the following lines to a yaml file and use it as input for sunsch:")
+    print("----")
+    print(yaml.dump({"files": args.inputfiles, "output": args.outputfile}).strip())
+    print("----")
 
     if args.end_date:
         sunsch_config["enddate"] = dateutil.parser.parse(args.end_date).date()

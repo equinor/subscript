@@ -1,0 +1,1704 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ResInsightProject>
+    <DocumentFileName>ri_reek_wells.rsp</DocumentFileName>
+    <ProjectFileVersionString>2020.10.1</ProjectFileVersionString>
+    <ReferencedExternalFiles>
+        $PathId_001$ ./reek_trajectories/reek_wells.dat;
+    </ReferencedExternalFiles>
+    <OilFields>
+        <ResInsightOilField>
+            <AnalysisModels>
+                <ResInsightAnalysisModels>
+                    <Reservoirs/>
+                    <CaseGroups/>
+                </ResInsightAnalysisModels>
+            </AnalysisModels>
+            <GeoMechModels/>
+            <WellPathCollection>
+                <WellPaths>
+                    <Active>True </Active>
+                    <ShowWellPathLabel>True </ShowWellPathLabel>
+                    <WellPathLabelColor>1 1 1</WellPathLabelColor>
+                    <GlobalWellPathVisibility>ALL_ON</GlobalWellPathVisibility>
+                    <WellPathRadiusScale>0.1</WellPathRadiusScale>
+                    <WellPathClip>True </WellPathClip>
+                    <WellPathClipZDistance>100</WellPathClipZDistance>
+                    <WellPaths>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0.180392161011696 0.298039227724075 0.878431379795074</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>2381 - 2426</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>2381</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>2426</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:22:00</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:22:00</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>OP_1</WellNameForExport>
+                                    <WellGroupNameForExport>OP</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>0</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0.650980412960052 0.74117648601532 0.843137264251709</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>3532 - 3586</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>3532</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>3586</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:22:57</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:22:57</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>OP_2</WellNameForExport>
+                                    <WellGroupNameForExport>OP</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>1</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0 0.325490206480026 0.541176497936249</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>3399 - 3447</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>3399</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>3447</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:30:47</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:30:47</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>OP_3</WellNameForExport>
+                                    <WellGroupNameForExport>OP</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>2</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0.211764708161354 0.490196079015732 0.482352942228317</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>1807 - 1845</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>1807</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>1845</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:31:08</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:31:08</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>OP_4</WellNameForExport>
+                                    <WellGroupNameForExport>OP</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>3</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0 0.490196079015732 0.20392157137394</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>1925 - 1968</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>1925</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>1968</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:31:35</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:31:35</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>OP_5</WellNameForExport>
+                                    <WellGroupNameForExport>OP</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>4</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0.23137255012989 0.329411774873734 0.0901960805058479</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>2177 - 2213</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>2177</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>2213</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:32:06</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:32:06</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>WI_1</WellNameForExport>
+                                    <WellGroupNameForExport>WI</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>5</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0.576470613479614 0.666666686534882 0</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>4565 - 4632</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>4565</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>4632</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:32:38</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:32:38</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>WI_2</WellNameForExport>
+                                    <WellGroupNameForExport>WI</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>6</WellPathNumberInFile>
+                        </WellPath>
+                        <WellPath>
+                            <AirGap>0</AirGap>
+                            <DatumElevation>0</DatumElevation>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
+                            <SimWellName></SimWellName>
+                            <SimBranchIndex>0</SimBranchIndex>
+                            <ShowWellPathLabel>True </ShowWellPathLabel>
+                            <ShowWellPath>True </ShowWellPath>
+                            <WellPathRadiusScale>1</WellPathRadiusScale>
+                            <WellPathColor>0.95686274766922 0.7843137383461 0</WellPathColor>
+                            <Completions>
+                                <WellPathCompletions>
+                                    <Perforations>
+                                        <PerforationCollection>
+                                            <Name>Perforations</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Perforations>
+                                                <Perforation>
+                                                    <Name>4993 - 5029.06</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <StartMeasuredDepth>4993</StartMeasuredDepth>
+                                                    <EndMeasuredDepth>5029.0554</EndMeasuredDepth>
+                                                    <Diameter>0.311</Diameter>
+                                                    <SkinFactor>0</SkinFactor>
+                                                    <UseCustomStartDate>False </UseCustomStartDate>
+                                                    <StartDate>2021_04_19-23:23:19</StartDate>
+                                                    <UseCustomEndDate>False </UseCustomEndDate>
+                                                    <EndDate>2021_04_19-23:23:19</EndDate>
+                                                    <Valves/>
+                                                </Perforation>
+                                            </Perforations>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <NonDarcyParameters>
+                                                <RimNonDarcyPerforationParameters>
+                                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                                    <GridPermeabilityScalingFactor>1</GridPermeabilityScalingFactor>
+                                                    <WellRadius>0.108</WellRadius>
+                                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                                    <GasViscosity>0.02</GasViscosity>
+                                                    <InertialCoefficientBeta0>883.9</InertialCoefficientBeta0>
+                                                    <PermeabilityScalingFactor>-1.1045</PermeabilityScalingFactor>
+                                                    <PorosityScalingFactor>0</PorosityScalingFactor>
+                                                </RimNonDarcyPerforationParameters>
+                                            </NonDarcyParameters>
+                                        </PerforationCollection>
+                                    </Perforations>
+                                    <Fishbones>
+                                        <FishbonesCollection>
+                                            <Name>Fishbones</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FishbonesSubs/>
+                                            <WellPathCollection>
+                                                <WellPathCompletionCollection>
+                                                    <Name>Imported Laterals</Name>
+                                                    <IsChecked>True </IsChecked>
+                                                    <WellPaths/>
+                                                    <PipeProperties>
+                                                        <FishbonesPipeProperties>
+                                                            <LateralHoleDiameter>12.5</LateralHoleDiameter>
+                                                            <SkinFactor>0</SkinFactor>
+                                                        </FishbonesPipeProperties>
+                                                    </PipeProperties>
+                                                </WellPathCompletionCollection>
+                                            </WellPathCollection>
+                                            <StartMD>inf</StartMD>
+                                            <MainBoreDiameter>0.216</MainBoreDiameter>
+                                            <MainBoreSkinFactor>0</MainBoreSkinFactor>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                        </FishbonesCollection>
+                                    </Fishbones>
+                                    <Fractures>
+                                        <WellPathFractureCollection>
+                                            <Name>Fractures</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <Fractures/>
+                                            <MswParameters>
+                                                <RimMswCompletionParameters>
+                                                    <RefMDType>GridIntersectionRefMD</RefMDType>
+                                                    <RefMD>0</RefMD>
+                                                    <LinerDiameter>0.152</LinerDiameter>
+                                                    <RoughnessFactor>1e-05</RoughnessFactor>
+                                                    <PressureDrop>HF-</PressureDrop>
+                                                    <LengthAndDepth>INC</LengthAndDepth>
+                                                    <EnforceMaxSegmentLength>False </EnforceMaxSegmentLength>
+                                                    <MaxSegmentLength>200</MaxSegmentLength>
+                                                </RimMswCompletionParameters>
+                                            </MswParameters>
+                                            <RefMDType>2147483647</RefMDType>
+                                            <RefMD>inf</RefMD>
+                                        </WellPathFractureCollection>
+                                    </Fractures>
+                                    <FractureModels>
+                                        <FractureModelCollection>
+                                            <Name>Fracture Models</Name>
+                                            <IsChecked>True </IsChecked>
+                                            <FractureModels/>
+                                        </FractureModelCollection>
+                                    </FractureModels>
+                                    <WellNameForExport>WI_3</WellNameForExport>
+                                    <WellGroupNameForExport>WI</WellGroupNameForExport>
+                                    <ReferenceDepthForExport></ReferenceDepthForExport>
+                                    <WellTypeForExport>OIL</WellTypeForExport>
+                                    <DrainageRadiusForPI>0.0</DrainageRadiusForPI>
+                                    <GasInflowEq>STD</GasInflowEq>
+                                    <AutoWellShutIn>STOP</AutoWellShutIn>
+                                    <AllowWellCrossFlow>False </AllowWellCrossFlow>
+                                    <WellBoreFluidPVTTable>0</WellBoreFluidPVTTable>
+                                    <HydrostaticDensity>SEG</HydrostaticDensity>
+                                    <FluidInPlaceRegion>0</FluidInPlaceRegion>
+                                </WellPathCompletions>
+                            </Completions>
+                            <WellLogFiles/>
+                            <CollectionOf3dWellLogCurves>
+                                <Rim3dWellLogCurveCollection>
+                                    <Show3dWellLogCurves>True </Show3dWellLogCurves>
+                                    <PlaneWidthScaling>1</PlaneWidthScaling>
+                                    <Show3dWellLogGrid>True </Show3dWellLogGrid>
+                                    <Show3dWellLogBackground>False </Show3dWellLogBackground>
+                                    <ArrayOf3dWellLogCurves/>
+                                </Rim3dWellLogCurveCollection>
+                            </CollectionOf3dWellLogCurves>
+                            <WellPathFormationKeyInFile></WellPathFormationKeyInFile>
+                            <WellPathFormationFilePath></WellPathFormationFilePath>
+                            <WellPathAttributes>
+                                <WellPathAttributes>
+                                    <Name>Casing Design</Name>
+                                    <IsChecked>True </IsChecked>
+                                    <Attributes/>
+                                </WellPathAttributes>
+                            </WellPathAttributes>
+                            <WellPathFilepath>$PathId_001$</WellPathFilepath>
+                            <WellPathFilePathInCache></WellPathFilePathInCache>
+                            <WellPathNumberInFile>7</WellPathNumberInFile>
+                        </WellPath>
+                    </WellPaths>
+                    <WellMeasurements>
+                        <WellMeasurements>
+                            <Measurements/>
+                            <ImportedFiles/>
+                        </WellMeasurements>
+                    </WellMeasurements>
+                </WellPaths>
+            </WellPathCollection>
+            <CompletionTemplateCollection>
+                <CompletionTemplateCollection>
+                    <FractureTemplates>
+                        <FractureDefinitionCollection>
+                            <DefaultUnitForTemplates>UNITS_METRIC</DefaultUnitForTemplates>
+                            <FractureDefinitions>
+                                <RimEllipseFractureTemplate>
+                                    <Id>0</Id>
+                                    <UserDescription>Ellipse Fracture Template</UserDescription>
+                                    <UnitSystem>UNITS_METRIC</UnitSystem>
+                                    <Orientation>TransverseWellPath</Orientation>
+                                    <AzimuthAngle>0</AzimuthAngle>
+                                    <SkinFactor>0</SkinFactor>
+                                    <PerforationLength>1</PerforationLength>
+                                    <PerforationEfficiency>1</PerforationEfficiency>
+                                    <WellDiameter>0.216</WellDiameter>
+                                    <ConductivityType>FiniteConductivity</ConductivityType>
+                                    <FractureContainmentField>
+                                        <FractureContainment>
+                                            <IsUsingFractureContainment>False </IsUsingFractureContainment>
+                                            <TopKLayer>0</TopKLayer>
+                                            <BaseKLayer>0</BaseKLayer>
+                                            <TruncateAtFaults>False </TruncateAtFaults>
+                                            <FaultThrowValue>0</FaultThrowValue>
+                                        </FractureContainment>
+                                    </FractureContainmentField>
+                                    <NonDarcyFlowType>None</NonDarcyFlowType>
+                                    <UserDefinedDFactor>1</UserDefinedDFactor>
+                                    <FractureWidthType>FractureWidth</FractureWidthType>
+                                    <FractureWidth>0.01</FractureWidth>
+                                    <BetaFactorType>UserDefinedBetaFactor</BetaFactorType>
+                                    <InertialCoefficient>0.006083236</InertialCoefficient>
+                                    <PermeabilityType>FractureConductivity</PermeabilityType>
+                                    <RelativePermeability>1</RelativePermeability>
+                                    <EffectivePermeability>0</EffectivePermeability>
+                                    <RelativeGasDensity>0.8</RelativeGasDensity>
+                                    <GasViscosity>0.02</GasViscosity>
+                                    <HeightScaleFactor>1</HeightScaleFactor>
+                                    <WidthScaleFactor>1</WidthScaleFactor>
+                                    <DFactorScaleFactor>1</DFactorScaleFactor>
+                                    <ConductivityFactor>1</ConductivityFactor>
+                                    <HalfLength>100</HalfLength>
+                                    <Height>75</Height>
+                                    <Width>0.01</Width>
+                                    <Permeability>100000</Permeability>
+                                </RimEllipseFractureTemplate>
+                            </FractureDefinitions>
+                            <NextValidFractureTemplateId>1</NextValidFractureTemplateId>
+                        </FractureDefinitionCollection>
+                    </FractureTemplates>
+                    <FractureModelTemplates>
+                        <FractureModelTemplateCollection>
+                            <FractureModelTemplates/>
+                            <NextValidId>0</NextValidId>
+                        </FractureModelTemplateCollection>
+                    </FractureModelTemplates>
+                    <ValveTemplates>
+                        <ValveTemplateCollection>
+                            <ValveDefinitions>
+                                <ValveTemplate>
+                                    <Name>AICD: Valve Template #1</Name>
+                                    <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                                    <CompletionType>AICD</CompletionType>
+                                    <UserLabel>Valve Template #1</UserLabel>
+                                    <OrificeDiameter>8</OrificeDiameter>
+                                    <FlowCoefficient>0.7</FlowCoefficient>
+                                    <AICDParameters>
+                                        <WellPathAicdParameters>
+                                            <DeviceOpen>True </DeviceOpen>
+                                            <StrengthAICD></StrengthAICD>
+                                            <DensityCalibrationFluid></DensityCalibrationFluid>
+                                            <ViscosityCalibrationFluid></ViscosityCalibrationFluid>
+                                            <VolumeFlowRateExponent></VolumeFlowRateExponent>
+                                            <ViscosityFunctionExponent></ViscosityFunctionExponent>
+                                            <CriticalWaterLiquidFractionEmul>1*</CriticalWaterLiquidFractionEmul>
+                                            <ViscosityTransitionRegionEmul>1*</ViscosityTransitionRegionEmul>
+                                            <MaxRatioOfEmulsionVisc>1*</MaxRatioOfEmulsionVisc>
+                                            <MaxFlowRate>1*</MaxFlowRate>
+                                            <ExponentOilDensity>1*</ExponentOilDensity>
+                                            <ExponentWaterDensity>1*</ExponentWaterDensity>
+                                            <ExponentGasDensity>1*</ExponentGasDensity>
+                                            <ExponentOilViscosity>1*</ExponentOilViscosity>
+                                            <ExponentWaterViscosity>1*</ExponentWaterViscosity>
+                                            <ExponentGasViscosity>1*</ExponentGasViscosity>
+                                        </WellPathAicdParameters>
+                                    </AICDParameters>
+                                </ValveTemplate>
+                                <ValveTemplate>
+                                    <Name>ICD: Valve Template #2</Name>
+                                    <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                                    <CompletionType>ICD</CompletionType>
+                                    <UserLabel>Valve Template #2</UserLabel>
+                                    <OrificeDiameter>8</OrificeDiameter>
+                                    <FlowCoefficient>0.7</FlowCoefficient>
+                                    <AICDParameters>
+                                        <WellPathAicdParameters>
+                                            <DeviceOpen>True </DeviceOpen>
+                                            <StrengthAICD></StrengthAICD>
+                                            <DensityCalibrationFluid></DensityCalibrationFluid>
+                                            <ViscosityCalibrationFluid></ViscosityCalibrationFluid>
+                                            <VolumeFlowRateExponent></VolumeFlowRateExponent>
+                                            <ViscosityFunctionExponent></ViscosityFunctionExponent>
+                                            <CriticalWaterLiquidFractionEmul>1*</CriticalWaterLiquidFractionEmul>
+                                            <ViscosityTransitionRegionEmul>1*</ViscosityTransitionRegionEmul>
+                                            <MaxRatioOfEmulsionVisc>1*</MaxRatioOfEmulsionVisc>
+                                            <MaxFlowRate>1*</MaxFlowRate>
+                                            <ExponentOilDensity>1*</ExponentOilDensity>
+                                            <ExponentWaterDensity>1*</ExponentWaterDensity>
+                                            <ExponentGasDensity>1*</ExponentGasDensity>
+                                            <ExponentOilViscosity>1*</ExponentOilViscosity>
+                                            <ExponentWaterViscosity>1*</ExponentWaterViscosity>
+                                            <ExponentGasViscosity>1*</ExponentGasViscosity>
+                                        </WellPathAicdParameters>
+                                    </AICDParameters>
+                                </ValveTemplate>
+                                <ValveTemplate>
+                                    <Name>ICV: Valve Template #3</Name>
+                                    <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                                    <CompletionType>ICV</CompletionType>
+                                    <UserLabel>Valve Template #3</UserLabel>
+                                    <OrificeDiameter>8</OrificeDiameter>
+                                    <FlowCoefficient>0.7</FlowCoefficient>
+                                    <AICDParameters>
+                                        <WellPathAicdParameters>
+                                            <DeviceOpen>True </DeviceOpen>
+                                            <StrengthAICD></StrengthAICD>
+                                            <DensityCalibrationFluid></DensityCalibrationFluid>
+                                            <ViscosityCalibrationFluid></ViscosityCalibrationFluid>
+                                            <VolumeFlowRateExponent></VolumeFlowRateExponent>
+                                            <ViscosityFunctionExponent></ViscosityFunctionExponent>
+                                            <CriticalWaterLiquidFractionEmul>1*</CriticalWaterLiquidFractionEmul>
+                                            <ViscosityTransitionRegionEmul>1*</ViscosityTransitionRegionEmul>
+                                            <MaxRatioOfEmulsionVisc>1*</MaxRatioOfEmulsionVisc>
+                                            <MaxFlowRate>1*</MaxFlowRate>
+                                            <ExponentOilDensity>1*</ExponentOilDensity>
+                                            <ExponentWaterDensity>1*</ExponentWaterDensity>
+                                            <ExponentGasDensity>1*</ExponentGasDensity>
+                                            <ExponentOilViscosity>1*</ExponentOilViscosity>
+                                            <ExponentWaterViscosity>1*</ExponentWaterViscosity>
+                                            <ExponentGasViscosity>1*</ExponentGasViscosity>
+                                        </WellPathAicdParameters>
+                                    </AICDParameters>
+                                </ValveTemplate>
+                            </ValveDefinitions>
+                            <ValveUnits>UNITS_METRIC</ValveUnits>
+                        </ValveTemplateCollection>
+                    </ValveTemplates>
+                </CompletionTemplateCollection>
+            </CompletionTemplateCollection>
+            <SummaryCaseCollection>
+                <SummaryCaseCollection>
+                    <SummaryCases/>
+                    <SummaryCaseCollections/>
+                </SummaryCaseCollection>
+            </SummaryCaseCollection>
+            <FormationNamesCollection>
+                <FormationNamesCollectionObject>
+                    <FormationNamesList/>
+                </FormationNamesCollectionObject>
+            </FormationNamesCollection>
+            <ObservedDataCollection>
+                <ObservedDataCollection>
+                    <ObservedDataArray/>
+                    <ObservedFmuRftDataArray/>
+                </ObservedDataCollection>
+            </ObservedDataCollection>
+            <AnnotationCollection>
+                <RimAnnotationCollection>
+                    <IsActive>True </IsActive>
+                    <TextAnnotations>
+                        <RimAnnotationGroupCollection>
+                            <IsActive>True </IsActive>
+                            <Annotations/>
+                        </RimAnnotationGroupCollection>
+                    </TextAnnotations>
+                    <ReachCircleAnnotations>
+                        <RimAnnotationGroupCollection>
+                            <IsActive>True </IsActive>
+                            <Annotations/>
+                        </RimAnnotationGroupCollection>
+                    </ReachCircleAnnotations>
+                    <UserDefinedPolylineAnnotations>
+                        <RimAnnotationGroupCollection>
+                            <IsActive>True </IsActive>
+                            <Annotations/>
+                        </RimAnnotationGroupCollection>
+                    </UserDefinedPolylineAnnotations>
+                    <PolylineFromFileAnnotations>
+                        <RimAnnotationGroupCollection>
+                            <IsActive>True </IsActive>
+                            <Annotations/>
+                        </RimAnnotationGroupCollection>
+                    </PolylineFromFileAnnotations>
+                </RimAnnotationCollection>
+            </AnnotationCollection>
+            <SurfaceCollection>
+                <SurfaceCollection>
+                    <SurfaceUserDecription>Surfaces</SurfaceUserDecription>
+                    <SubCollections/>
+                    <SurfacesField/>
+                </SurfaceCollection>
+            </SurfaceCollection>
+        </ResInsightOilField>
+    </OilFields>
+    <ColorLegendCollection>
+        <ColorLegendCollection>
+            <CustomColorLegends/>
+        </ColorLegendCollection>
+    </ColorLegendCollection>
+    <WellPathImport>
+        <RimWellPathImport>
+            <WellTypeSurvey>True </WellTypeSurvey>
+            <WellTypePlans>True </WellTypePlans>
+            <UtmMode>UTM_FILTER_OFF</UtmMode>
+            <UtmNorth>0</UtmNorth>
+            <UtmSouth>0</UtmSouth>
+            <UtmEast>0</UtmEast>
+            <UtmWest>0</UtmWest>
+            <Regions/>
+        </RimWellPathImport>
+    </WellPathImport>
+    <MainPlotCollection>
+        <MainPlotCollection>
+            <Show>True </Show>
+            <WellLogPlotCollection>
+                <WellLogPlotCollection>
+                    <WellLogPlots/>
+                </WellLogPlotCollection>
+            </WellLogPlotCollection>
+            <RftPlotCollection>
+                <WellRftPlotCollection>
+                    <RftPlots/>
+                </WellRftPlotCollection>
+            </RftPlotCollection>
+            <PltPlotCollection>
+                <WellPltPlotCollection>
+                    <PltPlots/>
+                </WellPltPlotCollection>
+            </PltPlotCollection>
+            <SummaryPlotCollection>
+                <SummaryPlotCollection>
+                    <SummaryPlots/>
+                </SummaryPlotCollection>
+            </SummaryPlotCollection>
+            <AnalysisPlotCollection>
+                <AnalysisPlotCollection>
+                    <AnalysisPlots/>
+                </AnalysisPlotCollection>
+            </AnalysisPlotCollection>
+            <CorrelationPlotCollection>
+                <CorrelationPlotCollection>
+                    <CorrelationPlots/>
+                    <CorrelationReports/>
+                </CorrelationPlotCollection>
+            </CorrelationPlotCollection>
+            <SummaryCrossPlotCollection>
+                <SummaryCrossPlotCollection>
+                    <SummaryCrossPlots/>
+                </SummaryCrossPlotCollection>
+            </SummaryCrossPlotCollection>
+            <FlowPlotCollection>
+                <FlowPlotCollection>
+                    <FlowCharacteristicsPlot/>
+                    <DefaultWellAllocationPlot/>
+                    <WellDistributionPlotCollection/>
+                    <StoredWellAllocationPlots/>
+                    <StoredFlowCharacteristicsPlots/>
+                </FlowPlotCollection>
+            </FlowPlotCollection>
+            <Rim3dCrossPlotCollection>
+                <RimGridCrossPlotCollection>
+                    <GridCrossPlots/>
+                </RimGridCrossPlotCollection>
+            </Rim3dCrossPlotCollection>
+            <RimSaturationPressurePlotCollection>
+                <RimSaturationPressurePlotCollection>
+                    <SaturationPressurePlots/>
+                </RimSaturationPressurePlotCollection>
+            </RimSaturationPressurePlotCollection>
+            <RimMultiPlotCollection>
+                <RimMultiPlotCollection>
+                    <MultiPlots/>
+                </RimMultiPlotCollection>
+            </RimMultiPlotCollection>
+            <FractureModelPlotCollection>
+                <FractureModelPlotCollection>
+                    <FractureModelPlots/>
+                </FractureModelPlotCollection>
+            </FractureModelPlotCollection>
+        </MainPlotCollection>
+    </MainPlotCollection>
+    <LinkedViews>
+        <RimViewLinkerCollection>
+            <Active>True </Active>
+            <ViewLinkers/>
+        </RimViewLinkerCollection>
+    </LinkedViews>
+    <CalculationCollection>
+        <RimSummaryCalculationCollection>
+            <Calculations/>
+        </RimSummaryCalculationCollection>
+    </CalculationCollection>
+    <CommandObjects/>
+    <MultiSnapshotDefinitions/>
+    <TreeViewState>-1-110000000;-1-1100000;-1-11000;-1-110100000;-1-1101000;-1-11010;-1-110200000;-1-1102000;-1-11020;-1-110300000;-1-1103000;-1-11030;-1-110400000;-1-1104000;-1-11040;-1-110500000;-1-1105000;-1-11050;-1-110600000;-1-1106000;-1-11060;-1-110700000;-1-1107000;-1-11070;-1-110</TreeViewState>
+    <TreeViewCurrentModelIndexPath>1 0;6 0;0 0</TreeViewCurrentModelIndexPath>
+    <PlotWindowTreeViewState>-1-10000;-1-100;-1-11000;-1-110</PlotWindowTreeViewState>
+    <PlotWindowTreeViewCurrentModelIndexPath></PlotWindowTreeViewCurrentModelIndexPath>
+    <show3DWindow>True </show3DWindow>
+    <showPlotWindow>False </showPlotWindow>
+    <tiled3DWindow>False </tiled3DWindow>
+    <tiledPlotWindow>False </tiledPlotWindow>
+    <DialogData>
+        <RimDialogData>
+            <ExportCarfin>
+                <RicExportCarfinUi>
+                    <CellRange>
+                        <RicCellRangeUi>
+                            <Case></Case>
+                            <GridIndex>0</GridIndex>
+                            <StartIndexI>1</StartIndexI>
+                            <StartIndexJ>1</StartIndexJ>
+                            <StartIndexK>1</StartIndexK>
+                            <CellCountI>1</CellCountI>
+                            <CellCountJ>1</CellCountJ>
+                            <CellCountK>1</CellCountK>
+                        </RicCellRangeUi>
+                    </CellRange>
+                    <ExportFileName></ExportFileName>
+                    <CaseToApply></CaseToApply>
+                    <CellCountI>2</CellCountI>
+                    <CellCountJ>2</CellCountJ>
+                    <CellCountK>2</CellCountK>
+                    <MaxWellCount>8</MaxWellCount>
+                </RicExportCarfinUi>
+            </ExportCarfin>
+            <ExportCompletionData>
+                <RicExportCompletionDataSettingsUi>
+                    <Folder></Folder>
+                    <CaseToApply></CaseToApply>
+                    <FileSplit>SPLIT_ON_WELL_AND_COMPLETION_TYPE</FileSplit>
+                    <compdatExport>TRANSMISSIBILITIES</compdatExport>
+                    <TimeStepIndex>0</TimeStepIndex>
+                    <IncludeMSW>True </IncludeMSW>
+                    <UseLateralNTG>False </UseLateralNTG>
+                    <IncludePerforations>True </IncludePerforations>
+                    <IncludeFishbones>True </IncludeFishbones>
+                    <IncludeFractures>True </IncludeFractures>
+                    <TransScalingType>False </TransScalingType>
+                    <TransScalingTimeStep>0</TransScalingTimeStep>
+                    <TransScalingWBHPSource>WBHP_SUMMARY</TransScalingWBHPSource>
+                    <TransScalingWBHP>200</TransScalingWBHP>
+                    <ExcludeMainBoreForFishbones>False </ExcludeMainBoreForFishbones>
+                    <ReportCompletionTypesSeparately>INDIVIDUALLY</ReportCompletionTypesSeparately>
+                </RicExportCompletionDataSettingsUi>
+            </ExportCompletionData>
+            <MultipleFractionsData>
+                <RiuCreateMultipleFractionsUi>
+                    <SourceCase></SourceCase>
+                    <MinDistanceFromWellTd>10</MinDistanceFromWellTd>
+                    <MaxFracturesPerWell>10</MaxFracturesPerWell>
+                    <Options/>
+                    <FractureCreationSummary>-- Selected Wells
+
+</FractureCreationSummary>
+                </RiuCreateMultipleFractionsUi>
+            </MultipleFractionsData>
+            <HoloLenseExportToFolderData>
+                <RicHoloLensExportToFolderUi>
+                    <ViewForExport></ViewForExport>
+                    <ExportFolder></ExportFolder>
+                </RicHoloLensExportToFolderUi>
+            </HoloLenseExportToFolderData>
+            <ExportwellPathsData>
+                <RicExportWellPathsUi>
+                    <ExportFolder></ExportFolder>
+                    <MdStepSize>5</MdStepSize>
+                </RicExportWellPathsUi>
+            </ExportwellPathsData>
+            <ExportLgr>
+                <RicExportLgrUi>
+                    <ExportFolder></ExportFolder>
+                    <CaseToApply></CaseToApply>
+                    <TimeStepIndex>16777215</TimeStepIndex>
+                    <IncludePerforations>True </IncludePerforations>
+                    <IncludeFractures>True </IncludeFractures>
+                    <IncludeFishbones>True </IncludeFishbones>
+                    <CellCountI>2</CellCountI>
+                    <CellCountJ>2</CellCountJ>
+                    <CellCountK>2</CellCountK>
+                    <SplitType>LGR_PER_COMPLETION</SplitType>
+                </RicExportLgrUi>
+            </ExportLgr>
+            <ExportSectorModel>
+                <RicExportEclipseInputGridUi>
+                    <ExportGrid>True </ExportGrid>
+                    <ExportGridFilename>GRID.GRDECL</ExportGridFilename>
+                    <ExportInLocalCoords>False </ExportInLocalCoords>
+                    <InvisibleCellActnum>False </InvisibleCellActnum>
+                    <GridBoxSelection>VISIBLE_CELLS</GridBoxSelection>
+                    <MinI>2147483647</MinI>
+                    <MinJ>2147483647</MinJ>
+                    <MinK>2147483647</MinK>
+                    <MaxI>-2147483647</MaxI>
+                    <MaxJ>-2147483647</MaxJ>
+                    <MaxK>-2147483647</MaxK>
+                    <ExportFaults>TO_SINGLE_RESULT_FILE</ExportFaults>
+                    <ExportFaultsFilename>FAULTS.GRDECL</ExportFaultsFilename>
+                    <RefinementCountI>1</RefinementCountI>
+                    <RefinementCountJ>1</RefinementCountJ>
+                    <RefinementCountK>1</RefinementCountK>
+                    <ExportParams>TO_SEPARATE_RESULT_FILES</ExportParams>
+                    <ExportParamsFilename>RESULTS.GRDECL</ExportParamsFilename>
+                    <ExportMainKeywords></ExportMainKeywords>
+                </RicExportEclipseInputGridUi>
+            </ExportSectorModel>
+            <MockModelSettings>
+                <MockModelSettings>
+                    <CellCountX>100</CellCountX>
+                    <CellCountY>100</CellCountY>
+                    <CellCountZ>10</CellCountZ>
+                    <TotalCellCount>72057589759737855</TotalCellCount>
+                    <ResultCount>3</ResultCount>
+                    <TimeStepCount>10</TimeStepCount>
+                </MockModelSettings>
+            </MockModelSettings>
+        </RimDialogData>
+    </DialogData>
+</ResInsightProject>

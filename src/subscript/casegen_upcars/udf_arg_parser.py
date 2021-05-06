@@ -666,6 +666,14 @@ def fill_parser(parser):
 
     # Streak
     parser.add_argument(
+        "--no_streak",
+        action="store_true",
+        dest="no_streak",
+        required=False,
+        help="Remove all streaks setting",
+    )
+
+    parser.add_argument(
         "--streak_k",
         type=int,
         nargs="+",

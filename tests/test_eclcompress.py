@@ -20,6 +20,13 @@ from subscript.eclcompress.eclcompress import (
     parse_wildcardfile,
 )
 
+# A permissive parser variant from OPM is used to verify some tests:
+OPMIO_PARSECONTEXT = opm.io.ParseContext(
+    [
+        ("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore),
+        ("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore),
+    ]
+)
 
 FILELINES = [
     "GRIDUNIT",
@@ -282,12 +289,7 @@ def test_eclcompress():
     kwsets = find_keyword_sets(FILELINES)
     compressed = compress_multiple_keywordsets(kwsets, FILELINES)
     compressedstr = "\n".join(compressed)
-    # Feed the compressed string into opm.io. OPM hopefully chokes on whatever
-    # Eclipse would choke on (and hopefully not on more..)
-    parsecontext = opm.io.ParseContext(
-        [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
-    )
-    assert opm.io.Parser().parse_string(compressedstr, parsecontext)
+    assert opm.io.Parser().parse_string(compressedstr, OPMIO_PARSECONTEXT)
 
 
 @pytest.mark.integration
@@ -315,11 +317,7 @@ VFPPROD
   50.34 50.31 50.34 50.36 50.85 52.38 54.45 59.58 65.46 71.53 80.43 89.28 101.43 /
   1 1 3 1
 """
-    parsecontext = opm.io.ParseContext(
-        [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
-    )
-    # Confirm that OPM can parse the starting point:
-    assert opm.io.Parser().parse_string(vfpstr, parsecontext)
+    assert opm.io.Parser().parse_string(vfpstr, OPMIO_PARSECONTEXT)
 
     # Call eclcompress as script on vfpstr:
     with open("vfpfile.inc", "w") as testdeck:
@@ -329,7 +327,7 @@ VFPPROD
 
     # Check that OPM can parse the output (but in this case, OPM allows
     # having the slashes on the next line, so it is not a good test)
-    assert opm.io.Parser().parse_string(open("vfpfile.inc").read(), parsecontext)
+    assert opm.io.Parser().parse_string(open("vfpfile.inc").read(), OPMIO_PARSECONTEXT)
 
     # Verify that a slash at record-end is still there. This test will pass
     # whether eclcompress is just skipping the file, or of it is able to
@@ -361,10 +359,7 @@ def test_main(tmpdir):
     assert compressedbytes < origbytes
 
     compressedstr = "\n".join(compressedlines)
-    parsecontext = opm.io.ParseContext(
-        [("PARSE_MISSING_DIMS_KEYWORD", opm.io.action.ignore)]
-    )
-    assert opm.io.Parser().parse_string(compressedstr, parsecontext)
+    assert opm.io.Parser().parse_string(compressedstr, OPMIO_PARSECONTEXT)
 
 
 @pytest.mark.skipif(sys.version_info < (3, 7), reason="Requires Python 3.7 or higher")
@@ -559,6 +554,8 @@ perm.grdecl"""
 
 
 def test_eclkw_regexp(tmpdir):
+    """Test that custom regular expressions can be supplied to compress
+    otherwise unknown (which implies no compression) keywords"""
     tmpdir.chdir()
 
     uncompressed_str = "G1\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/"
