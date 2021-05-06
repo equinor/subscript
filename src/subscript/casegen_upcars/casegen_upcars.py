@@ -159,6 +159,9 @@ def main():
         tilt = get_value(geometry["tilt"], parser.tilt)
         centroid_x = get_value(geometry["centroid_x"], parser.centroid_x)
         centroid_y = get_value(geometry["centroid_y"], parser.centroid_y)
+        origin_x = get_value(geometry["origin_x"], parser.origin_x)
+        origin_y = get_value(geometry["origin_y"], parser.origin_y)
+        rotation = get_value(geometry["rotation"], parser.rotation)
 
         # Merge streak intro background matrix
         matrix_nz = get_value(matrix["NZ"], parser.background_nz)
@@ -414,6 +417,9 @@ def main():
         tilt,
         centroid_x,
         centroid_y,
+        origin_x,
+        origin_y,
+        rotation,
         fracture_length_x,
         fracture_offset_x,
         fracture_height_x,

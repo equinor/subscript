@@ -559,6 +559,32 @@ def fill_parser(parser):
     )
 
     parser.add_argument(
+        "--originX",
+        "--origin_x",
+        type=float,
+        dest="origin_x",
+        required=False,
+        help="Origin coordinate of model in X-direction",
+    )
+
+    parser.add_argument(
+        "--originY",
+        "--origin_y",
+        type=float,
+        dest="origin_y",
+        required=False,
+        help="Origin coordinate of model in Y-direction",
+    )
+
+    parser.add_argument(
+        "--rotation",
+        type=float,
+        dest="rotation",
+        required=False,
+        help="Cell coordinate rotation in degree",
+    )
+
+    parser.add_argument(
         "--tilt",
         type=float,
         dest="tilt",
