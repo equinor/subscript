@@ -59,6 +59,9 @@ class Model:
         tilt,
         centroid_x=0.5,
         centroid_y=0.5,
+        origin_x=0.0,
+        origin_y=0.0,
+        rotation=0.0,
         fracture_length_x=1.0,
         fracture_offset_x=0.0,
         fracture_height_x=1.0,
@@ -150,6 +153,9 @@ class Model:
         self._centroid_x = centroid_x
         self._centroid_y = centroid_y
         self._seed_nr = seed
+        self._origin_x = origin_x
+        self._origin_y = origin_y
+        self._rotation = rotation
 
         self._n_faults_x = self._matrix_x_count + (1 if fracture_at_boundary else -1)
         self._n_faults_y = self._matrix_y_count + (1 if fracture_at_boundary else -1)
@@ -351,6 +357,8 @@ class Model:
             )
         )
         print("  Top geometry: {}".format(top))
+        print("  Model origin: {}, {}".format(origin_x, origin_y))
+        print("  Model coordinate rotation: {}°".format(rotation))
         print("  Tilting: {}".format(tilt))
         print("  Fracture:")
         print("    Thickness: {}".format(fractureThickness))
@@ -385,6 +393,9 @@ class Model:
         self.dict_info["nMatrixCellsTot"] = self._total_matrix_cells
         self.dict_info["nFracCells"] = self._total_fracture_cells
         self.dict_info["nCells"] = self._total_cells
+        self.dict_info["originX"] = self._origin_x
+        self.dict_info["originY"] = self._origin_y
+        self.dict_info["rotation"] = self._rotation
         (
             self.dict_info["geometryFacX"],
             self.dict_info["geometryFacY"],
@@ -506,6 +517,19 @@ class Model:
             )
         else:
             self._zv = (self._xv - x_mid) * math.tan(math.radians(self._tilt))
+
+        rotation = np.radians(self._rotation)
+        rotationMatrix = np.array(
+            [
+                [np.cos(rotation), np.sin(rotation)],
+                [-np.sin(rotation), np.cos(rotation)],
+            ]
+        )
+        self._xv, self._yv = np.einsum(
+            "ji, mni -> jmn", rotationMatrix, np.dstack([self._xv, self._yv])
+        )
+        self._xv += self._origin_x
+        self._yv += self._origin_y
         self._zv += self._top - self._zv.min()
 
     def distribute_property(self):
@@ -1031,7 +1055,7 @@ class Model:
         # Random vug
         if random_vug_fraction_dist[1] > 0:
             vug_domain_flag = np.ones(
-                (self._total_nx, self._total_ny, self._total_nz), dtype=np.bool
+                (self._total_nx, self._total_ny, self._total_nz), dtype=bool
             )
             total_random_vug_cells = int(
                 np.rint(

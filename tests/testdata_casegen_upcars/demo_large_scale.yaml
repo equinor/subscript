@@ -42,6 +42,13 @@ Geometry:
   # Location of dome/hull top point, fraction to length of the model in Y-direction ('--centroidY', '--centroid_y')
   centroid_y : 0.5
 
+  # Origin coordinate in X-direction (East) ('--offsetX', '--offset_x')
+  origin_x: 0
+  # Origin coordinate in Y-direction (East) ('--offsetY', '--offset_y')
+  origin_y: 0
+  # Coordinate rotation angle in degree ('--rotation')
+  rotation: 0
+
 Layers:
   Background Matrix:
     NZ : 27                   # Total number of cells in z-direction, including heterogeneous layers ('--matrix_nz)
