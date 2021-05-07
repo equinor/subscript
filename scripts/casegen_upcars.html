@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>CASEGEN_UPCARS &mdash; subscript 0.10.3.dev6+g0cf7fc8 documentation</title>
+  <title>CASEGEN_UPCARS &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.10.3.dev6+g0cf7fc8
+                0.10.3.dev7+gcdcc81a
               </div>
             
           
@@ -208,8 +208,9 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">casegen_upcars</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">top</span> <span class="n">TOP_DEPTH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">radiusX</span> <span class="n">RADIUS_X</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">radiusY</span> <span class="n">RADIUS_Y</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">radiusZ</span> <span class="n">RADIUS_Z</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">centroidX</span> <span class="n">CENTROID_X</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">centroidY</span> <span class="n">CENTROID_Y</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">tilt</span> <span class="n">TILT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">matrix_nz</span> <span class="n">BACKGROUND_NZ</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">matrix_dz</span> <span class="n">BACKGROUND_DZ</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">originX</span> <span class="n">ORIGIN_X</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">originY</span> <span class="n">ORIGIN_Y</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">rotation</span> <span class="n">ROTATION</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">tilt</span> <span class="n">TILT</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">matrix_nz</span> <span class="n">BACKGROUND_NZ</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">matrix_dz</span> <span class="n">BACKGROUND_DZ</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">matrix_poro</span> <span class="n">BACKGROUND_PORO</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">matrix_perm</span> <span class="n">BACKGROUND_PERM</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">matrix_multx</span> <span class="n">BACKGROUND_MULTX</span><span class="p">]</span>
@@ -309,6 +310,15 @@
 </dd>
 <dt><kbd>--centroidY, --centroid_y</kbd></dt>
 <dd><p>Fractional number to specify center of curvature in Y-direction</p>
+</dd>
+<dt><kbd>--originX, --origin_x</kbd></dt>
+<dd><p>Origin coordinate of model in X-direction</p>
+</dd>
+<dt><kbd>--originY, --origin_y</kbd></dt>
+<dd><p>Origin coordinate of model in Y-direction</p>
+</dd>
+<dt><kbd>--rotation</kbd></dt>
+<dd><p>Cell coordinate rotation in degree</p>
 </dd>
 <dt><kbd>--tilt</kbd></dt>
 <dd><p>Tilting angle in degree</p>
