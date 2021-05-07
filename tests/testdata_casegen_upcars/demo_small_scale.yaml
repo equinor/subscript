@@ -174,8 +174,8 @@ Random Vug:
     Max : 0.0
   # Vug porosity interval, uniformly distributed ('--vug2Poro','--VUG2PORO','--vug2Poro')
   Porosity :
-    Min : 0.1
-    Max : 0.1
+    Min : 1.0
+    Max : 1.0
   # Vug permeability interval, uniformly distributed ('--vug2Perm','--VUG2PERM','--vug2Perm')
   Permeability :
     Min : 1000.0

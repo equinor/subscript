@@ -1055,7 +1055,7 @@ class Model:
         # Random vug
         if random_vug_fraction_dist[1] > 0:
             vug_domain_flag = np.ones(
-                (self._total_nx, self._total_ny, self._total_nz), dtype=np.bool
+                (self._total_nx, self._total_ny, self._total_nz), dtype=bool
             )
             total_random_vug_cells = int(
                 np.rint(
