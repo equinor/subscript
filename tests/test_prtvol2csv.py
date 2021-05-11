@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import pytest
 
+import numpy as np
 import pandas as pd
 import yaml
 
@@ -278,38 +279,27 @@ def test_prtvol2csv_regions(tmpdir, mocker):
         "zone2fipnum": {"Upper": [1, 2], "Mid": [3, 4], "Lower": [5, 6]},
     }
 
-    expected_dframe = pd.DataFrame.from_dict(
-        {
-            "REGION": {0: "RegionA", 1: "RegionB", 2: "Totals"},
-            "STOIIP_OIL": {0: 10656981.0, 1: 6976894.0, 2: 28353970.0},
-            "ASSOCIATEDOIL_GAS": {0: 0.0, 1: 0.0, 2: 0.0},
-            "STOIIP_TOTAL": {0: 10656981.0, 1: 6976894.0, 2: 28353970.0},
-            "WIIP_TOTAL": {0: 171576825.0, 1: 114944632.0, 2: 343435600.0},
-            "GIIP_GAS": {0: 0.0, 1: 0.0, 2: 0.0},
-            "ASSOCIATEDGAS_OIL": {0: 1960884420.0, 1: 1283748490.0, 2: 5217130300.0},
-            "GIIP_TOTAL": {0: 1960884420.0, 1: 1283748490.0, 2: 5217130300.0},
-            "PORV_TOTAL": {0: 193843819.0, 1: 129601923.0, 2: 399202846.0},
-            "HCPV_OIL": {0: 17000359.0, 1: 11127443.0, 2: 45224669.0},
-            "WATPV_TOTAL": {0: 176843460.0, 1: 118474480.0, 2: 353978178.0},
-            "HCPV_GAS": {0: 0.0, 1: 0.0, 2: 0.0},
-            "HCPV_TOTAL": {0: 17000359.0, 1: 11127443.0, 2: 45224669.0},
-            "FIPNUM": {0: "1 4 6", 1: "2 5", 2: "1 2 3 4 5 6"},
-        }
+    expected_fip_reg_dframe = pd.DataFrame(
+        [
+            {"FIPNUM": 1, "REGION": "RegionA", "ZONE": "Upper"},
+            {"FIPNUM": 2, "REGION": "RegionB", "ZONE": "Upper"},
+            {"FIPNUM": 3, "REGION": np.nan, "ZONE": "Mid"},
+            {"FIPNUM": 4, "REGION": "RegionA", "ZONE": "Mid"},
+            {"FIPNUM": 5, "REGION": "RegionB", "ZONE": "Lower"},
+            {"FIPNUM": 6, "REGION": "RegionA", "ZONE": "Lower"},
+        ]
     )
     tmpdir.chdir()
     Path("regions.yml").write_text(yaml.dump(yamlexample))
-    with pytest.warns(FutureWarning):
-        mocker.patch(
-            "sys.argv", ["prtvol2csv", str(prtfile), "--regions", "regions.yml"]
-        )
-        prtvol2csv.main()
+    mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
+    prtvol2csv.main()
 
-    dframe = pd.read_csv("share/results/volumes/simulator_volume_region.csv")
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
     print("Computed:")
     print(dframe)
-    print("Reference")
-    print(expected_dframe)
-    pd.testing.assert_frame_equal(dframe, expected_dframe)
+    pd.testing.assert_frame_equal(
+        dframe[["FIPNUM", "REGION", "ZONE"]], expected_fip_reg_dframe
+    )
 
 
 @pytest.mark.integration
@@ -338,7 +328,7 @@ def test_prtvol2csv_backwards_compat(tmpdir):
 
 @pytest.mark.integration
 def test_prtvol2csv_regions_typemix(tmpdir, mocker):
-    """Test region support, getting data from yaml"""
+    """Test merging in region data, getting data from yaml"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
     yamlexample = {
@@ -350,19 +340,17 @@ def test_prtvol2csv_regions_typemix(tmpdir, mocker):
 
     tmpdir.chdir()
     Path("regions.yml").write_text(yaml.dump(yamlexample))
-    mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--regions", "regions.yml"])
-    with pytest.warns(FutureWarning, match="Output pr. region"):
-        mocker.patch(
-            "sys.argv", ["prtvol2csv", str(prtfile), "--regions", "regions.yml"]
-        )
+    mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
+    mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
+    with pytest.warns(FutureWarning, match="Output directories"):
         prtvol2csv.main()
-    dframe = pd.read_csv("share/results/volumes/simulator_volume_region.csv")
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
     assert not dframe.empty
     assert "REGION" in dframe
     assert "ZONE" not in dframe
     assert "RegionA" in dframe["REGION"].values
     assert "8" in dframe["REGION"].values
-    assert len(dframe) == 2
+    assert len(dframe) == 6
 
 
 @pytest.mark.integration
@@ -387,7 +375,7 @@ def test_prtvol2csv_webvizyaml(tmpdir, mocker):
     Path("regions.yml").write_text(yaml.dump(webvizmap))
     mocker.patch(
         "sys.argv",
-        ["prtvol2csv", str(prtfile), "--regions", "regions.yml", "--dir", "."],
+        ["prtvol2csv", str(prtfile), "--yaml", "regions.yml", "--dir", "."],
     )
     prtvol2csv.main()
     dframe = pd.read_csv("simulator_volume_fipnum.csv")
