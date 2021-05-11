@@ -400,7 +400,7 @@ def ertobs2df(input_str: str, cwd=".", starttime: str = None) -> pd.DataFrame:
             print(obs_unit_split)
             raise ValueError
         obs_unit = {"CLASS": obs_unit_split[0], "LABEL": obs_unit_split[1]}
-        logger.info("Parsing observation %s %s", obs_unit["CLASS"], obs_unit["LABEL"])
+        logger.debug("Parsing observation %s %s", obs_unit["CLASS"], obs_unit["LABEL"])
         if len(obs_unit_split) > 2:
             obs_args = " ".join(obs_unit_split[2:])
             logger.debug("Subunit data: %s", str(obs_args))
