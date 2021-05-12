@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -244,20 +241,20 @@
   <div class="section" id="module-subscript.summaryplot.summaryplot">
 <span id="subscript-summaryplot-summaryplot"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot.summaryplot</span></code><a class="headerlink" href="#module-subscript.summaryplot.summaryplot" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.summaryplot.summaryplot.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.get_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.summaryplot.summaryplot.get_parser">
+<code class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup parser for command line options</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.summaryplot.summaryplot.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.main" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.summaryplot.summaryplot.main">
+<code class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse command line, and control user interface.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.summaryplot.summaryplot.split_vectorsdatafiles">
-<span class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></span><span class="sig-name descname"><span class="pre">split_vectorsdatafiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectorsdatafiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.split_vectorsdatafiles" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.summaryplot.summaryplot.split_vectorsdatafiles">
+<code class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></code><code class="sig-name descname"><span class="pre">split_vectorsdatafiles</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vectorsdatafiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.split_vectorsdatafiles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Takes a list of strings and determines which of the arguments are Eclipse runs
 (by attempting to construct an EclSum object), and which are summary
 vector names/wildcards (that is, those that are not openable as EclSum)</p>
@@ -276,8 +273,8 @@ vector-strings, parameterfilename-strings</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.summaryplot.summaryplot.summaryplotter">
-<span class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></span><span class="sig-name descname"><span class="pre">summaryplotter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summaryfiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datafiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterfiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histvectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singleplot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nolegend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemblemode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dumpimages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colourby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logcolourby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.summaryplotter" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.summaryplot.summaryplot.summaryplotter">
+<code class="sig-prename descclassname"><span class="pre">subscript.summaryplot.summaryplot.</span></code><code class="sig-name descname"><span class="pre">summaryplotter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summaryfiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datafiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameterfiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">histvectors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singleplot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nolegend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxlabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemblemode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dumpimages</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colourby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logcolourby</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.summaryplot.summaryplot.summaryplotter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Will plot Eclipse summary vectors to screen or dump to file based on kwargs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>

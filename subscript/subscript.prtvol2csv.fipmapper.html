@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -247,8 +244,8 @@
 <p>This API should be considered private to prtvol2csv until it has moved somewhere
 else</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.prtvol2csv.fipmapper.invert_map">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.fipmapper.</span></span><span class="sig-name descname"><span class="pre">invert_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictmap</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join_on</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipstring</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#subscript.prtvol2csv.fipmapper.invert_map" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.prtvol2csv.fipmapper.invert_map">
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.fipmapper.</span></code><code class="sig-name descname"><span class="pre">invert_map</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictmap</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join_on</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipstring</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">dict</span><a class="headerlink" href="#subscript.prtvol2csv.fipmapper.invert_map" title="Permalink to this definition">¶</a></dt>
 <dd><p>Invert a dictionary.</p>
 <p>When input is many-to-one, the keys will be joined with the supplied join
 string. Returned values inside dictionary will always be strings if joined,
@@ -272,8 +269,8 @@ if not joined, the value type is unchanged.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.prtvol2csv.fipmapper.webviz_to_prtvol2csv">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.fipmapper.</span></span><span class="sig-name descname"><span class="pre">webviz_to_prtvol2csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">webvizdict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.fipmapper.webviz_to_prtvol2csv" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.prtvol2csv.fipmapper.webviz_to_prtvol2csv">
+<code class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.fipmapper.</span></code><code class="sig-name descname"><span class="pre">webviz_to_prtvol2csv</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">webvizdict</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.fipmapper.webviz_to_prtvol2csv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a dict representation of a region/zone map in the Webviz format
 to the prtvol2csv format</p>
 </dd></dl>

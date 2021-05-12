@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -245,22 +242,22 @@
 <span id="subscript-check-swatinit-check-swatinit"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.check_swatinit</span></code><a class="headerlink" href="#module-subscript.check_swatinit.check_swatinit" title="Permalink to this headline">¶</a></h1>
 <p>SWATINIT qc tool</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.augment_grid_frame_qc_vectors">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">augment_grid_frame_qc_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.augment_grid_frame_qc_vectors" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.augment_grid_frame_qc_vectors">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">augment_grid_frame_qc_vectors</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.augment_grid_frame_qc_vectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add extra columns to a dataframe with simple calculations from
 data already in the dataframe</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.check_applicability">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">check_applicability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.check_applicability" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.check_applicability">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">check_applicability</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.check_applicability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that the input is relevant for usage with check_swatinit. This
 function may raise exceptions, SystemExit or only give warnings</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.compute_pc">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">compute_pc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satfunc_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.compute_pc" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.compute_pc">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">compute_pc</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satfunc_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.compute_pc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute the capillary pressure in every cell, inferring backwards from
 SWAT at time zero and a scaled capillary pressure curve.</p>
 <p>Note that the computed Pc is truncated at PPCW = pc(SWL) when we
@@ -286,14 +283,14 @@ is METRIC)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.get_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.get_parser">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a command line argument parser</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.human_report_pc_scaling">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">human_report_pc_scaling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.human_report_pc_scaling" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.human_report_pc_scaling">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">human_report_pc_scaling</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.human_report_pc_scaling" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a string for human report for capillary scaling</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -306,8 +303,8 @@ is METRIC)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.human_report_qc_vols">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">human_report_qc_vols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_vols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.human_report_qc_vols" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.human_report_qc_vols">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">human_report_qc_vols</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_vols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.human_report_qc_vols" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produce a string with a human report for volumes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -320,31 +317,31 @@ is METRIC)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.main" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.main">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Executed when called from the command line.</p>
 <p>Acts on command line arguments, loads data, performs qc and dumps to
 CSV if requested.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.make_qc_gridframe">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">make_qc_gridframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.make_qc_gridframe" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.make_qc_gridframe">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">make_qc_gridframe</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.make_qc_gridframe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a dataframe with needed information for swatinit qc from an Eclipse run.</p>
 <p>Makes a dataframe with one row for each active cell. Information from
 satfunc and equil merged in.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.merge_equil">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">merge_equil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.merge_equil" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.merge_equil">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">merge_equil</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.merge_equil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge z, datum_pressure, contact information and oip_init settting from
 an EQUIL dataframe into the grid dataframe</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.merge_pc_max">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">merge_pc_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satfunc_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pc_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PCOW'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.merge_pc_max" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.merge_pc_max">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">merge_pc_max</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satfunc_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pc_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PCOW'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.merge_pc_max" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract the maximum capillary pressure function in input
 saturation tables (SWOF/SWFN) pr. SATNUM and merges that
 into a grid dataframe (pr cell)</p>
@@ -359,8 +356,8 @@ into a grid dataframe (pr cell)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.ppcwmax_gridvector">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">ppcwmax_gridvector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.ppcwmax_gridvector" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.ppcwmax_gridvector">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">ppcwmax_gridvector</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.ppcwmax_gridvector" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a vector of PPCWMAX data pr cell</p>
 <p>PPCWMAX is pr. SATNUM in the input deck</p>
 <dl class="field-list simple">
@@ -374,8 +371,8 @@ into a grid dataframe (pr cell)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.qc_flag">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">qc_flag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.qc_flag" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.qc_flag">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">qc_flag</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.qc_flag" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute a series categorizing the QC type of the cell, determining
 how SWATINIT behaved in that cell</p>
 <p>This function is the core of check_swatinit.</p>
@@ -390,8 +387,8 @@ how SWATINIT behaved in that cell</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.qc_volumes">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">qc_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.qc_volumes" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.qc_volumes">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">qc_volumes</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.qc_volumes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute numbers relevant for QC of saturation initialization of a
 reservoir model.</p>
 <p>Different volume numbers are typically related to the different QC_FLAG</p>
@@ -411,8 +408,8 @@ groupings.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.reorder_dframe_for_nonnans">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">reorder_dframe_for_nonnans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.reorder_dframe_for_nonnans" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.check_swatinit.check_swatinit.reorder_dframe_for_nonnans">
+<code class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></code><code class="sig-name descname"><span class="pre">reorder_dframe_for_nonnans</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.reorder_dframe_for_nonnans" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reorder a dataframe so that rows with less NaN comes first, this
 will aid data analysis application to deduce correct datatypes for
 columns</p>

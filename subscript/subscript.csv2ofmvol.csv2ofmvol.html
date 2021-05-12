@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -244,15 +241,15 @@
   <div class="section" id="module-subscript.csv2ofmvol.csv2ofmvol">
 <span id="subscript-csv2ofmvol-csv2ofmvol"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol.csv2ofmvol</span></code><a class="headerlink" href="#module-subscript.csv2ofmvol.csv2ofmvol" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.CustomFormatter">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.CustomFormatter" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.CustomFormatter">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">CustomFormatter</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.CustomFormatter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Multiple inheritance used for argparse to get both
 defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.check_consecutive_dates">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">check_consecutive_dates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.check_consecutive_dates" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.check_consecutive_dates">
+<code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">check_consecutive_dates</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.check_consecutive_dates" title="Permalink to this definition">¶</a></dt>
 <dd><p>Analyse consecutiveness in dates pr. well.</p>
 <p>Determines the  most common timedelta pr. datapoint, and warns
 if there are exceptions and production/injection is nonzero.</p>
@@ -270,8 +267,8 @@ can be either a DateTimeIndex, or it will be converted to such.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.csv2ofmvol_main">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">csv2ofmvol_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfilepatterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.csv2ofmvol_main" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.csv2ofmvol_main">
+<code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">csv2ofmvol_main</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfilepatterns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.csv2ofmvol_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a list of CSV files into one OFM vol-file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -291,8 +288,8 @@ be a single string.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.df2vol">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">df2vol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.df2vol" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.df2vol">
+<code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">df2vol</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.df2vol" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert a DataFrame to a multiline string in vol-format.</p>
 <p>The ‘tab’ character is used as a field separator in this format</p>
 <dl class="field-list simple">
@@ -310,20 +307,20 @@ Unsupported columns will be ignored.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.get_parser" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.get_parser">
+<code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">get_parser</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse command line arguments, return a Namespace with arguments</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.main" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.main">
+<code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">main</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point if called from command line</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.read_pdm_csv_files">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">read_pdm_csv_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.read_pdm_csv_files" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.csv2ofmvol.csv2ofmvol.read_pdm_csv_files">
+<code class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></code><code class="sig-name descname"><span class="pre">read_pdm_csv_files</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.read_pdm_csv_files" title="Permalink to this definition">¶</a></dt>
 <dd><p>Read a list of CSV files and return a dataframe</p>
 <p>If the CSV files does not look like data from PDM,
 a ValueError will be thrown.</p>

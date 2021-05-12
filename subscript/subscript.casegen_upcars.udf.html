@@ -13,8 +13,6 @@
   
   <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
 
   
@@ -32,7 +30,6 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
@@ -245,8 +242,8 @@
 <span id="subscript-casegen-upcars-udf"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code><a class="headerlink" href="#module-subscript.casegen_upcars.udf" title="Permalink to this headline">¶</a></h1>
 <p>Supporting functions/class for casegen_upcars</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.casegen_upcars.udf.compact_list">
-<span class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></span><span class="sig-name descname"><span class="pre">compact_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.compact_list" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.casegen_upcars.udf.compact_list">
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">compact_list</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.compact_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a compact representation of list value
 Useful in Eclipse context to make smaller file size and faster file writing
 For example:</p>
@@ -256,34 +253,34 @@ For example:</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.casegen_upcars.udf.conversion">
-<span class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></span><span class="sig-name descname"><span class="pre">conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">variable</span></em>, <em class="sig-param"><span class="pre">conversion_func=&lt;class</span> <span class="pre">'float'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.conversion" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.casegen_upcars.udf.conversion">
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">conversion</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="pre">variable</span></em>, <em class="sig-param"><span class="pre">conversion_func=&lt;class</span> <span class="pre">'float'&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.conversion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert value/list to anything using conversion function
 :param variable: any value/list to convert
 :return: converted value/list of value</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.casegen_upcars.udf.flatten">
-<span class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></span><span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.flatten" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.casegen_upcars.udf.flatten">
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">flatten</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">list_obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten multi-dimension iterable, ensure returning value is a list</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.casegen_upcars.udf.iter_flatten">
-<span class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></span><span class="sig-name descname"><span class="pre">iter_flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.iter_flatten" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.casegen_upcars.udf.iter_flatten">
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">iter_flatten</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iterable</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.iter_flatten" title="Permalink to this definition">¶</a></dt>
 <dd><p>Flatten multi-dimension iterable</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.casegen_upcars.udf.listify">
-<span class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></span><span class="sig-name descname"><span class="pre">listify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversion_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.listify" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.casegen_upcars.udf.listify">
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">listify</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conversion_func</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.listify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return list of source with length of count if source is not already a list</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.casegen_upcars.udf.uniform_dist">
-<span class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></span><span class="sig-name descname"><span class="pre">uniform_dist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_nr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.uniform_dist" title="Permalink to this definition">¶</a></dt>
+<dt id="subscript.casegen_upcars.udf.uniform_dist">
+<code class="sig-prename descclassname"><span class="pre">subscript.casegen_upcars.udf.</span></code><code class="sig-name descname"><span class="pre">uniform_dist</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">low</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed_nr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.casegen_upcars.udf.uniform_dist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate uniform distribution which range from low - high</p>
 </dd></dl>
 
