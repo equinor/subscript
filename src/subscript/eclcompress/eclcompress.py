@@ -10,6 +10,7 @@ import textwrap
 import argparse
 import re
 from typing import List, Optional, Tuple, Pattern, Union
+from pathlib import Path
 
 import subscript
 
@@ -75,6 +76,11 @@ def eclcompress(
     totalsavings = 0
 
     for filename in files:
+
+        if file_is_binary(filename):
+            logger.info("Skipped %s, not text file", filename)
+            continue
+
         logger.info("Compressing %s...", filename)
         try:
             with open(filename, "r") as fileh:
@@ -149,6 +155,21 @@ def eclcompress(
                     os.remove(filename + ".orig")
 
     return totalsavings
+
+
+def file_is_binary(filename: Union[str, Path]) -> bool:
+    """Determine if a file is assumed binary
+
+    This uses the same heuristic as the Linux `file` command. Only the first
+    1024 bytes are looked at.
+
+    Args:
+        filename: File to check
+    """
+    # https://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python  # noqa
+    textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7F})
+    with open(filename, "rb") as fh:
+        return bool(fh.read(1024).translate(None, textchars))
 
 
 def acceptedvalue(valuestring: str) -> bool:
