@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.fmuobs.parsers &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.fmuobs.parsers &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -270,8 +270,11 @@ for individual observations. These are constructed if not present.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>blocklist</strong> (<em>list</em>) – List of dictionaries with block/rft observations</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -313,8 +316,11 @@ it is the directory of the ERT config file.</p></li>
 to this starttime, and converted to DATE.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame. The DATE column is always of type datetime64</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame. The DATE column is always of type datetime64</p>
 </dd>
 </dl>
 </dd></dl>
@@ -335,6 +341,9 @@ when resolving include statements (for include files). Defaults
 to current directory, but the ERT observation format assumes
 it is the directory of the ERT config file.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -432,6 +441,11 @@ cannot be used to do the outermost “split-by-semicolon” operation.</p>
 <p>Instead we mask away the curly braces, so that all semicolons occuring
 in the string are at the outermost level - then we can split the
 unmasked string by the semicolon position in the masked string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -444,8 +458,11 @@ into the internal dataframe representation</p>
 <dd class="field-odd"><p><strong>obsdict</strong> (<em>dict</em>) – Dictionary of observations. Top level keys are “smry”
 and/or “rft”, pointing to list of dictionaries.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -497,6 +514,11 @@ braces. There should not be curly braces inside this data.</p>
 <dd><p>Removes enclosing curly braces around a string, permitting
 whitespace at start and end, and also a trailing semicolon after
 the curly brace end</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -509,8 +531,11 @@ disk) to the internal dataframe representation of observations.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -524,8 +549,11 @@ into  dataframe format</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>blocklist</strong> (<em>list</em>) – List of dictionaries with summary observations</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -552,15 +580,18 @@ being enclosed in f.ex. curly braces.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>string</strong> (<em>str</em>) – The string that should be split</p></li>
-<li><p><strong>masked_string</strong> (<em>str</em>) – Same length as first argument, but where
+<li><p><strong>string</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – The string that should be split</p></li>
+<li><p><strong>masked_string</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Same length as first argument, but where
 only a subset of the separator characters need to match up.</p></li>
-<li><p><strong>sep</strong> (<em>str</em>) – Separator character, defaults to “;”</p></li>
+<li><p><strong>sep</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Separator character, defaults to “;”</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><p><em>string</em> – Each part of the input string. Separator
+<dd class="field-even"><p>Each part of the input string. Separator
 character is not included</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>

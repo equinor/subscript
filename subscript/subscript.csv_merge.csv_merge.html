@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.csv_merge.csv_merge &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.csv_merge.csv_merge &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -269,18 +269,33 @@ defaults and raw description formatter</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></span><span class="sig-name descname"><span class="pre">csv_merge_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csvfiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filecolumn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memoryconservative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropconstantcolumns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.csv_merge_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>A “main” function that can be used both from the command line,
 and from an ERT workflow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_merge.csv_merge.get_ertwf_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></span><span class="sig-name descname"><span class="pre">get_ertwf_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.get_ertwf_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Alternative parser used for CSV_MERGE ERT workflow job</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_merge.csv_merge.get_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct parser object for csv_merge</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -294,6 +309,11 @@ and inject documentation</p>
 <dt class="sig sig-object py" id="subscript.csv_merge.csv_merge.main">
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_merge.csv_merge.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_merge.csv_merge.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Entry point from command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -312,8 +332,11 @@ be read from disk and merged at a time. Slower, but
 requires less memory than loading every dataframe up front.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.Dataframe</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.Dataframe</p>
 </dd>
 </dl>
 </dd></dl>
@@ -326,6 +349,11 @@ and return a list of the matches.</p>
 <p>The list may contain None for strings where there are no matches.
 If there are no matches for any of the strings, an empty
 list is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

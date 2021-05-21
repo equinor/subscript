@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.restartthinner.restartthinner &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.restartthinner.restartthinner &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -248,6 +248,11 @@
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.date_slicer">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">date_slicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slicedates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartdates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.date_slicer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a dict that maps a chosen restart date to a report index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -260,6 +265,11 @@ pack the remainding files into a new UNRST file</p>
 <p>This function will change working directory to the
 location of the UNRST file, dump temporary files in there, and
 modify the original filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -270,11 +280,11 @@ modify the original filename.</p>
 <p>Depending on libecl-version, it has the .x or the .c.x suffix
 We prefer .x.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>String with path if found.</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>String with path if found.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
 <dd class="field-odd"><p><strong>IOError</strong> – if tool can’t be found</p>
@@ -286,12 +296,22 @@ We prefer .x.</p>
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.get_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Setup parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.get_restart_indices">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_restart_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_restart_indices" title="Permalink to this definition">¶</a></dt>
 <dd><p>Extract a list of RST indices for a filename</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -304,6 +324,11 @@ We prefer .x.</p>
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.restartthinner">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">restartthinner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberofslices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dryrun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.restartthinner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Thin an existing UNRST file to selected number of restarts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

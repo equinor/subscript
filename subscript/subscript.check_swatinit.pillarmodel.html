@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.check_swatinit.pillarmodel &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.check_swatinit.pillarmodel &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -252,41 +252,44 @@ rectangular cells stacked on top of each other.</p>
 to SWATINIT analysis</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc">
-<span class="sig-name descname"><span class="pre">evaluate_pc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_water</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">evaluate_pc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_water</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the capilllary pressure value for a given Sw value
 for a SATNUM. Interpolated linearly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>s_water</strong> (<em>float</em>) – Saturation value between swl and 1.</p></li>
-<li><p><strong>scaling</strong> (<em>float</em>) – Scaling factor capillary pressure</p></li>
-<li><p><strong>satnum</strong> (<em>int</em>) – Starts at 1. Default 1.</p></li>
+<li><p><strong>s_water</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Saturation value between swl and 1.</p></li>
+<li><p><strong>scaling</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Scaling factor capillary pressure</p></li>
+<li><p><strong>satnum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Starts at 1. Default 1.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pc (float)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pc</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw">
-<span class="sig-name descname"><span class="pre">evaluate_sw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_cap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">evaluate_sw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_cap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the saturation at a given capillary pressure
 for a SATNUM. Interpolated linearly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>p_cap</strong> (<em>float</em>) – </p></li>
-<li><p><strong>scaling</strong> (<em>float</em>) – Scaling factor capillary pressure</p></li>
-<li><p><strong>satnum</strong> (<em>int</em>) – Starts at 1. Default 1.</p></li>
+<li><p><strong>p_cap</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – </p></li>
+<li><p><strong>scaling</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Scaling factor capillary pressure</p></li>
+<li><p><strong>satnum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Starts at 1. Default 1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Between 0 and 1</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>sw (float)</p>
+<dd class="field-odd"><p>sw</p>
 </dd>
 </dl>
 </dd></dl>
@@ -295,36 +298,66 @@ for a SATNUM. Interpolated linearly.</p>
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.grid">
 <span class="sig-name descname"><span class="pre">grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.grid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a string for the GRID section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.props">
 <span class="sig-name descname"><span class="pre">props</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.props" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a string for the PROPS section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.regions">
 <span class="sig-name descname"><span class="pre">regions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.regions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a string for the REGIONS section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.runspec">
 <span class="sig-name descname"><span class="pre">runspec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.runspec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a string for the RUNSPEC section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.schedule">
 <span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.schedule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a string for the SCHEDULE section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.solution">
 <span class="sig-name descname"><span class="pre">solution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.solution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Make a string for the SOLUTION section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.csv_stack.csv_stack &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.csv_stack.csv_stack &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -268,7 +268,7 @@ defaults and raw description formatter</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.csv_stack">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">csv_stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackmatcher</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Pattern[~</span> <span class="pre">AnyStr]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackseparator</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newcolumn</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.csv_stack" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">csv_stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackmatcher</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackseparator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">newcolumn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.csv_stack" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reshape an incoming dataframe by stacking/pivoting.</p>
 <p>The dataframe object will be modified in-place.</p>
 <dl class="field-list simple">
@@ -282,15 +282,18 @@ to be stacked.</p></li>
 stacked column names.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.csv_stack_main">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">csv_stack_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">argparse.Namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support_magics</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.csv_stack_main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">csv_stack_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">support_magics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.csv_stack_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>A main function to be used both from the command line, and
 when used as an ERT plugin (ERT workflow).</p>
 <p>This function writes to disk or to stdout.</p>
@@ -302,18 +305,26 @@ when used as an ERT plugin (ERT workflow).</p>
 stdin/stdout. Should not be set when used as ERT workflow.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.deprecated_main">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">deprecated_main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.deprecated_main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">deprecated_main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.deprecated_main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function to display deprecation warning before going to main()</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.drop_constants">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">drop_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pandas.core.frame.DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepminimal</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackmatcher</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Pattern[~</span> <span class="pre">AnyStr]</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">pandas.core.frame.DataFrame</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.drop_constants" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">drop_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keepminimal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stackmatcher</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.drop_constants" title="Permalink to this definition">¶</a></dt>
 <dd><p>Drop/purge/remove columns from the dataframe that we don’t want
 to include in a stacking operation (stacking can blow up the dataframe size)</p>
 <p>Obey a global variable with list of columns that we should always keep, you
@@ -328,29 +339,47 @@ operation will also  be dropped.</p></li>
 the columns to be stacked.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame, possibly with fewer columns.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame, possibly with fewer columns.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">argparse.ArgumentParser</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.get_parser" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set up parser for command line utility</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.legacy_ertscript_workflow">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.legacy_ertscript_workflow" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.legacy_ertscript_workflow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Hook the CsvStack class into ERT with the name CSV_STACK,
 and inject documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">None</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.main" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function for command line invocation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

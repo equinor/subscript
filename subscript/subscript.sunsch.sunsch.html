@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.sunsch.sunsch &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.sunsch.sunsch &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -249,18 +249,21 @@ hence the name. Later, this library has been merged into opm-common</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.sunsch.sunsch.dategrid">
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">dategrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startdate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enddate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.dategrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list of datetimes at given interval</p>
+<dd><p>Return a list of dates at given interval</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>startdate</strong> (<em>datetime.date</em>) – First date in range</p></li>
-<li><p><strong>enddate</strong> (<em>datetime.date</em>) – Last date in range</p></li>
-<li><p><strong>interval</strong> (<em>str</em>) – Must be among: ‘monthly’, ‘yearly’, ‘weekly’,
+<li><p><strong>startdate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>) – First date in range</p></li>
+<li><p><strong>enddate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>) – Last date in range</p></li>
+<li><p><strong>interval</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Must be among: ‘monthly’, ‘yearly’, ‘weekly’,
 ‘biweekly’, ‘bimonthly’</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>list of datetime.date. Always includes start-date, might not include end-date</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of datetime.date. Always includes start-date, might not include end-date</p>
 </dd>
 </dl>
 </dd></dl>
@@ -269,6 +272,11 @@ hence the name. Later, this library has been merged into opm-common</p>
 <dt class="sig sig-object py" id="subscript.sunsch.sunsch.datetime_from_date">
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">datetime_from_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.datetime_from_date" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set time to 00:00:00 in a date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -297,6 +305,11 @@ calls off to opm.io.tools.TimeVector</p>
 <dt class="sig sig-object py" id="subscript.sunsch.sunsch.get_schema">
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.get_schema" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return the ConfigSuite schema</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -307,8 +320,11 @@ calls off to opm.io.tools.TimeVector</p>
 delete whatever comes before the first DATES. But if the first DATES
 predates startdate, then we delete it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>opm.tools.TimeVector</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>opm.tools.TimeVector</p>
 </dd>
 </dl>
 </dd></dl>
@@ -327,13 +343,13 @@ predates startdate, then we delete it.</p>
 refdate, enddate, dategrid, insert</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>conf</strong> (<em>dict</em><em> or </em><em>named_dict</em>) – Configuration dictionary for the schedule
+<dd class="field-odd"><p><strong>conf</strong> – Configuration dictionary for the schedule
 merges and inserts</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>opm.io.TimeVector</p>
 </dd>
 </dl>
@@ -346,7 +362,7 @@ merges and inserts</p>
 keywords at all (excluding comments)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – </p>
+<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>False if the file is empty or has only comments.</p>

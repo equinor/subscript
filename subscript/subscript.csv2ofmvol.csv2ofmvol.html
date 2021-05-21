@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.csv2ofmvol.csv2ofmvol &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.csv2ofmvol.csv2ofmvol &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -263,8 +263,11 @@ if there are exceptions and production/injection is nonzero.</p>
 WELL is first index, and DATE is second. The DATE index
 can be either a DateTimeIndex, or it will be converted to such.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -313,6 +316,11 @@ Unsupported columns will be ignored.</p>
 <dt class="sig sig-object py" id="subscript.csv2ofmvol.csv2ofmvol.get_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.csv2ofmvol.csv2ofmvol.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv2ofmvol.csv2ofmvol.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse command line arguments, return a Namespace with arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -332,7 +340,7 @@ the same dataframe. If index duplicates, the last is kept
 and a warning is printed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>csvfiles</strong> – list of strings of filepaths to CSV files,
+<dd class="field-odd"><p><strong>csvfiles</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>]]) – list of strings of filepaths to CSV files,
 or list of DataFrames for which read_csv() has
 been done.</p>
 </dd>

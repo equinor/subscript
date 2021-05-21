@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.ri_wellmod.ri_wellmod &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.ri_wellmod.ri_wellmod &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -256,10 +256,13 @@ defaults and raw description formatter</p>
 <dd><p>Decode LGR spec and return as parsed tuple. For ERT FM replace ‘,’ by ‘;’.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>spec</strong> – LGR spec in the format ‘wname:ref_i,ref_j,ref_k’</p>
+<dd class="field-odd"><p><strong>spec</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – LGR spec in the format ‘wname:ref_i,ref_j,ref_k’</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Tuple (str, int, int, int) if well-formed, None if not</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Tuple (str, int, int, int) if well-formed, None if not</p>
 </dd>
 </dl>
 </dd></dl>
@@ -273,10 +276,13 @@ launch this particular version.</p>
 <p>NB! The caller is responsible for deleting the temporary wrapper</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>version_triplet</strong> – (major, minor, patch)</p>
+<dd class="field-odd"><p><strong>version_triplet</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – (major, minor, patch)</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Path to temporary wrapper or False if not found</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Path to temporary wrapper or None if not found</p>
 </dd>
 </dl>
 </dd></dl>
@@ -286,18 +292,33 @@ launch this particular version.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Utility function to build the cmdline argument parser using argparse
 (<a class="reference external" href="https://docs.python.org/3/library/argparse.html">https://docs.python.org/3/library/argparse.html</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.get_resinsight_exe">
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">get_resinsight_exe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.get_resinsight_exe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the path to a ResInsight executable (or wrapper script), False if not found.</p>
+<dd><p>Return the path to a ResInsight executable (or wrapper script), None if not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.get_rips_version_triplet">
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">get_rips_version_triplet</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.get_rips_version_triplet" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the rips (client-side) version, without instanciating/launching ResInsight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -305,6 +326,11 @@ launch this particular version.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">has_restart_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ecl_case</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.has_restart_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if ecl_case has a restart file
 (Currently required for LGR creation, to be fixed in next ResInsight release )</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -313,10 +339,10 @@ launch this particular version.</p>
 <dd><p>Check if input Eclipse case name corresponds to an initialized Eclipse run.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>ecl_case</strong> – Run name (or path) to check (file name with suffix ok)</p>
+<dd class="field-odd"><p><strong>ecl_case</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – Run name (or path) to check (file name with suffix ok)</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>True/False</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -342,6 +368,11 @@ launch this particular version.</p>
 <dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.main">
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -351,8 +382,8 @@ launch this particular version.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>well_project</strong> – ResInsight project (rsp) file</p></li>
-<li><p><strong>well_path_names</strong> – List of well names (as returned by the RI instance)</p></li>
+<li><p><strong>well_project</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – ResInsight project (rsp) file</p></li>
+<li><p><strong>well_path_names</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of well names (as returned by the RI instance)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -368,12 +399,15 @@ launch this particular version.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>pattern_list</strong> – List of fnmatch-style patterns</p></li>
-<li><p><strong>string_list</strong> – List of strings to check for match</p></li>
+<li><p><strong>pattern_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of fnmatch-style patterns</p></li>
+<li><p><strong>string_list</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of strings to check for match</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of unique strings string_list matching any element in pattern_list</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of unique strings string_list matching any element in pattern_list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -382,6 +416,11 @@ launch this particular version.</p>
 <dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.split_arg_string">
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">split_arg_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg_string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.split_arg_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Split an arg string of formats ‘str1,str2,str3’ or ‘str1|str2|str3’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

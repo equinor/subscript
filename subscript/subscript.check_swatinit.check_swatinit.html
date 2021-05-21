@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.check_swatinit.check_swatinit &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.check_swatinit.check_swatinit &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -249,6 +249,11 @@
 <span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">augment_grid_frame_qc_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.augment_grid_frame_qc_vectors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add extra columns to a dataframe with simple calculations from
 data already in the dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -256,6 +261,11 @@ data already in the dataframe</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">check_applicability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfiles</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.check_applicability" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check that the input is relevant for usage with check_swatinit. This
 function may raise exceptions, SystemExit or only give warnings</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -274,12 +284,15 @@ when SWLPC is in use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>qc_frame</strong> (<em>pd.DataFrame</em>) – </p></li>
-<li><p><strong>satfunc_df</strong> (<em>pd.DataFrame</em>) – </p></li>
+<li><p><strong>qc_frame</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – </p></li>
+<li><p><strong>satfunc_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.Series, with capillary pressure values in bars (given Eclipse unit
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.Series, with capillary pressure values in bars (given Eclipse unit
 is METRIC)</p>
 </dd>
 </dl>
@@ -289,6 +302,11 @@ is METRIC)</p>
 <dt class="sig sig-object py" id="subscript.check_swatinit.check_swatinit.get_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct a command line argument parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -297,10 +315,13 @@ is METRIC)</p>
 <dd><p>Produce a string for human report for capillary scaling</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>qc_frame</strong> (<em>pd.DataFrame</em>) – Dataframe with each row representing a reservoir cell.</p>
+<dd class="field-odd"><p><strong>qc_frame</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with each row representing a reservoir cell.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>string (multiline)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>string (multiline)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,10 +332,13 @@ is METRIC)</p>
 <dd><p>Produce a string with a human report for volumes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>qc_vols</strong> (<em>dict</em>) – Dictionary with certain keys assumed to be present</p>
+<dd class="field-odd"><p><strong>qc_vols</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Dictionary with certain keys assumed to be present</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>string (multiline)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>string (multiline)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -325,6 +349,11 @@ is METRIC)</p>
 <dd><p>Executed when called from the command line.</p>
 <p>Acts on command line arguments, loads data, performs qc and dumps to
 CSV if requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -333,6 +362,11 @@ CSV if requested.</p>
 <dd><p>Construct a dataframe with needed information for swatinit qc from an Eclipse run.</p>
 <p>Makes a dataframe with one row for each active cell. Information from
 satfunc and equil merged in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -340,6 +374,11 @@ satfunc and equil merged in.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.check_swatinit.</span></span><span class="sig-name descname"><span class="pre">merge_equil</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grid_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equil_df</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.check_swatinit.merge_equil" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merge z, datum_pressure, contact information and oip_init settting from
 an EQUIL dataframe into the grid dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -365,10 +404,13 @@ into a grid dataframe (pr cell)</p>
 <p>PPCWMAX is pr. SATNUM in the input deck</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>eclfiles</strong> (<em>EclFiles</em>) – </p>
+<dd class="field-odd"><p><strong>eclfiles</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">EclFiles</span></code>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.Series, indexed according to ecl2df.grid.df(eclfiles)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Series</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.Series, indexed according to ecl2df.grid.df(eclfiles)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -383,8 +425,11 @@ how SWATINIT behaved in that cell</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>qc_frame</strong> (<em>pd.DataFrame</em>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame (with an additional column QC_FLAG)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>pd.DataFrame (with an additional column QC_FLAG)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -416,6 +461,11 @@ groupings.</p>
 <dd><p>Reorder a dataframe so that rows with less NaN comes first, this
 will aid data analysis application to deduce correct datatypes for
 columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>

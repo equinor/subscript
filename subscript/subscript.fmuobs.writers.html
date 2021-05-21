@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.fmuobs.writers &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.fmuobs.writers &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -253,14 +253,14 @@ format</p>
 for block observations in dataframe representation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>block_df</strong> (<em>pd.DataFrame</em>) – </p>
+<dd class="field-odd"><p><strong>block_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of dictionaries, each dict has “well”, “date” and
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of dictionaries, each dict has “well”, “date” and
 “observations”</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -295,13 +295,13 @@ with potentially all classes of observations.</p>
 dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Observations in internal dataframe format</p>
+<dd class="field-odd"><p><strong>obs_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Observations in internal dataframe format</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ERT observations as multiline string.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ERT observations as multiline string.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -316,8 +316,11 @@ fmu-ensemble.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Dataframe representing ERT observations.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>dict</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -332,11 +335,14 @@ fmu-ensemble.</p>
 to the internal dataframe representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Dataframe representation of observations, this format
+<dd class="field-odd"><p><strong>obs_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe representation of observations, this format
 is internal to this module, and is nothing but a flattening</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>pd.DataFrame. This can be written directly to disk as CSV and
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>This can be written directly to disk as CSV and
 imported into the ResInsight application</p>
 </dd>
 </dl>
@@ -348,14 +354,14 @@ imported into the ResInsight application</p>
 <dd><p>Write BLOCK_OBSERVATION from dataframe rows as ERT observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Observations in internal dataframe
+<dd class="field-odd"><p><strong>obs_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Observations in internal dataframe
 representation</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ERT observation format string, multiline</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ERT observation format string, multiline</p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,14 +372,14 @@ representation</p>
 <dd><p>Write GENERAL_OBSERVATION from dataframe rows as ERT observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Observations in internal dataframe
+<dd class="field-odd"><p><strong>obs_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Observations in internal dataframe
 representation</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ERT observation format string, multiline</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ERT observation format string, multiline</p>
 </dd>
 </dl>
 </dd></dl>
@@ -386,14 +392,14 @@ representation</p>
 an extra DEFAULT segment is present in the internal dataframe representation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Observations in internal dataframe
+<dd class="field-odd"><p><strong>obs_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Observations in internal dataframe
 representation</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ERT observation format string, multiline</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ERT observation format string, multiline</p>
 </dd>
 </dl>
 </dd></dl>
@@ -404,14 +410,14 @@ representation</p>
 <dd><p>Write SUMMARY_OBSERVATION as ERT observations</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>obs_df</strong> (<em>pd.DataFrame</em>) – Observations in internal dataframe
+<dd class="field-odd"><p><strong>obs_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Observations in internal dataframe
 representation</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>ERT observation format string, multiline</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>ERT observation format string, multiline</p>
 </dd>
 </dl>
 </dd></dl>
@@ -430,13 +436,13 @@ through the dictionary format (because the way dates are rolled over). But
 a potential column LABEL will be included as “label”.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>sum_df</strong> (<em>pd.DataFrame</em>) – </p>
+<dd class="field-odd"><p><strong>sum_df</strong> – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of dictionaries, each dict has “key” and “observation”</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>List of dictionaries, each dict has “key” and “observation”</p>
 </dd>
 </dl>
 </dd></dl>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.bjobsusers.bjobsusers &mdash; subscript 0.10.3.dev7+gcdcc81a documentation</title>
+  <title>subscript.bjobsusers.bjobsusers &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev7+gcdcc81a
+                0.10.3.dev8+g3cc9571
               </div>
             
           
@@ -276,8 +276,11 @@ the number of allocated cores to the job.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">call_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_finger" title="Permalink to this definition">¶</a></dt>
 <dd><p>Call the system utility ‘finger’ on a specific username</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><p>Unicode string with the first line of output from ‘finger’
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>Unicode string with the first line of output from ‘finger’
 Example return value:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Login</span><span class="p">:</span> <span class="n">foobert</span>      <span class="n">Name</span><span class="p">:</span> <span class="n">Foo</span> <span class="n">Barrer</span> <span class="p">(</span><span class="n">FOO</span> <span class="n">BAR</span> <span class="n">COM</span><span class="p">)</span><span class="s2">&quot;</span>
 </pre></div>
@@ -296,7 +299,7 @@ Example return value:</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>status</strong> (<em>str</em>) – Type of job to list, RUN or PEND</p></li>
-<li><p><strong>bjobs_function</strong> – Function handle to a function that can return a string
+<li><p><strong>bjobs_function</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>) – Function handle to a function that can return a string
 with bjobs output.</p></li>
 </ul>
 </dd>
@@ -314,18 +317,33 @@ Only one row pr username. Sorted descending by ncpu.</p>
 <dt class="sig sig-object py" id="subscript.bjobsusers.bjobsusers.get_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.get_parser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prepare a parser for argument parsing and documentation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.bjobsusers.bjobsusers.main">
 <span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>For invocation on command line</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.bjobsusers.bjobsusers.show_status">
 <span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">show_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'RUN'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Running'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">umax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.show_status" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print job statistics to console user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -335,8 +353,8 @@ Only one row pr username. Sorted descending by ncpu.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>username</strong> – user shortname/loginname</p></li>
-<li><p><strong>finger_function</strong> – Function handle that can provide output
+<li><p><strong>username</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – user shortname/loginname</p></li>
+<li><p><strong>finger_function</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>) – Function handle that can provide output
 from the system finger program (/usr/bin/finger).
 The output must be a Unicode string</p></li>
 </ul>

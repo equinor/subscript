@@ -80,7 +80,8 @@ Repository conventions
   must be fixed.
 * For a new script, write a new file ``docs/scripts/scriptname.rst`` describing
   the script. Use sphinx-argparse to document the command line syntax.
-
+* Type hinting is encouraged. If type hinting is included in the source, it has to pass
+  mypy.
 
 
 Maintenance responsibility
