@@ -1,7 +1,16 @@
 """The FipMapper class, mapping region/zones in RMS to FIPxxx in Eclipse.
 
 This API should be considered private to prtvol2csv until it has moved somewhere
-else"""
+else.
+
+Assumptions:
+
+ * A FIPNUM always maps to an arbitrary-length list of regions
+ * A FIPNUM always maps to an arbitrary-length list of zones
+ * A region is assumed to present for all zones, but not relevant in this class
+ * A zone is assumed to be present for all regions, but not relevant in this class
+
+"""
 from pathlib import Path
 from typing import Union, Dict, List, Any, Optional
 
@@ -79,7 +88,7 @@ class FipMapper:
         self.has_region2fip = "region2fipnum" in self._mapdata
         self.has_zone2fip = "zone2fipnum" in self._mapdata
 
-    def _get_explicit_mapdata(self, yamldata: dict):
+    def _get_explicit_mapdata(self, yamldata: Dict[str, Any]):
         """Fetch explicit mapping configuration from a dictionary,
 
         Set internal flags when maps are found
@@ -154,72 +163,111 @@ class FipMapper:
         """
         self._get_explicit_mapdata(webviz_to_prtvol2csv(yamldict))
 
-    def fip2region(
-        self, fip: Union[List[int], int, None]
-    ) -> Union[List[str], str, None]:
-        """Maps FIP(NUM) integers to Region strings.
+    def _fips2regions(self, fips: List[int]) -> List[List[str]]:
+        return [self.fip2region(fip_int) for fip_int in fips]
+
+    def fip2region(self, fip: Optional[int]) -> List[str]:
+        """Maps one FIP(NUM) integer to list of Region strings. Each FIPNUM
+        can map to multiple regions, therefore a list is always returned for
+        each FIPNUM.
 
         Args:
             array: List/array of FIPNUMS, or integer.
 
         Returns:
-            str or list, depending on input. Region names that are "integers"
-            will be returned as strings.
+            List of strings or list of lists of strings, depending on input.
+            Region names that are "integers" will be returned as strings.
+            Empty list if no region is known for a specific FIPNUM.
         """
-        if isinstance(fip, list):
-            return [str(self.fip2region(fip_int)) for fip_int in fip]
-            # return list(map(lambda x: self.fip2region(int(x)), fip))
         assert "fipnum2region" in self._mapdata, "No data provided for fip2region"
         try:
-            return self._mapdata["fipnum2region"][fip]
+            regions = self._mapdata["fipnum2region"][fip]
+            if not isinstance(regions, list):
+                # Single region in input
+                return [regions]
+            return regions
         except KeyError:
             logger.warning(
                 "Unknown fip %s, known map is %s",
                 str(fip),
                 str(self._mapdata["fipnum2region"]),
             )
-            return None
+            return []
 
-    def region2fip(self, region: Union[List[str], str]) -> Union[List[int], int, None]:
-        """Maps Region string(s) to FIPNUM(s)
+    def _regions2fips(self, regions: List[str]) -> List[List[int]]:
+        return [self.region2fip(region) for region in regions]
+
+    def region2fip(self, region: Optional[str]) -> List[int]:
+        """Maps a Region string to FIPNUM(s).
 
         Args:
             array (list): List/array of FIPNUMS, or integer.
 
         Returns:
-            int: FIPNUM value. None if the region is unknown
+            FIPNUM values. None if the region is unknown, many if many FIPNUMs
+            are present in the region.
         """
-        if isinstance(region, list):
-            return [int(str(self.region2fip(region_str))) for region_str in region]
         assert "region2fipnum" in self._mapdata, "No data provided for region2fip"
         try:
-            return int(self._mapdata["region2fipnum"][region])
+            fips = self._mapdata["region2fipnum"][region]
+            if not isinstance(fips, list):
+                # Single FIPNUM in input
+                return [int(fips)]
+            return [int(fip) for fip in fips]
         except KeyError:
             logger.warning(
                 "Unknown region %s, known map is %s",
                 str(region),
                 str(self._mapdata["region2fipnum"]),
             )
-            return None
+            return []
 
-    def fip2zone(self, fip: Union[list, int]) -> Optional[Union[list, str]]:
-        """Maps an array of FIPNUM integers to an array of Zone strings
+    def zone2fip(self, zone: str) -> List[int]:
+        """Maps a zone to FIPNUMs"""
+        assert "zone2fipnum" in self._mapdata, "No data provided for zone2fip"
+        try:
+            fips = self._mapdata["zone2fipnum"][zone]
+            if not isinstance(fips, list):
+                # Single FIPNUM in input
+                return [int(fips)]
+            return [int(fip) for fip in fips]
+        except KeyError:
+            logger.warning(
+                "Unknown zone %s, known map is ¤s",
+                str(zone),
+                str(self._mapdata["zone2fipnum"]),
+            )
+            return []
+
+    def _fips2zones(self, fips: List[int]) -> List[List[str]]:
+        return [self.fip2zone(fip) for fip in fips]
+
+    def fip2zone(self, fip: int) -> List[str]:
+        """Maps a FIPNUM integer to an list of Zone strings
 
         Args:
             array (list): List/array of FIPNUMS, or integer.
 
         Returns:
             list: Region strings. Always returned as list, and always as
-            strings, even if zone "names" are integers.
+            strings, even if zone "names" are integers. Empty list if no
+            zone is assigned to the FIPNUM.
         """
-        if isinstance(fip, list):
-            return list(map(self.fip2zone, fip))
         assert "fipnum2zone" in self._mapdata, "No data provided for fip2zone"
         try:
-            return self._mapdata["fipnum2zone"][fip]
+            zones = self._mapdata["fipnum2zone"][fip]
+            if not isinstance(zones, list):
+                # Single zone for this FIPNUM
+                return [zones]
+            return zones
         except KeyError:
             logger.warning("The zone belonging to FIPNUM %s is unknown", str(fip))
-            return None
+            return []  # type: ignore
+
+    def regzone2fip(self, region: str, zone: str) -> List[int]:
+        fipreg = self.region2fip(region)
+        fipzon = self.zone2fip(zone)
+        return sorted(list(set(fipreg).intersection(set(fipzon))))
 
 
 def webviz_to_prtvol2csv(webvizdict: dict):
@@ -243,30 +291,20 @@ def webviz_to_prtvol2csv(webvizdict: dict):
 
 
 def invert_map(
-    dictmap: Dict[str, Any], join_on: str = ",", skipstring: Union[list, str] = None
-) -> Dict[str, Any]:
-    """Invert a dictionary.
-
-    When input is many-to-one, the keys will be joined with the supplied join
-    string. Returned values inside dictionary will always be strings if joined,
-    if not joined, the value type is unchanged.
-
-    When the input is one-to-many,
+    dictmap: Dict[str, Any], skipstring: Optional[Union[list, str]] = None
+) -> Dict[str, List[Any]]:
+    """Invert a dictionary, supporting many-to-many maps.
 
     Args:
-        dictmap (dict)
-        join_on (str)
+        dictmap
         skipstring: List of strings which will be ignored (e.g. "Totals").
-
-    Returns:
-        dict: Inverted map
     """
     if skipstring is None:
         skipstring = []
     if isinstance(skipstring, str):
         skipstring = [skipstring]
 
-    inv_map: Dict[str, Union[str, list]] = {}
+    inv_map: Dict[str, List[Any]] = {}
     for key, value in dictmap.items():
         if key in skipstring or value in skipstring:
             continue
@@ -277,13 +315,10 @@ def invert_map(
                 )
         else:
             base = set(inv_map.get(value, set()))
-            # mypy workoround: https://github.com/python/mypy/issues/2013
+            # mypy workaround: https://github.com/python/mypy/issues/2013
             inv_map[value] = list(base.union(set([key])))
-
-    assert join_on is not None, "A join operation must be specified"
-    assert isinstance(join_on, str), f"The join_on must be a string, got {join_on}"
 
     for key, value in inv_map.items():
         inv_map[key] = sorted(list(inv_map[key]))
-        inv_map[key] = join_on.join(map(str, list(inv_map[key])))
+
     return inv_map
