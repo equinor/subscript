@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.eclcompress.eclcompress &mdash; subscript 0.10.3.dev8+g3cc9571 documentation</title>
+  <title>subscript.eclcompress.eclcompress &mdash; subscript 0.10.3.dev9+g006eef3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev8+g3cc9571
+                0.10.3.dev9+g006eef3
               </div>
             
           
@@ -312,6 +312,22 @@ Default is [A-Z]{2-8}$</p></li>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.eclcompress.eclcompress.file_is_binary">
+<span class="sig-prename descclassname"><span class="pre">subscript.eclcompress.eclcompress.</span></span><span class="sig-name descname"><span class="pre">file_is_binary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.eclcompress.eclcompress.file_is_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a file is assumed binary</p>
+<p>This uses the same heuristic as the Linux <cite>file</cite> command. Only the first
+1024 bytes are looked at.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]) – File to check</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
 </dd>
 </dl>
 </dd></dl>
