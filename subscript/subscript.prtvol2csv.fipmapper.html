@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.prtvol2csv.fipmapper &mdash; subscript 0.10.3.dev9+g006eef3 documentation</title>
+  <title>subscript.prtvol2csv.fipmapper &mdash; subscript 0.10.3.dev10+g8e21696 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev9+g006eef3
+                0.10.3.dev10+g8e21696
               </div>
             
           
@@ -245,28 +245,29 @@
 <span id="subscript-prtvol2csv-fipmapper"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv.fipmapper</span></code><a class="headerlink" href="#module-subscript.prtvol2csv.fipmapper" title="Permalink to this headline">¶</a></h1>
 <p>The FipMapper class, mapping region/zones in RMS to FIPxxx in Eclipse.</p>
 <p>This API should be considered private to prtvol2csv until it has moved somewhere
-else</p>
+else.</p>
+<p>Assumptions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A FIPNUM always maps to an arbitrary-length list of regions</p></li>
+<li><p>A FIPNUM always maps to an arbitrary-length list of zones</p></li>
+<li><p>A region is assumed to present for all zones, but not relevant in this class</p></li>
+<li><p>A zone is assumed to be present for all regions, but not relevant in this class</p></li>
+</ul>
+</div></blockquote>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.prtvol2csv.fipmapper.invert_map">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.fipmapper.</span></span><span class="sig-name descname"><span class="pre">invert_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">join_on</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipstring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.fipmapper.invert_map" title="Permalink to this definition">¶</a></dt>
-<dd><p>Invert a dictionary.</p>
-<p>When input is many-to-one, the keys will be joined with the supplied join
-string. Returned values inside dictionary will always be strings if joined,
-if not joined, the value type is unchanged.</p>
-<p>When the input is one-to-many,</p>
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.fipmapper.</span></span><span class="sig-name descname"><span class="pre">invert_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dictmap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipstring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.fipmapper.invert_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Invert a dictionary, supporting many-to-many maps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dictmap</strong> (<em>dict</em>) – </p></li>
-<li><p><strong>join_on</strong> (<em>str</em>) – </p></li>
+<li><p><strong>dictmap</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – </p></li>
 <li><p><strong>skipstring</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – List of strings which will be ignored (e.g. “Totals”).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Inverted map</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>dict</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]]</p>
 </dd>
 </dl>
 </dd></dl>
