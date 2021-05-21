@@ -2,6 +2,8 @@ import argparse
 import logging
 from pathlib import Path
 
+from typing import Tuple
+
 import numpy as np
 import pandas as pd
 
@@ -43,7 +45,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Set up a parser for the command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
@@ -66,7 +68,7 @@ def get_parser():
     return parser
 
 
-def split_wellname_reportstep(wellname_reportstep):
+def split_wellname_reportstep(wellname_reportstep: str) -> Tuple[str, int]:
     """Split a string that might contain both a wellname and a report step,
     at least it should contain a wellname.
 
@@ -88,11 +90,11 @@ def split_wellname_reportstep(wellname_reportstep):
         "R_A4" gives (R_A4, 1)
         "R_A_4" gives (R_A, 4)  # Warning, this is probaly unintended!
 
-    Args
-        wellname_reportstep (str)
+    Args:
+        wellname_reportstep
 
-    Returns
-        tuple: wellname and reportstep. Reportstep defaulted to 1 if not found
+    Returns:
+        wellname and reportstep. Reportstep defaulted to 1 if not found
     """
     components = wellname_reportstep.split("_")
     if len(components[-1]) > 1:
@@ -104,7 +106,7 @@ def split_wellname_reportstep(wellname_reportstep):
         return ("_".join(components), 1)
 
 
-def get_observations(obsdir="", filepattern="*.obs"):
+def get_observations(obsdir: str = "", filepattern: str = "*.obs") -> pd.DataFrame:
     """
     Gather observation data from a directory of input filenames, or later
     from ERT storage api.
@@ -187,7 +189,7 @@ def get_observations(obsdir="", filepattern="*.obs"):
     return pd.DataFrame()
 
 
-def merge_rft_ertobs(gendatacsv, obsdir):
+def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
     """Main function for merge_rft_ertobs named arguments.
 
     Arguments correspond to argparse documentation
@@ -206,8 +208,8 @@ def merge_rft_ertobs(gendatacsv, obsdir):
         sim_df.loc[inactive_rows, "pressure"] = np.nan
         logger.info(
             "Found %s active and %s inactive pressure points",
-            str(len(inactive_rows) - sum(inactive_rows)),
-            str(sum(inactive_rows)),
+            str(len(inactive_rows) - sum(inactive_rows)),  # type: ignore
+            str(sum(inactive_rows)),  # type: ignore
         )
     else:
         logger.info("Found %s active pressure points", str(len(sim_df)))
@@ -219,7 +221,7 @@ def merge_rft_ertobs(gendatacsv, obsdir):
     return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
 
 
-def main():
+def main() -> None:
     """Main function when called as a command line application.
 
     Will get arguments from command line, and wrap around merge_rft_ertobs_main().

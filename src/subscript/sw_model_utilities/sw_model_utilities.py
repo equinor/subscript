@@ -12,6 +12,8 @@
 import argparse
 import math
 from copy import deepcopy
+from typing import List
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -96,16 +98,14 @@ def menu():
     return mode, inverse, av, bv, poro, perm, swirra, desc, hmax
 
 
-def autoformat(num):
-    """Autoformat to 'f' or 'e' format ,depending on size of number"""
+def autoformat(num: float) -> str:
+    """Autoformat to 'f' or 'e' format, depending on size of number"""
     if abs(num) > 0.01:
-        num = "{:.4f}".format(num)
-    else:
-        num = "{:.4e}".format(num)
-    return num
+        return "{:.4f}".format(num)
+    return "{:.4e}".format(num)
 
 
-def convert_normal2inverse(aval, bval):
+def convert_normal2inverse(aval: float, bval: float):
     """A and B algebraic conversion
 
     Note: same formula is valid in both conversion directions!"""
@@ -115,7 +115,19 @@ def convert_normal2inverse(aval, bval):
     return aval2, bval2
 
 
-def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax, show=True):
+def plotting(
+    option: int,
+    av: List[float],
+    bv: List[float],
+    avorig: List[float],
+    bvorig: List[float],
+    poro: List[float],
+    perm: List[float],
+    swirra: List[float],
+    desc: List[str],
+    hmax: float,
+    show=True,
+):
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-locals
     # Pylint rationale: Readability of this function would not improve with
@@ -165,7 +177,7 @@ def plotting(option, av, bv, avorig, bvorig, poro, perm, swirra, desc, hmax, sho
         plt.show()
 
 
-def main():
+def main() -> None:
     """Entry point from command line"""
 
     parser = get_parser()

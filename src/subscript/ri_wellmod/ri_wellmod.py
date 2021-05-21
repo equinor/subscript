@@ -9,6 +9,7 @@ import re
 import logging
 import sys
 from importlib import reload
+from typing import Optional, Tuple, List
 
 import rips
 import grpc
@@ -84,9 +85,9 @@ class CustomFormatter(
     pass
 
 
-def get_resinsight_exe():
+def get_resinsight_exe() -> Optional[str]:
     """
-    Return the path to a ResInsight executable (or wrapper script), False if not found.
+    Return the path to a ResInsight executable (or wrapper script), None if not found.
     """
     ri_exe = shutil.which("ResInsight")
     if ri_exe is not None:
@@ -96,10 +97,10 @@ def get_resinsight_exe():
     if ri_exe is not None:
         return ri_exe
 
-    return False
+    return None
 
 
-def get_rips_version_triplet():
+def get_rips_version_triplet() -> Tuple[int, int, str]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
@@ -109,7 +110,9 @@ def get_rips_version_triplet():
     return (major, minor, patch)
 
 
-def find_and_wrap_resinsight_version(version_triplet):
+def find_and_wrap_resinsight_version(
+    version_triplet: Tuple[int, int, str]
+) -> Optional[str]:
     """
     Find a ResInsight executable matching at least the major.minor version
     of the version triplet, and create a temporary wrapper that may be used to
@@ -119,12 +122,12 @@ def find_and_wrap_resinsight_version(version_triplet):
 
     :param version_triplet: (major, minor, patch)
 
-    :return: Path to temporary wrapper or False if not found
+    :return: Path to temporary wrapper or None if not found
     """
     (major, minor, patch) = version_triplet  # pylint: disable=unused-variable
     ri_home_path = Path(RI_HOME)
 
-    def _find_ri_exe(pattern):
+    def _find_ri_exe(pattern: str) -> Optional[Path]:
         """
         Utility function to search for the ResInsight executable
         """
@@ -135,7 +138,7 @@ def find_and_wrap_resinsight_version(version_triplet):
             if resinsight_exe.exists():
                 return resinsight_exe
 
-        return False
+        return None
 
     # First, search for full match, including patch version
     resinsight_exe = _find_ri_exe(f"*{major}.{minor}.{patch}*")
@@ -144,7 +147,7 @@ def find_and_wrap_resinsight_version(version_triplet):
         resinsight_exe = _find_ri_exe(f"*{major}.{minor}*")
 
     if not resinsight_exe:
-        return False
+        return None
 
     logger.info("Found ResInsight version: %s", resinsight_exe)
 
@@ -160,7 +163,7 @@ def find_and_wrap_resinsight_version(version_triplet):
     return wrapper_file.name
 
 
-def launch_resinsight(console_mode, command_line_parameters):
+def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
     """
     Try to launch a version of ResInsight matching the client version
 
@@ -262,7 +265,9 @@ def launch_resinsight(console_mode, command_line_parameters):
     return resinsight
 
 
-def launch_resinsight_dev(resinsightdev, console_mode, command_line_parameters):
+def launch_resinsight_dev(
+    resinsightdev: str, console_mode: bool, command_line_parameters: List[str]
+):
     """
     Launch development version of ResInsight
     """
@@ -294,7 +299,7 @@ def launch_resinsight_dev(resinsightdev, console_mode, command_line_parameters):
     return resinsight
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """
     Utility function to build the cmdline argument parser using argparse
     (https://docs.python.org/3/library/argparse.html)
@@ -376,7 +381,9 @@ def get_parser():
     return parser
 
 
-def select_matching_strings(pattern_list, string_list):
+def select_matching_strings(
+    pattern_list: List[str], string_list: List[str]
+) -> List[str]:
     """
     Utility function to select mathching strings (fnmatch wildcard style)
 
@@ -397,13 +404,11 @@ def select_matching_strings(pattern_list, string_list):
     return list(matching_string_set)
 
 
-def is_init_case(ecl_case):
+def is_init_case(ecl_case: Path) -> bool:
     """
     Check if input Eclipse case name corresponds to an initialized Eclipse run.
 
     :param ecl_case: Run name (or path) to check (file name with suffix ok)
-
-    :return: True/False
     """
     ecl_path = Path(ecl_case)
     has_grid = (
@@ -414,7 +419,7 @@ def is_init_case(ecl_case):
     return has_grid and has_init
 
 
-def has_restart_file(ecl_case):
+def has_restart_file(ecl_case: Path) -> bool:
     """
     Check if ecl_case has a restart file
     (Currently required for LGR creation, to be fixed in next ResInsight release )
@@ -426,7 +431,7 @@ def has_restart_file(ecl_case):
     )
 
 
-def rsp_extract_export_names(well_project, well_path_names):
+def rsp_extract_export_names(well_project: str, well_path_names: List[str]):
     """
     Extract export well names from ResInsight project
 
@@ -445,7 +450,7 @@ def rsp_extract_export_names(well_project, well_path_names):
     return dict(zip(export_names, well_path_names))
 
 
-def decode_lgr_spec(spec):
+def decode_lgr_spec(spec: str) -> Optional[Tuple[str, int, int, int]]:
     """
     Decode LGR spec and return as parsed tuple. For ERT FM replace ',' by ';'.
 
@@ -469,14 +474,14 @@ def decode_lgr_spec(spec):
     return (wname, ref_i, ref_j, ref_k)
 
 
-def split_arg_string(arg_string):
+def split_arg_string(arg_string: str) -> list:
     """
     Split an arg string of formats 'str1,str2,str3' or 'str1|str2|str3'
     """
     return [tok.strip() for tok in re.split(r",|;", arg_string.strip())]
 
 
-def main():
+def main() -> int:
     """
     Main function
     """
@@ -675,7 +680,7 @@ def main():
 
         logger.debug("Found the following MSW wells: %s", msw_well_names)
 
-    def get_exported_perf_filename(well_name, ri_case_name):
+    def get_exported_perf_filename(well_name: str, ri_case_name: str) -> Path:
         """
         Get file name of exported perforation completion file
         """
@@ -684,7 +689,7 @@ def main():
         perf_fn = perf_fn.replace(" ", "_")
         return Path(tmp_output_folder) / perf_fn
 
-    def get_exported_msw_filename(well_name, ri_case_name):
+    def get_exported_msw_filename(well_name: str, ri_case_name: str) -> Path:
         """
         Get file name of exported msw completion file
         """
@@ -693,7 +698,7 @@ def main():
         perf_fn = perf_fn.replace(" ", "_")
         return Path(tmp_output_folder) / perf_fn
 
-    def get_lgr_spec_filename(lgr_well_path):
+    def get_lgr_spec_filename(lgr_well_path: str) -> Path:
         """
         Get file name of exported LGR for a given well path
         """
@@ -775,7 +780,6 @@ def main():
                     lgr_output_file
                 )
             )
-
     return 0
 
 

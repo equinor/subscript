@@ -6,10 +6,12 @@ import argparse
 import re
 import logging
 
+from typing import List, Dict
+
 import pandas as pd
 
-from ert_shared.plugins.plugin_manager import hook_implementation
-from res.job_queue import ErtScript
+from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
+from res.job_queue import ErtScript  # type: ignore
 
 from subscript import getLogger
 from subscript.eclcompress.eclcompress import glob_patterns
@@ -72,7 +74,7 @@ class CsvMerge(ErtScript):
         csv_merge_main(csvfiles=globbedfiles, output=args.output)
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Construct parser object for csv_merge"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter,
@@ -133,7 +135,7 @@ Do not assume anything on the ordering of columns after merging.
     return parser
 
 
-def get_ertwf_parser():
+def get_ertwf_parser() -> argparse.ArgumentParser:
     """Alternative parser used for CSV_MERGE ERT workflow job"""
     parser = argparse.ArgumentParser(formatter_class=CustomFormatter, description="")
 
@@ -148,7 +150,9 @@ def get_ertwf_parser():
     return parser
 
 
-def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
+def merge_csvfiles(
+    csvfiles: list, tags: Dict[str, List] = None, memoryconservative: bool = False
+) -> pd.DataFrame:
     """
     Load CSV files from disk. Tag each row with filename origin.
 
@@ -222,7 +226,7 @@ def merge_csvfiles(csvfiles, tags=None, memoryconservative=False):
     return merged_df
 
 
-def taglist(strings, regexp_str):
+def taglist(strings: List[str], regexp_str: str) -> list:
     """Apply a regexp string to a list of strings
     and return a list of the matches.
 
@@ -238,7 +242,7 @@ def taglist(strings, regexp_str):
     return []
 
 
-def main():
+def main() -> None:
     """Entry point from command line"""
     parser = get_parser()
     args = parser.parse_args()
@@ -256,8 +260,12 @@ def main():
 
 
 def csv_merge_main(
-    csvfiles, output, filecolumn="", memoryconservative=False, dropconstantcolumns=False
-):
+    csvfiles: list,
+    output: str,
+    filecolumn: str = "",
+    memoryconservative: bool = False,
+    dropconstantcolumns: bool = False,
+) -> None:
     """A "main" function that can be used both from the command line,
     and from an ERT workflow"""
     csvfiles = list(filter(os.path.exists, csvfiles))

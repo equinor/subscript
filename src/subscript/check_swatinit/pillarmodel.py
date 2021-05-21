@@ -1,5 +1,5 @@
 import textwrap
-
+from typing import List, Optional, Union
 import numpy as np
 
 
@@ -13,26 +13,32 @@ class PillarModel:
     # pylint: disable=too-many-arguments,too-many-instance-attributes,too-many-locals
     def __init__(
         self,
-        cells=1,
-        apex=1000,
-        phases=None,
-        perm=None,
-        poro=None,
-        swatinit=None,
-        satnum=None,  # one value pr. cell
-        swl=None,  # first saturation in swof, one pr. satnum
-        swlpc=None,  # swl scaler for pc only, leaving kr unmodified
-        swu=None,  # maximum saturation in swof, one pr. satnum
-        maxpc=None,  # max pc in SWOF
-        minpc=None,  # pc at sw=1 in SWOF
-        ppcwmax=None,  # PPCWMAX keyword.
-        eqlnum=None,  # One value pr cell
-        owc=None,  # One value pr. eqlnum region, also used for gwc.
-        goc=None,  # One value pr. eqlnum region
-        oip_init=0,  # EQUIL item 9. Eclipse default is -5
-        filleps="FILLEPS",
-        rptrst="ALLPROPS",
-        unifout="UNIFOUT",
+        cells: int = 1,
+        apex: int = 1000,
+        phases: Optional[List[str]] = None,
+        perm: Optional[List[float]] = None,
+        poro: Optional[List[float]] = None,
+        swatinit: Optional[List[float]] = None,
+        satnum: Optional[List[int]] = None,  # one value pr. cell
+        swl: Optional[List[float]] = None,  # first saturation in swof, one pr. satnum
+        swlpc: Optional[
+            List[float]
+        ] = None,  # swl scaler for pc only, leaving kr unmodified
+        swu: Optional[List[float]] = None,  # maximum saturation in swof, one pr. satnum
+        maxpc: Optional[List[float]] = None,  # max pc in SWOF
+        minpc: Optional[List[float]] = None,  # pc at sw=1 in SWOF
+        ppcwmax: Optional[List[float]] = None,  # PPCWMAX keyword.
+        eqlnum: Optional[List[int]] = None,  # One value pr cell
+        owc: Optional[
+            List[float]
+        ] = None,  # One value pr. eqlnum region, also used for gwc.
+        goc: Optional[
+            Union[List[float], List[str]]
+        ] = None,  # One value pr. eqlnum region
+        oip_init: int = 0,  # EQUIL item 9. Eclipse default is -5
+        filleps: str = "FILLEPS",
+        rptrst: str = "ALLPROPS",
+        unifout: str = "UNIFOUT",
     ):
         """Set up a reservoir grid and dynamic model that can be
         exported as an Eclipse deck.
@@ -46,7 +52,7 @@ class PillarModel:
             self.phases = set(phases)
 
         if perm is None:
-            self.perm = [100] * self.cells
+            self.perm = [100.0] * self.cells
         else:
             self.perm = perm
         assert len(self.perm) == self.cells
@@ -78,20 +84,20 @@ class PillarModel:
             assert len(self.swlpc) == self.cells
 
         if swu is None:
-            self.swu = [1] * max(self.satnum)
+            self.swu = [1.0] * max(self.satnum)
         else:
             self.swu = swu
         # SWU is pr. SATNUM, not pr. cell in this class
         assert len(self.swu) == max(self.satnum)
 
         if maxpc is None:
-            self.maxpc = [3] * max(self.satnum)
+            self.maxpc = [3.0] * max(self.satnum)
         else:
             self.maxpc = maxpc
         assert len(self.maxpc) == max(self.satnum)
 
         if minpc is None:
-            self.minpc = [0] * max(self.satnum)
+            self.minpc = [0.0] * max(self.satnum)
         else:
             self.minpc = minpc
         assert len(self.minpc) == max(self.satnum)
@@ -106,10 +112,11 @@ class PillarModel:
         assert len(self.eqlnum) == self.cells
 
         if owc is None:
-            self.owc = [1000] * max(self.eqlnum)
+            self.owc = [1000.0] * max(self.eqlnum)
         else:
             self.owc = owc
 
+        self.goc: Union[List[str], List[float]]
         if goc is None:
             self.goc = ["1*"] * max(self.eqlnum)
         else:
@@ -148,7 +155,7 @@ class PillarModel:
                 else:
                     self.swatinit[cell_idx] = 1.0
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Make an Eclipse deck"""
 
         string = ""
@@ -167,7 +174,7 @@ class PillarModel:
 
         return string
 
-    def runspec(self):
+    def runspec(self) -> str:
         """Make a string for the RUNSPEC section"""
         string = ""
         string += "RUNSPEC\n\n"
@@ -183,7 +190,7 @@ class PillarModel:
         string += f"{self.unifout}\n\n"
         return string
 
-    def grid(self):
+    def grid(self) -> str:
         """Make a string for the GRID section"""
         string = "GRID\n\n"
         string += "DX\n" + _wrap(" ".join(["100"] * self.cells) + "/") + "\n"
@@ -205,17 +212,19 @@ class PillarModel:
 
         return string
 
-    def evaluate_pc(self, s_water, scaling=1, satnum=1):
+    def evaluate_pc(
+        self, s_water: float, scaling: float = 1.0, satnum: int = 1
+    ) -> float:
         """Evaluate the capilllary pressure value for a given Sw value
         for a SATNUM. Interpolated linearly.
 
         Args:
-            s_water (float): Saturation value between swl and 1.
-            scaling (float): Scaling factor capillary pressure
-            satnum (int): Starts at 1. Default 1.
+            s_water: Saturation value between swl and 1.
+            scaling: Scaling factor capillary pressure
+            satnum: Starts at 1. Default 1.
 
         Returns:
-            pc (float)
+            pc
         """
         return np.interp(
             s_water,
@@ -223,17 +232,17 @@ class PillarModel:
             [self.maxpc[satnum - 1] * scaling, self.minpc[satnum - 1] * scaling],
         )
 
-    def evaluate_sw(self, p_cap, scaling=1, satnum=1):
+    def evaluate_sw(self, p_cap: float, scaling: float = 1.0, satnum: int = 1) -> float:
         """Evaluate the saturation at a given capillary pressure
         for a SATNUM. Interpolated linearly.
 
         Args:
-            p_cap (float)
-            scaling (float): Scaling factor capillary pressure
-            satnum (int): Starts at 1. Default 1.
+            p_cap
+            scaling: Scaling factor capillary pressure
+            satnum: Starts at 1. Default 1.
 
         Returns:
-            sw (float): Between 0 and 1
+            sw: Between 0 and 1
         """
         return np.interp(
             p_cap,
@@ -241,7 +250,7 @@ class PillarModel:
             [self.swu[satnum - 1], self.swl[satnum - 1]],
         )
 
-    def regions(self):
+    def regions(self) -> str:
         """Make a string for the REGIONS section"""
         string = "REGIONS\n\n"
 
@@ -253,7 +262,7 @@ class PillarModel:
 
         return string
 
-    def props(self):
+    def props(self) -> str:
         """Make a string for the PROPS section"""
         string = "PROPS\n\n"
 
@@ -330,7 +339,7 @@ PVDG
         string += self.filleps + "\n"  # Needed to get SWL in INIT file.
         return string
 
-    def solution(self):
+    def solution(self) -> str:
         """Make a string for the SOLUTION section"""
         string = "SOLUTION\n\n"
         string += ""
@@ -347,7 +356,7 @@ PVDG
             string += f"RPTRST\n  {self.rptrst}/ \n"
         return string
 
-    def schedule(self):
+    def schedule(self) -> str:
         # pylint: disable=no-self-use
         """Make a string for the SCHEDULE section"""
         string = "SCHEDULE\n\n"
@@ -355,7 +364,7 @@ PVDG
         return string
 
 
-def _wrap(longstring):
+def _wrap(longstring: str) -> str:
     return (
         "\n".join(
             textwrap.wrap(longstring, initial_indent="  ", subsequent_indent="  ")

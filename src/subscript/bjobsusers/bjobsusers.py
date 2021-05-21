@@ -2,6 +2,7 @@ import os
 import re
 import subprocess
 import argparse
+from typing import Callable
 
 import pandas as pd
 
@@ -12,7 +13,7 @@ This is statistics derived from the system command `bjobs` and `finger`.
 """
 
 
-def call_bjobs(status="RUN"):
+def call_bjobs(status: str = "RUN") -> str:
     """Call the system bjobs utility
 
     Filter on a specific status, and to only the username
@@ -36,7 +37,7 @@ def call_bjobs(status="RUN"):
     return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
-def get_jobs(status, bjobs_function):
+def get_jobs(status: str, bjobs_function: Callable) -> pd.DataFrame:
     """Make a Pandas dataframe out of the bjobs output
 
     Sums the cpu/core usage pr. user.
@@ -55,12 +56,17 @@ def get_jobs(status, bjobs_function):
     # Split bjobs output into a list of list:
     slines = [line.split() for line in str.splitlines(str(cmdoutput))]
     # We only accept lines with two components:
-    slines = filter(lambda x: len(x) == 2, slines)
+    slines = list(filter(lambda x: len(x) == 2, slines))
     if not slines:
         # Empty bjobs-output should just return empty dataframe.
         return pd.DataFrame(columns=("user", "ncpu"))
     data = [
-        [uname, 1 if rex.match(hname) is None else int(rex.match(hname).group(1))]
+        [
+            uname,
+            1
+            if rex.match(hname) is None
+            else int(rex.match(hname).group(1)),  # type: ignore
+        ]
         for (uname, hname) in slines
     ]
     return (
@@ -71,7 +77,7 @@ def get_jobs(status, bjobs_function):
     )
 
 
-def call_finger(username):
+def call_finger(username: str) -> str:
     """Call the system utility 'finger' on a specific username
 
     Returns:
@@ -97,7 +103,7 @@ def call_finger(username):
     return "Login: {}  Name: ?? ()".format(username)
 
 
-def userinfo(username, finger_function):
+def userinfo(username: str, finger_function: Callable) -> str:
     """Get information on a user based on the username
 
     Args:
@@ -114,27 +120,27 @@ def userinfo(username, finger_function):
     rex_with_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
     rex_no_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)")
     if rex_with_org.match(finger_output):
-        matches = rex_with_org.match(finger_output).groups()
+        matches = rex_with_org.match(finger_output).groups()  # type: ignore
         org = matches[2].strip()
     else:
-        matches = rex_no_org.match(finger_output).groups()
+        matches = rex_no_org.match(finger_output).groups()  # type: ignore
         org = ""
     fullname = matches[1].strip()
     return "{} ({}) ({})".format(fullname, org, username)
 
 
-def show_status(status="RUN", title="Running", umax=10):
+def show_status(status: str = "RUN", title: str = "Running", umax: int = 10) -> None:
     """Print job statistics to console user"""
     dframe = get_jobs(status, call_bjobs).iloc[:umax]
     print("{} jobs:".format(title))
     print("--------------")
     for user, count in dframe.iterrows():
-        print(count[0], userinfo(user, call_finger))
+        print(count[0], userinfo(str(user), call_finger))
     print("- - - - - - - - - - -")
     print("Total: {}".format(dframe["ncpu"].sum()))
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Prepare a parser for argument parsing and documentation"""
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
@@ -143,7 +149,7 @@ def get_parser():
     return parser
 
 
-def main():
+def main() -> None:
     """For invocation on command line"""
     parser = get_parser()
     args = parser.parse_args()

@@ -2,8 +2,9 @@
 
 This API should be considered private to prtvol2csv until it has moved somewhere
 else"""
-from typing import Union
 from pathlib import Path
+from typing import Union, Dict, List, Any, Optional
+
 import yaml
 
 from subscript import getLogger
@@ -15,8 +16,8 @@ class FipMapper:
     def __init__(
         self,
         yamlfile: Union[str, Path] = None,
-        mapdata: dict = None,
-        skipstring: Union[list, str] = None,
+        mapdata: Dict[str, str] = None,
+        skipstring: Union[List[str], str] = None,
     ):
         """FipMapper is a utility class for being able to map between
         regions/zones in the geomodel (RMS) and to different region divisions in the
@@ -32,12 +33,12 @@ class FipMapper:
         file.
 
         Args:
-            yamlfile (Path): Filename
-            mapdata (dict): direct dictionary input. Provide only one of the
+            yamlfile: Filename
+            mapdata: direct dictionary input. Provide only one of the
                 arguments, not both.
             skipstring: List of strings which will be ignored (e.g. ["Totals"]).
         """
-        self._mapdata = {}  # To be filled with data we need.
+        self._mapdata: Dict[str, dict] = {}  # To be filled with data we need.
 
         if skipstring is None:
             self.skipstring = []
@@ -153,18 +154,21 @@ class FipMapper:
         """
         self._get_explicit_mapdata(webviz_to_prtvol2csv(yamldict))
 
-    def fip2region(self, fip: Union[list, int]) -> Union[list, str]:
+    def fip2region(
+        self, fip: Union[List[int], int, None]
+    ) -> Union[List[str], str, None]:
         """Maps FIP(NUM) integers to Region strings.
 
         Args:
-            array (list): List/array of FIPNUMS, or integer.
+            array: List/array of FIPNUMS, or integer.
 
         Returns:
-            Union[list, str]: Returns str or list, depending on input. Region
-            names that are "integers" will be returned as strings.
+            str or list, depending on input. Region names that are "integers"
+            will be returned as strings.
         """
         if isinstance(fip, list):
-            return list(map(self.fip2region, fip))
+            return [str(self.fip2region(fip_int)) for fip_int in fip]
+            # return list(map(lambda x: self.fip2region(int(x)), fip))
         assert "fipnum2region" in self._mapdata, "No data provided for fip2region"
         try:
             return self._mapdata["fipnum2region"][fip]
@@ -176,7 +180,7 @@ class FipMapper:
             )
             return None
 
-    def region2fip(self, region: Union[list, str]) -> Union[list, int]:
+    def region2fip(self, region: Union[List[str], str]) -> Union[List[int], int, None]:
         """Maps Region string(s) to FIPNUM(s)
 
         Args:
@@ -186,7 +190,7 @@ class FipMapper:
             int: FIPNUM value. None if the region is unknown
         """
         if isinstance(region, list):
-            return list(map(self.region2fip, region))
+            return [int(str(self.region2fip(region_str))) for region_str in region]
         assert "region2fipnum" in self._mapdata, "No data provided for region2fip"
         try:
             return int(self._mapdata["region2fipnum"][region])
@@ -198,7 +202,7 @@ class FipMapper:
             )
             return None
 
-    def fip2zone(self, fip: Union[list, int]) -> Union[list, str]:
+    def fip2zone(self, fip: Union[list, int]) -> Optional[Union[list, str]]:
         """Maps an array of FIPNUM integers to an array of Zone strings
 
         Args:
@@ -239,8 +243,8 @@ def webviz_to_prtvol2csv(webvizdict: dict):
 
 
 def invert_map(
-    dictmap: dict, join_on: str = ",", skipstring: Union[list, str] = None
-) -> dict:
+    dictmap: Dict[str, Any], join_on: str = ",", skipstring: Union[list, str] = None
+) -> Dict[str, Any]:
     """Invert a dictionary.
 
     When input is many-to-one, the keys will be joined with the supplied join
@@ -262,19 +266,24 @@ def invert_map(
     if isinstance(skipstring, str):
         skipstring = [skipstring]
 
-    inv_map = {}
+    inv_map: Dict[str, Union[str, list]] = {}
     for key, value in dictmap.items():
         if key in skipstring or value in skipstring:
             continue
         if isinstance(value, list):
             for _value in value:
-                inv_map[_value] = inv_map.get(_value, set()).union(set([key]))
+                inv_map[_value] = list(
+                    set(inv_map.get(_value, set())).union(set([key]))
+                )
         else:
-            inv_map[value] = inv_map.get(value, set()).union(set([key]))
+            base = set(inv_map.get(value, set()))
+            # mypy workoround: https://github.com/python/mypy/issues/2013
+            inv_map[value] = list(base.union(set([key])))
+
     assert join_on is not None, "A join operation must be specified"
     assert isinstance(join_on, str), f"The join_on must be a string, got {join_on}"
+
     for key, value in inv_map.items():
-        inv_map[key] = list(inv_map[key])
-        inv_map[key].sort()
+        inv_map[key] = sorted(list(inv_map[key]))
         inv_map[key] = join_on.join(map(str, list(inv_map[key])))
     return inv_map

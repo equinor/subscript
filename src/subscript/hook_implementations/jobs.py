@@ -2,6 +2,8 @@ import importlib
 import os
 from pkg_resources import resource_filename
 
+from typing import Any, Optional
+
 from ert_shared.plugins.plugin_manager import hook_implementation
 from ert_shared.plugins.plugin_response import plugin_response
 
@@ -35,7 +37,9 @@ def installable_workflow_jobs():
     return {}
 
 
-def _get_module_variable_if_exists(module_name, variable_name, default=""):
+def _get_module_variable_if_exists(
+    module_name: str, variable_name: str, default: str = ""
+) -> Any:
     """Grab variables from subscript modules, e.g. for use in docs"""
     try:
         script_module = importlib.import_module(module_name)
@@ -47,7 +51,7 @@ def _get_module_variable_if_exists(module_name, variable_name, default=""):
 
 @hook_implementation
 @plugin_response(plugin_name="subscript")
-def job_documentation(job_name):
+def job_documentation(job_name: str) -> Optional[dict]:
     """Build documentation for a specific job.
 
     Return:

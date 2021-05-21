@@ -5,6 +5,7 @@ import argparse
 import warnings
 import logging
 from pathlib import Path
+from typing import Optional
 
 import yaml
 
@@ -136,7 +137,7 @@ def prep_output_dir(tablesdir: str = None, suffix: str = None) -> Path:
             FutureWarning,
         )
         Path(tablesdir).mkdir(parents=True)
-    return tablesdir
+    return Path(tablesdir)
 
 
 def find_prtfile(basefile: str) -> str:
@@ -284,7 +285,7 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
     return pd.DataFrame(records).set_index("FIPNUM")
 
 
-def main():
+def main() -> None:
     """Function for command line invocation"""
     args = get_parser().parse_args()
 
@@ -315,6 +316,7 @@ def main():
 
     resvolumes_df = reservoir_volumes_from_prt(prt_file)
 
+    fipmapper: Optional[FipMapper]
     if args.yaml:
         fipmapper = FipMapper(yamlfile=args.yaml, skipstring="Totals")
     else:
@@ -388,7 +390,11 @@ def deprecated_region_export(volumes, tablesdir, args):
             )
 
 
-def prtvol2df(simvolumes_df, resvolumes_df, fipmapper=None):
+def prtvol2df(
+    simvolumes_df: pd.DataFrame,
+    resvolumes_df: pd.DataFrame,
+    fipmapper: Optional[FipMapper] = None,
+) -> pd.DataFrame:
     """
     Concatenate two dataframes (with common index) horizontally,
     and add REGION and ZONE parameter.

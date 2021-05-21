@@ -25,7 +25,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter,
@@ -69,7 +69,7 @@ The original filename for each file is written to the column
     return parser
 
 
-def main():
+def main() -> None:
     """Entry point from command line"""
     parser = get_parser()
     args = parser.parse_args()
@@ -117,11 +117,15 @@ def main():
             and "Realization" not in transposed.columns
         ):
             transposed.insert(
-                0, "Realization", re.match(realregex, parameterfilename).group(1)
+                0,
+                "Realization",
+                re.match(realregex, parameterfilename).group(1),  # type: ignore
             )
         if re.match(iterregex, parameterfilename) and "Iter" not in transposed.columns:
             transposed.insert(
-                0, "Iter", re.match(iterregex, parameterfilename).group(1)
+                0,
+                "Iter",
+                re.match(iterregex, parameterfilename).group(1),  # type: ignore
             )
 
         ens = pd.concat([ens, transposed], sort=True)

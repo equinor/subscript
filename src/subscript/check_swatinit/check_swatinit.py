@@ -1,6 +1,7 @@
 """SWATINIT qc tool"""
 import sys
 import argparse
+from typing import Dict, List
 
 from matplotlib import pyplot
 
@@ -48,7 +49,7 @@ where ``ECLBASE`` is already defined in your ERT config.
 """
 
 
-def main():
+def main() -> None:
     """Executed when called from the command line.
 
     Acts on command line arguments, loads data, performs qc and dumps to
@@ -103,7 +104,7 @@ def main():
         pyplot.savefig(args.plotfile)
 
 
-def check_applicability(eclfiles):
+def check_applicability(eclfiles: ecl2df.EclFiles) -> None:
     """Check that the input is relevant for usage with check_swatinit. This
     function may raise exceptions, SystemExit or only give warnings"""
 
@@ -136,7 +137,7 @@ def check_applicability(eclfiles):
         )
 
 
-def reorder_dframe_for_nonnans(dframe):
+def reorder_dframe_for_nonnans(dframe: pd.DataFrame) -> pd.DataFrame:
     """Reorder a dataframe so that rows with less NaN comes first, this
     will aid data analysis application to deduce correct datatypes for
     columns"""
@@ -147,11 +148,11 @@ def reorder_dframe_for_nonnans(dframe):
     )
 
 
-def human_report_qc_vols(qc_vols):
+def human_report_qc_vols(qc_vols: Dict[str, float]) -> str:
     """Produce a string with a human report for volumes
 
     Arguments:
-        qc_vols (dict): Dictionary with certain keys assumed to be present
+        qc_vols: Dictionary with certain keys assumed to be present
 
     Returns:
         string (multiline)
@@ -190,11 +191,11 @@ def human_report_qc_vols(qc_vols):
     return string
 
 
-def human_report_pc_scaling(qc_frame):
+def human_report_pc_scaling(qc_frame: pd.DataFrame) -> str:
     """Produce a string for human report for capillary scaling
 
     Args:
-        qc_frame (pd.DataFrame): Dataframe with each row representing a reservoir cell.
+        qc_frame: Dataframe with each row representing a reservoir cell.
 
     Returns:
         string (multiline)
@@ -213,7 +214,7 @@ def human_report_pc_scaling(qc_frame):
     return string
 
 
-def make_qc_gridframe(eclfiles):
+def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
     """Construct a dataframe with needed information for swatinit qc from an Eclipse run.
 
     Makes a dataframe with one row for each active cell. Information from
@@ -308,7 +309,7 @@ def make_qc_gridframe(eclfiles):
     return grid_df
 
 
-def qc_flag(qc_frame):
+def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
     """Compute a series categorizing the QC type of the cell, determining
     how SWATINIT behaved in that cell
 
@@ -428,7 +429,7 @@ def qc_flag(qc_frame):
     return qc_col
 
 
-def qc_volumes(qc_frame):
+def qc_volumes(qc_frame: pd.DataFrame) -> Dict[str, float]:
     """Compute numbers relevant for QC of saturation initialization of a
     reservoir model.
 
@@ -442,12 +443,13 @@ def qc_volumes(qc_frame):
         dict: Summed water and hydrocarbon reservoir volumes for different cell
         groupings.
     """
-    watergains = dict()
+    watergains: Dict[str, float]
+    watergains = {}
 
     if "QC_FLAG" in qc_frame:
         # Ensure all categories are represented:
         for qc_cat in QC_FLAGS:
-            watergains[qc_cat] = 0
+            watergains[qc_cat] = 0.0
 
         # Overwrite dict values with correct figures:
         for qc_cat, qc_subframe in qc_frame.groupby("QC_FLAG"):
@@ -456,36 +458,46 @@ def qc_volumes(qc_frame):
             ).sum()
 
     # Extra figures:
-    watergains["PORV"] = qc_frame["PORV"].sum()
+    watergains["PORV"] = float(qc_frame["PORV"].sum())
     if "VOLUME" in qc_frame:
         watergains["VOLUME"] = qc_frame["VOLUME"].sum()
     if "SWATINIT" in qc_frame:
         watergains["SWATINIT_WVOL"] = (qc_frame["SWATINIT"] * qc_frame["PORV"]).sum()
-        watergains["SWATINIT_HCVOL"] = watergains["PORV"] - watergains["SWATINIT_WVOL"]
+        watergains["SWATINIT_HCVOL"] = float(
+            watergains["PORV"] - watergains["SWATINIT_WVOL"]
+        )
     watergains["SWAT_WVOL"] = (qc_frame["SWAT"] * qc_frame["PORV"]).sum()
     watergains["SWAT_HCVOL"] = watergains["PORV"] - watergains["SWAT_WVOL"]
 
     return watergains
 
 
-def _evaluate_pc(swats, scale_vert, swls, swus, satfunc, sat_name="SW", pc_name="PCOW"):
+def _evaluate_pc(
+    swats: List[float],
+    scale_vert: List[float],
+    swls: List[float],
+    swus: List[float],
+    satfunc: pd.DataFrame,
+    sat_name: str = "SW",
+    pc_name: str = "PCOW",
+) -> List[float]:
     """Evaluate pc as a function of saturation on a scaled Pc-curve
 
     Args:
-        swats (list): floats with water saturation values
-        scale_vert (list): floats with vertical scalers for pc
-        swls (list): List of SWL values for horizontal scaling.
+        swats: floats with water saturation values
+        scale_vert: floats with vertical scalers for pc
+        swls: List of SWL values for horizontal scaling.
             If the model is using SWLPC, supply those values instead.
-        swus (list): List of SWU values for horizontal scaling.
-        satfunc (pd.DataFrame): Dataframe representing un-scaled
+        swus: List of SWU values for horizontal scaling.
+        satfunc: Dataframe representing un-scaled
             capillary pressure curve
-        sat_name (str): Column name for the column in the dataframe with the
+        sat_name: Column name for the column in the dataframe with the
             water saturation values
-        pc_name (str): Column name for the column with capillary pressure
+        pc_name: Column name for the column with capillary pressure
             values.
 
     Returns:
-        list: computed capillary pressure values.
+        Computed capillary pressure values.
     """
     p_cap = []
     sw_min = satfunc[sat_name].min()
@@ -506,7 +518,7 @@ def _evaluate_pc(swats, scale_vert, swls, swus, satfunc, sat_name="SW", pc_name=
     return p_cap
 
 
-def compute_pc(qc_frame, satfunc_df):
+def compute_pc(qc_frame: pd.DataFrame, satfunc_df: pd.DataFrame) -> pd.Series:
     """Compute the capillary pressure in every cell, inferring backwards from
     SWAT at time zero and a scaled capillary pressure curve.
 
@@ -522,8 +534,8 @@ def compute_pc(qc_frame, satfunc_df):
     when SWLPC is in use.
 
     Args:
-        qc_frame (pd.DataFrame)
-        satfunc_df (pd.DataFrame)
+        qc_frame
+        satfunc_df
 
     Returns:
         pd.Series, with capillary pressure values in bars (given Eclipse unit
@@ -576,13 +588,13 @@ def compute_pc(qc_frame, satfunc_df):
     return p_cap
 
 
-def ppcwmax_gridvector(eclfiles):
+def ppcwmax_gridvector(eclfiles: ecl2df.EclFiles) -> pd.Series:
     """Generate a vector of PPCWMAX data pr cell
 
     PPCWMAX is pr. SATNUM in the input deck
 
     Args:
-        eclfiles (EclFiles)
+        eclfiles
 
     Returns:
         pd.Series, indexed according to ecl2df.grid.df(eclfiles)
@@ -596,7 +608,7 @@ def ppcwmax_gridvector(eclfiles):
     return satnum_df["PPCWMAX"]
 
 
-def merge_equil(grid_df, equil_df):
+def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
     """Merge z, datum_pressure, contact information and oip_init settting from
     an EQUIL dataframe into the grid dataframe"""
     assert "EQLNUM" in grid_df, "Grid dataframe must have the EQLNUM column"
@@ -623,7 +635,9 @@ def merge_equil(grid_df, equil_df):
     return grid_df
 
 
-def merge_pc_max(grid_df, satfunc_df, pc_name="PCOW"):
+def merge_pc_max(
+    grid_df: pd.DataFrame, satfunc_df: pd.DataFrame, pc_name: str = "PCOW"
+) -> pd.DataFrame:
     """Extract the maximum capillary pressure function in input
     saturation tables (SWOF/SWFN) pr. SATNUM and merges that
     into a grid dataframe (pr cell)
@@ -640,7 +654,7 @@ def merge_pc_max(grid_df, satfunc_df, pc_name="PCOW"):
     return grid_df.merge(max_pc.reset_index(), on="SATNUM")
 
 
-def augment_grid_frame_qc_vectors(grid_df):
+def augment_grid_frame_qc_vectors(grid_df: pd.DataFrame) -> pd.DataFrame:
     """Add extra columns to a dataframe with simple calculations from
     data already in the dataframe"""
     grid_df["EQLNUM"] = grid_df["EQLNUM"].astype(int)
@@ -661,7 +675,7 @@ def augment_grid_frame_qc_vectors(grid_df):
     return grid_df
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Construct a command line argument parser"""
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
