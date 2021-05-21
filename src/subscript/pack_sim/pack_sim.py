@@ -1,3 +1,4 @@
+# type: ignore
 import sys
 import os
 import time
@@ -321,7 +322,7 @@ def inspect_file(
 
                         new_include = "%s/include/%s%s" % (
                             packing_path,
-                            section,  # type: ignore
+                            section,
                             include_stripped.split("/")[-1],
                         )
 
@@ -410,22 +411,14 @@ def inspect_file(
                             new_data_file += include_line.replace(
                                 include_stripped_in_file,
                                 "%sinclude/%s%s"
-                                % (
-                                    fmu_include,  # type: ignore
-                                    section,  # type: ignore
-                                    new_include.split("/")[-1],
-                                ),
+                                % (fmu_include, section, new_include.split("/")[-1]),
                             )
                         else:
 
                             new_data_file += include_line.replace(
                                 include_stripped_in_file,
                                 "'%sinclude/%s%s'"
-                                % (
-                                    fmu_include,  # type: ignore
-                                    section,  # type: ignore
-                                    new_include.split("/")[-1],
-                                ),
+                                % (fmu_include, section, new_include.split("/")[-1]),
                             )
 
                         # Ignore comments after the include statement
@@ -434,72 +427,50 @@ def inspect_file(
                         new_data_file += line
                         if "--" in line:
                             print(line)
-        elif line_strip == "RUNSPEC" and fmu_include:  # type: ignore
-            section = "runspec/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s"
-                % (
-                    packing_path,
-                    section,  # type: ignore
-                )
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "RUNSPEC" and fmu_include:
+            section = "runspec/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "GRID" and fmu_include:  # type: ignore
-            section = "grid/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "GRID" and fmu_include:
+            section = "grid/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "EDIT" and fmu_include:  # type: ignore
-            section = "edit/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "EDIT" and fmu_include:
+            section = "edit/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "PROPS" and fmu_include:  # type: ignore
-            section = "props/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "PROPS" and fmu_include:
+            section = "props/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "REGIONS" and fmu_include:  # type: ignore
-            section = "regions/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "REGIONS" and fmu_include:
+            section = "regions/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "SOLUTION" and fmu_include:  # type: ignore
-            section = "solution/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "SOLUTION" and fmu_include:
+            section = "solution/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "SUMMARY" and fmu_include:  # type: ignore
-            section = "summary/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "SUMMARY" and fmu_include:
+            section = "summary/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "SCHEDULE" and fmu_include:  # type: ignore
-            section = "schedule/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "SCHEDULE" and fmu_include:
+            section = "schedule/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
-        elif line_strip == "OPTIMIZE" and fmu_include:  # type: ignore
-            section = "optimize/"  # type: ignore
-            if not os.path.exists(
-                "%s/include/%s" % (packing_path, section)  # type: ignore
-            ):
-                os.makedirs("%s/include/%s" % (packing_path, section))  # type: ignore
+        elif line_strip == "OPTIMIZE" and fmu_include:
+            section = "optimize/"
+            if not os.path.exists("%s/include/%s" % (packing_path, section)):
+                os.makedirs("%s/include/%s" % (packing_path, section))
             new_data_file += line
         elif "RESTART" in line_strip[0:7]:
             # This line defines a restart: raise a warning!
@@ -524,7 +495,7 @@ def inspect_file(
             print(
                 "**********************************************************************"
             )
-            warnings += 1  # type: ignore
+            warnings += 1
             new_data_file += line
         elif "IMPFILE" in line_strip[0:6]:
             # This line defines a restart: raise a warning!
@@ -546,7 +517,7 @@ def inspect_file(
             print(
                 "**********************************************************************"
             )
-            warnings += 1  # type: ignore
+            warnings += 1
             new_data_file += line
         elif "USEFLUX" in line_strip[0:6]:
             # This line defines a restart: raise a warning!
@@ -569,7 +540,7 @@ def inspect_file(
                 "******************************************"
                 "****************************"
             )
-            warnings += 1  # type: ignore
+            warnings += 1
             new_data_file += line
         else:
             if not (clear_comments and len(line.strip()) == 0):
@@ -598,9 +569,9 @@ def pack_simulation(
     global warnings
     global fmu_include
 
-    section = ""  # type: ignore
-    warnings = 0  # type: ignore
-    fmu_include = ""  # type: ignore
+    section = ""
+    warnings = 0
+    fmu_include = ""
 
     if ecl_case == "":
         raise ValueError("Script stopped: please supply a non-empty Eclipse DATA-file")
@@ -617,7 +588,7 @@ def pack_simulation(
 
     if fmu:
         print("You requested FMU path style saving.")
-        fmu_include = "../"  # type: ignore
+        fmu_include = "../"
 
     # Increase maximum include depth to unrealistic high values
     sys.setrecursionlimit(10000)
@@ -673,12 +644,12 @@ def pack_simulation(
     print("Modified %s and written output packing folder" % data_file_name)
     print("")
     print("*********************************************************************")
-    if warnings == 0:  # type: ignore
+    if warnings == 0:
         print("SUCCESSFULLY PACKED SIMULATION MODEL IN %s" % packing_path)
     else:
         print(
             "PACKED SIMULATION MODEL WITH %s WARNING(S) IN %s"
-            % (warnings, packing_path)  # type: ignore
+            % (warnings, packing_path)
         )
         print("PLEASE CHECK WARNING(S)!")
 
