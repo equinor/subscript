@@ -97,8 +97,8 @@ def test_demo_small_scale_with_no_streaks(tmpdir, mocker):
     assert data_frame.Values["nz"] == 50
     assert data_frame.Values["lx"] == 4.15
     assert data_frame.Values["ly"] == 4.15
-    assert data_frame.Values["lz"] == 1.00
-    assert data_frame.Values["poro"] == 0.0907
+    assert data_frame.Values["lz"] == 1.03
+    assert data_frame.Values["poro"] == 0.0912
 
 
 def test_demo_small_scale_with_vugs(tmpdir, mocker):
