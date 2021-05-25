@@ -3,6 +3,7 @@ import datetime
 import logging
 import argparse
 from pathlib import Path
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -23,7 +24,7 @@ BARRELSPRCUBIC = 6.28981077
 NOKUNIT = 1000000.0  # all NOK figures are scaled by this value (input and output)
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Parser for command line arguments and for documentation.
 
     Returns:
@@ -119,7 +120,7 @@ def get_parser():
     return parser
 
 
-def main():
+def main() -> None:
     """Function for command line invocation.
 
     Parses command line arguments, and writes output to file and/or terminal."""
@@ -183,15 +184,15 @@ def main():
             print(str(results))
 
 
-def dict_to_parameterstxt(results, paramname):
+def dict_to_parameterstxt(results: Dict[str, float], paramname: str) -> str:
     """Produce a key-value string with newlines from a dict of results
 
     Args:
-        results (dict): depth-1 dictionary
-        paramname (str): Basename for parameters to produce
+        results: depth-1 dictionary
+        paramname: Basename for parameters to produce
 
     Returns:
-        str: multiline, ready to be appended to parameters.txt
+        multiline, ready to be appended to parameters.txt
     """
     str_result = ""
     for key, value in results.items():
@@ -202,14 +203,14 @@ def dict_to_parameterstxt(results, paramname):
     return str_result.strip()
 
 
-def get_paramfilename(eclfile):
+def get_paramfilename(eclfile: str) -> str:
     """Locate the parameters.txt file closest to the Eclipse DATA file
 
     Args:
-        eclfile (str): Path to Eclipse DATA file.
+        eclfile: Path to Eclipse DATA file.
 
     Returns.
-        str: Empty string if no file found. Full path if found.
+        Empty string if no file found. Full path if found.
     """
     for paramcandidate in [
         "parameters.txt",
@@ -223,33 +224,33 @@ def get_paramfilename(eclfile):
 
 
 def presentvalue_main(
-    datafile,
-    economics,
-    discountrate=8,
-    discountto=datetime.datetime.now().year,
-    oilvector="FOPT",
-    gasvector="FGPT",
-    gasinjvector="FGIT",
-    cutoffyear=2100,
-    basedatafile=None,
-):
+    datafile: str,
+    economics: pd.DataFrame,
+    discountrate: float = 8,
+    discountto: int = datetime.datetime.now().year,
+    oilvector: str = "FOPT",
+    gasvector: str = "FGPT",
+    gasinjvector: str = "FGIT",
+    cutoffyear: int = 2100,
+    basedatafile: Optional[str] = None,
+) -> Dict[str, float]:
     """Calculate presentvalue and financial parameters for a single Eclipse
     run
 
     Args:
-        datafile (str): Path to Eclipse DATA-file
-        economics (pd.DataFrame): Year-indexed data with economic parameters
-        discountrate (float): Yearly discount factor
-        discountto (int): Which year to discount to, defaults to current year
-        oilvector (str): Eclipse summary cumulative oil production vector
-        gasvector (str): Eclipse summary cumulative gas production vector
-        gasinjvector (str): Eclipse summary cumulative gas injection vector
-        cutoffyear (int): Production/costs beyond this year will be dropped
-        basedatafile (str): Path to Eclipse DATA file to use as reference
+        datafile: Path to Eclipse DATA-file
+        economics: Year-indexed data with economic parameters
+        discountrate: Yearly discount factor
+        discountto: Which year to discount to, defaults to current year
+        oilvector: Eclipse summary cumulative oil production vector
+        gasvector: Eclipse summary cumulative gas production vector
+        gasinjvector: Eclipse summary cumulative gas injection vector
+        cutoffyear: Production/costs beyond this year will be dropped
+        basedatafile: Path to Eclipse DATA file to use as reference
             data (production from this file will be deducted)
 
     Returns:
-        dict: with keys "PresentValue", and if input data allows it: "BEP1", "BEP",
+        Dictionary with keys "PresentValue", and if input data allows it: "BEP1", "BEP",
         "IRR" and "CEI".
     """
     # pylint: disable=too-many-arguments
@@ -285,12 +286,12 @@ def presentvalue_main(
     return results
 
 
-def calculate_financials(pv_df, cutoffyear):
+def calculate_financials(pv_df: pd.DataFrame, cutoffyear: int) -> Dict[str, float]:
     """Calculate economical parameters given a dataframe with
     income and costs.
 
     Args:
-        pv_df (pd.DataFrame): A dataframe prepared with data for
+        pv_df: A dataframe prepared with data for
             presentvalue computations.
 
     Return:
@@ -339,18 +340,20 @@ def calculate_financials(pv_df, cutoffyear):
     return finance
 
 
-def calc_presentvalue_df(summary_df, econ_df, discountto):
+def calc_presentvalue_df(
+    summary_df: pd.DataFrame, econ_df: pd.DataFrame, discountto: int
+) -> pd.DataFrame:
     """
     Calculate a dataframe for present value computations.
 
     Discount rate will be obtained from the econ_df dataframe.
 
     Args:
-        summary_df (pd.DataFrame):  summary dataframe,  OPT, GPT, GIT, indexed
+        summary_df: summary dataframe,  OPT, GPT, GIT, indexed
             year
-        econ_df (pd.DataFrame): Dataframe with economical input (prices and
+        econ_df: Dataframe with economical input (prices and
             costs)
-        discountto (int): Which year to discount to.
+        discountto: Which year to discount to.
 
     Returns:
         pd.DataFrame: A column "presentvalue" will be added, which
@@ -390,8 +393,11 @@ def calc_presentvalue_df(summary_df, econ_df, discountto):
 
 
 def get_yearly_summary(
-    eclfile, oilvector="FOPT", gasvector="FGPT", gasinjvector="FGIT"
-):
+    eclfile: str,
+    oilvector: str = "FOPT",
+    gasvector: str = "FGPT",
+    gasinjvector: str = "FGIT",
+) -> pd.DataFrame:
     """Obtain a yearly summary with only three production vectors from
     an Eclipse output file.
 
@@ -400,10 +406,10 @@ def get_yearly_summary(
     calculated from the cumulatives.
 
     Args:
-        eclfile (str): Path to Eclipse DATA file
-        oilvector (str): Name of cumulative summary vector with oil production
-        gasvector (str): Name of cumulative summary vector with gas production
-        gasinjvector (str): Name of cumulative summary vector with gas injection
+        eclfile: Path to Eclipse DATA file
+        oilvector: Name of cumulative summary vector with oil production
+        gasvector: Name of cumulative summary vector with gas production
+        gasinjvector: Name of cumulative summary vector with gas injection
 
     Returns:
         pd.DataFrame. Indexed by year, with the columns OPR, GPR, GIR and GSR.
@@ -443,16 +449,20 @@ def get_yearly_summary(
 
 
 def prepare_econ_table(
-    filename=None, oilprice=None, gasprice=None, usdtonok=None, discountrate=8
-):
+    filename: Optional[str] = None,
+    oilprice: float = None,
+    gasprice: float = None,
+    usdtonok: float = None,
+    discountrate: float = 8,
+) -> pd.DataFrame:
     """Parse a CSV file with economical input
 
     Args:
-        filename (str): Path to a CSV file to be parsed with pd.read_csv()
-        oilprice (float): Default for oilprice if not included in CSV file.
-        gasprice (float): Default for gasprice if not included in CSV file.
-        usdtonok (float): Default for usdtonk if not included in CSV file.
-        discountrate (float): Default for discountrate if not included (as
+        filename: Path to a CSV file to be parsed with pd.read_csv()
+        oilprice: Default for oilprice if not included in CSV file.
+        gasprice: Default for gasprice if not included in CSV file.
+        usdtonok: Default for usdtonk if not included in CSV file.
+        discountrate: Default for discountrate if not included (as
             constant) in CSV file.
 
     Returns:
@@ -497,16 +507,16 @@ def prepare_econ_table(
     return econ_df
 
 
-def calc_pv_irr(rate, pv_df, cutoffyear):
+def calc_pv_irr(rate: float, pv_df: pd.DataFrame, cutoffyear: int) -> float:
     """Calculate internal rate of return (IRR)
 
     Args:
-        rate (float): discountfactor to be used
-        pv_df (pd.DataFrame): Production and economical data
-        cutoffyear (int): Ignore production beyond this year.
+        rate: discountfactor to be used
+        pv_df: Production and economical data
+        cutoffyear: Ignore production beyond this year.
 
     Returns:
-        float: Computed presentvalue
+        Computed presentvalue
     """
     discountfactors_irr = 1.0 / (1.0 + rate / 100.0) ** np.array(
         list(range(0, len(pv_df)))
@@ -522,21 +532,24 @@ def calc_pv_irr(rate, pv_df, cutoffyear):
 
 
 def calc_pv_bep_relativegas(
-    oilprice, pv_df, cutoffyear, relativegasprice=9.3 * 3.79127 / 100 / 100
-):
+    oilprice: float,
+    pv_df: pd.DataFrame,
+    cutoffyear: int,
+    relativegasprice: float = 9.3 * 3.79127 / 100 / 100,
+) -> float:
     """Calculate break-even oilprice with gasprice strongly correlated to
     oilprice using EPA QX 201X External Assumptions;
     there is a link between gas and oil prices and the
     resulting break-even price is in USD/boe.
 
     Args:
-        oilprice (float): Price pr. barrel of oil in USD
-        pv_df (pd.DataFrame): Production and economical data.
-        cutoffyear (int): Production/costs beyond this year is ignored
-        relativegasprice (float): Gasprice (in MNOK/GSm3) is oilprice
+        oilprice: Price pr. barrel of oil in USD
+        pv_df: Production and economical data.
+        cutoffyear: Production/costs beyond this year is ignored
+        relativegasprice: Gasprice (in MNOK/GSm3) is oilprice
             (usd/bbl) multiplied with this constant.
     Returns:
-        float: Computed presentvalue.
+        Computed presentvalue.
     """
     gasprice = oilprice * relativegasprice
 
@@ -548,19 +561,21 @@ def calc_pv_bep_relativegas(
     return pv_bep.loc[: cutoffyear - 1].sum() / NOKUNIT
 
 
-def calc_pv_bep_constantgas(oilprice, pv_df, cutoffyear):
+def calc_pv_bep_constantgas(
+    oilprice: float, pv_df: pd.DataFrame, cutoffyear: int
+) -> float:
     """Calculate break-even oilprice without touching the gas price:
 
     Gas price is fixed, from the dataframe, the resulting break-even price
     is in USD/bbl. This can be used to evaluate gas injection/deferral projects.
 
     Args:
-        oilprice (float): Price pr. barrel of oil in USD
-        pv_df (pd.DataFrame): Production and economical data, with gasprice
-        cutoffyear (int): Production/costs beyond this year is ignored
+        oilprice: Price pr. barrel of oil in USD
+        pv_df: Production and economical data, with gasprice
+        cutoffyear: Production/costs beyond this year is ignored
 
     Returns:
-        float: Computed presentvalue.
+        Computed presentvalue.
     """
     pv_bep = (
         pv_df["OPR"] * BARRELSPRCUBIC * oilprice * pv_df["usdtonok"]

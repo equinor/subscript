@@ -3,6 +3,7 @@ equivalent DataFrame representation"""
 import re
 import datetime
 from pathlib import Path
+from typing import List, Dict
 
 import numpy as np
 import pandas as pd
@@ -55,7 +56,7 @@ INCLUDE_RE = re.compile(
 """Regular expression for capturing include statements in input file"""
 
 
-def expand_includes(input_str, cwd="."):
+def expand_includes(input_str: str, cwd: str = ".") -> str:
     """Look for include 'filename.txt'; in the string, and replace
     it with the contents of that file. Filenames need not be quoted,
     but semicolons (and most other special characters) in filenames
@@ -80,7 +81,7 @@ def expand_includes(input_str, cwd="."):
     return input_str
 
 
-def mask_curly_braces(string, mask_char="X"):
+def mask_curly_braces(string: str, mask_char: str = "X") -> str:
     """In order to support nested curly braces, a regular expression
     cannot be used to do the outermost "split-by-semicolon" operation.
 
@@ -106,7 +107,9 @@ def mask_curly_braces(string, mask_char="X"):
     return string
 
 
-def split_by_sep_in_masked_string(string, masked_string, sep=";"):
+def split_by_sep_in_masked_string(
+    string: str, masked_string: str, sep: str = ";"
+) -> List[str]:
     """Splits a string by a separator, but the separators are searched
     for in an auxiliary string, the "masked_string". This is so in order
     to mask out separator characters that should be ignored due to
@@ -124,13 +127,13 @@ def split_by_sep_in_masked_string(string, masked_string, sep=";"):
         ["foo { bar; com}", "hei hopp"]
 
     Args:
-        string (str): The string that should be split
-        masked_string (str): Same length as first argument, but where
+        string: The string that should be split
+        masked_string: Same length as first argument, but where
             only a subset of the separator characters need to match up.
-        sep (str): Separator character, defaults to ";"
+        sep: Separator character, defaults to ";"
 
     Yields:
-        string: Each part of the input string. Separator
+        Each part of the input string. Separator
         character is not included
     """
 
@@ -154,16 +157,18 @@ def split_by_sep_in_masked_string(string, masked_string, sep=";"):
             raise ValueError("string and masked_string do not match on separators")
         if match.start() < len(string) - 1:
             sep_positions.append(match.start())
-    return filter(
-        len,
-        (
-            string[i + 1 : j].strip()
-            for i, j in zip(sep_positions, sep_positions[1:] + [len(string)])
-        ),
+    return list(
+        filter(
+            len,
+            (
+                string[i + 1 : j].strip()
+                for i, j in zip(sep_positions, sep_positions[1:] + [len(string)])
+            ),
+        )
     )
 
 
-def filter_comments(input_str, comment_identifier="--"):
+def filter_comments(input_str: str, comment_identifier: str = "--") -> str:
     """Strip comments from a multiline string.
 
     If the comment_identifier, defaults to "--" is found, the remainder
@@ -182,12 +187,9 @@ def filter_comments(input_str, comment_identifier="--"):
     lines = input_str.split("\n")
 
     # Drop comments
-    lines = (line.strip().split(comment_identifier)[0].strip() for line in lines)
+    _lines = (line.strip().split(comment_identifier)[0].strip() for line in lines)
 
-    # Drop empty lines:
-    lines = filter(len, lines)
-
-    return "\n".join(lines)
+    return "\n".join(filter(len, _lines))
 
 
 def fix_dtype(value):
@@ -220,7 +222,7 @@ def fix_dtype(value):
                 return str(value)
 
 
-def remove_enclosing_curly_braces(string):
+def remove_enclosing_curly_braces(string: str) -> str:
     """Removes enclosing curly braces around a string, permitting
     whitespace at start and end, and also a trailing semicolon after
     the curly brace end"""
@@ -236,7 +238,7 @@ def remove_enclosing_curly_braces(string):
     return string
 
 
-def parse_observation_unit(obsunit):
+def parse_observation_unit(obsunit: str) -> dict:
     """Parse one observation, with all its arguments. The string should
     be the content of the curly braces after one of SUMMARYOBSERVATION,
     BLOCK_OBSERVATION,  GENERAL_OBSERVATION or HISTORY_OBSERVATION.
@@ -273,7 +275,7 @@ def parse_observation_unit(obsunit):
     return {**obs_dict, **subunits}
 
 
-def parse_subobservation_args(string):
+def parse_subobservation_args(string: str) -> dict:
     """Parse the key=value arguments given to an observation sub-unit
 
     This is semicolon-separated list of key-values, optionally enclosed in curly
@@ -296,7 +298,9 @@ def parse_subobservation_args(string):
     return keyvalues
 
 
-def flatten_observation_unit(obsunit, subunit_label="obs_sub_id"):
+def flatten_observation_unit(
+    obsunit: dict, subunit_label: str = "obs_sub_id"
+) -> List[Dict[str, str]]:
     """Flatten/unroll a observation unit represented as a nested dict, return
     as a list of dicts.
 
@@ -364,7 +368,7 @@ def flatten_observation_unit(obsunit, subunit_label="obs_sub_id"):
     return obs_subunits
 
 
-def ertobs2df(input_str, cwd=".", starttime=None):
+def ertobs2df(input_str: str, cwd=".", starttime: str = None) -> pd.DataFrame:
     """Parse a string with ERT observations and convert into
     the internal dataframe format.
 
@@ -410,7 +414,7 @@ def ertobs2df(input_str, cwd=".", starttime=None):
     return compute_date_from_days(pd.DataFrame(obs_list), starttime)
 
 
-def compute_date_from_days(dframe, starttime=None):
+def compute_date_from_days(dframe: pd.DataFrame, starttime: str = None):
     """Fill in DATE cells in a dataframe computed from
     a given starttime and data in DAYS cells.
 
@@ -437,7 +441,7 @@ def compute_date_from_days(dframe, starttime=None):
     return dframe
 
 
-def resinsight_df2df(ri_dframe):
+def resinsight_df2df(ri_dframe: pd.DataFrame) -> pd.DataFrame:
     """Convert a ResInsight observation dataframe (as it is represented on
     disk) to the internal dataframe representation of observations.
 
@@ -461,7 +465,7 @@ def resinsight_df2df(ri_dframe):
     return dframe
 
 
-def smrydictlist2df(smrylist):
+def smrydictlist2df(smrylist: List[dict]) -> pd.DataFrame:
     """Parse a list structure (subpart of yaml syntax) of summary observations
     into  dataframe format
 
@@ -502,7 +506,7 @@ def smrydictlist2df(smrylist):
     return dframe
 
 
-def blockdictlist2df(blocklist):
+def blockdictlist2df(blocklist: List[dict]) -> pd.DataFrame:
     """Parse a list structure (subpart of yaml syntax) of block observations
     into  dataframe format
 
@@ -550,7 +554,7 @@ def blockdictlist2df(blocklist):
     return dframe
 
 
-def obsdict2df(obsdict):
+def obsdict2df(obsdict: dict) -> pd.DataFrame:
     """Convert an observation dictionary (with YAML file format structure)
     into the internal dataframe representation
 

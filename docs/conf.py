@@ -46,13 +46,14 @@ release = version
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "autoapi.sphinx",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.inheritance_diagram",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinx_autodoc_typehints",
     "sphinxarg.ext",
-    "autoapi.sphinx",
 ]
 
 autoapi_modules = {"subscript": None}

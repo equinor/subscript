@@ -2,8 +2,10 @@ import argparse
 import logging
 import dateutil
 
-import xtgeo
+import xtgeo  # type: ignore
 import subscript
+
+from typing import List, Tuple, Set, Union
 
 logger = subscript.getLogger(__name__)
 
@@ -40,7 +42,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Set up a parser for the command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
@@ -85,7 +87,7 @@ def get_parser():
     return parser
 
 
-def parse_diff_dates(filename):
+def parse_diff_dates(filename: str) -> List[Tuple[str, str]]:
     """Read a text file with one date pair pr. line, each date separated by space.
 
     The file can have dates in YYYYMMDD or in YYYY-MM-DD format, and
@@ -131,14 +133,14 @@ def parse_diff_dates(filename):
 
 # pylint: disable=too-many-arguments
 def ecldiff2roff_main(
-    eclroot,
-    prop,
-    diffdates,
-    outputfilebase="eclgrid",
-    sep="--",
-    datesep="_",
-    datefmt="YYYYMMDD",
-):
+    eclroot: str,
+    prop: str,
+    diffdates: Union[str, List[Tuple[str, str]]],
+    outputfilebase: str = "eclgrid",
+    sep: str = "--",
+    datesep: str = "_",
+    datefmt: str = "YYYYMMDD",
+) -> None:
     """Main function for ecldiff2roff, taking positional and
     named arguments.
 
@@ -151,6 +153,7 @@ def ecldiff2roff_main(
     if isinstance(diffdates, str):
         diffdates = parse_diff_dates(diffdates)
 
+    alldates: Set[str]
     alldates = set()
     for date_pair in diffdates:
         alldates = alldates.union(set(date_pair))

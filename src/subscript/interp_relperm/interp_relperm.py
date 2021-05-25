@@ -105,19 +105,19 @@ EXAMPLES = """
 
 
 @configsuite.validator_msg("Valid file name")
-def _is_filename(fname):
+def _is_filename(fname: str):
     return Path(fname).exists()
 
 
 @configsuite.validator_msg("Valid interpolator list")
-def _is_valid_interpolator_list(interpolators):
+def _is_valid_interpolator_list(interpolators: list):
     if len(interpolators) > 0:
         return True
     return False
 
 
 @configsuite.validator_msg("Valid interpolator")
-def _is_valid_interpolator(interp):
+def _is_valid_interpolator(interp: dict):
     valid = False
 
     try:
@@ -153,7 +153,7 @@ def _is_valid_interpolator(interp):
 
 
 @configsuite.validator_msg("Valid table entries")
-def _is_valid_table_entries(schema):
+def _is_valid_table_entries(schema: dict):
 
     valid = False
     try:
@@ -171,7 +171,7 @@ def _is_valid_table_entries(schema):
     return valid
 
 
-def get_cfg_schema():
+def get_cfg_schema() -> dict:
     """
     Defines the yml config schema
     """
@@ -231,7 +231,7 @@ def get_cfg_schema():
     return schema
 
 
-def tables_to_dataframe(filenames):
+def tables_to_dataframe(filenames: list) -> pd.DataFrame:
     """
     Routine to gather scal tables (SWOF and SGOF) from ecl include files.
 
@@ -248,7 +248,14 @@ def tables_to_dataframe(filenames):
     )
 
 
-def make_interpolant(base_df, low_df, high_df, interp_param, satnum, delta_s):
+def make_interpolant(
+    base_df: pd.DataFrame,
+    low_df: pd.DataFrame,
+    high_df: pd.DataFrame,
+    interp_param: dict,
+    satnum: int,
+    delta_s: float,
+) -> pyscal.WaterOilGas:
     """
     Routine to define a pyscal.interpolant instance and perform interpolation.
 
@@ -408,7 +415,7 @@ def make_interpolant(base_df, low_df, high_df, interp_param, satnum, delta_s):
     return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=delta_s)
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """
     Define the argparse parser
     """
@@ -460,7 +467,7 @@ def main():
     process_config(cfg, args.root_path)
 
 
-def process_config(cfg, root_path=""):
+def process_config(cfg: dict, root_path: str = "") -> None:
     """
     Process a configuration and dumps produced Eclipse include file to disk.
 

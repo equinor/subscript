@@ -1,14 +1,10 @@
-EXECUTABLE prtvol2csv 
+EXECUTABLE prtvol2csv
 
 
 DEFAULT <DIR> share/results/volumes
 DEFAULT <OUTPUTFILENAME> simulator_volume_fipnum.csv
 
--- Warning: simulator_volume_region.csv is deprecated and
--- will be removed later
-DEFAULT <REGIONOUTPUTFILENAME> simulator_volume_region.csv
-
-DEFAULT <REGIONS> "" 
+DEFAULT <REGIONS> ""
 
 ARG_TYPE 0 STRING
 ARG_TYPE 1 STRING
@@ -16,7 +12,7 @@ ARG_TYPE 2 STRING
 ARG_TYPE 3 STRING
 ARG_TYPE 4 STRING
 
-ARGLIST "--verbose" "--dir" <DIR> "--outputfilename" <OUTPUTFILENAME> "--regionoutputfilename" <REGIONOUTPUTFILENAME> "--yaml" <REGIONS> <DATAFILE>
+ARGLIST "--verbose" "--dir" <DIR> "--outputfilename" <OUTPUTFILENAME> "--yaml" <REGIONS> <DATAFILE>
 
 MIN_ARG 1
 MAX_ARG 5
