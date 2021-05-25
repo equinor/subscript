@@ -4,6 +4,8 @@ import sys
 import os
 import subprocess
 from pathlib import Path
+import shutil
+import hashlib
 
 import pytest
 
@@ -13,12 +15,15 @@ import opm.io
 
 from subscript.eclcompress.eclcompress import (
     compress_multiple_keywordsets,
+    file_is_binary,
     find_keyword_sets,
     glob_patterns,
     main,
     main_eclcompress,
     parse_wildcardfile,
 )
+
+TESTDATADIR = Path(__file__).absolute().parent / "testdata_eclcompress"
 
 # A permissive parser variant from OPM is used to verify some tests:
 OPMIO_PARSECONTEXT = opm.io.ParseContext(
@@ -374,9 +379,7 @@ def test_binary_file():
     proc_output = proc_result.stdout.decode() + proc_result.stderr.decode()
     bytes_after = Path(binfile).read_bytes()
     assert bytes_before == bytes_after
-    assert (
-        "No Eclipse keywords found to compress in wrong.grdecl, skipping" in proc_output
-    )
+    assert "Skipped wrong.grdecl, not text file" in proc_output
 
 
 def test_iso8859(tmpdir):
@@ -591,3 +594,46 @@ def test_eclkw_regexp(tmpdir):
     compressed = open("g1.grdecl").read()
     assert "File compressed with eclcompress" in compressed
     assert "13*0" in compressed
+
+
+def test_binary_example_file(tmpdir, mocker):
+    """Test that a particular binary file is not touched by eclcompress
+
+    (historical bug)
+    """
+    tmpdir.chdir()
+    filename = "permxyz.grdecl"
+    shutil.copy(TESTDATADIR / filename, filename)
+    origfilehash = hashlib.sha256(open(filename, "rb").read()).hexdigest()
+    mocker.patch("sys.argv", ["eclcompress", "--verbose", filename])
+    main()
+    afterfilehash = hashlib.sha256(open(filename, "rb").read()).hexdigest()
+    assert origfilehash == afterfilehash
+
+
+@pytest.mark.parametrize(
+    "byte_sequence, expected",
+    [
+        ("foo", False),
+        ("foo æøå", False),
+        (bytearray([0, 30, 50, 100, 129]), True),  # "random" bytes
+        (bytearray([7, 8, 9, 10, 12, 13, 27]), False),  # allow-listed bytes.
+        (bytearray("foo".encode()), False),
+        # Null-terminated string makes it binary:
+        (bytearray("foo".encode()) + bytearray([0]), True),
+        # Only first 1024 characters are checked, so we can fool it:
+        (bytearray([7] * 1024), False),
+        (bytearray([7] * 1023 + [0]), True),
+        (bytearray([7] * 1024 + [0]), False),
+    ],
+)
+def test_file_is_binary(byte_sequence, expected, tmpdir):
+    if isinstance(byte_sequence, str):
+        Path("foo-utf8.txt").write_text(byte_sequence, encoding="utf-8")
+        assert file_is_binary("foo-utf8.txt") == expected
+
+        Path("foo-iso8859.txt").write_text(byte_sequence, encoding="iso-8859-1")
+        assert file_is_binary("foo-iso8859.txt") == expected
+    else:
+        Path("foo.txt").write_bytes(byte_sequence)
+        assert file_is_binary("foo.txt") == expected

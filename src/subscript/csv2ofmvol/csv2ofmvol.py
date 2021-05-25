@@ -3,6 +3,8 @@ import datetime
 import argparse
 import logging
 
+from typing import List, Union
+
 from dateutil.relativedelta import relativedelta
 import pandas as pd
 
@@ -68,7 +70,9 @@ SUPPORTED_DAYCOLS = ["DAYS", "GIDAY", "WIDAY"]
 SUPPORTED_COLS = SUPPORTED_VOLCOLS + SUPPORTED_DAYCOLS
 
 
-def read_pdm_csv_files(csvfiles):
+def read_pdm_csv_files(
+    csvfiles: Union[pd.DataFrame, str, List[str], List[pd.DataFrame]]
+) -> pd.DataFrame:
     """Read a list of CSV files and return a dataframe
 
     If the CSV files does not look like data from PDM,
@@ -88,7 +92,10 @@ def read_pdm_csv_files(csvfiles):
         vectors, WOPR, WWCT, etc.
     """
 
-    if not isinstance(csvfiles, list):
+    if isinstance(csvfiles, str):
+        csvfiles = [csvfiles]
+
+    if isinstance(csvfiles, pd.DataFrame):
         csvfiles = [csvfiles]
 
     dataframes = []
@@ -123,7 +130,7 @@ def read_pdm_csv_files(csvfiles):
     return data.sort_index()
 
 
-def check_consecutive_dates(data):
+def check_consecutive_dates(data: pd.DataFrame) -> None:
     """Analyse consecutiveness in dates pr. well.
 
     Determines the  most common timedelta pr. datapoint, and warns
@@ -182,7 +189,7 @@ def check_consecutive_dates(data):
             logger.warning("Most common timedelta is: %s", str(dominantdelta))
 
 
-def df2vol(data):
+def df2vol(data: pd.DataFrame) -> str:
     """Convert a DataFrame to a multiline string in vol-format.
 
     The 'tab' character is used as a field separator in this format
@@ -246,7 +253,7 @@ class CustomFormatter(
     pass
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Parse command line arguments, return a Namespace with arguments"""
     parser = argparse.ArgumentParser(
         description=DESCRIPTION, epilog=EPILOG, formatter_class=CustomFormatter
@@ -257,7 +264,7 @@ def get_parser():
     return parser
 
 
-def csv2ofmvol_main(csvfilepatterns, output):
+def csv2ofmvol_main(csvfilepatterns: List[str], output: str) -> bool:
     """Convert a list of CSV files into one OFM vol-file.
 
     Arguments:

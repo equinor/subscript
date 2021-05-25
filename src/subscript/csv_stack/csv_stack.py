@@ -9,8 +9,8 @@ from typing import Pattern
 
 import pandas as pd
 
-from ert_shared.plugins.plugin_manager import hook_implementation
-from res.job_queue import ErtScript
+from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
+from res.job_queue import ErtScript  # type: ignore
 
 from subscript import getLogger
 

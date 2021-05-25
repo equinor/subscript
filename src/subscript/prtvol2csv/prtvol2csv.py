@@ -5,8 +5,7 @@ import argparse
 import warnings
 import logging
 from pathlib import Path
-
-import yaml
+from typing import Optional
 
 import pandas as pd
 
@@ -80,13 +79,6 @@ def get_parser() -> argparse.ArgumentParser:
         "-v", "--verbose", action="store_true", help="Be verbose, print the tables"
     )
     parser.add_argument(
-        "--suffix",
-        type=str,
-        help=argparse.SUPPRESS,
-        default=""
-        # DEPRECATED option.
-    )
-    parser.add_argument(
         "--dir",
         type=str,
         help=(
@@ -94,15 +86,6 @@ def get_parser() -> argparse.ArgumentParser:
             "compatibility."
         ),
         default=None,
-    )
-    parser.add_argument(
-        "--regionoutputfilename",
-        type=str,
-        help=(
-            "Deprecated option. Do not use, will be removed later. "
-            "Filename for regrouped region volume output."
-        ),
-        default="simulator_volume_region.csv",
     )
     parser.add_argument("--debug", action="store_true", help="Debug mode")
     return parser
@@ -136,7 +119,7 @@ def prep_output_dir(tablesdir: str = None, suffix: str = None) -> Path:
             FutureWarning,
         )
         Path(tablesdir).mkdir(parents=True)
-    return tablesdir
+    return Path(tablesdir)
 
 
 def find_prtfile(basefile: str) -> str:
@@ -284,11 +267,11 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
     return pd.DataFrame(records).set_index("FIPNUM")
 
 
-def main():
+def main() -> None:
     """Function for command line invocation"""
     args = get_parser().parse_args()
 
-    tablesdir = prep_output_dir(args.dir, args.suffix)
+    tablesdir = prep_output_dir(args.dir, "")
 
     if args.dir != ".":
         logger.warning(
@@ -315,6 +298,7 @@ def main():
 
     resvolumes_df = reservoir_volumes_from_prt(prt_file)
 
+    fipmapper: Optional[FipMapper]
     if args.yaml:
         fipmapper = FipMapper(yamlfile=args.yaml, skipstring="Totals")
     else:
@@ -325,70 +309,12 @@ def main():
     volumes.to_csv(Path(tablesdir) / args.outputfilename)
     logger.info("Written CSV file %s", str(Path(tablesdir) / args.outputfilename))
 
-    deprecated_region_export(volumes.copy(), tablesdir, args)
 
-
-def deprecated_region_export(volumes, tablesdir, args):
-    """This function exports a dataframe where volumes
-    are summed over regions.
-
-    This is now deprecated, as it is bad architecture to export multiple
-    files from this script, it gives awkward command line arguments, and
-    the input to this functionality is not well-designed.
-
-    prtvol2csv should focus on rather exporting rows pr. FIPNUM, and
-    rather add meta-information to the rows. Various groupings should be
-    performed in a visualization application.
-    """
-    if args.yaml:
-        reg2fip = yaml.safe_load(Path(args.yaml).read_text())
-        if "region2fipnum" in reg2fip:
-            warnings.warn(
-                "Output pr. region from prtvol2csv will be removed in a later version",
-                FutureWarning,
-            )
-            volumes.drop(
-                ["REGION", "ZONE"], axis="columns", inplace=True, errors="ignore"
-            )
-            reg2fipmap = reg2fip["region2fipnum"]
-            # Ensure all dictonary keys (region names) are strings:
-            reg2fipmap = {str(key): value for key, value in reg2fipmap.items()}
-            # Invert the dictionary of lists, as we alse need to map
-            # from fipnum to region:
-            fip2regmap = {}
-            for reg in reg2fipmap:
-                for fip in reg2fipmap[reg]:
-                    if fip not in fip2regmap:
-                        fip2regmap[fip] = []
-                    fip2regmap[fip].append(reg)
-
-            # Now make a REGION-indexed dataframe, with summed volumes
-            # from the involved FIPNUMs
-            volumesbyregions = {}
-            for reg in reg2fipmap:
-                volumesbyregions[reg] = pd.DataFrame(
-                    volumes.loc[volumes.index.intersection(reg2fipmap[reg])].sum()
-                ).transpose()
-                # Space separated list of fipnums involved in this region
-                volumesbyregions[reg]["FIPNUM"] = " ".join(map(str, reg2fipmap[reg]))
-            volumesbyregions = (
-                pd.concat(volumesbyregions)
-                .reset_index()
-                .drop("level_1", axis=1)
-                .set_index("level_0")
-            )
-            volumesbyregions.index.name = "REGION"
-            # Also tag the FIPNUM-indexed dataframe with the regions
-            # that are involved in a FIPNUM, space-separated
-            for fip in fip2regmap:
-                volumes.loc[fip, "REGION"] = " ".join(map(str, fip2regmap[fip]))
-            volumesbyregions.to_csv(Path(tablesdir) / args.regionoutputfilename)
-            logger.info(
-                "Written CSV file %s", str(Path(tablesdir) / args.regionoutputfilename)
-            )
-
-
-def prtvol2df(simvolumes_df, resvolumes_df, fipmapper=None):
+def prtvol2df(
+    simvolumes_df: pd.DataFrame,
+    resvolumes_df: pd.DataFrame,
+    fipmapper: Optional[FipMapper] = None,
+) -> pd.DataFrame:
     """
     Concatenate two dataframes (with common index) horizontally,
     and add REGION and ZONE parameter.
@@ -398,9 +324,15 @@ def prtvol2df(simvolumes_df, resvolumes_df, fipmapper=None):
 
     if fipmapper is not None:
         if fipmapper.has_fip2region:
-            volumes["REGION"] = list(map(fipmapper.fip2region, volumes.index))
+            volumes["REGION"] = [
+                ",".join(map(str, fipmapper.fip2region(fipnum)))
+                for fipnum in volumes.index
+            ]
         if fipmapper.has_fip2zone:
-            volumes["ZONE"] = list(map(fipmapper.fip2zone, volumes.index))
+            volumes["ZONE"] = [
+                ",".join(map(str, fipmapper.fip2zone(fipnum)))
+                for fipnum in volumes.index
+            ]
     if any(volumes.index < 1):
         logger.warning("FIPNUM values should be 1 or larger")
     return volumes

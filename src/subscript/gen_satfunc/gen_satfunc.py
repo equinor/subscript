@@ -1,6 +1,7 @@
 import sys
 import argparse
 import logging
+import warnings
 from pathlib import Path
 
 import pyscal
@@ -15,7 +16,11 @@ logger = subscript.getLogger(__name__)
 
 def get_parser():
     """Make a parser for command line arg parsing and for documentation"""
-    parser = argparse.ArgumentParser(prog="gen_satfunc")
+    parser = argparse.ArgumentParser(
+        prog="gen_satfunc",
+        description="Deprecated tool for making SWOF/SGOF files for Eclipse. "
+        "Use pyscal instead.",
+    )
     parser.add_argument(
         "config_file",
         help=("Path to configuration file."),
@@ -31,6 +36,8 @@ def main():
     """Used for invocation on the command line"""
     parser = get_parser()
     args = parser.parse_args()
+
+    warnings.warn("gen_satfunc is deprecated, use pyscal", FutureWarning)
 
     logger.setLevel(logging.INFO)
 
