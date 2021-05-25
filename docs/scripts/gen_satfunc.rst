@@ -2,8 +2,7 @@
 GEN_SATFUNC
 ===========
 
-*gen_satfunc is provided for backwards compatibility. PYSCAL is the recommended
-tool for relperm include file generation*
+*gen_satfunc is deprecated. Switch to pyscal.*
 
 The gen_satfunc.py can create a SWOF/SGOF include file based on LET-parameters,
 initial water saturation, residual oil saturation and Krwo. The script requires
@@ -52,4 +51,3 @@ Example configuration file for gen_satfunc.py::
   RELPERM 4 1 1   4 2 1   0.14 0.12 0.3 20
   RELPERM 4 3 1   3 3 1   0.13 0.11 0.6 20
   RELPERM 4 1 0.5 3 2 0.5 0.16 0.09 0.4 20
-
