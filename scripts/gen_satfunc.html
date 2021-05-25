@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>GEN_SATFUNC &mdash; subscript 0.10.3.dev10+g8e21696 documentation</title>
+  <title>GEN_SATFUNC &mdash; subscript 0.10.3.dev11+g8f78252 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev10+g8e21696
+                0.10.3.dev11+g8f78252
               </div>
             
           
@@ -206,8 +206,7 @@
             
   <div class="section" id="gen-satfunc">
 <h1>GEN_SATFUNC<a class="headerlink" href="#gen-satfunc" title="Permalink to this headline">¶</a></h1>
-<p><em>gen_satfunc is provided for backwards compatibility. PYSCAL is the recommended
-tool for relperm include file generation</em></p>
+<p><em>gen_satfunc is deprecated. Switch to pyscal.</em></p>
 <p>The gen_satfunc.py can create a SWOF/SGOF include file based on LET-parameters,
 initial water saturation, residual oil saturation and Krwo. The script requires
 a simple configuration file as an input (example below) and returns a SWOF/SGOF
@@ -215,6 +214,8 @@ include file that you can directly include in Eclipse. The script can both be
 beneficial in a manual setting where you want to test various relative
 permeabilities, or in an automatic fashion where the configuration file is used
 as a template for a forward model job.</p>
+<p><p>Deprecated tool for making SWOF/SGOF files for Eclipse. Use pyscal instead.</p>
+</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">gen_satfunc</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="n">config_file</span> <span class="n">output_file</span>
 </pre></div>
 </div>
