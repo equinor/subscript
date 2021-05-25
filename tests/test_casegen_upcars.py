@@ -61,6 +61,46 @@ def test_demo_small_scale(tmpdir, mocker):
     assert data_frame.Values["poro"] == 0.0912
 
 
+def test_demo_small_scale_with_no_streaks(tmpdir, mocker):
+    """Test casegen_upcars on demo_small_scale.yaml"""
+    tmpdir.chdir()
+    shutil.copytree(DATADIR, TESTDATA)
+    tmpdir.join(TESTDATA).chdir()
+
+    base_name = "TEST_SMALL_NO_STREAKS"
+    mocker.patch(
+        "sys.argv",
+        [
+            "casegen_upcars",
+            "demo_small_scale.yaml",
+            "--et",
+            "dump_value.tmpl",
+            "--base",
+            base_name,
+        ],
+    )
+    casegen_upcars.main()
+
+    # check that all output files are generated
+    for pre, suf in zip(
+        ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
+        [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+    ):
+        assert Path(pre + base_name + suf).exists()
+        if suf != ".DATA":
+            assert opm.io.Parser().parse(pre + base_name + suf)
+
+    # check some key parameters in output file
+    data_frame = pd.read_csv(base_name + ".DATA", index_col=0)
+    assert data_frame.Values["nx"] == 53
+    assert data_frame.Values["ny"] == 53
+    assert data_frame.Values["nz"] == 50
+    assert data_frame.Values["lx"] == 4.15
+    assert data_frame.Values["ly"] == 4.15
+    assert data_frame.Values["lz"] == 1.00
+    assert data_frame.Values["poro"] == 0.0907
+
+
 def test_demo_small_scale_with_vugs(tmpdir, mocker):
     """Test casegen_upcars on demo_small_scale.yaml with random vugs"""
     tmpdir.chdir()
@@ -75,7 +115,13 @@ def test_demo_small_scale_with_vugs(tmpdir, mocker):
             "demo_small_scale.yaml",
             "--et",
             "dump_value.tmpl",
+            "--vug1Volume",
+            "0.1",
+            "0.1",
             "--vug2Volume",
+            "0.1",
+            "0.1",
+            "--vug3Volume",
             "0.1",
             "0.1",
             "--base",
@@ -101,7 +147,7 @@ def test_demo_small_scale_with_vugs(tmpdir, mocker):
     assert data_frame.Values["lx"] == 4.15
     assert data_frame.Values["ly"] == 4.15
     assert data_frame.Values["lz"] == 1.03
-    assert data_frame.Values["poro"] == 0.1732
+    assert data_frame.Values["poro"] == 0.1749
 
 
 def test_demo_large_scale(tmpdir, mocker):
