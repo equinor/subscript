@@ -92,8 +92,6 @@ class Model:
 
         if isinstance(streak_rect, list) and len(streak_rect) > 0:
             if isinstance(streak_rect[0], list) and len(streak_rect) > 1:
-                print(len(streak_rect))
-                print(len(streak_k))
                 assert len(streak_rect) == len(
                     streak_k
                 ), "Number of streak k-index is differs from number of streak box"
