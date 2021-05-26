@@ -42,9 +42,9 @@ Geometry:
   # Location of dome/hull top point, fraction to length of the model in Y-direction ('--centroidY', '--centroid_y')
   centroid_y : 0.5
 
-  # Origin coordinate in X-direction (East) ('--offsetX', '--offset_x')
+  # Origin coordinate in X-direction (East) ('--originX', '--origin_x')
   origin_x: 0
-  # Origin coordinate in Y-direction (East) ('--offsetY', '--offset_y')
+  # Origin coordinate in Y-direction (East) ('--originY', '--origin_y')
   origin_y: 0
   # Coordinate rotation angle in degree ('--rotation')
   rotation: 0
