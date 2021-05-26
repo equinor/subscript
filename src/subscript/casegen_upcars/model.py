@@ -769,6 +769,8 @@ class Model:
                 zcorn[2 * n_surface_points * idx : n_surface_points * (2 * idx + 1)]
                 + self._layer_dz[idx]
             )
+        self.dict_info["top"] = zcorn.min()
+        self.dict_info["bottom"] = zcorn.max()
 
         buffer_ = io.StringIO()
         print(
@@ -928,7 +930,7 @@ class Model:
         # Near fracture vug distribution
         if near_fracture_vug_fraction_dist[1] > 0:
             vug_domain_flag = np.zeros(
-                (self._total_nx, self._total_ny, self._total_nz), dtype=np.bool
+                (self._total_nx, self._total_ny, self._total_nz), dtype=bool
             )
             total_near_fracture_vug_cells = int(
                 np.rint(
@@ -995,10 +997,10 @@ class Model:
         # Distribute vugs near streaks
         if len(self._streak_k) > 0 and near_streak_vug_fraction_dist[1] > 0:
             vug_domain_flag = np.zeros(
-                (self._total_nx, self._total_ny, self._total_nz), dtype=np.bool
+                (self._total_nx, self._total_ny, self._total_nz), dtype=bool
             )
             streak_domain_flag = np.zeros(
-                (self._total_nx, self._total_ny, self._total_nz), dtype=np.bool
+                (self._total_nx, self._total_ny, self._total_nz), dtype=bool
             )
             total_near_streak_vug_cells = int(
                 np.rint(

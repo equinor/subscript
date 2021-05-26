@@ -159,9 +159,9 @@ def main():
         tilt = get_value(geometry["tilt"], parser.tilt)
         centroid_x = get_value(geometry["centroid_x"], parser.centroid_x)
         centroid_y = get_value(geometry["centroid_y"], parser.centroid_y)
-        origin_x = get_value(geometry["origin_x"], parser.origin_x)
-        origin_y = get_value(geometry["origin_y"], parser.origin_y)
-        rotation = get_value(geometry["rotation"], parser.rotation)
+        origin_x = get_value(geometry.get("origin_x", 0.0), parser.origin_x)
+        origin_y = get_value(geometry.get("origin_y", 0.0), parser.origin_y)
+        rotation = get_value(geometry.get("rotation", 0.0), parser.rotation)
 
         # Merge streak intro background matrix
         matrix_nz = get_value(matrix["NZ"], parser.background_nz)
@@ -176,7 +176,7 @@ def main():
         matrix_swatinit = get_value(matrix["SWATINIT"], parser.background_swatinit)
 
         if (streaks is not None) and (not parser.no_streak):
-            streak_k = conversion(get_value(streaks["k"], parser.streak_nz), int)
+            streak_k = conversion(get_value(streaks["k"], parser.streak_k), int)
             streak_nz = listify(
                 conversion(get_value(streaks["NZ"], parser.streak_nz), int),
                 len(streak_k),
@@ -474,7 +474,6 @@ def main():
     grid.distribute_property()
 
     dictionary.update(grid.dict_info)
-
     env = Environment(
         loader=FileSystemLoader(searchpath="."),
         undefined=DebugUndefined,
@@ -513,6 +512,7 @@ def main():
             var_vug,
         )
 
+    dictionary.update(grid.dict_info)
     dictionary["swatm"] = matrix_swatinit
     dictionary["swatstreak"] = streak_swatinit
     dictionary["swatf"] = fracture_swatinit

@@ -63,33 +63,6 @@ def uniform_dist(low, high, size, seed_nr=None):
     return uniform.rvs(low, high - low, size=size)
 
 
-def compact_list(data):
-    """
-    Generate a compact representation of list value
-    Useful in Eclipse context to make smaller file size and faster file writing
-    For example::
-
-      compact_list([1 1 1 1 2 1 1 1]) -> 4*1 2 3*1
-
-    """
-    list_value = [data[0]]
-    list_count = [1]
-    for idx in range(1, len(data)):
-        if data[idx] == list_value[-1]:
-            list_count[-1] += 1
-        else:
-            list_value.append(data[idx])
-            list_count.append(1)
-    str_ = ""
-    for idx, value in enumerate(list_value):
-        str_ += (
-            " {}*{}".format(list_count[idx], value)
-            if list_count[idx] > 1
-            else " {}".format(value)
-        )
-    return str_
-
-
 def conversion(variable, conversion_func=float):
     """
     Convert value/list to anything using conversion function
