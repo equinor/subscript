@@ -10,9 +10,15 @@
 .. image:: https://img.shields.io/lgtm/grade/python/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
     :target: https://lgtm.com/projects/g/equinor/subscript/context:python
 
-.. image:: https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8-%20|%203.9-blue.svg
+.. image:: https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8%20|%203.9-blue.svg
     :target: https://www.python.org
 
+.. image:: https://img.shields.io/badge/License-GPLv3-blue.svg
+    :target: https://www.gnu.org/licenses/gpl-3.0
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/psf/black
+￼
 *********
 subscript
 *********
