@@ -64,6 +64,8 @@ EPILOGUE = """
 
   result_file: outfilen.inc  # Required: Name of output file with interpolated tables
 
+  family: 1  # Eclipse keyword family. 1 is optional, 2 is the alternative
+
   delta_s: 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
 
   # Required: applied in order of appearance so that
@@ -172,6 +174,11 @@ def _is_valid_table_entries(schema: dict):
     return valid
 
 
+@configsuite.validator_msg("Valid Eclipse keyword family")
+def _is_valid_eclipse_keyword_family(schema: dict):
+    return schema["family"] in [1, 2]
+
+
 def get_cfg_schema() -> dict:
     """
     Defines the yml config schema
@@ -207,6 +214,7 @@ def get_cfg_schema() -> dict:
                 },
             },
             "result_file": {MK.Type: types.String},
+            "family": {MK.Type: types.Number, MK.Default: 1},
             "delta_s": {MK.Type: types.Number, MK.Default: 0.01},
             "interpolations": {
                 MK.Type: types.List,
@@ -543,7 +551,7 @@ def process_config(cfg: Dict[str, Any], root_path: str = "") -> None:
     high_df.sort_index(inplace=True)
 
     # Loop over satnum and interpolate according to default and cfg values
-    interpolants = []
+    interpolants = pyscal.PyscalList()
     satnums = range(1, base_df.reset_index("SATNUM")["SATNUM"].unique().max() + 1)
 
     for satnum in satnums:
@@ -561,14 +569,10 @@ def process_config(cfg: Dict[str, Any], root_path: str = "") -> None:
             )
         )
 
-    # Dump to Eclipse include file:
-    with open(cfg_suite.snapshot.result_file, "w") as fileh:
-        fileh.write("SWOF\n")
-        for interpolant in interpolants:
-            fileh.write(interpolant.wateroil.SWOF(header=False))
-        fileh.write("\nSGOF\n")
-        for interpolant in interpolants:
-            fileh.write(interpolant.gasoil.SGOF(header=False))
+    if cfg_suite.snapshot.family == 1:
+        interpolants.dump_family_1(cfg_suite.snapshot.result_file)
+    else:
+        interpolants.dump_family_2(cfg_suite.snapshot.result_file)
 
     logger.info(
         "Done; interpolated relperm curves written to file: %s",
