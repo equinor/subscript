@@ -15,7 +15,7 @@ from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignor
 from res.job_queue import ErtScript  # type: ignore
 
 
-from subscript import getLogger
+from subscript import getLogger, __version__
 
 from subscript.fmuobs.parsers import (
     ertobs2df,
@@ -141,6 +141,11 @@ def get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--debug", action="store_true", help="Print debugging messages")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 

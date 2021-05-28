@@ -13,6 +13,8 @@ import numpy
 
 from ecl.eclfile import EclFile
 
+from subscript import __version__
+
 DESCRIPTION = """
 Slice a subset of restart-dates from an E100 Restart file (UNRST)
 
@@ -211,6 +213,11 @@ def get_parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False,
         help="Keep original UNRST file",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

@@ -11,7 +11,7 @@ import pandas as pd
 
 import ecl2df
 
-from subscript import getLogger
+from subscript import getLogger, __version__
 from subscript.prtvol2csv.fipmapper import FipMapper
 
 DESCRIPTION = """
@@ -88,6 +88,11 @@ def get_parser() -> argparse.ArgumentParser:
         default=None,
     )
     parser.add_argument("--debug", action="store_true", help="Debug mode")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 

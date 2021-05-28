@@ -13,7 +13,7 @@ import pandas as pd
 from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
 from res.job_queue import ErtScript  # type: ignore
 
-from subscript import getLogger
+from subscript import getLogger, __version__
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = getLogger(__name__)
@@ -131,6 +131,11 @@ Do not assume anything on the ordering of columns after merging.
     )
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="More verbose output"
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

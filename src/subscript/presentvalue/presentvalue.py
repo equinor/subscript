@@ -12,7 +12,7 @@ import ecl2df
 
 import scipy.optimize
 
-from subscript import getLogger
+from subscript import getLogger, __version__
 
 logger = getLogger(__name__)
 
@@ -117,6 +117,11 @@ def get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
     parser.add_argument("--quiet", "-q", action="store_true", help="Be quiet")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 

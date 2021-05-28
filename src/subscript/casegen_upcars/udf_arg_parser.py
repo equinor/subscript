@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ Argument parser for casegen_upcars """
 
+from subscript import __version__
+
 
 def fill_parser_fracture(parser):
     """Set arguments parser for fracture related"""
@@ -882,6 +884,12 @@ def fill_parser(parser):
         dest="dy",
         help="Increment in y-direction",
         required=False,
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
 
     fill_parser_vugs(parser)
