@@ -12,7 +12,7 @@ import pandas as pd
 from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
 from res.job_queue import ErtScript  # type: ignore
 
-from subscript import getLogger
+from subscript import getLogger, __version__
 
 logger = getLogger(__name__)
 
@@ -161,6 +161,11 @@ def get_parser() -> argparse.ArgumentParser:
         default="",
         nargs="?",
         help=argparse.SUPPRESS,
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
 
     return parser

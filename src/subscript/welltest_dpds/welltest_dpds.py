@@ -8,6 +8,7 @@ import pandas as pd
 from scipy.interpolate import interp1d
 from ecl.summary import EclSum
 
+from subscript import __version__
 
 DESCRIPTION = """
 Script to extract simulated welltest results. Typically used to compare with welltest
@@ -131,6 +132,11 @@ def get_parser():
             "to be used with GENERAL_OBSERVATION in ERT are produced"
         ),
         default=None,
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

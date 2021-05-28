@@ -65,6 +65,11 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "-o", "--output", type=str, default="rft_ertobs_sim.csv", help="Output CSV file"
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
     return parser
 
 

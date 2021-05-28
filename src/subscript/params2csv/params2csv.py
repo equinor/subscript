@@ -11,6 +11,8 @@ import argparse
 
 import pandas as pd
 
+from subscript import __version__
+
 
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
@@ -65,6 +67,11 @@ The original filename for each file is written to the column
         action="store_true",
         help="Write back cleaned parameters.txt",
         default=False,
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

@@ -3,6 +3,8 @@ import argparse
 import numpy as np
 import pandas as pd
 
+from subscript import __version__
+
 DESCRIPTION = """Process a VFP file (typically outputted from Prosper or similar)
 and relayout the data into a tabular format, exported to CSV.
 
@@ -29,6 +31,11 @@ def get_parser():
         type=str,
         help="Name of output CSV file",
         default="vfptables.csv",
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

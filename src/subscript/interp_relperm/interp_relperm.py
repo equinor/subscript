@@ -443,6 +443,11 @@ def get_parser() -> argparse.ArgumentParser:
             " in config file, except for the output file."
         ),
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
     return parser
 
 

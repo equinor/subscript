@@ -17,6 +17,8 @@ from typing import List
 import matplotlib.pyplot as plt
 import numpy as np
 
+from subscript import __version__
+
 DESCRIPTION = """This is a simple interactive script for converting
 'a', 'b' between normal and inverse Leverett SwJ formulations. This is in
 particular useful for RMS, which uses the inverse formulation while,
@@ -40,6 +42,11 @@ def get_parser():
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument("--dryrun", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 
