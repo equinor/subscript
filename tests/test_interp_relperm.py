@@ -249,7 +249,7 @@ def test_args(tmpdir, mocker):
 
     interp_relperm.main()
 
-    assert Path("outfilen.inc").exists()
+    assert Path("outfile.inc").exists()
 
 
 def test_mock(tmpdir):
@@ -451,7 +451,7 @@ def test_main(tmpdir, mocker):
     mocker.patch("sys.argv", [__file__, "-c", str(test_cfg), "-r", str(TESTDATA)])
     interp_relperm.main()
 
-    assert Path("outfilen.inc").exists()
+    assert Path("outfile.inc").exists()
 
 
 if __name__ == "__main__":
@@ -461,5 +461,5 @@ if __name__ == "__main__":
     test_schema_errors()
     test_tables_to_dataframe()
     test_make_interpolant()
-    test_args()
-    test_main()
+    test_args()  # type: ignore
+    test_main()  # type: ignore
