@@ -33,6 +33,7 @@ jobs:
 
     - name: Install subscript and test dependencies
       run: |
+        pip install git+https://github.com/equinor/pyscal.git  # needs master version
         pip install pip -U
         pip install .[tests]
 

@@ -2,9 +2,8 @@ import sys
 import os
 import logging
 import argparse
-import warnings
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 import yaml
 import pandas as pd
@@ -43,7 +42,7 @@ Krg, Krog, Pcog interpolated using parameter param_g
 EPILOGUE = """
 .. code-block:: yaml
 
-  # Example config file
+  # Example config file for interp_relperm
 
   base:
     # SWOF and SGOF in one unified or two separate files.
@@ -53,21 +52,18 @@ EPILOGUE = """
     - /project/snakeoil/r017f/ert/input/relperm/sgof_base.inc
 
   high:
-    # Required: the phase(s) to be interpolated must be present,
-    # ie can drop either SWOF or SGOF if not relevant.
     - swof_opt.inc
     - ../include/sgof_opt.inc
 
   low:
-    # Required: see high
     - swof_pes.inc
     - /project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc
 
-  result_file: outfilen.inc  # Required: Name of output file with interpolated tables
+  result_file: outfile.inc  # Required: Name of output file with interpolated tables
 
-  family: 1  # Eclipse keyword family. 1 is optional, 2 is the alternative
+  family: 1  # Eclipse keyword family. Optional. 1 is default, 2 is the alternative
 
-  delta_s: 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
+  delta_s: 0.02  # Optional: resolution of Sw/Sg, defaulted to 0.01
 
   # Required: applied in order of appearance so that
   # a default value for all tables can set and overrided
@@ -109,8 +105,8 @@ EXAMPLES = """
 
 
 @configsuite.validator_msg("Valid file name")
-def _is_filename(fname: str):
-    return Path(fname).exists()
+def _is_filename(filename: str):
+    return Path(filename).exists()
 
 
 @configsuite.validator_msg("Valid interpolator list")
@@ -156,28 +152,21 @@ def _is_valid_interpolator(interp: dict):
     return valid
 
 
-@configsuite.validator_msg("Valid table entries")
+@configsuite.validator_msg("Low, base and high are provided")
 def _is_valid_table_entries(schema: dict):
-
-    valid = False
-    try:
-        if schema["low"]:
-            valid = True
-    except (KeyError, ValueError, TypeError):
-        pass
-
-    try:
-        if schema["high"]:
-            valid = True
-    except (KeyError, ValueError, TypeError):
-        pass
-
-    return valid
+    if "base" in schema and "low" in schema and "high" in schema:
+        if schema["low"] and schema["base"] and schema["high"]:
+            return (
+                isinstance(schema["low"], tuple)
+                and isinstance(schema["base"], tuple)
+                and isinstance(schema["high"], tuple)
+            )
+    return False
 
 
 @configsuite.validator_msg("Valid Eclipse keyword family")
-def _is_valid_eclipse_keyword_family(schema: dict):
-    return schema["family"] in [1, 2]
+def _is_valid_eclipse_keyword_family(familychoice: int):
+    return familychoice in [1, 2]
 
 
 def get_cfg_schema() -> dict:
@@ -186,6 +175,7 @@ def get_cfg_schema() -> dict:
     """
     schema = {
         MK.Type: types.NamedDict,
+        MK.ElementValidators: (_is_valid_table_entries,),
         MK.Content: {
             "base": {
                 MK.Type: types.List,
@@ -215,7 +205,11 @@ def get_cfg_schema() -> dict:
                 },
             },
             "result_file": {MK.Type: types.String},
-            "family": {MK.Type: types.Number, MK.Default: 1},
+            "family": {
+                MK.Type: types.Number,
+                MK.Default: 1,
+                MK.ElementValidators: (_is_valid_eclipse_keyword_family,),
+            },
             "delta_s": {MK.Type: types.Number, MK.Default: 0.01},
             "interpolations": {
                 MK.Type: types.List,
@@ -241,12 +235,12 @@ def get_cfg_schema() -> dict:
     return schema
 
 
-def tables_to_dataframe(filenames: List[str]) -> pd.DataFrame:
+def parse_satfunc_files(filenames: List[str]) -> pd.DataFrame:
     """
     Routine to gather scal tables (SWOF and SGOF) from ecl include files.
 
     Parameters:
-        filenames : List with filenames to be parsed. Assumed to contain Eclipse
+        filenames: List with filenames to be parsed. Assumed to contain Eclipse
             saturation function keywords.
 
     Returns:
@@ -255,7 +249,25 @@ def tables_to_dataframe(filenames: List[str]) -> pd.DataFrame:
 
     return pd.concat(
         [satfunc.df(Path(filename).read_text()) for filename in filenames], sort=False
+    ).set_index("SATNUM")
+
+
+def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas:
+    """Construct a pyscal WaterOilGas object from a dataframe of tabulated
+    relperm and capillary pressure values
+
+    Arguments:
+        dframe: Containing tabulated values with pyscals column naming.
+            The data must be restricted to only one SATNUM.
+    """
+    wog = pyscal.WaterOilGas(swl=dframe["SW"].min(), h=delta_s)
+    wog.wateroil.add_fromtable(
+        dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
     )
+    wog.gasoil.add_fromtable(
+        dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
+    )
+    return wog
 
 
 def make_interpolant(
@@ -267,7 +279,7 @@ def make_interpolant(
     delta_s: float,
 ) -> pyscal.WaterOilGas:
     """
-    Routine to define a pyscal.interpolant instance and perform interpolation.
+    Define a pyscal WaterOilGas interpolant
 
     Parameters:
         base_df: containing the base tables
@@ -277,166 +289,12 @@ def make_interpolant(
             the interp parameter values
         satnum: the satuation number index
         delta_s: the saturation spacing to be used in out tables
-
-    Returns:
-        Object holding tables for one satnum
     """
 
-    # Define base tables
-    swlbase = base_df.loc["SWOF", satnum]["SW"].min()
-    base = pyscal.WaterOilGas(swl=float(swlbase), h=delta_s)
-    base.wateroil.add_fromtable(
-        base_df.loc["SWOF", satnum].reset_index(),
-        swcolname="SW",
-        krwcolname="KRW",
-        krowcolname="KROW",
-        pccolname="PCOW",
-    )
-
-    # Define low tables
-    if "SWOF" in low_df.index.unique():
-        swllow = low_df.loc["SWOF", satnum]["SW"].min()
-        low = pyscal.WaterOilGas(swl=float(swllow), h=delta_s)
-        low.wateroil.add_fromtable(
-            low_df.loc["SWOF", satnum].reset_index(),
-            swcolname="SW",
-            krwcolname="KRW",
-            krowcolname="KROW",
-            pccolname="PCOW",
-        )
-    else:
-        warnings.warn(
-            "Relperm input for low is required in future version of interp_relperm",
-            FutureWarning,
-        )
-        swllow = base_df.loc["SWOF", satnum]["SW"].min()
-        low = pyscal.WaterOilGas(swl=float(swllow), h=delta_s)
-        low.wateroil.add_fromtable(
-            base_df.loc["SWOF", satnum].reset_index(),
-            swcolname="SW",
-            krwcolname="KRW",
-            krowcolname="KROW",
-            pccolname="PCOW",
-        )
-
-    # Define high tables
-    if "SWOF" in high_df.index.unique():
-        swlhigh = high_df.loc["SWOF", satnum]["SW"].min()
-        high = pyscal.WaterOilGas(swl=float(swlhigh), h=delta_s)
-        high.wateroil.add_fromtable(
-            high_df.loc["SWOF", satnum].reset_index(),
-            swcolname="SW",
-            krwcolname="KRW",
-            krowcolname="KROW",
-            pccolname="PCOW",
-        )
-    else:
-        warnings.warn(
-            "Relperm input for high is required in future version of interp_relperm",
-            FutureWarning,
-        )
-        swlhigh = base_df.loc["SWOF", satnum]["SW"].min()
-        high = pyscal.WaterOilGas(swl=float(swlhigh), h=delta_s)
-        high.wateroil.add_fromtable(
-            base_df.loc["SWOF", satnum].reset_index(),
-            swcolname="SW",
-            krwcolname="KRW",
-            krowcolname="KROW",
-            pccolname="PCOW",
-        )
-
-    # Correct types for Sg (sometimes incorrecly set to str)
-    base_df["SG"] = base_df["SG"].astype("float64")
-
-    base.gasoil.add_fromtable(
-        base_df.loc["SGOF", satnum].reset_index(),
-        sgcolname="SG",
-        krgcolname="KRG",
-        krogcolname="KROG",
-        pccolname="PCOG",
-    )
-
-    if "SGOF" in low_df.index.unique():
-        low_df["SG"] = low_df["SG"].astype("float64")
-        low.gasoil.add_fromtable(
-            low_df.loc["SGOF", satnum].reset_index(),
-            sgcolname="SG",
-            krgcolname="KRG",
-            krogcolname="KROG",
-            pccolname="PCOG",
-        )
-    else:
-        warnings.warn(
-            "Relperm input for low is required in future version of interp_relperm",
-            FutureWarning,
-        )
-        low.gasoil.add_fromtable(
-            base_df.loc["SGOF", satnum].reset_index(),
-            sgcolname="SG",
-            krgcolname="KRG",
-            krogcolname="KROG",
-            pccolname="PCOG",
-        )
-
-    if "SGOF" in high_df.index.unique():
-        high_df["SG"] = high_df["SG"].astype("float64")
-        high.gasoil.add_fromtable(
-            high_df.loc["SGOF", satnum].reset_index(),
-            sgcolname="SG",
-            krgcolname="KRG",
-            krogcolname="KROG",
-            pccolname="PCOG",
-        )
-    else:
-        warnings.warn(
-            "Relperm input for high is required in future version of interp_relperm",
-            FutureWarning,
-        )
-        high.gasoil.add_fromtable(
-            base_df.loc["SGOF", satnum].reset_index(),
-            sgcolname="SG",
-            krgcolname="KRG",
-            krogcolname="KROG",
-            pccolname="PCOG",
-        )
-
+    base = make_wateroilgas(base_df.loc[satnum], delta_s)
+    low = make_wateroilgas(low_df.loc[satnum], delta_s)
+    high = make_wateroilgas(high_df.loc[satnum], delta_s)
     rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=delta_s)
-
-    if "SWOF" not in low_df.index.unique() and interp_param["param_w"] < 0:
-        sys.exit(
-            "Error: interpolation parameter for SWOF, satnum:"
-            + str(satnum)
-            + " set to "
-            + str(interp_param["param_w"])
-            + " but no low table is provided. Values cannot be negative"
-        )
-
-    if "SWOF" not in high_df.index.unique() and interp_param["param_w"] > 0:
-        sys.exit(
-            "Error: interpolation parameter for SWOF, satnum:"
-            + str(satnum)
-            + " set to "
-            + str(interp_param["param_w"])
-            + " but no high table is provided. Values cannot be positive"
-        )
-
-    if "SGOF" not in low_df.index.unique() and interp_param["param_g"] < 0:
-        sys.exit(
-            "Error: interpolation parameter for SGOF, satnum:"
-            + str(satnum)
-            + " set to "
-            + str(interp_param["param_g"])
-            + " but no low table is provided. Values cannot be negative"
-        )
-
-    if "SGOF" not in high_df.index.unique() and interp_param["param_g"] > 0:
-        sys.exit(
-            "Error: interpolation parameter for SGOF, satnum:"
-            + str(satnum)
-            + " set to "
-            + str(interp_param["param_g"])
-            + " but no high table is provided. Values cannot be positive"
-        )
 
     return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=delta_s)
 
@@ -478,9 +336,6 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    """
-    Main function; this is what is executed
-    """
     parser = get_parser()
     args = parser.parse_args()
 
@@ -495,32 +350,53 @@ def main() -> None:
     if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
     cfg = yaml.safe_load(Path(args.configfile).read_text())
-    process_config(cfg, args.root_path)
+    process_config(cfg, Path(args.root_path))
 
 
-def process_config(cfg: Dict[str, Any], root_path: str = "") -> None:
+def prepend_root_path_to_relative_files(
+    cfg: Dict[str, Any], root_path: Path
+) -> Dict[str, Any]:
+    """Prepend root_path to relative files found paths in a configuration
+    dictionary.
+
+    Note: This function is before prior to validation of the configuration!
+
+    Will look for list of filenames in the keys "base, low and high"
+
+    Args:
+        cfg: interp_relperm configuration dictionary
+        root_path: An relative or absolute path to be prepended
+
+    Returns:
+        Modified configuration for interp_relperm
+    """
+    if "base" in cfg.keys() and isinstance(cfg["base"], list):
+        for idx in range(len(cfg["base"])):
+            if not os.path.isabs(cfg["base"][idx]):
+                cfg["base"][idx] = str(root_path / Path(cfg["base"][idx]))
+    if "high" in cfg.keys() and isinstance(cfg["high"], list):
+        for idx in range(len(cfg["high"])):
+            if not os.path.isabs(cfg["high"][idx]):
+                cfg["high"][idx] = str(root_path / Path(cfg["high"][idx]))
+    if "low" in cfg.keys() and isinstance(cfg["low"], list):
+        for idx in range(len(cfg["low"])):
+            if not os.path.isabs(cfg["low"][idx]):
+                cfg["low"][idx] = str(root_path / Path(cfg["low"][idx]))
+    return cfg
+
+
+def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> None:
     """
     Process a configuration and dumps produced Eclipse include file to disk.
 
     Args:
         cfg: Configuration for files to parse and interpolate in
-        root_path: Prepended to the file paths. Defaults to empty string
+        root_path: Prepended to the file paths
     """
-    # add root-path to all include files
-    if "base" in cfg.keys():
-        for idx in range(len(cfg["base"])):
-            if not os.path.isabs(cfg["base"][idx]):
-                cfg["base"][idx] = os.path.join(root_path, cfg["base"][idx])
-    if "high" in cfg.keys():
-        for idx in range(len(cfg["high"])):
-            if not os.path.isabs(cfg["high"][idx]):
-                cfg["high"][idx] = os.path.join(root_path, cfg["high"][idx])
-    if "low" in cfg.keys():
-        for idx in range(len(cfg["low"])):
-            if not os.path.isabs(cfg["low"][idx]):
-                cfg["low"][idx] = os.path.join(root_path, cfg["low"][idx])
 
-    # validate cfg according to schema
+    if root_path is not None:
+        cfg = prepend_root_path_to_relative_files(cfg, root_path)
+
     cfg_schema = get_cfg_schema()
     cfg_suite = configsuite.ConfigSuite(cfg, cfg_schema, deduce_required=True)
 
@@ -534,38 +410,19 @@ def process_config(cfg: Dict[str, Any], root_path: str = "") -> None:
         relperm_delta_s = cfg_suite.snapshot.delta_s
 
     # Parse tables from files
-    base_df = tables_to_dataframe(cfg_suite.snapshot.base)
-    low_df = tables_to_dataframe(cfg_suite.snapshot.low)
-    high_df = tables_to_dataframe(cfg_suite.snapshot.high)
+    base_df = parse_satfunc_files(cfg_suite.snapshot.base)
+    low_df = parse_satfunc_files(cfg_suite.snapshot.low)
+    high_df = parse_satfunc_files(cfg_suite.snapshot.high)
 
-    # Check what we have been provided; SWOF/SGOF/HIGH/LOW/BASE
-    # base must contain SWOF and SGOF, high and low can be missing
-    if "SWOF" not in base_df["KEYWORD"].unique():
-        sys.exit("ERROR: No SWOF table provided for base")
-    if "SGOF" not in base_df["KEYWORD"].unique():
-        sys.exit("ERROR: No SGOF table provided for base")
-
-    # low
-    if ("SWOF" not in low_df["KEYWORD"].unique()) and (
-        "SGOF" not in low_df["KEYWORD"].unique()
+    if not (
+        set(base_df.columns) == set(low_df.columns)
+        and set(base_df.columns) == set(high_df.columns)
     ):
-        sys.exit("ERROR: No tables provided for low; provide SWOF and/or SGOF")
-
-    # high
-    if ("SWOF" not in high_df["KEYWORD"].unique()) and (
-        "SGOF" not in high_df["KEYWORD"].unique()
-    ):
-        sys.exit("ERROR: No tables provided for high; provide SWOF and/or SGOF")
-
-    # This is how we want to navigate the dataframes:
-    base_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
-    low_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
-    high_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
-
-    # Sort for performance
-    base_df.sort_index(inplace=True)
-    low_df.sort_index(inplace=True)
-    high_df.sort_index(inplace=True)
+        logger.error("Base input had columns: %s", str(base_df.columns.values))
+        logger.error("Low input had columns: %s", str(low_df.columns.values))
+        logger.error("High input had columns: %s", str(high_df.columns.values))
+        logger.error("Inconsistent input data, check keywords in input files")
+        sys.exit(1)
 
     # Loop over satnum and interpolate according to default and cfg values
     interpolants = pyscal.PyscalList()
@@ -582,7 +439,12 @@ def process_config(cfg: Dict[str, Any], root_path: str = "") -> None:
 
         interpolants.append(
             make_interpolant(
-                base_df, low_df, high_df, interp_values, satnum, relperm_delta_s
+                base_df.loc[satnum],
+                low_df.loc[satnum],
+                high_df.loc[satnum],
+                interp_values,
+                satnum,
+                relperm_delta_s,
             )
         )
 
