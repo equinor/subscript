@@ -249,17 +249,10 @@ def test_args(tmpdir, mocker):
 
     interp_relperm.main()
 
-    assert Path("outfilen.inc").exists()
+    assert Path("outfile.inc").exists()
 
 
-def test_mock(tmpdir):
-    """Mocked pyscal-generated input files.
-
-    Note that this is using pyscal both for dumping to disk and
-    parsing from disk, and is thus not representative for how flexible
-    the code is for reading from include files not originating in pyscal.
-    """
-    tmpdir.chdir()
+def mock_family_1():
     columns = [
         "SATNUM",
         "Nw",
@@ -289,6 +282,17 @@ def test_mock(tmpdir):
     PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")
     PyscalFactory.create_pyscal_list(dframe_opt).dump_family_1("opt.inc")
 
+
+def test_mock(tmpdir):
+    """Mocked pyscal-generated input files.
+
+    Note that this is using pyscal both for dumping to disk and
+    parsing from disk, and is thus not representative for how flexible
+    the code is for reading from include files not originating in pyscal.
+    """
+    tmpdir.chdir()
+    mock_family_1()
+
     config = {
         "base": ["base.inc"],
         "low": ["pess.inc"],
@@ -298,7 +302,6 @@ def test_mock(tmpdir):
         "delta_s": 0.1,
     }
 
-    interp_relperm.process_config(config)
     interp_relperm.process_config(config)
 
     outfile_df = satfunc.df(open("outfile.inc").read(), ntsfun=1)
@@ -310,6 +313,27 @@ def test_mock(tmpdir):
     assert outfile_df["KRG"].sum() > 0
     assert outfile_df["KROG"].sum() > 0
     assert outfile_df["PCOW"].sum() > 0
+
+
+def test_family_2_output(tmpdir):
+    tmpdir.chdir()
+    mock_family_1()
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [{"param_w": -0.5, "param_g": 0.5}],
+        "family": 2,
+        "delta_s": 0.1,
+    }
+    interp_relperm.process_config(config)
+    output = Path("outfile.inc").read_text()
+
+    assert "SWFN" in output
+    assert "SGFN" in output
+    assert "SOF3" in output
 
 
 def test_mock_two_satnums(tmpdir):
@@ -451,7 +475,7 @@ def test_main(tmpdir, mocker):
     mocker.patch("sys.argv", [__file__, "-c", str(test_cfg), "-r", str(TESTDATA)])
     interp_relperm.main()
 
-    assert Path("outfilen.inc").exists()
+    assert Path("outfile.inc").exists()
 
 
 if __name__ == "__main__":
@@ -461,5 +485,5 @@ if __name__ == "__main__":
     test_schema_errors()
     test_tables_to_dataframe()
     test_make_interpolant()
-    test_args()
-    test_main()
+    test_args()  # type: ignore
+    test_main()  # type: ignore
