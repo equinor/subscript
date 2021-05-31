@@ -726,6 +726,11 @@ def get_parser() -> argparse.ArgumentParser:
             "Does not affect CSV output"
         ),
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
     return parser
 
 

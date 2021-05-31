@@ -119,6 +119,11 @@ def get_parser() -> argparse.ArgumentParser:
         type=str,
         help="List of vectors to plot and/or DATA-files to include",
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
     return parser
 
 

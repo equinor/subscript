@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 import pandas as pd
 
 from subscript import getLogger as subscriptlogger
+from subscript import __version__
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = subscriptlogger(__name__)
@@ -261,6 +262,11 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument("csvfiles", nargs="+", help="CSV files with data")
     parser.add_argument("-o", "--output", type=str, default="pdm_data.vol")
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 

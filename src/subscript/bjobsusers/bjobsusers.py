@@ -6,6 +6,8 @@ from typing import Callable
 
 import pandas as pd
 
+from subscript import __version__
+
 DESCRIPTION = """
 Print list of users running on cluster, sorted by number of jobs.
 
@@ -145,6 +147,11 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
         "-u", "--usercount", type=int, default=10, help="Number of users to display"
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

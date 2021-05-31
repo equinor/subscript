@@ -7,6 +7,7 @@ from typing import List, Union
 
 import pandas as pd
 
+from subscript import __version__
 from subscript import getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns
 
@@ -70,6 +71,11 @@ def get_parser() -> argparse.ArgumentParser:
             "If this is set, a column named OFMVOLFILE will be added "
             "to identify the source file for each row."
         ),
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

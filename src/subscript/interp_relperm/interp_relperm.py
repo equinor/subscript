@@ -3,6 +3,7 @@ import os
 import logging
 import argparse
 from pathlib import Path
+from typing import List, Dict, Any
 
 import yaml
 import pandas as pd
@@ -61,36 +62,38 @@ EPILOGUE = """
     - swof_pes.inc
     - /project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc
 
-  result_file  : outfilen.inc  # Required: Name of output file with interpolated tables
+  result_file: outfilen.inc  # Required: Name of output file with interpolated tables
 
-  delta_s      : 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
+  family: 1  # Eclipse keyword family. 1 is optional, 2 is the alternative
+
+  delta_s: 0.02          # Optional: resolution of Sw/Sg, defaulted to 0.01
 
   # Required: applied in order of appearance so that
   # a default value for all tables can set and overrided
   # for individual satnums later.
   interpolations:
-    - tables   : []
+    - tables: []
       # Required: list of satnums to be interpolated
       # empty list interpreted as all entries
       # for individual satnums later.
-      param_w  : -0.23
-      param_g  :  0.44
+      param_w: -0.23
+      param_g:  0.44
 
   # Required: list of satnums to be interpolated
   # empty list interpreted as all entries
 
-    - tables : [1]
+    - tables: [1]
       # will only apply to satnum nr. 1, for SWOF and SGOF
-      param_w  : -0.23
-      param_g  :  0.24
+      param_w: -0.23
+      param_g:  0.24
 
-    - tables : [2,5,75]
+    - tables: [2,5,75]
       # applies to satnum 2, 5, and 75, for SWOF
       # (not SGOF since param_g not declared) SGOF
       # will be interpolated using 0.44, from above.
       # If a parameter not set, no interpolation will
       # be applied ie base table is returned
-      param_w  :  0.5
+      param_w:  0.5
 
 """
 
@@ -171,6 +174,11 @@ def _is_valid_table_entries(schema: dict):
     return valid
 
 
+@configsuite.validator_msg("Valid Eclipse keyword family")
+def _is_valid_eclipse_keyword_family(schema: dict):
+    return schema["family"] in [1, 2]
+
+
 def get_cfg_schema() -> dict:
     """
     Defines the yml config schema
@@ -206,6 +214,7 @@ def get_cfg_schema() -> dict:
                 },
             },
             "result_file": {MK.Type: types.String},
+            "family": {MK.Type: types.Number, MK.Default: 1},
             "delta_s": {MK.Type: types.Number, MK.Default: 0.01},
             "interpolations": {
                 MK.Type: types.List,
@@ -231,20 +240,20 @@ def get_cfg_schema() -> dict:
     return schema
 
 
-def tables_to_dataframe(filenames: list) -> pd.DataFrame:
+def tables_to_dataframe(filenames: List[str]) -> pd.DataFrame:
     """
     Routine to gather scal tables (SWOF and SGOF) from ecl include files.
 
     Parameters:
-        filenames (list): List with filenames (str) to be parsed.
-            Assumed to contain ecl SCAL tables
+        filenames : List with filenames to be parsed. Assumed to contain Eclipse
+            saturation function keywords.
 
     Returns:
         dataframe with the tables
     """
 
     return pd.concat(
-        [satfunc.df(open(filename).read()) for filename in filenames], sort=False
+        [satfunc.df(Path(filename).read_text()) for filename in filenames], sort=False
     )
 
 
@@ -252,7 +261,7 @@ def make_interpolant(
     base_df: pd.DataFrame,
     low_df: pd.DataFrame,
     high_df: pd.DataFrame,
-    interp_param: dict,
+    interp_param: Dict[str, float],
     satnum: int,
     delta_s: float,
 ) -> pyscal.WaterOilGas:
@@ -260,16 +269,16 @@ def make_interpolant(
     Routine to define a pyscal.interpolant instance and perform interpolation.
 
     Parameters:
-        base_df (pd.DataFrame): containing the base tables
-        low_df (pd.DataFrame): containing the low tables
-        high_df (pd.DataFrame): containing the high tables
-        interp_param (dict): With keys ('param_w', 'param_g'),
+        base_df: containing the base tables
+        low_df: containing the low tables
+        high_df: containing the high tables
+        interp_param: With keys ('param_w', 'param_g'),
             the interp parameter values
-        satnum (int): the satuation number index
-        delta_s (float): the saturation spacing to be used in out tables
+        satnum: the satuation number index
+        delta_s: the saturation spacing to be used in out tables
 
     Returns:
-        pyscal.WaterOilGas: Object holding tables for one satnum
+        Object holding tables for one satnum
     """
 
     # Define base tables
@@ -443,10 +452,15 @@ def get_parser() -> argparse.ArgumentParser:
             " in config file, except for the output file."
         ),
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
     return parser
 
 
-def main():
+def main() -> None:
     """
     Main function; this is what is executed
     """
@@ -467,13 +481,13 @@ def main():
     process_config(cfg, args.root_path)
 
 
-def process_config(cfg: dict, root_path: str = "") -> None:
+def process_config(cfg: Dict[str, Any], root_path: str = "") -> None:
     """
     Process a configuration and dumps produced Eclipse include file to disk.
 
     Args:
-        cfg (dict): Configuration for files to parse and interpolate in
-        root_path (str): Preprended to the file paths. Defaults to empty string
+        cfg: Configuration for files to parse and interpolate in
+        root_path: Prepended to the file paths. Defaults to empty string
     """
     # add root-path to all include files
     if "base" in cfg.keys():
@@ -537,11 +551,11 @@ def process_config(cfg: dict, root_path: str = "") -> None:
     high_df.sort_index(inplace=True)
 
     # Loop over satnum and interpolate according to default and cfg values
-    interpolants = []
+    interpolants = pyscal.PyscalList()
     satnums = range(1, base_df.reset_index("SATNUM")["SATNUM"].unique().max() + 1)
 
     for satnum in satnums:
-        interp_values = {"param_w": 0, "param_g": 0}
+        interp_values = {"param_w": 0.0, "param_g": 0.0}
         for interp in cfg_suite.snapshot.interpolations:
             if not interp.tables or satnum in interp.tables:
                 if interp.param_w:
@@ -555,14 +569,10 @@ def process_config(cfg: dict, root_path: str = "") -> None:
             )
         )
 
-    # Dump to Eclipse include file:
-    with open(cfg_suite.snapshot.result_file, "w") as fileh:
-        fileh.write("SWOF\n")
-        for interpolant in interpolants:
-            fileh.write(interpolant.wateroil.SWOF(header=False))
-        fileh.write("\nSGOF\n")
-        for interpolant in interpolants:
-            fileh.write(interpolant.gasoil.SGOF(header=False))
+    if cfg_suite.snapshot.family == 1:
+        interpolants.dump_family_1(cfg_suite.snapshot.result_file)
+    else:
+        interpolants.dump_family_2(cfg_suite.snapshot.result_file)
 
     logger.info(
         "Done; interpolated relperm curves written to file: %s",

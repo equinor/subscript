@@ -9,6 +9,8 @@ import xtgeo  # type: ignore
 
 from xtgeo.common import XTGeoDialog  # type: ignore
 
+from subscript import __version__
+
 APPNAME = "convert_grid_format (subscript)"
 
 # allowed CONVERSIONS and MODES:
@@ -17,13 +19,6 @@ MODES = ["grid", "init", "restart"]
 
 xtg = XTGeoDialog()
 logger = xtg.functionlogger(__name__)
-
-try:
-    from ..version import version
-
-    __version__ = version
-except ImportError:
-    __version__ = "0.0.0"
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -84,6 +79,11 @@ def get_parser() -> argparse.ArgumentParser:
         default=False,
         help="Use standard fmu name setting of file (no args)",
     )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 
@@ -95,12 +95,13 @@ def _do_parse_args(args):
 
     parser = get_parser()
 
-    if len(args) < 2:
+    args = parser.parse_args(args)
+
+    if len(sys.argv[1:]) < 2:
         parser.print_help()
         print("QUIT")
         sys.exit(0)
 
-    args = parser.parse_args(args)
     return args
 
 

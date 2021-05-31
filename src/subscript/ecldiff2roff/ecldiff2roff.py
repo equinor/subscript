@@ -84,6 +84,11 @@ def get_parser() -> argparse.ArgumentParser:
         "--datefmt", default="YYYYMMDD", type=str, help="Dateformat in output filenames"
     )
     parser.add_argument("-v", "--verbose", action="store_true", help="Be verbose")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
     return parser
 
 

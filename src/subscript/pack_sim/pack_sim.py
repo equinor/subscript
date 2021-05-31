@@ -10,6 +10,8 @@ import argparse
 
 from io import StringIO
 
+from subscript import __version__
+
 DESCRIPTION = """The script pack_sim will read trough a data file and copy all
 include files to one include directory in the so-called packing
 directory. It will also generate a new DATA file in the packing
@@ -687,7 +689,11 @@ def get_parser() -> argparse.ArgumentParser:
         "Eclipse model in standard fmu file structure (model/ and include/grid, "
         "include/props, etc folders)",
     )
-
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 

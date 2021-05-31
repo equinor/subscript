@@ -1,33 +1,29 @@
 
-base:  # a unified file with SWOF and SGOF or two separate files. Both tables are required
+base:
+  # Unified file with SWOF and SGOF or two separate files. Both tables are required
   - swof_base.inc
   - sgof_base.inc
-high:  # a unified file with SWOF and SGOF or two separate files. Nothing required
+high:
+  # Not required.
   - swof_opt.inc
   - sgof_opt.inc
-low:   # a unified file with SWOF and SGOF or two separate files. Nothing required
+low:
+  # Not required
   - swof_pes.inc
   - sgof_pes.inc
 
-result_file  : outfilen.inc
+result_file: outfile.inc
 
-delta_s      : 0.001   # optional: defaulted to 0.01 this does not work as expected!
+delta_s: 0.001  # optional, defaulted to 0.01
 
 interpolations:
-  - param_w  : -0.9975
-    param_g  : -0.44
+  - param_w: -0.9975
+    param_g: -0.44
 
-  - tables   : [] # all
-    param_w  : -0.9975
-    param_g  : -0.44
-  - tables   : [1] # 1,3,6 #count from 1 NOT from 0
-    param_w  : 0.3975
-  - tables   : [2] # 1,3,6 #count from 1 NOT from 0
-    param_w  : 0.1975
-
-
-
-
-
-
-
+  - tables: []  # all
+    param_w: -0.9975
+    param_g: -0.44
+  - tables: [1]  # 1,3,6 # count from 1 NOT from 0
+    param_w: 0.3975
+  - tables: [2]  # 1,3,6 # count from 1 NOT from 0
+    param_w: 0.1975

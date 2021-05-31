@@ -13,7 +13,7 @@ from typing import Optional, Tuple, List
 
 import rips
 import grpc
-from subscript import getLogger
+from subscript import getLogger, __version__
 
 DESCRIPTION = """
 ``ri_wellmod`` is a utility to generate Eclipse well model definitions
@@ -377,7 +377,11 @@ def get_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=argparse.SUPPRESS,
     )
-
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
+    )
     return parser
 
 

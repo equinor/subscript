@@ -25,7 +25,7 @@ import configsuite  # lgtm [py/import-and-import-from]
 from configsuite import types  # lgtm [py/import-and-import-from]
 from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 
-from subscript import getLogger
+from subscript import getLogger, __version__
 
 logger = getLogger(__name__)
 
@@ -793,6 +793,12 @@ def get_parser():
     )
     parser.add_argument(
         "--dategrid", type=str, help="Interval for extra DATES to be inserted."
+    )
+
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
 
     # Deprecated argument, keep to avoid old scripts failing. The setting is not used.
