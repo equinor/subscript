@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>INTERP_RELPERM &mdash; subscript 0.10.3.dev14+ge4edb03 documentation</title>
+  <title>INTERP_RELPERM &mdash; subscript 0.10.3.dev17+g44ae966 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev14+ge4edb03
+                0.10.3.dev17+g44ae966
               </div>
             
           
@@ -258,36 +258,38 @@ high may be achieved.</p>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">swof_pes.inc</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc</span>
 
-<span class="nt">result_file  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">outfilen.inc</span>  <span class="c1"># Required: Name of output file with interpolated tables</span>
+<span class="nt">result_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">outfilen.inc</span>  <span class="c1"># Required: Name of output file with interpolated tables</span>
 
-<span class="nt">delta_s      </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.02</span>          <span class="c1"># Optional: resolution of Sw/Sg, defaulted to 0.01</span>
+<span class="nt">family</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>  <span class="c1"># Eclipse keyword family. 1 is optional, 2 is the alternative</span>
+
+<span class="nt">delta_s</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.02</span>          <span class="c1"># Optional: resolution of Sw/Sg, defaulted to 0.01</span>
 
 <span class="c1"># Required: applied in order of appearance so that</span>
 <span class="c1"># a default value for all tables can set and overrided</span>
 <span class="c1"># for individual satnums later.</span>
 <span class="nt">interpolations</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">tables   </span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">tables</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
     <span class="c1"># Required: list of satnums to be interpolated</span>
     <span class="c1"># empty list interpreted as all entries</span>
     <span class="c1"># for individual satnums later.</span>
-    <span class="nt">param_w  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.23</span>
-    <span class="nt">param_g  </span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.44</span>
+    <span class="nt">param_w</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.23</span>
+    <span class="nt">param_g</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.44</span>
 
 <span class="c1"># Required: list of satnums to be interpolated</span>
 <span class="c1"># empty list interpreted as all entries</span>
 
-  <span class="p p-Indicator">-</span> <span class="nt">tables </span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">tables</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
     <span class="c1"># will only apply to satnum nr. 1, for SWOF and SGOF</span>
-    <span class="nt">param_w  </span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.23</span>
-    <span class="nt">param_g  </span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.24</span>
+    <span class="nt">param_w</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.23</span>
+    <span class="nt">param_g</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.24</span>
 
-  <span class="p p-Indicator">-</span> <span class="nt">tables </span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="nv">75</span><span class="p p-Indicator">]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">tables</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="nv">75</span><span class="p p-Indicator">]</span>
     <span class="c1"># applies to satnum 2, 5, and 75, for SWOF</span>
     <span class="c1"># (not SGOF since param_g not declared) SGOF</span>
     <span class="c1"># will be interpolated using 0.44, from above.</span>
     <span class="c1"># If a parameter not set, no interpolation will</span>
     <span class="c1"># be applied ie base table is returned</span>
-    <span class="nt">param_w  </span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+    <span class="nt">param_w</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.5</span>
 </pre></div>
 </div>
 </p>

@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.interp_relperm.interp_relperm &mdash; subscript 0.10.3.dev14+ge4edb03 documentation</title>
+  <title>subscript.interp_relperm.interp_relperm &mdash; subscript 0.10.3.dev17+g44ae966 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.10.3.dev14+ge4edb03
+                0.10.3.dev17+g44ae966
               </div>
             
           
@@ -269,6 +269,11 @@
 <dt class="sig sig-object py" id="subscript.interp_relperm.interp_relperm.main">
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.main" title="Permalink to this definition">¶</a></dt>
 <dd><p>Main function; this is what is executed</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -278,20 +283,20 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>base_df</strong> (<em>pd.DataFrame</em>) – containing the base tables</p></li>
-<li><p><strong>low_df</strong> (<em>pd.DataFrame</em>) – containing the low tables</p></li>
-<li><p><strong>high_df</strong> (<em>pd.DataFrame</em>) – containing the high tables</p></li>
-<li><p><strong>interp_param</strong> (<em>dict</em>) – With keys (‘param_w’, ‘param_g’),
+<li><p><strong>base_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – containing the base tables</p></li>
+<li><p><strong>low_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – containing the low tables</p></li>
+<li><p><strong>high_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – containing the high tables</p></li>
+<li><p><strong>interp_param</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – With keys (‘param_w’, ‘param_g’),
 the interp parameter values</p></li>
-<li><p><strong>satnum</strong> (<em>int</em>) – the satuation number index</p></li>
-<li><p><strong>delta_s</strong> (<em>float</em>) – the saturation spacing to be used in out tables</p></li>
+<li><p><strong>satnum</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – the satuation number index</p></li>
+<li><p><strong>delta_s</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – the saturation spacing to be used in out tables</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Object holding tables for one satnum</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">WaterOilGas</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pyscal.WaterOilGas</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Object holding tables for one satnum</p>
 </dd>
 </dl>
 </dd></dl>
@@ -303,8 +308,8 @@ the interp parameter values</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>cfg</strong> (<em>dict</em>) – Configuration for files to parse and interpolate in</p></li>
-<li><p><strong>root_path</strong> (<em>str</em>) – Preprended to the file paths. Defaults to empty string</p></li>
+<li><p><strong>cfg</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Configuration for files to parse and interpolate in</p></li>
+<li><p><strong>root_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Prepended to the file paths. Defaults to empty string</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
@@ -319,8 +324,8 @@ the interp parameter values</p></li>
 <dd><p>Routine to gather scal tables (SWOF and SGOF) from ecl include files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filenames</strong> (<em>list</em>) – List with filenames (str) to be parsed.
-Assumed to contain ecl SCAL tables</p>
+<dd class="field-odd"><p><strong>filenames</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List with filenames to be parsed. Assumed to contain Eclipse
+saturation function keywords.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
