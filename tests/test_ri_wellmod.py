@@ -260,7 +260,7 @@ def test_main_lgr_reek(tmpdir, mocker):
     assert Path(outfile).exists() and file_contains(outfile, "OP_1")
 
 
-# Test development version
+@pytest.mark.ri_dev  # Need --ri_dev option to pytest to run this.
 @pytest.mark.skipif(
     not Path(RI_DEV).exists(), reason="No dev-version of ResInsight available"
 )
