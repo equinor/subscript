@@ -16,6 +16,31 @@ from subscript.interp_relperm import interp_relperm
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_interp_relperm"
 
+TWO_SATNUM_PYSCAL_MOCK = pd.DataFrame(
+    columns=[
+        "CASE",
+        "SATNUM",
+        "Nw",
+        "Now",
+        "Ng",
+        "Nog",
+        "swl",
+        "a",
+        "b",
+        "poro_ref",
+        "perm_ref",
+        "drho",
+    ],
+    data=[
+        ["low", 1, 1.1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ["low", 2, 1.1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ["base", 1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ["base", 2, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ["high", 1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+        ["high", 2, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+    ],
+).set_index("CASE")
+
 
 def test_get_cfg_schema():
     """Test the configsuite schema"""
@@ -445,7 +470,21 @@ def test_wrong_family(tmpdir):
         interp_relperm.process_config(config)
 
 
-def test_mock_two_satnums(tmpdir):
+def test_mock_two_satnums_via_xlsx(tmpdir):
+    tmpdir.chdir()
+    TWO_SATNUM_PYSCAL_MOCK.reset_index().to_excel("scal_input.xlsx")
+    config = {
+        "pyscalfile": "scal_input.xlsx",
+        "result_file": "outfile.inc",
+        "interpolations": [{"param_w": -0.5, "param_g": 0.5}],
+        "delta_s": 0.1,
+    }
+    interp_relperm.process_config(config)
+    outfile_str = Path("outfile.inc").read_text()
+    assert outfile_str.find("SCAL recommendation interpolation to 0.5")
+
+
+def test_mock_two_satnums_via_files(tmpdir):
     """Mocked pyscal-generated input files.
 
     Note that this is using pyscal both for dumping to disk and
@@ -454,43 +493,15 @@ def test_mock_two_satnums(tmpdir):
     """
     # pylint: disable=no-value-for-parameter
     tmpdir.chdir()
-    columns = [
-        "SATNUM",
-        "Nw",
-        "Now",
-        "Ng",
-        "Nog",
-        "swl",
-        "a",
-        "b",
-        "poro_ref",
-        "perm_ref",
-        "drho",
-    ]
-    dframe_pess = pd.DataFrame(
-        columns=columns,
-        data=[
-            [1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
-            [1, 1, 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
-        ],
+    PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["low"]).dump_family_1(
+        "pess.inc"
     )
-    dframe_base = pd.DataFrame(
-        columns=columns,
-        data=[
-            [1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
-            [1, 2, 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
-        ],
+    PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["base"]).dump_family_1(
+        "base.inc"
     )
-    dframe_opt = pd.DataFrame(
-        columns=columns,
-        data=[
-            [1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
-            [1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
-        ],
+    PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["high"]).dump_family_1(
+        "opt.inc"
     )
-    PyscalFactory.create_pyscal_list(dframe_pess).dump_family_1("pess.inc")
-    PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")
-    PyscalFactory.create_pyscal_list(dframe_opt).dump_family_1("opt.inc")
 
     config = {
         "base": ["base.inc"],
@@ -502,7 +513,7 @@ def test_mock_two_satnums(tmpdir):
     }
 
     interp_relperm.process_config(config)
-    outfile_str = open("outfile.inc").read()
+    outfile_str = Path("outfile.inc").read_text()
 
     # Assert things about the comments emitted by pyscal when interpolating:
     # This is used as a proxy for asserting that interpolation parameters
