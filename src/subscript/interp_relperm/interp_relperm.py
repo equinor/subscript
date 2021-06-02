@@ -267,21 +267,56 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
         dframe: Containing tabulated values with pyscals column naming.
             The data must be restricted to only one SATNUM.
     """
+    dframe = dframe.copy()  # Copy since we will modify it.
     wog = pyscal.WaterOilGas(swl=dframe["SW"].min(), h=delta_s)
     if "PCOW" not in dframe:
         dframe = dframe.assign(PCOW=0)
+    if "PCOG" not in dframe:
+        dframe = dframe.assign(PCOG=0)
+
+    # If we have parsed family 2 input, KRO and KROW are not
+    # on the same row. Merge the rows into family 1 style:
+    if "KEYWORD" in dframe and "SOF3" in dframe["KEYWORD"].values:
+        sof3_rows = dframe["KEYWORD"] == "SOF3"
+        dframe.loc[sof3_rows, "SW"] = 1 - dframe[sof3_rows]["SO"]
+        swl = dframe["SW"].min()
+        dframe.loc[sof3_rows, "SG"] = 1 - swl - dframe[sof3_rows]["SO"]
+        wo_dframe = (
+            dframe[["SW", "KRW", "KROW", "PCOW"]]
+            .set_index("SW")
+            .sort_index()
+            .dropna(how="all")
+            .interpolate(method="index")
+            .fillna(method="bfill")
+            .round(8)
+            .drop_duplicates()
+            .reset_index()
+        )
+        go_dframe = (
+            dframe[["SG", "KRG", "KROG", "PCOG"]]
+            .set_index("SG")
+            .sort_index()
+            .dropna(how="all")
+            .interpolate(method="index")
+            .fillna(method="bfill")
+            .round(8)
+            .drop_duplicates()
+            .reset_index()
+        )
+    else:
+        wo_dframe = dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
+        go_dframe = dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
+
     wog.wateroil.add_fromtable(
-        dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index(),
+        wo_dframe,
         # For pyscal <= 0.7.7:
         swcolname="SW",
         krwcolname="KRW",
         krowcolname="KROW",
         pccolname="PCOW",
     )
-    if "PCOG" not in dframe:
-        dframe = dframe.assign(PCOG=0)
     wog.gasoil.add_fromtable(
-        dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index(),
+        go_dframe,
         # For pyscal <= 0.7.7:
         sgcolname="SG",
         krgcolname="KRG",

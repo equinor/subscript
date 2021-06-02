@@ -4,12 +4,12 @@ from pathlib import Path
 
 import yaml
 import configsuite
-
-# import pathlib
-import pytest
 import pandas as pd
 
+import pytest
+
 from pyscal import PyscalFactory
+from pyscal.utils.testing import sat_table_str_ok
 from ecl2df import satfunc
 
 from subscript.interp_relperm import interp_relperm
@@ -471,6 +471,7 @@ def test_wrong_family(tmpdir):
 
 
 def test_mock_two_satnums_via_xlsx(tmpdir):
+    """Test initializing interp_relperm from a pyscal xlsx file"""
     tmpdir.chdir()
     TWO_SATNUM_PYSCAL_MOCK.reset_index().to_excel("scal_input.xlsx")
     config = {
@@ -576,6 +577,44 @@ def test_mock_two_satnums_via_files(tmpdir):
     outfile_str = open("outfile.inc").read()
     assert "interpolation to -0.9" not in outfile_str
     assert "interpolation to 0.8" in outfile_str
+
+
+@pytest.mark.parametrize(
+    "int_param, expected_file",
+    [(-1, "pess.inc"), (0, "base.inc"), (1, "opt.inc"), (-0.5, None), (0.5, None)],
+)
+def test_mock_two_satnums_via_fam2_files(tmpdir, int_param, expected_file):
+    tmpdir.chdir()
+    PyscalFactory.create_pyscal_list(
+        TWO_SATNUM_PYSCAL_MOCK.loc["low"], h=0.1
+    ).dump_family_2("pess.inc")
+    PyscalFactory.create_pyscal_list(
+        TWO_SATNUM_PYSCAL_MOCK.loc["base"], h=0.1
+    ).dump_family_2("base.inc")
+    PyscalFactory.create_pyscal_list(
+        TWO_SATNUM_PYSCAL_MOCK.loc["high"], h=0.1
+    ).dump_family_2("opt.inc")
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [{"param_w": int_param, "param_g": int_param}],
+        "family": 2,
+        "delta_s": 0.1,
+    }
+
+    interp_relperm.process_config(config)
+    outfile_str = Path("outfile.inc").read_text()
+    outfile_df = satfunc.df(outfile_str)
+    if expected_file is not None:
+        expected_df = satfunc.df(Path(expected_file).read_text())
+        pd.testing.assert_frame_equal(outfile_df, expected_df)
+    else:
+        # Use test function from pyscal to assert that the produced file is
+        # valid for Eclipse (not testing numerically that the interpolation
+        # is correct)
+        sat_table_str_ok(outfile_str)
 
 
 @pytest.mark.integration
