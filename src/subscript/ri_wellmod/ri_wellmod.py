@@ -8,12 +8,15 @@ import xml.dom.minidom
 import re
 import logging
 import sys
+import inspect
 from importlib import reload
-from typing import Optional, Tuple, List
-
-import rips
-import grpc
+from typing import Optional, Tuple, List, Set
+from types import ModuleType
 from subscript import getLogger, __version__
+import grpc
+
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+import rips  # noqa: E402
 
 DESCRIPTION = """
 ``ri_wellmod`` is a utility to generate Eclipse well model definitions
@@ -265,6 +268,58 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
     return resinsight
 
 
+def find_candidate_modules(top_path: Path) -> Set:
+    """
+    Find candidate python modules below a specified top path (which must
+    be a member of sys.path)
+
+    (candidate modules are here simply defined as directories or .py files)
+
+    :return: set of importable names, empty set if top_path not in sys.path
+    """
+    mod_names = set()
+    if str(top_path) not in sys.path:
+        return mod_names
+
+    for root, dirs, files in os.walk(top_path):
+        for dname in dirs:
+            mod_names.add(dname)
+        for fname in files:
+            pyfile_name = Path(fname)
+            if pyfile_name.suffix == ".py":
+                mod_names.add(pyfile_name.stem)
+
+    return mod_names
+
+
+def deep_reload(
+    module: ModuleType, top_path: Path, loaded: Set = set(), ok_names: bool = None
+):
+    """
+    Deep module reload constrained to names possibly found in a given folder
+    """
+    if not ok_names:
+        ok_names = find_candidate_modules(top_path)
+
+    logger.debug(
+        "Trying to reload module %s (previously in %s)", module.__name__, module
+    )
+    mod_name = module.__name__.rsplit(".")[-1]
+    if inspect.ismodule(module):
+        if mod_name not in ok_names:
+            logger.debug("Module %s not found below top path specified")
+            return
+        reload(module)
+
+    for name in dir(module):
+        member = getattr(module, name)
+        if inspect.ismodule(member) and member not in loaded:
+            loaded.add(module)
+            if name in ok_names:
+                logger.debug("Recursively reloading module %s", name)
+                deep_reload(member, top_path, loaded, ok_names)
+
+
 def launch_resinsight_dev(
     resinsightdev: str, console_mode: bool, command_line_parameters: List[str]
 ):
@@ -283,7 +338,7 @@ def launch_resinsight_dev(
     if pypath.exists():  # Use development rips, if present
         sys.path.insert(0, str(ridir))
         sys.path.insert(0, str(pypath))
-        reload(rips)
+        deep_reload(rips, pypath)
         sys.path.pop(0)
     try:
         resinsight = rips.Instance.launch(
