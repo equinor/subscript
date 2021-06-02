@@ -2,6 +2,7 @@ import sys
 import os
 import logging
 import argparse
+import warnings
 from pathlib import Path
 from typing import List, Dict, Any
 
@@ -45,7 +46,7 @@ EPILOGUE = """
   # Example config file
 
   base:
-    # Required: SWOF and SGOF in one unified or two separate files.
+    # SWOF and SGOF in one unified or two separate files.
     # Absolute or relative paths are accepted. Relative paths are
     # interpreted with respect to command line option --root-path
     - swof_base.inc
@@ -304,6 +305,10 @@ def make_interpolant(
             pccolname="PCOW",
         )
     else:
+        warnings.warn(
+            "Relperm input for low is required in future version of interp_relperm",
+            FutureWarning,
+        )
         swllow = base_df.loc["SWOF", satnum]["SW"].min()
         low = pyscal.WaterOilGas(swl=float(swllow), h=delta_s)
         low.wateroil.add_fromtable(
@@ -326,6 +331,10 @@ def make_interpolant(
             pccolname="PCOW",
         )
     else:
+        warnings.warn(
+            "Relperm input for high is required in future version of interp_relperm",
+            FutureWarning,
+        )
         swlhigh = base_df.loc["SWOF", satnum]["SW"].min()
         high = pyscal.WaterOilGas(swl=float(swlhigh), h=delta_s)
         high.wateroil.add_fromtable(
@@ -357,6 +366,10 @@ def make_interpolant(
             pccolname="PCOG",
         )
     else:
+        warnings.warn(
+            "Relperm input for low is required in future version of interp_relperm",
+            FutureWarning,
+        )
         low.gasoil.add_fromtable(
             base_df.loc["SGOF", satnum].reset_index(),
             sgcolname="SG",
@@ -375,6 +388,10 @@ def make_interpolant(
             pccolname="PCOG",
         )
     else:
+        warnings.warn(
+            "Relperm input for high is required in future version of interp_relperm",
+            FutureWarning,
+        )
         high.gasoil.add_fromtable(
             base_df.loc["SGOF", satnum].reset_index(),
             sgcolname="SG",

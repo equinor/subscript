@@ -18,18 +18,22 @@ def pytest_addoption(parser):
         default=False,
         help="run tests that display plots to the screen",
     )
+    parser.addoption(
+        "--ri_dev",
+        action="store_true",
+        default=False,
+        help="run tests that display plots to the screen",
+    )
 
 
 def pytest_collection_modifyitems(config, items):
-    """Allow adding @pytest.mark.plot to a test function to
-    skip it unless --plot is supplied on the pytest command line"""
-    if config.getoption("--plot"):
-        # Do not skip tests when --plot is supplied on pytest command line
-        return
-    skip_plot = pytest.mark.skip(reason="need --plot option to run")
+    """Add skip markers to marked test functions skip it unless
+    options are supplied on the pytest command line"""
     for item in items:
-        if "plot" in item.keywords:
-            item.add_marker(skip_plot)
+        if "plot" in item.keywords and not config.getoption("--plot"):
+            item.add_marker(pytest.mark.skip(reason="need --plot option to run"))
+        if "ri_dev" in item.keywords and not config.getoption("--ri_dev"):
+            item.add_marker(pytest.mark.skip(reason="need --ri_dev option to run"))
 
 
 @pytest.fixture
