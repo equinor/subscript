@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.ri_wellmod.ri_wellmod &mdash; subscript 0.11.2.dev1+g2647a98 documentation</title>
+  <title>subscript.ri_wellmod.ri_wellmod &mdash; subscript 0.11.2.dev2+g2f19334 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.2.dev1+g2647a98
+                0.11.2.dev2+g2f19334
               </div>
             
           
@@ -268,6 +268,12 @@ defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.deep_reload">
+<span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">deep_reload</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loaded</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ok_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.deep_reload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deep module reload constrained to names possibly found in a given folder</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.find_and_wrap_resinsight_version">
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">find_and_wrap_resinsight_version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version_triplet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.find_and_wrap_resinsight_version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a ResInsight executable matching at least the major.minor version
@@ -283,6 +289,22 @@ launch this particular version.</p>
 </dd>
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>Path to temporary wrapper or None if not found</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.find_candidate_modules">
+<span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">find_candidate_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">top_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.find_candidate_modules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find candidate python modules below a specified top path (which must
+be a member of sys.path)</p>
+<p>(candidate modules are here simply defined as directories or .py files)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>set of importable names, empty set if top_path not in sys.path</p>
 </dd>
 </dl>
 </dd></dl>
