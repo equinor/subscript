@@ -262,7 +262,8 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_commandline(tmpdir, mocker):
+@pytest.mark.parametrize("verbose", ["", "--verbose", "--debug"])
+def test_commandline(tmpdir, verbose, mocker, caplog):
     """Test the executable versus on the ERT doc observation data
     and compare to precomputed CSV and YML.
 
@@ -272,24 +273,43 @@ def test_commandline(tmpdir, mocker):
     tmpdir.chdir()
     mocker.patch(
         "sys.argv",
-        [
-            "fmuobs",
-            "--includedir",
-            str(TESTDATA_DIR),
-            "--verbose",
-            "--csv",
-            "output.csv",
-            "--yml",
-            "output.yml",
-            "--resinsight",
-            "ri_output.csv",
-            str(TESTDATA_DIR / "ert-doc.obs"),
-        ],
+        list(
+            filter(
+                None,
+                [
+                    # [
+                    "fmuobs",
+                    "--includedir",
+                    str(TESTDATA_DIR),
+                    verbose,
+                    "--csv",
+                    "output.csv",
+                    "--yml",
+                    "output.yml",
+                    "--resinsight",
+                    "ri_output.csv",
+                    str(TESTDATA_DIR / "ert-doc.obs"),
+                ],
+            )
+        ),
     )
     main()
     assert Path("output.csv").exists()
     assert Path("output.yml").exists()
     assert Path("ri_output.csv").exists()
+
+    if verbose == "--verbose":
+        # This is from the logger "subscript.fmuobs":
+        assert "Observation dataframe validated" in caplog.text
+        assert "Injecting include file" in caplog.text
+    elif verbose == "--debug":
+        # This is from the logger "subscript.fmuobs.parsers":
+        assert "Parsing observation" in caplog.text
+    else:
+        assert "Observation dataframe validated" not in caplog.text
+        assert "Injecting include file" not in caplog.text
+        assert "Parsing observation" not in caplog.text
+
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
     reference_dframe_from_disk = pd.read_csv(TESTDATA_DIR / "ert-doc.csv")
     pd.testing.assert_frame_equal(
@@ -327,7 +347,8 @@ def test_commandline(tmpdir, mocker):
 
 
 @pytest.mark.integration
-def test_ert_workflow_hook(tmpdir):
+@pytest.mark.parametrize("verbose", ["", '"--verbose"', '"--debug"'])
+def test_ert_workflow_hook(verbose, tmpdir):
     """Mock an ERT config with FMUOBS as a workflow and run it"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
@@ -337,7 +358,9 @@ def test_ert_workflow_hook(tmpdir):
     Path("FOO.DATA").write_text("--Empty")
 
     Path("wf_fmuobs").write_text(
-        'FMUOBS "--verbose" '
+        "FMUOBS "
+        + verbose
+        + " "
         + str(obs_file)
         + ' "--yaml" ert-obs.yml "--resinsight" ri-obs.csv "--includedir" '
         + str(TESTDATA_DIR)
@@ -360,3 +383,22 @@ def test_ert_workflow_hook(tmpdir):
 
     assert Path("ert-obs.yml").exists()
     assert Path("ri-obs.csv").exists()
+
+    # Verify that we can control whether INFO messages from fmuobs through ERT
+    # is emitted:
+    ert_log_filename = "ert-log.txt"  # Beware, this filename is controlled by ERT
+    assert Path(ert_log_filename).exists()
+    ert_output = Path(ert_log_filename).read_text()
+
+    # This is slightly tricky, as ERT has its own logging handler which is able
+    # to pick up the log messages, but whose level cannot be controlled by
+    # the fmuobs.py file. Thus, we test on the exact subscript logger format:
+    if verbose == "--verbose":
+        assert "INFO:subscript.fmuobs.parsers:Injecting include file" in ert_output
+    elif verbose == "--debug":
+        assert (
+            "DEBUG:subscript.fmuobs.parsers:"
+            "Parsing observation SUMMARY_OBSERVATION SEP_TEST_2005" in ert_output
+        )
+    else:
+        assert "INFO:subscript.fmuobs.parsers:Injecting include file" not in ert_output
