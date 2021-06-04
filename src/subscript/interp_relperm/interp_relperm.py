@@ -262,10 +262,20 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
     """
     wog = pyscal.WaterOilGas(swl=dframe["SW"].min(), h=delta_s)
     wog.wateroil.add_fromtable(
-        dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
+        dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index(),
+        # For pyscal <= 0.7.7:
+        swcolname="SW",
+        krwcolname="KRW",
+        krowcolname="KROW",
+        pccolname="PCOW",
     )
     wog.gasoil.add_fromtable(
-        dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
+        dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index(),
+        # For pyscal <= 0.7.7:
+        sgcolname="SG",
+        krgcolname="KRG",
+        krogcolname="KROG",
+        pccolname="PCOG",
     )
     return wog
 

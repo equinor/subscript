@@ -62,7 +62,6 @@ jobs:
 
       - name: Install subscript with dependencies
         run: |
-          pip install git+https://github.com/equinor/pyscal.git  # needs master version
           pip install --upgrade pip
           pip install .[tests,docs]
 
