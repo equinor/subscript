@@ -1,16 +1,17 @@
-# type: ignore
 import sys
-import os
 import time
+import shlex
 import hashlib
-from shutil import copy
-from typing import TextIO, Dict, Optional
-
+import logging
 import argparse
-
 from io import StringIO
+from shutil import copy
+from pathlib import Path
+from typing import TextIO, Dict, Optional, Union
 
-from subscript import __version__
+from subscript import __version__, getLogger
+
+logger = getLogger(__name__)
 
 DESCRIPTION = """The script pack_sim will read trough a data file and copy all
 include files to one include directory in the so-called packing
@@ -63,7 +64,8 @@ def _remove_comments(clear_comments: bool, tmp_in: str):
     return tmp_out
 
 
-def _check_filename_found(filename: str, org_sim_loc: str) -> str:
+# def _check_filename_found(filename: Path, org_sim_loc: Path) -> Path:
+def _expand_filename(filename: Path, org_sim_loc: Path) -> Path:
     """Check whether the supplied filename can be found either directly,
     or as a relative path
 
@@ -72,20 +74,20 @@ def _check_filename_found(filename: str, org_sim_loc: str) -> str:
         org_sim_loc: Original simulation path
 
     Returns:
-        str: converted file when successfull or
+        absolute path of an existing file
 
     Raises:
         IOError when file is not found or readable
     """
-    if not os.path.exists(filename):
-        if os.path.exists(org_sim_loc + filename):
-            return org_sim_loc + filename
-        raise IOError("Could not open '%s'. Make sure you have read access." % filename)
-    return filename
+    if filename.exists():
+        return filename
+    if (org_sim_loc / filename).exists():
+        return org_sim_loc / filename
+    raise IOError(f"Could not open '{str(filename)}'. Make sure you have read access.")
 
 
 def _md5checksum(
-    filepath: Optional[str] = None, data: Optional[str] = None
+    filepath: Optional[Union[str, Path]] = None, data: Optional[str] = None
 ) -> Optional[str]:
     """Perform an MD5 checksum on a file or a string
 
@@ -121,23 +123,23 @@ def _md5checksum(
     )
 
 
-def _get_paths(filename: str, org_sim_loc: str) -> dict:
+def _get_paths(filename: Path, org_sim_loc: Path) -> Dict[str, Path]:
     """Method to scan for a PATHS keyword in the datafile
     Multiple paths can be defined in the keyword
 
     Args:
-        filename (str): File to scan for PATHS keyword,
+        filename: File to scan for PATHS keyword,
             can both be absolute or base filename
-        org_sim_loc (str): Original simulation location
+        org_sim_loc: Original simulation location
 
     Returns:
-        dict: dictionary with PATHS
+        dictionary with PATHS
 
     """
     paths = {}
 
     # Check if the filename can be found
-    filename = _check_filename_found(filename, org_sim_loc)
+    filename = _expand_filename(filename, org_sim_loc)
 
     with open(filename, "r") as fhandle:
         # Read through all lines of text
@@ -145,7 +147,7 @@ def _get_paths(filename: str, org_sim_loc: str) -> dict:
             line_strip = line.strip()
 
             if line_strip.startswith("PATHS"):
-                print("Found Eclipse PATHS keyword, creating a dictionary.")
+                logger.info("Found Eclipse PATHS keyword, creating a dictionary.")
 
                 # In the keyword, find the path definitions and ignore comments
                 for innerline in fhandle:
@@ -160,22 +162,17 @@ def _get_paths(filename: str, org_sim_loc: str) -> dict:
                     # Assume we have found a PATHS definition line
                     try:
                         path_info = innerline.split("--")[0].strip().split("'")
-                        paths[path_info[1]] = path_info[3]
+                        paths[path_info[1]] = Path(path_info[3])
                     except IndexError:
-                        print(
-                            (
-                                "WARNING: Could not parse %s as a "
-                                "PATHS definition, skipping"
-                            )
-                            % line_strip
+                        logger.warning(
+                            "Could not parse %s as a PATHS definition, skipping",
+                            line_strip,
                         )
-
-    print("Dictionary created: ", end="")
-    print(paths)
+    logger.debug("Dictionary created: %s", str(paths))
     return paths
 
 
-def _replace_paths(text: str, paths: Dict[str, str]) -> str:
+def _replace_paths(text: Union[str, Path], paths: Dict[str, Path]) -> Path:
     """Helper method to replace PATHS keys
 
     Args:
@@ -186,14 +183,13 @@ def _replace_paths(text: str, paths: Dict[str, str]) -> str:
         String with replaced keys
 
     """
-    if "$" in text:
+    if "$" in str(text):
         for key in paths:
-            text = text.replace("$" + key, paths[key])
+            text = str(text).replace("$" + key, str(paths[key]))
+    return Path(text)
 
-    return text
 
-
-def _check_file_binary(filename: str, org_sim_loc: str) -> bool:
+def _check_file_binary(filename: Path, org_sim_loc: Path) -> bool:
     """Method that that checks whether a file is binary
 
     Args:
@@ -205,7 +201,7 @@ def _check_file_binary(filename: str, org_sim_loc: str) -> bool:
     """
 
     # Check if the filename can be found
-    filename = _check_filename_found(filename, org_sim_loc)
+    filename = _expand_filename(filename, org_sim_loc)
 
     # Try to open the file, if fail: show message to user
     try:
@@ -213,8 +209,8 @@ def _check_file_binary(filename: str, org_sim_loc: str) -> bool:
         fhandle.close()
     except IOError:
         raise IOError(
-            "Script stopped: Could not open '%s'. Make sure you have read "
-            "access for this file." % filename
+            f"Script stopped: Could not open '{filename}'. Make sure you have read "
+            "access for this file."
         )
 
     # Check whether the file is binary and should not be inspected
@@ -229,15 +225,19 @@ def _check_file_binary(filename: str, org_sim_loc: str) -> bool:
 
 
 def inspect_file(
-    filename: str,
-    org_sim_loc: str,
-    packing_path: str,
-    eclipse_paths: Dict[str, str],
-    indent: str,
-    clear_comments: bool,
+    filename: Path,
+    org_sim_loc: Path,
+    packing_path: Path,
+    eclipse_paths: Dict[str, Path],
+    indent: str = "",
+    clear_comments: bool = False,
+    fmu: bool = False,
+    section: str = "",
 ) -> str:
     """Method that inspects a file for includes and copies the
-    results to include folder
+    results to include folder. This can be both the main DATA file
+    or it can be called recursively in order to inspect files
+    that are included by the DATA file and below.
 
     Args:
         filename: filename to inspect
@@ -246,31 +246,23 @@ def inspect_file(
         eclipse_paths: PATHS dictionary
         indent: indent for output printing
         clear_comments: comments or not.
+        fmu: flag for FMU directory layout
+        section: currently active Eclipse section.
 
     Returns:
-        Modified text of include file.
+        Modified text of inspected file.
 
     """
-    global section
-    global warnings
-    global fmu_include
-
-    # Check if the filename can be found
-    filename = _check_filename_found(filename, org_sim_loc)
+    filename = _expand_filename(filename, org_sim_loc)
 
     # Try to open the file, if fail: show message to user
-    try:
-        fhandle = open(filename, "r")
-    except IOError:
-        raise IOError(
-            "Script stopped: Could not open '%s'. Make sure you have read "
-            "access for this file." % filename
-        )
+    filename.read_text()
 
     # Modified text will be stored in new_data_file
     new_data_file = ""
 
     # Read through all lines of text
+    fhandle = open(filename, "r")
     for line in fhandle:
         line = _normalize_line_endings(line)
         line_strip = line.strip()
@@ -285,7 +277,7 @@ def inspect_file(
             or line.startswith("IMPORT")
         ):
             # Include keyword found!
-            print("%s%s" % (indent, "FOUND INCLUDE FILE ==>"))
+            logger.info("%s%s", indent, "FOUND INCLUDE FILE ==>")
             new_data_file += line
 
             # In the INCLUDE or GDFILE keyword, find the include path and
@@ -302,40 +294,38 @@ def inspect_file(
                     if "--" not in line_strip[0:3] and not len(line_strip) == 0:
                         # This is the include file!
                         include_full = line_strip.split("--")[0]
-                        if "'" in include_full or '"' in include_full:
-                            include_stripped = include_full.split("'")[1].strip()
-                        else:
-                            include_stripped = include_full.split()[0].strip()
+                        include_stripped = Path(shlex.split(include_full)[0])
 
                         # Sometimes paths are entered in a Windows style, using \
                         # instead of /. Although this should not be done,
                         # Eclipse allows it.
                         include_stripped_in_file = include_stripped
-                        include_stripped = include_stripped.replace("\\", "/")
+                        include_stripped = Path(
+                            str(include_stripped).replace("\\", "/")
+                        )
 
                         # Inspect an INCLUDE file one layer deeper, return a
                         # modified INCLUDE file
-                        print("%sInspecting %s..." % (indent, include_stripped))
+                        logger.info("%sInspecting %s...", indent, include_stripped)
 
                         # check if use has been made of eclipse paths
                         include_stripped = _replace_paths(
                             include_stripped, eclipse_paths
                         )
 
-                        new_include = "%s/include/%s%s" % (
-                            packing_path,
-                            section,
-                            include_stripped.split("/")[-1],
+                        new_include = (
+                            packing_path / "include" / section / include_stripped.name
                         )
 
                         if _check_file_binary(include_stripped, org_sim_loc):
-                            print(
+                            logger.info(
                                 "%sThe file %s seems to be binary; we'll simply copy "
-                                "this file and skip scanning its contents."
-                                % (indent, include_stripped)
+                                "this file and skip scanning its contents.",
+                                indent,
+                                include_stripped,
                             )
                             copy(
-                                _check_filename_found(include_stripped, org_sim_loc),
+                                _expand_filename(include_stripped, org_sim_loc),
                                 new_include,
                             )
                         else:
@@ -346,46 +336,53 @@ def inspect_file(
                                 eclipse_paths,
                                 indent + "      ",
                                 clear_comments,
+                                section=section,
+                                fmu=fmu,
                             )
-                            print(
-                                "%sFinished inspecting %s" % (indent, include_stripped)
+                            logger.info(
+                                "%sFinished inspecting %s", indent, include_stripped
                             )
 
                             # Write the results of the inspect to the include folder
-                            print(
-                                "%sWriting include file %s..." % (indent, new_include)
+                            logger.info(
+                                "%sWriting include file %s...", indent, new_include
                             )
 
                             # Check if file already exists
-                            if os.path.exists(new_include):
+                            if new_include.exists():
 
                                 # Calculate MD5 hashes for the files with equal file
                                 # names to be able to compare the contents
-                                md5a = _md5checksum(filepath=new_include)
+                                md5a = _md5checksum(filepath=Path(new_include))
                                 md5b = _md5checksum(data=file_text)
 
                                 if md5a == md5b:
                                     # Files are equal, skip
-                                    print(
+                                    logger.info(
                                         "%sIdentical files in packing folder, "
-                                        "skipping %s" % (indent, new_include)
+                                        "skipping %s",
+                                        indent,
+                                        new_include,
                                     )
 
                                 else:
                                     # Add timestamp to the filename to make it unique
                                     tstamp = int(time.time())
-                                    new_include += str(tstamp)
+                                    new_include = Path(str(new_include) + str(tstamp))
 
                                     try:
                                         with open(new_include, "w") as fhandle_w:
                                             fhandle_w.write(file_text)
-                                        print(
-                                            "%sfilename made unique with "
-                                            "a timestamp (%s)." % (indent, tstamp)
+                                        logger.info(
+                                            "%sfilename made unique "
+                                            "with a timestamp (%s).",
+                                            indent,
+                                            tstamp,
                                         )
-                                        print(
-                                            "%sFinished writing include file %s"
-                                            % (indent, new_include)
+                                        logger.info(
+                                            "%sFinished writing include file %s",
+                                            indent,
+                                            new_include,
                                         )
                                     except IOError:
                                         raise IOError(
@@ -394,33 +391,30 @@ def inspect_file(
                                             "this file." % new_include
                                         )
                             else:
-                                try:
-                                    with open(new_include, "w") as fhandle_w:
-                                        fhandle_w.write(file_text)
-                                    print(
-                                        "%sFinished writing include file %s"
-                                        % (indent, new_include)
-                                    )
-                                except IOError:
-                                    raise IOError(
-                                        "Script stopped: Could not write to '%s'. "
-                                        "Make sure you have write access for "
-                                        "this file." % new_include
-                                    )
+                                Path(new_include).write_text(file_text)
+                                logger.info(
+                                    "%sFinished writing include file %s",
+                                    indent,
+                                    new_include,
+                                )
+                        if fmu:
+                            fmu_include = "../"
+                        else:
+                            fmu_include = ""
 
                         # Change the include path in the current file being inspected
                         if "'" in include_full or '"' in include_full:
                             new_data_file += include_line.replace(
-                                include_stripped_in_file,
+                                str(include_stripped_in_file),
                                 "%sinclude/%s%s"
-                                % (fmu_include, section, new_include.split("/")[-1]),
+                                % (fmu_include, section, new_include.name),
                             )
                         else:
 
                             new_data_file += include_line.replace(
-                                include_stripped_in_file,
+                                str(include_stripped_in_file),
                                 "'%sinclude/%s%s'"
-                                % (fmu_include, section, new_include.split("/")[-1]),
+                                % (fmu_include, section, new_include.name),
                             )
 
                         # Ignore comments after the include statement
@@ -429,50 +423,41 @@ def inspect_file(
                         new_data_file += line
                         if "--" in line:
                             print(line)
-        elif line_strip == "RUNSPEC" and fmu_include:
+        elif line_strip == "RUNSPEC" and fmu:
             section = "runspec/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "GRID" and fmu_include:
+        elif line_strip == "GRID" and fmu:
             section = "grid/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "EDIT" and fmu_include:
+        elif line_strip == "EDIT" and fmu:
             section = "edit/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "PROPS" and fmu_include:
+        elif line_strip == "PROPS" and fmu:
             section = "props/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "REGIONS" and fmu_include:
+        elif line_strip == "REGIONS" and fmu:
             section = "regions/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "SOLUTION" and fmu_include:
+        elif line_strip == "SOLUTION" and fmu:
             section = "solution/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "SUMMARY" and fmu_include:
+        elif line_strip == "SUMMARY" and fmu:
             section = "summary/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "SCHEDULE" and fmu_include:
+        elif line_strip == "SCHEDULE" and fmu:
             section = "schedule/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "OPTIMIZE" and fmu_include:
+        elif line_strip == "OPTIMIZE" and fmu:
             section = "optimize/"
-            if not os.path.exists("%s/include/%s" % (packing_path, section)):
-                os.makedirs("%s/include/%s" % (packing_path, section))
+            (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
         elif "RESTART" in line_strip[0:7]:
             # This line defines a restart: raise a warning!
@@ -497,7 +482,6 @@ def inspect_file(
             print(
                 "**********************************************************************"
             )
-            warnings += 1
             new_data_file += line
         elif "IMPFILE" in line_strip[0:6]:
             # This line defines a restart: raise a warning!
@@ -519,7 +503,6 @@ def inspect_file(
             print(
                 "**********************************************************************"
             )
-            warnings += 1
             new_data_file += line
         elif "USEFLUX" in line_strip[0:6]:
             # This line defines a restart: raise a warning!
@@ -542,7 +525,6 @@ def inspect_file(
                 "******************************************"
                 "****************************"
             )
-            warnings += 1
             new_data_file += line
         else:
             if not (clear_comments and len(line.strip()) == 0):
@@ -556,25 +538,17 @@ def inspect_file(
 
 
 def pack_simulation(
-    ecl_case: str, packing_path: str, clear_comments: bool, fmu: bool
+    ecl_case: Path, packing_path: Path, clear_comments: bool, fmu: bool
 ) -> None:
     """Method that will pack an Eclipse simulation DATA file.
 
     Args:
         ecl_case: Path to Eclipse simulation DATA file
-        packing_path: Path to packing location
+        packing_path: Path to packing location (directory)
         clear_comments: clear or not to clear comments
         fmu: use fmu packing style or not
 
     """
-    global section
-    global warnings
-    global fmu_include
-
-    section = ""
-    warnings = 0
-    fmu_include = ""
-
     if ecl_case == "":
         raise ValueError("Script stopped: please supply a non-empty Eclipse DATA-file")
 
@@ -582,78 +556,58 @@ def pack_simulation(
         raise ValueError("Script stopped: please supply a non-empty packing path")
 
     # This can raise IOError
-    packing_path = os.path.abspath(packing_path)
+    packing_path = packing_path.absolute()
 
     if clear_comments:
-        print("You requested to clear all comments during the packing process.")
-        print("NB: In-line comments behind slashes will NOT be removed.")
+        logger.info("You requested to clear all comments during the packing process.")
+        logger.warning("NB: In-line comments behind slashes will NOT be removed.")
 
     if fmu:
-        print("You requested FMU path style saving.")
-        fmu_include = "../"
+        logger.info("You requested FMU path style saving.")
 
     # Increase maximum include depth to unrealistic high values
     sys.setrecursionlimit(10000)
 
-    # Remove slash from packing path if needed
-    if packing_path[-1] == "/":
-        packing_path = packing_path[0:-1]
-
     # Get the original directory of the simulation
-    org_sim_loc = os.path.dirname(ecl_case) + "/"
+    org_sim_loc = ecl_case.parent
 
     # Create include folder in packing location
-    if not os.path.exists("%s/include" % packing_path):
-        os.makedirs("%s/include" % packing_path)
+    (packing_path / "include").mkdir(parents=True, exist_ok=True)
 
-    fmu_data = ""
     if fmu:
-        if not os.path.exists("%s/model" % packing_path):
-            os.makedirs("%s/model" % packing_path)
-        fmu_data = "model/"
+        (packing_path / "model").mkdir(parents=True, exist_ok=True)
 
     # Get paths from Eclipse PATHS keyword
     eclipse_paths = _get_paths(ecl_case, org_sim_loc)
 
     # Inspect the DATA file, return a modified DATA file
     data_file = inspect_file(
-        ecl_case, org_sim_loc, packing_path, eclipse_paths, "", clear_comments
+        ecl_case, org_sim_loc, packing_path, eclipse_paths, "", clear_comments, fmu=fmu
     )
     if not data_file:
         raise ValueError("Script stopped: no text was found in the DATA deck.")
 
-    data_file_name = ecl_case.split("/")[-1]
-    path_new_data_file = "%s/%s%s" % (packing_path, fmu_data, data_file_name)
+    data_file_name = Path(ecl_case).name
+
+    if fmu:
+        path_new_data_file = packing_path / "model" / data_file_name
+    else:
+        path_new_data_file = packing_path / data_file_name
 
     # Write out DATA file if not already exists
-    if os.path.exists(path_new_data_file):
+    if path_new_data_file.exists():
+        raise ValueError(
+            f"DATA file {str(path_new_data_file)} exists already, will not overwrite."
+        )
 
-        with open(path_new_data_file, "r") as fhandle:
-            content = fhandle.read()
-
-            if data_file == content:
-                print("The DATA-file in place is identical. Did not re-save.")
-            else:
-                tstamp = int(time.time())
-                path_new_data_file += str(tstamp)
-
-                print("A unique number has been added in the name of the datafile.")
-
-    with open("%s" % path_new_data_file, "w") as fhandle:
-        fhandle.write(data_file)
+    path_new_data_file.write_text(data_file)
 
     # Print output to screen
-    print("Modified %s and written output packing folder" % data_file_name)
-    print("")
-    print("*********************************************************************")
-    if warnings == 0:
-        print("SUCCESSFULLY PACKED SIMULATION MODEL IN %s" % packing_path)
-    else:
-        print(
-            "PACKED SIMULATION MODEL WITH %s WARNING(S) IN %s"
-            % (warnings, packing_path)
-        )
-        print("PLEASE CHECK WARNING(S)!")
+    logger.info(
+        "Written modificated %s to packing folder %s",
+        str(data_file_name),
+        str(packing_path),
+    )
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -700,8 +654,10 @@ def get_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = get_parser()
     args = parser.parse_args()
-
-    pack_simulation(args.ECLIPSE_CASE, args.PACKING_PATH, args.clearcomments, args.fmu)
+    logger.setLevel(logging.INFO)
+    pack_simulation(
+        Path(args.ECLIPSE_CASE), Path(args.PACKING_PATH), args.clearcomments, args.fmu
+    )
 
 
 if __name__ == "__main__":
