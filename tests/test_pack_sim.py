@@ -29,7 +29,25 @@ def test_main(tmpdir, mocker):
     pack_sim.main()
 
     assert Path(ECLCASE).exists()
-    assert Path("include").exists()
+    assert Path("include/reek.grid").exists()
+    assert Path("include/reek.perm").exists()
+    assert Path("include/reek.pvt").exists()
+    assert Path("include/swof.inc").exists()
+
+
+def test_main_fmu(tmpdir, mocker):
+    tmpdir.chdir()
+
+    datafilepath = ECLDIR / ECLCASE
+    mocker.patch("sys.argv", ["pack_sim", str(datafilepath), ".", "--fmu"])
+    pack_sim.main()
+
+    # Test a subset of the files that should be there, paths
+    # here are different from the test above without the "--fmu" option:
+    assert (Path("model") / Path(ECLCASE)).exists()
+    assert Path("include/edit").exists()
+    assert Path("include/grid/reek.grid").exists()
+    assert Path("include/props/reek.pvt").exists()
 
 
 def test_binary_file_detection(tmpdir):
@@ -37,15 +55,15 @@ def test_binary_file_detection(tmpdir):
 
     tmpdir.chdir()
 
-    packing_path = "./packed"
-    tmp_data_file = "TMP.DATA"
+    packing_path = Path("packed")
+    tmp_data_file = Path("TMP.DATA")
     egrid_file = "2_R001_REEK-0.EGRID"
 
-    Path("TMP.DATA").write_text(f"GDFILE\n'{egrid_file}' /")
+    tmp_data_file.write_text(f"GDFILE\n'{egrid_file}' /")
 
-    os.mkdir(packing_path)
-    os.mkdir(packing_path + "/include")
-    pack_sim.inspect_file(tmp_data_file, str(ECLDIR) + "/", packing_path, "", "", False)
+    (packing_path / "include").mkdir(parents=True)
+
+    pack_sim.inspect_file(tmp_data_file, ECLDIR, packing_path, "", "", False)
 
     assert filecmp.cmp(
         "%s/%s" % (ECLDIR, egrid_file), "%s/include/%s" % (packing_path, egrid_file)
@@ -57,16 +75,15 @@ def test_empty_file_inspection(tmpdir):
 
     tmpdir.chdir()
 
-    empty_include_file = "empty.inc"
+    empty_include_file = Path("empty.inc")
 
     packing_path = Path("packed")
-    Path(empty_include_file).write_text("")
+    empty_include_file.write_text("")
 
-    os.mkdir(packing_path)
-    os.mkdir(packing_path / "include")
+    (packing_path / "include").mkdir(parents=True)
 
     include_text = pack_sim.inspect_file(
-        empty_include_file, str(ECLDIR) + "/", str(packing_path), "", "", False
+        empty_include_file, ECLDIR / packing_path, "", "", False
     )
 
     assert isinstance(include_text, str)
@@ -93,19 +110,18 @@ def test_replace_paths():
     test_str = " $ECLINCLUDE/grid/foo.grdecl \n $ECLINCLUDE/props/satnums.inc"
     paths = {"ECLINCLUDE": "include"}
     transformed_str = pack_sim._replace_paths(test_str, paths)
-    assert "ECLINCLUDE" not in transformed_str
-    assert "include" in transformed_str
+    assert "ECLINCLUDE" not in str(transformed_str)
+    assert "include" in str(transformed_str)
 
 
 def test_get_paths(tmpdir):
     """Test that we can obtain the PATHS keyword from a deck"""
     tmpdir.chdir()
-    file = "pathfile"
-    os.mkdir("somepath")
-    with open(file, "w") as fhandle:
-        fhandle.write("PATHS\n  'IDENTIFIER' 'somepath'/\n")
-    path_dict = pack_sim._get_paths(file, ".")
-    assert path_dict["IDENTIFIER"] == "somepath"
+    file_with_path = Path("pathfile")
+    Path("somepath").mkdir()
+    file_with_path.write_text("PATHS\n  'IDENTIFIER' 'somepath'/\n")
+    path_dict = pack_sim._get_paths(file_with_path, Path("."))
+    assert path_dict["IDENTIFIER"] == Path("somepath")
 
 
 def test_normalize_line_endings():
@@ -148,5 +164,5 @@ TITLE
 Smørbukk Sør
 """
     Path("FOO.DATA").write_text(datafile_str)
-    pack_sim.pack_simulation("FOO.DATA", "somedir", True, False)
+    pack_sim.pack_simulation(Path("FOO.DATA"), Path("somedir"), True, False)
     assert Path("somedir/FOO.DATA").read_text() == datafile_str
