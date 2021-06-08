@@ -40,6 +40,33 @@ def test_get_cfg_schema():
     assert suite.valid
 
 
+def test_prepend_root_path():
+    """Test that we need to prepend with root-path"""
+    cfg_filen = TESTDATA / "cfg.yml"
+
+    cfg = yaml.safe_load(cfg_filen.read_text())
+    schema = interp_relperm.get_cfg_schema()
+
+    suite_no_rootpath = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
+    assert not suite_no_rootpath.valid
+
+    cfg_with_rootpath = interp_relperm.prepend_root_path_to_relative_files(
+        cfg, TESTDATA
+    )
+    suite = configsuite.ConfigSuite(cfg_with_rootpath, schema, deduce_required=True)
+    assert suite.valid
+
+    # When root-path is prepended (with an absolute part) it should not
+    # matter if we reapply:
+    cfg_with_double_rootpath = interp_relperm.prepend_root_path_to_relative_files(
+        cfg_with_rootpath, TESTDATA
+    )
+    suite_double = configsuite.ConfigSuite(
+        cfg_with_double_rootpath, schema, deduce_required=True
+    )
+    assert suite_double.valid
+
+
 def test_schema_errors():
     """Test that configsuite errors correctly with some hint to the resolution"""
     cfg = {
@@ -178,13 +205,82 @@ def test_schema_errors():
     assert parsed_cfg.valid
 
 
-def test_tables_to_dataframe():
+def test_schema_errors_low_base_high():
+    os.chdir(TESTDATA)
+    cfg = {
+        "base": ["swof_base.inc", "sgof_base.inc"],
+        "high": ["swof_opt.inc", "sgof_opt.inc"],
+        "low": ["swof_pes.inc", "sgof_pes.inc"],
+        "result_file": "foo.inc",
+        "interpolations": [{"param_w": 0.1, "param_g": -0.1}],
+    }
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert parsed_cfg.valid
+
+    cfg_no_low = cfg.copy()
+    del cfg_no_low["low"]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg_no_low, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert not parsed_cfg.valid
+    assert "Low, base and high are provided is false" in str(parsed_cfg.errors)
+
+    cfg_no_high = cfg.copy()
+    del cfg_no_high["high"]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg_no_high, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert not parsed_cfg.valid
+    assert "Low, base and high are provided is false" in str(parsed_cfg.errors)
+
+    cfg_no_base = cfg.copy()
+    del cfg_no_base["base"]
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg_no_base, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert not parsed_cfg.valid
+    assert "Low, base and high are provided is false" in str(parsed_cfg.errors)
+
+    cfg_string_for_high = cfg.copy()
+    cfg_string_for_high["high"] = "sgof_opt.inc"
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg_string_for_high, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert not parsed_cfg.valid
+    assert "Is x a list is false on input 'sgof_opt.inc'" in str(parsed_cfg.errors)
+
+
+def test_garbled_base_input(tmpdir):
+    """Perturb the swof_base.inc so that it does not include the SWOF keyword"""
+    os.chdir(TESTDATA)
+    Path(tmpdir / "swof_base_invalid.inc").write_text(
+        "xx" + Path("swof_base.inc").read_text()
+    )
+    cfg = {
+        "base": [str(tmpdir / "swof_base_invalid.inc"), "sgof_base.inc"],
+        "high": ["swof_opt.inc", "sgof_opt.inc"],
+        "low": ["swof_pes.inc", "sgof_pes.inc"],
+        "result_file": str(tmpdir / "foo.inc"),
+        "interpolations": [{"param_w": 0.1, "param_g": -0.1}],
+    }
+    parsed_cfg = configsuite.ConfigSuite(
+        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
+    )
+    assert parsed_cfg.valid  # Error can't be captured by schema
+
+    with pytest.raises(SystemExit):
+        interp_relperm.process_config(cfg)
+
+
+def test_parse_satfunc_files():
     """Test that tables in Eclipse format can be converted
     into dataframes (using ecl2df)"""
     swoffn = TESTDATA / "swof_base.inc"
     sgoffn = TESTDATA / "sgof_base.inc"
 
-    tables_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
+    tables_df = interp_relperm.parse_satfunc_files([swoffn, sgoffn])
 
     assert isinstance(tables_df, pd.DataFrame)
 
@@ -199,7 +295,6 @@ def test_tables_to_dataframe():
     assert "KROG" in tables_df.columns
     assert "PCOW" in tables_df.columns
     assert "PCOG" in tables_df.columns
-    assert "SATNUM" in tables_df.columns
     assert not tables_df.empty
 
 
@@ -208,25 +303,17 @@ def test_make_interpolant():
     swoffn = TESTDATA / "swof_base.inc"
     sgoffn = TESTDATA / "sgof_base.inc"
 
-    base_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
+    base_df = interp_relperm.parse_satfunc_files([swoffn, sgoffn])
 
     swoffn = TESTDATA / "swof_pes.inc"
     sgoffn = TESTDATA / "sgof_pes.inc"
 
-    low_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
+    low_df = interp_relperm.parse_satfunc_files([swoffn, sgoffn])
 
     swoffn = TESTDATA / "swof_opt.inc"
     sgoffn = TESTDATA / "sgof_opt.inc"
 
-    high_df = interp_relperm.tables_to_dataframe([swoffn, sgoffn])
-
-    base_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
-    low_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
-    high_df.set_index(["KEYWORD", "SATNUM"], inplace=True)
-
-    base_df.sort_index(inplace=True)
-    low_df.sort_index(inplace=True)
-    high_df.sort_index(inplace=True)
+    high_df = interp_relperm.parse_satfunc_files([swoffn, sgoffn])
 
     interpolant = interp_relperm.make_interpolant(
         base_df, low_df, high_df, {"param_w": 0.1, "param_g": -0.5}, 1, 0.1
@@ -334,6 +421,28 @@ def test_family_2_output(tmpdir):
     assert "SWFN" in output
     assert "SGFN" in output
     assert "SOF3" in output
+
+
+def test_wrong_family(tmpdir):
+    tmpdir.chdir()
+    mock_family_1()
+
+    config = {
+        "base": ["base.inc"],
+        "low": ["pess.inc"],
+        "high": ["opt.inc"],
+        "result_file": "outfile.inc",
+        "interpolations": [{"param_w": -0.5, "param_g": 0.5}],
+        "family": "Rockefeller",
+        "delta_s": 0.1,
+    }
+    with pytest.raises(
+        SystemExit, match="Is x a number is false on input 'Rockefeller'"
+    ):
+        interp_relperm.process_config(config)
+    config["family"] = 3
+    with pytest.raises(SystemExit):
+        interp_relperm.process_config(config)
 
 
 def test_mock_two_satnums(tmpdir):
@@ -476,14 +585,3 @@ def test_main(tmpdir, mocker):
     interp_relperm.main()
 
     assert Path("outfile.inc").exists()
-
-
-if __name__ == "__main__":
-    # pylint: disable=no-value-for-parameter
-
-    test_get_cfg_schema()
-    test_schema_errors()
-    test_tables_to_dataframe()
-    test_make_interpolant()
-    test_args()  # type: ignore
-    test_main()  # type: ignore
