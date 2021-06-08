@@ -163,6 +163,9 @@ def _is_valid_table_entries(schema: dict):
                 and isinstance(schema["base"], tuple)
                 and isinstance(schema["high"], tuple)
             )
+    if "pyscalfile" in schema:
+        # If pyscalfile is given, we don't need low/base/high
+        return True
     return False
 
 
