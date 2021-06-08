@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.pack_sim.pack_sim &mdash; subscript 0.11.2 documentation</title>
+  <title>subscript.pack_sim.pack_sim &mdash; subscript 0.11.3.dev1+gb21a235 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.2
+                0.11.3.dev1+gb21a235
               </div>
             
           
@@ -259,25 +259,29 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.pack_sim.pack_sim.inspect_file">
-<span class="sig-prename descclassname"><span class="pre">subscript.pack_sim.pack_sim.</span></span><span class="sig-name descname"><span class="pre">inspect_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">org_sim_loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eclipse_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_comments</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.pack_sim.pack_sim.inspect_file" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.pack_sim.pack_sim.</span></span><span class="sig-name descname"><span class="pre">inspect_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">org_sim_loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packing_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eclipse_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear_comments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">section</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.pack_sim.pack_sim.inspect_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method that inspects a file for includes and copies the
-results to include folder</p>
+results to include folder. This can be both the main DATA file
+or it can be called recursively in order to inspect files
+that are included by the DATA file and below.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – filename to inspect</p></li>
-<li><p><strong>org_sim_loc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – original simulation path</p></li>
-<li><p><strong>packing_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – path to pack simulation in</p></li>
-<li><p><strong>eclipse_paths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – PATHS dictionary</p></li>
+<li><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – filename to inspect</p></li>
+<li><p><strong>org_sim_loc</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – original simulation path</p></li>
+<li><p><strong>packing_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – path to pack simulation in</p></li>
+<li><p><strong>eclipse_paths</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]) – PATHS dictionary</p></li>
 <li><p><strong>indent</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – indent for output printing</p></li>
 <li><p><strong>clear_comments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – comments or not.</p></li>
+<li><p><strong>fmu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – flag for FMU directory layout</p></li>
+<li><p><strong>section</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – currently active Eclipse section.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Modified text of include file.</p>
+<dd class="field-odd"><p>Modified text of inspected file.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -289,8 +293,8 @@ results to include folder</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ecl_case</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse simulation DATA file</p></li>
-<li><p><strong>packing_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to packing location</p></li>
+<li><p><strong>ecl_case</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – Path to Eclipse simulation DATA file</p></li>
+<li><p><strong>packing_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – Path to packing location (directory)</p></li>
 <li><p><strong>clear_comments</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – clear or not to clear comments</p></li>
 <li><p><strong>fmu</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – use fmu packing style or not</p></li>
 </ul>
