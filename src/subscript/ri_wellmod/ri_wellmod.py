@@ -69,8 +69,7 @@ EXAMPLES = """
 logger = getLogger(__name__)
 
 RI_HOME = "/prog/ResInsight"
-WRAPPER_TEMPLATE = """
-#!/bin/bash
+WRAPPER_TEMPLATE = """#!/bin/bash
 unset LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/prog/ResInsight/6.14-3_odb_api/lib
 """
@@ -227,6 +226,8 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
                     logger.error(str(any_exception))
                     return False
             else:  # Not via wrapper - try to find a valid install and wrap it
+                #import pdb
+                #pdb.set_trace()
                 resinsight_exe = find_and_wrap_resinsight_version(
                     get_rips_version_triplet()
                 )
@@ -339,6 +340,7 @@ def launch_resinsight_dev(
         sys.path.insert(0, str(ridir))
         sys.path.insert(0, str(pypath))
         deep_reload(rips, pypath)
+        reload(rips.case)
         sys.path.pop(0)
     try:
         resinsight = rips.Instance.launch(
@@ -766,10 +768,15 @@ def main() -> int:
         lgr_spec_fn = lgr_spec_fn.replace(" ", "_")
         return Path(tmp_output_folder) / lgr_spec_fn
 
+    orig_ri_case_name = ri_case_name
     ri_case_name = ri_case_name.replace(".", "_")
     with open(output_file, "w") as out_fd:
         for well in well_path_names:
             perf_fn = get_exported_perf_filename(well, ri_case_name)
+            # Check for case name with '.' due to behavioural change in 2021.06 release
+            orig_perf_fn = get_exported_perf_filename(well, orig_ri_case_name)
+            if orig_perf_fn.exists() and not perf_fn.exists():
+                perf_fn = orig_perf_fn
 
             # Need to check if LGR perfs exists, in case of non-LGR wells intersecting
             # well LGRs, or in case of LGRs present in the init case
@@ -779,7 +786,7 @@ def main() -> int:
                 perf_fn = lgr_perf_fn
                 perf_fn_exists = True
                 logger.debug("Found LGR completion file %s", lgr_perf_fn)
-
+            
             if perf_fn_exists or Path(perf_fn).exists():
                 with open(perf_fn, "r") as perf_fd:
                     shutil.copyfileobj(perf_fd, out_fd)
