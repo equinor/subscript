@@ -109,7 +109,7 @@ def get_resinsight_exe() -> Optional[str]:
     return ri_exe
 
 
-def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, str]:
+def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, int]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
@@ -124,7 +124,7 @@ def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, str]:
     return (major, minor, patch)
 
 
-def get_rips_version_triplet() -> Tuple[int, int, str]:
+def get_rips_version_triplet() -> Tuple[int, int, int]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
@@ -135,7 +135,7 @@ def get_rips_version_triplet() -> Tuple[int, int, str]:
 
 
 def find_and_wrap_resinsight_version(
-    version_triplet: Tuple[int, int, str]
+    version_triplet: Tuple[int, int, int]
 ) -> Optional[str]:
     """
     Find a ResInsight executable matching at least the major.minor version
