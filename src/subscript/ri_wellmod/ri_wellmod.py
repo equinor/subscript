@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 import os
+import subprocess
 import tempfile
 import fnmatch
 import shutil
@@ -89,26 +90,47 @@ class CustomFormatter(
 
 def get_resinsight_exe() -> Optional[str]:
     """
-    Return the path to a ResInsight executable (or wrapper script), None if not found.
+    Return the path to a ResInsight executable (or wrapper script).
+    Returns None if not found or major version < rips major version.
     """
     ri_exe = shutil.which("ResInsight")
-    if ri_exe is not None:
-        return ri_exe
+    if not ri_exe:
+        ri_exe = shutil.which("resinsight")
 
-    ri_exe = shutil.which("resinsight")
-    if ri_exe is not None:
-        return ri_exe
+    if not ri_exe:
+        return None
 
-    return None
+    ri_triplet = get_resinsight_version_triplet(ri_exe)
+    rips_triplet = get_rips_version_triplet()
+    if ri_triplet[0] < rips_triplet[0]:
+        logger.debug("Found ResInsight version < rips version - cannot use this.")
+        return None
+
+    return ri_exe
+
+
+def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, str]:
+    """
+    Get the rips (client-side) version, without instanciating/launching ResInsight
+    """
+    cmd = f"{ri_exe} --console --help | grep 'ResInsight v.' | cut -d ' ' -f 3"
+    version_bytes = subprocess.check_output(cmd, shell=True)
+    version_string = version_bytes.decode("UTF-8")
+    version_string_triplet = version_string.strip().split(sep=".")
+    major = minor = patch = 0
+    if len(version_string_triplet) == 3:
+        major, minor, patch = [int(num) for num in version_string_triplet]
+
+    return (major, minor, patch)
 
 
 def get_rips_version_triplet() -> Tuple[int, int, str]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
-    major = rips.instance.RiaVersionInfo.RESINSIGHT_MAJOR_VERSION
-    minor = rips.instance.RiaVersionInfo.RESINSIGHT_MINOR_VERSION
-    patch = rips.instance.RiaVersionInfo.RESINSIGHT_PATCH_VERSION
+    major = int(rips.instance.RiaVersionInfo.RESINSIGHT_MAJOR_VERSION)
+    minor = int(rips.instance.RiaVersionInfo.RESINSIGHT_MINOR_VERSION)
+    patch = int(rips.instance.RiaVersionInfo.RESINSIGHT_PATCH_VERSION)
     return (major, minor, patch)
 
 
