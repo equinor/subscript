@@ -277,6 +277,11 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
         krogcolname="KROG",
         pccolname="PCOG",
     )
+
+    # If sgro > 0, it is a gas condensate object, which cannot be
+    # mixed with non-gas condensate (during interpolation). Avoid pitfalls
+    # in the estimated sgro by always setting it to zero:
+    wog.gasoil.sgro = 0.0
     return wog
 
 
