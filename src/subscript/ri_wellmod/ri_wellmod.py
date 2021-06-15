@@ -226,8 +226,8 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
                     logger.error(str(any_exception))
                     return False
             else:  # Not via wrapper - try to find a valid install and wrap it
-                #import pdb
-                #pdb.set_trace()
+                # import pdb
+                # pdb.set_trace()
                 resinsight_exe = find_and_wrap_resinsight_version(
                     get_rips_version_triplet()
                 )
@@ -786,7 +786,7 @@ def main() -> int:
                 perf_fn = lgr_perf_fn
                 perf_fn_exists = True
                 logger.debug("Found LGR completion file %s", lgr_perf_fn)
-            
+
             if perf_fn_exists or Path(perf_fn).exists():
                 with open(perf_fn, "r") as perf_fd:
                     shutil.copyfileobj(perf_fd, out_fd)
