@@ -308,13 +308,16 @@ def fmuobs(
 ):
     # pylint: disable=too-many-arguments
     """Alternative to main() with named arguments"""
-    if verbose:
+    if verbose or debug:
         if __MAGIC_STDOUT__ in (csv, yml, ertobs):
-            raise SystemExit("Don't use verbose mode when writing to stdout")
-        logger.setLevel(logging.INFO)
-
-    if debug:
-        logger.setLevel(logging.DEBUG)
+            raise SystemExit("Don't use verbose/debug when writing to stdout")
+        loglevel = logging.INFO
+        if debug:
+            loglevel = logging.DEBUG
+        logger.setLevel(loglevel)
+        getLogger("subscript.fmuobs.parsers").setLevel(loglevel)
+        getLogger("subscript.fmuobs.writers").setLevel(loglevel)
+        getLogger("subscript.fmuobs.util").setLevel(loglevel)
 
     (filetype, dframe) = autoparse_file(inputfile)
 
