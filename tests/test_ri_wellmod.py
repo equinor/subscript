@@ -37,6 +37,23 @@ def has_display():
     return "DISPLAY" in os.environ and os.environ["DISPLAY"]
 
 
+def has_resinsight():
+    """
+    Check for a valid ResInsight install
+    """
+    if ri_wellmod.get_resinsight_exe():
+        return True
+
+    wrapper = ri_wellmod.find_and_wrap_resinsight_version(
+        ri_wellmod.get_rips_version_triplet()
+    )
+    if wrapper:
+        Path(wrapper).unlink()
+        return True
+
+    return False
+
+
 def file_contains(filename, string_to_find):
     """
     Utility function to check if a file contains a given string.
@@ -56,7 +73,7 @@ def test_integration():
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 def test_main_initcase(tmpdir, mocker):
@@ -73,7 +90,7 @@ def test_main_initcase(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(),
+    not has_resinsight(),
     reason="Could not find a ResInsight executable",
 )
 def test_main_inputcase(tmpdir, mocker):
@@ -104,7 +121,7 @@ def test_main_inputcase(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 def test_drogon_mswdef(tmpdir, mocker):
@@ -125,7 +142,7 @@ def test_drogon_mswdef(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 def test_drogon_lgr(tmpdir, mocker):
@@ -146,7 +163,7 @@ def test_drogon_lgr(tmpdir, mocker):
 
 
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 @pytest.mark.skipif(not has_display(), reason="Requires X display")
@@ -183,7 +200,7 @@ def test_main_lgr_cmdline(tmpdir, mocker):
 
 @pytest.mark.integration
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT")
@@ -223,7 +240,7 @@ def test_ert_forward_model(tmpdir):
 
 # REEK TESTS
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 def test_main_initcase_reek(tmpdir, mocker):
     """Test well data generation from init case on Reek"""
@@ -240,7 +257,7 @@ def test_main_initcase_reek(tmpdir, mocker):
 
 # This one requires a GUI (for now)
 @pytest.mark.skipif(
-    not ri_wellmod.get_resinsight_exe(), reason="Could not find a ResInsight executable"
+    not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(not has_display(), reason="Requires X display")
 def test_main_lgr_reek(tmpdir, mocker):
