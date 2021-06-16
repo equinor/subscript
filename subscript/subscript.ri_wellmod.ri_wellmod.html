@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.ri_wellmod.ri_wellmod &mdash; subscript 0.11.3.dev2+g0830ac7 documentation</title>
+  <title>subscript.ri_wellmod.ri_wellmod &mdash; subscript 0.11.3.dev4+g4bcae7a documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.3.dev2+g0830ac7
+                0.11.3.dev4+g4bcae7a
               </div>
             
           
@@ -282,7 +282,7 @@ launch this particular version.</p>
 <p>NB! The caller is responsible for deleting the temporary wrapper</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>version_triplet</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – (major, minor, patch)</p>
+<dd class="field-odd"><p><strong>version_triplet</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]) – (major, minor, patch)</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
@@ -324,10 +324,33 @@ be a member of sys.path)</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.get_resinsight_exe">
 <span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">get_resinsight_exe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.get_resinsight_exe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the path to a ResInsight executable (or wrapper script), None if not found.</p>
+<dd><p>Return the path to a ResInsight executable (or wrapper script).
+Returns None if not found or major version &lt; rips major version.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.get_resinsight_version_string">
+<span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">get_resinsight_version_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ri_exe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.get_resinsight_version_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find version string from ResInsight help output</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.ri_wellmod.ri_wellmod.get_resinsight_version_triplet">
+<span class="sig-prename descclassname"><span class="pre">subscript.ri_wellmod.ri_wellmod.</span></span><span class="sig-name descname"><span class="pre">get_resinsight_version_triplet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ri_exe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.ri_wellmod.ri_wellmod.get_resinsight_version_triplet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the rips (client-side) version, without instanciating/launching ResInsight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -338,7 +361,7 @@ be a member of sys.path)</p>
 <dd><p>Get the rips (client-side) version, without instanciating/launching ResInsight</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+<dd class="field-odd"><p><code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
