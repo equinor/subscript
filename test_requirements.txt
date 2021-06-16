@@ -6,3 +6,7 @@ pytest
 pytest-cov
 pytest-mock
 rstcheck
+types-Jinja2
+types-PyYAML
+types-pkg_resources
+types-python-dateutil
