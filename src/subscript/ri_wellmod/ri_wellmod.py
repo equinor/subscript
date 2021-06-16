@@ -265,7 +265,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
     return resinsight
 
 
-def find_candidate_modules(top_path: Path) -> Set:
+def find_candidate_modules(top_path: Path) -> Set[str]:
     """
     Find candidate python modules below a specified top path (which must
     be a member of sys.path)
@@ -274,7 +274,7 @@ def find_candidate_modules(top_path: Path) -> Set:
 
     :return: set of importable names, empty set if top_path not in sys.path
     """
-    mod_names = set()
+    mod_names: Set[str] = set()
     if str(top_path) not in sys.path:
         return mod_names
 
@@ -290,7 +290,7 @@ def find_candidate_modules(top_path: Path) -> Set:
 
 
 def deep_reload(
-    module: ModuleType, top_path: Path, loaded: Set = set(), ok_names: bool = None
+    module: ModuleType, top_path: Path, loaded: Set = set(), ok_names: Set[str] = None
 ):
     """
     Deep module reload constrained to names possibly found in a given folder
