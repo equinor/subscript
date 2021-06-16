@@ -228,7 +228,8 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
         resinsight_exe = find_and_wrap_resinsight_version(rips_version_triplet)
         if not resinsight_exe:
             logger.critical(
-                "Unable to find the %d version of ResInsight (to match the rips version)",
+                "Unable to find the %d version of ResInsight (to match \
+                    the rips version)",
                 rips_version_triplet[0],
             )
             return False
