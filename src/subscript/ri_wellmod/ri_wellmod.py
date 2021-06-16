@@ -103,8 +103,11 @@ def get_resinsight_exe() -> Optional[str]:
 
     ri_triplet = get_resinsight_version_triplet(ri_exe)
     rips_triplet = get_rips_version_triplet()
-    if ri_triplet[0] < rips_triplet[0]:
-        logger.critical("Found ResInsight version < rips version - cannot use this.")
+    if ri_triplet[0] != rips_triplet[0]:
+        logger.debug(
+            "ResInsight version in path does not match rips version (%d)",
+            rips_triplet[0],
+        )
         return None
 
     return ri_exe
@@ -196,7 +199,7 @@ def find_and_wrap_resinsight_version(
     wrapper_file = tempfile.NamedTemporaryFile(delete=False)
     with open(wrapper_file.name, "w") as fhandle:
         print(WRAPPER_TEMPLATE, file=fhandle)
-        print(f'{resinsight_exe} "$@"', file=fhandle)
+        print(f'exec {resinsight_exe} "$@"', file=fhandle)
         fhandle.flush()
     os.chmod(wrapper_file.name, 0o770)
     wrapper_file.close()
@@ -224,6 +227,10 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
         rips_version_triplet = get_rips_version_triplet()
         resinsight_exe = find_and_wrap_resinsight_version(rips_version_triplet)
         if not resinsight_exe:
+            logger.critical(
+                "Unable to find the %d version of ResInsight (to match the rips version)",
+                rips_version_triplet[0],
+            )
             return False
         wrapper = True
 
@@ -235,76 +242,24 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
             command_line_parameters=command_line_parameters,
         )
     except Exception as any_exception:  # pylint: disable=broad-except
-        if (
-            len(any_exception.args) > 3
-            and any_exception.args[0].find("Wrong Version") >= 0
-        ):
-            server_version_triplet = any_exception.args[2].split(".")
-            smajor, sminor, spatch = server_version_triplet
-            logger.error(
-                "Wrong ResInsight version - found (%s.%s.%s), requires (%s.%s.*)",
-                smajor,
-                sminor,
-                spatch,
-                cmajor,
-                cminor,
+        logger.error(str(any_exception))
+        logger.debug(
+            "Failed to launch ResInsight (%s)- trying once more", resinsight_exe
+        )
+        try:  # Second launch attempt
+            resinsight = rips.Instance.launch(
+                resinsight_executable=resinsight_exe,
+                console=console_mode,
+                command_line_parameters=command_line_parameters,
             )
-            if (
-                wrapper
-            ):  # If already tried via wrapper, no need to search, just try again
-                logger.debug(
-                    "Trying to launch ResInsight wrapper again: %s", resinsight_exe
-                )
-                try:  # Second launch attempt via wrapper
-                    resinsight = rips.Instance.launch(
-                        resinsight_executable=resinsight_exe,
-                        console=console_mode,
-                        command_line_parameters=command_line_parameters,
-                    )
-                except Exception as any_exception:  # pylint: disable=broad-except
-                    Path(resinsight_exe).unlink()  # Delete wrapper
-                    logger.error(str(any_exception))
-                    return False
-            else:  # Not via wrapper - try to find a valid install and wrap it
-                # import pdb
-                # pdb.set_trace()
-                resinsight_exe = find_and_wrap_resinsight_version(
-                    get_rips_version_triplet()
-                )
-                if not resinsight_exe:
-                    return False
-                wrapper = True
-                try:  # First launch attempt via wrapper
-                    resinsight = rips.Instance.launch(
-                        resinsight_executable=resinsight_exe,
-                        console=console_mode,
-                        command_line_parameters=command_line_parameters,
-                    )
-                except Exception as any_exception:  # pylint: disable=broad-except
-                    logger.error(str(any_exception))
-                    try:  # Second launch attempt via wrapper
-                        resinsight = rips.Instance.launch(
-                            resinsight_executable=resinsight_exe,
-                            console=console_mode,
-                            command_line_parameters=command_line_parameters,
-                        )
-                    except Exception as any_exception:  # pylint: disable=broad-except
-                        Path(resinsight_exe).unlink()
-                        logger.error(str(any_exception))
-                        return False
-        else:  # Not a version error, just try a second time
-            try:
-                resinsight = rips.Instance.launch(
-                    resinsight_executable=resinsight_exe,
-                    console=console_mode,
-                    command_line_parameters=command_line_parameters,
-                )
-            except Exception as any_exception:  # pylint: disable=broad-except
-                logger.error(str(any_exception))
-                return False
+        except Exception as any_exception:  # pylint: disable=broad-except
+            logger.error(str(any_exception))
+            logger.critical(
+                "Failed to launch ResInsight (%s) again - stopping now.", resinsight_exe
+            )
 
     if wrapper:
-        Path(resinsight_exe).unlink()
+        Path(resinsight_exe).unlink()  # Delete wrapper
 
     return resinsight
 
