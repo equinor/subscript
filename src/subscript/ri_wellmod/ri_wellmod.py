@@ -74,6 +74,7 @@ WRAPPER_TEMPLATE = """#!/bin/bash
 unset LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/prog/ResInsight/6.14-3_odb_api/lib
 """
+RI_VERSION_REX = re.compile(r".*(\d{4}\.\d{2}\.\d+).*", re.DOTALL)
 
 
 class CustomFormatter(
@@ -103,23 +104,40 @@ def get_resinsight_exe() -> Optional[str]:
     ri_triplet = get_resinsight_version_triplet(ri_exe)
     rips_triplet = get_rips_version_triplet()
     if ri_triplet[0] < rips_triplet[0]:
-        logger.debug("Found ResInsight version < rips version - cannot use this.")
+        logger.critical("Found ResInsight version < rips version - cannot use this.")
         return None
 
     return ri_exe
+
+
+def get_resinsight_version_string(ri_exe: str) -> str:
+    """
+    Find version string from ResInsight help output
+    """
+    output_bytes = subprocess.check_output([ri_exe, "--console", "--help"])
+    output_string = output_bytes.decode("UTF-8")
+    match = RI_VERSION_REX.match(output_string)
+    if not match:
+        return ""
+
+    return match.group(1)
 
 
 def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, int]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
-    cmd = f"{ri_exe} --console --help | grep 'ResInsight v.' | cut -d ' ' -f 3"
-    version_bytes = subprocess.check_output(cmd, shell=True)
-    version_string = version_bytes.decode("UTF-8")
+    version_string = get_resinsight_version_string(ri_exe)
     version_string_triplet = version_string.strip().split(sep=".")
     major = minor = patch = 0
     if len(version_string_triplet) == 3:
-        major, minor, patch = [int(num) for num in version_string_triplet]
+        try:
+            major, minor, patch = [int(num) for num in version_string_triplet]
+        except ValueError:
+            logger.debug(
+                "Unable to extract version triplet from string %s, returning (0,0,0)",
+                version_string,
+            )
 
     return (major, minor, patch)
 
