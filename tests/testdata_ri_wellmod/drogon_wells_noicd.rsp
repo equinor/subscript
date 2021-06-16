@@ -28,7 +28,7 @@
                         <WellPath>
                             <AirGap>25</AirGap>
                             <DatumElevation>0</DatumElevation>
-                            <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
                             <SimWellName></SimWellName>
                             <SimBranchIndex>0</SimBranchIndex>
                             <ShowWellPathLabel>True </ShowWellPathLabel>
@@ -169,7 +169,7 @@
                         <WellPath>
                             <AirGap>25</AirGap>
                             <DatumElevation>0</DatumElevation>
-                            <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
                             <SimWellName></SimWellName>
                             <SimBranchIndex>0</SimBranchIndex>
                             <ShowWellPathLabel>True </ShowWellPathLabel>
@@ -310,7 +310,7 @@
                         <WellPath>
                             <AirGap>25</AirGap>
                             <DatumElevation>0</DatumElevation>
-                            <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                            <UnitSystem>UNITS_METRIC</UnitSystem>
                             <SimWellName></SimWellName>
                             <SimBranchIndex>0</SimBranchIndex>
                             <ShowWellPathLabel>True </ShowWellPathLabel>
@@ -2223,7 +2223,7 @@
                             <ValveDefinitions>
                                 <ValveTemplate>
                                     <Name>AICD: Valve Template #1</Name>
-                                    <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                                    <UnitSystem>UNITS_METRIC</UnitSystem>
                                     <CompletionType>AICD</CompletionType>
                                     <UserLabel>Valve Template #1</UserLabel>
                                     <OrificeDiameter>8</OrificeDiameter>
@@ -2251,7 +2251,7 @@
                                 </ValveTemplate>
                                 <ValveTemplate>
                                     <Name>ICD: Valve Template #2</Name>
-                                    <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                                    <UnitSystem>UNITS_METRIC</UnitSystem>
                                     <CompletionType>ICD</CompletionType>
                                     <UserLabel>Valve Template #2</UserLabel>
                                     <OrificeDiameter>8</OrificeDiameter>
@@ -2279,7 +2279,7 @@
                                 </ValveTemplate>
                                 <ValveTemplate>
                                     <Name>ICV: Valve Template #3</Name>
-                                    <UnitSystem>UNITS_UNKNOWN</UnitSystem>
+                                    <UnitSystem>UNITS_METRIC</UnitSystem>
                                     <CompletionType>ICV</CompletionType>
                                     <UserLabel>Valve Template #3</UserLabel>
                                     <OrificeDiameter>8</OrificeDiameter>
