@@ -18,15 +18,19 @@ Required summary vectors in sim deck:
   * wbhp:well_name
   * wopr:well_name if phase == OIL
   * wgpr:well_name if phase == GAS
+  * wwpr:well_name if phase == WATER
 
-Outputs files according to naming convention outputdirectory/fname_outfilesuffix.csv:
-  * dpdspt_lag1; cumtime and superpositioned time derivative of pressure lag 1
-  * dpdspt_lag2; cumtime and superpositioned time derivative of pressure lag 2
-  * spt; superpositioned time
-  * welltest; unified csv file with vectors: cumtime, wbhp, wopr, wgpr, wwpr
-  * dpdspt_lag1_gendobs_suffix_bunr; if --genobs_resultfile is invoked
-  * dpdspt_lag2_gendobs_suffix_burn; if --genobs_resultfile is invoked
-  * wbhp_genobs_suffix_bunr; if --gen_obs_result_file is invoked
+Outputs files according to naming convention under outputdirectory/:
+  * dpdspt_lag1_suffix.csv; cumtime and superpositioned time derivative of pressure lag1
+  * dpdspt_lag2_suffix.csv; cumtime and superpositioned time derivative of pressure lag2
+  * spt_suffix.csv; superpositioned time
+  * welltest_output_suffix.csv; file with vectors: cumtime, wbhp, wopr, wgpr, wwpr
+  * dpdspt_lag1_genobs_suffix_bunr.csv; if --genobs_resultfile is invoked
+  * dpdspt_lag2_genobs_suffix_bunr.csv; if --genobs_resultfile is invoked
+  * wbhp_genobs_suffix_bunr.csv; if --gen_obs_result_file is invoked
+
+gen_obs_result_file is to generate files to be used with GENERAL_OBSERVATION in ERT.
+Note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
 
 """
 
@@ -57,6 +61,8 @@ EXAMPLES = """
  FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS,
     <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1)
 
+Then GEN_DATA DPDT_SIM  INPUT_FORMAT:ASCII REPORT_STEPS:1
+RESULTS_FILE:dpdspt_lag2_genobs_<WELLNAME>_%d_<BUILDUP_NR>
 """
 
 
@@ -118,8 +124,8 @@ def get_parser():
     parser.add_argument(
         "--phase",
         type=str,
-        choices=["OIL", "GAS"],
-        help="Main fluid phase in test (OIL/GAS).",
+        choices=["OIL", "GAS", "WATER"],
+        help="Main fluid phase in test (OIL/GAS/WATER).",
         default="OIL",
         required=False,
     )
@@ -127,9 +133,10 @@ def get_parser():
         "--genobs_resultfile",
         type=str,
         help=(
-            "File with welltest results used to define time steps, "
-            "typically exported from Saphir. If present, additional files "
-            "to be used with GENERAL_OBSERVATION in ERT are produced"
+            "Option to trigger export of result files compatible with ERT"
+            "GENERAL_OBSERVATION file format to be used in history matching. "
+            "Expected argument is a file with welltest results used to define"
+            "the time steps to be reported (file typically exported from Saphir.)"
         ),
         default=None,
     )
@@ -451,16 +458,22 @@ def main():
     if main_phase == "OIL":
         wopr = summary_vec(summary, "WOPR:" + well_name)
         wgpr = summary_vec(summary, "WGPR:" + well_name, required=False)
-    else:
+        wwpr = summary_vec(summary, "WWPR:" + well_name, required=False)
+    elif main_phase == "GAS":
         wopr = summary_vec(summary, "WOPR:" + well_name, required=False)
         wgpr = summary_vec(summary, "WGPR:" + well_name)
-
-    wwpr = summary_vec(summary, "WWPR:" + well_name, required=False)
+        wwpr = summary_vec(summary, "WWPR:" + well_name, required=False)
+    else:
+        wopr = summary_vec(summary, "WOPR:" + well_name, required=False)
+        wgpr = summary_vec(summary, "WGPR:" + well_name, required=False)
+        wwpr = summary_vec(summary, "WWPR:" + well_name)
 
     if main_phase == "OIL":
         buildup_indices, buildup_end_indices = get_buildup_indices(wopr)
-    else:
+    elif main_phase == "GAS":
         buildup_indices, buildup_end_indices = get_buildup_indices(wgpr)
+    else:
+        buildup_indices, buildup_end_indices = get_buildup_indices(wwpr)
 
     print("Identified %d buildup periods:" % (len(buildup_indices)))
     print("Starting at time steps:" + str(buildup_indices) + " Corresponding to:")
@@ -489,9 +502,10 @@ def main():
 
     if main_phase == "OIL":
         super_time = supertime(time, wopr, bu_start_ind, bu_end_ind)
-    else:
+    elif main_phase == "GAS":
         super_time = supertime(time, wgpr, bu_start_ind, bu_end_ind)
-
+    else:
+        super_time = supertime(time, wwpr, bu_start_ind, bu_end_ind)
     # Calculate delta pressure             - lag 1 only
     dp = np.diff(wbhp[bu_start_ind + 1 : bu_end_ind + 1])
 
