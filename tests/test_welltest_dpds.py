@@ -55,7 +55,13 @@ def test_main(tmpdir, mocker):
     welltest_dpds.main()
     assert Path("welltest_output.csv").exists()
     Path("welltest_output.csv").unlink()
-
+    # test --phase
+    mocker.patch(
+        "sys.argv", ["welltest_dpds", DATAFILEPATH, "55_33-1", "--phase", "WATER"]
+    )
+    welltest_dpds.main()
+    assert Path("welltest_output.csv").exists()
+    Path("welltest_output.csv").unlink()
     # test --genobs_resultfile
     mocker.patch(
         "sys.argv",
