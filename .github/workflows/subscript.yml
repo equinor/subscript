@@ -45,12 +45,7 @@ jobs:
           black --check *.py src tests
           pip install flake8
           flake8 src tests
-
-      - name: Enforce static typing
-        run: |
-          pip install mypy
-          mypy src/subscript
-
+          
       - name: Install OPM-flow and ResInsight (for testing)
         run: |
           sudo apt-get install software-properties-common
@@ -64,6 +59,16 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install .[tests,docs]
+
+      - name: Force correct RIPS version
+        run: |
+          ResInsight --console --help | grep "ResInsight v. 2021.06" && pip install rips==2021.6.0.1 || true
+          ResInsight --console --help | grep "ResInsight v. 2020.10" && pip install rips==2020.10.0.2 || true
+
+      - name: Enforce static typing
+        run: |
+          pip install mypy
+          mypy src/subscript
 
       - name: List all installed packages
         run: pip freeze

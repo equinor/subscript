@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 import os
+import subprocess
 import tempfile
 import fnmatch
 import shutil
@@ -69,11 +70,11 @@ EXAMPLES = """
 logger = getLogger(__name__)
 
 RI_HOME = "/prog/ResInsight"
-WRAPPER_TEMPLATE = """
-#!/bin/bash
+WRAPPER_TEMPLATE = """#!/bin/bash
 unset LD_LIBRARY_PATH
 export LD_LIBRARY_PATH=/prog/ResInsight/6.14-3_odb_api/lib
 """
+RI_VERSION_REX = re.compile(r".*(\d{4}\.\d{2}\.\d+).*", re.DOTALL)
 
 
 class CustomFormatter(
@@ -90,31 +91,72 @@ class CustomFormatter(
 
 def get_resinsight_exe() -> Optional[str]:
     """
-    Return the path to a ResInsight executable (or wrapper script), None if not found.
+    Return the path to a ResInsight executable (or wrapper script).
+    Returns None if not found or major version < rips major version.
     """
     ri_exe = shutil.which("ResInsight")
-    if ri_exe is not None:
-        return ri_exe
+    if not ri_exe:
+        ri_exe = shutil.which("resinsight")
 
-    ri_exe = shutil.which("resinsight")
-    if ri_exe is not None:
-        return ri_exe
+    if not ri_exe:
+        return None
 
-    return None
+    ri_triplet = get_resinsight_version_triplet(ri_exe)
+    rips_triplet = get_rips_version_triplet()
+    if ri_triplet[0] != rips_triplet[0]:
+        logger.debug(
+            "ResInsight version in path does not match rips version (%d)",
+            rips_triplet[0],
+        )
+        return None
+
+    return ri_exe
 
 
-def get_rips_version_triplet() -> Tuple[int, int, str]:
+def get_resinsight_version_string(ri_exe: str) -> str:
+    """
+    Find version string from ResInsight help output
+    """
+    output_bytes = subprocess.check_output([ri_exe, "--console", "--help"])
+    output_string = output_bytes.decode("UTF-8")
+    match = RI_VERSION_REX.match(output_string)
+    if not match:
+        return ""
+
+    return match.group(1)
+
+
+def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, int]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
-    major = rips.instance.RiaVersionInfo.RESINSIGHT_MAJOR_VERSION
-    minor = rips.instance.RiaVersionInfo.RESINSIGHT_MINOR_VERSION
-    patch = rips.instance.RiaVersionInfo.RESINSIGHT_PATCH_VERSION
+    version_string = get_resinsight_version_string(ri_exe)
+    version_string_triplet = version_string.strip().split(sep=".")
+    major = minor = patch = 0
+    if len(version_string_triplet) == 3:
+        try:
+            major, minor, patch = [int(num) for num in version_string_triplet]
+        except ValueError:
+            logger.debug(
+                "Unable to extract version triplet from string %s, returning (0,0,0)",
+                version_string,
+            )
+
+    return (major, minor, patch)
+
+
+def get_rips_version_triplet() -> Tuple[int, int, int]:
+    """
+    Get the rips (client-side) version, without instanciating/launching ResInsight
+    """
+    major = int(rips.instance.RiaVersionInfo.RESINSIGHT_MAJOR_VERSION)
+    minor = int(rips.instance.RiaVersionInfo.RESINSIGHT_MINOR_VERSION)
+    patch = int(rips.instance.RiaVersionInfo.RESINSIGHT_PATCH_VERSION)
     return (major, minor, patch)
 
 
 def find_and_wrap_resinsight_version(
-    version_triplet: Tuple[int, int, str]
+    version_triplet: Tuple[int, int, int]
 ) -> Optional[str]:
     """
     Find a ResInsight executable matching at least the major.minor version
@@ -157,7 +199,7 @@ def find_and_wrap_resinsight_version(
     wrapper_file = tempfile.NamedTemporaryFile(delete=False)
     with open(wrapper_file.name, "w") as fhandle:
         print(WRAPPER_TEMPLATE, file=fhandle)
-        print(f'{resinsight_exe} "$@"', file=fhandle)
+        print(f'exec {resinsight_exe} "$@"', file=fhandle)
         fhandle.flush()
     os.chmod(wrapper_file.name, 0o770)
     wrapper_file.close()
@@ -185,6 +227,11 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
         rips_version_triplet = get_rips_version_triplet()
         resinsight_exe = find_and_wrap_resinsight_version(rips_version_triplet)
         if not resinsight_exe:
+            logger.critical(
+                "Unable to find the %d version of ResInsight (to match \
+                    the rips version)",
+                rips_version_triplet[0],
+            )
             return False
         wrapper = True
 
@@ -196,74 +243,24 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
             command_line_parameters=command_line_parameters,
         )
     except Exception as any_exception:  # pylint: disable=broad-except
-        if (
-            len(any_exception.args) > 3
-            and any_exception.args[0].find("Wrong Version") >= 0
-        ):
-            server_version_triplet = any_exception.args[2].split(".")
-            smajor, sminor, spatch = server_version_triplet
-            logger.error(
-                "Wrong ResInsight version - found (%s.%s.%s), requires (%s.%s.*)",
-                smajor,
-                sminor,
-                spatch,
-                cmajor,
-                cminor,
+        logger.error(str(any_exception))
+        logger.debug(
+            "Failed to launch ResInsight (%s)- trying once more", resinsight_exe
+        )
+        try:  # Second launch attempt
+            resinsight = rips.Instance.launch(
+                resinsight_executable=resinsight_exe,
+                console=console_mode,
+                command_line_parameters=command_line_parameters,
             )
-            if (
-                wrapper
-            ):  # If already tried via wrapper, no need to search, just try again
-                logger.debug(
-                    "Trying to launch ResInsight wrapper again: %s", resinsight_exe
-                )
-                try:  # Second launch attempt via wrapper
-                    resinsight = rips.Instance.launch(
-                        resinsight_executable=resinsight_exe,
-                        console=console_mode,
-                        command_line_parameters=command_line_parameters,
-                    )
-                except Exception as any_exception:  # pylint: disable=broad-except
-                    Path(resinsight_exe).unlink()  # Delete wrapper
-                    logger.error(str(any_exception))
-                    return False
-            else:  # Not via wrapper - try to find a valid install and wrap it
-                resinsight_exe = find_and_wrap_resinsight_version(
-                    get_rips_version_triplet()
-                )
-                if not resinsight_exe:
-                    return False
-                wrapper = True
-                try:  # First launch attempt via wrapper
-                    resinsight = rips.Instance.launch(
-                        resinsight_executable=resinsight_exe,
-                        console=console_mode,
-                        command_line_parameters=command_line_parameters,
-                    )
-                except Exception as any_exception:  # pylint: disable=broad-except
-                    logger.error(str(any_exception))
-                    try:  # Second launch attempt via wrapper
-                        resinsight = rips.Instance.launch(
-                            resinsight_executable=resinsight_exe,
-                            console=console_mode,
-                            command_line_parameters=command_line_parameters,
-                        )
-                    except Exception as any_exception:  # pylint: disable=broad-except
-                        Path(resinsight_exe).unlink()
-                        logger.error(str(any_exception))
-                        return False
-        else:  # Not a version error, just try a second time
-            try:
-                resinsight = rips.Instance.launch(
-                    resinsight_executable=resinsight_exe,
-                    console=console_mode,
-                    command_line_parameters=command_line_parameters,
-                )
-            except Exception as any_exception:  # pylint: disable=broad-except
-                logger.error(str(any_exception))
-                return False
+        except Exception as any_exception:  # pylint: disable=broad-except
+            logger.error(str(any_exception))
+            logger.critical(
+                "Failed to launch ResInsight (%s) again - stopping now.", resinsight_exe
+            )
 
     if wrapper:
-        Path(resinsight_exe).unlink()
+        Path(resinsight_exe).unlink()  # Delete wrapper
 
     return resinsight
 
@@ -339,6 +336,7 @@ def launch_resinsight_dev(
         sys.path.insert(0, str(ridir))
         sys.path.insert(0, str(pypath))
         deep_reload(rips, pypath)
+        reload(rips.case)
         sys.path.pop(0)
     try:
         resinsight = rips.Instance.launch(
@@ -766,10 +764,15 @@ def main() -> int:
         lgr_spec_fn = lgr_spec_fn.replace(" ", "_")
         return Path(tmp_output_folder) / lgr_spec_fn
 
+    orig_ri_case_name = ri_case_name
     ri_case_name = ri_case_name.replace(".", "_")
     with open(output_file, "w") as out_fd:
         for well in well_path_names:
             perf_fn = get_exported_perf_filename(well, ri_case_name)
+            # Check for case name with '.' due to behavioural change in 2021.06 release
+            orig_perf_fn = get_exported_perf_filename(well, orig_ri_case_name)
+            if orig_perf_fn.exists() and not perf_fn.exists():
+                perf_fn = orig_perf_fn
 
             # Need to check if LGR perfs exists, in case of non-LGR wells intersecting
             # well LGRs, or in case of LGRs present in the init case
