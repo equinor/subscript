@@ -29,8 +29,8 @@ Outputs files according to naming convention outputdirectory/fname_outfilesuffix
   * dpdspt_lag2_genobs_suffix_bunr; if --genobs_resultfile is invoked
   * wbhp_genobs_suffix_bunr; if --gen_obs_result_file is invoked
 
-gen_obs_result_file is to be invoked to generate necessary files to be sued with GENERAL_OBSERVATION in ERT.
-Note: the outfilesuffix argument is then used to pass on the RESTART/report step number. 
+gen_obs_result_file is to generate files to be used with GENERAL_OBSERVATION in ERT.
+Note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
 
 """
 
@@ -61,7 +61,8 @@ EXAMPLES = """
  FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS,
     <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1)
 
-Then GEN_DATA DPDT_SIM  INPUT_FORMAT:ASCII REPORT_STEPS:1 RESULTS_FILE:dpdspt_lag2_genobs_<WELLNAME>_%d_<BUILDUP_NR>
+Then GEN_DATA DPDT_SIM  INPUT_FORMAT:ASCII REPORT_STEPS:1
+RESULTS_FILE:dpdspt_lag2_genobs_<WELLNAME>_%d_<BUILDUP_NR>
 """
 
 
