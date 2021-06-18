@@ -26,6 +26,10 @@ def test_main(tmpdir, mocker):
     mocker.patch("sys.argv", ["welltest_dpds", DATAFILEPATH, "55_33-1"])
     welltest_dpds.main()
     assert Path("welltest_output.csv").exists()
+    assert Path("dpdspt_lag1.csv").exists()
+    assert Path("dpdspt_lag2.csv").exists()
+    assert Path("spt.csv").exists()
+    Path("welltest_output.csv").unlink()
 
     # test --outfilessuffix
     mocker.patch(
@@ -61,7 +65,11 @@ def test_main(tmpdir, mocker):
     )
     welltest_dpds.main()
     assert Path("welltest_output.csv").exists()
+    suptimew = pd.read_csv("spt.csv")
+    assert suptimew.iloc[0] == pytest.approx(-9.87037983)
+    assert suptimew.iloc[-1] == pytest.approx(-0.65693308)
     Path("welltest_output.csv").unlink()
+
     # test --genobs_resultfile
     mocker.patch(
         "sys.argv",
