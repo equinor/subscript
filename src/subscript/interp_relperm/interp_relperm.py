@@ -20,23 +20,20 @@ from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """Interpolation script for relperm tables.
-Script reads base/high/low SWOF and SGOF tables from files and
-interpolates in between, using interpolation parameter(s) in range
-[-1,1], so that -1, 0, and 1 corresponds to low, base, and high tables
-respectively.
 
-The base tables must contain both SWOF and SGOF to ensure consistent
-endpoints. Files for base, low and high must be declared, however
-they may be identical. Consequently, if either base, low or high
-is missing in the scal recommendation, two of the inputs can be
-set to point to the same file and by adjusting the interpolation
-range accordingly interpolation between base and high, or low and
-high may be achieved.
+The script reads files with SWOF/SGOF tables (or family 2) with base/high/low
+curves in SWOF and SGOF tables from files and interpolates in between, using
+interpolation parameter(s) in the range [-1,1], so that -1, 0, and 1
+correspond to low, base, and high respectively.
 
-Krw, Krow, Pcow interpolated using parameter param_w
+The tables must contain both SWOF and SGOF (or SWFN and SGFN) to ensure
+consistent endpoints. Files for base, low and high must be declared, however
+they may be identical in the case only "low" and "high" is available, and
+together with an adjusted interpolation parameter range.
 
-Krg, Krog, Pcog interpolated using parameter param_g
-
+The interpolation parameter ``param_w`` in the YAML configuration will be used
+to interpolate KRW, KROW and PCOW. The parameter ``param_g`` is used for KRG,
+KROG and PCOG. These parameters can be set individually pr. SATNUM.
 """
 
 EPILOGUE = """
