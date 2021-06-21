@@ -61,7 +61,6 @@ REQUIREMENTS = [
     "configsuite",
     "ecl",
     "ecl2df",
-    "equinor-libres",
     "ert",
     "matplotlib",
     "numpy",
