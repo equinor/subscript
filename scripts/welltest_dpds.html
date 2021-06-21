@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>WELLTEST_DPDS &mdash; subscript 0.11.3.dev6+g6ce994a documentation</title>
+  <title>WELLTEST_DPDS &mdash; subscript 0.11.3.dev15+g9828d55 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.3.dev6+g6ce994a
+                0.11.3.dev15+g9828d55
               </div>
             
           
@@ -213,22 +213,25 @@ analysis, from eg Kappa Saphir.</p>
 <li><p>wbhp:well_name</p></li>
 <li><p>wopr:well_name if phase == OIL</p></li>
 <li><p>wgpr:well_name if phase == GAS</p></li>
+<li><p>wwpr:well_name if phase == WATER</p></li>
 </ul>
 </dd>
-<dt>Outputs files according to naming convention outputdirectory/fname_outfilesuffix.csv:</dt><dd><ul class="simple">
-<li><p>dpdspt_lag1; cumtime and superpositioned time derivative of pressure lag 1</p></li>
-<li><p>dpdspt_lag2; cumtime and superpositioned time derivative of pressure lag 2</p></li>
-<li><p>spt; superpositioned time</p></li>
-<li><p>welltest; unified csv file with vectors: cumtime, wbhp, wopr, wgpr, wwpr</p></li>
-<li><p>dpdspt_lag1_gendobs_suffix_bunr; if –genobs_resultfile is invoked</p></li>
-<li><p>dpdspt_lag2_gendobs_suffix_burn; if –genobs_resultfile is invoked</p></li>
-<li><p>wbhp_genobs_suffix_bunr; if –gen_obs_result_file is invoked</p></li>
+<dt>Outputs files according to naming convention under outputdirectory/:</dt><dd><ul class="simple">
+<li><p>dpdspt_lag1_suffix.csv; cumtime and superpositioned time derivative of pressure lag1</p></li>
+<li><p>dpdspt_lag2_suffix.csv; cumtime and superpositioned time derivative of pressure lag2</p></li>
+<li><p>spt_suffix.csv; superpositioned time</p></li>
+<li><p>welltest_output_suffix.csv; file with vectors: cumtime, wbhp, wopr, wgpr, wwpr</p></li>
+<li><p>dpdspt_lag1_genobs_suffix_bunr.csv; if –genobs_resultfile is invoked</p></li>
+<li><p>dpdspt_lag2_genobs_suffix_bunr.csv; if –genobs_resultfile is invoked</p></li>
+<li><p>wbhp_genobs_suffix_bunr.csv; if –gen_obs_result_file is invoked</p></li>
 </ul>
 </dd>
 </dl>
+<p>gen_obs_result_file is to generate files to be used with GENERAL_OBSERVATION in ERT.
+Note: the outfilesuffix argument is then used to pass on the RESTART/report step number.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">welltest_dpds</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">outfilessuffix</span> <span class="n">OUTFILESSUFFIX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">BUILDUP_NR</span><span class="p">]</span>
-                     <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIRECTORY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">phase</span> <span class="p">{</span><span class="n">OIL</span><span class="p">,</span><span class="n">GAS</span><span class="p">}]</span>
+                     <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIRECTORY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">phase</span> <span class="p">{</span><span class="n">OIL</span><span class="p">,</span><span class="n">GAS</span><span class="p">,</span><span class="n">WATER</span><span class="p">}]</span>
                      <span class="p">[</span><span class="o">--</span><span class="n">genobs_resultfile</span> <span class="n">GENOBS_RESULTFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                      <span class="n">eclcase</span> <span class="n">wellname</span>
 </pre></div>
@@ -260,12 +263,12 @@ analysis, from eg Kappa Saphir.</p>
 <p>Default: “.”</p>
 </dd>
 <dt><kbd>--phase</kbd></dt>
-<dd><p>Possible choices: OIL, GAS</p>
-<p>Main fluid phase in test (OIL/GAS).</p>
+<dd><p>Possible choices: OIL, GAS, WATER</p>
+<p>Main fluid phase in test (OIL/GAS/WATER).</p>
 <p>Default: “OIL”</p>
 </dd>
 <dt><kbd>--genobs_resultfile</kbd></dt>
-<dd><p>File with welltest results used to define time steps, typically exported from Saphir. If present, additional files to be used with GENERAL_OBSERVATION in ERT are produced</p>
+<dd><p>Option to trigger export of result files compatible with ERTGENERAL_OBSERVATION file format to be used in history matching. Expected argument is a file with welltest results used to definethe time steps to be reported (file typically exported from Saphir.)</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
