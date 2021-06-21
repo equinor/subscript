@@ -20,23 +20,20 @@ from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """Interpolation script for relperm tables.
-Script reads base/high/low SWOF and SGOF tables from files and
-interpolates in between, using interpolation parameter(s) in range
-[-1,1], so that -1, 0, and 1 corresponds to low, base, and high tables
-respectively.
 
-The base tables must contain both SWOF and SGOF to ensure consistent
-endpoints. Files for base, low and high must be declared, however
-they may be identical. Consequently, if either base, low or high
-is missing in the scal recommendation, two of the inputs can be
-set to point to the same file and by adjusting the interpolation
-range accordingly interpolation between base and high, or low and
-high may be achieved.
+The script reads files with SWOF/SGOF tables (or family 2) with base/high/low
+curves in SWOF and SGOF tables from files and interpolates in between, using
+interpolation parameter(s) in the range [-1,1], so that -1, 0, and 1
+correspond to low, base, and high respectively.
 
-Krw, Krow, Pcow interpolated using parameter param_w
+The tables must contain both SWOF and SGOF (or SWFN and SGFN) to ensure
+consistent endpoints. Files for base, low and high must be declared, however
+they may be identical in the case only "low" and "high" is available, and
+together with an adjusted interpolation parameter range.
 
-Krg, Krog, Pcog interpolated using parameter param_g
-
+The interpolation parameter ``param_w`` in the YAML configuration will be used
+to interpolate KRW, KROW and PCOW. The parameter ``param_g`` is used for KRG,
+KROG and PCOG. These parameters can be set individually pr. SATNUM.
 """
 
 EPILOGUE = """
@@ -58,6 +55,8 @@ EPILOGUE = """
   low:
     - swof_pes.inc
     - /project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc
+
+  pyscalfile: scal_input.xlsx  # Optional, alternative to providing low/base/high
 
   result_file: outfile.inc  # Required: Name of output file with interpolated tables
 
@@ -161,6 +160,9 @@ def _is_valid_table_entries(schema: dict):
                 and isinstance(schema["base"], tuple)
                 and isinstance(schema["high"], tuple)
             )
+    if "pyscalfile" in schema:
+        # If pyscalfile is given, we don't need low/base/high
+        return True
     return False
 
 
@@ -203,6 +205,11 @@ def get_cfg_schema() -> dict:
                         MK.ElementValidators: (_is_filename,),
                     }
                 },
+            },
+            "pyscalfile": {
+                MK.Type: types.String,
+                MK.ElementValidators: (_is_filename,),
+                MK.AllowNone: True,
             },
             "result_file": {MK.Type: types.String},
             "family": {
@@ -260,9 +267,48 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
         dframe: Containing tabulated values with pyscals column naming.
             The data must be restricted to only one SATNUM.
     """
+    dframe = dframe.copy()  # Copy since we will modify it.
     wog = pyscal.WaterOilGas(swl=dframe["SW"].min(), h=delta_s)
+    if "PCOW" not in dframe:
+        dframe = dframe.assign(PCOW=0)
+    if "PCOG" not in dframe:
+        dframe = dframe.assign(PCOG=0)
+
+    # If we have parsed family 2 input, KRO and KROW are not
+    # on the same row. Merge the rows into family 1 style:
+    if "KEYWORD" in dframe and "SOF3" in dframe["KEYWORD"].values:
+        sof3_rows = dframe["KEYWORD"] == "SOF3"
+        dframe.loc[sof3_rows, "SW"] = 1 - dframe[sof3_rows]["SO"]
+        swl = dframe["SW"].min()
+        dframe.loc[sof3_rows, "SG"] = 1 - swl - dframe[sof3_rows]["SO"]
+        wo_dframe = (
+            dframe[["SW", "KRW", "KROW", "PCOW"]]
+            .set_index("SW")
+            .sort_index()
+            .dropna(how="all")
+            .interpolate(method="index")
+            .fillna(method="bfill")
+            .round(8)
+            .drop_duplicates()
+            .reset_index()
+        )
+        go_dframe = (
+            dframe[["SG", "KRG", "KROG", "PCOG"]]
+            .set_index("SG")
+            .sort_index()
+            .dropna(how="all")
+            .interpolate(method="index")
+            .fillna(method="bfill")
+            .round(8)
+            .drop_duplicates()
+            .reset_index()
+        )
+    else:
+        wo_dframe = dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
+        go_dframe = dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
+
     wog.wateroil.add_fromtable(
-        dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index(),
+        wo_dframe,
         # For pyscal <= 0.7.7:
         swcolname="SW",
         krwcolname="KRW",
@@ -270,7 +316,7 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
         pccolname="PCOW",
     )
     wog.gasoil.add_fromtable(
-        dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index(),
+        go_dframe,
         # For pyscal <= 0.7.7:
         sgcolname="SG",
         krgcolname="KRG",
@@ -424,10 +470,37 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
     if cfg_suite.snapshot.delta_s:
         relperm_delta_s = cfg_suite.snapshot.delta_s
 
-    # Parse tables from files
-    base_df = parse_satfunc_files(cfg_suite.snapshot.base)
-    low_df = parse_satfunc_files(cfg_suite.snapshot.low)
-    high_df = parse_satfunc_files(cfg_suite.snapshot.high)
+    base_df: pd.DataFrame = pd.DataFrame()
+    low_df: pd.DataFrame = pd.DataFrame()
+    high_df: pd.DataFrame = pd.DataFrame()
+
+    if cfg_suite.snapshot.pyscalfile is not None:
+        logger.info(
+            "Loading relperm parametrization from %s", cfg_suite.snapshot.pyscalfile
+        )
+        param_dframe = pyscal.PyscalFactory.load_relperm_df(
+            cfg_suite.snapshot.pyscalfile
+        ).set_index("CASE")
+        base_df = (
+            pyscal.PyscalFactory.create_pyscal_list(param_dframe.loc["base"])
+            .df()
+            .set_index("SATNUM")
+        )
+        low_df = (
+            pyscal.PyscalFactory.create_pyscal_list(param_dframe.loc["low"])
+            .df()
+            .set_index("SATNUM")
+        )
+        high_df = (
+            pyscal.PyscalFactory.create_pyscal_list(param_dframe.loc["high"])
+            .df()
+            .set_index("SATNUM")
+        )
+    else:
+        # Parse tables from files
+        base_df = parse_satfunc_files(cfg_suite.snapshot.base)
+        low_df = parse_satfunc_files(cfg_suite.snapshot.low)
+        high_df = parse_satfunc_files(cfg_suite.snapshot.high)
 
     if not (
         set(base_df.columns) == set(low_df.columns)
@@ -442,7 +515,6 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
     # Loop over satnum and interpolate according to default and cfg values
     interpolants = pyscal.PyscalList()
     satnums = range(1, base_df.reset_index("SATNUM")["SATNUM"].unique().max() + 1)
-
     for satnum in satnums:
         interp_values = {"param_w": 0.0, "param_g": 0.0}
         for interp in cfg_suite.snapshot.interpolations:
