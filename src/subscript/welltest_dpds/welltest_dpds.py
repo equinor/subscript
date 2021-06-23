@@ -34,8 +34,10 @@ bunr is specified by argument buildup_nr
 genobs_resultfile expects a file with welltest results used to define the time steps
 to be reported (typically exported from Saphir with time and pressure derivative).
 genobs_resultfile is to generate files used with GENERAL_OBSERVATION/GEN_DATA in ERT.
-Note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
+note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
 (in example below outfilesuffix=wellname_reportstep).
+
+.. note:: GAS phase results do not include yet pseudo-time and pseudo-pressure.
 
 """
 
@@ -65,8 +67,7 @@ Example for cases without HM:
 
    FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
 
-or
-::
+   or
 
    FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS, <BUILDUP_NR>=1,
                  <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1)
@@ -86,6 +87,9 @@ Then set-up of GEN_DATA can be
             RESULT_FILE:dpdspt_lag2_genobs_OP_1_%d_2
 
 result_file corresponds to dpdspt_lag2_genobs_<WELLNAME>_%d_<BUILDUP_NR>
+
+.. warning:: Remember to remove line breaks in argument list when copying the
+   examples into your own ERT config.
 """
 
 
