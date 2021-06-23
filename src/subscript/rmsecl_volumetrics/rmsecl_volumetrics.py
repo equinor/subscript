@@ -21,8 +21,6 @@ with volumetrics from RMS, when the mapping between FIPNUMs and
 region/zones is provided in a yaml file.
 
 This script is currently in BETA. The name and calling syntax might change.
-
-See the documentation for prtvol2csv for YAML file specification and example.
 """
 
 
@@ -124,7 +122,18 @@ def _compare_volumetrics(
 
 def _disjoint_sets_to_yaml(disjoint_sets_df: pd.DataFrame) -> str:
     """Construct a user readable version of the disjoint_sets dataframe"""
-    return yaml.dump(disjoint_sets_df.set_index("SET").to_dict(orient="index"))
+    regions = disjoint_sets_df.groupby(["SET"])["REGION"].apply(
+        lambda x: ",".join(sorted(map(str, set(x))))
+    )
+    zones = disjoint_sets_df.groupby(["SET"])["ZONE"].apply(
+        lambda x: ",".join(sorted(map(str, set(x))))
+    )
+    fipnums = disjoint_sets_df.groupby(["SET"])["FIPNUM"].apply(
+        lambda x: ",".join(sorted(map(str, set(x))))
+    )
+    return yaml.dump(
+        pd.concat([regions, zones, fipnums], axis=1).to_dict(orient="index")
+    )
 
 
 def main() -> None:
@@ -147,7 +156,7 @@ def main() -> None:
     if args.sets:
         Path(args.sets).write_text(_disjoint_sets_to_yaml(disjoint_sets_df))
     if args.output:
-        comparison_df.to_csv(args.output, index=False)
+        comparison_df.to_csv(args.output, float_format="%g", index=False)
         logger.info("Written %d rows to %s", len(comparison_df), args.output)
     else:
         pd.set_option("display.max_rows", 1000)

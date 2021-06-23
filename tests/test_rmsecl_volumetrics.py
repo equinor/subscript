@@ -6,6 +6,7 @@ import yaml
 import pytest
 
 
+import fmu.tools.fipmapper.fipmapper as fipmapper
 from subscript.rmsecl_volumetrics.rmsecl_volumetrics import _compare_volumetrics, main
 
 
@@ -221,6 +222,134 @@ def test_compare_volumetrics(
     )
 
 
+def test_documentation_example(tmpdir, mocker, capsys):
+    tmpdir.chdir()
+    print(f"\nLook in {tmpdir} for input and output to be used in documentation")
+    Path("FOO.PRT").write_text(
+        """
+  REPORT   0     1 JAN 2000
+                                                =================================
+                                                : FIPNUM  REPORT REGION    1    :
+                                                :     PAV =        139.76  BARSA:
+                                                :     PORV=     27777509.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :          100.                         100.:           200. :           400.           0.           400.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    2    :
+                                                :     PAV =        139.76  BARSA:
+                                                :     PORV=     27777509.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :          200.                         200.:           400. :           800.           0.           800.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+"""  # noqa
+    )
+    Path("volumetrics_sim_oil_1.txt").write_text(
+        """
+   Zone      Region index          Bulk                Pore                Hcpv               Stoiip
+Upper  West                             500.0              400.                300.00              50.40
+Lower  West                             500.0              400.                300.00              50.40
+Upper  East                            1000.0              800.                600.00              100.40
+Lower  East                            1000.0              800.                600.00              100.40
+"""  # noqa
+    )
+    Path("volumetrics_sim_gas_1.txt").write_text(
+        """
+   Zone      Region index          Bulk                Pore                Hcpv              Giip
+Upper  West                             500.0              400.                300.00              200.40
+Lower  West                             500.0              400.                300.00              200.40
+Upper  East                            1000.0              800.                600.00              404.40
+Lower  East                            1000.0              800.                600.00              404.40
+"""  # noqa
+    )
+    Path("fipmap_config_1.yml").write_text(
+        """
+region2fipnum:
+  West: [1]
+  East: [2]
+zone2fipnum:
+  Upper: [1, 2]
+  Lower: [1, 2]"""
+    )
+    Path("fipmap_config_2.yml").write_text(
+        """
+fipnum2region:
+  1: West
+  2: East
+fipnum2zone:
+  1:
+   - Upper
+   - Lower
+  2:
+   - Upper
+   - Lower"""
+    )
+    Path("fipmap_config_3.yml").write_text(
+        """
+FIPNUM:
+  groups:
+    REGION:
+      West: [1]
+      East: [2]
+    ZONE:
+      Upper: [1, 2]
+      Lower: [1, 2]"""
+    )
+    mocker.patch(
+        "sys.argv",
+        [
+            "rmsecl_volumetrics",
+            "FOO.PRT",
+            "volumetrics_sim",
+            "fipmap_config_1.yml",
+            "--sets",
+            "sets.yml",
+            "--output",
+            "volcomp.csv",
+        ],
+    )
+    main()
+    print(Path("sets.yml").read_text())
+    print(Path("volcomp.csv").read_text())
+    print(pd.read_csv("volcomp.csv"))
+    sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text())
+    assert sets_fromdisk == {
+        0: {"FIPNUM": "2", "REGION": "East", "ZONE": "Lower,Upper"},
+        1: {"FIPNUM": "1", "REGION": "West", "ZONE": "Lower,Upper"},
+    }
+    mocker.patch(
+        "sys.argv",
+        [
+            "rmsecl_volumetrics",
+            "FOO.PRT",
+            "volumetrics_sim",
+            "fipmap_config_1.yml",
+        ],
+    )
+    main()
+
+    # Run again to get the script output:
+
+    # Test that the three yaml files give the same disjoint sets
+    disjoint_sets_1 = fipmapper.FipMapper(
+        yamlfile="fipmap_config_1.yml"
+    ).disjoint_sets()
+    disjoint_sets_2 = fipmapper.FipMapper(
+        yamlfile="fipmap_config_2.yml"
+    ).disjoint_sets()
+    disjoint_sets_3 = fipmapper.FipMapper(
+        yamlfile="fipmap_config_3.yml"
+    ).disjoint_sets()
+
+    pd.testing.assert_frame_equal(disjoint_sets_1, disjoint_sets_2)
+    pd.testing.assert_frame_equal(disjoint_sets_1, disjoint_sets_3)
+
+
 def test_command_line(tmpdir, mocker):
     tmpdir.chdir()
     Path("FOO.PRT").write_text(
@@ -304,6 +433,4 @@ fipnum2zone:
     )
 
     sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text())
-    assert sets_fromdisk == {
-        0: {"FIPNUM": 1, "REGION": "1", "REGZONE": "1-UpperReek", "ZONE": "UpperReek"}
-    }
+    assert sets_fromdisk == {0: {"FIPNUM": "1", "REGION": "1", "ZONE": "UpperReek"}}
