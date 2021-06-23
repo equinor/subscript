@@ -60,22 +60,23 @@ CATEGORY = "modelling.reservoir"
 
 EXAMPLES = """
 Example for cases without HM:
---------
+-----------------------------
 ::
 
    FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
 
 or
+::
    FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS, <BUILDUP_NR>=1,
                  <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1)
 
 Example for cases with HM:
---------
+--------------------------
 ::
 
    FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS, <BUILDUP_NR>=2,
                  <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1,
-                 <GENOBS_RESULTFILE>=OP_1_dpdt_bu1_saphir.txt )
+                 <GENOBS_RESULTFILE>=OP_1_dpdt_bu2_saphir.txt )
 
 Then set-up of GEN_DATA can be
 ::
