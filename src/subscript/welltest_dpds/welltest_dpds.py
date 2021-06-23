@@ -67,6 +67,7 @@ Example for cases without HM:
 
 or
 ::
+
    FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS, <BUILDUP_NR>=1,
                  <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1)
 
