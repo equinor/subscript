@@ -17,7 +17,7 @@ analysis, from eg Kappa Saphir.
 Required summary vectors in sim deck:
   * wbhp:well_name
   * wopr:well_name if phase == OIL
-  * wgpr:well_name if phase == GAS
+  * wgpr:well_name if phase == GAS (do not yet use pseudo-pressure)
   * wwpr:well_name if phase == WATER
 
 Outputs files according to naming convention under outputdirectory/:
@@ -27,10 +27,17 @@ Outputs files according to naming convention under outputdirectory/:
   * welltest_output_suffix.csv; file with vectors: cumtime, wbhp, wopr, wgpr, wwpr
   * dpdspt_lag1_genobs_suffix_bunr.csv; if --genobs_resultfile is invoked
   * dpdspt_lag2_genobs_suffix_bunr.csv; if --genobs_resultfile is invoked
-  * wbhp_genobs_suffix_bunr.csv; if --gen_obs_result_file is invoked
+  * wbhp_genobs_suffix_bunr.csv; if --genobs_resultfile is invoked
 
-gen_obs_result_file is to generate files to be used with GENERAL_OBSERVATION in ERT.
-Note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
+suffix is specified by argument outfilesuffix
+bunr is specified by argument buildup_nr
+genobs_resultfile expects a file with welltest results used to define the time steps
+to be reported (typically exported from Saphir with time and pressure derivative).
+genobs_resultfile is to generate files used with GENERAL_OBSERVATION/GEN_DATA in ERT.
+note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
+(in example below outfilesuffix=wellname_reportstep).
+
+.. note:: GAS phase results do not include yet pseudo-time and pseudo-pressure.
 
 """
 
@@ -54,15 +61,35 @@ To do:
 CATEGORY = "modelling.reservoir"
 
 EXAMPLES = """
-.. code-block:: console
+Example for cases without HM:
+-----------------------------
+::
 
- FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
+   FORWARD_MODEL WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=DST_WELL)
 
- FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS,
-    <BUILDUP_NR>=1, <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1)
+   or
 
-Then GEN_DATA DPDT_SIM  INPUT_FORMAT:ASCII REPORT_STEPS:1
-RESULTS_FILE:dpdspt_lag2_genobs_<WELLNAME>_%d_<BUILDUP_NR>
+   FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS, <BUILDUP_NR>=1,
+                 <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1)
+
+Example for cases with HM:
+--------------------------
+::
+
+   FORWARD_MODEL  WELLTEST_DPDS(<ECLBASE>, <WELLNAME>=OP_1, <PHASE>=GAS, <BUILDUP_NR>=2,
+                 <OUTPUTDIRECTORY>=dst, <OUTFILESSUFFIX>=OP_1_1,
+                 <GENOBS_RESULTFILE>=OP_1_dpdt_bu2_saphir.txt )
+
+Then set-up of GEN_DATA can be
+::
+
+   GEN_DATA DPDT_SIM INPUT_FORMAT:ASCII REPORT_STEPS:1
+            RESULT_FILE:dpdspt_lag2_genobs_OP_1_%d_2
+
+result_file corresponds to dpdspt_lag2_genobs_<WELLNAME>_%d_<BUILDUP_NR>
+
+.. warning:: Remember to remove line breaks in argument list when copying the
+   examples into your own ERT config.
 """
 
 
