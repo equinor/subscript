@@ -58,7 +58,6 @@ jobs:
       - name: Install subscript with dependencies
         run: |
           pip install --upgrade pip
-          pip install git+https://github.com/equinor/fmu-tools  # Not on pypi
           pip install .[tests,docs]
 
       - name: Force correct RIPS version
