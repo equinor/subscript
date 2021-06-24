@@ -45,7 +45,7 @@ jobs:
           black --check *.py src tests
           pip install flake8
           flake8 src tests
-          
+
       - name: Install OPM-flow and ResInsight (for testing)
         run: |
           sudo apt-get install software-properties-common
@@ -58,6 +58,7 @@ jobs:
       - name: Install subscript with dependencies
         run: |
           pip install --upgrade pip
+          pip install git+https://github.com/equinor/fmu-tools  # Not on pypi
           pip install .[tests,docs]
 
       - name: Force correct RIPS version
