@@ -10,7 +10,7 @@ import fmu.tools.fipmapper.fipmapper as fipmapper
 from subscript.rmsecl_volumetrics.rmsecl_volumetrics import (
     _compare_volumetrics,
     main,
-    disjoint_sets_to_dict,
+    _disjoint_sets_to_dict,
 )
 
 
@@ -279,7 +279,7 @@ def test_compare_volumetrics(
     ],
 )
 def test_disjoint_sets_to_dict(dframe: list, expected: dict):
-    assert disjoint_sets_to_dict(pd.DataFrame(dframe)) == expected
+    assert _disjoint_sets_to_dict(pd.DataFrame(dframe)) == expected
 
 
 def test_documentation_example(tmpdir, mocker, capsys):

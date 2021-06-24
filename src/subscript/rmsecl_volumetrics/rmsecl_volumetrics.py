@@ -120,7 +120,7 @@ def _compare_volumetrics(
     return comparison_df
 
 
-def disjoint_sets_to_dict(
+def _disjoint_sets_to_dict(
     disjoint_sets_df: pd.DataFrame,
 ) -> Dict[int, Dict[str, list]]:
     """From the dataframe of sets, construct a dictionary indexed by set
@@ -155,7 +155,7 @@ def main() -> None:
         disjoint_sets_df, simvolumes_df, volumetrics_df
     )
     if args.sets:
-        Path(args.sets).write_text(yaml.dump(disjoint_sets_to_dict(disjoint_sets_df)))
+        Path(args.sets).write_text(yaml.dump(_disjoint_sets_to_dict(disjoint_sets_df)))
     if args.output:
         comparison_df.to_csv(args.output, float_format="%g", index=False)
         logger.info("Written %d rows to %s", len(comparison_df), args.output)
