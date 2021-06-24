@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>WELLTEST_DPDS &mdash; subscript 0.11.3.dev8+g12ef300 documentation</title>
+  <title>WELLTEST_DPDS &mdash; subscript 0.11.3.dev9+gad92da8 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.11.3.dev8+g12ef300
+                0.11.3.dev9+gad92da8
               </div>
             
           
@@ -212,7 +212,7 @@ analysis, from eg Kappa Saphir.</p>
 <dt>Required summary vectors in sim deck:</dt><dd><ul class="simple">
 <li><p>wbhp:well_name</p></li>
 <li><p>wopr:well_name if phase == OIL</p></li>
-<li><p>wgpr:well_name if phase == GAS</p></li>
+<li><p>wgpr:well_name if phase == GAS (do not yet use pseudo-pressure)</p></li>
 <li><p>wwpr:well_name if phase == WATER</p></li>
 </ul>
 </dd>
@@ -223,12 +223,21 @@ analysis, from eg Kappa Saphir.</p>
 <li><p>welltest_output_suffix.csv; file with vectors: cumtime, wbhp, wopr, wgpr, wwpr</p></li>
 <li><p>dpdspt_lag1_genobs_suffix_bunr.csv; if –genobs_resultfile is invoked</p></li>
 <li><p>dpdspt_lag2_genobs_suffix_bunr.csv; if –genobs_resultfile is invoked</p></li>
-<li><p>wbhp_genobs_suffix_bunr.csv; if –gen_obs_result_file is invoked</p></li>
+<li><p>wbhp_genobs_suffix_bunr.csv; if –genobs_resultfile is invoked</p></li>
 </ul>
 </dd>
 </dl>
-<p>gen_obs_result_file is to generate files to be used with GENERAL_OBSERVATION in ERT.
-Note: the outfilesuffix argument is then used to pass on the RESTART/report step number.</p>
+<p>suffix is specified by argument outfilesuffix
+bunr is specified by argument buildup_nr
+genobs_resultfile expects a file with welltest results used to define the time steps
+to be reported (typically exported from Saphir with time and pressure derivative).
+genobs_resultfile is to generate files used with GENERAL_OBSERVATION/GEN_DATA in ERT.
+note: the outfilesuffix argument is then used to pass on the RESTART/report step number.
+(in example below outfilesuffix=wellname_reportstep).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>GAS phase results do not include yet pseudo-time and pseudo-pressure.</p>
+</div>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">welltest_dpds</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">outfilessuffix</span> <span class="n">OUTFILESSUFFIX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">BUILDUP_NR</span><span class="p">]</span>
                      <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIRECTORY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">phase</span> <span class="p">{</span><span class="n">OIL</span><span class="p">,</span><span class="n">GAS</span><span class="p">,</span><span class="n">WATER</span><span class="p">}]</span>
