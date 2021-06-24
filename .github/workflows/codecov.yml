@@ -34,7 +34,6 @@ jobs:
     - name: Install subscript and test dependencies
       run: |
         pip install pip -U
-        pip install git+https://github.com/equinor/fmu-tools  # Not on pypi
         pip install .[tests]
 
     - name: Generate coverage report
