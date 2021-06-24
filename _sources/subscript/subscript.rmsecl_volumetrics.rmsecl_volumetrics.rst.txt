@@ -1,0 +1,10 @@
+===================================================
+``subscript.rmsecl_volumetrics.rmsecl_volumetrics``
+===================================================
+
+.. automodule:: subscript.rmsecl_volumetrics.rmsecl_volumetrics
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.rmsecl_volumetrics.rmsecl_volumetrics

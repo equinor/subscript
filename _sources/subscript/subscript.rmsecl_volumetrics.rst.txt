@@ -1,0 +1,18 @@
+================================
+``subscript.rmsecl_volumetrics``
+================================
+
+.. automodule:: subscript.rmsecl_volumetrics
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.rmsecl_volumetrics.rmsecl_volumetrics
+
+.. currentmodule:: subscript.rmsecl_volumetrics

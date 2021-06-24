@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.check_swatinit.plotter &mdash; subscript 0.11.3.dev10+g9a91261 documentation</title>
+  <title>subscript.rmsecl_volumetrics &mdash; subscript 0.11.3.dev10+g9a91261 documentation</title>
   
 
   
@@ -42,8 +42,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="subscript.convert_grid_format" href="subscript.convert_grid_format.html" />
-    <link rel="prev" title="subscript.check_swatinit.pillarmodel" href="subscript.check_swatinit.pillarmodel.html" /> 
+    <link rel="next" title="subscript.rmsecl_volumetrics.rmsecl_volumetrics" href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html" />
+    <link rel="prev" title="subscript.ri_wellmod.ri_wellmod" href="subscript.ri_wellmod.ri_wellmod.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -137,10 +137,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="subscript.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit</span></code></a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="subscript.check_swatinit.html#submodules">Submodules</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge</span></code></a></li>
@@ -160,7 +157,10 @@
 <li class="toctree-l3"><a class="reference internal" href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.ri_wellmod.html"><code class="docutils literal notranslate"><span class="pre">subscript.ri_wellmod</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.rmsecl_volumetrics.html"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a></li>
@@ -222,15 +222,13 @@
         
           <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
         
-          <li><a href="subscript.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit</span></code></a> &raquo;</li>
-        
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.plotter</span></code></li>
+      <li><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics</span></code></li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/subscript/subscript.check_swatinit.plotter.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/subscript/subscript.rmsecl_volumetrics.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -243,103 +241,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-subscript.check_swatinit.plotter">
-<span id="subscript-check-swatinit-plotter"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.plotter</span></code><a class="headerlink" href="#module-subscript.check_swatinit.plotter" title="Permalink to this headline">¶</a></h1>
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.pc_depth">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">pc_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'QC_FLAG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.pc_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a pc vs depth plot on current axis</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.plot_qc_panels">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">plot_qc_panels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqlnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.plot_qc_panels" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a plotting panel (multiple plots) on cell-based dataframe.</p>
-<p>It only makes sense to view one eqlnum at a time.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>qc_frame</strong> (<em>pd.Dataframe</em>) – Dataframe constructed by check_swatinit</p></li>
-<li><p><strong>eqlnum</strong> (<em>int</em>) – Restrict plotting to this EQLNUM. If None, the qc_frame must have
-only one unique value for EQLNUM</p></li>
+  <div class="section" id="module-subscript.rmsecl_volumetrics">
+<span id="subscript-rmsecl-volumetrics"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics</span></code><a class="headerlink" href="#module-subscript.rmsecl_volumetrics" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>pyplot handle</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.pressure_depth">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">pressure_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'QC_FLAG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.pressure_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a pressure vs. depth plot on current axis</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.swat_depth">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">swat_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'QC_FLAG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.swat_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a SWAT vs depth plot on current axis</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.swatinit_depth">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">swatinit_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'QC_FLAG'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.swatinit_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a swatinit vs depth plot on current axis</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.visual_depth">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">visual_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.visual_depth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Suggest a deep depth limit for what to plot, in order to avoid
-showing too much of a less interesting water zone</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.check_swatinit.plotter.wvol_waterfall">
-<span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.plotter.</span></span><span class="sig-name descname"><span class="pre">wvol_waterfall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">qc_vols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.plotter.wvol_waterfall" title="Permalink to this definition">¶</a></dt>
-<dd><p>Make a waterfall chart of the computed volumes</p>
-<p>Plots on current axis.</p>
-<p>Based on:</p>
-<p><a class="reference external" href="https://pbpython.com/waterfall-chart.html">https://pbpython.com/waterfall-chart.html</a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>qc_vols</strong> (<em>dict</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
-</dd>
-</dl>
-</dd></dl>
-
+</div>
+<div class="section" id="submodules">
+<h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics.rmsecl_volumetrics</span></code></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
@@ -348,8 +264,8 @@ showing too much of a less interesting water zone</p>
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="subscript.convert_grid_format.html" class="btn btn-neutral float-right" title="subscript.convert_grid_format" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="subscript.check_swatinit.pillarmodel.html" class="btn btn-neutral float-left" title="subscript.check_swatinit.pillarmodel" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html" class="btn btn-neutral float-right" title="subscript.rmsecl_volumetrics.rmsecl_volumetrics" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="subscript.ri_wellmod.ri_wellmod.html" class="btn btn-neutral float-left" title="subscript.ri_wellmod.ri_wellmod" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

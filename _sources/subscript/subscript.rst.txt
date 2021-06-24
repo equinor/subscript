@@ -35,6 +35,7 @@ Submodules
    subscript.prtvol2csv
    subscript.restartthinner
    subscript.ri_wellmod
+   subscript.rmsecl_volumetrics
    subscript.runrms
    subscript.summaryplot
    subscript.sunsch
