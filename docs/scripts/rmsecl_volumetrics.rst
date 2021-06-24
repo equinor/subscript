@@ -92,31 +92,41 @@ are possible. The sets are listed in the outputted file ``sets.yml``:
 .. code-block:: yaml
 
   0:
-    FIPNUM: '2'
-    REGION: East
-    ZONE: Lower,Upper
+    FIPNUM:
+    - 2
+    REGION:
+    - East
+    ZONE:
+    - Lower
+    - Upper
   1:
-    FIPNUM: '1'
-    REGION: West
-    ZONE: Lower,Upper
+    FIPNUM:
+    - 1
+    REGION:
+    - West
+    ZONE:
+    - Lower
+    - Upper
 
-and the compared volumes are in ``volcomp.csv``, from which an excerpt looks like:
+Do not rely on the exact enumeration of sets, whichever FIPNUM-region-zone
+combination comes first is arbitrary.  The compared volumes are in
+``volcomp.csv``, from which an excerpt looks like:
 
 .. list-table::
    :header-rows: 1
 
    * - SET
-     - ECL_STOIIP_OIL
      - RMS_STOIIP_OIL
+     - ECL_STOIIP_OIL
      - DIFF_STOIIP_OIL
    * - 0
-     - 200.0
      - 200.8
+     - 200.0
      - -0.8
    * - 1
-     - 100.0
      - 100.8
+     - 100.0
      - -0.8
 
-which means that in both set 0 and 1, 0.8 MSm3 of STOIIP was lost from the geomodel to the
+which means that in both set 0 and 1, 0.8 m\ :sup:`3` of STOIIP was lost from the geomodel to the
 dynamical model.

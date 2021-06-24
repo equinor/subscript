@@ -120,20 +120,21 @@ def _compare_volumetrics(
     return comparison_df
 
 
-def _disjoint_sets_to_yaml(disjoint_sets_df: pd.DataFrame) -> str:
-    """Construct a user readable version of the disjoint_sets dataframe"""
+def disjoint_sets_to_dict(
+    disjoint_sets_df: pd.DataFrame,
+) -> Dict[int, Dict[str, list]]:
+    """From the dataframe of sets, construct a dictionary indexed by set
+    index provide lists of members in the set for FIPNUM, ZONE and REGION"""
     regions = disjoint_sets_df.groupby(["SET"])["REGION"].apply(
-        lambda x: ",".join(sorted(map(str, set(x))))
+        lambda x: sorted(list(set(x)))
     )
     zones = disjoint_sets_df.groupby(["SET"])["ZONE"].apply(
-        lambda x: ",".join(sorted(map(str, set(x))))
+        lambda x: sorted(list(set(x)))
     )
     fipnums = disjoint_sets_df.groupby(["SET"])["FIPNUM"].apply(
-        lambda x: ",".join(sorted(map(str, set(x))))
+        lambda x: sorted(list(set(x)))
     )
-    return yaml.dump(
-        pd.concat([regions, zones, fipnums], axis=1).to_dict(orient="index")
-    )
+    return pd.concat([regions, zones, fipnums], axis=1).to_dict(orient="index")
 
 
 def main() -> None:
@@ -154,7 +155,7 @@ def main() -> None:
         disjoint_sets_df, simvolumes_df, volumetrics_df
     )
     if args.sets:
-        Path(args.sets).write_text(_disjoint_sets_to_yaml(disjoint_sets_df))
+        Path(args.sets).write_text(yaml.dump(disjoint_sets_to_dict(disjoint_sets_df)))
     if args.output:
         comparison_df.to_csv(args.output, float_format="%g", index=False)
         logger.info("Written %d rows to %s", len(comparison_df), args.output)

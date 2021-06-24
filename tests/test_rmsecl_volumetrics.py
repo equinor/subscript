@@ -7,7 +7,11 @@ import pytest
 
 
 import fmu.tools.fipmapper.fipmapper as fipmapper
-from subscript.rmsecl_volumetrics.rmsecl_volumetrics import _compare_volumetrics, main
+from subscript.rmsecl_volumetrics.rmsecl_volumetrics import (
+    _compare_volumetrics,
+    main,
+    disjoint_sets_to_dict,
+)
 
 
 @pytest.mark.parametrize(
@@ -222,6 +226,62 @@ def test_compare_volumetrics(
     )
 
 
+@pytest.mark.parametrize(
+    "dframe, expected",
+    [
+        (
+            [{"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 1}],
+            {0: {"REGION": ["Moon"], "ZONE": ["Soil"], "FIPNUM": [1]}},
+        ),
+        (
+            [
+                # Multiple FIPNUMs
+                {"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 1},
+                {"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 2},
+            ],
+            {0: {"REGION": ["Moon"], "ZONE": ["Soil"], "FIPNUM": [1, 2]}},
+        ),
+        (
+            [
+                # Multiple ZONEs
+                {"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 1},
+                {"SET": 0, "REGION": "Moon", "ZONE": "Core", "FIPNUM": 1},
+            ],
+            {0: {"REGION": ["Moon"], "ZONE": ["Core", "Soil"], "FIPNUM": [1]}},
+        ),
+        (
+            [
+                # Sorting:
+                {"SET": 0, "REGION": "Moon", "ZONE": "Core", "FIPNUM": 1},
+                {"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 1},
+            ],
+            {0: {"REGION": ["Moon"], "ZONE": ["Core", "Soil"], "FIPNUM": [1]}},
+        ),
+        (
+            [
+                # Multiple REGIONs
+                {"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 1},
+                {"SET": 0, "REGION": "Venus", "ZONE": "Soil", "FIPNUM": 1},
+            ],
+            {0: {"REGION": ["Moon", "Venus"], "ZONE": ["Soil"], "FIPNUM": [1]}},
+        ),
+        (
+            [
+                # Multiple SETs
+                {"SET": 0, "REGION": "Moon", "ZONE": "Soil", "FIPNUM": 1},
+                {"SET": 1, "REGION": "Venus", "ZONE": "Soil", "FIPNUM": 2},
+            ],
+            {
+                0: {"REGION": ["Moon"], "ZONE": ["Soil"], "FIPNUM": [1]},
+                1: {"REGION": ["Venus"], "ZONE": ["Soil"], "FIPNUM": [2]},
+            },
+        ),
+    ],
+)
+def test_disjoint_sets_to_dict(dframe: list, expected: dict):
+    assert disjoint_sets_to_dict(pd.DataFrame(dframe)) == expected
+
+
 def test_documentation_example(tmpdir, mocker, capsys):
     tmpdir.chdir()
     print(f"\nLook in {tmpdir} for input and output to be used in documentation")
@@ -319,8 +379,8 @@ FIPNUM:
     print(pd.read_csv("volcomp.csv"))
     sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text())
     assert sets_fromdisk == {
-        0: {"FIPNUM": "2", "REGION": "East", "ZONE": "Lower,Upper"},
-        1: {"FIPNUM": "1", "REGION": "West", "ZONE": "Lower,Upper"},
+        0: {"FIPNUM": [2], "REGION": ["East"], "ZONE": ["Lower", "Upper"]},
+        1: {"FIPNUM": [1], "REGION": ["West"], "ZONE": ["Lower", "Upper"]},
     }
     mocker.patch(
         "sys.argv",
@@ -433,4 +493,4 @@ fipnum2zone:
     )
 
     sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text())
-    assert sets_fromdisk == {0: {"FIPNUM": "1", "REGION": "1", "ZONE": "UpperReek"}}
+    assert sets_fromdisk == {0: {"FIPNUM": [1], "REGION": ["1"], "ZONE": ["UpperReek"]}}
