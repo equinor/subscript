@@ -158,18 +158,6 @@ def test_dump_stdout(testdata, mocker):
     assert "DEBUG:subscript" not in result.stdout.decode()
 
 
-def test_main_configv1(testdata, caplog, mocker):
-    """Test command line sunsch, loading a yaml file.
-
-    This is run on a v1 config file, which will be autoconverted to v2.
-
-    This format is to be deprecated, and should be removed in the future
-    """
-    mocker.patch("sys.argv", ["sunsch", "config_v1.yml"])
-    with pytest.raises(SystemExit):
-        sunsch.main()
-
-
 def test_config_schema(tmpdir):
     """Test the implementation of configsuite"""
     tmpdir.chdir()
@@ -184,16 +172,10 @@ def test_config_schema(tmpdir):
         cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
     )
     print(cfg_suite.errors)
-    assert cfg_suite.valid
-
-    cfg = {"init": "existingfile.sch", "insert": []}  # missing output
-    cfg_suite = configsuite.ConfigSuite(
-        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
-    )
-    assert cfg_suite.valid  # (missing output is allowed)
+    assert not cfg_suite.valid  # "foo" is not valid configuration.
 
     cfg = {
-        "init": "existingfile.sch",
+        "files": ["existingfile.sch"],
         "output": "newfile.sch",
         "startdate": datetime.date(2018, 2, 2),
         "insert": [],
@@ -203,32 +185,6 @@ def test_config_schema(tmpdir):
     )
     print(cfg_suite.errors)
     assert cfg_suite.valid
-
-
-def test_v1_to_v2():
-    """Test the auto-converter from V1 to V2 config"""
-    # pylint: disable=protected-access
-
-    conv = sunsch._v1_content_to_v2
-
-    assert conv({}) == {}
-    assert conv({"init": "foo"}) == {"files": ["foo"]}
-    assert conv({"merge": "foo"}) == {"files": ["foo"]}
-    assert conv({"merge": ["foo"]}) == {"files": ["foo"]}
-    assert conv({"init": "bar", "merge": ["foo"]}) == {"files": ["bar", "foo"]}
-    assert conv({"init": "bar", "merge": ["foo", "com"]}) == {
-        "files": ["bar", "foo", "com"]
-    }
-
-    assert conv({"insert": [{"foo.sch": {"days": 100}}]}) == {
-        "insert": [{"days": 100, "filename": "foo.sch", "substitute": {}}]
-    }
-
-    # Check that V2 syntax is not altered:
-    assert conv({"files": ["a", "b"]}) == {"files": ["a", "b"]}
-    assert conv({"insert": [{"filename": "foo.sch", "days": 100}]}) == {
-        "insert": [{"days": 100, "filename": "foo.sch"}]
-    }
 
 
 def test_templating(tmpdir):
@@ -814,16 +770,15 @@ def test_comments():
     sch = sunsch.process_sch_config(sunschconf)
     assert mycomment in str(sch)
 
-    # Redo the same test through a yaml string, the empty
-    # identificator "" used here probably illustrates a bad
-    # layout for the configuration file.
+    # Redo the same test through a yaml string
+    # (the linebreak after the dash is optional)
     conf_str = (
         """
 startdate: 2020-01-01
 insert:
-  - "":
-      days: 1
-      string: """
+  -
+    days: 1
+    string: """
         + mycomment
     )
     conf = yaml.safe_load(conf_str)
