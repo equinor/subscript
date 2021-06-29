@@ -51,7 +51,7 @@ and then run ``pip`` :
 
 .. code-block:: console
 
-  pip install -e .[tests,docs]
+  pip install -e ".[tests,docs]"
 
 to install subscript in "edit"-mode together will all the dependencies for
 subscript, its test suite and documentation.
