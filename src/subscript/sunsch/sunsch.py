@@ -6,26 +6,24 @@ This script was originally based on a library named sunbeam,
 hence the name. Later, this library has been merged into opm-common
 """
 
-import sys
-import datetime
-import tempfile
 import argparse
-import textwrap
+import datetime
 import logging
+import sys
+import tempfile
+import textwrap
 import warnings
-import dateutil.parser
 from pathlib import Path
 from typing import List, Union
 
+import configsuite  # lgtm [py/import-and-import-from]
+import dateutil.parser
 import yaml
-
+from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
+from configsuite import types  # lgtm [py/import-and-import-from]
 from opm.tools import TimeVector  # type: ignore
 
-import configsuite  # lgtm [py/import-and-import-from]
-from configsuite import types  # lgtm [py/import-and-import-from]
-from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
-
-from subscript import getLogger, __version__
+from subscript import __version__, getLogger
 
 logger = getLogger(__name__)
 

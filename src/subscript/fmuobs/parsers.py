@@ -1,17 +1,17 @@
 """Module for parsing and writing ERT observation files into/from an
 equivalent DataFrame representation"""
-import re
 import datetime
+import re
 from pathlib import Path
-from typing import List, Dict
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
 
 from subscript import getLogger
 from subscript.fmuobs.util import (
-    ERT_DATE_FORMAT,
     ERT_ALT_DATE_FORMAT,
+    ERT_DATE_FORMAT,
     uppercase_dictkeys,
 )
 

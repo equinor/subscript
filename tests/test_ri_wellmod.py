@@ -1,8 +1,8 @@
 import os
-from pathlib import Path
 import subprocess
-import pytest
+from pathlib import Path
 
+import pytest
 
 from subscript.ri_wellmod import ri_wellmod
 

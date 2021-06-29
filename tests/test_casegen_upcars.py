@@ -1,12 +1,10 @@
 """Test that casegen_upcars is installed and launched with given demo cases"""
-import subprocess
 import shutil
+import subprocess
 from pathlib import Path
 
-import pandas as pd
-
 import opm.io
-
+import pandas as pd
 import pytest
 
 from subscript.casegen_upcars import casegen_upcars

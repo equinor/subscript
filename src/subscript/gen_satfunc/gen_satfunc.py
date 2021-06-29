@@ -1,10 +1,11 @@
-import sys
 import argparse
 import logging
+import sys
 import warnings
 from pathlib import Path
 
 import pyscal
+
 import subscript
 
 # Non-conforming names are in use here, as they follow a different norm.

@@ -1,9 +1,9 @@
-import seaborn
-from matplotlib import pyplot
 from typing import Dict
 
 import numpy as np
 import pandas as pd
+import seaborn
+from matplotlib import pyplot
 
 from subscript.check_swatinit.constants import (
     __FINE_EQUIL__,
@@ -15,7 +15,6 @@ from subscript.check_swatinit.constants import (
     __UNKNOWN__,
     __WATER__,
 )
-
 
 SNS_PAL = seaborn.color_palette("tab10")
 QC_PALETTE = {

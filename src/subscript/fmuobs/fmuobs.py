@@ -1,33 +1,29 @@
 """fmuobs is a converter tool for observation files used in assisted
 history matching"""
-import os
-import sys
-import signal
-import logging
-from typing import Union, Tuple, Optional
-
 import argparse
-import yaml
+import logging
+import os
+import signal
+import sys
+from typing import Optional, Tuple, Union
 
 import pandas as pd
-
+import yaml
 from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
 from res.job_queue import ErtScript  # type: ignore
 
-
-from subscript import getLogger, __version__
-
+from subscript import __version__, getLogger
 from subscript.fmuobs.parsers import (
-    ertobs2df,
     compute_date_from_days,
-    resinsight_df2df,
+    ertobs2df,
     obsdict2df,
+    resinsight_df2df,
 )
 from subscript.fmuobs.writers import (
-    df2obsdict,
-    df2resinsight_df,
     CLASS_SHORTNAME,
     df2ertobs,
+    df2obsdict,
+    df2resinsight_df,
 )
 
 logger = getLogger(__name__)

@@ -1,15 +1,14 @@
-import sys
-import datetime
 import argparse
+import datetime
 import logging
-
+import sys
 from typing import List, Union
 
-from dateutil.relativedelta import relativedelta
 import pandas as pd
+from dateutil.relativedelta import relativedelta
 
-from subscript import getLogger as subscriptlogger
 from subscript import __version__
+from subscript import getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = subscriptlogger(__name__)

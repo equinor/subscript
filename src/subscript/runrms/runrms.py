@@ -3,18 +3,18 @@
 
 See also the assosiated runrms.yml YAML file paths in SETUP variable.
 """
-import os
-import pathlib
-import sys
-import time
 import argparse
-import shutil
 import datetime
 import getpass
-import logging
-import platform
 import json
+import logging
+import os
+import pathlib
+import platform
+import shutil
 import subprocess
+import sys
+import time
 
 import yaml
 

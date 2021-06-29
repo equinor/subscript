@@ -9,8 +9,6 @@ import numpy as np
 import pandas as pd
 
 from subscript import getLogger
-
-
 from subscript.fmuobs.util import CLASS_SHORTNAME, ERT_DATE_FORMAT, lowercase_dictkeys
 
 logger = getLogger(__name__)

@@ -4,8 +4,9 @@ import logging
 import re
 from typing import List, Union
 
-from packaging import version
 import pandas as pd
+from packaging import version
+
 from subscript import __version__
 from subscript import getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns

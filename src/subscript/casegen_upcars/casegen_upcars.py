@@ -12,13 +12,14 @@ It has capability to:
 - etc. Check wiki for more details:
   https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen
 """
-import shutil
 import argparse
-from yaml import load, Loader
+import shutil
 
-from jinja2 import Environment, FileSystemLoader, meta, DebugUndefined
-from subscript.casegen_upcars.udf import TERMINALCOLORS, listify, flatten, conversion
+from jinja2 import DebugUndefined, Environment, FileSystemLoader, meta
+from yaml import Loader, load
+
 from subscript.casegen_upcars.model import Model
+from subscript.casegen_upcars.udf import TERMINALCOLORS, conversion, flatten, listify
 from subscript.casegen_upcars.udf_arg_parser import fill_parser
 
 

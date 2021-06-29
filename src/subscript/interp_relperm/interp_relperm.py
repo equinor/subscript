@@ -1,21 +1,19 @@
-import sys
-import os
-import logging
 import argparse
+import logging
+import os
+import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional
-
-import yaml
-import pandas as pd
-
-import pyscal
-
-from ecl2df import satfunc
-import subscript
+from typing import Any, Dict, List, Optional
 
 import configsuite  # lgtm [py/import-and-import-from]
-from configsuite import types  # lgtm [py/import-and-import-from]
+import pandas as pd
+import pyscal
+import yaml
 from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
+from configsuite import types  # lgtm [py/import-and-import-from]
+from ecl2df import satfunc
+
+import subscript
 
 logger = subscript.getLogger(__name__)
 

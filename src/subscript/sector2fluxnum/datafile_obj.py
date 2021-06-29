@@ -1,7 +1,8 @@
 import os
-import subprocess
 import shlex
+import subprocess
 from datetime import date
+
 import numpy as np
 
 

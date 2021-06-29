@@ -7,6 +7,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 import xtgeo
+
 from subscript import getLogger
 from subscript.ecldiff2roff import ecldiff2roff
 

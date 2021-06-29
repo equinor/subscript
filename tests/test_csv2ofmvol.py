@@ -1,10 +1,10 @@
+import datetime
 import re
 import subprocess
-import datetime
 from pathlib import Path
 
-import pandas as pd
 import numpy as np
+import pandas as pd
 import pytest
 
 from subscript.csv2ofmvol import csv2ofmvol

@@ -1,7 +1,7 @@
+import getpass
 import os
 import subprocess
 import time
-import getpass
 from pathlib import Path
 
 import pytest

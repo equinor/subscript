@@ -3,10 +3,9 @@
 import argparse
 import os
 import sys
-from typing import Optional, List
+from typing import List, Optional
 
 import xtgeo  # type: ignore
-
 from xtgeo.common import XTGeoDialog  # type: ignore
 
 from subscript import __version__

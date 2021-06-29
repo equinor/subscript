@@ -1,17 +1,17 @@
 """Script for comparing RMS vs Eclipse volumetrics, provided
 a mapping between Region and Zones in RMS, to FIPNUMs in Eclipse"""
 import argparse
-from typing import Dict, Any
-from pathlib import Path
-import yaml
 import logging
-
-import pandas as pd
+from pathlib import Path
+from typing import Any, Dict
 
 import fmu.tools.fipmapper.fipmapper as fipmapper
 import fmu.tools.rms.volumetrics as volumetrics
-from subscript.prtvol2csv.prtvol2csv import currently_in_place_from_prt
+import pandas as pd
+import yaml
+
 from subscript import getLogger
+from subscript.prtvol2csv.prtvol2csv import currently_in_place_from_prt
 
 logger = getLogger(__name__)
 logger.setLevel(logging.INFO)

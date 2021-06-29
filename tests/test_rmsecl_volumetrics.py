@@ -1,16 +1,15 @@
-import pandas as pd
-from typing import List
 from pathlib import Path
-import yaml
-
-import pytest
-
+from typing import List
 
 import fmu.tools.fipmapper.fipmapper as fipmapper
+import pandas as pd
+import pytest
+import yaml
+
 from subscript.rmsecl_volumetrics.rmsecl_volumetrics import (
     _compare_volumetrics,
-    main,
     _disjoint_sets_to_dict,
+    main,
 )
 
 

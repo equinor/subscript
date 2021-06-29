@@ -18,27 +18,26 @@
 #      https://github.com/equinor/subscript
 
 
-import sys
-import os
-import re
-import tty
-import termios
+import argparse
 import difflib
 import logging
-import argparse
-from pathlib import Path
+import os
+import re
+import sys
+import termios
+import tty
 from multiprocessing import Process
+from pathlib import Path
 from typing import Optional
 
 import matplotlib.pyplot
 import numpy as np
+from ecl.eclfile import EclFile  # type: ignore
+from ecl.grid import EclGrid  # type: ignore
+from ecl.summary import EclSum  # type: ignore
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
-
-from ecl.summary import EclSum  # type: ignore
-from ecl.eclfile import EclFile  # type: ignore
-from ecl.grid import EclGrid  # type: ignore
 
 import subscript
 

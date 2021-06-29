@@ -1,18 +1,17 @@
 """Tool to stack/pivot CSV files, exposed as command line client,
 ERT workflow and ERT forward model"""
-import sys
-import re
-import warnings
-import logging
 import argparse
+import logging
+import re
+import sys
+import warnings
 from typing import Pattern
 
 import pandas as pd
-
 from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
 from res.job_queue import ErtScript  # type: ignore
 
-from subscript import getLogger, __version__
+from subscript import __version__, getLogger
 
 logger = getLogger(__name__)
 

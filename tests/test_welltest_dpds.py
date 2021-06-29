@@ -1,10 +1,12 @@
 import subprocess
-import pytest
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+import pytest
 from ecl.summary import EclSum
+
 from subscript.welltest_dpds import welltest_dpds
-from pathlib import Path
 
 ECLDIR = Path(__file__).parent.absolute() / Path("data/welltest/eclipse/model")
 ECLCASE = "DROGON_DST_PLT-0"

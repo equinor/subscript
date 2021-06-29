@@ -2,7 +2,6 @@ import getpass
 import subprocess
 
 import pandas as pd
-
 import pytest
 
 from subscript.bjobsusers import bjobsusers

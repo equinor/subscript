@@ -1,12 +1,11 @@
 """Test prtvol2csv, both as library and as command line"""
+import subprocess
 import sys
 from pathlib import Path
 
-import subprocess
-import pytest
-
 import numpy as np
 import pandas as pd
+import pytest
 import yaml
 
 from subscript.prtvol2csv import prtvol2csv

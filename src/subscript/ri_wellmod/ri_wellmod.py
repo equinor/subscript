@@ -1,20 +1,22 @@
 import argparse
-from pathlib import Path
-import os
-import subprocess
-import tempfile
 import fnmatch
-import shutil
-import xml.dom.minidom
-import re
-import logging
-import sys
 import inspect
+import logging
+import os
+import re
+import shutil
+import subprocess
+import sys
+import tempfile
+import xml.dom.minidom
 from importlib import reload
-from typing import Optional, Tuple, List, Set
+from pathlib import Path
 from types import ModuleType
-from subscript import getLogger, __version__
+from typing import List, Optional, Set, Tuple
+
 import grpc
+
+from subscript import __version__, getLogger
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 import rips  # noqa: E402

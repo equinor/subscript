@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 from subscript.sector2fluxnum import sector2fluxnum
 

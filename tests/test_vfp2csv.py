@@ -1,9 +1,8 @@
 import subprocess
 from pathlib import Path
 
-import pytest
-
 import pandas as pd
+import pytest
 
 from subscript.vfp2csv import vfp2csv
 

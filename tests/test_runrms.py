@@ -1,12 +1,12 @@
 """Test runrms script, but manual interactive testing is also needed."""
-import subprocess
 import os
-import stat
-from pathlib import Path
-import yaml
 import shutil
+import stat
+import subprocess
+from pathlib import Path
 
 import pytest
+import yaml
 
 from subscript.runrms import runrms as rr
 

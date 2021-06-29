@@ -1,10 +1,9 @@
-import sys
 import os
+import sys
 
+from ecl import EclDataType
 from ecl.eclfile import EclKW
 from ecl.grid import EclRegion
-from ecl import EclDataType
-
 
 import subscript.sector2fluxnum.flux_util as flux_util
 

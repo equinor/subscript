@@ -8,23 +8,21 @@ import datetime
 import pandas as pd
 import pytest
 
-
 from subscript.fmuobs.parsers import (
     INCLUDE_RE,
     OBS_ARGS_RE,
+    blockdictlist2df,
     ertobs2df,
     expand_includes,
     filter_comments,
     fix_dtype,
     flatten_observation_unit,
     mask_curly_braces,
-    parse_observation_unit,
-    split_by_sep_in_masked_string,
-    smrydictlist2df,
-    blockdictlist2df,
     obsdict2df,
+    parse_observation_unit,
+    smrydictlist2df,
+    split_by_sep_in_masked_string,
 )
-
 from subscript.fmuobs.writers import df2ertobs, df2obsdict
 
 

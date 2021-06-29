@@ -1,14 +1,13 @@
 """Test the convert_grid_format script"""
 
-from pathlib import Path
 import subprocess
+from pathlib import Path
 
 import pytest
-
 import xtgeo
 
-from subscript import getLogger
 import subscript.convert_grid_format.convert_grid_format as cgf
+from subscript import getLogger
 
 logger = getLogger(__name__)
 

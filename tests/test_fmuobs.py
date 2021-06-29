@@ -1,22 +1,16 @@
 """Test that ERT observations represented as dataframes can be exported to
 other formats, and test the ERT hook"""
 
-import os
 import io
+import os
 import subprocess
 from pathlib import Path
 
 import pandas as pd
+import pytest
 import yaml
 
-import pytest
-
-
-from subscript.fmuobs.fmuobs import (
-    autoparse_file,
-    main,
-)
-
+from subscript.fmuobs.fmuobs import autoparse_file, main
 from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 

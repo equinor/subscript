@@ -1,19 +1,18 @@
-import os
 import logging
+import os
 import shutil
 import subprocess
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-
 import pytest
 
 from subscript import getLogger
 from subscript.merge_rft_ertobs.merge_rft_ertobs import (
-    split_wellname_reportstep,
     get_observations,
     merge_rft_ertobs,
+    split_wellname_reportstep,
 )
 
 try:
