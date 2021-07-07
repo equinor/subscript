@@ -51,7 +51,7 @@ DENYLIST_KEYWORDS = ["INCLUDE"]  # Due to slashes in filenames
 
 
 def eclcompress(
-    files: list,
+    files: Union[str, List[str]],
     keeporiginal: bool = False,
     dryrun: bool = False,
     eclkw_regexp: str = None,
@@ -61,13 +61,13 @@ def eclcompress(
     Files will be modified in-place, backup is optional.
 
     Args:
-        files (list): List of filenames (str) to be compressed
-        keeporiginal (bool): Whether to copy the original to a backup file
-        dryrun (bool): If true, only print compression efficiency
-        eclkw_regexp (str): Regular expression for locating Eclipse keywords.
+        files: Filenames to be compressed
+        keeporiginal: Whether to copy the original to a backup file
+        dryrun: If true, only print compression efficiency
+        eclkw_regexp: Regular expression for locating Eclipse keywords.
             Default is [A-Z]{2-8}$
     Returns:
-        int: Number of bytes saved by compression.
+        Number of bytes saved by compression.
     """
 
     if not isinstance(files, list):
@@ -173,14 +173,12 @@ def file_is_binary(filename: Union[str, Path]) -> bool:
 
 
 def acceptedvalue(valuestring: str) -> bool:
-    """Return true only for strings that are numbers
-    we don't want to try to compress other things
+    """Return true only for strings that are numbers.
+
+    Used to avoid trying to compress other strings than numbers.
 
     Args:
-        valuestring (str)
-
-    Returns:
-        bool
+        valuestring
     """
 
     try:
@@ -190,24 +188,25 @@ def acceptedvalue(valuestring: str) -> bool:
         return False
 
 
-def compress_multiple_keywordsets(keywordsets: list, filelines: list) -> list:
+def compress_multiple_keywordsets(
+    keywordsets: List[Tuple[int, int]], filelines: List[str]
+) -> List[str]:
     """Apply Eclipse type compression to data in filelines
 
     The list of strings given as input (filelines) is indexed
     by the tuples in keywordsets.
 
     Args:
-        keywordsets (list): List of 2-tuples, (start, end) indices in
+        keywordsets: 2-tuples, (start, end) with indices to
             line number in the deck, referring to individual sections
             of distinct keywords.
-        filelines (list): list of lines (strings) from Eclipse deck, cleaned.
+        filelines: Lines from the Eclipse deck, cleaned.
 
     Returns:
-        list:  List of strings to be used as a replacement Eclipse deck
+        Strings to be used as a replacement Eclipse deck
     """
 
-    # List of finished lines to build up:
-    compressedlines = []
+    compressedlines: List[str] = []
 
     # Line pointer to the last line with a slash in it:
     lastslash_linepointer = 0
@@ -220,9 +219,9 @@ def compress_multiple_keywordsets(keywordsets: list, filelines: list) -> list:
         # Append whatever we have gathered since previous keyword
         compressedlines += filelines[lastslash_linepointer:start_linepointer]
 
-        data = (
-            []
-        )  # List of strings, each string is one data element (typically integer)
+        # List of strings, each string is one data element (typically integer):
+        data: List[str] = []
+
         end_linepointer = keywordtuple[1]
         lastslash_linepointer = end_linepointer + 1
         for dataline in filelines[start_linepointer:end_linepointer]:
@@ -305,12 +304,12 @@ def find_keyword_sets(
     are skipped (i.e. not recognized as an Eclipse keyword)
 
     Args:
-        filelines (list): List of Eclipse deck (str) (not necessarily complete decks)
-        eclkw_regexp (str): Regular expression for locating Eclipse keywords.
+        filelines: Eclipse deck lines (not necessarily complete decks)
+        eclkw_regexp: Regular expression for locating Eclipse keywords.
             Default is [A-Z]{2-8}$
 
     Return:
-        list: List of 2-tuples, with start and end line indices for datasets to
+        2-tuples, with start and end line indices for datasets to
         compress
 
     """
@@ -343,13 +342,13 @@ def find_keyword_sets(
     return keywordsets
 
 
-def glob_patterns(patterns: list) -> list:
+def glob_patterns(patterns: List[str]) -> List[str]:
     """
     Args:
-        patterns (list): List of strings with filename patterns
+        patterns: List of strings with filename patterns
 
     Returns:
-        list: List of strings with globbed files.
+        Strings with globbed files.
     """
     # Remove duplicates:
     patterns = list(set(patterns))
@@ -440,10 +439,7 @@ def parse_wildcardfile(filename: str) -> List[str]:
     Wildcard file supports comments, starting by # or --
 
     Args:
-        filename (str)
-
-    Returns:
-        list: List of strings
+        filename
     """
     if filename == MAGIC_DEFAULT_FILELIST:
         return DEFAULT_FILES_TO_COMPRESS
@@ -485,12 +481,12 @@ def main_eclcompress(
     """Implements the command line functionality
 
     Args:
-        grdeclfiles (list): List of strings or a string, with filename(s) to compress
-        wildcardfile (str): Filename containing wildcards
-        keeporiginal (bool): Whether a backup file should be left behind
-        dryrun (bool): Nothing written to disk, only statistics for
+        grdeclfiles: Strings or a string, with filename(s) to compress
+        wildcardfile: Filename containing wildcards
+        keeporiginal: Whether a backup file should be left behind
+        dryrun: Nothing written to disk, only statistics for
             compression printed to terminal.
-        eclkw_regexp (str): Regular expression for locating Eclipse keywords.
+        eclkw_regexp: Regular expression for locating Eclipse keywords.
             Default is [A-Z]{2-8}$
     """
     # A list of wildcards on the command line should always be compressed:
