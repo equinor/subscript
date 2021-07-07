@@ -197,17 +197,16 @@ def compress_multiple_keywordsets(
     by the tuples in keywordsets.
 
     Args:
-        keywordsets: List of 2-tuples, (start, end) indices in
+        keywordsets: 2-tuples, (start, end) with indices to
             line number in the deck, referring to individual sections
             of distinct keywords.
-        filelines: list of lines from Eclipse deck, cleaned.
+        filelines: Lines from the Eclipse deck, cleaned.
 
     Returns:
         Strings to be used as a replacement Eclipse deck
     """
 
-    # List of finished lines to build up:
-    compressedlines = []
+    compressedlines: List[str] = []
 
     # Line pointer to the last line with a slash in it:
     lastslash_linepointer = 0
@@ -220,9 +219,9 @@ def compress_multiple_keywordsets(
         # Append whatever we have gathered since previous keyword
         compressedlines += filelines[lastslash_linepointer:start_linepointer]
 
-        data = (
-            []
-        )  # List of strings, each string is one data element (typically integer)
+        # List of strings, each string is one data element (typically integer):
+        data: List[str] = []
+
         end_linepointer = keywordtuple[1]
         lastslash_linepointer = end_linepointer + 1
         for dataline in filelines[start_linepointer:end_linepointer]:
@@ -305,12 +304,12 @@ def find_keyword_sets(
     are skipped (i.e. not recognized as an Eclipse keyword)
 
     Args:
-        filelines: List of Eclipse deck lines (not necessarily complete decks)
+        filelines: Eclipse deck lines (not necessarily complete decks)
         eclkw_regexp: Regular expression for locating Eclipse keywords.
             Default is [A-Z]{2-8}$
 
     Return:
-        List of 2-tuples, with start and end line indices for datasets to
+        2-tuples, with start and end line indices for datasets to
         compress
 
     """
@@ -349,7 +348,7 @@ def glob_patterns(patterns: List[str]) -> List[str]:
         patterns: List of strings with filename patterns
 
     Returns:
-        List of strings with globbed files.
+        Strings with globbed files.
     """
     # Remove duplicates:
     patterns = list(set(patterns))
@@ -482,7 +481,7 @@ def main_eclcompress(
     """Implements the command line functionality
 
     Args:
-        grdeclfiles: List of strings or a string, with filename(s) to compress
+        grdeclfiles: Strings or a string, with filename(s) to compress
         wildcardfile: Filename containing wildcards
         keeporiginal: Whether a backup file should be left behind
         dryrun: Nothing written to disk, only statistics for
