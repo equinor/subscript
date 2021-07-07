@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>subscript.eclcompress.eclcompress &mdash; subscript 0.12.0 documentation</title>
+  <title>subscript.eclcompress.eclcompress &mdash; subscript 0.12.1.dev1+ga10afa3 documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.12.0
+                0.12.1.dev1+ga10afa3
               </div>
             
           
@@ -255,17 +255,14 @@ defaults and raw description formatter</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.eclcompress.eclcompress.acceptedvalue">
 <span class="sig-prename descclassname"><span class="pre">subscript.eclcompress.eclcompress.</span></span><span class="sig-name descname"><span class="pre">acceptedvalue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">valuestring</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.eclcompress.eclcompress.acceptedvalue" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return true only for strings that are numbers
-we don’t want to try to compress other things</p>
+<dd><p>Return true only for strings that are numbers.</p>
+<p>Used to avoid trying to compress other strings than numbers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>valuestring</strong> (<em>str</em>) – </p>
+<dd class="field-odd"><p><strong>valuestring</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></p>
-</dd>
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
 </dd></dl>
@@ -279,17 +276,17 @@ by the tuples in keywordsets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>keywordsets</strong> (<em>list</em>) – List of 2-tuples, (start, end) indices in
+<li><p><strong>keywordsets</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]) – 2-tuples, (start, end) with indices to
 line number in the deck, referring to individual sections
 of distinct keywords.</p></li>
-<li><p><strong>filelines</strong> (<em>list</em>) – list of lines (strings) from Eclipse deck, cleaned.</p></li>
+<li><p><strong>filelines</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Lines from the Eclipse deck, cleaned.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of strings to be used as a replacement Eclipse deck</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Strings to be used as a replacement Eclipse deck</p>
 </dd>
 </dl>
 </dd></dl>
@@ -302,18 +299,18 @@ of distinct keywords.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>files</strong> (<em>list</em>) – List of filenames (str) to be compressed</p></li>
-<li><p><strong>keeporiginal</strong> (<em>bool</em>) – Whether to copy the original to a backup file</p></li>
-<li><p><strong>dryrun</strong> (<em>bool</em>) – If true, only print compression efficiency</p></li>
-<li><p><strong>eclkw_regexp</strong> (<em>str</em>) – Regular expression for locating Eclipse keywords.
+<li><p><strong>files</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]) – Filenames to be compressed</p></li>
+<li><p><strong>keeporiginal</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether to copy the original to a backup file</p></li>
+<li><p><strong>dryrun</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – If true, only print compression efficiency</p></li>
+<li><p><strong>eclkw_regexp</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Regular expression for locating Eclipse keywords.
 Default is [A-Z]{2-8}$</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Number of bytes saved by compression.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>int</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of bytes saved by compression.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -366,17 +363,17 @@ are skipped (i.e. not recognized as an Eclipse keyword)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filelines</strong> (<em>list</em>) – List of Eclipse deck (str) (not necessarily complete decks)</p></li>
-<li><p><strong>eclkw_regexp</strong> (<em>str</em>) – Regular expression for locating Eclipse keywords.
+<li><p><strong>filelines</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Eclipse deck lines (not necessarily complete decks)</p></li>
+<li><p><strong>eclkw_regexp</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Pattern</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – Regular expression for locating Eclipse keywords.
 Default is [A-Z]{2-8}$</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of 2-tuples, with start and end line indices for datasets to
-compress</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>2-tuples, with start and end line indices for datasets to
+compress</p>
 </dd>
 </dl>
 </dd></dl>
@@ -397,13 +394,13 @@ compress</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.eclcompress.eclcompress.</span></span><span class="sig-name descname"><span class="pre">glob_patterns</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">patterns</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.eclcompress.eclcompress.glob_patterns" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>patterns</strong> (<em>list</em>) – List of strings with filename patterns</p>
+<dd class="field-odd"><p><strong>patterns</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List of strings with filename patterns</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of strings with globbed files.</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Strings with globbed files.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -421,12 +418,12 @@ compress</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>grdeclfiles</strong> (<em>list</em>) – List of strings or a string, with filename(s) to compress</p></li>
-<li><p><strong>wildcardfile</strong> (<em>str</em>) – Filename containing wildcards</p></li>
-<li><p><strong>keeporiginal</strong> (<em>bool</em>) – Whether a backup file should be left behind</p></li>
-<li><p><strong>dryrun</strong> (<em>bool</em>) – Nothing written to disk, only statistics for
+<li><p><strong>grdeclfiles</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Strings or a string, with filename(s) to compress</p></li>
+<li><p><strong>wildcardfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Filename containing wildcards</p></li>
+<li><p><strong>keeporiginal</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Whether a backup file should be left behind</p></li>
+<li><p><strong>dryrun</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Nothing written to disk, only statistics for
 compression printed to terminal.</p></li>
-<li><p><strong>eclkw_regexp</strong> (<em>str</em>) – Regular expression for locating Eclipse keywords.
+<li><p><strong>eclkw_regexp</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Regular expression for locating Eclipse keywords.
 Default is [A-Z]{2-8}$</p></li>
 </ul>
 </dd>
@@ -445,13 +442,10 @@ wildcards is returned. Magic filename is __NONE__</p>
 <p>Wildcard file supports comments, starting by # or –</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – </p>
+<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>List of strings</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>list</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
 </dd>
 </dl>
 </dd></dl>
