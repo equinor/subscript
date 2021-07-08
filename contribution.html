@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Contributing to subscript &mdash; subscript 0.12.1.dev1+ga10afa3 documentation</title>
+  <title>Contributing to subscript &mdash; subscript 0.12.1.dev2+g79117ab documentation</title>
   
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                0.12.1.dev1+ga10afa3
+                0.12.1.dev2+g79117ab
               </div>
             
           
@@ -239,15 +239,15 @@ button.</p>
 <p>This requires a valid login setup with SSH keys for you github account, needed
 for write access.</p>
 <p>After cloning, you need a Python virtual environment in which you install
-subscript and its dependencies. If you develop on a non-Equinor computer you
+subscript and its dependencies. If you develop on an Equinor computer you
 should use <cite>komodoenv</cite> as outlined above, if not, you can create a new virtual
 environment for subscript using the commands:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv venv-subscript</span>
-<span class="go">source venv-subscript/bin/activate</span>
+<span class="go">source venv-subscript/bin/activate  # append &quot;.csh&quot; if c-shell</span>
 </pre></div>
 </div>
 <p>and then run <code class="docutils literal notranslate"><span class="pre">pip</span></code> :</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e .[tests,docs]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -e &quot;.[tests,docs]&quot;</span>
 </pre></div>
 </div>
 <p>to install subscript in “edit”-mode together will all the dependencies for
