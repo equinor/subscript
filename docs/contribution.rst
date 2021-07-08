@@ -38,14 +38,14 @@ This requires a valid login setup with SSH keys for you github account, needed
 for write access.
 
 After cloning, you need a Python virtual environment in which you install
-subscript and its dependencies. If you develop on a non-Equinor computer you
+subscript and its dependencies. If you develop on an Equinor computer you
 should use `komodoenv` as outlined above, if not, you can create a new virtual
 environment for subscript using the commands:
 
 .. code-block:: console
 
   python3 -m venv venv-subscript
-  source venv-subscript/bin/activate
+  source venv-subscript/bin/activate  # append ".csh" if c-shell
 
 and then run ``pip`` :
 
