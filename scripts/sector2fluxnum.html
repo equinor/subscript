@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>SECTOR2FLUXNUM &mdash; subscript 0.12.1.dev3+g1662d82 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SUMMARYPLOT" href="summaryplot.html" />
+    <link rel="prev" title="RUNRMS" href="runrms.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> subscript
+          
+
+          
+            
+            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.12.1.dev3+g1662d82
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Scripts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="check_swatinit.html">CHECK_SWATINIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gen_satfunc.html">GEN_SATFUNC</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_schedule.html">MERGE_SCHEDULE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ri_wellmod.html">RI_WELLMOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rmsecl_volumetrics.html">RMSECL_VOLUMETRICS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runrms.html">RUNRMS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SECTOR2FLUXNUM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#syntax">Syntax</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+      <li>SECTOR2FLUXNUM</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="../_sources/scripts/sector2fluxnum.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sector2fluxnum">
+<h1>SECTOR2FLUXNUM<a class="headerlink" href="#sector2fluxnum" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">sector2fluxnum</span></code> is a command line utility to generate sector models in Eclipse
+using the FLUX functionality</p>
+<div class="figure align-default">
+<a class="reference internal image-reference" href="../_images/Workflow_sector2fluxnum.png"><img alt="../_images/Workflow_sector2fluxnum.png" src="../_images/Workflow_sector2fluxnum.png" style="width: 50%;" /></a>
+</div>
+<div class="section" id="syntax">
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline">¶</a></h2>
+<p><p>The script sector2fluxnum will execute different steps in a workflow
+for generating sector models in ECLIPSE and utilize the FLUX
+functionality in ECL100. The workflow will take user defined region of interest (ROI)
+and convert that into a FLUXNUM region that is possible for ECLIPSE to include.
+This includes crossing well trajectories.</p>
+<p>Futhermore, the script will generate a template FLUX file and populate this
+with restart data from the RESTART file. This way it is not necessary to run
+a full DUMPFLUX run if the ROI is changed.</p>
+<p>The sector models have the same block resolution as the mother full-field model,
+but opens up for including LGR functionality.</p>
+<p>Further details about usage and howto can be found here:
+<a class="reference external" href="https://wiki.equinor.com/wiki/index.php/Res:Workflow_for_boundary_condition_handling">https://wiki.equinor.com/wiki/index.php/Res:Workflow_for_boundary_condition_handling</a></p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">sector2fluxnum</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">I</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">j</span> <span class="n">J</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">k</span> <span class="n">K</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FIPNUM</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">RESTART</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">-</span><span class="n">e</span> <span class="n">EGRID</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">w</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">fipfile</span> <span class="n">FIPFILE</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">fluxfile</span> <span class="n">FLUXFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">test</span> <span class="n">TEST</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span> <span class="n">ECL_VERSION</span><span class="p">]</span>
+                      <span class="n">ECLIPSE_CASE</span> <span class="n">OUTPUT_CASE</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h3>
+<dl class="option-list">
+<dt><kbd>ECLIPSE_CASE</kbd></dt>
+<dd><p>Eclipse input case</p>
+</dd>
+<dt><kbd>OUTPUT_CASE</kbd></dt>
+<dd><p>Name of output FLUX file with file extension .FLUX</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
+<dl class="option-list">
+<dt><kbd>-i</kbd></dt>
+<dd><p>Sector box dimension. Example: -i 5-20</p>
+</dd>
+<dt><kbd>-j</kbd></dt>
+<dd><p>Sector box dimension. Example: -j 5-20</p>
+</dd>
+<dt><kbd>-k</kbd></dt>
+<dd><p>Sector box dimension. Example: -k 5-20</p>
+</dd>
+<dt><kbd>-f, --fipnum</kbd></dt>
+<dd><p>Sector FIPNUM region. Example: -f 46</p>
+</dd>
+<dt><kbd>-r, --restart</kbd></dt>
+<dd><p>Name of restart file read separately</p>
+</dd>
+<dt><kbd>-e, --egrid</kbd></dt>
+<dd><p>Name of EGRID file read separately</p>
+</dd>
+<dt><kbd>-w, --well</kbd></dt>
+<dd><p>Well data read from RST file</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--fipfile</kbd></dt>
+<dd><p>Name of FIPNUM file read separately</p>
+</dd>
+<dt><kbd>--fluxfile</kbd></dt>
+<dd><p>Name of FLUXNUM file read separately</p>
+</dd>
+<dt><kbd>--test</kbd></dt>
+<dd><p>Name of predefined DUMPFLUX case for testing</p>
+</dd>
+<dt><kbd>-v, --ecl_version</kbd></dt>
+<dd><p>ECL version</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="summaryplot.html" class="btn btn-neutral float-right" title="SUMMARYPLOT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="runrms.html" class="btn btn-neutral float-left" title="RUNRMS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2020, Equinor.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

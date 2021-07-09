@@ -1,0 +1,23 @@
+============================
+``subscript.sector2fluxnum``
+============================
+
+.. automodule:: subscript.sector2fluxnum
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.sector2fluxnum.completions
+   subscript.sector2fluxnum.datafile_obj
+   subscript.sector2fluxnum.flux_obj
+   subscript.sector2fluxnum.flux_util
+   subscript.sector2fluxnum.fluxfile_obj
+   subscript.sector2fluxnum.sector2fluxnum
+
+.. currentmodule:: subscript.sector2fluxnum

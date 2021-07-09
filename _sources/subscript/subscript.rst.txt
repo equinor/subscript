@@ -37,6 +37,7 @@ Submodules
    subscript.ri_wellmod
    subscript.rmsecl_volumetrics
    subscript.runrms
+   subscript.sector2fluxnum
    subscript.summaryplot
    subscript.sunsch
    subscript.sw_model_utilities

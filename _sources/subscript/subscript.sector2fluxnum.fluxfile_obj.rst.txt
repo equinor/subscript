@@ -1,0 +1,10 @@
+=========================================
+``subscript.sector2fluxnum.fluxfile_obj``
+=========================================
+
+.. automodule:: subscript.sector2fluxnum.fluxfile_obj
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.sector2fluxnum.fluxfile_obj
