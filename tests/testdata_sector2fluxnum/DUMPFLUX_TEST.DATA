@@ -1,0 +1,480 @@
+---------------------------------------------------------------------------
+-- TWO LAYERED FIELD MODEL
+-- 
+-- A two-dimensional grid with two horizontal layers that have different 
+-- properties. The top layer has higher permeability than the lower.
+-- An injection well is located at the left end of the model, and a 
+-- production well on the right end.
+-- 
+-- Case: BASECASE
+-- Time: 01 Apr 2014, 12:39:58
+---------------------------------------------------------------------------
+
+
+
+---------------------------------------------------------------------------
+RUNSPEC
+NOSIM
+
+OPTIONS
+85* 1  /
+
+OPTIONS
+231* 1  /
+
+---------------------------------------------------------------------------
+
+TITLE
+   TEST
+
+METRIC
+
+DIMENS
+   100   40    10  /
+
+OIL
+WATER
+
+EQLDIMS
+    1   100   10    1    1 /
+
+TABDIMS
+-- NTSFUN  NTPVT   NSSFUN   NPPVT   NTFIP   NRPVT
+      2      1       20      12       1      12 /
+
+REGDIMS
+-- NTFIP NMFIPR NRFREG NTFREG     NTOPREG
+1   1   0   1   / 
+
+WELLDIMS
+--    MAX     CONN              WELLS IN
+--   WELLS   PR WELL   GROUPS     GROUP
+       2       40         1         2      /
+
+START
+  1 'JAN' 2014  /
+
+
+-- Note: we do not use unified output files on purpose, as MRST has 
+-- problems reading these files.
+
+
+-- Linear solver stack size
+NSTACK
+25 / -- Increased from 10 due to convergence problems
+
+
+UNIFIN
+UNIFOUT
+
+
+---------------------------------------------------------------------------
+GRID
+
+
+FLUXTYPE
+'PRESSURE' /
+
+DUMPFLUX
+
+INCLUDE
+'FLUXNUM_FIPNUM_None_912661.grdecl' 
+/
+
+FLUXREG
+1 /
+
+---------------------------------------------------------------------------
+
+-- In this section, the geometry of the simulation grid and the rock
+-- permeabilities and porosities are defined.
+
+
+INIT
+
+--     ARRAY  VALUE     ------- BOX ------
+EQUALS
+       DX      25    /
+       DY      25    /
+       DZ      2    /
+       TOPS    1000      1  100  1  40   1  1  / top layer 
+       PERMX   10      1  100  1  20   1  1 / left region (milli darcy)
+       PORO     0.1      / defaults to last specified box
+       PERMX     1000      1  100  21  40  1 1 / right region 
+       PORO     0.1      / defaults to last specified box
+/
+
+COPY
+      'PERMX'    'PERMY'   /
+      'PERMX'    'PERMZ'   /
+/
+
+
+---------------------------------------------------------------------------
+PROPS
+---------------------------------------------------------------------------
+
+-- This section defines the relative permeabilities, capillary pressures,
+-- and other properties of the reservoir fluids.
+
+
+
+SWOF
+--    Sw      Krw    Krow     Pcow
+--                            (bar)
+    0.1000  0.0000  1.0000   1.198e-01
+    0.1421  0.0092  0.9172   3.754e-02
+    0.1842  0.0273  0.8370   2.547e-02
+    0.2263  0.0522  0.7596   1.845e-02
+    0.2684  0.0827  0.6851   1.331e-02
+    0.3105  0.1182  0.6135   9.054e-03
+    0.3526  0.1582  0.5449   5.384e-03
+    0.3947  0.2024  0.4794   2.058e-03
+    0.4368  0.2506  0.4171  -1.079e-03
+    0.4789  0.3026  0.3581  -4.027e-03
+    0.5211  0.3581  0.3026  -7.074e-03
+    0.5632  0.4171  0.2506  -1.018e-02
+    0.6053  0.4794  0.2024  -1.336e-02
+    0.6474  0.5449  0.1582  -1.687e-02
+    0.6895  0.6135  0.1182  -2.087e-02
+    0.7316  0.6851  0.0827  -2.546e-02
+    0.7737  0.7596  0.0522  -3.122e-02
+    0.8158  0.8370  0.0273  -3.922e-02
+    0.8579  0.9172  0.0092  -5.311e-02
+    0.9000  1.0000  0.0000  -3.328e-01 / rock 1
+    0.1000  0.0000  1.0000   3.788e-01
+    0.1421  0.0007  0.8738   1.187e-01
+    0.1842  0.0036  0.7573   8.055e-02
+    0.2263  0.0100  0.6509   5.834e-02
+    0.2684  0.0204  0.5539   4.208e-02
+    0.3105  0.0356  0.4661   2.863e-02
+    0.3526  0.0561  0.3874   1.703e-02
+    0.3947  0.0824  0.3170   6.509e-03
+    0.4368  0.1152  0.2552  -3.414e-03
+    0.4789  0.1545  0.2011  -1.273e-02
+    0.5211  0.2011  0.1545  -2.237e-02
+    0.5632  0.2552  0.1152  -3.218e-02
+    0.6053  0.3170  0.0824  -4.225e-02
+    0.6474  0.3874  0.0561  -5.334e-02
+    0.6895  0.4661  0.0356  -6.600e-02
+    0.7316  0.5539  0.0204  -8.052e-02
+    0.7737  0.6509  0.0100  -9.872e-02
+    0.8158  0.7573  0.0036  -1.240e-01
+    0.8579  0.8738  0.0007  -1.680e-01
+    0.9000  1.0000  0.0000  -1.052e+00 / rock 2
+ 
+
+DENSITY
+--   O       W     G
+    850    1014   0.82   /
+
+
+PVTW
+-- REF.PRES.  REF. FVF  COMPRESSIBILITY  REF.VISC.  VISCOSIBILITY
+--                                         (cP)
+     200        1.0        4.28e-5         0.5       0.00E+00 /
+ 
+PVCDO
+-- REF.PRES.  REF. FVF  COMPRESSIBILITY  REF.VISC.  VISCOSIBILITY
+--                                         (cP)
+     200        1.0        6.65e-5      1.5   0.0e+0   /
+--     200        1.0        6.65e-5      1.5   0.0e+0   /
+
+ROCK
+-- REF.PRES   COMPRESSIBILITY
+--  (bars)        (1/bars)
+     200             4.0e-6       /
+
+
+
+-- $$$ -- Polymer properties -----------------------------------------------------
+-- $$$ 
+-- $$$ -- PLYVISC: Viscosity multiplier. 
+-- $$$ -- Defined as PLYVISC=u/uw, where uw is water viscosity.
+-- $$$ PLYVISC
+-- $$$ 0    1.0
+-- $$$ 3.0  40.0 
+-- $$$ 4.0  40.0 /
+-- $$$ 
+-- $$$ 
+-- $$$ PLYROCK
+-- $$$ -- Note: AI=1 is desorption, AI=2 gives no desorption.
+-- $$$ -- IPV   RRF  dens   AI   max ads
+-- $$$    0.0   1.0  2000   1    20.0e-6 / rock 1
+-- $$$    0.0   1.0  2000   1    70.0e-6 / rock 2
+-- $$$ 
+-- $$$ --PLYADS: Adsorption isotherm
+-- $$$ PLYADS
+-- $$$ --   conc     adsorb-conc
+-- $$$ -- (kg/m^3)     (mg/kg)
+-- $$$      0.0    0.0e-6
+-- $$$      2.3   20.0e-6
+-- $$$      3.0   20.0e-6
+-- $$$      4.0   20.0e-6 / rock 1
+-- $$$      0.0    0.0e-6
+-- $$$      2.0   70.0e-6
+-- $$$      3.0   70.0e-6
+-- $$$      4.0   70.0e-6 / rock 2
+-- $$$ 
+-- $$$ 
+-- $$$ --Polymer: Todd-Longstaff mixing parameter. 1 = full mixing
+-- $$$ -- TLMIXPAR <- old keyword no longer in use in Eclipse
+-- $$$ PLMIXPAR  
+-- $$$  1.0  /
+-- $$$ 
+-- $$$ -- Max. concentration to be used in the mixing calculation
+-- $$$ -- Should equal the injected concentration
+-- $$$ PLYMAX
+-- $$$  4.00  0  /
+-- $$$ 
+-- $$$ 
+
+---------------------------------------------------------------------------
+REGIONS
+---------------------------------------------------------------------------
+
+EQUALS
+--                 VAL        ------- BOX ------
+        SATNUM      1         1  100  1  20   1  1 / 
+        SATNUM      2         1  100  21  40   1  1 /
+/
+
+
+
+
+---------------------------------------------------------------------------
+SOLUTION
+---------------------------------------------------------------------------
+
+-- The solution section defines the initial state of the solution 
+-- variables (phase pressures, saturations, and gas-oil ratios)
+
+-- Equilibration data specification
+EQUIL
+-- DEPTH   PRES   OW CONTACT
+--  (m)    (bar)     (m)
+   1000    210      1040 /
+
+-- Create initial restart file
+--RPTSOL
+--  RESTART=4 /
+
+
+---------------------------------------------------------------------------
+SUMMARY
+---------------------------------------------------------------------------
+
+-- This section specifies data to be written to the summary files and which
+-- may later be used with the Eclipse graphics package
+
+
+-- Field Oil Production Rate
+FOPR
+
+-- Well Bottom Hole Pressure
+WBHP
+'PRODUCER'
+'INJECTOR'
+/
+
+-- Well Water Injection Rate
+WWIR
+'INJECTOR'
+/
+
+-- Well Water Production Rate
+WWPR
+'PRODUCER'
+/
+
+-- Well Oil Production Rate
+WOPR
+'PRODUCER'
+/
+
+-- Well Water Cut
+WWCT
+'PRODUCER'
+/
+
+
+
+
+
+---------------------------------------------------------------------------
+SCHEDULE
+---------------------------------------------------------------------------
+
+-- The schedule section defines the operations to be simulated
+
+
+-- Controls on output to the RESTART file
+-- BASIC=3: restart files are created every FREQ report time
+-- BASIC=5: restart is written every FREQ month
+-- BASIC=6: a restart file is written at every time step
+RPTRST
+  BASIC=3  FREQ=1  /
+
+WELSPECS
+--     WELL   GROUP LOCATION     BHP   PI
+--     NAME   NAME     I    J   DEPTH DEFN
+    'PRODUCER' 'G'  100  1    1000 'OIL'  /
+    'INJECTOR' 'G'  1  1    1000 'WAT'  /
+/
+
+COMPDAT
+--     WELL     -LOCATION- OPEN/ SAT CONN  WELL
+--     NAME      I     J K1  K2 SHUT  TAB FACT  DIA
+    'PRODUCER' 100  1  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  2  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  3  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  4  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  5  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  6  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  7  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  8  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  9  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  10  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  11  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  12  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  13  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  14  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  15  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  16  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  17  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  18  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  19  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  20  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  21  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  22  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  23  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  24  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  25  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  26  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  27  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  28  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  29  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  30  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  31  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  32  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  33  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  34  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  35  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  36  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  37  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  38  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  39  1 1 'OPEN' 2*       0.1 /
+    'PRODUCER' 100  40  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   1  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   2  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   3  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   4  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   5  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   6  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   7  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   8  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   9  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   10  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   11  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   12  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   13  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   14  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   15  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   16  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   17  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   18  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   19  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   20  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   21  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   22  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   23  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   24  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   25  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   26  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   27  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   28  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   29  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   30  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   31  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   32  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   33  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   34  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   35  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   36  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   37  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   38  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   39  1 1 'OPEN' 2*       0.1 /
+    'INJECTOR'  1   40  1 1 'OPEN' 2*       0.1 /
+/
+
+
+
+
+---------------------------------------------------------------------------
+-- CONTROL: WATER AND POLYMER INJECTION
+---------------------------------------------------------------------------
+
+WCONPROD
+--      WELL     OPEN/  CNTL   OIL  WATER   GAS  LIQU   RES   BHP
+--      NAME     SHUT   MODE  RATE   RATE  RATE  RATE  RATE
+     'PRODUCER' 'OPEN'  'BHP'   5*                            200/
+/
+
+WCONINJE
+--      WELL       INJ     OPEN/   CNTL     FLOW       FLOW      BHP
+--      NAME      TYPE     SHUT    MODE     RATE       LIMIT    LIMIT
+--                                        (m^3/day)  (m^3/day)  (bar)
+     'INJECTOR'  'WATER'  'OPEN'  'RATE'   50    1*       600 /
+/
+
+
+-- $$$ WPOLYMER
+-- $$$   'INJECTOR'  0  /
+-- $$$ /
+
+
+TSTEP
+ 2*20 
+/
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- CONTROL: PURE WATER INJECTION
+---------------------------------------------------------------------------
+
+WCONPROD
+--      WELL     OPEN/  CNTL   OIL  WATER   GAS  LIQU   RES   BHP
+--      NAME     SHUT   MODE  RATE   RATE  RATE  RATE  RATE
+     'PRODUCER' 'OPEN'  'BHP'   5*                            200/
+/
+
+WCONINJE
+--      WELL       INJ     OPEN/   CNTL     FLOW       FLOW      BHP
+--      NAME      TYPE     SHUT    MODE     RATE       LIMIT    LIMIT
+--                                        (m^3/day)  (m^3/day)  (bar)
+     'INJECTOR'  'WATER'  'OPEN'  'RATE'   50     1*       600 /
+/
+
+-- $$$ WPOLYMER
+-- $$$   'INJECTOR'  0  /
+-- $$$ /
+
+
+
+
+TSTEP
+ 2*20 
+/
+
+
+
+
+
+---------------------------------------------------------------------------
+END
+
+
