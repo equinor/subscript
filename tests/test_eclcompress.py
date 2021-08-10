@@ -15,6 +15,7 @@ import opm.io
 
 from subscript.eclcompress.eclcompress import (
     compress_multiple_keywordsets,
+    eclcompress,
     file_is_binary,
     find_keyword_sets,
     glob_patterns,
@@ -229,6 +230,29 @@ def test_multiplerecords():
     ]
 
 
+def test_whitespace(tmpdir):
+    """Ensure excessive whitespace is not added"""
+    kw_string = """
+MULTIPLY
+  'PORO' 2 /
+/"""
+    filelines = kw_string.splitlines()
+    assert (
+        compress_multiple_keywordsets(find_keyword_sets(filelines), filelines)
+        == filelines
+    )
+
+    # Test the same when the string is read from a file:
+    tmpdir.chdir()
+    Path("test.inc").write_text(kw_string)
+    eclcompress("test.inc")
+    compressed_lines = Path("test.inc").read_text().splitlines()
+
+    # The compressed output should have only two header lines added and one
+    # empty lines after the header added:
+    assert len(compressed_lines) == len(filelines) + 3
+
+
 def test_formatting():
     """Test that compressed output is only 79 characters wide"""
     numbers = " ".join([str(number) for number in np.random.rand(1, 100)[0]])
@@ -259,9 +283,7 @@ INC INC INC DOWN RIGHT /
 
 ZCORN
   1 1 1 1 1 1 /
-""".split(
-        "\n"
-    )
+""".splitlines()
     kwsets = find_keyword_sets(filelines)
     assert (
         compress_multiple_keywordsets(kwsets, filelines)
@@ -274,9 +296,7 @@ GDORIENT
 
 ZCORN
   6*1 /
-""".split(
-            "\n"
-        )
+""".splitlines()
     )
 
 

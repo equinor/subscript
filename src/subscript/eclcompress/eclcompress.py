@@ -84,12 +84,12 @@ def eclcompress(
         logger.info("Compressing %s...", filename)
         try:
             with open(filename, "r") as fileh:
-                filelines = fileh.readlines()
+                filelines = fileh.read().splitlines()
         except UnicodeDecodeError:
             # Try ISO-8859:
             try:
                 with open(filename, "r", encoding="ISO-8859-1") as fileh:
-                    filelines = fileh.readlines()
+                    filelines = fileh.read().splitlines()
             except (TypeError, UnicodeDecodeError):
                 # ISO-8859 under py2 is not intentionally supported
                 logger.warning("Skipped %s, not text file.", filename)
