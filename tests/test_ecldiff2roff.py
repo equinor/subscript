@@ -4,7 +4,10 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import numpy as np
+
 import pytest
+import xtgeo
 
 from subscript.ecldiff2roff import ecldiff2roff
 
@@ -168,6 +171,103 @@ def test_mainfunction(
     )
     for expected_file in expected_files:
         assert Path(expected_file).exists()
+
+
+def test_values_dateorder(reek_data):
+    """Verify the handling of date order in date pairs, that the
+    sign of values gets correct and it negated when dates are reversed"""
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0", "PRESSURE", [("20000101", "20000701")]
+    )
+    pressure_diff1 = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000101_20000701.roff"
+    )
+
+    # This tools works such that a reduction in pressure gives a positive value when
+    # the dates "increase". This test assumes that the Reek dataset declines
+    # in pressure:
+    assert pressure_diff1.values.mean() > 0.0
+
+    # Also verify the actual mean value:
+    assert np.isclose(pressure_diff1.values.mean(), 29.6174076)
+
+    # Check that when the dates are reversed, the difference is negated:
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0", "PRESSURE", [("20000701", "20000101")]
+    )
+    pressure_diff_reverse = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000701_20000101.roff"
+    )
+    assert np.isclose(
+        pressure_diff1.values.mean(), -pressure_diff_reverse.values.mean()
+    )
+
+
+def test_values_samedate(reek_data):
+    """Verify that the same date yields zero change"""
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0", "PRESSURE", [("20000101", "20000101")]
+    )
+    pressure_diff = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000101_20000101.roff"
+    )
+    assert np.isclose(pressure_diff.values.mean(), 0.0)
+
+
+def test_values_multiple_datepairs(reek_data):
+    """Check that differences for multiple date pairs are handled correctly
+
+    This was a bug in subscript up to v0.12.0"""
+
+    # First establish some thruths:
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0", "PRESSURE", [("20000101", "20000701")]
+    )
+    pressure_diff1_singlerun = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000101_20000701.roff"
+    )
+    assert np.isclose(pressure_diff1_singlerun.values.mean(), 29.6174076)
+
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0", "PRESSURE", [("20000701", "20010201")]
+    )
+    pressure_diff2_singlerun = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000701_20010201.roff"
+    )
+    assert np.isclose(pressure_diff2_singlerun.values.mean(), 12.570824)
+
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0", "PRESSURE", [("20000101", "20010201")]
+    )
+    pressure_diff3_singlerun = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000101_20010201.roff"
+    )
+    assert np.isclose(pressure_diff3_singlerun.values.mean(), 42.18823213)
+
+    # Then run with multiple datepairs:
+    ecldiff2roff.ecldiff2roff_main(
+        "2_R001_REEK-0",
+        "PRESSURE",
+        [("20000101", "20000701"), ("20000701", "20010201"), ("20000101", "20010201")],
+    )
+    pressure_diff1 = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000101_20000701.roff"
+    )
+    pressure_diff2 = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000701_20010201.roff"
+    )
+    pressure_diff3 = xtgeo.gridproperty_from_file(
+        "eclgrid--pressure--20000101_20010201.roff"
+    )
+    assert np.isclose(
+        pressure_diff1.values.mean(), pressure_diff1_singlerun.values.mean()
+    )
+    assert np.isclose(
+        pressure_diff2.values.mean(), pressure_diff2_singlerun.values.mean()
+    )
+    assert np.isclose(
+        pressure_diff3.values.mean(), pressure_diff3_singlerun.values.mean()
+    )
 
 
 def test_errors(reek_data):
