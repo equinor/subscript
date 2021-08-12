@@ -1,6 +1,6 @@
 import argparse
 import logging
-import dateutil
+import dateutil.parser
 
 import xtgeo  # type: ignore
 import subscript
@@ -191,8 +191,11 @@ def ecldiff2roff_main(
             str(date_pair[0]),
             str(date_pair[1]),
         )
-        # Inplace substraction, prop1 = prop1 - prop2
-        prop1.values -= prop2.values
+
+        diffprop = xtgeo.GridProperty(
+            ncol=ecl_grid.ncol, nrow=ecl_grid.nrow, nlay=ecl_grid.nlay
+        )
+        diffprop.values = prop1.values - prop2.values
 
         diffpropname = (
             prop.lower()
@@ -204,7 +207,7 @@ def ecldiff2roff_main(
         filename = outputfilebase + sep + diffpropname + ".roff"
 
         logger.info("Writing to file %s", filename)
-        prop1.to_file(filename, name=diffpropname)
+        diffprop.to_file(filename, name=diffpropname)
 
 
 def main():
