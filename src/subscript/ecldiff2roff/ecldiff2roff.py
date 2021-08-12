@@ -1,11 +1,11 @@
 import argparse
 import logging
-import dateutil
+from typing import List, Set, Tuple, Union
 
+import dateutil.parser
 import xtgeo  # type: ignore
-import subscript
 
-from typing import List, Tuple, Set, Union
+import subscript
 
 logger = subscript.getLogger(__name__)
 
@@ -163,7 +163,7 @@ def ecldiff2roff_main(
     for date_pair in diffdates:
         alldates = alldates.union(set(date_pair))
 
-    ecl_grid = xtgeo.grid3d.Grid().from_file(
+    ecl_grid = xtgeo.grid_from_file(
         eclroot, fformat="eclipserun", restartprops=[prop], restartdates=alldates
     )
     logger.info("Loaded UNRST data at %s dates from %s", len(alldates), eclroot)
@@ -191,8 +191,9 @@ def ecldiff2roff_main(
             str(date_pair[0]),
             str(date_pair[1]),
         )
-        # Inplace substraction, prop1 = prop1 - prop2
-        prop1.values -= prop2.values
+
+        diffprop = prop1.copy()
+        diffprop.values = prop1.values - prop2.values
 
         diffpropname = (
             prop.lower()
@@ -204,7 +205,7 @@ def ecldiff2roff_main(
         filename = outputfilebase + sep + diffpropname + ".roff"
 
         logger.info("Writing to file %s", filename)
-        prop1.to_file(filename, name=diffpropname)
+        diffprop.to_file(filename, name=diffpropname)
 
 
 def main():
