@@ -10,9 +10,9 @@ import pytest
 from subscript.runrms import runrms as rr
 
 # the resolve().as_posix() for pytest tmpdir fixture (workaround)
-TESTRMS1 = Path("tests/data/reek/rms/reek.rms10.1.3").resolve().as_posix()
-TESTRMS2 = Path("tests/data/reek/rms/reek.rms11.1.0").resolve().as_posix()
-TESTSETUP = Path("tests/testdata_runrms/runrms.yml").resolve().as_posix()
+TESTRMS1 = (Path(__file__).parent / "data/reek/rms/reek.rms10.1.3").resolve().as_posix()
+TESTRMS2 = (Path(__file__).parent / "data/reek/rms/reek.rms11.1.0").resolve().as_posix()
+TESTSETUP = (Path(__file__).parent / "testdata_runrms/runrms.yml").resolve().as_posix()
 
 
 def test_main_no_project():
