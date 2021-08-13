@@ -29,7 +29,8 @@ def test_gen_satfunc(tmpdir, mocker):
     Path("relperm.conf").write_text(EXAMPLE)
 
     mocker.patch("sys.argv", ["gen_satfunc", "relperm.conf", "swof.inc"])
-    gen_satfunc.main()
+    with pytest.warns(FutureWarning):
+        gen_satfunc.main()
 
     assert Path("swof.inc").exists()
     assert len(Path("swof.inc").read_text().splitlines()) > 50
@@ -41,7 +42,8 @@ RELPERM 4 2 1   3 2 1   0.15 0.10 0.5 20 100 0.2 0.22 -0.5 30
 """
     )
     mocker.patch("sys.argv", ["gen_satfunc", "relpermpc.conf", "swofpc.inc"])
-    gen_satfunc.main()
+    with pytest.warns(FutureWarning):
+        gen_satfunc.main()
     assert Path("swofpc.inc").exists()
     swofpclines = Path("swofpc.inc").read_text().splitlines()
     assert len(swofpclines) > 20

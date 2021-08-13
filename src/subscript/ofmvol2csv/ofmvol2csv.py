@@ -1,12 +1,11 @@
-import logging
 import argparse
-import re
 import io
-
+import logging
+import re
 from typing import List, Union
 
+from packaging import version
 import pandas as pd
-
 from subscript import __version__
 from subscript import getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns
@@ -262,13 +261,23 @@ def parse_ofmtable(
 
     assert "DATE" in columnnames
 
-    data = pd.read_table(
-        io.StringIO(ofmstring),
-        skiprows=1,
-        sep=r"\s+",
-        names=columnnames,
-        error_bad_lines=False,
-    )
+    if version.parse(pd.__version__) < version.parse("1.3.0"):
+        data = pd.read_table(
+            io.StringIO(ofmstring),
+            skiprows=1,
+            sep=r"\s+",
+            names=columnnames,
+            # The following option is deprecated from Pandas 1.3.0:
+            error_bad_lines=False,
+        )
+    else:
+        data = pd.read_table(
+            io.StringIO(ofmstring),
+            skiprows=1,
+            sep=r"\s+",
+            names=columnnames,
+            on_bad_lines="skip",
+        )
 
     data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
 

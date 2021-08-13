@@ -292,7 +292,8 @@ def test_prtvol2csv_regions(tmpdir, mocker):
     tmpdir.chdir()
     Path("regions.yml").write_text(yaml.dump(yamlexample))
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
-    prtvol2csv.main()
+    with pytest.warns(FutureWarning):
+        prtvol2csv.main()
 
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
     print("Computed:")
