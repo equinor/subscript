@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import shutil
 import subprocess
 import filecmp
 import pytest
@@ -48,6 +49,55 @@ def test_main_fmu(tmpdir, mocker):
     assert Path("include/edit").exists()
     assert Path("include/grid/reek.grid").exists()
     assert Path("include/props/reek.pvt").exists()
+
+
+def test_repeated_run(tmpdir, mocker):
+    tmpdir.chdir()
+
+    datafilepath = ECLDIR / ECLCASE
+    mocker.patch("sys.argv", ["pack_sim", str(datafilepath), ".", "--fmu"])
+    pack_sim.main()
+
+    with pytest.raises(ValueError, match="will not overwrite"):
+        pack_sim.main()
+
+    os.remove("model/" + ECLCASE)
+    # Here it will reuse the packed include files:
+    pack_sim.main()
+
+    # But error if a file is not writable:
+    os.remove("model/" + ECLCASE)
+    os.chmod("include/grid/reek.perm", 0)
+    with pytest.raises(IOError):
+        pack_sim.main()
+
+
+@pytest.mark.parametrize(
+    "injected, expectedwarning",
+    [
+        ("IMPFILE", "WARNING: THE SIMULATION CONTAINS THE IMPFILE KEYWORD"),
+        ("USEFLUX", "WARNING: THE SIMULATION DEPENDS ON A USEFLUX FILE"),
+        ("RESTART", "WARNING: THE SIMULATION POSSIBLY DEPENDS ON A RESTART FILE"),
+    ],
+)
+def test_restart_warning(injected, expectedwarning, tmpdir, mocker, capsys):
+    tmpdir.chdir()
+
+    shutil.copytree(ECLDIR.parent / "include", "include", copy_function=os.symlink)
+    shutil.copytree(ECLDIR.parent / "model", "model", copy_function=os.symlink)
+    os.remove("model/" + ECLCASE)
+    shutil.copy(ECLDIR.parent / "model" / ECLCASE, "model/" + ECLCASE)
+
+    datafile = Path("model") / ECLCASE
+    mocker.patch("sys.argv", ["pack_sim", str(datafile), "."])
+
+    modifieddata = "\n".join(datafile.read_text().splitlines() + [injected])
+    datafile.write_text(modifieddata)
+
+    pack_sim.main()
+
+    captured = capsys.readouterr()
+    assert expectedwarning in captured.out
 
 
 def test_binary_file_detection(tmpdir):
@@ -127,11 +177,31 @@ def test_get_paths(tmpdir):
 def test_normalize_line_endings():
     """Test line ending normalization"""
 
+    # Test default ("unix")
     assert pack_sim.EOL_WINDOWS not in pack_sim._normalize_line_endings(
         "foobar" + pack_sim.EOL_WINDOWS
     )
+    assert pack_sim.EOL_WINDOWS not in pack_sim._normalize_line_endings(
+        "foobar" + pack_sim.EOL_WINDOWS, "unix"
+    )
     assert pack_sim.EOL_MAC not in pack_sim._normalize_line_endings(
         "foobar" + pack_sim.EOL_MAC
+    )
+
+    # Test mac
+    assert pack_sim.EOL_MAC in pack_sim._normalize_line_endings(
+        "foobar" + pack_sim.EOL_MAC, "mac"
+    )
+    assert pack_sim.EOL_WINDOWS not in pack_sim._normalize_line_endings(
+        "foobar" + pack_sim.EOL_UNIX, "mac"
+    )
+    assert pack_sim.EOL_WINDOWS not in pack_sim._normalize_line_endings(
+        "foobar" + pack_sim.EOL_WINDOWS, "mac"
+    )
+
+    # Test Windows:
+    assert pack_sim.EOL_WINDOWS in pack_sim._normalize_line_endings(
+        "foobar" + pack_sim.EOL_WINDOWS, "windows"
     )
 
 
