@@ -3,6 +3,7 @@ import subprocess
 import os
 import stat
 from pathlib import Path
+import yaml
 import shutil
 
 import pytest
@@ -56,6 +57,167 @@ def test_scan_rms(tmpdir):
     runner.scan_rms()
 
     assert runner.version_fromproject == "10.1.3"
+
+
+def test_scan_mocked_rms(tmpdir):
+    """Test RMS project scanning on mocked projects"""
+    tmpdir.chdir()
+    runner = rr.RunRMS()
+    runner.project = "notexisting"
+    runner.scan_rms()
+
+    mocked_rms = "mockedproject.rms18.0.0"
+    os.mkdir(mocked_rms)
+    runner.project = mocked_rms
+    with pytest.raises(SystemExit):
+        # Empty dir is an invalid RMS project:
+        runner.scan_rms()
+
+    # Mock a .master:
+    dot_master = Path(mocked_rms) / ".master"
+    dot_master.write_text("")
+    runner.scan_rms()  # No errors from this
+    assert runner.version_fromproject is None
+
+    # Add version to the .master:
+    dot_master.write_text("release : 18.0.0")
+    runner.scan_rms()
+    assert runner.version_fromproject == "18.0.0"
+
+    # Add version in wrong place to the .master:
+    dot_master.write_text("End GEOMATIC\nrelease : 18.0.0")
+    runner = rr.RunRMS()
+    runner.project = mocked_rms
+    runner.scan_rms()
+    assert runner.version_fromproject is None
+
+    # Test mkeys:
+    dot_master.write_text(
+        "fileversion : foo\nuser : foobert\nvariant : bogus bogus bogus"
+    )
+    runner = rr.RunRMS()
+    runner.project = mocked_rms
+    runner.scan_rms()
+    assert runner.fileversion == "foo"
+    assert runner.user == "foobert"
+    assert runner.variant == "unknown"  # Too many strings provided in .master
+
+
+def test_runlogger(tmpdir):
+    tmpdir.chdir()
+
+    runner = rr.RunRMS()
+    runner.runloggerfile = "not-existing"
+    # Nothing happens, skipped because it does not exist
+    runner.runlogger()
+
+    # Make an empty file and prove that it will be logged to:
+    Path("foo-log").write_text("")
+    assert not Path("foo-log").read_text()
+    runner.runloggerfile = "foo-log"
+    runner.runlogger()
+    assert Path("foo-log").read_text()
+
+
+@pytest.mark.parametrize(
+    "os_id, expected",
+    [
+        ("Red Hat Enterprise Linux Server release 6.0 (bar)", "x86_64_RH_6"),
+        ("Red Hat Enterprise Linux Server release 7.2 (Maipo)", "x86_64_RH_7"),
+        ("Red Hat Enterprise Linux Server release 8.2 (foo)", "x86_64_RH_8"),
+        pytest.param("foobar", None, marks=pytest.mark.xfail(raises=IndexError)),
+    ],
+)
+def test_detect_os(os_id, expected, tmpdir, mocker):
+    tmpdir.chdir()
+    release_file = Path("redhat-release")
+    release_file.write_text(os_id)
+    mocker.patch("subscript.runrms.runrms.RHEL_ID", release_file)
+    runner = rr.RunRMS()
+    assert runner.osver == expected
+
+
+def test_detect_os_default(tmpdir, mocker):
+    tmpdir.chdir()
+    release_file = Path("not-existing-file")
+    mocker.patch("subscript.runrms.runrms.RHEL_ID", release_file)
+    runner = rr.RunRMS()
+    assert runner.osver == "x86_64_RH_7"
+
+
+def test_store_pythonpath(mocker):
+    mocker.patch("os.environ", {"PYTHONPATH": "foo/bar/com"})
+    runner = rr.RunRMS()
+    assert "foo/bar/com" in runner.oldpythonpath
+    assert runner.pythonpath is None
+
+    mocker.patch("os.environ", {"PYTHONbarfPATH": "foo/bar/com"})
+    runner = rr.RunRMS()
+    assert runner.oldpythonpath == ""
+    assert runner.pythonpath is None
+
+
+def test_store_rmspluginpath(mocker):
+    mocker.patch("os.environ", {"RMS_PLUGINS_LIBRARY": "foo/bar/com"})
+    runner = rr.RunRMS()
+    assert "foo/bar/com" in runner.oldpluginspath
+    assert runner.pluginspath is None
+
+    mocker.patch("os.environ", {"PYTHONbarfPATH": "foo/bar/com"})
+    runner = rr.RunRMS()
+    assert runner.oldpythonpath == ""
+    assert runner.pythonpath is None
+
+
+def test_parse_setup(tmpdir, mocker):
+    tmpdir.chdir()
+    setupfile = "foo.yml"
+    mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
+    runner = rr.RunRMS()
+    runner.do_parse_args(["runrms", "--debug"])
+    with pytest.raises(FileNotFoundError):
+        runner.parse_setup()
+
+    # Write dummy file:
+    Path(setupfile).write_text(yaml.dump({}))
+    # No errors from this, even if the setup is empty:
+    runner.parse_setup()
+    assert runner.setup == {}
+    assert runner.setupfile == setupfile
+
+
+def test_requested_rms_version(tmpdir, mocker):
+    tmpdir.chdir()
+    setupfile = "setup.yml"
+    mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
+    runner = rr.RunRMS()
+    runner.do_parse_args(["runrms", "--debug"])
+
+    with pytest.raises(KeyError, match="rms"):
+        Path(setupfile).write_text(yaml.dump({}))
+        runner.parse_setup()
+        runner.requested_rms_version()
+
+    with pytest.raises(RuntimeError, match="Executable is not found"):
+        Path(setupfile).write_text(yaml.dump({"rms": {"18.0.0": {"default": True}}}))
+        runner.parse_setup()
+        runner.requested_rms_version()
+
+    with pytest.raises(KeyError, match="rms_nonstandard"):
+        Path(setupfile).write_text(yaml.dump({"rms": {"18.0.0": {"default": True}}}))
+        runner.parse_setup()
+        runner.version_fromproject = "17.0.0"
+        runner.requested_rms_version()
+
+    Path(setupfile).write_text(
+        yaml.dump(
+            {"rms": {"18.0.0": {"default": True, "exe": "somefile", "pythonpath": ""}}}
+        )
+    )
+    runner.parse_setup()
+    runner.version_fromproject = "18.0.0"
+    runner.requested_rms_version()
+    assert runner.version_requested == "18.0.0"
 
 
 @pytest.mark.skipif(

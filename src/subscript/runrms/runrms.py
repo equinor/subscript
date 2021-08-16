@@ -229,6 +229,8 @@ class RunRMS:
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
         self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
 
+        self.detect_os()
+
         self.oldpythonpath = ""
         if "PYTHONPATH" in os.environ:
             self.oldpythonpath = os.environ["PYTHONPATH"]
@@ -245,7 +247,7 @@ class RunRMS:
 
     def detect_os(self):
         """Detect operating system string in runtime, just use default if not found."""
-        if RHEL_ID.is_dir():
+        if RHEL_ID.is_file():
             with open(RHEL_ID, "r") as buffer:
                 major = buffer.read().split(" ")[6].split(".")[0].replace("'", "")
                 self.osver = "x86_64_RH_" + str(major)
@@ -420,6 +422,7 @@ class RunRMS:
         if not myproject.is_dir():
             print("Project does not exist, will only launch RMS!")
             self.project = None
+            return
 
         mkeys = ("fileversion", "variant", "user", "date", "time")
 
