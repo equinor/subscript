@@ -33,9 +33,10 @@ def test_first_and_last(tmpdir, mocker):
     """Ask for two restart points, this should give us the first and last."""
     shutil.copyfile(ECLDIR / UNRST_FNAME, tmpdir.join(UNRST_FNAME))
 
+    tmpdir.chdir()
+
     orig_rstindices = restartthinner.get_restart_indices(UNRST_FNAME)
 
-    tmpdir.chdir()
     mocker.patch("sys.argv", ["restartthinner", "-n", "2", UNRST_FNAME, "--keep"])
     restartthinner.main()
 
