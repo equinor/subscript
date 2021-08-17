@@ -62,13 +62,10 @@ def _is_existing_file(filename: str):
     return Path(filename).exists()
 
 
-@configsuite.transformation_msg("Defaults and v1-vs-v2 handling of config")
-def _defaults_and_v1_format_handling(config: dict):
-    """Wrapper transformation function.
-
-    Only one tranformation can be given to ConfigSuite.
-    """
-    return _v1_content_to_v2(_shuffle_start_refdate(config))
+@configsuite.transformation_msg("Defaults handling")
+def _defaults_handling(config: dict):
+    """Handle defaults with dates."""
+    return _shuffle_start_refdate(config)
 
 
 @configsuite.transformation_msg("Convert to string")
@@ -105,61 +102,9 @@ def _shuffle_start_refdate(config: dict) -> dict:
     return config
 
 
-@configsuite.transformation_msg("Convert v1 sunsch format to v2")
-# pylint: disable=invalid-name
-def _v1_content_to_v2(config: dict) -> dict:
-    """
-    Process an incoming dictionary with sunsch configuration.
-
-    If sunsch v1 format is detected, then transform to v2. If v2 format
-    nothing happens.
-
-    Validation (and convertion from mutable dict to immutable named_dict)
-    happens later.
-
-    Args:
-        config (dict)
-
-    Returns
-        dict
-    """
-    if "insert" in config:
-        v2_insert = []
-        for insertstatement in config["insert"]:
-            # ConfigSuite 0.6.1 always provides the "substitute" key in the dict,
-            # in order to detect v1 we must disregard an empty substitute:
-            if "substitute" in insertstatement and not insertstatement["substitute"]:
-                insertstatement_length = len(insertstatement) - 1
-            else:
-                insertstatement_length = len(insertstatement)
-            if insertstatement_length == 1:
-                v2_insert += [_remap_v1_insert_to_v2(insertstatement)]
-            else:
-                v2_insert += [insertstatement]
-        config["insert"] = v2_insert
-
-    if "init" in config or "merge" in config:
-        v2_files = []
-        if "files" in config:
-            # This is a strange mix of v1 and v2 config..
-            v2_files += config["files"]
-        if "init" in config:
-            v2_files += [config["init"]]
-            del config["init"]
-        if "merge" in config:
-            # In v1, this can be both a list and a string
-            if isinstance(config["merge"], str):
-                v2_files += [config["merge"]]
-            else:
-                v2_files += config["merge"]
-            del config["merge"]
-        config["files"] = v2_files
-    return config
-
-
 CONFIG_SCHEMA_V2 = {
     MK.Type: types.NamedDict,
-    MK.Transformation: _defaults_and_v1_format_handling,
+    MK.Transformation: _defaults_handling,
     MK.Content: {
         "files": {
             MK.Type: types.List,
@@ -602,67 +547,6 @@ def wrap_long_lines(string: str, maxchars: int = 128, warn: bool = True) -> str:
     return wrappedstr.strip()
 
 
-def _remap_v1_insert_to_v2(insert_statement: dict) -> dict:
-    """
-    Remap a config v1 insert section to how it should look like
-    in the v2 config.
-
-    Args:
-        insert_statement (dict): A dictionary with only one key, which is either
-            dummy or a filename. The key refers to a dictionary of configuration
-            elements
-    Returns:
-        dict: The dictionary value being the first key in the input dict, with
-            the key 'filename' added.
-    """
-
-    # ConfigSuite 0.6.1 always provides the "substitute" key in the dict,
-    # delete it temporarily if it is present, and reinstate at the end.
-    if "substitute" in insert_statement and not insert_statement["substitute"]:
-        del insert_statement["substitute"]
-
-    fileid = list(insert_statement.keys())[0]
-
-    if len(insert_statement) > 1:
-        logger.warning(
-            "This does not look like v1 insert config element %s", str(insert_statement)
-        )
-
-    filedata = list(insert_statement[fileid].keys())
-    # v1 config property:
-    if not isinstance(insert_statement[fileid], dict):
-        logger.error("BUG: The insert_statement: %s was not v1", str(insert_statement))
-        return {}
-
-    v2_insert_statement: dict
-    v2_insert_statement = {}
-
-    if "string" in filedata:
-        v2_insert_statement = {}
-    else:
-        if "filename" not in filedata:
-            filename = fileid
-        else:
-            filename = insert_statement[fileid]["filename"]
-        v2_insert_statement.update({"filename": filename})
-
-    if "substitute" in insert_statement[fileid]:
-        v2_insert_statement.update({"template": filename})
-        if "filename" in v2_insert_statement:
-            v2_insert_statement.pop("filename")
-    if "filename" in insert_statement[fileid]:
-        insert_statement[fileid].pop("filename")
-    v2_insert_statement.update(insert_statement[fileid])
-    if "substitute" not in v2_insert_statement:
-        v2_insert_statement["substitute"] = {}
-    # Ensure the string transformation is applied
-    for key in v2_insert_statement["substitute"]:
-        v2_insert_statement["substitute"][key] = _to_string(
-            v2_insert_statement["substitute"][key]
-        )
-    return v2_insert_statement
-
-
 def dategrid(
     startdate: datetime.date, enddate: datetime.date, interval: str
 ) -> List[datetime.date]:
@@ -840,53 +724,8 @@ def main():
     )
     if not config.valid:
         logger.error(config.errors)
-        logger.warning(
-            "Failed validating your input, will continue, but expect errors.."
-        )
-    else:
-        config_schema_v2_pure = CONFIG_SCHEMA_V2.copy()
-        # Check if yaml had outdated v1 syntax, check that by removing the
-        # transformation key(s) in the top layer from configsuite:
-        # pylint: disable=consider-iterating-dictionary
-        trans_keys = [
-            key
-            for key in CONFIG_SCHEMA_V2.keys()
-            if str(key) == "MetaKeys.Transformation"
-        ]
-        for deletekey in trans_keys:
-            del config_schema_v2_pure[deletekey]
-
-        try:
-            config_pure = configsuite.ConfigSuite(
-                {},
-                config_schema_v2_pure,
-                layers=(defaults_config, yaml_config, cli_config),
-                deduce_required=True,
-            )
-            valid = config_pure.valid
-        except KeyError:
-            # Only Py2 gets here.
-            valid = False
-        if not valid:
-            logger.error(
-                (
-                    "Your configuration syntax is UNSUPPORTED, "
-                    "switch to new format:\n"
-                    "The keys 'init' and 'merge' are "
-                    "now merged into a key called 'files'\n"
-                    "and the insert statements all start "
-                    "with a single dash on a line.\n"
-                    "The following auto-converted YAML "
-                    "might be usable for you:\n"
-                    "%s"
-                    "\nEnd auto-converted YAML"
-                ),
-                yaml.dump(
-                    _v1_content_to_v2(yaml_config)
-                ).strip(),  # lgtm [py/call-to-non-callable]
-            )
-            logger.error("Exiting script, no schedule file written")
-            sys.exit(1)
+        logger.error("Your configuration is invalid. Exiting.")
+        sys.exit(1)
 
     if args.verbose and config.snapshot.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.INFO)
