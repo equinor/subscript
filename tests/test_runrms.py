@@ -151,7 +151,12 @@ def test_store_pythonpath(mocker):
     assert "foo/bar/com" in runner.oldpythonpath
     assert runner.pythonpath is None
 
-    mocker.patch("os.environ", {"PYTHONbarfPATH": "foo/bar/com"})
+    mocker.patch("os.environ", {"PYTHONPATH": ""})
+    runner = rr.RunRMS()
+    assert runner.oldpythonpath == ""
+    assert runner.pythonpath is None
+
+    mocker.patch("os.environ", {"PYTHONdummyPATH": "foo/bar/com"})
     runner = rr.RunRMS()
     assert runner.oldpythonpath == ""
     assert runner.pythonpath is None
