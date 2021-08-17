@@ -459,7 +459,7 @@ def inspect_file(
             section = "optimize/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif "RESTART" in line_strip[0:7]:
+        elif line_strip.startswith("RESTART"):
             # This line defines a restart: raise a warning!
             print(
                 "**********************************************************************"
@@ -483,7 +483,7 @@ def inspect_file(
                 "**********************************************************************"
             )
             new_data_file += line
-        elif "IMPFILE" in line_strip[0:6]:
+        elif line_strip.startswith("IMPFILE"):
             # This line defines a restart: raise a warning!
             print(
                 "**********************************************************************"
@@ -504,7 +504,7 @@ def inspect_file(
                 "**********************************************************************"
             )
             new_data_file += line
-        elif "USEFLUX" in line_strip[0:6]:
+        elif line_strip.startswith("USEFLUX"):
             # This line defines a restart: raise a warning!
             print(
                 "**********************************************************************"
