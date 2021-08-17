@@ -1,0 +1,10 @@
+=================================================
+``subscript.fmu_copy_revision.fmu_copy_revision``
+=================================================
+
+.. automodule:: subscript.fmu_copy_revision.fmu_copy_revision
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.fmu_copy_revision.fmu_copy_revision

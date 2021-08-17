@@ -1,0 +1,18 @@
+===============================
+``subscript.fmu_copy_revision``
+===============================
+
+.. automodule:: subscript.fmu_copy_revision
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.fmu_copy_revision.fmu_copy_revision
+
+.. currentmodule:: subscript.fmu_copy_revision
