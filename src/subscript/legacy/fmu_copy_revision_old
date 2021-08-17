@@ -37,6 +37,11 @@ print "NFORK is $opt_nfork\n";
 
 print <<EOX;
 
+WARNING! You are running the old version of fmu_copy_revision for some reason.
+Please run the new version. If there are particular issues with the new version
+that enforces you to run the old one, please post an issue on
+https://github.com/equinor/subscript/issues or contact the author(s) (JRIV/HAVB)
+
 ===============================================================================
 The purpose with this script is to copy a FMU revision. To either:
 - A user copy
