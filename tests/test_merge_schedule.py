@@ -44,7 +44,8 @@ def test_main(datadir, mocker):
             "merged.sch",
         ],
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
 
     assert Path("merged.sch").exists()
     assert len(open("merged.sch").readlines()) == 32
@@ -64,7 +65,8 @@ def test_initwithdates(datadir, mocker):
             "merged.sch",
         ],
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     assert Path("merged.sch").exists()
     merged = open("merged.sch").read()
     assert merged.count("\n") == 28
@@ -82,7 +84,8 @@ def test_dummy_1(datadir, mocker):
     mocker.patch(
         "sys.argv", ["merge_schedule", "--verbose", "initwithdates.sch", "merged.sch"]
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 12
 
 
@@ -91,7 +94,8 @@ def test_dummy2(datadir, mocker):
     mocker.patch(
         "sys.argv", ["merge_schedule", "--verbose", "merge2.sch", "merged.sch"]
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 16
 
 
@@ -110,7 +114,8 @@ def test_statements_prior_to_dates(datadir, mocker):
             "merged.sch",
         ],
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     merged_str = open("merged.sch").read()
     assert merged_str.find("BAR-FOO") < merged_str.find("DATES")
 
@@ -121,7 +126,8 @@ def test_force(datadir, mocker):
     mocker.patch(
         "sys.argv", ["merge_schedule", "mergeme.sch", "merge2.sch", "existing.sch"]
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     assert len(open("existing.sch").readlines()) == 1
 
     mocker.patch(
@@ -134,7 +140,8 @@ def test_force(datadir, mocker):
             "--force",
         ],
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     assert len(open("existing.sch").readlines()) == 32
 
 
@@ -152,5 +159,6 @@ def test_clip_end(datadir, mocker):
             "2025-01-01",
         ],
     )
-    merge_schedule.main()
+    with pytest.warns(FutureWarning):
+        merge_schedule.main()
     assert len(open("merged.sch").readlines()) == 21

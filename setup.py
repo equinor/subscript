@@ -69,6 +69,7 @@ REQUIREMENTS = [
     "matplotlib",
     "numpy",
     "opm",
+    "packaging",
     "pandas",
     "protobuf",
     "pyscal",
