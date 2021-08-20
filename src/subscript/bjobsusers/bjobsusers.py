@@ -137,7 +137,12 @@ def show_status(status: str = "RUN", title: str = "Running", umax: int = 10) -> 
     print("{} jobs:".format(title))
     print("--------------")
     for user, count in dframe.iterrows():
-        print(count[0], userinfo(str(user), call_finger))
+        print(
+            count[0],
+            userinfo(  # lgtm [py/clear-text-logging-sensitive-data]
+                str(user), call_finger
+            ),
+        )
     print("- - - - - - - - - - -")
     print("Total: {}".format(dframe["ncpu"].sum()))
 
