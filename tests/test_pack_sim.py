@@ -1,9 +1,9 @@
+import filecmp
 import os
-from pathlib import Path
-
 import shutil
 import subprocess
-import filecmp
+from pathlib import Path
+
 import pytest
 
 from subscript.pack_sim import pack_sim

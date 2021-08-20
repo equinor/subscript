@@ -1,19 +1,17 @@
 """Merge multiple CSV files."""
 
-import os
-import sys
 import argparse
-import re
 import logging
-
-from typing import List, Dict
+import os
+import re
+import sys
+from typing import Dict, List
 
 import pandas as pd
-
 from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
 from res.job_queue import ErtScript  # type: ignore
 
-from subscript import getLogger, __version__
+from subscript import __version__, getLogger
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = getLogger(__name__)

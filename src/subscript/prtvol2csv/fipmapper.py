@@ -12,7 +12,7 @@ Assumptions:
 
 """
 from pathlib import Path
-from typing import Union, Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import yaml
 

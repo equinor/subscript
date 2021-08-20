@@ -1,16 +1,15 @@
-import os
-import sys
 import datetime
+import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pandas as pd
-
 import pytest
 
-from subscript.ofmvol2csv import ofmvol2csv
 from subscript.csv2ofmvol import csv2ofmvol
+from subscript.ofmvol2csv import ofmvol2csv
 
 try:
     # pylint: disable=unused-import

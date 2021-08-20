@@ -1,17 +1,15 @@
 """Test eclcompress with  pytest"""
 
-import sys
-import os
-import subprocess
-from pathlib import Path
-import shutil
 import hashlib
-
-import pytest
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
 
 import numpy as np
-
 import opm.io
+import pytest
 
 from subscript.eclcompress.eclcompress import (
     compress_multiple_keywordsets,

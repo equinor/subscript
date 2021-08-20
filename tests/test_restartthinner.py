@@ -1,8 +1,8 @@
 import os
 import shutil
+import subprocess
 from pathlib import Path
 
-import subprocess
 import pytest
 
 from subscript.restartthinner import restartthinner

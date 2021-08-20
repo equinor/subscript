@@ -1,16 +1,14 @@
 """SWATINIT qc tool"""
-import sys
 import argparse
+import sys
 from typing import Dict, List
 
-from matplotlib import pyplot
-
+import ecl2df
 import numpy as np
 import pandas as pd
+from matplotlib import pyplot
 
-import ecl2df
 import subscript
-
 from subscript.check_swatinit import plotter
 from subscript.check_swatinit.constants import (
     __FINE_EQUIL__,

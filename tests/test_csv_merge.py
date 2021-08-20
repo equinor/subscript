@@ -2,8 +2,8 @@
 import subprocess
 from pathlib import Path
 
-import pytest
 import pandas as pd
+import pytest
 
 from subscript.csv_merge import csv_merge
 

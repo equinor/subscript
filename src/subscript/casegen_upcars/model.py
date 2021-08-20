@@ -1,14 +1,14 @@
 """ Engine part of casegen_upcars """
 
-import io
-import math
 import datetime
+import io
 import itertools
+import math
 from itertools import product
 
 import numpy as np
 
-from .udf import listify, TERMINALCOLORS, uniform_dist
+from .udf import TERMINALCOLORS, listify, uniform_dist
 
 
 def fracture_idx(matrix_elements, fracture_cell_count, boundary_fracture):

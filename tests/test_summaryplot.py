@@ -1,9 +1,8 @@
+import shutil
 import subprocess
 from pathlib import Path
-import shutil
 
 import ecl
-
 import pytest
 
 from subscript.summaryplot import summaryplot

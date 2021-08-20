@@ -1,14 +1,13 @@
 import shutil
-from pathlib import Path
-
 import subprocess
-import pytest
-
-import numpy as np
-import pandas as pd
+from pathlib import Path
 
 import ecl
 import ecl2df
+import numpy as np
+import pandas as pd
+import pytest
+
 from subscript.presentvalue import presentvalue
 
 ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"

@@ -1,14 +1,12 @@
 import argparse
-import os
 import datetime
-from cwrap import open
-from ecl.grid import EclGrid
-from ecl.eclfile import EclFile, FortIO
-from subscript.sector2fluxnum import flux_obj
-from subscript.sector2fluxnum import fluxfile_obj
-from subscript.sector2fluxnum import datafile_obj
-from subscript.sector2fluxnum import completions
+import os
 
+from cwrap import open
+from ecl.eclfile import EclFile, FortIO
+from ecl.grid import EclGrid
+
+from subscript.sector2fluxnum import completions, datafile_obj, flux_obj, fluxfile_obj
 
 DESCRIPTION = """
 The script sector2fluxnum will execute different steps in a workflow

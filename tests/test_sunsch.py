@@ -1,15 +1,14 @@
-import os
-import sys
-import shutil
 import datetime
+import os
+import shutil
 import subprocess
+import sys
 from pathlib import Path
 
+import configsuite
+import pytest  # noqa: F401
 import yaml
 
-import pytest  # noqa: F401
-
-import configsuite
 from subscript.sunsch import sunsch
 
 DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"

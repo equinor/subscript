@@ -2,15 +2,13 @@ import os
 import subprocess
 from pathlib import Path
 
-import yaml
 import configsuite
 import pandas as pd
-
 import pytest
-
+import yaml
+from ecl2df import satfunc
 from pyscal import PyscalFactory
 from pyscal.utils.testing import sat_table_str_ok
-from ecl2df import satfunc
 
 from subscript.interp_relperm import interp_relperm
 

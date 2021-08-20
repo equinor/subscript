@@ -9,15 +9,13 @@ which this test code has separate code paths for asserts.
 """
 
 import os
-from pathlib import Path
 import subprocess
-
-import numpy as np
-import pandas as pd
-
-import pytest
+from pathlib import Path
 
 import ecl2df
+import numpy as np
+import pandas as pd
+import pytest
 
 from subscript.check_swatinit.check_swatinit import (
     __HC_BELOW_FWL__,
@@ -26,12 +24,11 @@ from subscript.check_swatinit.check_swatinit import (
     __SWATINIT_1__,
     __SWL_TRUNC__,
     __WATER__,
-    make_qc_gridframe,
     main,
+    make_qc_gridframe,
     qc_volumes,
 )
 from subscript.check_swatinit.pillarmodel import PillarModel
-
 
 pd.set_option("display.max_columns", 100)
 
@@ -63,7 +60,9 @@ def find_eclipse_simulator():
     return None
 
 
-SIMULATORS = tuple(filter(None, [find_flow_simulator(), find_eclipse_simulator()]))
+SIMULATORS: tuple = tuple(
+    filter(None, [find_flow_simulator(), find_eclipse_simulator()])
+)
 
 
 def run_reservoir_simulator(simulator, resmodel, perform_qc=True):

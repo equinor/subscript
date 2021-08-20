@@ -1,11 +1,10 @@
 """Test module for csv_stack"""
 import re
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 import pandas as pd
-
 import pytest
 
 from subscript.csv_stack import csv_stack

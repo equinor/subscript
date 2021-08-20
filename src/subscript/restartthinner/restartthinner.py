@@ -1,16 +1,15 @@
 """Restart file (UNRST) thinner, command line application"""
-import os
-import sys
-import glob
-import datetime
-import tempfile
-import shutil
 import argparse
+import datetime
+import glob
+import os
+import shutil
+import sys
+import tempfile
 from pathlib import Path
 
-import pandas
 import numpy
-
+import pandas
 from ecl.eclfile import EclFile
 
 from subscript import __version__

@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-import os
-import glob
-import shutil
-import logging
-import datetime
-import itertools
-import textwrap
 import argparse
+import datetime
+import glob
+import itertools
+import logging
+import os
 import re
-from typing import List, Optional, Tuple, Pattern, Union
+import shutil
+import textwrap
 from pathlib import Path
+from typing import List, Optional, Pattern, Tuple, Union
 
 import subscript
 

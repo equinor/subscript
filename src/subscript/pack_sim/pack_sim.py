@@ -1,13 +1,13 @@
-import sys
-import time
-import shlex
+import argparse
 import hashlib
 import logging
-import argparse
+import shlex
+import sys
+import time
 from io import StringIO
-from shutil import copy
 from pathlib import Path
-from typing import TextIO, Dict, Optional, Union
+from shutil import copy
+from typing import Dict, Optional, TextIO, Union
 
 from subscript import __version__, getLogger
 

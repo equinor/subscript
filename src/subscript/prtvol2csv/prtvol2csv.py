@@ -1,17 +1,16 @@
 """Extract volumes from Eclipse PRT files, augmenting with region and zone
 metadata"""
-import re
 import argparse
-import warnings
 import logging
+import re
+import warnings
 from pathlib import Path
 from typing import Optional
 
+import ecl2df
 import pandas as pd
 
-import ecl2df
-
-from subscript import getLogger, __version__
+from subscript import __version__, getLogger
 from subscript.prtvol2csv.fipmapper import FipMapper
 
 DESCRIPTION = """

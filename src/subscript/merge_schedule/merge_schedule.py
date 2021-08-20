@@ -1,6 +1,6 @@
-import os
 import argparse
 import logging
+import os
 import warnings
 
 import dateutil.parser

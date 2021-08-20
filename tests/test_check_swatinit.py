@@ -1,12 +1,10 @@
 import subprocess
 from pathlib import Path
 
-from matplotlib import pyplot
-
 import numpy as np
 import pandas as pd
-
 import pytest
+from matplotlib import pyplot
 
 from subscript.check_swatinit.check_swatinit import (
     __FINE_EQUIL__,
@@ -25,7 +23,6 @@ from subscript.check_swatinit.check_swatinit import (
     qc_volumes,
     reorder_dframe_for_nonnans,
 )
-
 from subscript.check_swatinit.plotter import wvol_waterfall
 
 REEK_DATAFILE = (

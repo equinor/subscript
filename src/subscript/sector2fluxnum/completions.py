@@ -1,4 +1,4 @@
-from ecl2df import compdat, EclFiles
+from ecl2df import EclFiles, compdat
 
 
 def get_completion_list(ECL_DATA_file_name):

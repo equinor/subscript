@@ -8,7 +8,6 @@ import pytest
 
 from subscript.merge_schedule import merge_schedule
 
-
 # pylint: disable=redefined-outer-name  # conflict with fixtures
 # pylint: disable=unused-argument  # conflict with fixtures
 

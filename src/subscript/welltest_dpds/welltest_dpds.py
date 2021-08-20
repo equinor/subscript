@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 
+import argparse
 import sys
 from pathlib import Path
-import argparse
+
 import numpy as np
 import pandas as pd
-from scipy.interpolate import interp1d
 from ecl.summary import EclSum
+from scipy.interpolate import interp1d
 
 from subscript import __version__
 

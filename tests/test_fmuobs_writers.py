@@ -5,23 +5,21 @@ import datetime
 
 import numpy as np
 import pandas as pd
-
 import pytest
 
-
+from subscript.fmuobs.parsers import ertobs2df
 from subscript.fmuobs.writers import (
-    dfblock2ertobs,
-    dfsummary2ertobs,
-    dfgeneral2ertobs,
-    dfhistory2ertobs,
+    block_df2obsdict,
+    convert_dframe_date_to_str,
     df2ertobs,
     df2obsdict,
-    summary_df2obsdict,
-    convert_dframe_date_to_str,
-    block_df2obsdict,
     df2resinsight_df,
+    dfblock2ertobs,
+    dfgeneral2ertobs,
+    dfhistory2ertobs,
+    dfsummary2ertobs,
+    summary_df2obsdict,
 )
-from subscript.fmuobs.parsers import ertobs2df
 
 
 # dfsummary2ertobs

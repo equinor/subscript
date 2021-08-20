@@ -4,10 +4,10 @@ data, ensuring labels for each value matches).
 
 """
 
-import sys
-import shutil
-import re
 import argparse
+import re
+import shutil
+import sys
 
 import pandas as pd
 

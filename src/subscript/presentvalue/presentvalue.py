@@ -1,18 +1,16 @@
 """NPV calculation of oil and gas production income"""
+import argparse
 import datetime
 import logging
-import argparse
 from pathlib import Path
 from typing import Dict, Optional
 
+import ecl2df
 import numpy as np
 import pandas as pd
-
-import ecl2df
-
 import scipy.optimize
 
-from subscript import getLogger, __version__
+from subscript import __version__, getLogger
 
 logger = getLogger(__name__)
 

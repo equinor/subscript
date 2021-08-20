@@ -1,7 +1,6 @@
 import argparse
 import logging
 from pathlib import Path
-
 from typing import Tuple
 
 import numpy as np

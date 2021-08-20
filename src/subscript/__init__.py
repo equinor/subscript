@@ -1,5 +1,5 @@
-import sys
 import logging
+import sys
 
 try:
     import pkg_resources
