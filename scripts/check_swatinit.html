@@ -1,81 +1,39 @@
-
-
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" />
-  
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
   <title>CHECK_SWATINIT &mdash; subscript 0.13.1.dev1+gd6132b75 documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-    
-      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-    
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-
-    
+    <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="CONVERT_GRID_FORMAT" href="convert_grid_format.html" />
     <link rel="prev" title="CASEGEN_UPCARS" href="casegen_upcars.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
-
-   
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
-    
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-          
-
-          
             <a href="../index.html" class="icon icon-home"> subscript
-          
-
-          
-            
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
-          
           </a>
-
-          
-            
-            
               <div class="version">
                 0.13.1.dev1+gd6132b75
               </div>
-            
-          
-
-          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -83,18 +41,7 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
@@ -149,73 +96,32 @@
 <li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
 </ul>
 
-            
-          
         </div>
-        
       </div>
     </nav>
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
           <a href="../index.html">subscript</a>
-        
       </nav>
 
-
       <div class="wy-nav-content">
-        
         <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
+          <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-    
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-        
       <li>CHECK_SWATINIT</li>
-    
-    
       <li class="wy-breadcrumbs-aside">
-        
-          
             <a href="../_sources/scripts/check_swatinit.rst.txt" rel="nofollow"> View page source</a>
-          
-        
       </li>
-    
   </ul>
-
-  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-            
-  <div class="section" id="check-swatinit">
-<h1>CHECK_SWATINIT<a class="headerlink" href="#check-swatinit" title="Permalink to this headline">¶</a></h1>
+             
+  <section id="check-swatinit">
+<h1>CHECK_SWATINIT<a class="headerlink" href="#check-swatinit" title="Permalink to this headline"></a></h1>
 <p>check_swatinit is a tool to quality check water initialization in Eclipse runs
 where the keyword SWATINIT has been used. The tool will quantify how much
 the volume changes from SWATINIT to SWAT at time zero in the dynamical model,
@@ -233,8 +139,8 @@ waterfall chart.</p></li>
 <li><p>A plot panel with scatter plot of a parameter vs depth for every cell. This
 plot panel is individual pr. EQLNUM.</p></li>
 </ul>
-<div class="section" id="the-eclipse-keyword-swatinit">
-<h2>The Eclipse keyword SWATINIT<a class="headerlink" href="#the-eclipse-keyword-swatinit" title="Permalink to this headline">¶</a></h2>
+<section id="the-eclipse-keyword-swatinit">
+<h2>The Eclipse keyword SWATINIT<a class="headerlink" href="#the-eclipse-keyword-swatinit" title="Permalink to this headline"></a></h2>
 <p>SWATINIT is used as a tool to conserve the water saturation modelling done
 in the geomodel. However, SWATINIT will not set the “initial” water saturation
 in the Eclipse run, it will <em>only</em> scale the capillary pressure table
@@ -245,16 +151,18 @@ using the capillary pressure function from the SWOF/SWFN tables, this is in
 order to maintain initial dynamical stability. The impact of SWATINIT is only
 to allow for cell-by-cell scaling of the capillary pressure function before it
 is used for initialization.</p>
-<div class="figure align-center" id="id1">
+<figure class="align-center" id="id1">
 <a class="reference internal image-reference" href="../_images/ecl-swat-initialization.png"><img alt="../_images/ecl-swat-initialization.png" src="../_images/ecl-swat-initialization.png" style="width: 90%;" /></a>
-<p class="caption"><span class="caption-text">Illustration of the water initialization in Eclipse. If SWATINIT is in use
+<figcaption>
+<p><span class="caption-text">Illustration of the water initialization in Eclipse. If SWATINIT is in use
 the capillary pressure curve to the right is scaled vertically up or down
 such that the computed SWAT matches the requested SWATINIT value for the
-specific cell.</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="cell-by-cell-outcome-of-water-initialization">
-<h2>Cell by cell outcome of water initialization<a class="headerlink" href="#cell-by-cell-outcome-of-water-initialization" title="Permalink to this headline">¶</a></h2>
+specific cell.</span><a class="headerlink" href="#id1" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="cell-by-cell-outcome-of-water-initialization">
+<h2>Cell by cell outcome of water initialization<a class="headerlink" href="#cell-by-cell-outcome-of-water-initialization" title="Permalink to this headline"></a></h2>
 <p>The tool assesses each cell in the dynamical model individually, and flags
 them according to what has happened from SWATINIT to SWAT. The flag will be
 included in the <code class="docutils literal notranslate"><span class="pre">QC_FLAG</span></code> column of the outputted CSV. The possible outcomes
@@ -299,9 +207,9 @@ need to use PPCWMAX you should revisit the modelling.</p>
 <dt><code class="docutils literal notranslate"><span class="pre">WATER</span></code></dt><dd><p>SWATINIT was 1 in the water zone, and SWAT is set to 1.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="text-output-from-check-swatinit">
-<h2>Text output from check_swatinit<a class="headerlink" href="#text-output-from-check-swatinit" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="text-output-from-check-swatinit">
+<h2>Text output from check_swatinit<a class="headerlink" href="#text-output-from-check-swatinit" title="Permalink to this headline"></a></h2>
 <p>When run interactively in a terminal on an Eclipse case, check_swatinit will
 print a text output summarizing the results from flagging each cell into
 distinct QC categories.  The table below sums the water volume changes from
@@ -347,9 +255,9 @@ of which capillary pressures ranges are present in your reservoir model.</p>
 <p>More often, PC_SCALING and PPCW will be large, with scaling larger than 1.
 Still, this table only prints the maximal values, and if severe PC_SCALING only
 occurs in a few cells, it could still be acceptable.</p>
-</div>
-<div class="section" id="outputted-csv-file">
-<h2>Outputted CSV file<a class="headerlink" href="#outputted-csv-file" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="outputted-csv-file">
+<h2>Outputted CSV file<a class="headerlink" href="#outputted-csv-file" title="Permalink to this headline"></a></h2>
 <p>Through the <code class="docutils literal notranslate"><span class="pre">--output</span></code> option, a CSV file can be written containing
 information for every cell. This can be used for further analysis, either by
 numerically or visually. The CSV file contains grid data from the EGRID file
@@ -370,26 +278,30 @@ the column <code class="docutils literal notranslate"><span class="pre">PC_SCALI
 Eclipse initialization. It is back-computed from SWAT and the scaled capillary
 pressure function from SWOF/SWFN. Beware that this will not be correct for all
 cells when item #9 in EQUIL is nonzero.</p>
-</div>
-<div class="section" id="example-plots">
-<h2>Example plots<a class="headerlink" href="#example-plots" title="Permalink to this headline">¶</a></h2>
-<div class="figure align-center" id="id2">
+</section>
+<section id="example-plots">
+<h2>Example plots<a class="headerlink" href="#example-plots" title="Permalink to this headline"></a></h2>
+<figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/check_swatinit_volplot.png"><img alt="../_images/check_swatinit_volplot.png" src="../_images/check_swatinit_volplot.png" style="width: 70%;" /></a>
-<p class="caption"><span class="caption-text">A waterfall chart illustrating what contributes to the change from SWATINIT
+<figcaption>
+<p><span class="caption-text">A waterfall chart illustrating what contributes to the change from SWATINIT
 to SWAT. This plot is obtained by adding the <code class="docutils literal notranslate"><span class="pre">--volplot</span></code> command line
 option.  The numbers inside the plot are the percentage changes in terms of
 reservoir volumes, blue numbers are with respect to SWATINIT_WVOL and green
-numbers are with respect to initial hydrocarbon volumes.</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
-<div class="figure align-center" id="id3">
+numbers are with respect to initial hydrocarbon volumes.</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id3">
 <a class="reference internal image-reference" href="../_images/check_swatinit_scatter.png"><img alt="../_images/check_swatinit_scatter.png" src="../_images/check_swatinit_scatter.png" style="width: 98%;" /></a>
-<p class="caption"><span class="caption-text">A panel of reservoir properties versus depth, coloured by the QC_FLAG, for a
+<figcaption>
+<p><span class="caption-text">A panel of reservoir properties versus depth, coloured by the QC_FLAG, for a
 specific EQLNUM. Use the command line option <code class="docutils literal notranslate"><span class="pre">--plot</span></code> together with
-<code class="docutils literal notranslate"><span class="pre">--eqlnum</span></code> to obtain this.</span><a class="headerlink" href="#id3" title="Permalink to this image">¶</a></p>
-</div>
-</div>
-<div class="section" id="command-line-syntax">
-<h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Permalink to this headline">¶</a></h2>
+<code class="docutils literal notranslate"><span class="pre">--eqlnum</span></code> to obtain this.</span><a class="headerlink" href="#id3" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="command-line-syntax">
+<h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Permalink to this headline"></a></h2>
 <p><p>QC tool for SWATINIT vs SWAT in Eclipse runs</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">check_swatinit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplotfile</span> <span class="n">VOLPLOTFILE</span><span class="p">]</span>
@@ -398,16 +310,16 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
                       <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<div class="section" id="Positional Arguments">
-<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h3>
+<section id="Positional Arguments">
+<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h3>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Eclipse DATA-file for a finished run with restart data. It is also possible to provide a CSV file that has earlier been exported by this tool, which will trigger a rerun of the volumetric report and plotting.</p>
 </dd>
 </dl>
-</div>
-<div class="section" id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="Named Arguments">
+<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h3>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Output filename for CSV that can be used for QC in other tools</p>
@@ -435,56 +347,39 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
 <dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
            </div>
-           
           </div>
-          <footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="convert_grid_format.html" class="btn btn-neutral float-right" title="CONVERT_GRID_FORMAT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="casegen_upcars.html" class="btn btn-neutral float-left" title="CASEGEN_UPCARS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="convert_grid_format.html" class="btn btn-neutral float-right" title="CONVERT_GRID_FORMAT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>
-        &#169; Copyright 2020, Equinor.
-
-    </p>
+    <p>&#169; Copyright 2020, Equinor.</p>
   </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
 
 </footer>
         </div>
       </div>
-
     </section>
-
   </div>
-  
-
-  <script type="text/javascript">
+  <script>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
-
-  
-  
-    
-    
+  </script>  
 
   <style>
     /* Sidebar header (and topbar for mobile) */
