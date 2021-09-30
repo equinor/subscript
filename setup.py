@@ -2,10 +2,9 @@
 
 """Setup for subscript packages"""
 from glob import glob
-from os.path import splitext, basename
+from os.path import basename, splitext
 
 import setuptools
-
 
 SSCRIPTS = [
     "bjobsusers = subscript.bjobsusers.bjobsusers:main",
@@ -56,7 +55,6 @@ LEGACYSCRIPTS = [
     "list_rms_usage",
     "make_3dgrid_regions",
     "nosim",
-    "roxenvbash",
     "runeclipse",
 ]
 
