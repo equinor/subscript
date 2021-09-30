@@ -150,7 +150,7 @@ def test_csv_stack_all():
 
 
 @pytest.mark.integration
-def test_commandlinetool(tmpdir):
+def test_commandlinetool(tmpdir, mocker):
     """Test command line interface for csv_stack"""
 
     assert subprocess.check_output(["csv_stack", "-h"])  # nosec
@@ -158,7 +158,7 @@ def test_commandlinetool(tmpdir):
     tmpdir.chdir()
     TESTFRAME.to_csv("testframe.csv", index=False)
 
-    sys.argv = ["csv_stack", "testframe.csv", "-o", "stacked.csv"]
+    mocker.patch("sys.argv", ["csv_stack", "testframe.csv", "-o", "stacked.csv"])
     csv_stack.main()
     stacked = pd.read_csv("stacked.csv")
     assert isinstance(stacked, pd.DataFrame)
@@ -169,20 +169,25 @@ def test_commandlinetool(tmpdir):
     assert "A2" in stacked["WELL"].values
     assert "CONST" not in stacked
 
-    sys.argv = [
-        "csv_stack",
-        "testframe.csv",
-        "--keepconstantcolumns",
-        "-o",
-        "stacked.csv",
-    ]
+    mocker.patch(
+        "sys.argv",
+        [
+            "csv_stack",
+            "testframe.csv",
+            "--keepconstantcolumns",
+            "-o",
+            "stacked.csv",
+        ],
+    )
     csv_stack.main()
     stacked = pd.read_csv("stacked.csv")
     assert isinstance(stacked, pd.DataFrame)
     assert "WELL" in stacked
     assert "CONST" in stacked
 
-    sys.argv = ["csv_stack", "testframe.csv", "--keepminimal", "-o", "stacked.csv"]
+    mocker.patch(
+        "sys.argv", ["csv_stack", "testframe.csv", "--keepminimal", "-o", "stacked.csv"]
+    )
     csv_stack.main()
     stacked = pd.read_csv("stacked.csv")
     assert isinstance(stacked, pd.DataFrame)
@@ -190,7 +195,10 @@ def test_commandlinetool(tmpdir):
     assert "CONST" not in stacked
     assert "PORO" not in stacked
 
-    sys.argv = ["csv_stack", "testframe.csv", "--split", "region", "-o", "stacked.csv"]
+    mocker.patch(
+        "sys.argv",
+        ["csv_stack", "testframe.csv", "--split", "region", "-o", "stacked.csv"],
+    )
     csv_stack.main()
     stacked = pd.read_csv("stacked.csv")
     assert isinstance(stacked, pd.DataFrame)

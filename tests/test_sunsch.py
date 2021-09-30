@@ -2,7 +2,6 @@ import datetime
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import configsuite
@@ -718,7 +717,7 @@ def test_wrap_long_lines():
     )
 
 
-def test_long_vfp_lines(tmpdir, caplog):
+def test_long_vfp_lines(tmpdir, caplog, mocker):
     tmpdir.chdir()
     Path("vfp.inc").write_text(
         """VFPPROD
@@ -744,7 +743,7 @@ def test_long_vfp_lines(tmpdir, caplog):
     Path("conf.yml").write_text(
         "files:\n  - vfp.inc\noutput: sch.inc", encoding="utf-8"
     )
-    sys.argv = ["sunsch", "conf.yml"]
+    mocker.patch("sys.argv", ["sunsch", "conf.yml"])
     sunsch.main()
     schinc = Path("sch.inc").read_text()
     assert max([len(line) for line in schinc.split("\n")]) <= 129
