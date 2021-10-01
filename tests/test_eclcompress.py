@@ -321,7 +321,7 @@ def test_integration():
     assert subprocess.check_output(["eclcompress", "-h"])
 
 
-def test_vfpprod(tmpdir):
+def test_vfpprod(tmpdir, mocker):
     """VFPPROD contains multiple record data, for which E100
     fails if the record-ending slash is not on the same line as the data
     """
@@ -345,7 +345,7 @@ VFPPROD
     # Call eclcompress as script on vfpstr:
     with open("vfpfile.inc", "w") as testdeck:
         testdeck.write(vfpstr)
-    sys.argv = ["eclcompress", "--keeporiginal", "vfpfile.inc"]
+    mocker.patch("sys.argv", ["eclcompress", "--keeporiginal", "vfpfile.inc"])
     main()
 
     # Check that OPM can parse the output (but in this case, OPM allows
@@ -358,7 +358,7 @@ VFPPROD
     assert "8000 10000 /" in open("vfpfile.inc").read()
 
 
-def test_main(tmpdir):
+def test_main(tmpdir, mocker):
     """Test installed endpoint"""
 
     tmpdir.chdir()
@@ -370,7 +370,7 @@ def test_main(tmpdir):
     if os.path.exists("testdeck.inc.orig"):
         os.unlink("testdeck.inc.orig")
 
-    sys.argv = ["eclcompress", "--keeporiginal", "testdeck.inc"]
+    mocker.patch("sys.argv", ["eclcompress", "--keeporiginal", "testdeck.inc"])
     main()
 
     assert os.path.exists("testdeck.inc.orig")
@@ -500,9 +500,9 @@ def test_compress_files_filelist(args):
 
 
 @pytest.mark.usefixtures("twofiles")
-def text_compress_argparse_1():
+def text_compress_argparse_1(mocker):
     """Test also the command line interface with --files"""
-    sys.argv = ["eclcompress", "--files", "files"]
+    mocker.patch("sys.argv", ["eclcompress", "--files", "files"])
     main()
     assert "File compressed with eclcompress" in open("perm.grdecl").read()
     assert "File compressed with eclcompress" in open("poro.grdecl").read()
@@ -511,9 +511,9 @@ def text_compress_argparse_1():
 
 
 @pytest.mark.usefixtures("twofiles")
-def text_compress_argparse_2():
+def text_compress_argparse_2(mocker):
     """Command line options, explicit files vs. --files"""
-    sys.argv = ["eclcompress", "perm.grdecl", "--files", "files"]
+    mocker.patch("sys.argv", ["eclcompress", "perm.grdecl", "--files", "files"])
     main()
     assert "File compressed with eclcompress" in open("perm.grdecl").read()
     assert "File compressed with eclcompress" in open("poro.grdecl").read()
@@ -522,9 +522,9 @@ def text_compress_argparse_2():
 
 
 @pytest.mark.usefixtures("twofiles")
-def text_compress_argparse_3():
+def text_compress_argparse_3(mocker):
     """Command line options, explicit files vs. --files"""
-    sys.argv = ["eclcompress", "perm.grdecl"]
+    mocker.patch("sys.argv", ["eclcompress", "perm.grdecl"])
     main()
     assert "File compressed with eclcompress" in open("perm.grdecl").read()
     assert "File compressed with eclcompress" not in open("poro.grdecl").read()
@@ -574,7 +574,7 @@ perm.grdecl"""
         parse_wildcardfile("notthere")
 
 
-def test_eclkw_regexp(tmpdir):
+def test_eclkw_regexp(tmpdir, mocker):
     """Test that custom regular expressions can be supplied to compress
     otherwise unknown (which implies no compression) keywords"""
     tmpdir.chdir()
@@ -607,7 +607,7 @@ def test_eclkw_regexp(tmpdir):
         uncompressed_str.split(), eclkw_regexp="[A-Z0-9]{2-8}$"
     ) == [(0, kwend_idx)]
 
-    sys.argv = ["eclcompress", "g1.grdecl", "--eclkw_regexp", "G1"]
+    mocker.patch("sys.argv", ["eclcompress", "g1.grdecl", "--eclkw_regexp", "G1"])
     main()
     compressed = open("g1.grdecl").read()
     assert "File compressed with eclcompress" in compressed

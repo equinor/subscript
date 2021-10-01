@@ -2,7 +2,6 @@ import datetime
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -493,7 +492,7 @@ def test_no_files(tmpdir):
     assert not Path("volfiles.csv").exists()
 
 
-def test_roundtrip(datadir):
+def test_roundtrip(datadir, mocker):
     """Test that ofmvol2csv and csv2ofmvol can work together as inverses
     of each other."""
     ofmvol2csv.ofmvol2csv_main(
@@ -502,7 +501,9 @@ def test_roundtrip(datadir):
 
     first_frame = pd.read_csv("volfiles.csv")
 
-    sys.argv = ["csv2ofmvol", "volfiles.csv", "--output", "backagain.vol"]
+    mocker.patch(
+        "sys.argv", ["csv2ofmvol", "volfiles.csv", "--output", "backagain.vol"]
+    )
     csv2ofmvol.main()
 
     ofmvol2csv.ofmvol2csv_main(["backagain.vol"], "take2.csv", includefileorigin=False)
