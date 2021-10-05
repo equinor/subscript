@@ -510,17 +510,29 @@ class RunRMS:
 
         rms_exec_env = self._collect_env_settings()
 
-        if shutil.which("disable_komodo_exec"):
-            rms_exec_env["PATH_PREFIX"] = self.setup["roxenv_path"]
-            args_list = ["disable_komodo_exec"] + args_list
+        env_args = ["env"]
+        for key, value in rms_exec_env.items():
+            env_args.append(f"{key}={value}")
 
+        if shutil.which("disable_komodo_exec"):
+            args_list = (
+                [
+                    "env",
+                    f"PATH_PREFIX={self.setup['roxenv_path']}",
+                    "disable_komodo_exec",
+                ]
+                + env_args
+                + args_list
+            )
+        else:
+            args_list = env_args + args_list
         logger.debug("args_list    : %s", args_list)
 
         if self.args.dryrun:
             xwarn("<<<< DRYRUN, do not start RMS >>>>")
             print(_BColors.ENDC)
         else:
-            rms_process = subprocess.run(args_list, env=rms_exec_env, check=True)
+            rms_process = subprocess.run(args_list, check=True)
             print(_BColors.ENDC)
             return rms_process.returncode
 
@@ -539,7 +551,7 @@ class RunRMS:
 
     def _collect_env_settings(self):
         """Collect env settings."""
-        rms_exec_env = os.environ.copy()
+        rms_exec_env = {}
         pythonpathlist = []
 
         if not self.args.nopy:
