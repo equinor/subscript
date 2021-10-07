@@ -173,6 +173,23 @@ def test_choice_profile3(datatree):
     assert not (datatree / target / "backup").is_dir()
 
 
+def test_profile_via_args(datatree):
+    """Test interactive use but with profile specified on command line"""
+    os.chdir(datatree)
+    target = "users/jriv/xx_cmd_profile"
+    user_input = bytes(f"1\n{target}\n", encoding="ascii")
+    result = subprocess.run(
+        ["fmu_copy_revision", "--profile", "3"],
+        check=True,
+        input=user_input,
+        stdout=subprocess.PIPE,
+    )
+    print(result.stdout.decode())
+
+    assert "Sync files using multiple threads" in result.stdout.decode()
+    assert (datatree / target / "rms" / "input" / "faults" / "f1.dat").exists()
+
+
 def test_choice_profile3_double_target(datatree):
     """Test interactive mode, using profile 3 trying writing to same target twice."""
     os.chdir(datatree)
