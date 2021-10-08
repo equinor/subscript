@@ -129,6 +129,72 @@ def test_rsync_profile3(datatree):
     assert not (datatree / target / "backup").is_dir()
 
 
+@pytest.mark.parametrize(
+    "rmsinputperm, profile",
+    [
+        (0o0400, 1),  # Readable, not executable
+        (0o400, 3),
+        (0o400, 4),
+        (0o100, 1),  # Only executable, not readable
+        (0o100, 3),
+        (0o100, 4),
+        (0o000, 1),  # No permissions
+        (0o000, 3),
+        (0o000, 4),
+    ],
+)
+def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
+    """Test what happens if one directory is unreadable.
+
+    This situation is only expected as a side effect in rare cases
+    and it has only been seen happening on not-interesting directories.
+    The important part is to be able to skip the directory with only a
+    warning and not a full stop.
+
+    Tests only profiles 1, 3 and 4 which are gives different keepfolders
+    values.
+    """
+    os.chdir(tmp_path)
+    source = "20.1.1"
+
+    (tmp_path / source / "rms" / "model").mkdir(parents=True)
+    (tmp_path / source / "rms" / "input" / "unreachabledir").mkdir(parents=True)
+    (tmp_path / source / "rms" / "xx" / "reachabledir").mkdir(parents=True)
+    (tmp_path / source / "rms" / "input" / "unreachablefile").touch()
+    os.chmod(source + "/rms/input", rmsinputperm)  # Remove all permissions
+
+    target = "missing_rms_input"
+    (tmp_path / source / "ert").mkdir()
+    (tmp_path / source / "ert" / "xcopyme").touch()
+    (tmp_path / source / "rms" / "model" / "includeme").touch()
+    (tmp_path / source / "rms" / "xx" / "reachabledir" / "a_file").touch()
+
+    subprocess.run(
+        [
+            "fmu_copy_revision",
+            "--source",
+            source,
+            "--target",
+            target,
+            "--profile",
+            str(profile),
+        ],
+        check=True,
+        stdout=subprocess.PIPE,
+    )
+    assert (tmp_path / target / "ert" / "xcopyme").exists()
+    assert (tmp_path / target / "rms" / "model" / "includeme").exists()
+    assert (tmp_path / target / "rms" / "xx" / "reachabledir").exists()
+    try:
+        assert not (tmp_path / target / "rms" / "input" / "unreachabledir").exists()
+        assert not (tmp_path / target / "rms" / "input" / "unreachablefile").exists()
+    except PermissionError:
+        pass
+
+    # Reinstate write permission for pytest garbage collection
+    os.chmod(source + "/rms/input", 0o0700)
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed."""

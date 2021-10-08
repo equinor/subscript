@@ -87,8 +87,8 @@ By default some file types and directories will be skipped. Here are some profil
 """
 
 
-# FILTER* are per file filters, used in the second rsync ommand in the shell file below.
-# DIRFILTER* are per folder, used if DIRTREE == 1 or 2 in the shell script below.
+# FILTER* are per file filters, used in the second rsync command in the shell file below
+# DIRFILTER* are per folder, used if DIRTREE is 1 or 2 in the shell script below.
 
 FILTER1 = """
 + **
@@ -218,7 +218,6 @@ end=`date +%s.%N`
 runtime=$( echo "$end - $start" | bc -l )
 
 echo " ** Compute runtime..."
-
 echo $runtime
 cd $PWD
 
@@ -468,9 +467,11 @@ class CopyFMU:
         def _get_size(path: str) -> int:
             sum = 0
             for p in pathlib.Path(path).rglob("*"):
-                if not p.is_symlink():
-                    sum += p.stat().st_size
-
+                try:
+                    if not p.is_symlink():
+                        sum += p.stat().st_size
+                except PermissionError:
+                    logger.warning("Could not get size of %s, Permission denied", p)
             return sum
 
         def _filesize(size: float) -> str:
@@ -594,13 +595,13 @@ class CopyFMU:
         command = [
             "sh",
             scriptname,
-            self.source,
-            self.target,
-            filterpatternname,
-            str(self.nthreads),
-            str(rsyncargs),
-            str(self.keepfolders),
-            dirfilterpatternname,
+            self.source,  # $SRCDIR  ( = variable name in shell script)
+            self.target,  # $DESTDIR
+            filterpatternname,  # $FILTERFILE
+            str(self.nthreads),  # $THREADS
+            str(rsyncargs),  # $RSYNCARGS
+            str(self.keepfolders),  # $DIRTREE
+            dirfilterpatternname,  # $DIRFILTERFILE
         ]
         logger.info(" ".join(command))
 
@@ -618,13 +619,18 @@ class CopyFMU:
                 stderr=subprocess.PIPE,
             )
 
-        if process.returncode != 0:
-            print(f"Process returncode: {process.returncode}")
-            print(process.stderr.decode())
         stdout = process.stdout.decode().splitlines()
+        stderr = process.stderr.decode().splitlines()
 
-        output = "\n".join(stdout[0:-2])
-        print(output)
+        print("\n".join(stdout[0:-2]))
+
+        if process.returncode != 0:
+            logger.error("Process returncode: %s", process.returncode)
+            print("\n".join(stderr))
+        elif stderr:
+            logger.warning("Check error messages from rsync script:")
+            print("\n".join(stderr))
+
         timing = float(stdout[-1])
         timing = time.strftime("%H hours %M minutes %S seconds", time.gmtime(timing))
         print(
