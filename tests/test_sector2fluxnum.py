@@ -82,7 +82,6 @@ def test_main_with_ecl_run(tmp_path, mocker):
 
     input_ECL_CASE = TESTDATA / "TEST.DATA"
     input_OUTPUT_FLUX = "OUT_COARSE.FLUX"
-    input_INPUT_DUMPFLUX = TESTDATA / "DUMPFLUX_TEST.DATA"
     input_RESTART = TESTDATA / "TEST.UNRST"
 
     mocker.patch(
