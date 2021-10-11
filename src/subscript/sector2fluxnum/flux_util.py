@@ -38,7 +38,6 @@ def filter_region(grid, i, j, k, fipnum, fipnum_kw, combine_operator="intersect"
 
     if fipnum:
         for fip in unpack_filter(fipnum):
-            print(fip)
             region_fip.select_equal(fipnum_kw, fip)
     else:
         region_fip.select_all()
