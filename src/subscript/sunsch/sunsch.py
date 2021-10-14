@@ -240,7 +240,7 @@ def datetime_from_date(
 ) -> datetime.datetime:
     """Set time to 00:00:00 in a date"""
     if isinstance(date, str):
-        raise ValueError("Is the string {} a date?".format(str(date)))
+        raise ValueError(f"Is the string {date} a date?")
     return datetime.datetime.combine(date, datetime.datetime.min.time())
 
 
@@ -340,9 +340,8 @@ def process_sch_config(conf) -> TimeVector:
         enddate = conf.enddate  # datetime.date
         if not isinstance(enddate, datetime.date):
             raise TypeError(
-                "ERROR: enddate {} not in ISO-8601 format, must be YYYY-MM-DD".format(
-                    conf.enddate
-                )
+                f"ERROR: enddate {conf.enddate} not in ISO-8601 format, "
+                "must be YYYY-MM-DD"
             )
 
     # Clip anything that is beyond the enddate
@@ -489,19 +488,20 @@ def substitute(insert_statement) -> str:
             "Too many (?) configuration elements in %s", str(insert_statement)
         )
 
-    resultfile = tempfile.NamedTemporaryFile(mode="w", delete=False)
-    resultfilename = resultfile.name
-    templatelines = open(insert_statement.template, "r").readlines()
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as resultfile:
+        resultfilename = resultfile.name
+        templatelines = (
+            Path(insert_statement.template).read_text(encoding="utf8").splitlines()
+        )
 
-    # Parse substitution list:
-    substdict = insert_statement.substitute
-    # Perform substitution and put into a tmp file
-    for line in templatelines:
-        for (key, value) in substdict:
-            if "<" + key + ">" in line:
-                line = line.replace("<" + key + ">", str(value))
-        resultfile.write(line)
-    resultfile.close()
+        # Parse substitution list:
+        substdict = insert_statement.substitute
+        # Perform substitution and put into a tmp file
+        for line in templatelines:
+            for (key, value) in substdict:
+                if "<" + key + ">" in line:
+                    line = line.replace("<" + key + ">", str(value))
+            resultfile.write(line + "\n")
     return resultfilename
 
 
@@ -698,7 +698,7 @@ def main():
     defaults_config = {"output": "-", "startdate": datetime.date(1900, 1, 1)}
 
     # Users YAML configuration:
-    yaml_config = yaml.safe_load(open(args.config))
+    yaml_config = yaml.safe_load(Path(args.config).read_text(encoding="utf8"))
 
     # Command line configuration:
     cli_config = {}
@@ -748,7 +748,7 @@ def main():
                 FutureWarning,
             )
             dirname.mkdir()
-        Path(config.snapshot.output).write_text(schedule)
+        Path(config.snapshot.output).write_text(schedule, encoding="utf8")
 
 
 if __name__ == "__main__":

@@ -82,9 +82,9 @@ def visual_depth(qc_frame: pd.DataFrame) -> float:
     if hc_height > 0:
         # Suggest to visualize a water height of 10% of the hc zone:
         return lowest_hc + 0.2 * hc_height
-    else:
-        # Plot everything when there is only water in the model
-        return qc_frame["Z"].max()
+
+    # Plot everything when there is only water in the model
+    return qc_frame["Z"].max()
 
 
 def swat_depth(
@@ -148,6 +148,7 @@ def pc_depth(
 
 
 def add_contacts_to_plot(qc_frame: pd.DataFrame, axis: pyplot.Axes) -> None:
+    """Annotate axes with named horizontal lines for contacts."""
     if "OWC" in qc_frame:
         owc = qc_frame["OWC"].values[0]  # OWC is assumed constant in the dataframe
         axis.axhline(owc, color="black", linestyle="--", linewidth=1)

@@ -108,8 +108,8 @@ def menu():
 def autoformat(num: float) -> str:
     """Autoformat to 'f' or 'e' format, depending on size of number"""
     if abs(num) > 0.01:
-        return "{:.4f}".format(num)
-    return "{:.4e}".format(num)
+        return f"{num:.4f}"
+    return f"{num:.4e}"
 
 
 def convert_normal2inverse(aval: float, bval: float):
@@ -197,17 +197,13 @@ def main() -> None:
     if option == 1:
         aval2, bval2 = convert_normal2inverse(av[0], bv[0])
         print(
-            "\nInverse values are: A={0} and  B={1}\n".format(
-                autoformat(aval2), autoformat(bval2)
-            )
+            f"\nInverse values are: A={autoformat(aval2)} and  B={autoformat(bval2)}\n"
         )
 
     if option == 2:
         aval2, bval2 = convert_normal2inverse(av[0], bv[0])
         print(
-            "\nNormal values are: a={0} and  b={1}\n".format(
-                autoformat(aval2), autoformat(bval2)
-            )
+            f"\nNormal values are: a={autoformat(aval2)} and  b={autoformat(bval2)}\n"
         )
 
     if option >= 3:

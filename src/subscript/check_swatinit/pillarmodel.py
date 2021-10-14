@@ -150,7 +150,7 @@ class PillarModel:
         else:
             # Mock a SWATINIT (constant above contact)
             self.swatinit = [0] * self.cells
-            for cell_idx in range(len(self.midpoints)):
+            for cell_idx, _ in enumerate(self.midpoints):
                 if self.midpoints[cell_idx] <= self.owc[self.eqlnum[cell_idx] - 1]:
                     self.swatinit[cell_idx] = 0.4
                 else:

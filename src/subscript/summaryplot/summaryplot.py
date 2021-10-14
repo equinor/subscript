@@ -205,7 +205,7 @@ def summaryplotter(
         for parameterfile in parameterfiles:
             valuefound = False
             if Path(parameterfile).exists():
-                for line in Path(parameterfile).read_text().splitlines():
+                for line in Path(parameterfile).read_text(encoding="utf8").splitlines():
                     linecontents = line.split()
                     parameternames.append(linecontents[0])
                     if linecontents[0] == colourbyparametername:

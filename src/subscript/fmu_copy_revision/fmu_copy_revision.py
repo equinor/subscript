@@ -5,7 +5,6 @@ with xargs to speed up multithreading.
 """
 import argparse
 import getpass
-import pathlib
 import shutil
 import subprocess
 import sys
@@ -13,6 +12,7 @@ import tempfile
 import time
 from multiprocessing import cpu_count
 from os.path import join
+from pathlib import Path
 
 import subscript
 
@@ -323,7 +323,7 @@ class CopyFMU:
     def check_folders(self):
         """Check if potential fmu folders are present or list all if --all."""
 
-        current = pathlib.Path(".")
+        current = Path(".")
         folders = [file for file in current.iterdir() if file.is_dir()]
         result = []
         for folder in folders:
@@ -374,7 +374,7 @@ class CopyFMU:
 
         logger.info("Source is %s", self.source)
 
-        sourcepath = pathlib.Path(self.source)
+        sourcepath = Path(self.source)
         sourcenode = sourcepath.name
 
         if not sourcepath.exists():
@@ -391,16 +391,16 @@ class CopyFMU:
 
         xsource = sourcenode + "_" + today
         logger.info("Userpath is %s", userpath)
-        self.default_target = pathlib.Path(userpath) / user / sourcenode / xsource
+        self.default_target = Path(userpath) / user / sourcenode / xsource
         logger.info("Default target is %s", self.default_target.resolve())
 
     def construct_target(self, proposal):
         """Final target as abs path string, and evaluate cleanup or merge."""
-        target = pathlib.Path(proposal)
+        target = Path(proposal)
         self.target = str(target.absolute())
         print(f"Selected target is <{self.target}>")
 
-        if self.target == str(pathlib.Path(self.source).absolute()):
+        if self.target == str(Path(self.source).absolute()):
             raise RuntimeError("You cannot have same target as source!")
 
         if target.is_dir():
@@ -427,7 +427,7 @@ class CopyFMU:
 
     def check_rms_lockfile(self):
         """Check if RMS project has an active lockfile if interactive mode."""
-        lockfiles = pathlib.Path(self.source).glob("rms/model/*/project_lock_file")
+        lockfiles = Path(self.source).glob("rms/model/*/project_lock_file")
 
         if len(list(lockfiles)) > 0:
             print(
@@ -452,9 +452,9 @@ class CopyFMU:
         """Checking diskspace."""
         print("Checking disk space at current partition...")
         total, used, free = shutil.disk_usage(".")
-        print("  Total: %d G" % (total // (2 ** 30)))
-        print("  Used:  %d G" % (used // (2 ** 30)))
-        print("  Free:  %d G" % (free // (2 ** 30)))
+        print(f"  Total: {total // (2 ** 30):d} G")
+        print(f"  Used:  {used // (2 ** 30):d} G")
+        print(f"  Free:  {free // (2 ** 30):d} G")
 
         if self.args.skipestimate:
             print("  Skip estimation of current revision size!")
@@ -465,14 +465,16 @@ class CopyFMU:
         freekbytes = free // 1024
 
         def _get_size(path: str) -> int:
-            sum = 0
-            for p in pathlib.Path(path).rglob("*"):
+            disksum = 0
+            for filesystemobject in Path(path).rglob("*"):
                 try:
-                    if not p.is_symlink():
-                        sum += p.stat().st_size
+                    if not filesystemobject.is_symlink():
+                        disksum += filesystemobject.stat().st_size
                 except PermissionError:
-                    logger.warning("Could not get size of %s, Permission denied", p)
-            return sum
+                    logger.warning(
+                        "Could not get size of %s, Permission denied", filesystemobject
+                    )
+            return disksum
 
         def _filesize(size: float) -> str:
             for unit in ("B", "K", "M", "G"):
@@ -501,7 +503,7 @@ class CopyFMU:
 
         if self.profile == 9:
             ffile = input("Choose rsync filter file: ")
-            with open(ffile, "r") as stream:
+            with open(ffile, "r", encoding="utf8") as stream:
                 self.filter = stream.read()
 
     def define_filterpattern(self):
@@ -554,14 +556,11 @@ class CopyFMU:
         filterpatternname = join(tdir.name, "filterpattern.txt")
         dirfilterpatternname = join(tdir.name, "dirfilterpattern.txt")
 
-        with open(scriptname, "w") as stream:
-            stream.write(SHELLSCRIPT)
+        Path(scriptname).write_text(SHELLSCRIPT, encoding="utf8")
 
-        with open(filterpatternname, "w") as stream:
-            stream.write(self.filter)
+        Path(filterpatternname).write_text(self.filter, encoding="utf8")
 
-        with open(dirfilterpatternname, "w") as stream:
-            stream.write(self.dirfilter)
+        Path(dirfilterpatternname).write_text(self.dirfilter, encoding="utf8")
 
         logger.info("FILE FILTER FILE: %s", filterpatternname)
         logger.info("DIR FILTER FILE: %s", dirfilterpatternname)
@@ -668,7 +667,7 @@ def main(args=None) -> None:
             runner.construct_default_target()
             proposal = runner.default_target
         else:
-            proposal = pathlib.Path(runner.args.target)
+            proposal = Path(runner.args.target)
         runner.construct_target(proposal)
         runner.check_disk_space()
         runner.define_filterpattern()

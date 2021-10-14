@@ -253,7 +253,11 @@ def parse_satfunc_files(filenames: List[str]) -> pd.DataFrame:
     """
 
     return pd.concat(
-        [satfunc.df(Path(filename).read_text()) for filename in filenames], sort=False
+        [
+            satfunc.df(Path(filename).read_text(encoding="utf8"))
+            for filename in filenames
+        ],
+        sort=False,
     ).set_index("SATNUM")
 
 
@@ -395,6 +399,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    """Invocated from the command line, parsing command line arguments"""
     parser = get_parser()
     args = parser.parse_args()
 
@@ -408,7 +413,7 @@ def main() -> None:
     # parse the config file
     if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
-    cfg = yaml.safe_load(Path(args.configfile).read_text())
+    cfg = yaml.safe_load(Path(args.configfile).read_text(encoding="utf8"))
     process_config(cfg, Path(args.root_path))
 
 

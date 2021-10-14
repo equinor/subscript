@@ -35,7 +35,7 @@ def call_bjobs(status: str = "RUN") -> str:
         where the optional number in front a compute node name denotes
         the number of allocated cores to the job.
     """
-    cmd = "bjobs -u all | grep {} | awk '{{print $2,$6;}}'".format(status)
+    cmd = f"bjobs -u all | grep {status} | awk '{{print $2,$6;}}'"
     return subprocess.check_output(cmd, shell=True).decode("utf-8")
 
 
@@ -88,10 +88,10 @@ def call_finger(username: str) -> str:
 
           Login: foobert      Name: Foo Barrer (FOO BAR COM)"
     """
-    cmd = "finger -m {} | head -n 1".format(username)
+    cmd = f"finger -m {username} | head -n 1"
     finger_output = None
     try:
-        with open(os.devnull, "w") as devnull:
+        with open(os.devnull, "w", encoding="utf8") as devnull:
             finger_output = (
                 subprocess.check_output(cmd, shell=True, stderr=devnull)
                 .strip()
@@ -102,7 +102,7 @@ def call_finger(username: str) -> str:
     if finger_output:
         return finger_output
     # When finger fails, return something similar and usable
-    return "Login: {}  Name: ?? ()".format(username)
+    return f"Login: {username}  Name: ?? ()"
 
 
 def userinfo(username: str, finger_function: Callable) -> str:
@@ -128,13 +128,13 @@ def userinfo(username: str, finger_function: Callable) -> str:
         matches = rex_no_org.match(finger_output).groups()  # type: ignore
         org = ""
     fullname = matches[1].strip()
-    return "{} ({}) ({})".format(fullname, org, username)
+    return f"{fullname} ({org}) ({username})"
 
 
 def show_status(status: str = "RUN", title: str = "Running", umax: int = 10) -> None:
     """Print job statistics to console user"""
     dframe = get_jobs(status, call_bjobs).iloc[:umax]
-    print("{} jobs:".format(title))
+    print(f"{title} jobs:")
     print("--------------")
     for user, count in dframe.iterrows():
         print(
@@ -144,7 +144,7 @@ def show_status(status: str = "RUN", title: str = "Running", umax: int = 10) -> 
             ),
         )
     print("- - - - - - - - - - -")
-    print("Total: {}".format(dframe["ncpu"].sum()))
+    print(f"Total: {dframe['ncpu'].sum()}")
 
 
 def get_parser() -> argparse.ArgumentParser:

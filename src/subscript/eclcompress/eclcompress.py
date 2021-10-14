@@ -83,20 +83,18 @@ def eclcompress(
 
         logger.info("Compressing %s...", filename)
         try:
-            with open(filename, "r") as fileh:
-                filelines = fileh.read().splitlines()
+            filelines = Path(filename).read_text(encoding="utf8").splitlines()
         except UnicodeDecodeError:
             # Try ISO-8859:
             try:
-                with open(filename, "r", encoding="ISO-8859-1") as fileh:
-                    filelines = fileh.read().splitlines()
+                filelines = Path(filename).read_text(encoding="ISO-8859-1").splitlines()
             except (TypeError, UnicodeDecodeError):
                 # ISO-8859 under py2 is not intentionally supported
                 logger.warning("Skipped %s, not text file.", filename)
                 continue
 
         # Skip if it seems we have already compressed this file
-        if any([x.find("eclcompress") > -1 for x in filelines]):
+        if any(x.find("eclcompress") > -1 for x in filelines):
             logger.warning("Skipped %s, compressed already", filename)
             continue  # to next file
 
@@ -136,15 +134,14 @@ def eclcompress(
         )
         if not dryrun and compressedlines:
             shutil.copy2(filename, filename + ".orig")
-            with open(filename, "w") as file_h:
+            with open(filename, "w", encoding="utf8") as file_h:
                 file_h.write(
-                    "-- File compressed with eclcompress at "
-                    + str(datetime.datetime.now())
-                    + "\n"
+                    "-- File compressed with eclcompress "
+                    f"at {datetime.datetime.now()}\n"
                 )
                 file_h.write(
-                    "-- Compression ratio %.1f " % compressionratio
-                    + "(higher is better, 1 is no compression)\n"
+                    f"-- Compression ratio {compressionratio:.1f} "
+                    "(higher is better, 1 is no compression)\n"
                 )
                 file_h.write("\n")
 
@@ -166,10 +163,11 @@ def file_is_binary(filename: Union[str, Path]) -> bool:
     Args:
         filename: File to check
     """
+    # pylint: disable=line-too-long
     # https://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python  # noqa
     textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7F})
-    with open(filename, "rb") as fh:
-        return bool(fh.read(1024).translate(None, textchars))
+    with open(filename, "rb") as filehandle:
+        return bool(filehandle.read(1024).translate(None, textchars))
 
 
 def acceptedvalue(valuestring: str) -> bool:
@@ -444,9 +442,9 @@ def parse_wildcardfile(filename: str) -> List[str]:
     if filename == MAGIC_DEFAULT_FILELIST:
         return DEFAULT_FILES_TO_COMPRESS
     if not os.path.exists(filename):
-        raise IOError("File {} not found".format(filename))
+        raise IOError(f"File {filename} not found")
 
-    lines = open(filename).readlines()
+    lines = Path(filename).read_text(encoding="utf8").splitlines()
     lines = [line.strip() for line in lines]
     lines = [line.split("#")[0] for line in lines]
     lines = [line.split("--")[0] for line in lines]
@@ -521,10 +519,8 @@ def main_eclcompress(
             dryrun=dryrun,
             eclkw_regexp=eclkw_regexp,
         )
-        print(
-            "eclcompress finished. Saved %d Mb from compression"
-            % (savings / 1024.0 / 1024.0)
-        )
+        savings_mb = savings / 1024.0 / 1024.0
+        print(f"eclcompress finished. Saved {savings_mb:.1f} Mb from compression")
     else:
         logger.warning("No files found to compress")
 

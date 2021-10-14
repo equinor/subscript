@@ -69,7 +69,7 @@ def main():
     parser = arg_parse.parse_args()
 
     # YAML format
-    with open(parser.config_file, "r") as file_handle:
+    with open(parser.config_file, "r", encoding="utf8") as file_handle:
         config = load(file_handle.read(), Loader=Loader)
 
         general = config["General"]
@@ -263,12 +263,10 @@ def main():
             for throw in parser.throws:
                 if len(throw) != 5:
                     raise ValueError(
-                        "{}You need to specify throw in the following order:\r\n"
-                        "{}i1   i2    j1    j2   dz{}".format(
-                            TERMINALCOLORS["FAIL"],
-                            TERMINALCOLORS["OKBLUE"],
-                            TERMINALCOLORS["ENDC"],
-                        )
+                        f"{TERMINALCOLORS['FAIL']}You need to specify throw "
+                        f"in the following order:\r\n"
+                        f"{TERMINALCOLORS['OKBLUE']}i1   i2    j1    j2   dz"
+                        f"{TERMINALCOLORS['ENDC']}"
                     )
                 throws.append(
                     [
@@ -485,7 +483,7 @@ def main():
     )
     base_name = env.from_string(base_name).render(dictionary)
 
-    dictionary["GRDECL_file"] = "gridinc_{}.GRDECL".format(base_name)
+    dictionary["GRDECL_file"] = f"gridinc_{base_name}.GRDECL"
 
     print("Exporting GRDECL file")
     grid.export_grdecl(dictionary["GRDECL_file"])
@@ -502,8 +500,8 @@ def main():
         ],
     ):
         print("Exporting " + keyword + " include file")
-        include_file = "{}_file".format(keyword.lower())
-        dictionary[include_file] = "{}_{}.INC".format(keyword.lower(), base_name)
+        include_file = f"{keyword.lower()}_file"
+        dictionary[include_file] = f"{keyword.lower()}_{base_name}.INC"
         grid.export_props(
             dictionary[include_file],
             keyword,
@@ -524,7 +522,7 @@ def main():
         [vug1_swatinit, vug2_swatinit],
     )
 
-    with open(template_file, "r") as file_handle:
+    with open(template_file, "r", encoding="utf8") as file_handle:
         buffer_ = mask_token(file_handle.read(), unmask=False)
         case_template = env.from_string(buffer_)
         ast = env.parse(buffer_)
@@ -538,23 +536,21 @@ def main():
 
     if undefined_var:
         print(
-            "\033[91mWarning: Found {} undefined variables."
-            "Please verify your output files.\033[0m\n{}".format(
-                len(undefined_var), undefined_var
-            )
+            f"\033[91mWarning: Found {len(undefined_var)} undefined variables."
+            f"Please verify your output files.\033[0m\n{undefined_var}"
         )
 
-    with open(base_name + ".DATA", "w") as file_handle:
+    with open(base_name + ".DATA", "w", encoding="utf8") as file_handle:
         file_handle.write(mask_token(case_template.render(dictionary), unmask=True))
 
     if parser.debug_model is not None:
         # create debug model
         file_list = [
-            dictionary["{}_file".format(keyword.lower())]
+            dictionary[f"{keyword.lower()}_file"]
             for keyword in ["FIPNUM", "SATNUM", "SWAT"]
         ]
         file_list.insert(0, dictionary["GRDECL_file"])
-        with open(parser.debug_model, "wb") as wfd:
+        with open(parser.debug_model, "wb", encoding="utf8") as wfd:
             for _file in file_list:
                 with open(_file, "rb") as file_handle:
                     shutil.copyfileobj(file_handle, wfd)

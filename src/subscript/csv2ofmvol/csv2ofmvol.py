@@ -228,12 +228,12 @@ def df2vol(data: pd.DataFrame) -> str:
     volstr = ""
     volstr += "*METRIC\n"
     volstr += "*DAILY\n"
-    if any([colname in SUPPORTED_DAYCOLS for colname in voldata.columns]):
+    if any(colname in SUPPORTED_DAYCOLS for colname in voldata.columns):
         volstr += "*HRS_IN_DAYS\n"
     volstr += "*DATE *" + " *".join(voldata.columns)
     if not voldata.empty:
         for well in voldata.index.levels[0]:
-            volstr += "\n\n*NAME " + well + "\n"
+            volstr += f"\n\n*NAME {well}\n"
             volstr += voldata.loc[well].to_string(header=False, index_names=False)
     else:
         logger.warning("No data, only header written")
@@ -302,12 +302,9 @@ def csv2ofmvol_main(csvfilepatterns: List[str], output: str) -> bool:
     # Convert dataframes to a multiline string:
     volstr = df2vol(data)
 
-    with open(output, "w") as outfile:
-        outfile.write(
-            "-- Data printed by csv2ofmvol at " + str(datetime.datetime.now()) + "\n"
-        )
-        outfile.write("-- Input files: " + str(csvfiles) + "\n")
-        outfile.write("\n")
+    with open(output, "w", encoding="utf8") as outfile:
+        outfile.write(f"-- Data printed by csv2ofmvol at {datetime.datetime.now()}\n")
+        outfile.write(f"-- Input files: {csvfiles}\n\n")
         outfile.write(volstr)
     logger.info("Well count: %s", str(len(data.index.levels[0])))
     logger.info("Date count: %s", str(len(data.index.levels[1])))

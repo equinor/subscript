@@ -234,7 +234,7 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
     table_found = (
         False  # State determining if current line is in our interesting table or not.
     )
-    with Path(prt_file).open() as f_handle:
+    with Path(prt_file).open(encoding="utf8") as f_handle:
         for line in f_handle:
             if start_matcher.search(line) is not None:
                 table_found = True

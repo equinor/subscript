@@ -189,6 +189,8 @@ def merge_csvfiles(
             for tag in tags:
                 if len(tags[tag]) == len(csvfiles):
                     if tag not in dframe:
+                        # pylint: disable=E1137
+                        # (false positive)
                         dframe[tag] = tags[tag][idx]
                     else:
                         logger.warning("Tag %s already in dataframe", str(tag))
@@ -280,7 +282,7 @@ def csv_merge_main(
     tags["ENSEMBLESET"] = taglist(csvfiles, ENSEMBLESET_REGEXP)
     if filecolumn:
         tags[filecolumn] = csvfiles
-    tags = {tag: tags[tag] for tag in tags if len(tags[tag])}
+    tags = {key: value for key, value in tags.items() if len(value)}
 
     logger.info("Found tags: %s", str(tags.keys()))
     logger.debug("Tags: %s", str(tags))
@@ -303,7 +305,7 @@ def csv_merge_main(
 
     logger.info("Exporting CSV data to %s", output)
 
-    if output == "-" or output == "stdout":
+    if output in ["-", "stdout"]:
         merged_df.to_csv(sys.stdout, index=False)
     else:
         merged_df.to_csv(path_or_buf=output, index=False)

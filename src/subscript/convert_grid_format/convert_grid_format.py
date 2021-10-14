@@ -3,6 +3,7 @@
 import argparse
 import os
 import sys
+from pathlib import Path
 from typing import List, Optional
 
 import xtgeo  # type: ignore
@@ -35,8 +36,7 @@ def get_parser() -> argparse.ArgumentParser:
         dest="conversion",
         type=str,
         default="ecl2roff",
-        help="Conversion method, select from {} "
-        "(default ecl2roff)".format(CONVERSIONS),
+        help=f"Conversion method, select from {CONVERSIONS} (default ecl2roff)",
     )
 
     parser.add_argument(
@@ -44,7 +44,7 @@ def get_parser() -> argparse.ArgumentParser:
         dest="mode",
         type=str,
         default="grid",
-        help="Mode: {} (default grid)".format(MODES),
+        help=f"Mode: {MODES} (default grid)",
     )
 
     parser.add_argument(
@@ -134,13 +134,13 @@ def _convert_ecl2roff(
         if mode == "grid":
             xtg.say("Mode is grid")
             outputfile = oname + ".roff"
-            xtg.say("Output grid to <{}>".format(oname + ".roff"))
+            xtg.say(f"Output grid to <{oname + '.roff'}>")
             mygrid.to_file(outputfile, fformat="roff")
     else:
-        raise SystemExit("STOP! Invalid mode: <{}>".format(mode))
+        raise SystemExit(f"STOP! Invalid mode: <{mode}>")
 
     if mode in ("restart", "init"):
-        xtg.say("Mode is {}".format(mode))
+        xtg.say(f"Mode is {mode}")
         logger.info("Running %s conversion...", mode.upper())
         fname, fext = os.path.splitext(filename)
 
@@ -161,8 +161,7 @@ def _convert_ecl2roff(
                 raise SystemExit("STOP. No dates given")
 
             if os.path.exists(dates):
-                with open(dates, "r") as datesfile_h:
-                    dates = " ".join(datesfile_h.readlines())
+                dates = " ".join(Path(dates).read_text(encoding="utf8").splitlines())
             if ":" in dates:
                 dates_list = dates.split(":")
             else:
@@ -174,7 +173,7 @@ def _convert_ecl2roff(
 
             myprops = xtgeo.grid3d.GridProperties()
 
-            usext = ".{}".format(fformat).upper()
+            usext = f".{fformat.upper()}"
 
             myprops.from_file(
                 fname + usext,
@@ -187,7 +186,7 @@ def _convert_ecl2roff(
             for prop in myprops.props:
                 pname = prop.name.lower().replace("_", filesep)
                 outputfile = oname + filesep + pname + ".roff"
-                xtg.say("Output grid property to <{}>".format(outputfile))
+                xtg.say(f"Output grid property to <{outputfile}>")
                 prop.to_file(outputfile, fformat="roff")
         else:
             raise SystemExit("Invalid grid extention")
@@ -204,11 +203,7 @@ def main(args=None) -> None:
 
     if args.conversion not in set(CONVERSIONS):
         logger.critical("ERROR")
-        SystemExit(
-            "Illegal conversion <{}>. Allowed are: {}".format(
-                args.conversion, CONVERSIONS
-            )
-        )
+        SystemExit("Illegal conversion <{args.conversion}>. Allowed are: {CONVERSIONS}")
 
     xtg.say("Running conversion...")
     _convert_ecl2roff(

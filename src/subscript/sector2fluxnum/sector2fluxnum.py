@@ -2,7 +2,7 @@ import argparse
 import datetime
 import os
 
-from cwrap import open
+import cwrap
 from ecl.eclfile import EclFile, FortIO
 from ecl.grid import EclGrid
 
@@ -94,7 +94,7 @@ def sector_to_fluxnum(args):
         raise Exception("ERROR: Case does not exist", " ")
 
     # Root name for writing to target directory
-    ECLIPSE_CASE_ROOT = os.path.basename(args.ECLIPSE_CASE[0])
+    eclipse_case_root = os.path.basename(args.ECLIPSE_CASE[0])
 
     args.OUTPUT_CASE = args.OUTPUT_CASE.split(".")[0:1]
     if not args.OUTPUT_CASE:
@@ -106,15 +106,15 @@ def sector_to_fluxnum(args):
     print("Reading grid ...")
     if args.egrid:
         args.egrid = os.path.abspath(args.egrid).split(".")[0:1]
-        grid = EclGrid("%s.EGRID" % args.egrid[0])
+        grid = EclGrid(f"{args.egrid[0]}.EGRID")
     else:
-        grid = EclGrid("%s.EGRID" % args.ECLIPSE_CASE[0])
+        grid = EclGrid(f"{args.ECLIPSE_CASE[0]}.EGRID")
 
-    init = EclFile("%s.INIT" % args.ECLIPSE_CASE[0])
+    init = EclFile(f"{args.ECLIPSE_CASE[0]}.INIT")
 
     # Finding well completions
     completion_list, well_list = completions.get_completion_list(
-        "%s.DATA" % args.ECLIPSE_CASE[0]
+        f"{args.ECLIPSE_CASE[0]}.DATA"
     )
 
     # Check ROI arguments
@@ -149,31 +149,31 @@ def sector_to_fluxnum(args):
     print("Writing FLUXNUM file ...")
     fluxnum_new_kw = fluxnum_new.get_fluxnum_kw()
 
-    FLUXNUM_filename = "FLUXNUM_FIPNUM_%s_%d.grdecl" % (args.fipnum, now.microsecond)
+    fluxnum_filename = f"FLUXNUM_FIPNUM_{args.fipnum}_{now.microsecond:d}.grdecl"
 
-    with open(FLUXNUM_filename, "w") as file_handle:
+    with cwrap.open(fluxnum_filename, "w") as file_handle:
         fluxnum_new_kw.write_grdecl(file_handle)
 
     print("Writing DUMPFLUX DATA-file ...")
-    new_data_file = datafile_obj.Datafile("%s.DATA" % args.ECLIPSE_CASE[0])
+    new_data_file = datafile_obj.Datafile(f"{args.ECLIPSE_CASE[0]}.DATA")
 
     if new_data_file.has_KW("DUMPFLUX") or new_data_file.has_KW("USEFLUX"):
         raise Exception("ERROR: FLUX keywords already present in input ECL_CASE")
 
-    new_data_file.create_DUMPFLUX_file(FLUXNUM_filename)
+    new_data_file.create_DUMPFLUX_file(fluxnum_filename)
 
     if args.test:
         args.test = os.path.abspath(args.test).split(".")[0:1]
 
-        if not os.path.isfile("%s.FLUX" % args.test[0]):
+        if not os.path.isfile(f"{args.test[0]}.FLUX"):
             raise Exception("ERROR: FLUX file from DUMPFLUX run not created")
 
         # Needs the coordinates from the
         print("Generating new FLUX file...")
 
-        grid_coarse = EclGrid("%s.EGRID" % args.test[0])
-        grid_fine = EclGrid("%s.EGRID" % args.test[0])
-        flux_fine = EclFile("%s.FLUX" % args.test[0])
+        grid_coarse = EclGrid(f"{args.test[0]}.EGRID")
+        grid_fine = EclGrid(f"{args.test[0]}.EGRID")
+        flux_fine = EclFile(f"{args.test[0]}.FLUX")
 
     else:
         print("Executing DUMPFLUX NOSIM run ...")
@@ -182,21 +182,21 @@ def sector_to_fluxnum(args):
         else:
             new_data_file.run_DUMPFLUX_nosim()
 
-        if not os.path.isfile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT):
+        if not os.path.isfile(f"DUMPFLUX_{eclipse_case_root}.FLUX"):
             raise Exception("ERROR: FLUX file from DUMPFLUX run not created")
 
         # Needs the coordinates from the
         print("Generating new FLUX file...")
 
-        grid_coarse = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
-        grid_fine = EclGrid("DUMPFLUX_%s.EGRID" % ECLIPSE_CASE_ROOT)
-        flux_fine = EclFile("DUMPFLUX_%s.FLUX" % ECLIPSE_CASE_ROOT)
+        grid_coarse = EclGrid(f"DUMPFLUX_{eclipse_case_root}.EGRID")
+        grid_fine = EclGrid(f"DUMPFLUX_{eclipse_case_root}.EGRID")
+        flux_fine = EclFile(f"DUMPFLUX_{eclipse_case_root}.FLUX")
 
     # Reads restart file
     if args.restart:
-        rst_coarse = EclFile("%s.UNRST" % args.restart[0])
+        rst_coarse = EclFile(f"{args.restart[0]}.UNRST")
     else:
-        rst_coarse = EclFile("%s.UNRST" % args.ECLIPSE_CASE[0])
+        rst_coarse = EclFile(f"{args.ECLIPSE_CASE[0]}.UNRST")
 
     flux_object_fine = fluxfile_obj.Fluxfile(grid_fine, flux_fine)
 
@@ -207,7 +207,7 @@ def sector_to_fluxnum(args):
 
     # Importing elements
     # Open FortIO stream
-    fortio = FortIO("%s.FLUX" % args.OUTPUT_CASE[0], mode=FortIO.WRITE_MODE)
+    fortio = FortIO(f"{args.OUTPUT_CASE[0]}.FLUX", mode=FortIO.WRITE_MODE)
 
     fluxfile_obj.write_new_fluxfile_from_rst(
         flux_object_fine, grid_coarse, rst_coarse, f_c_map, fortio
@@ -218,7 +218,7 @@ def sector_to_fluxnum(args):
 
     # Writing USEFLUX suggestion
     print("Writing suggestion for USEFLUX DATA-file ...")
-    new_data_file.create_USEFLUX_file(FLUXNUM_filename, args.OUTPUT_CASE[0])
+    new_data_file.create_USEFLUX_file(fluxnum_filename, args.OUTPUT_CASE[0])
     new_data_file.set_USEFLUX_header(args)
 
 

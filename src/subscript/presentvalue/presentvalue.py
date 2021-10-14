@@ -180,7 +180,7 @@ def main() -> None:
         paramfile = get_paramfilename(datafile)
         if args.writetoparams and paramfile:
             logger.info("Writing results to %s", paramfile)
-            with open(paramfile, "a") as f_handle:
+            with open(paramfile, "a", encoding="utf8") as f_handle:
                 f_handle.write(dict_to_parameterstxt(results, args.paramname))
         elif not args.verbose:
             # Ensure user gets a response
@@ -419,10 +419,7 @@ def get_yearly_summary(
 
     """
     if not all(
-        [
-            vec.split(":")[0].endswith("T")
-            for vec in [oilvector, gasvector, gasinjvector]
-        ]
+        vec.split(":")[0].endswith("T") for vec in [oilvector, gasvector, gasinjvector]
     ):
         raise ValueError("Only cumulative Eclipse vectors can be used")
     eclfiles = ecl2df.EclFiles(eclfile)
@@ -472,6 +469,8 @@ def prepare_econ_table(
         pd.DataFrame: dataframe with economical data to be given
         to calc_presentvalue_df().
     """
+    # False positives from pylint:
+    # pylint: disable=E1136,E1137,E1101
     if filename:
         econ_df = pd.read_csv(filename, index_col=0)
         econ_df.columns = econ_df.columns.map(str.strip)
@@ -499,10 +498,9 @@ def prepare_econ_table(
     required_columns = {"oilprice", "gasprice", "usdtonok", "costs", "discountrate"}
 
     if not required_columns.issubset(set(econ_df)):
-        msg = "Missing economical input columns: {}".format(
-            required_columns - set(econ_df)
+        raise ValueError(
+            f"Missing economical input columns: {required_columns - set(econ_df)}"
         )
-        raise ValueError(msg)
 
     if len(econ_df.columns) > len(required_columns):
         logger.warning("Superfluous columns in economical input")

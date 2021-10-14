@@ -166,21 +166,19 @@ def restartthinner(
             else:
                 slicepresent = ""
             print(
-                "%4d:  %s  %s"
-                % (
-                    rstidx,
-                    datetime.date.strftime(restart_dates[idx], "%Y-%m-%d"),
-                    slicepresent,
-                )
+                f"{rstidx:4d}  "
+                f"{datetime.date.strftime(restart_dates[idx], '%Y-%m-%d')}  "
+                f"{slicepresent}"
             )
         print("-----------------------")
     if not dryrun:
         if keep:
+            backupname = filename + ".orig"
             if not quiet:
-                print("Info: Backing up %s to %s" % (filename, filename + ".orig"))
-            shutil.copyfile(filename, filename + ".orig")
+                print(f"Info: Backing up {filename} to {backupname}")
+            shutil.copyfile(filename, backupname)
         ecl_repacker(filename, slicerstindices, quiet)
-    print("Written to " + filename)
+    print(f"Written to {filename}")
 
 
 def get_parser() -> argparse.ArgumentParser:

@@ -2,6 +2,7 @@ import os
 import shlex
 import subprocess
 from datetime import date
+from pathlib import Path
 
 import numpy as np
 
@@ -21,23 +22,22 @@ class Datafile:
         self.datafile_shortname = os.path.basename(self.datafile_name)
         self.datafile_dirname = os.path.dirname(os.path.abspath(self.datafile_name))
 
+        # pylint: disable=invalid-name
         self.DUMPFLUX_name = "DUMPFLUX_" + self.datafile_shortname
         self.USEFLUX_name = "USEFLUX_" + self.datafile_shortname
         self.lines = self.get_datafile_content()
 
     def get_datafile_content(self):
-        with open(self.datafile_name, "r") as file_handle:
-            file_content = file_handle.readlines()
-
-        return file_content
+        """Return a list of all lines in a text file.
+        Newlines are kept at the end of each line."""
+        return [line + "\n" for line in self.get_datafile_text_content().splitlines()]
 
     def get_datafile_text_content(self):
-        with open(self.datafile_name, "r") as file_handle:
-            file_content = file_handle.read()
-
-        return file_content
+        """Return the contents of a text file as a multiline string"""
+        return Path(self.datafile_name).read_text(encoding="utf8")
 
     def get_lines_clean(self, comment_char="--"):
+        """Remove lines we don't want"""
         lines_clean = []
         for line in self.lines:
             line = line.strip()
@@ -47,17 +47,19 @@ class Datafile:
 
         return lines_clean
 
-    def has_KW(self, kw):
-        return kw in self.get_lines_clean()
+    def has_KW(self, keyword):
+        """Determine if a certain keyword is present"""
+        return keyword in self.get_lines_clean()
 
-    def get_KW_position(self, kw, end_char="/"):
+    def get_KW_position(self, keyword, end_char="/"):
+        """Get the position for a certain keyword"""
         lines_clean = self.get_lines_clean()
         ncontent = len(lines_clean)
-        start_index = np.where(np.asarray(lines_clean) == kw)[0]
+        start_index = np.where(np.asarray(lines_clean) == keyword)[0]
 
         if start_index.shape[0] == 0:
             # the keyword is not found
-            print("KW " + kw + " not found in DATA\n")
+            print(f"KW {keyword} not found in DATA\n")
             return np.asarray([-1]), np.asarray([-1])
 
         end_index = []
@@ -78,7 +80,8 @@ class Datafile:
         return start_index, np.asarray(end_index)
 
     def set_update_RUNSPEC(self, sim_type=""):
-
+        # pylint: disable=invalid-name
+        """Set or update the RUNSPEC in the DATA file"""
         if not self.has_KW("RUNSPEC"):
             raise Exception("ERROR: No RUNSPEC section in DATA file!")
 
@@ -97,7 +100,7 @@ class Datafile:
         else:
             raise Exception("ERROR: Not specified if DUMPFLUX or USEFLUX")
 
-        start_idx, end_idx = self.get_KW_position("RUNSPEC", end_char="")
+        start_idx, _ = self.get_KW_position("RUNSPEC", end_char="")
 
         idx = start_idx[0]
         for line in insert_lines:
@@ -105,7 +108,8 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_GRID_DUMPFLUX(self, fluxnumfile_name):
-
+        # pylint: disable=invalid-name
+        """Set or update DUMPFLUX in the GRID section"""
         if not self.has_KW("GRID"):
             raise Exception("ERROR: No GRID section in DATA file!")
 
@@ -121,7 +125,7 @@ class Datafile:
             "1 /\n\n",
         ]
 
-        start_idx, end_idx = self.get_KW_position("GRID", end_char="")
+        start_idx, _ = self.get_KW_position("GRID", end_char="")
 
         idx = start_idx[0]
         for line in insert_lines:
@@ -129,6 +133,8 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_GRID_USEFLUX(self, fluxnumfile_name, fluxfile_name):
+        # pylint: disable=invalid-name
+        """Set or update USEFLUX in the GRID section"""
 
         if not self.has_KW("GRID"):
             raise Exception("ERROR: No GRID section in DATA file!")
@@ -146,7 +152,7 @@ class Datafile:
             "1 /\n\n",
         ]
 
-        start_idx, end_idx = self.get_KW_position("GRID", end_char="")
+        start_idx, _ = self.get_KW_position("GRID", end_char="")
 
         idx = start_idx[0]
         for line in insert_lines:
@@ -154,7 +160,8 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_SOLUTION(self):
-
+        # pylint: disable=invalid-name
+        """Set or update the SOLUTION section"""
         if not self.has_KW("SOLUTION"):
             return
 
@@ -169,7 +176,7 @@ class Datafile:
             "-- /\n",
         ]
 
-        start_idx, end_idx = self.get_KW_position("GRID", end_char="")
+        start_idx, _ = self.get_KW_position("GRID", end_char="")
 
         idx = start_idx[0]
         for line in insert_lines:
@@ -177,7 +184,8 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_PARALLEL(self):
-
+        # pylint: disable=invalid-name
+        """Set or update the PARALLEL keyword"""
         if not self.has_KW("PARALLEL"):
             return
 
@@ -187,6 +195,8 @@ class Datafile:
             self.lines[idx] = "-- " + self.lines[idx]
 
     def set_update_NOSIM(self):
+        # pylint: disable=invalid-name
+        """Set or update the NOSIM keyword"""
 
         if not self.has_KW("NOSIM"):
             return
@@ -197,6 +207,8 @@ class Datafile:
             self.lines[idx] = "-- " + self.lines[idx]
 
     def set_update_REGDIMS(self):
+        # pylint: disable=invalid-name
+        """Set or update the REGDIMS keyword"""
 
         if not self.has_KW("REGDIMS"):
             return
@@ -218,6 +230,8 @@ class Datafile:
         raise Exception("Check REGDIMS kw!")
 
     def set_update_INCLUDE(self):
+        # pylint: disable=invalid-name
+        """Set or update the (first) INCLUDE statement"""
 
         if not self.has_KW("INCLUDE"):
             return
@@ -234,7 +248,7 @@ class Datafile:
         lines_clean = self.get_lines_clean()
         start_idx, end_idx = self.get_KW_position("INCLUDE", end_char="/")
 
-        for idx_s in range(len(start_idx)):
+        for idx_s, _ in enumerate(range(start_idx)):
             for idx in range(start_idx[idx_s] + 1, end_idx[idx_s] + 1):
 
                 if lines_clean[idx] == "":
@@ -254,29 +268,30 @@ class Datafile:
 
                 # Copy text content in read/write sequence
                 try:
-                    with open(src_file_path, "r", errors="ignore") as fin:
+                    with open(
+                        src_file_path, "r", encoding="utf8", errors="ignore"
+                    ) as fin:
                         infile_text_content = fin.read()
                 except IOError:
-                    print("Could not open ", src_file_path, "at", idx)
+                    print(f"Could not open {src_file_path} at {idx}")
                     raise
 
-                with open(dst_file_path, "w") as fout:
+                with open(dst_file_path, "w", encoding="utf8") as fout:
                     fout.write(infile_text_content)
 
                 line_elements[0] = "'" + dst_file_path + "'"
                 self.lines[idx] = "  " + " ".join(line_elements) + " \n"
 
     def get_RESTART_warning(self):
-
+        # pylint: disable=invalid-name
+        """Print a warning if the RESTART keyword is detected"""
         if self.has_KW("RESTART"):
             print("WARNING: DUMPFLUX file contains a RESTART.\n")
             print("This may cause problems with execution of DUMPFLUX run.\n")
             print("Please check the RESTART file path before you proceed!")
 
-        else:
-            return
-
     def set_USEFLUX_header(self, args):
+        # pylint: disable=invalid-name
         """
         Adds header to the output USEFLUX file
 
@@ -290,28 +305,28 @@ class Datafile:
             "-- **************************************************\n",
             "-- **              SECTOR MODEL                    **\n",
             "-- **************************************************\n",
-            "-- DATA file created %s\n" % (date_str),
+            f"-- DATA file created {date_str}\n",
             "--\n",
             "-- This is an automatic generated file for sector simulation ",
             "in ECLIPSE\n",
             "-- The resolution is the same as for the full field model\n",
-            "-- DATA file created %s\n" % (date_str),
+            f"-- DATA file created {date_str}\n",
             "--\n",
             "-- The sector is selected from the following region",
             " in the FF model\n",
-            "-- Box dimensions i-dir =  %s\n" % (args.i),
-            "-- Box dimensions j-dir =  %s\n" % (args.j),
-            "-- Box dimensions k-dir =  %s\n" % (args.k),
-            "-- FIPNUM regions = %s\n" % (args.fipnum),
-            "-- FLUXNUM from file = %s\n" % (args.fluxfile),
+            f"-- Box dimensions i-dir =  {args.i}\n",
+            f"-- Box dimensions j-dir =  {args.j}\n",
+            f"-- Box dimensions k-dir =  {args.k}\n",
+            f"-- FIPNUM regions = {args.fipnum}\n",
+            f"-- FLUXNUM from file = {args.fluxfile}\n",
             "--\n",
-            "-- FF case is: %s\n" % (args.ECLIPSE_CASE),
-            "-- Eclipse version is = %s\n" % (args.ecl_version),
+            f"-- FF case is: {args.ECLIPSE_CASE}\n",
+            f"-- Eclipse version is = {args.ecl_version}\n",
             "--\n",
             "-- **************************************************\n\n\n",
         ]
 
-        with open(self.USEFLUX_name, "r") as fin:
+        with open(self.USEFLUX_name, "r", encoding="utf8") as fin:
             lines = fin.readlines()
 
         idx = 0
@@ -319,10 +334,11 @@ class Datafile:
             idx += 1
             lines.insert(idx, line)
 
-        with open(self.USEFLUX_name, "w") as fout:
+        with open(self.USEFLUX_name, "w", encoding="utf8") as fout:
             fout.writelines(lines)
 
     def create_DUMPFLUX_file(self, fluxnumfile_name):
+        # pylint: disable=invalid-name
         """
         Writes a DATA file with DUMPFLUX keyword.
 
@@ -338,7 +354,7 @@ class Datafile:
         self.set_update_REGDIMS()
         self.get_RESTART_warning()
 
-        with open(self.DUMPFLUX_name, "w") as fout:
+        with open(self.DUMPFLUX_name, "w", encoding="utf8") as fout:
             fout.writelines(self.lines)
 
         self.lines = self.get_datafile_content()
@@ -347,6 +363,7 @@ class Datafile:
             raise Exception("ERROR: DUMPFLUX file not created!")
 
     def create_USEFLUX_file(self, fluxnumfile_name, fluxfile_name):
+        # pylint: disable=invalid-name
         """
         Writes a DATA file with USEFLUX keyword.
 
@@ -365,7 +382,7 @@ class Datafile:
         self.set_update_SOLUTION()
         self.get_RESTART_warning()
 
-        with open(self.USEFLUX_name, "w") as fout:
+        with open(self.USEFLUX_name, "w", encoding="utf8") as fout:
             fout.writelines(self.lines)
 
         self.lines = self.get_datafile_content()
@@ -374,7 +391,7 @@ class Datafile:
             raise Exception("ERROR: USEFLUX file not created!")
 
     def run_DUMPFLUX_nosim(self, ecl_version="2014.2"):
-
+        # pylint: disable=invalid-name
         """
         Executes interactive ECLIPSE run with DUMPFLUX DATA file.
 
@@ -383,15 +400,14 @@ class Datafile:
 
         if ecl_version != "2014.2":
             print(
-                "WARNING: Not a default ECL version. ECL version is %s ..."
-                % ecl_version
+                f"WARNING: Not a default ECL version. ECL version is {ecl_version} ..."
             )
 
         if not os.path.isfile(self.DUMPFLUX_name):
             raise Exception("ERROR: DUMPFLUX file not found!")
 
         # Delete old FLUX file if present
-        old_FLUX_file = "%s.FLUX" % self.DUMPFLUX_name.split(".")[0]
+        old_FLUX_file = f"{self.DUMPFLUX_name.split('.')[0]}.FLUX"
         if os.path.isfile(old_FLUX_file):
             try:
                 os.remove(old_FLUX_file)
@@ -399,7 +415,7 @@ class Datafile:
                 print("Could not remove old FLUX file ", err)
                 raise
 
-        commandline = "runeclipse %s -v %s %s" % ("-i", ecl_version, self.DUMPFLUX_name)
+        commandline = f"runeclipse -i -v {ecl_version} {self.DUMPFLUX_name}"
         args = shlex.split(commandline)
 
         # Call ECL subprocess
@@ -427,5 +443,5 @@ class Datafile:
                     print(line_elements)
                     raise Exception()
 
-        if not os.path.isfile("%s.FLUX" % self.DUMPFLUX_name.split(".")[0]):
+        if not Path(f"{self.DUMPFLUX_name.split('.')[0]}.FLUX").exists():
             raise Exception("FLUX file template not created!")
