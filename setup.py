@@ -19,7 +19,6 @@ SSCRIPTS = [
     "ecldiff2roff = subscript.ecldiff2roff.ecldiff2roff:main",
     "fmu_copy_revision = subscript.fmu_copy_revision.fmu_copy_revision:main",
     "fmuobs = subscript.fmuobs.fmuobs:main",
-    "gen_satfunc = subscript.gen_satfunc.gen_satfunc:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
     "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "merge_rft_ertobs = subscript.merge_rft_ertobs.merge_rft_ertobs:main",
