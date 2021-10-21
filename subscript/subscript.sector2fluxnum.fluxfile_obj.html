@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sector2fluxnum.fluxfile_obj &mdash; subscript 0.13.1rc1.dev1+g32a10fbb documentation</title>
+  <title>subscript.sector2fluxnum.fluxfile_obj &mdash; subscript 0.13.1rc1.dev4+g2f5115fa documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -32,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.13.1rc1.dev1+g32a10fbb
+                0.13.1rc1.dev4+g2f5115fa
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -166,12 +166,12 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.fluxfile_obj.create_map_rst">
-<span class="sig-prename descclassname"><span class="pre">subscript.sector2fluxnum.fluxfile_obj.</span></span><span class="sig-name descname"><span class="pre">create_map_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destFlux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceGrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.fluxfile_obj.create_map_rst" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.sector2fluxnum.fluxfile_obj.</span></span><span class="sig-name descname"><span class="pre">create_map_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_i</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift_j</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.fluxfile_obj.create_map_rst" title="Permalink to this definition"></a></dt>
 <dd><p>Creates a map from coarse to fine index.</p>
 <p>Will return a map to be used to look up data from coarse RESTART file for later
 population of FLUX file data.</p>
-<p>&#64;destFlux: Template FLUX file to be populated
-&#64;sourceGrid: Full field grid
+<p>&#64;dest_flux: Template FLUX file to be populated
+&#64;source_grid: Full field grid
 &#64;scale_i: Scale in resolution in i-direction
 &#64;scale_j: Scale in resolution in j-direction
 &#64;scale_k: Scale in resolution in k-direction
@@ -196,11 +196,12 @@ it should be investigated if grids are correctly initialized.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.fluxfile_obj.write_new_fluxfile_from_rst">
-<span class="sig-prename descclassname"><span class="pre">subscript.sector2fluxnum.fluxfile_obj.</span></span><span class="sig-name descname"><span class="pre">write_new_fluxfile_from_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">destFlux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceGrid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sourceRST</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fortio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.fluxfile_obj.write_new_fluxfile_from_rst" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.sector2fluxnum.fluxfile_obj.</span></span><span class="sig-name descname"><span class="pre">write_new_fluxfile_from_rst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dest_flux</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_grid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_restart</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fortio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.fluxfile_obj.write_new_fluxfile_from_rst" title="Permalink to this definition"></a></dt>
 <dd><p>Populates a templated .FLUX file with full field data from a RESTART file.</p>
-<p>&#64;destFlux: Template FLUX file to be populated
-&#64;sourceFlux: Template FLUX file from full field grid (Not used)
-&#64;sourceRST: RESTART data from full field simulation. Used to populate &#64;destFlux
+<p>&#64;dest_flux: Template FLUX file to be populated
+&#64;source_grid: Template FLUX file from full field grid (Not used)
+&#64;source_restart: RESTART data from full field simulation.
+Used to populate &#64;dest_flux
 &#64;mapping: Map from refined to coarse index
 &#64;fortio: File stream for unformated data.</p>
 <p>The population of the FLUX file is sensitive to the format of the template file.
