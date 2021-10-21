@@ -85,7 +85,7 @@ By default some file types and directories will be skipped. Here are some profil
 9. Make your own filter rules in a named file. For syntax, see e.g.
     https://www.tutorialspoint.com/unix_commands/rsync.htm
 """
-
+DEFAULT_PROFILE = 4
 
 # FILTER* are per file filters, used in the second rsync command in the shell file below
 # DIRFILTER* are per folder, used if DIRTREE is 1 or 2 in the shell script below.
@@ -272,9 +272,8 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--profile",
         dest="profile",
-        type=str,
-        default="4",
-        help="profile for copy profile to use, default is 3",
+        type=int,
+        help="profile for copy profile to use, default is 4",
     )
     parser.add_argument(
         "--threads",
@@ -305,7 +304,7 @@ class CopyFMU:
         self.default_target = None
         self.target = None
         self.nthreads = None
-        self.profile = 3
+        self.profile = None
         self.filter = ""
         self.dirfilter = ""
         self.batch = False
@@ -494,10 +493,13 @@ class CopyFMU:
     def show_possible_profiles_copy(self):
         """Show a menu for possible profiles for copy/rsync."""
 
-        print(USERMENU)
-
-        default = "4"
-        self.profile = int(input(f"Choose (default is {default}): ") or default)
+        if self.args.profile is None:
+            print(USERMENU)
+            self.profile = int(
+                input(f"Choose (default is {DEFAULT_PROFILE}): ") or DEFAULT_PROFILE
+            )
+        else:
+            self.profile = int(self.args.profile)
 
         if self.profile == 9:
             ffile = input("Choose rsync filter file: ")
@@ -573,7 +575,10 @@ class CopyFMU:
             # as default, leave one CPU free for other use
             self.nthreads = cpu_count() - 1 if cpu_count() > 1 else 1
 
-        print(f"Doing copy using {self.nthreads} CPU threads, please wait...")
+        print(
+            f"Doing copy with profile {self.profile} "
+            f"using {self.nthreads} CPU threads, please wait..."
+        )
 
         # the -R (--relative) is crucial for making filter profiles work!
         rsyncargs = "-a -R --delete"
@@ -649,7 +654,6 @@ def main(args=None) -> None:
         logger.setLevel("DEBUG")
 
     if not runner.args.source:
-        # interactive menues
         runner.check_folders()
         runner.menu_source_folder()
         runner.menu_target_folder()
