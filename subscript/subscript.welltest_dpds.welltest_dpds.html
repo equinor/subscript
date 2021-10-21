@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.welltest_dpds.welltest_dpds &mdash; subscript 0.13.1rc1.dev2+gb6c2e076 documentation</title>
+  <title>subscript.welltest_dpds.welltest_dpds &mdash; subscript 0.13.1rc1.dev1+g32a10fbb documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -31,7 +31,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.13.1rc1.dev2+gb6c2e076
+                0.13.1rc1.dev1+g32a10fbb
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -287,7 +287,7 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag1">
-<span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag1" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag1" title="Permalink to this definition"></a></dt>
 <dd><p>Compute weighted average of pressure time derivative,
 one time step to each side. Lag1</p>
 <p>Formula: (  (dp_f/dspt_f)*dspt_b + (dp_b/dspt_b)*dspt_f )/(dspt_f + dspt_b)</p>
@@ -307,12 +307,12 @@ one time step to each side. Lag1</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2">
-<span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">super_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wbhp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_start_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_end_ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">super_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wbhp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_start_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_end_ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2" title="Permalink to this definition"></a></dt>
 <dd><p>Compute weighted average using LAG 2 for pressure time derivative</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>delta_p</strong> (<em>np.array</em>) – </p></li>
+<li><p><strong>dp</strong> (<em>np.array</em>) – </p></li>
 <li><p><strong>dspt</strong> (<em>np.array</em>) – </p></li>
 <li><p><strong>supertime</strong> (<em>np.array</em>) – </p></li>
 <li><p><strong>wbhp</strong> (<em>np.array</em>) – </p></li>
