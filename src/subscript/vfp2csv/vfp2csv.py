@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -49,7 +50,7 @@ def main():
     vfpframes = []
 
     for filename in args.vfpfiles:
-        print("Processing file {}".format(filename))
+        print(f"Processing file {filename}")
         vfpframes.append(vfpfile2df(filename))
     allvfpdata = pd.concat(vfpframes, sort=False)
     print("Exporting to " + args.output)
@@ -76,19 +77,11 @@ def vfpfile2df(filename: str) -> pd.DataFrame:
         pd.DataFrame.
     """
     try:
-        lines = [
-            line.strip()
-            for line in open(filename).readlines()
-            if not line.strip().startswith("--")
-        ]
+        lines = Path(filename).read_text(encoding="utf8").splitlines()
     except UnicodeDecodeError:
-        lines = [
-            line.strip()
-            for line in open(filename, encoding="iso-8859-1").readlines()
-            if not line.strip().startswith("--")
-        ]
+        lines = Path(filename).read_text(encoding="iso-8859-1").splitlines()
 
-    # Strip mid-line comments:
+    # Strip comments:
     lines = [line.split("--")[0] for line in lines]
 
     # BUG: Will not tolerate comments that has something else than a whitespace
@@ -98,10 +91,10 @@ def vfpfile2df(filename: str) -> pd.DataFrame:
     # Now loop over vfptabledata. Lines starting with VFP{PROD/INJE} are the
     # interesting ones, and the consecutive lines after.
     vfpstartindices = [
-        x for x in range(0, len(vfptabledata)) if vfptabledata[x].startswith("VFP")
+        x for x in range(len(vfptabledata)) if vfptabledata[x].startswith("VFP")
     ]
 
-    print(" - found " + str(len(vfpstartindices)) + " vfp keywords")
+    print(f" - found {len(vfpstartindices)} vfp keywords")
     for vfptableidx in vfpstartindices:
         vfptype = vfptabledata[vfptableidx].split()[0]
         tableno = vfptabledata[vfptableidx].split()[1]

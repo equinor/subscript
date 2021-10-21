@@ -5,10 +5,10 @@ import logging
 from pathlib import Path
 from typing import Any, Dict
 
-import fmu.tools.fipmapper.fipmapper as fipmapper
-import fmu.tools.rms.volumetrics as volumetrics
 import pandas as pd
 import yaml
+from fmu.tools.fipmapper import fipmapper
+from fmu.tools.rms import volumetrics
 
 from subscript import getLogger
 from subscript.prtvol2csv.prtvol2csv import currently_in_place_from_prt
@@ -25,6 +25,9 @@ This script is currently in BETA. The name and calling syntax might change.
 
 
 def get_parser() -> argparse.ArgumentParser:
+    """Set up an argparse parser object for command line interface.
+
+    This is also used to generate documentation."""
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
         "PRTFILE",
@@ -90,8 +93,8 @@ def _compare_volumetrics(
 
         # Slicing in multiindex requires a list of unique tuples:
         regzones = set(
-            [tuple(regzone) for regzone in regzonfip_set[["REGION", "ZONE"]].to_numpy()]
-        ).intersection(set([tuple(regzone) for regzone in volumetrics_df.index]))
+            tuple(regzone) for regzone in regzonfip_set[["REGION", "ZONE"]].to_numpy()
+        ).intersection(set(tuple(regzone) for regzone in volumetrics_df.index))
         if not regzones:
             # Skip sets for which there are not volumetrics:
             logger.warning(
@@ -138,6 +141,7 @@ def _disjoint_sets_to_dict(
 
 
 def main() -> None:
+    """Parse command line arguments and run"""
     args = get_parser().parse_args()
 
     if args.PRTFILE.endswith("csv"):
@@ -155,7 +159,9 @@ def main() -> None:
         disjoint_sets_df, simvolumes_df, volumetrics_df
     )
     if args.sets:
-        Path(args.sets).write_text(yaml.dump(_disjoint_sets_to_dict(disjoint_sets_df)))
+        Path(args.sets).write_text(
+            yaml.dump(_disjoint_sets_to_dict(disjoint_sets_df)), encoding="utf8"
+        )
     if args.output:
         comparison_df.to_csv(args.output, float_format="%g", index=False)
         logger.info("Written %d rows to %s", len(comparison_df), args.output)

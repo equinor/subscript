@@ -1,7 +1,9 @@
 from ecl.grid import EclRegion
 
 
-def filter_region(grid, i, j, k, fipnum, fipnum_kw, combine_operator="intersect"):
+def filter_region(
+    grid, idx_i, idx_j, idx_k, fipnum, fipnum_kw, combine_operator="intersect"
+):
 
     # Filter out the selected grid cells
     region = EclRegion(grid, False)
@@ -12,24 +14,24 @@ def filter_region(grid, i, j, k, fipnum, fipnum_kw, combine_operator="intersect"
     region_fip = EclRegion(grid, False)
 
     # Create selected regions for each filter type
-    if i:
-        for i_slice in unpack_filter(i):
+    if idx_i:
+        for i_slice in unpack_filter(idx_i):
             region_i.select_islice(
                 i_slice - 1, i_slice - 1
             )  # -1 because ert defines i=1 as i=0
     else:
         region_i.select_all()
 
-    if j:
-        for j_slice in unpack_filter(j):
+    if idx_j:
+        for j_slice in unpack_filter(idx_j):
             region_j.select_jslice(
                 j_slice - 1, j_slice - 1
             )  # -1 because ert defines j=1 as j=0
     else:
         region_j.select_all()
 
-    if k:
-        for k_slice in unpack_filter(k):
+    if idx_k:
+        for k_slice in unpack_filter(idx_k):
             region_k.select_kslice(
                 k_slice - 1, k_slice - 1
             )  # -1 because ert defines j=1 as j=0
@@ -53,30 +55,30 @@ def filter_region(grid, i, j, k, fipnum, fipnum_kw, combine_operator="intersect"
         region = region & region_i & region_j & region_k & region_fip
         return region
 
-    elif combine_operator == "union":
+    if combine_operator == "union":
         # Union
         region1.select_active()
         region2 = region_i | region_j | region_k | region_fip
         region = region1 & region2
         return region
-    else:
-        raise Exception(
-            "ERROR: '%s' is not a valid operator to combine regions." % combine_operator
-        )
+
+    raise Exception(
+        f"ERROR: '{combine_operator}' is not a valid operator to combine regions."
+    )
 
 
 def unpack_filter(filter_list):
 
     filter_list = filter_list.split(",")
     filter_list_return = []
-    for i in range(0, len(filter_list)):
-        if "-" in str(filter_list[i]):
-            filter_start = int(filter_list[i].split("-")[0])
-            filter_end = int(filter_list[i].split("-")[1])
-            for j in range(filter_start, filter_end + 1):
-                filter_list_return.append(int(j))
+    for idx, _ in enumerate(filter_list):
+        if "-" in str(filter_list[idx]):
+            filter_start = int(filter_list[idx].split("-")[0])
+            filter_end = int(filter_list[idx].split("-")[1])
+            for idx2 in range(filter_start, filter_end + 1):
+                filter_list_return.append(int(idx2))
         else:
-            filter_list_return.append(int(filter_list[i]))
+            filter_list_return.append(int(filter_list[idx]))
     return filter_list_return
 
 

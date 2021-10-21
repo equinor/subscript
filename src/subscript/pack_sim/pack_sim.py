@@ -57,11 +57,9 @@ def _remove_comments(clear_comments: bool, tmp_in: str):
     Returns:
         tmp_in or tmp_in without comments depending on clear_comments
     """
-    tmp_out = tmp_in
-    if clear_comments:
-        if "--" in tmp_out:
-            tmp_out = "%s\n" % tmp_out.split("--")[0]
-    return tmp_out
+    if clear_comments and "--" in tmp_in:
+        return tmp_in.split("--")[0] + "\n"
+    return tmp_in
 
 
 # def _check_filename_found(filename: Path, org_sim_loc: Path) -> Path:
@@ -113,10 +111,10 @@ def _md5checksum(
         raise ValueError(
             "Cannot get both a file path and a data string; what should I checksum?"
         )
-    elif data is not None:
+    if data is not None:
         return _md5_on_fhandle(StringIO(data))
-    elif filepath is not None:
-        with open(filepath, "r") as fhandle:
+    if filepath is not None:
+        with open(filepath, "r", encoding="utf8") as fhandle:
             return _md5_on_fhandle(fhandle)
     raise ValueError(
         "Either a file path or data string need to be supplied. Nothing to checksum."
@@ -141,7 +139,7 @@ def _get_paths(filename: Path, org_sim_loc: Path) -> Dict[str, Path]:
     # Check if the filename can be found
     filename = _expand_filename(filename, org_sim_loc)
 
-    with open(filename, "r") as fhandle:
+    with open(filename, "r", encoding="utf8") as fhandle:
         # Read through all lines of text
         for line in fhandle:
             line_strip = line.strip()
@@ -205,18 +203,18 @@ def _check_file_binary(filename: Path, org_sim_loc: Path) -> bool:
 
     # Try to open the file, if fail: show message to user
     try:
-        fhandle = open(filename, "r")
-        fhandle.close()
-    except IOError:
+        with open(filename, "r", encoding="utf8") as fhandle:
+            pass
+    except IOError as orig_exc:
         raise IOError(
             f"Script stopped: Could not open '{filename}'. Make sure you have read "
             "access for this file."
-        )
+        ) from orig_exc
 
     # Check whether the file is binary and should not be inspected
     try:
-        with open(filename, "r") as f:
-            for _ in f:
+        with open(filename, "r", encoding="utf8") as fhandle:
+            for _ in fhandle:
                 pass
     except UnicodeDecodeError:
         return True
@@ -262,7 +260,7 @@ def inspect_file(
     new_data_file = ""
 
     # Read through all lines of text
-    fhandle = open(filename, "r")
+    fhandle = open(filename, "r", encoding="utf8")
     for line in fhandle:
         line = _normalize_line_endings(line)
         line_strip = line.strip()
@@ -371,8 +369,9 @@ def inspect_file(
                                     new_include = Path(str(new_include) + str(tstamp))
 
                                     try:
-                                        with open(new_include, "w") as fhandle_w:
-                                            fhandle_w.write(file_text)
+                                        Path(new_include).write_text(
+                                            file_text, encoding="utf8"
+                                        )
                                         logger.info(
                                             "%sfilename made unique "
                                             "with a timestamp (%s).",
@@ -384,14 +383,15 @@ def inspect_file(
                                             indent,
                                             new_include,
                                         )
-                                    except IOError:
+                                    except IOError as orig_exc:
                                         raise IOError(
-                                            "Script stopped: Could not write to '%s'. "
+                                            "Script stopped: Could not write to "
+                                            f"'{new_include}'. "
                                             "Make sure you have write access for "
-                                            "this file." % new_include
-                                        )
+                                            "this file."
+                                        ) from orig_exc
                             else:
-                                Path(new_include).write_text(file_text)
+                                Path(new_include).write_text(file_text, encoding="utf8")
                                 logger.info(
                                     "%sFinished writing include file %s",
                                     indent,
@@ -406,15 +406,13 @@ def inspect_file(
                         if "'" in include_full or '"' in include_full:
                             new_data_file += include_line.replace(
                                 str(include_stripped_in_file),
-                                "%sinclude/%s%s"
-                                % (fmu_include, section, new_include.name),
+                                f"{fmu_include}include/{section}{new_include.name}",
                             )
                         else:
 
                             new_data_file += include_line.replace(
                                 str(include_stripped_in_file),
-                                "'%sinclude/%s%s'"
-                                % (fmu_include, section, new_include.name),
+                                f"'{fmu_include}include/{section}{new_include.name}'",
                             )
 
                         # Ignore comments after the include statement
@@ -652,6 +650,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    """Parse command line arguments and run"""
     parser = get_parser()
     args = parser.parse_args()
     logger.setLevel(logging.INFO)

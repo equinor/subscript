@@ -202,11 +202,10 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
     sim_df = pd.read_csv(gendatacsv)
     if not {"well", "order", "pressure"}.issubset(set(sim_df.columns)):
         raise ValueError(
-            "Need at least the columns well, order and pressure in {}".format(
-                gendatacsv
-            )
+            f"Need at least the columns well, order and pressure in {gendatacsv}"
         )
     # Replace "-1" in simulated data with NaN, to avoid trouble later.
+    # pylint: disable=unsubscriptable-object
     inactive_rows = np.isclose(sim_df["pressure"], -1)
     if inactive_rows.any():
         sim_df.loc[inactive_rows, "pressure"] = np.nan

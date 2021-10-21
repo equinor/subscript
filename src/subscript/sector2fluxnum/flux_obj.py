@@ -5,7 +5,7 @@ from ecl import EclDataType
 from ecl.eclfile import EclKW
 from ecl.grid import EclRegion
 
-import subscript.sector2fluxnum.flux_util as flux_util
+from subscript.sector2fluxnum import flux_util
 
 
 class Fluxnum:
@@ -93,7 +93,7 @@ class Fluxnum:
 
         int_type = EclDataType.ECL_INT
 
-        with open(fluxnum_file, "r") as file_handle:
+        with open(fluxnum_file, "r", encoding="utf8") as file_handle:
             self.fluxnum_kw = EclKW.read_grdecl(
                 file_handle, "FLUXNUM", ecl_type=int_type
             )
@@ -101,7 +101,7 @@ class Fluxnum:
     def get_fluxnum_kw(self):
         return self.fluxnum_kw
 
-    def include_nnc(self, EGRID_file):
+    def include_nnc(self, egrid_file):
         """
         Adds NNC connections to FLUXNUM region.
 
@@ -113,19 +113,19 @@ class Fluxnum:
         Needs NNC data from EGRID file.
         """
 
-        if EGRID_file[11].header[0] == "NNC1":
-            NNC1_list = EGRID_file[11]
+        if egrid_file[11].header[0] == "NNC1":
+            nnc1_list = egrid_file[11]
         else:
             print("ERROR: NNC info not included in EGRID ...")
-        if EGRID_file[12].header[0] == "NNC2":
-            NNC2_list = EGRID_file[12]
+        if egrid_file[12].header[0] == "NNC2":
+            nnc2_list = egrid_file[12]
         else:
             print("ERROR: NNC info not included in EGRID ...")
 
         # Checks for NNC pairs. Sets both to 1 if detected in FLUXNUM KW
-        for i in range(len(NNC1_list)):
-            nnc1_global_index = NNC1_list[i] - 1  # Converts ECL index
-            nnc2_global_index = NNC2_list[i] - 1  # Converts ECL index
+        for idx, _ in enumerate(nnc1_list):
+            nnc1_global_index = nnc1_list[idx] - 1  # Converts ECL index
+            nnc2_global_index = nnc2_list[idx] - 1  # Converts ECL index
             if self.fluxnum_kw[nnc1_global_index] == 1:
                 self.fluxnum_kw[nnc2_global_index] = 1
 
@@ -163,8 +163,8 @@ class Fluxnum:
             if include_well:
                 print(well)
                 self.included_wells.append(well)
-                for g in temp_g:
-                    self.fluxnum_kw[g] = 1
+                for g_ in temp_g:
+                    self.fluxnum_kw[g_] = 1
 
     def write_fluxnum_kw(self, filename_path):
         """
@@ -173,7 +173,7 @@ class Fluxnum:
         @filename_path : FLUXNUM keyword file
         """
 
-        with open(filename_path, "w") as file_handle:
+        with open(filename_path, "w", encoding="utf8") as file_handle:
             self.fluxnum_kw.write_grdecl(file_handle)
 
 
@@ -246,7 +246,7 @@ class FluxnumFipnum(Fluxnum):
             if not os.path.isfile(fipnum_file):
                 raise Exception("ERROR: FIPNUM input file not found!")
 
-            with open(fipnum_file, "r") as file_handle:
+            with open(fipnum_file, "r", encoding="utf8") as file_handle:
                 fipnum = EclKW.read_grdecl(
                     file_handle, "FIPNUM", ecl_type=EclDataType.ECL_INT
                 )

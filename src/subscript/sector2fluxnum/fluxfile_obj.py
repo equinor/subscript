@@ -16,7 +16,7 @@ class Fluxfile:
         """
         self.grid = grid
         self.flux = flux
-        self.number_flux_cells = int(len(flux[6]) / 3)  # Cast for Python3
+        self.number_flux_cells = int(len(flux[6]) / 3)
         self.xyz_list = []
         self.index_list = []
 
@@ -47,7 +47,7 @@ class Fluxfile:
 
 
 def create_map_rst(
-    destFlux, sourceGrid, scale_i=1, scale_j=1, scale_k=1, shift_i=0, shift_j=0
+    dest_flux, source_grid, scale_i=1, scale_j=1, scale_k=1, shift_i=0, shift_j=0
 ):
     """
     Creates a map from coarse to fine index.
@@ -55,8 +55,8 @@ def create_map_rst(
     Will return a map to be used to look up data from coarse RESTART file for later
     population of FLUX file data.
 
-    @destFlux: Template FLUX file to be populated
-    @sourceGrid: Full field grid
+    @dest_flux: Template FLUX file to be populated
+    @source_grid: Full field grid
     @scale_i: Scale in resolution in i-direction
     @scale_j: Scale in resolution in j-direction
     @scale_k: Scale in resolution in k-direction
@@ -86,10 +86,10 @@ def create_map_rst(
     counter = 0
     print("Creating map...")
 
-    for index in destFlux.flux[6][0 : destFlux.number_flux_cells]:
+    for index in dest_flux.flux[6][0 : dest_flux.number_flux_cells]:
 
         # Find global coordinates in the fine grid
-        (i_f, j_f, k_f) = destFlux.grid.get_ijk(global_index=index - 1)
+        (i_f, j_f, k_f) = dest_flux.grid.get_ijk(global_index=index - 1)
 
         # Do transform ijk fine to coarse
         ijk_source = (
@@ -99,7 +99,7 @@ def create_map_rst(
         )
 
         # Identify the global index in the coarse grid
-        source_active_index = sourceGrid.get_active_index(ijk_source)
+        source_active_index = source_grid.get_active_index(ijk_source)
 
         if source_active_index > -1:
             mapping.append(source_active_index)
@@ -107,18 +107,18 @@ def create_map_rst(
         else:
             print("Warning: Not able to find direct cell. Using global position ...")
             # Find global coordinates in the fine grid
-            (x_f, y_f, z_f) = destFlux.grid.get_xyz(global_index=index - 1)
+            (x_f, y_f, z_f) = dest_flux.grid.get_xyz(global_index=index - 1)
 
             min_dist = 1e12
 
-            for a in range(sourceGrid.get_num_active()):
-                (x_s, y_s, z_s) = sourceGrid.get_xyz(active_index=a)
+            for active_cell in range(source_grid.get_num_active()):
+                (x_s, y_s, z_s) = source_grid.get_xyz(active_index=active_cell)
 
                 dist = (x_s - x_f) ** 2 + (y_s - y_f) ** 2 + (z_s - z_f) ** 2
 
                 if dist < min_dist:
                     min_dist = dist
-                    min_pos_index = a
+                    min_pos_index = active_cell
 
             # print min_pos_index, min_dist, c_g_index
             # Identify map of coarse grid to collect values to fine grid
@@ -127,18 +127,21 @@ def create_map_rst(
         counter += 1
 
         if counter % 100 == 0:
-            print("Map progress: %i" % counter)
+            print(f"Map progress: {counter:d}")
 
     return mapping
 
 
-def write_new_fluxfile_from_rst(destFlux, sourceGrid, sourceRST, mapping, fortio):
+def write_new_fluxfile_from_rst(
+    dest_flux, source_grid, source_restart, mapping, fortio
+):
     """
     Populates a templated .FLUX file with full field data from a RESTART file.
 
-    @destFlux: Template FLUX file to be populated
-    @sourceFlux: Template FLUX file from full field grid (Not used)
-    @sourceRST: RESTART data from full field simulation. Used to populate @destFlux
+    @dest_flux: Template FLUX file to be populated
+    @source_grid: Template FLUX file from full field grid (Not used)
+    @source_restart: RESTART data from full field simulation.
+    Used to populate @dest_flux
     @mapping: Map from refined to coarse index
     @fortio: File stream for unformated data.
 
@@ -148,9 +151,9 @@ def write_new_fluxfile_from_rst(destFlux, sourceGrid, sourceRST, mapping, fortio
     """
 
     # Importing elements
-    flux_fine = destFlux.get_flux()
+    flux_fine = dest_flux.get_flux()
 
-    if sourceGrid.getNumLGR() > 0:
+    if source_grid.getNumLGR() > 0:
         print(" ")
         print("***************************************")
         print("WARNING: LGR present in native grid.")
@@ -159,128 +162,130 @@ def write_new_fluxfile_from_rst(destFlux, sourceGrid, sourceRST, mapping, fortio
         print(" ")
 
     # Common elements in both FLUX files
-    nCommonElements = 7
+    n_common_elements = 7
 
-    for i in range(nCommonElements):
-        kw_temp = flux_fine[i].deep_copy()
+    for index in range(n_common_elements):
+        kw_temp = flux_fine[index].deep_copy()
         kw_temp.fwrite(fortio)  # Writes to file succesivly
 
-    blockSize = len(flux_fine) - nCommonElements
+    block_size = len(flux_fine) - n_common_elements
 
     # Manipulating existing blocks in the fine grid
     # Importing data from the coarse grid
 
-    prevDate = sourceRST.dates[0]
-    prevDaysFlux = flux_fine.iget_named_kw("DTIME", 0)[0]
+    prev_date = source_restart.dates[0]
+    prev_days_flux = flux_fine.iget_named_kw("DTIME", 0)[0]
 
-    for i in range(0, len(sourceRST.report_dates)):
+    for index, _ in enumerate(source_restart.report_dates):
 
-        i_coarse_grid = i * (sourceGrid.getNumLGR() + 1)
+        i_coarse_grid = index * (source_grid.getNumLGR() + 1)
 
-        currentDate = sourceRST.dates[i]
-        deltaTime = currentDate - prevDate
-        deltaDays = deltaTime.days
-        prevDate = currentDate
+        current_date = source_restart.dates[index]
+        delta_time = current_date - prev_date
+        delta_days = delta_time.days
+        prev_date = current_date
 
-        for j in range(nCommonElements, nCommonElements + blockSize):
+        for j_idx in range(n_common_elements, n_common_elements + block_size):
 
             # Not related to grid cells
-            if flux_fine[j].header[0] == "ITIME":
-                kw_temp = flux_fine[j].deep_copy()
+            if flux_fine[j_idx].header[0] == "ITIME":
+                kw_temp = flux_fine[j_idx].deep_copy()
                 kw_temp[0] = 1
 
-            elif flux_fine[j].header[0] == "DTIME":
-                kw_temp = flux_fine[j].deep_copy()
-                kw_temp[0] = prevDaysFlux
-                kw_temp[1] = prevDaysFlux + deltaDays
-                prevDaysFlux += deltaDays
+            elif flux_fine[j_idx].header[0] == "DTIME":
+                kw_temp = flux_fine[j_idx].deep_copy()
+                kw_temp[0] = prev_days_flux
+                kw_temp[1] = prev_days_flux + delta_days
+                prev_days_flux += delta_days
 
-            elif flux_fine[j].header[0] == "WELLNAME":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "WELLNAME":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "WELLFLOW":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "WELLFLOW":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "PMER":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "PMER":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "PADMAX":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "PADMAX":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "PMAX":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "PMAX":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "PADS":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "PADS":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "":  # OBS!
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "":  # OBS!
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-            elif flux_fine[j].header[0] == "POIL":
-                kw_temp = flux_fine[j].deep_copy()
-                kw_source = sourceRST.iget_named_kw("PRESSURE", i_coarse_grid)
+            elif flux_fine[j_idx].header[0] == "POIL":
+                kw_temp = flux_fine[j_idx].deep_copy()
+                kw_source = source_restart.iget_named_kw("PRESSURE", i_coarse_grid)
 
-                if len(kw_source) != sourceGrid.get_num_active():
+                if len(kw_source) != source_grid.get_num_active():
                     print("ERROR: Mismatch between restart data and grid size!")
                     print(
-                        "kw size = %i and restart size = %i"
-                        % (len(kw_source), sourceGrid.get_num_active())
+                        f"kw size = {len(kw_source):d} and "
+                        f"restart size = {source_grid.get_num_active():d}"
                     )
                     sys.exit(1)
 
                 # Maps property data from coarse to fine grid.
                 # Related to grid cells.
-                for k in range(flux_fine[j].header[1]):
-                    kw_temp[k] = kw_source[mapping[k]]
+                for k_idx in range(flux_fine[j_idx].header[1]):
+                    kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j].header[0] == "SWAT":
-                kw_temp = flux_fine[j].deep_copy()
-                kw_source = sourceRST.iget_named_kw("SWAT", i_coarse_grid)
+            elif flux_fine[j_idx].header[0] == "SWAT":
+                kw_temp = flux_fine[j_idx].deep_copy()
+                kw_source = source_restart.iget_named_kw("SWAT", i_coarse_grid)
 
-                for k in range(flux_fine[j].header[1]):
-                    kw_temp[k] = kw_source[mapping[k]]
+                for k_idx in range(flux_fine[j_idx].header[1]):
+                    kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j].header[0] == "SGAS":
-                kw_temp = flux_fine[j].deep_copy()
-                kw_source = sourceRST.iget_named_kw("SGAS", i_coarse_grid)
+            elif flux_fine[j_idx].header[0] == "SGAS":
+                kw_temp = flux_fine[j_idx].deep_copy()
+                kw_source = source_restart.iget_named_kw("SGAS", i_coarse_grid)
 
-                for k in range(flux_fine[j].header[1]):
-                    kw_temp[k] = kw_source[mapping[k]]
+                for k_idx in range(flux_fine[j_idx].header[1]):
+                    kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j].header[0] == "SOIL":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "SOIL":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-                if sourceRST.has_kw("SGAS"):
-                    kw_source1 = sourceRST.iget_named_kw("SGAS", i_coarse_grid)
-                    kw_source2 = sourceRST.iget_named_kw("SWAT", i_coarse_grid)
+                if source_restart.has_kw("SGAS"):
+                    kw_source1 = source_restart.iget_named_kw("SGAS", i_coarse_grid)
+                    kw_source2 = source_restart.iget_named_kw("SWAT", i_coarse_grid)
 
-                    for k in range(flux_fine[j].header[1]):
-                        kw_temp[k] = 1 - kw_source1[mapping[k]] - kw_source2[mapping[k]]
+                    for k_idx in range(flux_fine[j_idx].header[1]):
+                        kw_temp[k_idx] = (
+                            1 - kw_source1[mapping[k_idx]] - kw_source2[mapping[k_idx]]
+                        )
 
                 else:
-                    kw_source2 = sourceRST.iget_named_kw("SWAT", i_coarse_grid)
+                    kw_source2 = source_restart.iget_named_kw("SWAT", i_coarse_grid)
 
-                    for k in range(flux_fine[j].header[1]):
-                        kw_temp[k] = 1 - kw_source2[mapping[k]]
+                    for k_idx in range(flux_fine[j_idx].header[1]):
+                        kw_temp[k_idx] = 1 - kw_source2[mapping[k_idx]]
 
-            elif flux_fine[j].header[0] == "RS":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "RS":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-                if sourceRST.has_kw("RS"):
-                    kw_source = sourceRST.iget_named_kw("RS", i_coarse_grid)
+                if source_restart.has_kw("RS"):
+                    kw_source = source_restart.iget_named_kw("RS", i_coarse_grid)
 
-                    for k in range(flux_fine[j].header[1]):
-                        kw_temp[k] = kw_source[mapping[k]]
+                    for k_idx in range(flux_fine[j_idx].header[1]):
+                        kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j].header[0] == "OILAPI":
-                kw_temp = flux_fine[j].deep_copy()
+            elif flux_fine[j_idx].header[0] == "OILAPI":
+                kw_temp = flux_fine[j_idx].deep_copy()
 
-                if sourceRST.has_kw("OILAPI"):
-                    kw_source = sourceRST.iget_named_kw("OILAPI", i_coarse_grid)
+                if source_restart.has_kw("OILAPI"):
+                    kw_source = source_restart.iget_named_kw("OILAPI", i_coarse_grid)
 
-                    for k in range(flux_fine[j].header[1]):
-                        kw_temp[k] = kw_source[mapping[k]]
+                    for k_idx in range(flux_fine[j_idx].header[1]):
+                        kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
             kw_temp.fwrite(fortio)
 
-        print("Writing restart reportstep %s to FLUX file" % (i))
+        print(f"Writing restart reportstep {index} to FLUX file")

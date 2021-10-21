@@ -19,7 +19,7 @@ import grpc
 from subscript import __version__, getLogger
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
-import rips  # noqa: E402
+import rips  # noqa: E402 # pylint: disable=wrong-import-position, wrong-import-order
 
 DESCRIPTION = """
 ``ri_wellmod`` is a utility to generate Eclipse well model definitions
@@ -198,13 +198,12 @@ def find_and_wrap_resinsight_version(
 
     logger.info("Found ResInsight version: %s", resinsight_exe)
 
-    wrapper_file = tempfile.NamedTemporaryFile(delete=False)
-    with open(wrapper_file.name, "w") as fhandle:
-        print(WRAPPER_TEMPLATE, file=fhandle)
-        print(f'exec {resinsight_exe} "$@"', file=fhandle)
-        fhandle.flush()
-    os.chmod(wrapper_file.name, 0o770)
-    wrapper_file.close()
+    with tempfile.NamedTemporaryFile(delete=False) as wrapper_file:
+        with open(wrapper_file.name, "w", encoding="utf8") as fhandle:
+            print(WRAPPER_TEMPLATE, file=fhandle)
+            print(f'exec {resinsight_exe} "$@"', file=fhandle)
+            fhandle.flush()
+        os.chmod(wrapper_file.name, 0o770)
     logger.debug("Created ResInsight wrapper file: %s", wrapper_file.name)
 
     return wrapper_file.name
@@ -280,7 +279,7 @@ def find_candidate_modules(top_path: Path) -> Set[str]:
     if str(top_path) not in sys.path:
         return mod_names
 
-    for root, dirs, files in os.walk(top_path):
+    for _, dirs, files in os.walk(top_path):
         for dname in dirs:
             mod_names.add(dname)
         for fname in files:
@@ -292,11 +291,13 @@ def find_candidate_modules(top_path: Path) -> Set[str]:
 
 
 def deep_reload(
-    module: ModuleType, top_path: Path, loaded: Set = set(), ok_names: Set[str] = None
+    module: ModuleType, top_path: Path, loaded: Set = None, ok_names: Set[str] = None
 ):
     """
     Deep module reload constrained to names possibly found in a given folder
     """
+    if loaded is None:
+        loaded = set()
     if not ok_names:
         ok_names = find_candidate_modules(top_path)
 
@@ -768,7 +769,7 @@ def main() -> int:
 
     orig_ri_case_name = ri_case_name
     ri_case_name = ri_case_name.replace(".", "_")
-    with open(output_file, "w") as out_fd:
+    with open(output_file, "w", encoding="utf8") as out_fd:
         for well in well_path_names:
             perf_fn = get_exported_perf_filename(well, ri_case_name)
             # Check for case name with '.' due to behavioural change in 2021.06 release
@@ -786,7 +787,7 @@ def main() -> int:
                 logger.debug("Found LGR completion file %s", lgr_perf_fn)
 
             if perf_fn_exists or Path(perf_fn).exists():
-                with open(perf_fn, "r") as perf_fd:
+                with open(perf_fn, "r", encoding="utf8") as perf_fd:
                     shutil.copyfileobj(perf_fd, out_fd)
             else:
                 logger.debug("No completion file found for well %s", well)
@@ -798,7 +799,7 @@ def main() -> int:
             if well in msw_well_names:
                 msw_fn = get_exported_msw_filename(well, ri_case_name)
                 if Path(msw_fn).exists():
-                    with open(msw_fn, "r") as msw_fd:
+                    with open(msw_fn, "r", encoding="utf8") as msw_fd:
                         shutil.copyfileobj(msw_fd, out_fd)
                 else:
                     logger.debug("No msw completion file found for well %s", well)
@@ -809,22 +810,15 @@ def main() -> int:
 
     logger.info("Completions exported to %s", output_file)
     if not silent:
-        print(
-            """
-    Completions exported to {}
-
-""".format(
-                output_file
-            )
-        )
+        print(f"\n     Completions exported to {output_file}\n")
 
     # Finally, collect LGR files
     if lgr_specs is not None and len(lgr_specs) > 0:
-        with open(lgr_output_file, "w") as out_fd:
+        with open(lgr_output_file, "w", encoding="utf8") as out_fd:
             for lgr_well_path in lgr_well_path_names:
                 lgr_spec_fn = get_lgr_spec_filename(lgr_well_path)
                 if Path(lgr_spec_fn).exists():
-                    with open(lgr_spec_fn, "r") as lgr_fd:
+                    with open(lgr_spec_fn, "r", encoding="utf8") as lgr_fd:
                         # shutil.copyfileobj(lgr_fd, out_fd)
                         # Ugly hack to get around 'multiple-wells-in-lgr'
                         # For now, assuming 5 wells in each LGR is sufficient..
@@ -838,11 +832,9 @@ def main() -> int:
         logger.info("LGR specifications exported to %s", lgr_output_file)
         if not silent:
             print(
-                """
-    Well LGR definitions exported to {}
-            """.format(
-                    lgr_output_file
-                )
+                f"""
+    Well LGR definitions exported to {lgr_output_file}
+            """
             )
     return 0
 

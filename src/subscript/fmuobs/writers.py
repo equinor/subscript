@@ -88,7 +88,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
                 else:
                     # This inconsistency is critical
                     raise ValueError(
-                        "block dataframe for one label has multiple {}".format(dataname)
+                        f"block dataframe for one label has multiple {dataname}"
                     )
         for _, row in block_df.iterrows():
             if "SUBCOMMENT" in row and not pd.isnull("SUBCOMMENT"):

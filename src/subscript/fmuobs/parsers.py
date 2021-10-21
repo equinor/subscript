@@ -75,7 +75,7 @@ def expand_includes(input_str: str, cwd: str = ".") -> str:
         logger.info(
             "Injecting include file: %s into observation file", include_filename
         )
-        include_txt = include_filename.read_text()
+        include_txt = include_filename.read_text(encoding="utf8")
         input_str = input_str.replace("".join(match.groups()), include_txt)
         match = INCLUDE_RE.search(input_str)
     return input_str
@@ -351,7 +351,7 @@ def flatten_observation_unit(
     obs_subunits = []
 
     # Inject a default segment if segments are in use:
-    if any(["SEGMENT" in key for key in subunit_keys]):
+    if any("SEGMENT" in key for key in subunit_keys):
         obs_subunits.append({**{"SEGMENT": "DEFAULT"}, **keyvalues})
 
     for subunit in subunit_keys:

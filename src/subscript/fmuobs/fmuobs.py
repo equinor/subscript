@@ -5,6 +5,7 @@ import logging
 import os
 import signal
 import sys
+from pathlib import Path
 from typing import Optional, Tuple, Union
 
 import pandas as pd
@@ -209,6 +210,9 @@ def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, di
         tuple: First element is a string in [resinsight, csv, yaml, ert], second
         element is a dataframe or a dict (if input was yaml).
     """
+    # Pylint exceptions as this code is made to catch these errors and act on them.
+    # pylint: disable=unsubscriptable-object, no-member
+    # pylint: disable=unsupported-assignment-operation
     try:
         dframe = pd.read_csv(filename, sep=";")
         if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
@@ -233,8 +237,7 @@ def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, di
         pass
 
     try:
-        with open(filename) as f_handle:
-            obsdict = yaml.safe_load(f_handle.read())
+        obsdict = yaml.safe_load(Path(filename).read_text(encoding="utf8"))
         if isinstance(obsdict, dict):
             if obsdict.get("smry", None) or obsdict.get("rft", None):
                 logger.info("Parsed %s as a YAML file with observations", filename)
@@ -248,7 +251,7 @@ def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, di
         pass
 
     try:
-        with open(filename) as f_handle:
+        with open(filename, encoding="utf8") as f_handle:
             # This function does not have information on include file paths.
             # Accept a FileNotFoundError while parsing, if we encounter that
             # it is most likely an ert file, but which needs additional hints
@@ -320,8 +323,7 @@ def fmuobs(
     # For ERT files, there is the problem of include-file-path. If not-found
     # include filepaths are present, the filetype is ert, but dframe is empty.
     if filetype == "ert" and pd.DataFrame.empty:
-        with open(inputfile) as f_handle:
-            input_str = f_handle.read()
+        input_str = Path(inputfile).read_text(encoding="utf8")
         if not includedir:
             # Try and error for the location of include files, first in current
             # dir, then in the directory of the input file. The proper default
@@ -388,8 +390,7 @@ def dump_results(
                 "Writing observations in YAML (webviz) format to file: %s",
                 resinsightfile,
             )
-            with open(yamlfile, "w") as f_handle:
-                f_handle.write(yaml_str)
+            Path(yamlfile).write_text(yaml_str, encoding="utf8")
         else:
             print(yaml_str)
 
@@ -409,9 +410,8 @@ def dump_results(
     if ertfile:
         ertobs_str = df2ertobs(dframe)
         if ertfile != __MAGIC_STDOUT__:
-            with open(ertfile, "w") as f_handle:
-                logger.info("Writing ERT observation format to %s", ertfile)
-                f_handle.write(ertobs_str)
+            logger.info("Writing ERT observation format to %s", ertfile)
+            Path(ertfile).write_text(ertobs_str, encoding="utf8")
         else:
             print(ertobs_str)
 

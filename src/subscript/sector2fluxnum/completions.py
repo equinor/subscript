@@ -1,7 +1,7 @@
 from ecl2df import EclFiles, compdat
 
 
-def get_completion_list(ECL_DATA_file_name):
+def get_completion_list(ecl_data_file_name):
     """
     Create a datafram of unrolled well completions
 
@@ -14,8 +14,8 @@ def get_completion_list(ECL_DATA_file_name):
     List of completions associated to well names
     """
 
-    ECL_file = EclFiles(ECL_DATA_file_name)
-    compdat_df = compdat.df(ECL_file)
+    ecl_file = EclFiles(ecl_data_file_name)
+    compdat_df = compdat.df(ecl_file)
 
     # Convert from ECL index
     compdat_df[["I", "J", "K1", "K2"]] = compdat_df[["I", "J", "K1", "K2"]] - 1

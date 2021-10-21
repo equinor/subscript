@@ -109,9 +109,9 @@ class Model:
                     if _k - 1 < 0 or _k + _nz - 1 > nz:
                         print(
                             TERMINALCOLORS["WARNING"]
-                            + "Warning: Streak #{} is outside background matrix.\n"
-                            "The streak will be ignored.".format(idx + 1)
-                            + TERMINALCOLORS["ENDC"]
+                            + f"Warning: Streak #{idx + 1} is outside "
+                            "background matrix.\n"
+                            "The streak will be ignored." + TERMINALCOLORS["ENDC"]
                         )
                     else:
                         prts[_k - 1 : _k + _nz - 1] = [idx] * _nz
@@ -182,10 +182,9 @@ class Model:
         ):
             if len(var) != self._n_faults_y:
                 raise ValueError(
-                    "Number of specified X-dir {} ({}) is not equals to number of "
-                    "fracture in Y-direction ({})".format(
-                        title, len(var), self._n_faults_y
-                    )
+                    f"Number of specified X-dir {title} ({len(var)}) "
+                    "is not equals to number of "
+                    f"fracture in Y-direction ({self._n_faults_y})"
                 )
 
         self._fracture_length_y = listify(fracture_length_y, self._n_faults_x, float)
@@ -210,10 +209,9 @@ class Model:
         ):
             if len(var) != self._n_faults_x:
                 raise ValueError(
-                    "Number of specified Y-dir {} ({}) is not equals to number of "
-                    "fracture in X-direction ({})".format(
-                        title, len(var), self._n_faults_x
-                    )
+                    f"Number of specified Y-dir {title} ({len(var)}) "
+                    "is not equals to number of "
+                    f"fracture in X-direction ({self._n_faults_x})"
                 )
 
         self._total_nx = int(
@@ -340,40 +338,32 @@ class Model:
         self._throws = []
 
         print("Initializing model")
-        print("  LX x LY x LZ: {} x {} x {}".format(self._lx, self._ly, self._lz))
-        print(
-            "  NX x NY x NZ: {} x {} x {}".format(
-                self._total_nx, self._total_ny, self._total_nz
-            )
-        )
-        print("  dx x dy x dz: {} x {} x {}".format(dx, dy, dz))
+        print(f"  LX x LY x LZ: {self._lx} x {self._ly} x {self._lz}")
+        print(f"  NX x NY x NZ: {self._total_nx} x {self._total_ny} x {self._total_nz}")
+        print(f"  dx x dy x dz: {dx} x {dy} x {dz}")
 
-        print("  Matrix Element in X-direction: {}".format(nMatrixY))
-        print("  Matrix Element in Y-direction: {}".format(nMatrixX))
-        print("  Layers: {}".format(nz))
-        print(
-            "  Shape Factor: {} (a), {} (b), {} (c)".format(
-                radius_x, radius_y, radius_z
-            )
-        )
-        print("  Top geometry: {}".format(top))
-        print("  Model origin: {}, {}".format(origin_x, origin_y))
-        print("  Model coordinate rotation: {}°".format(rotation))
-        print("  Tilting: {}".format(tilt))
+        print(f"  Matrix Element in X-direction: {nMatrixY}")
+        print(f"  Matrix Element in Y-direction: {nMatrixX}")
+        print(f"  Layers: {nz}")
+        print(f"  Shape Factor: {radius_x} (a), {radius_y} (b), {radius_z} (c)")
+        print(f"  Top geometry: {top}")
+        print(f"  Model origin: {origin_x}, {origin_y}")
+        print(f"  Model coordinate rotation: {rotation}°")
+        print(f"  Tilting: {tilt}")
         print("  Fracture:")
-        print("    Thickness: {}".format(fractureThickness))
-        print("    Cell Count: {}".format(fracture_cell_count))
-        print("    At Boundary: {}".format(fracture_at_boundary))
+        print(f"    Thickness: {fractureThickness}")
+        print(f"    Cell Count: {fracture_cell_count}")
+        print(f"    At Boundary: {fracture_at_boundary}")
         print("    X-dir fractures:")
-        print("      Length: {}".format(fracture_length_x))
-        print("      Offset: {}".format(fracture_offset_x))
-        print("      Height: {}".format(fracture_height_x))
-        print("      Z-offset: {}".format(fracture_zoffset_x))
+        print(f"      Length: {fracture_length_x}")
+        print(f"      Offset: {fracture_offset_x}")
+        print(f"      Height: {fracture_height_x}")
+        print(f"      Z-offset: {fracture_zoffset_x}")
         print("    Y-dir fractures:")
-        print("      Length: {}".format(fracture_length_y))
-        print("      Offset: {}".format(fracture_offset_y))
-        print("      Height: {}".format(fracture_height_y))
-        print("      Z-offset: {}".format(fracture_zoffset_y))
+        print(f"      Length: {fracture_length_y}")
+        print(f"      Offset: {fracture_offset_y}")
+        print(f"      Height: {fracture_height_y}")
+        print("      Z-offset: {fracture_zoffset_y}")
 
         self.dict_info["nx"] = self._total_nx
         self.dict_info["ny"] = self._total_ny
@@ -469,9 +459,7 @@ class Model:
     def _build_grid(self):
         """Create the mesh xv, yv and zv"""
         if self._a * self._b * self._c == 0.0:
-            self.dict_info["ModelDescription"] = "Slab with tilting angle {}".format(
-                self._tilt
-            )
+            self.dict_info["ModelDescription"] = f"Slab with tilting angle {self._tilt}"
         else:
             self.dict_info[
                 "ModelDescription"
@@ -519,14 +507,14 @@ class Model:
             self._zv = (self._xv - x_mid) * math.tan(math.radians(self._tilt))
 
         rotation = np.radians(self._rotation)
-        rotationMatrix = np.array(
+        rotation_matrix = np.array(
             [
                 [np.cos(rotation), np.sin(rotation)],
                 [-np.sin(rotation), np.cos(rotation)],
             ]
         )
         self._xv, self._yv = np.einsum(
-            "ji, mni -> jmn", rotationMatrix, np.dstack([self._xv, self._yv])
+            "ji, mni -> jmn", rotation_matrix, np.dstack([self._xv, self._yv])
         )
         self._xv += self._origin_x
         self._yv += self._origin_y
@@ -588,7 +576,7 @@ class Model:
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(
             self._streak_k
-        ), "Number of input {} is not equal to number of streak".format(keyword)
+        ), f"Number of input {keyword} is not equal to number of streak"
         if isinstance(fracture_property, int):
             data_type = np.int16
         else:
@@ -655,9 +643,9 @@ class Model:
     def set_layers_property(self, keyword, matrix_property, streak_property):
         """Store matrix and streak property"""
         streak_property = listify(streak_property, len(self._streak_k))
-        assert len(streak_property) == len(self._streak_k), (
-            "Number of input " + keyword + " is not equal to number of streaks"
-        )
+        assert len(streak_property) == len(
+            self._streak_k
+        ), f"Number of input {keyword} is not equal to number of streaks"
         keyword = keyword.upper()
         self._streak_props[keyword] = streak_property
         self._matrix_props[keyword] = matrix_property
@@ -672,12 +660,12 @@ class Model:
         values_x = listify(values_x, self._n_faults_x)
         values_y = listify(values_y, self._n_faults_y)
         assert len(values_x) == self._n_faults_x, (
-            "Please specify correct number of fracture {} for x-faults.\r\n"
-            "You need {} values".format(keyword, self._n_faults_y)
+            f"Please specify correct number of fracture {keyword} for x-faults.\n"
+            f"You need {self._n_faults_y} values"
         )
         assert len(values_y) == self._n_faults_y, (
-            "Please specify correct number of fracture {} for y-faults.\r\n"
-            "You need {} values".format(keyword, self._n_faults_y)
+            f"Please specify correct number of fracture {keyword} for y-faults.\n"
+            f"You need {self._n_faults_y} values"
         )
         self._fracture_props[keyword + "X"] = values_x
         self._fracture_props[keyword + "Y"] = values_y
@@ -701,10 +689,10 @@ class Model:
             + datetime.datetime.now().strftime("%A, %d. %B %Y %I:%M%p"),
             file=buffer_,
         )
-        print("-- Matrix property : {}".format(matrix_prop), file=buffer_)
-        print("-- Streak property : {}".format(streak_prop), file=buffer_)
-        print("-- Fracture property : {}".format(frac_props), file=buffer_)
-        print("-- Vug property : {}".format(vug_prop), file=buffer_)
+        print(f"-- Matrix property : {matrix_prop}", file=buffer_)
+        print(f"-- Streak property : {streak_prop}", file=buffer_)
+        print(f"-- Fracture property : {frac_props}", file=buffer_)
+        print(f"-- Vug property : {vug_prop}", file=buffer_)
         self._print_property(
             buffer_,
             keyword,
@@ -712,7 +700,7 @@ class Model:
                 keyword, matrix_prop, streak_prop, frac_props, vug_prop
             ),
         )
-        with open(filename, "w") as file_handle:
+        with open(filename, "w", encoding="utf8") as file_handle:
             file_handle.write(buffer_.getvalue())
         buffer_.close()
 
@@ -779,13 +767,13 @@ class Model:
             file=buffer_,
         )
         print(
-            "-- {} x {} x {}".format(self._total_nx, self._total_ny, self._total_nz),
+            f"-- {self._total_nx} x {self._total_ny} x {self._total_nz}",
             file=buffer_,
         )
         print("-- " + self.dict_info["ModelDescription"], file=buffer_)
         print("SPECGRID", file=buffer_)
         print(
-            "  {}  {}  {}  1  F".format(self._total_nx, self._total_ny, self._total_nz),
+            f"  {self._total_nx}  {self._total_ny}  {self._total_nz}  1  F",
             file=buffer_,
         )
         print("/", file=buffer_)
@@ -794,6 +782,7 @@ class Model:
         for _i in range(0, self._xv.shape[0]):
             for _j in range(0, self._xv.shape[1]):
                 print(
+                    # pylint: disable=consider-using-f-string
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}} "
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}}".format(
                         self._eclipse_output_float
@@ -817,7 +806,7 @@ class Model:
                     self._vug_props[keyword],
                 ),
             )
-        with open(filename, "w") as file_handle:
+        with open(filename, "w", encoding="utf8") as file_handle:
             file_handle.write(buffer_.getvalue())
         buffer_.close()
 
@@ -1079,14 +1068,18 @@ class Model:
 
         final_near_fracture_vug_cells = np.count_nonzero(self._vug_idx == 1)
         if total_near_fracture_vug_cells != final_near_fracture_vug_cells:
+            total_fraction = (
+                float(total_near_fracture_vug_cells) / self._total_matrix_cells
+            )
+            final_fraction = (
+                float(final_near_fracture_vug_cells) / self._total_matrix_cells
+            )
             print(
-                "{}Warning: Near fracture vugs fraction is reduced from {:.2%} "
-                "to {:.2%} as they overlaps with near streak vugs{}".format(
-                    TERMINALCOLORS["WARNING"],
-                    float(total_near_fracture_vug_cells) / self._total_matrix_cells,
-                    float(final_near_fracture_vug_cells) / self._total_matrix_cells,
-                    TERMINALCOLORS["ENDC"],
-                )
+                TERMINALCOLORS["WARNING"]
+                + "Warning: Near fracture vugs fraction is reduced from "
+                + f" {total_fraction:.2%} to {final_fraction:.2%} "
+                + "as they overlaps with near streak vugs"
+                + TERMINALCOLORS["ENDC"]
             )
             total_near_fracture_vug_cells = final_near_fracture_vug_cells
 

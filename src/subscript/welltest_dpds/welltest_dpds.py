@@ -216,13 +216,13 @@ def get_buildup_indices(rates):
     buildup_end_indices = []
 
     last = 0
-    for i, rate in enumerate(rates):
+    for idx, rate in enumerate(rates):
         if np.isclose(rate, 0) and last > 0.0:
-            buildup_indices.append(i)
-        if rate > 0 and np.isclose(last, 0) and not i == 0:
-            buildup_end_indices.append(i - 1)
-        if i == len(rates) - 1 and np.isclose(rate, 0):
-            buildup_end_indices.append(i)
+            buildup_indices.append(idx)
+        if rate > 0 and np.isclose(last, 0) and not idx == 0:
+            buildup_end_indices.append(idx - 1)
+        if idx == len(rates) - 1 and np.isclose(rate, 0):
+            buildup_end_indices.append(idx)
         last = rate
 
     if rates[0] == 0:
@@ -256,9 +256,11 @@ def supertime(time, rate, bu_start_ind, bu_end_ind):
     for bu_time_ind in range(1, bu_end_ind - bu_start_ind + 1):
         # Cannot start from zero. Hence from 1 and not 0 in loop. (Avoid ln(0))
         tot = 0.0
-        for i in range(0, bu_start_ind):
-            # End at len-1 because n is not included - only n-1 in formula
-            tot = tot + rdiff[i] * np.log(time[bu_start_ind + bu_time_ind] - time[i])
+        for idx in range(0, bu_start_ind):
+            # End at len-1 because n is not included - only n-1 in formul a
+            tot = tot + rdiff[idx] * np.log(
+                time[bu_start_ind + bu_time_ind] - time[idx]
+            )
         super_time[bu_time_ind] = coeff1 * tot + np.log(
             time[bu_start_ind + bu_time_ind] - time[bu_start_ind]
         )
@@ -266,7 +268,7 @@ def supertime(time, rate, bu_start_ind, bu_end_ind):
     return super_time[1:]
 
 
-def weighted_avg_press_time_derivative_lag1(dp, dspt):
+def weighted_avg_press_time_derivative_lag1(delta_p, dspt):
     """
     Compute weighted average of pressure time derivative,
     one time step to each side. Lag1
@@ -284,7 +286,7 @@ def weighted_avg_press_time_derivative_lag1(dp, dspt):
 
     """
 
-    dpdspt = dp / dspt
+    dpdspt = delta_p / dspt
     dspt_forward = np.hstack((dspt, 1))
     # dspt_forward not defined for last time step; set to 1
     dspt_forward[0] = 0
@@ -308,14 +310,14 @@ def weighted_avg_press_time_derivative_lag1(dp, dspt):
 
 
 def weighted_avg_press_time_derivative_lag2(
-    dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
+    delta_p, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
 ):
 
     """
     Compute weighted average using LAG 2 for pressure time derivative
 
     Args:
-        dp (np.array)
+        delta_p (np.array)
         dspt (np.array)
         supertime (np.array)
         wbhp (np.array)
@@ -335,20 +337,20 @@ def weighted_avg_press_time_derivative_lag2(
     dp_lag2 = np.zeros(n_lag2)
 
     # find Lag 2 diff for supertime and pressure
-    for i in range(n_lag2):
-        dspt_lag2[i] = spt_raw[i + 2] - spt_raw[i]
-        dp_lag2[i] = p_raw[i + 2] - p_raw[i]
+    for idx in range(n_lag2):
+        dspt_lag2[idx] = spt_raw[idx + 2] - spt_raw[idx]
+        dp_lag2[idx] = p_raw[idx + 2] - p_raw[idx]
 
     # Get the end points right
     dspt_lag2_forward = np.hstack((dspt_lag2, dspt[-1], 1))
     # Last forward step does not exist, Second Last forward  step is only one step
 
-    dp_lag2_forward = np.hstack((dp_lag2, dp[-1], 0))  # As for dspt_forward
+    dp_lag2_forward = np.hstack((dp_lag2, delta_p[-1], 0))  # As for dspt_forward
 
     dspt_lag2_backward = np.hstack((1, dspt[0], dspt_lag2))
     # First backward step does not exist. Second backward step is only one step
 
-    dp_lag2_backward = np.hstack((0, dp[0], dp_lag2))  # As for dspt_backward
+    dp_lag2_backward = np.hstack((0, delta_p[0], dp_lag2))  # As for dspt_backward
 
     # Calculate the lag2 weighted derivative
     dpdspt_lag2_forward = dp_lag2_forward / dspt_lag2_forward
@@ -383,22 +385,20 @@ def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):
 
     """
 
-    fileh = open(filen, "w")
-
-    if header_list:
-        fileh.write(header_list[0])
-        for header in header_list[1:]:
-            fileh.write(sep + header)
-        fileh.write("\n")
-    for i in range(len(field_list[0][start:end])):
-        fileh.write("%0.10f" % field_list[0][i])
-        for field in field_list[1:]:
-            if len(field) != 0:
-                fileh.write(sep + "%0.10f" % field[i])
-            else:
-                fileh.write(sep)
-        fileh.write("\n")
-    fileh.close()
+    with open(filen, "w", encoding="utf8") as fileh:
+        if header_list:
+            fileh.write(header_list[0])
+            for header in header_list[1:]:
+                fileh.write(sep + header)
+            fileh.write("\n")
+        for idx in range(len(field_list[0][start:end])):
+            fileh.write(f"{field_list[0][idx]:0.10f}")
+            for field in field_list[1:]:
+                if len(field) != 0:
+                    fileh.write(sep + f"{field[idx]:0.10f}")
+                else:
+                    fileh.write(sep)
+            fileh.write("\n")
     print("Writing file:" + filen)
 
 
@@ -422,20 +422,20 @@ def genobs_vec(filen, vec, time):
     if not Path(filen).exists():
         raise FileNotFoundError("No such file:", filen)
 
-    df = pd.read_csv(filen, sep="\t")
-    obs_time = df["dTime"][1:None].dropna().to_numpy(dtype=float)
+    dframe = pd.read_csv(filen, sep="\t")
+    obs_time = dframe["dTime"][1:None].dropna().to_numpy(dtype=float)
 
     gen_data = np.zeros(len(obs_time))
 
     interp = interp1d(time, vec)
 
-    for i, t in enumerate(obs_time):
-        if t < time[0]:
-            gen_data[i] = vec[0]
-        elif t > time[-1]:
-            gen_data[i] = vec[-1]
+    for idx, timepoint in enumerate(obs_time):
+        if timepoint < time[0]:
+            gen_data[idx] = vec[0]
+        elif timepoint > time[-1]:
+            gen_data[idx] = vec[-1]
         else:
-            gen_data[i] = interp(t)
+            gen_data[idx] = interp(timepoint)
 
     return gen_data
 
@@ -503,26 +503,24 @@ def main():
     else:
         buildup_indices, buildup_end_indices = get_buildup_indices(wwpr)
 
-    print("Identified %d buildup periods:" % (len(buildup_indices)))
-    print("Starting at time steps:" + str(buildup_indices) + " Corresponding to:")
-    for i in buildup_indices:
-        print("  %0.5f Hours" % (time[i]))
-    print("Ending at time step:" + str(buildup_end_indices) + " Corresponding to: ")
-    for i in buildup_end_indices:
-        print("  %0.5f Hours" % (time[i]))
+    print(f"Identified {len(buildup_indices)} buildup periods:")
+    print(f"Starting at time steps: {buildup_indices} Corresponding to: ")
+    for idx in buildup_indices:
+        print(f"  {time[idx]:0.5f} Hours")
+    print(f"Ending at time step: {buildup_end_indices} Corresponding to: ")
+    for idx in buildup_end_indices:
+        print(f"  {time[idx]:0.5f} Hours")
 
     if buildup_nr > len(buildup_indices):
-        sys.stderr.write(
-            "There are %d build ups detected for well %s. You asked for nr %d\n"
-            % (len(buildup_indices), well_name, buildup_nr)
+        raise SystemExit(
+            f"There are {len(buildup_indices)} build ups detected "
+            f"for well {well_name}. You asked for nr {buildup_nr}."
         )
-        sys.exit(1)
-    else:
-        bu_start_ind = buildup_indices[buildup_nr - 1]
-        print(
-            "Selected buildup period is nr %d, starting at: %0.5f Hours"
-            % (buildup_nr, time[buildup_indices[buildup_nr - 1]])
-        )
+    bu_start_ind = buildup_indices[buildup_nr - 1]
+    print(
+        f"Selected buildup period is nr {buildup_nr}, "
+        f"starting at: {time[buildup_indices[buildup_nr - 1]]:0.5f} Hours"
+    )
     print()
 
     # Find end of buildup period.
@@ -535,7 +533,7 @@ def main():
     else:
         super_time = supertime(time, wwpr, bu_start_ind, bu_end_ind)
     # Calculate delta pressure             - lag 1 only
-    dp = np.diff(wbhp[bu_start_ind + 1 : bu_end_ind + 1])
+    delta_p = np.diff(wbhp[bu_start_ind + 1 : bu_end_ind + 1])
 
     # Calculate delta superpositioned time - lag 1 only
     dspt = np.diff(super_time)  # Supertime at Tn is not defined.
@@ -543,10 +541,10 @@ def main():
     # Cumulative time used from start of buildup
     cum_time = time[bu_start_ind + 1 : bu_end_ind + 1] - time[bu_start_ind]
 
-    dpdspt_weighted_lag1 = weighted_avg_press_time_derivative_lag1(dp, dspt)
+    dpdspt_weighted_lag1 = weighted_avg_press_time_derivative_lag1(delta_p, dspt)
 
     dpdspt_weighted_lag2 = weighted_avg_press_time_derivative_lag2(
-        dp, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
+        delta_p, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
     )
 
     if genobs_resultf:

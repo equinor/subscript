@@ -2,6 +2,7 @@ import argparse
 import io
 import logging
 import re
+from pathlib import Path
 from typing import List, Union
 
 import pandas as pd
@@ -122,7 +123,7 @@ def unify_dateformat(lines: List[str]) -> List[str]:
     Return:
         list: One string pr. line
     """
-    if any([line.startswith("*DAY *MONTH *YEAR") for line in lines]):
+    if any(line.startswith("*DAY *MONTH *YEAR") for line in lines):
         # Later: Allow any whitespace between the columns
         lines = [line.replace("*DAY *MONTH *YEAR", "*DATE") for line in lines]
         lines = [
@@ -242,6 +243,8 @@ def parse_well(well_lines: List[str], columnnames: List[str]) -> pd.DataFrame:
 
     data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
     if not data.empty:
+        # pylint: disable=E1101
+        # (false positive)
         return data.reset_index().set_index(["WELL", "DATE"]).sort_index()
     return pd.DataFrame()
 
@@ -277,7 +280,7 @@ def parse_ofmtable(
             skiprows=1,
             sep=r"\s+",
             names=columnnames,
-            on_bad_lines="skip",
+            on_bad_lines="skip",  # pylint: disable=unexpected-keyword-arg
         )
 
     data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
@@ -285,6 +288,8 @@ def parse_ofmtable(
     if "WELL" in data and "DATE" in data:
         data = data.set_index(["WELL", "DATE"]).sort_index()
     else:
+        # pylint: disable=no-member
+        # (false positive)
         data = data.set_index(["DATE"]).sort_index()
     return data
 
@@ -299,9 +304,7 @@ def process_volfile(filename: str) -> pd.DataFrame:
         Dataframe indexed by WELL and DATE.
     """
     logger.info("Parsing file %s", filename)
-    with open(filename) as file_h:
-        volstr = "\n".join(file_h.readlines())
-    dframe = process_volstr(volstr)
+    dframe = process_volstr(Path(filename).read_text(encoding="utf8"))
     if dframe.empty:
         logger.warning("No data extracted from %s", filename)
     return dframe

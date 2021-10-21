@@ -1,5 +1,6 @@
 import argparse
 import logging
+from pathlib import Path
 from typing import List, Set, Tuple, Union
 
 import dateutil.parser
@@ -114,9 +115,7 @@ def parse_diff_dates(filename: str) -> List[Tuple[str, str]]:
     """
     outputdateformat = "%Y%m%d"  # For xtgeo compatibility
 
-    with open(filename, "r") as f_handle:
-        lines = f_handle.readlines()
-
+    lines = Path(filename).read_text(encoding="utf8").splitlines()
     lines = [line for line in lines if line.strip()]
     lines = [line.strip() for line in lines]
     lines = [line for line in lines if not line.startswith("--")]
@@ -126,7 +125,7 @@ def parse_diff_dates(filename: str) -> List[Tuple[str, str]]:
     for line in lines:
         line_components = line.split()
         if len(line_components) != 2:
-            raise ValueError("Could not parse dateline {}".format(line))
+            raise ValueError(f"Could not parse dateline {line}")
         datelist.append(
             (
                 dateutil.parser.parse(line_components[0]).strftime(outputdateformat),
@@ -170,20 +169,16 @@ def ecldiff2roff_main(
 
     supp_datefmts = {"YYYYMMDD": "%Y%m%d", "YYYY-MM-DD": "%Y-%m-%d"}
     if datefmt not in supp_datefmts:
-        raise ValueError("Requested dateformat not supported {}".format(datefmt))
+        raise ValueError(f"Requested dateformat not supported {datefmt}")
 
     for date_pair in diffdates:
-        prop1 = ecl_grid.get_prop_by_name("{}_{}".format(prop, date_pair[0]))
+        prop1 = ecl_grid.get_prop_by_name(f"{prop}_{date_pair[0]}")
         if prop1 is None or prop1.values is None:
-            raise ValueError(
-                "Could not extract {} at date {}".format(prop, date_pair[0])
-            )
+            raise ValueError(f"Could not extract {prop} at date {date_pair[0]}")
 
-        prop2 = ecl_grid.get_prop_by_name("{}_{}".format(prop, date_pair[1]))
+        prop2 = ecl_grid.get_prop_by_name(f"{prop}_{date_pair[1]}")
         if prop2 is None or prop2.values is None:
-            raise ValueError(
-                "Could not extract {} at date {}".format(prop, date_pair[1])
-            )
+            raise ValueError(f"Could not extract {prop} at date {date_pair[1]}")
 
         logger.info(
             "Computing difference for property %s between dates %s and %s",
