@@ -239,6 +239,8 @@ def datetime_from_date(
     date: Union[str, datetime.datetime, datetime.date]
 ) -> datetime.datetime:
     """Set time to 00:00:00 in a date"""
+    if isinstance(date, datetime.date):
+        return date
     if isinstance(date, str):
         raise ValueError(f"Is the string {date} a date?")
     return datetime.datetime.combine(date, datetime.datetime.min.time())
