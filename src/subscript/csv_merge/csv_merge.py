@@ -127,8 +127,9 @@ Do not assume anything on the ordering of columns after merging.
         help="Name of column containing original filename",
         default="FILENAME",
     )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     parser.add_argument(
-        "-v", "--verbose", action="store_true", help="More verbose output"
+        "--debug", action="store_true", help="Debug output, more verbose than --verbose"
     )
     parser.add_argument(
         "--version",
@@ -205,10 +206,12 @@ def merge_csvfiles(
     else:
         logger.info("Loading all CSV files into memory before merging")
         dfs = []
+        loaded_files = 0
         for csvfile in csvfiles:
-            logger.info(" - Loading %s", csvfile)
+            logger.debug(" - Loading %s", csvfile)
             try:
                 dfs.append(pd.read_csv(csvfile))
+                loaded_files += 1
             except pd.errors.EmptyDataError:
                 logger.warning("Empty file %s, ignored", csvfile)
                 dfs.append(pd.DataFrame())
@@ -226,7 +229,7 @@ def merge_csvfiles(
                     logger.warning(
                         "Could not use tag %s, insufficient length", str(tag)
                     )
-        logger.info("Merging..")
+        logger.info("Merging %d files..", loaded_files)
         merged_df = pd.concat(dfs, axis=0, ignore_index=True, sort=False)
     return merged_df
 
@@ -254,6 +257,8 @@ def main() -> None:
 
     if args.verbose:
         logger.setLevel(logging.INFO)
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
 
     csv_merge_main(
         csvfiles=args.csvfiles,

@@ -81,9 +81,7 @@ def test_main_merge(tmp_path, mocker):
         columns=["REAL", "BAR", "CONST"], data=[[0, 30, 1], [1, 40, 1]]
     ).to_csv(test_csv_2, index=False)
 
-    mocker.patch(
-        "sys.argv", ["csv_merge", test_csv_1, test_csv_2, "-v", "-o", merged_csv]
-    )
+    mocker.patch("sys.argv", ["csv_merge", test_csv_1, test_csv_2, "-o", merged_csv])
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
 
@@ -101,7 +99,6 @@ def test_main_merge(tmp_path, mocker):
             test_csv_1,
             test_csv_2,
             "--dropconstantcolumns",
-            "-v",
             "-o",
             merged_csv,
         ],
@@ -121,7 +118,6 @@ def test_main_merge(tmp_path, mocker):
             test_csv_1,
             test_csv_2,
             "--memoryconservative",
-            "-v",
             "-o",
             merged_csv,
         ],
@@ -140,7 +136,6 @@ def test_main_merge(tmp_path, mocker):
             test_csv_2,
             "--filecolumn",
             "FILETYPE",
-            "-v",
             "-o",
             merged_csv,
         ],
@@ -149,6 +144,49 @@ def test_main_merge(tmp_path, mocker):
     merged = pd.read_csv(merged_csv)
     assert "FILETYPE" in merged
     assert set(merged["FILETYPE"].unique()) == set([test_csv_1, test_csv_2])
+
+
+@pytest.mark.parametrize(
+    "options, expected, not_expected",
+    [
+        ([], None, "writing to merged.csv"),
+        (["--verbose"], "writing to merged.csv", "Loading foo.csv"),
+        (["-v"], "writing to merged.csv", "Loading foo.csv"),
+        (["--debug"], "Loading foo.csv", None),
+        (["-v", "--debug"], "Loading foo.csv", None),
+        (["--debug", "-v"], "Loading foo.csv", None),
+    ],
+)
+def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
+    """Check that --verbose and --debug on the command line works as expected.
+
+    Warning: This test is fragile if the other test functions manipulate
+    the loglevel"""
+    os.chdir(tmp_path)
+    pd.DataFrame(
+        columns=["REAL", "FOO", "CONST"], data=[[0, 10, 1], [1, 20, 1]]
+    ).to_csv("foo.csv", index=False)
+    pd.DataFrame(
+        columns=["REAL", "BAR", "CONST"], data=[[0, 30, 1], [1, 40, 1]]
+    ).to_csv("bar.csv", index=False)
+    mocker.patch(
+        "sys.argv",
+        ["csv_merge", "foo.csv", "bar.csv" "--filecolumn", "FILETYPE"]
+        + options
+        + [
+            "-o",
+            "merged.csv",
+        ],
+    )
+    csv_merge.main()
+    output = caplog.text
+    if not options:
+        # By default, it is a very quiet script.
+        assert output == ""
+    else:
+        assert expected in output
+    if not_expected is not None:
+        assert not_expected not in output
 
 
 def test_empty_files(tmp_path):
