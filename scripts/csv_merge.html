@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSV_MERGE &mdash; subscript 0.14.1.dev1+g01bd87cf documentation</title>
+  <title>CSV_MERGE &mdash; subscript 0.14.1.dev2+g77b0e612 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -32,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.1.dev1+g01bd87cf
+                0.14.1.dev2+g77b0e612
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -125,7 +125,7 @@ resulting dataset where they don’t exist.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv_merge</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">memoryconservative</span><span class="p">]</span>
                  <span class="p">[</span><span class="o">--</span><span class="n">dropconstantcolumns</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">filecolumn</span> <span class="n">FILECOLUMN</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
-                 <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+                 <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                  <span class="n">csvfiles</span> <span class="p">[</span><span class="n">csvfiles</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -157,7 +157,11 @@ resulting dataset where they don’t exist.</p>
 <p>Default: “FILENAME”</p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
-<dd><p>More verbose output</p>
+<dd><p>Verbose output</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--debug</kbd></dt>
+<dd><p>Debug output, more verbose than –verbose</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
