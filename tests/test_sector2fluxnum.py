@@ -41,9 +41,9 @@ def test_main_test(tmp_path, mocker):
     assert Path("USEFLUX_TEST.DATA").exists()
 
 
-def test_main_test_fipnum(tmpdir, mocker):
+def test_main_test_fipnum(tmp_path, mocker):
     """Test the --fipnum command line argument"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     input_ECL_CASE = TESTDATA / "TEST.DATA"
     input_OUTPUT_FLUX = "OUT_COARSE.FLUX"

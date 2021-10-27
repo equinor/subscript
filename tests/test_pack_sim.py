@@ -21,9 +21,9 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test invocation from command line"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafilepath), "."])
@@ -36,8 +36,8 @@ def test_main(tmpdir, mocker):
     assert Path("include/swof.inc").exists()
 
 
-def test_main_fmu(tmpdir, mocker):
-    tmpdir.chdir()
+def test_main_fmu(tmp_path, mocker):
+    os.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafilepath), ".", "--fmu"])
@@ -51,8 +51,8 @@ def test_main_fmu(tmpdir, mocker):
     assert Path("include/props/reek.pvt").exists()
 
 
-def test_repeated_run(tmpdir, mocker):
-    tmpdir.chdir()
+def test_repeated_run(tmp_path, mocker):
+    os.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafilepath), ".", "--fmu"])
@@ -80,8 +80,8 @@ def test_repeated_run(tmpdir, mocker):
         ("RESTART", "WARNING: THE SIMULATION POSSIBLY DEPENDS ON A RESTART FILE"),
     ],
 )
-def test_restart_warning(injected, expectedwarning, tmpdir, mocker, capsys):
-    tmpdir.chdir()
+def test_restart_warning(injected, expectedwarning, tmp_path, mocker, capsys):
+    os.chdir(tmp_path)
 
     shutil.copytree(ECLDIR.parent / "include", "include", copy_function=os.symlink)
     shutil.copytree(ECLDIR.parent / "model", "model", copy_function=os.symlink)
@@ -100,10 +100,10 @@ def test_restart_warning(injected, expectedwarning, tmpdir, mocker, capsys):
     assert expectedwarning in captured.out
 
 
-def test_binary_file_detection(tmpdir):
+def test_binary_file_detection(tmp_path):
     """Test that binary files are found and handled correctly"""
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     packing_path = Path("packed")
     tmp_data_file = Path("TMP.DATA")
@@ -120,10 +120,10 @@ def test_binary_file_detection(tmpdir):
     )
 
 
-def test_empty_file_inspection(tmpdir):
+def test_empty_file_inspection(tmp_path):
     """Test that an empty include file is inspected correctly"""
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     empty_include_file = Path("empty.inc")
 
@@ -140,9 +140,9 @@ def test_empty_file_inspection(tmpdir):
     assert len(include_text) == 0
 
 
-def test_strip_comments(tmpdir, mocker):
+def test_strip_comments(tmp_path, mocker):
     """Test that we can strip comments"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     size_with_comments = os.stat(datafilepath).st_size
@@ -164,9 +164,9 @@ def test_replace_paths():
     assert "include" in str(transformed_str)
 
 
-def test_get_paths(tmpdir):
+def test_get_paths(tmp_path):
     """Test that we can obtain the PATHS keyword from a deck"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     file_with_path = Path("pathfile")
     Path("somepath").mkdir()
     file_with_path.write_text("PATHS\n  'IDENTIFIER' 'somepath'/\n")
@@ -212,9 +212,9 @@ def test_remove_comments():
     assert "--" in pack_sim._remove_comments(False, test_str)
 
 
-def test_md5sum(tmpdir):
+def test_md5sum(tmp_path):
     """Check md5sum computations from files"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     test_str = "foo bar com"
     with open("foo.txt", "w") as fhandle:
         fhandle.write(test_str)
@@ -226,9 +226,9 @@ def test_md5sum(tmpdir):
     int(pack_sim._md5checksum("foo.txt"), 16)
 
 
-def test_utf8(tmpdir):
+def test_utf8(tmp_path):
     """Test that no errors are triggered when UTF-8 input is provided"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     datafile_str = """RUNSPEC
 TITLE
 Smørbukk Sør

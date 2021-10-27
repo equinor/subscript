@@ -106,13 +106,13 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmpdir):
+def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
     """If SWL is set higher than SWATINIT, both Eclipse and flow
     truncates SWAT to SWL.
 
     QC category is "Water gained"
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(cells=1, apex=1000, owc=[2000], swatinit=[0.3], swl=[0.5])
     qc_frame = run_reservoir_simulator(simulator, model)
     assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
@@ -135,13 +135,13 @@ def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swat_limited_by_ppcwmax_above_contact(simulator, tmpdir):
+def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
     """Test PPCWMAX far above contact. This keyword is only supported by Eclipse100
     and will be ignored by flow.
 
     This leads to water being lost from SWATINIT to SWAT.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     swatinit = 0.8
     model = PillarModel(
         cells=1, apex=1000, owc=[1100], swatinit=[swatinit], ppcwmax=[3.01]
@@ -194,13 +194,13 @@ def test_swat_limited_by_ppcwmax_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_accepted_swatinit_slightly_above_contact(simulator, tmpdir):
+def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
     """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will be applied
     some meters above the contact
 
     QC-wise, these cells will not be flagged, but contribute to average PC_SCALING
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[1020], swatinit=[0.5], swl=[0.0], maxpc=[3.0]
     )
@@ -237,11 +237,11 @@ def test_accepted_swatinit_slightly_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_accepted_swatinit_far_above_contact(simulator, tmpdir):
+def test_accepted_swatinit_far_above_contact(simulator, tmp_path):
     """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will be applied
     far above the contact
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[1100], swatinit=[0.1], swl=[0.0], maxpc=[3.0]
     )
@@ -283,12 +283,12 @@ def test_accepted_swatinit_far_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_accepted_swatinit_in_gas(simulator, tmpdir):
+def test_accepted_swatinit_in_gas(simulator, tmp_path):
     """Repeat the test above, but with a gas-oil contact below the reservoir cell
 
     This gives higher capillary pressure (larger scaling) in the single reservoir cell.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         phases=["OIL", "WATER", "GAS"],
@@ -323,7 +323,7 @@ def test_accepted_swatinit_in_gas(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swatinit_1_far_above_contact(simulator, tmpdir):
+def test_swatinit_1_far_above_contact(simulator, tmp_path):
     """If SWATINIT is 1 far above the contact, we are in an unstable
     situation (water should not be mobile e.g)
 
@@ -336,7 +336,7 @@ def test_swatinit_1_far_above_contact(simulator, tmpdir):
     the SWOF table and the relevant Pc pressure, and since that Pc curve
     is not touched by SWATINIT, SWAT becomes SWL far above contact.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[2000], swatinit=[1], swl=[0.1], maxpc=[3.0]
     )
@@ -383,13 +383,13 @@ def test_swatinit_1_far_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swatinit_1_slightly_above_contact(simulator, tmpdir):
+def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     """If we are slightly above the contact, item 9 in EQUIL plays
     a small role.
 
     SWATINIT=1 is still ignored above contact, Pc curve is left untouched.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[1030], swatinit=[1], swl=[0.1], oip_init=0
     )
@@ -429,11 +429,11 @@ def test_swatinit_1_slightly_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_capillary_entry_pressure(simulator, tmpdir):
+def test_capillary_entry_pressure(simulator, tmp_path):
     """With some capillary entry pressure, we should have SWATINIT=1 some
     distance above the contact and also SWAT=1 there. Above the capillary entry
     pressure, both swat and swatinit should be less than 1."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     if "flow" in simulator:
         pc_25m_above_contact = 0.373919
@@ -462,9 +462,9 @@ def test_capillary_entry_pressure(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_below_capillary_entry_pressure(simulator, tmpdir):
+def test_below_capillary_entry_pressure(simulator, tmp_path):
     """Test what we get below the capillary entry pressure"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     if "flow" in simulator:
         pc_10m_above_contact = 0.150006
@@ -491,7 +491,7 @@ def test_below_capillary_entry_pressure(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swatinit_almost1_slightly_above_contact(simulator, tmpdir):
+def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
     """The result is discontinuous close to swatinit=1 for Eclipse100, because
     at swatinit = 1 - epsilon, Eclipse will try to scale  the capillary
     pressure, and is only limited by PPCWMAX (but not in this test).
@@ -499,7 +499,7 @@ def test_swatinit_almost1_slightly_above_contact(simulator, tmpdir):
     flow is not discontinuous in SWAT as a function of SWATINIT, but in PPCW as a
     function of SWATINIT.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     if "flow" in simulator:
         p_cap = 0.37392
@@ -520,11 +520,11 @@ def test_swatinit_almost1_slightly_above_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swatinit_less_than_1_below_contact(simulator, tmpdir):
+def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
     """SWATINIT below the contact is ignored, and SWAT is set based on the
     input SWOF table. In water-wet system (pc>0), this always yields SWAT=1
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(cells=1, apex=1000, owc=[900], swatinit=[0.7], swl=[0.1])
     qc_frame = run_reservoir_simulator(simulator, model)
     qc_vols = qc_volumes(qc_frame)
@@ -548,7 +548,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmpdir):
+def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
     """For an oil-wet system, there can be oil below free water level.
 
     Flow will set water saturation to 1 no questions asked. Bug?
@@ -556,7 +556,7 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmpdir):
     Eclipse ignores SWATINIT but calculates SWAT based on the input
     Pc-curve, and can thus give SWAT<1 if pc_min < 0.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -606,12 +606,12 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swu(simulator, tmpdir):
+def test_swu(simulator, tmp_path):
     """Test SWATINIT < SWU < 1.
 
     Both flow and Eclipse will scale the PC curve according to
     SWU and SWATINIT."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=900,  # pc is around 1.443238 here.
@@ -635,7 +635,7 @@ def test_swu(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swu_equal_swatinit(simulator, tmpdir):
+def test_swu_equal_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
     Eclipse will ignore SWATINIT because it is equal to SWU.
@@ -663,7 +663,7 @@ def test_swu_equal_swatinit(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swu_lessthan_swatinit(simulator, tmpdir):
+def test_swu_lessthan_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT
 
     In Eclipse this looks like the same situation as SWATINIT_1,
@@ -696,9 +696,9 @@ def test_swu_lessthan_swatinit(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swatinit_1_below_contact(simulator, tmpdir):
+def test_swatinit_1_below_contact(simulator, tmp_path):
     """An all-good scenario, below contact, water-wet, ask for water, we get water."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -722,9 +722,9 @@ def test_swatinit_1_below_contact(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swlpc_trunc(simulator, tmpdir):
+def test_swlpc_trunc(simulator, tmp_path):
     """SWAT truncated by SWLPC is the same as being truncated by SWL"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -744,10 +744,10 @@ def test_swlpc_trunc(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swlpc_correcting_swl(simulator, tmpdir):
+def test_swlpc_correcting_swl(simulator, tmp_path):
     """SWLPC should be allowed to override SWL, so that
     if an SWL value would trigger SWL_TRUNC, we can save the day by SWLPC"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -767,9 +767,9 @@ def test_swlpc_correcting_swl(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swlpc_scaling(simulator, tmpdir):
+def test_swlpc_scaling(simulator, tmp_path):
     """Test that PC is scaled differently when SWLPC is included"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -800,10 +800,10 @@ def test_swlpc_scaling(simulator, tmpdir):
 
 @pytest.mark.parametrize("simulator", filter(None, [find_eclipse_simulator()]))
 # Gas-water is not supported by flow.
-def test_pc_scaled_above_gwc(simulator, tmpdir):
+def test_pc_scaled_above_gwc(simulator, tmp_path):
     """Test a two-phase gas-water problem, scaled capillary pressure above contact"""
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         phases=["WATER", "GAS"],
@@ -820,9 +820,9 @@ def test_pc_scaled_above_gwc(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_ppcwmax_gridvector(simulator, tmpdir):
+def test_ppcwmax_gridvector(simulator, tmp_path):
     """Test that ppcwmax_gridvector maps ppcwmax values correctly in the grid"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=3,
         owc=[1050],
@@ -845,9 +845,9 @@ def test_ppcwmax_gridvector(simulator, tmpdir):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_ppcwmax_gridvector_eqlnum(simulator, tmpdir):
+def test_ppcwmax_gridvector_eqlnum(simulator, tmp_path):
     """Test that ppcwmax unrolling also works with EQLNUM (historical bug)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=3,
         satnum=[2, 1, 2],
@@ -861,9 +861,9 @@ def test_ppcwmax_gridvector_eqlnum(simulator, tmpdir):
     assert qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique() == [0.02]
 
 
-def test_no_swatinit(tmpdir, mocker, caplog):
+def test_no_swatinit(tmp_path, mocker, caplog):
     """Test what check_swatinit does on a case not initialized by SWATINIT"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(swatinit=[None])
     run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
@@ -871,9 +871,9 @@ def test_no_swatinit(tmpdir, mocker, caplog):
     assert "INIT-file/deck does not have SWATINIT" in caplog.text
 
 
-def test_no_filleps(tmpdir, mocker, caplog):
+def test_no_filleps(tmp_path, mocker, caplog):
     """Test the output when we don't have SWL (FILLEPS is needed)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(filleps="")
     run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
@@ -882,9 +882,9 @@ def test_no_filleps(tmpdir, mocker, caplog):
     assert "FILLEPS" in caplog.text
 
 
-def test_no_unrst(tmpdir, mocker):
+def test_no_unrst(tmp_path, mocker):
     """Test what happens when there is no restart file with SWAT[0]"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel()
     run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
     os.unlink("FOO.UNRST")
@@ -893,9 +893,9 @@ def test_no_unrst(tmpdir, mocker):
         main()
 
 
-def test_no_rptrst(tmpdir, mocker):
+def test_no_rptrst(tmp_path, mocker):
     """Test what happens when RPTRST is not included, no UNRST"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(rptrst="")
     run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
@@ -904,9 +904,9 @@ def test_no_rptrst(tmpdir, mocker):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_rptrst_basic_1(simulator, tmpdir, mocker):
+def test_rptrst_basic_1(simulator, tmp_path, mocker):
     """Test what happens when RPTRST is BASIC=1"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(rptrst="BASIC=1")
     run_reservoir_simulator(simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
@@ -914,18 +914,18 @@ def test_rptrst_basic_1(simulator, tmpdir, mocker):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_rptrst_allprops(simulator, tmpdir, mocker):
+def test_rptrst_allprops(simulator, tmp_path, mocker):
     """Test what happens when RPTRST is ALLPROPS (which probably implies BASIC=1)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(rptrst="ALLPROPS")
     run_reservoir_simulator(simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     main()  # No exceptions.
 
 
-def test_no_unifout(tmpdir, mocker):
+def test_no_unifout(tmp_path, mocker):
     """Test what happens when UNIFOUT is not included"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     model = PillarModel(unifout="")
     run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])

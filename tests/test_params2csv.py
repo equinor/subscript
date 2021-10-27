@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -7,9 +8,9 @@ import pytest
 from subscript.params2csv import params2csv
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test invocation from command line"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("parameters1.txt").write_text(
         "\n".join(["FOO     100", "BAR com", "BOGUS", "CONSTANT 1"])
     )
@@ -63,10 +64,10 @@ def test_main(tmpdir, mocker):
     assert set(result["filename"].values) == set(["parameters1.txt", "parameters2.txt"])
 
 
-def test_spaces_in_values(tmpdir, mocker):
+def test_spaces_in_values(tmp_path, mocker):
     """Test that we support spaces in values in parameters.txt
     if they are quoted properly"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("parameters.txt").write_text('somekey "value with spaces"')
     # Single-qoutes:
     Path("parameters2.txt").write_text("somekey 'value with spaces'")
@@ -78,9 +79,9 @@ def test_spaces_in_values(tmpdir, mocker):
     assert result["somekey"].values[0] == "value with spaces"
 
 
-def test_spaces_in_values_single_quotes(tmpdir, mocker):
+def test_spaces_in_values_single_quotes(tmp_path, mocker):
     """Test that single quotes can also be used to support spaces in values"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("parameters.txt").write_text('somekey "value with spaces"')
 
     mocker.patch("sys.argv", ["params2csv", "--keepconstantcolumns", "parameters.txt"])

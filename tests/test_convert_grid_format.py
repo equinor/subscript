@@ -29,10 +29,10 @@ RFILE2 = (
 )
 
 
-def test_convert_grid_format_egrid(tmpdir, mocker):
+def test_convert_grid_format_egrid(tmp_path, mocker):
     """Convert an ECLIPSE egrid to roff"""
 
-    outfile = tmpdir / "reek_grid.roff"
+    outfile = tmp_path / "reek_grid.roff"
 
     mocker.patch(
         "sys.argv",
@@ -54,10 +54,10 @@ def test_convert_grid_format_egrid(tmpdir, mocker):
     assert geogrid.nactive == 35817
 
 
-def test_convert_grid_format_restart(tmpdir, mocker):
+def test_convert_grid_format_restart(tmp_path, mocker):
     """Convert an ECLIPSE SOIL from restart to roff"""
 
-    outfile = tmpdir / "reek_grid.roff"
+    outfile = tmp_path / "reek_grid.roff"
 
     mocker.patch(
         "sys.argv",
@@ -78,9 +78,9 @@ def test_convert_grid_format_restart(tmpdir, mocker):
     )
     cgf.main()
 
-    actual_outfile = tmpdir / "reek_grid--soil--20000701.roff"
+    actual_outfile = tmp_path / "reek_grid--soil--20000701.roff"
 
-    gprop = xtgeo.GridProperty(str(actual_outfile))
+    gprop = xtgeo.gridproperty_from_file(actual_outfile)
 
     assert gprop.values.mean() == pytest.approx(0.0857, abs=0.001)
 
@@ -107,10 +107,10 @@ def test_convert_grid_format_restart(tmpdir, mocker):
         ),
     ],
 )
-def test_datesfile(dates, date_mode, expected_files, tmpdir, mocker):
+def test_datesfile(dates, date_mode, expected_files, tmp_path, mocker):
     """Test invocation with a filename to the dates"""
 
-    outfile = tmpdir / "reek_grid.roff"
+    outfile = tmp_path / "reek_grid.roff"
 
     assert date_mode in {"space", "colon", "file"}
 
@@ -145,7 +145,7 @@ def test_datesfile(dates, date_mode, expected_files, tmpdir, mocker):
     )
     cgf.main()
     for expected_file in expected_files:
-        assert (tmpdir / expected_file).exists()
+        assert (tmp_path / expected_file).exists()
 
 
 @pytest.mark.integration

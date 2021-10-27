@@ -1,4 +1,5 @@
 import datetime
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -385,9 +386,9 @@ def test_main(datadir, mocker):
     assert sum(["*OIL" in line for line in vollines]) == 1
 
 
-def test_emptyfile(tmpdir):
+def test_emptyfile(tmp_path):
     """Verify behaviour on empty input"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     # All empty file.
     Path("empty.csv").write_text("")
     with pytest.raises(pd.errors.EmptyDataError):
@@ -413,9 +414,9 @@ def test_emptyfile(tmpdir):
 
 
 @pytest.fixture
-def datadir(tmpdir):
+def datadir(tmp_path):
     """Prepare a tmp directory with some example data preloaded"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     PRODDATA_A3.to_csv("prodA3.csv", index=False)
     PRODDATA_A4.to_csv("prodA4.csv", index=False)
     yield

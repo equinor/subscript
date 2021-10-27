@@ -1,4 +1,5 @@
 """Test module for csv_stack"""
+import os
 import re
 import subprocess
 import sys
@@ -150,12 +151,12 @@ def test_csv_stack_all():
 
 
 @pytest.mark.integration
-def test_commandlinetool(tmpdir, mocker):
+def test_commandlinetool(tmp_path, mocker):
     """Test command line interface for csv_stack"""
 
     assert subprocess.check_output(["csv_stack", "-h"])  # nosec
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TESTFRAME.to_csv("testframe.csv", index=False)
 
     mocker.patch("sys.argv", ["csv_stack", "testframe.csv", "-o", "stacked.csv"])
@@ -214,9 +215,9 @@ def test_commandlinetool(tmpdir, mocker):
     reason="Requires Python 3.7 or higher (subprocess-capture-output)",
 )
 @pytest.mark.parametrize("verbose", [False, True])
-def test_csv_stack_verbose(tmpdir, verbose):
+def test_csv_stack_verbose(tmp_path, verbose):
     """Test that --verbose gives INFO logging to stdout"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TESTFRAME.to_csv("testframe.csv", index=False)
 
     commands = ["csv_stack", "testframe.csv", "--output", "stacked.csv"]
@@ -236,9 +237,9 @@ def test_csv_stack_verbose(tmpdir, verbose):
     sys.version_info < (3, 7),
     reason="Requires Python 3.7 or higher (subprocess-capture-output)",
 )
-def test_csv_stack_stdout(tmpdir):
+def test_csv_stack_stdout(tmp_path):
     """Test that csv output can be dumped to stdout"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TESTFRAME.to_csv("testframe.csv", index=False)
     commands = ["csv_stack", "testframe.csv", "--output", csv_stack.__MAGIC_STDOUT__]
     result = subprocess.run(commands, check=True, capture_output=True)
@@ -249,11 +250,11 @@ def test_csv_stack_stdout(tmpdir):
 
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
-def test_ert_forward_model(tmpdir):
+def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     with open("FOO.DATA", "w") as file_h:
         file_h.write("--Empty")
@@ -279,11 +280,11 @@ def test_ert_forward_model(tmpdir):
 
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
-def test_ert_forward_model_keepminimal(tmpdir):
+def test_ert_forward_model_keepminimal(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     with open("FOO.DATA", "w") as file_h:
         file_h.write("--Empty")
@@ -312,11 +313,11 @@ def test_ert_forward_model_keepminimal(tmpdir):
 
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
-def test_ert_forward_model_keepconstants(tmpdir):
+def test_ert_forward_model_keepconstants(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     with open("FOO.DATA", "w") as file_h:
         file_h.write("--Empty")
@@ -345,9 +346,9 @@ def test_ert_forward_model_keepconstants(tmpdir):
 
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
-def test_csv_stack_ert_workflow(tmpdir):
+def test_csv_stack_ert_workflow(tmp_path):
     """Test that CSV_STACK can be run as an ERT workflow/plugin"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     csvfile = "some_ensemble/share/results/tables/unsmry--monthly.csv"
     Path(csvfile).parent.mkdir(parents=True)

@@ -2,8 +2,9 @@
 
 They all parse and transform the data into the internal dataframe
 representation."""
-
 import datetime
+import os
+from pathlib import Path
 
 import pandas as pd
 import pytest
@@ -26,9 +27,9 @@ from subscript.fmuobs.parsers import (
 from subscript.fmuobs.writers import df2ertobs, df2obsdict
 
 
-def test_expand_includes(tmpdir):
+def test_expand_includes(tmp_path):
     """Test that include <filename> statements can be resolved"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     with open("foo.txt", "w") as f_handle:
         f_handle.write("foo;")
     assert expand_includes("hallo; include foo.txt; hei") == "hallo; foo; hei"
@@ -42,7 +43,7 @@ def test_expand_includes(tmpdir):
     )
 
     # Test relative directory support:
-    tmpdir.mkdir("subdir")
+    Path("subdir").mkdir()
     with open("subdir/leaf.txt", "w") as f_handle:
         f_handle.write("foo;")
     assert (

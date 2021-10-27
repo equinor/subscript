@@ -1,5 +1,6 @@
 """Test the merge_schedule application, which is just another command-line
 frontend to sunsch"""
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -19,11 +20,11 @@ def test_integration():
 
 
 @pytest.fixture
-def datadir(tmpdir):
+def datadir(tmp_path):
     """A fixture that provides selected input files, copied from sunsch's
     testdata"""
     testdatadir = Path(__file__).absolute().parent / "testdata_sunsch"
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     wanted_files = ["mergeme.sch", "initwithdates.sch", "merge2.sch"]
     for filename in wanted_files:
         shutil.copy(testdatadir / filename, filename)

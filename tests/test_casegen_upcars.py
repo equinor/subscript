@@ -1,4 +1,5 @@
 """Test that casegen_upcars is installed and launched with given demo cases"""
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -19,11 +20,10 @@ def test_installed():
     assert subprocess.check_output(["casegen_upcars", "-h"])
 
 
-def test_demo_small_scale(tmpdir, mocker):
+def test_demo_small_scale(tmp_path, mocker):
     """Test casegen_upcars on demo_small_scale.yaml"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_SMALL"
     mocker.patch(
@@ -59,11 +59,10 @@ def test_demo_small_scale(tmpdir, mocker):
     assert data_frame.Values["poro"] == 0.0912
 
 
-def test_demo_small_scale_with_no_streaks(tmpdir, mocker):
+def test_demo_small_scale_with_no_streaks(tmp_path, mocker):
     """Test casegen_upcars on demo_small_scale.yaml"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_SMALL_NO_STREAKS"
     mocker.patch(
@@ -99,11 +98,10 @@ def test_demo_small_scale_with_no_streaks(tmpdir, mocker):
     assert data_frame.Values["poro"] == 0.0912
 
 
-def test_demo_small_scale_with_vugs(tmpdir, mocker):
+def test_demo_small_scale_with_vugs(tmp_path, mocker):
     """Test casegen_upcars on demo_small_scale.yaml with random vugs"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_SMALL_WITH_VUGS"
     mocker.patch(
@@ -148,11 +146,10 @@ def test_demo_small_scale_with_vugs(tmpdir, mocker):
     assert data_frame.Values["poro"] == 0.1749
 
 
-def test_demo_large_scale(tmpdir, mocker):
+def test_demo_large_scale(tmp_path, mocker):
     """Test casegen_upcars on demo_large_scale.yaml"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_LARGE"
     mocker.patch(
@@ -188,11 +185,10 @@ def test_demo_large_scale(tmpdir, mocker):
     assert data_frame.Values["poro"] == 0.1711
 
 
-def test_demo_large_scale_with_coordinate_transformation(tmpdir, mocker):
+def test_demo_large_scale_with_coordinate_transformation(tmp_path, mocker):
     """Test casegen_upcars on demo_large_scale.yaml with coordinate transformation"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_LARGE_WITH_TRANFORMATION"
     mocker.patch(
@@ -237,11 +233,10 @@ def test_demo_large_scale_with_coordinate_transformation(tmpdir, mocker):
     assert data_frame.Values["rotation"] == 15.0
 
 
-def test_demo_large_scale_with_cmdline_streaks(tmpdir, mocker):
+def test_demo_large_scale_with_cmdline_streaks(tmp_path, mocker):
     """Test casegen_upcars on demo_large_scale.yaml with some streaks"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_LARGE_WITH_STREAKS"
     mocker.patch(
@@ -287,11 +282,10 @@ def test_demo_large_scale_with_cmdline_streaks(tmpdir, mocker):
     assert data_frame.Values["rotation"] == 0.0
 
 
-def test_demo_large_scale_with_cmdline_throws(tmpdir, mocker):
+def test_demo_large_scale_with_cmdline_throws(tmp_path, mocker):
     """Test casegen_upcars on demo_large_scale.yaml with throw"""
-    tmpdir.chdir()
-    shutil.copytree(DATADIR, TESTDATA)
-    tmpdir.join(TESTDATA).chdir()
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
 
     base_name = "TEST_LARGE_WITH_THROW"
     mocker.patch(

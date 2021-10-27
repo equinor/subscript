@@ -76,9 +76,9 @@ def test_integration():
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
-def test_main_initcase(tmpdir, mocker):
+def test_main_initcase(tmp_path, mocker):
     """Test well data generation from init case"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")
@@ -93,9 +93,9 @@ def test_main_initcase(tmpdir, mocker):
     not has_resinsight(),
     reason="Could not find a ResInsight executable",
 )
-def test_main_inputcase(tmpdir, mocker):
+def test_main_inputcase(tmp_path, mocker):
     """Test well data generation from input case"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     grid_name = str(DATAPATH / "drogon_include/grid/drogon.grid.grdecl")
@@ -124,9 +124,9 @@ def test_main_inputcase(tmpdir, mocker):
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
-def test_drogon_mswdef(tmpdir, mocker):
+def test_drogon_mswdef(tmp_path, mocker):
     """Test multi-segment well data generation"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")
@@ -145,9 +145,9 @@ def test_drogon_mswdef(tmpdir, mocker):
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
-def test_drogon_lgr(tmpdir, mocker):
+def test_drogon_lgr(tmp_path, mocker):
     """Test creation of LGR"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM_LGR")
@@ -167,9 +167,9 @@ def test_drogon_lgr(tmpdir, mocker):
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 @pytest.mark.skipif(not has_display(), reason="Requires X display")
-def test_main_lgr_cmdline(tmpdir, mocker):
+def test_main_lgr_cmdline(tmp_path, mocker):
     """Test creation of LGR"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")
@@ -204,11 +204,11 @@ def test_main_lgr_cmdline(tmpdir, mocker):
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT")
-def test_ert_forward_model(tmpdir):
+def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")
@@ -242,9 +242,9 @@ def test_ert_forward_model(tmpdir):
 @pytest.mark.skipif(
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
-def test_main_initcase_reek(tmpdir, mocker):
+def test_main_initcase_reek(tmp_path, mocker):
     """Test well data generation from init case on Reek"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "ri_reek_wells.rsp")
     init_case_name = str(DATAPATH / "../data/reek/eclipse/model/2_R001_REEK-0")
@@ -260,9 +260,9 @@ def test_main_initcase_reek(tmpdir, mocker):
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(not has_display(), reason="Requires X display")
-def test_main_lgr_reek(tmpdir, mocker):
+def test_main_lgr_reek(tmp_path, mocker):
     """Test creation of LGR on Reek"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "ri_reek_wells.rsp")
     init_case_name = str(DATAPATH / "../data/reek/eclipse/model/2_R001_REEK-0")
@@ -282,9 +282,9 @@ def test_main_lgr_reek(tmpdir, mocker):
     not Path(RI_DEV).exists(), reason="No dev-version of ResInsight available"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
-def test_main_lgr_cmdline_dev_version(tmpdir, mocker):
+def test_main_lgr_cmdline_dev_version(tmp_path, mocker):
     """Test creation of LGR using development version"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")

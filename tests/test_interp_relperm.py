@@ -275,17 +275,17 @@ def test_schema_errors_low_base_high():
     assert "Is x a list is false on input 'sgof_opt.inc'" in str(parsed_cfg.errors)
 
 
-def test_garbled_base_input(tmpdir):
+def test_garbled_base_input(tmp_path):
     """Perturb the swof_base.inc so that it does not include the SWOF keyword"""
     os.chdir(TESTDATA)
-    Path(tmpdir / "swof_base_invalid.inc").write_text(
+    Path(tmp_path / "swof_base_invalid.inc").write_text(
         "xx" + Path("swof_base.inc").read_text()
     )
     cfg = {
-        "base": [str(tmpdir / "swof_base_invalid.inc"), "sgof_base.inc"],
+        "base": [str(tmp_path / "swof_base_invalid.inc"), "sgof_base.inc"],
         "high": ["swof_opt.inc", "sgof_opt.inc"],
         "low": ["swof_pes.inc", "sgof_pes.inc"],
-        "result_file": str(tmpdir / "foo.inc"),
+        "result_file": str(tmp_path / "foo.inc"),
         "interpolations": [{"param_w": 0.1, "param_g": -0.1}],
     }
     parsed_cfg = configsuite.ConfigSuite(
@@ -346,9 +346,9 @@ def test_make_interpolant():
     assert "SGOF" in interpolant.gasoil.SGOF()
 
 
-def test_args(tmpdir, mocker):
+def test_args(tmp_path, mocker):
     """Test that we can parse args on the command line"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     test_cfg = TESTDATA / "cfg.yml"
 
@@ -393,14 +393,14 @@ def mock_family_1():
     PyscalFactory.create_pyscal_list(dframe_opt).dump_family_1("opt.inc")
 
 
-def test_mock(tmpdir):
+def test_mock(tmp_path):
     """Mocked pyscal-generated input files.
 
     Note that this is using pyscal both for dumping to disk and
     parsing from disk, and is thus not representative for how flexible
     the code is for reading from include files not originating in pyscal.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mock_family_1()
 
     config = {
@@ -425,8 +425,8 @@ def test_mock(tmpdir):
     assert outfile_df["PCOW"].sum() > 0
 
 
-def test_family_2_output(tmpdir):
-    tmpdir.chdir()
+def test_family_2_output(tmp_path):
+    os.chdir(tmp_path)
     mock_family_1()
 
     config = {
@@ -446,8 +446,8 @@ def test_family_2_output(tmpdir):
     assert "SOF3" in output
 
 
-def test_wrong_family(tmpdir):
-    tmpdir.chdir()
+def test_wrong_family(tmp_path):
+    os.chdir(tmp_path)
     mock_family_1()
 
     config = {
@@ -468,9 +468,9 @@ def test_wrong_family(tmpdir):
         interp_relperm.process_config(config)
 
 
-def test_mock_two_satnums_via_xlsx(tmpdir):
+def test_mock_two_satnums_via_xlsx(tmp_path):
     """Test initializing interp_relperm from a pyscal xlsx file"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     TWO_SATNUM_PYSCAL_MOCK.reset_index().to_excel("scal_input.xlsx")
     config = {
         "pyscalfile": "scal_input.xlsx",
@@ -483,7 +483,7 @@ def test_mock_two_satnums_via_xlsx(tmpdir):
     assert outfile_str.find("SCAL recommendation interpolation to 0.5")
 
 
-def test_mock_two_satnums_via_files(tmpdir):
+def test_mock_two_satnums_via_files(tmp_path):
     """Mocked pyscal-generated input files.
 
     Note that this is using pyscal both for dumping to disk and
@@ -491,7 +491,7 @@ def test_mock_two_satnums_via_files(tmpdir):
     the code is for reading from include files not originating in pyscal.
     """
     # pylint: disable=no-value-for-parameter
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["low"]).dump_family_1(
         "pess.inc"
     )
@@ -581,8 +581,8 @@ def test_mock_two_satnums_via_files(tmpdir):
     "int_param, expected_file",
     [(-1, "pess.inc"), (0, "base.inc"), (1, "opt.inc"), (-0.5, None), (0.5, None)],
 )
-def test_mock_two_satnums_via_fam2_files(tmpdir, int_param, expected_file):
-    tmpdir.chdir()
+def test_mock_two_satnums_via_fam2_files(tmp_path, int_param, expected_file):
+    os.chdir(tmp_path)
     PyscalFactory.create_pyscal_list(
         TWO_SATNUM_PYSCAL_MOCK.loc["low"], h=0.1
     ).dump_family_2("pess.inc")
@@ -621,9 +621,9 @@ def test_integration():
     assert subprocess.check_output(["interp_relperm", "-h"])
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test invocation from command line"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     assert subprocess.check_output(["interp_relperm", "-h"])
 

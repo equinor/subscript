@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -38,9 +39,9 @@ def get_plot_cmds(plot):
         ["--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_summaryplotter(cmd_args, tmpdir, mocker, plot):
+def test_summaryplotter(cmd_args, tmp_path, mocker, plot):
     """Test multiple command line invocations"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         get_plot_cmds(plot) + cmd_args + [str(DATAFILE), str(DATAFILE)],
@@ -61,10 +62,10 @@ def test_summaryplotter(cmd_args, tmpdir, mocker, plot):
         ["--logcolourby", "FOO", "--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_two_datafiles(cmd_args, tmpdir, mocker, plot):
+def test_two_datafiles(cmd_args, tmp_path, mocker, plot):
     """Mock two different runs. Need different values in parameters.txt
     to trigger particular test lines."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("realization-0").mkdir()
     Path("realization-1").mkdir()
     for filename in DATAFILE.parent.glob("*"):
@@ -112,9 +113,9 @@ def test_two_datafiles(cmd_args, tmpdir, mocker, plot):
         ),
     ],
 )
-def test_warnings(cmd_args, match, tmpdir, mocker, caplog):
+def test_warnings(cmd_args, match, tmp_path, mocker, caplog):
     """Run command line arguments that give warning"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages"] + cmd_args)
     summaryplot.main()
     assert match in caplog.text
@@ -131,9 +132,9 @@ def test_warnings(cmd_args, match, tmpdir, mocker, caplog):
         ["--colourby", "FOO", "--ensemblemode", "FOPT", str(DATAFILE)],
     ],
 )
-def test_sysexit(cmd_args, tmpdir, mocker):
+def test_sysexit(cmd_args, tmp_path, mocker):
     """Run command line arguments that should end in failure"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages"] + cmd_args)
     with pytest.raises(SystemExit):
         summaryplot.main()
@@ -162,8 +163,8 @@ def test_splitvectorsdatafiles():
     )
 
 
-def test_find_parameterstxt_in_current(tmpdir):
-    tmpdir.chdir()
+def test_find_parameterstxt_in_current(tmp_path):
+    os.chdir(tmp_path)
     shutil.copy(DATAFILE, "FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "FOO.SMSPEC")
@@ -174,10 +175,9 @@ def test_find_parameterstxt_in_current(tmpdir):
     ]
 
 
-def test_find_parameterstxt_two_levels_up(tmpdir):
-    tmpdir.chdir()
-    tmpdir.mkdir("eclipse")
-    tmpdir.mkdir("eclipse/model")
+def test_find_parameterstxt_two_levels_up(tmp_path):
+    os.chdir(tmp_path)
+    Path("eclipse/model").mkdir(parents=True)
     shutil.copy(DATAFILE, "eclipse/model/FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/model/FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "eclipse/model/FOO.SMSPEC")
@@ -190,9 +190,9 @@ def test_find_parameterstxt_two_levels_up(tmpdir):
     ]
 
 
-def test_find_parameterstxt_one_level_up(tmpdir):
-    tmpdir.chdir()
-    tmpdir.mkdir("eclipse")
+def test_find_parameterstxt_one_level_up(tmp_path):
+    os.chdir(tmp_path)
+    Path("eclipse").mkdir()
     shutil.copy(DATAFILE, "eclipse/FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "eclipse/FOO.SMSPEC")

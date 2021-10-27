@@ -427,9 +427,9 @@ def test_cmdline():
 
 
 @pytest.fixture
-def datadir(tmpdir):
+def datadir(tmp_path):
     data = Path(__file__).absolute().parent / "testdata_ofmvol2csv"
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     shutil.copytree(data, "data")
     os.chdir("data")
     yield
@@ -486,8 +486,8 @@ def test_cmdline_globbing(datadir):
     pd.testing.assert_frame_equal(output, output_alt)
 
 
-def test_no_files(tmpdir):
-    tmpdir.chdir()
+def test_no_files(tmp_path):
+    os.chdir(tmp_path)
     ofmvol2csv.ofmvol2csv_main("bogus*.vol", "volfiles.csv")
     assert not Path("volfiles.csv").exists()
 

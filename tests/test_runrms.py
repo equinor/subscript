@@ -10,7 +10,7 @@ import yaml
 
 from subscript.runrms import runrms as rr
 
-# the resolve().as_posix() for pytest tmpdir fixture (workaround)
+# the resolve().as_posix() for pytest tmp_path fixture (workaround)
 TESTRMS1 = (Path(__file__).parent / "data/reek/rms/reek.rms10.1.3").resolve().as_posix()
 TESTRMS2 = (Path(__file__).parent / "data/reek/rms/reek.rms11.1.0").resolve().as_posix()
 TESTSETUP = (Path(__file__).parent / "testdata_runrms/runrms.yml").resolve().as_posix()
@@ -26,11 +26,12 @@ def test_main_projects():
     print(rr.main([TESTRMS2, "--dryrun", "--setup", TESTSETUP]))
 
 
-def test_do_parse_args(tmpdir):
+def test_do_parse_args(tmp_path):
     """Test runrms parsing args."""
     runner = rr.RunRMS()
 
-    runner.runloggerfile = tmpdir.mkdir("runner1").join("runrms_usage.log")
+    (tmp_path / "runner1").mkdir()
+    runner.runloggerfile = tmp_path / "runner1" / "runrms_usage.log"
     assert runner.args is None
 
     args = ["--dryrun", "--setup", TESTSETUP]
@@ -47,11 +48,12 @@ def test_integration():
     assert subprocess.check_output(["runrms", "-h"])
 
 
-def test_scan_rms(tmpdir):
+def test_scan_rms(tmp_path):
     """Scan master files in RMS."""
     runner = rr.RunRMS()
 
-    runner.runloggerfile = tmpdir.mkdir("runner2").join("runrms_usage.log")
+    (tmp_path / "runner2").mkdir()
+    runner.runloggerfile = tmp_path / "runner2" / "runrms_usage.log"
     runner.project = TESTRMS1
 
     runner.scan_rms()
@@ -59,9 +61,9 @@ def test_scan_rms(tmpdir):
     assert runner.version_fromproject == "10.1.3"
 
 
-def test_scan_mocked_rms(tmpdir):
+def test_scan_mocked_rms(tmp_path):
     """Test RMS project scanning on mocked projects"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     runner = rr.RunRMS()
     runner.project = "notexisting"
     runner.scan_rms()
@@ -103,8 +105,8 @@ def test_scan_mocked_rms(tmpdir):
     assert runner.variant == "unknown"  # Too many strings provided in .master
 
 
-def test_runlogger(tmpdir):
-    tmpdir.chdir()
+def test_runlogger(tmp_path):
+    os.chdir(tmp_path)
 
     runner = rr.RunRMS()
     runner.runloggerfile = "not-existing"
@@ -128,8 +130,8 @@ def test_runlogger(tmpdir):
         pytest.param("foobar", None, marks=pytest.mark.xfail(raises=IndexError)),
     ],
 )
-def test_detect_os(os_id, expected, tmpdir, mocker):
-    tmpdir.chdir()
+def test_detect_os(os_id, expected, tmp_path, mocker):
+    os.chdir(tmp_path)
     release_file = Path("redhat-release")
     release_file.write_text(os_id)
     mocker.patch("subscript.runrms.runrms.RHEL_ID", release_file)
@@ -137,8 +139,8 @@ def test_detect_os(os_id, expected, tmpdir, mocker):
     assert runner.osver == expected
 
 
-def test_detect_os_default(tmpdir, mocker):
-    tmpdir.chdir()
+def test_detect_os_default(tmp_path, mocker):
+    os.chdir(tmp_path)
     release_file = Path("not-existing-file")
     mocker.patch("subscript.runrms.runrms.RHEL_ID", release_file)
     runner = rr.RunRMS()
@@ -174,8 +176,8 @@ def test_store_rmspluginpath(mocker):
     assert runner.pythonpath is None
 
 
-def test_parse_setup(tmpdir, mocker):
-    tmpdir.chdir()
+def test_parse_setup(tmp_path, mocker):
+    os.chdir(tmp_path)
     setupfile = "foo.yml"
     mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
     runner = rr.RunRMS()
@@ -191,8 +193,8 @@ def test_parse_setup(tmpdir, mocker):
     assert runner.setupfile == setupfile
 
 
-def test_requested_rms_version(tmpdir, mocker):
-    tmpdir.chdir()
+def test_requested_rms_version(tmp_path, mocker):
+    os.chdir(tmp_path)
     setupfile = "setup.yml"
     mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
     runner = rr.RunRMS()
@@ -229,9 +231,9 @@ def test_requested_rms_version(tmpdir, mocker):
     not shutil.which("disable_komodo_exec"),
     reason="The executable disable_komodo_exec is not available",
 )
-def test_runrms_disable_komodo_exec(tmpdir, monkeypatch):
+def test_runrms_disable_komodo_exec(tmp_path, monkeypatch):
     """Testing integration with Komodo."""
-    with tmpdir.as_cwd():
+    with tmp_path.as_cwd():
         Path("rms_fake").write_text(
             """\
 #!/usr/bin/env python3
