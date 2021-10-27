@@ -565,6 +565,8 @@ def test_reorder_dframe_for_nonnans(inputrows, expected):
 
 @pytest.mark.plot
 def test_volplot_negative_bars():
+    """Test the volumetrics waterfall chart with negative values, giving negative bars,
+    interaticve plot test"""
     qc_frame = pd.DataFrame(
         [
             # This dataframe is a minimum dataset for check_swatinit
@@ -594,7 +596,7 @@ def test_volplot_negative_bars():
 
 @pytest.mark.plot
 def test_volplot_zerospan():
-    # Test when there is no difference from SWATINIT to SWAT:
+    """Test when there is no difference from SWATINIT to SWAT"""
     qc_frame = pd.DataFrame(
         [
             {
@@ -621,6 +623,7 @@ def test_volplot_zerospan():
 
 @pytest.mark.plot
 def test_volplot_largenegative():
+    """Test the waterfall chart with large negatives, interactive plot test"""
     qc_frame = pd.DataFrame(
         [
             {
@@ -647,6 +650,8 @@ def test_volplot_largenegative():
 
 @pytest.mark.plot
 def test_volplot_manynegative():
+    """Test the waterfall chart (interactively) when many values give
+    negative bars"""
     qc_frame = pd.DataFrame(
         [
             {
@@ -708,6 +713,7 @@ def test_reek(tmp_path, mocker):
     assert Path("scatter.png").exists()
     assert Path("volplot.png").exists()
 
+    # pylint: disable=no-member  # false positive on Pandas dataframe
     # Check that we never get -1e20 from libecl in any data:
     assert np.isclose(qc_frame.select_dtypes("number").min().min(), -7097, atol=1)
     assert np.isclose(qc_frame.select_dtypes("number").max().max(), 5938824, atol=1)
@@ -745,6 +751,7 @@ def test_reek(tmp_path, mocker):
 
 @pytest.mark.integration
 def test_ert_integration(tmp_path):
+    """Test the installed ERT forward model"""
     os.chdir(tmp_path)
     Path("test.ert").write_text(
         "\n".join(
@@ -756,7 +763,8 @@ def test_ert_integration(tmp_path):
                 "",
                 f"FORWARD_MODEL CHECK_SWATINIT(<DATAFILE>={REEK_DATAFILE})",
             ]
-        )
+        ),
+        encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
     # Testing the default OUTPUT:
@@ -777,7 +785,8 @@ def test_ert_integration(tmp_path):
                     "<OUTPUT>=foo.csv)"
                 ),
             ]
-        )
+        ),
+        encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test-output.ert"], check=True)
     qc_frame = pd.read_csv("foo.csv")

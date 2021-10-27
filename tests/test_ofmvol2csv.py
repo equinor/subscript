@@ -10,6 +10,9 @@ import pytest
 from subscript.csv2ofmvol import csv2ofmvol
 from subscript.ofmvol2csv import ofmvol2csv
 
+# pylint: disable=unused-argument  # false positive on fixtures
+# pylint: disable=unsubscriptable-object  # false positive on Pandas objects.
+
 try:
     # pylint: disable=unused-import
     import ert_shared  # noqa
@@ -17,11 +20,6 @@ try:
     HAVE_ERT = True
 except ImportError:
     HAVE_ERT = False
-
-
-# pylint: disable=redefined-outer-name  # conflict with fixtures
-# pylint: disable=unused-argument  # conflict with fixtures
-# pylint: disable=missing-function-docstring  # docstrings not needed here.
 
 
 @pytest.mark.parametrize(
@@ -37,6 +35,7 @@ except ImportError:
     ],
 )
 def test_cleanse_ofm_lines(filelines, expected):
+    """Test cleanup of lines in OFM file format"""
     assert ofmvol2csv.cleanse_ofm_lines(filelines) == expected
 
 
@@ -45,6 +44,7 @@ def test_cleanse_ofm_lines(filelines, expected):
     [(["*DAY *MONTH *YEAR", "24 12 2020 x"], ["*DATE", "24.12.2020 x"])],
 )
 def test_unify_dateformat(filelines, expected):
+    """Test that OFM vol date formats can be unified to something easier to parse"""
     assert ofmvol2csv.unify_dateformat(filelines) == expected
 
 
@@ -61,6 +61,7 @@ def test_unify_dateformat(filelines, expected):
     ],
 )
 def test_extract_columnnames(filelines, expected):
+    """Test the ability to extract columnnames from a string occuring in OFM lines"""
     if isinstance(expected, list):
         assert ofmvol2csv.extract_columnnames(filelines) == expected
     else:
@@ -90,6 +91,7 @@ def test_extract_columnnames(filelines, expected):
     ],
 )
 def test_split_list(inputlist, splitidxs, expected):
+    """Test ofmvol specific splitting of lists"""
     if isinstance(expected, list):
         assert ofmvol2csv.split_list(inputlist, splitidxs) == expected
     else:
@@ -109,6 +111,7 @@ def test_split_list(inputlist, splitidxs, expected):
     ],
 )
 def test_find_wellstart_indices(inputlines, expected):
+    """Test lookup of where well data starts in strings"""
     if isinstance(expected, list):
         assert ofmvol2csv.find_wellstart_indices(inputlines) == expected
     else:
@@ -288,6 +291,7 @@ def test_find_wellstart_indices(inputlines, expected):
     ],
 )
 def test_parse_well(inputlines, expected):
+    """Test parsing well data"""
     if "DATE" in expected:
         expected["DATE"] = pd.to_datetime(expected["DATE"])
         expected.set_index(["WELL", "DATE"], inplace=True)
@@ -384,6 +388,8 @@ def test_parse_well(inputlines, expected):
     ],
 )
 def test_process_volstr(inputlines, expected):
+    """Test processing ofmvol strings, consisting of header data
+    and well data"""
     if "DATE" in expected:
         expected["DATE"] = pd.to_datetime(expected["DATE"])
         expected.set_index(["WELL", "DATE"], inplace=True)
@@ -417,17 +423,20 @@ def test_process_volstr(inputlines, expected):
     ],
 )
 def test_errors(inputlines, expected_error):
+    """Test some erros from ofmvol"""
     with pytest.raises(expected_error):
         ofmvol2csv.process_volstr("\n".join(inputlines))
 
 
 @pytest.mark.integration
 def test_cmdline():
+    """Test that the command line client is installed"""
     assert subprocess.check_output(["ofmvol2csv", "-h"])
 
 
-@pytest.fixture
-def datadir(tmp_path):
+@pytest.fixture(name="datadir")
+def fixture_datadir(tmp_path):
+    """Provide a fixture with a directory with test data"""
     data = Path(__file__).absolute().parent / "testdata_ofmvol2csv"
     os.chdir(tmp_path)
     shutil.copytree(data, "data")
@@ -436,12 +445,14 @@ def datadir(tmp_path):
 
 
 def test_main(datadir):
+    """Test the main function used by the command line client"""
     ofmvol2csv.ofmvol2csv_main(
         "ofm_example.vol", "volfiles.csv", includefileorigin=True
     )
 
     output = pd.read_csv("volfiles.csv")
     assert isinstance(output, pd.DataFrame)
+    # pylint: disable=no-member
     assert not output.empty
     assert len(output) == 4379
     assert set(output.columns) == {
@@ -469,6 +480,7 @@ def test_main(datadir):
 
 
 def test_cmdline_globbing(datadir):
+    """Test that globbing works (also when globbing is not done by the shell)"""
     ofmvol2csv.ofmvol2csv_main("file*.vol", "volfiles.csv", includefileorigin=True)
     output = pd.read_csv("volfiles.csv")
     assert isinstance(output, pd.DataFrame)
@@ -487,6 +499,7 @@ def test_cmdline_globbing(datadir):
 
 
 def test_no_files(tmp_path):
+    """Test what happens when input does not exist"""
     os.chdir(tmp_path)
     ofmvol2csv.ofmvol2csv_main("bogus*.vol", "volfiles.csv")
     assert not Path("volfiles.csv").exists()
@@ -518,10 +531,10 @@ def test_roundtrip(datadir, mocker):
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(datadir):
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    """Test the installed ERT forward model"""
+    Path("FOOBAR.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
-        "ECLBASE FOO.DATA",
+        "ECLBASE FOOBAR.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
         "RUNPATH .",
@@ -529,8 +542,7 @@ def test_ert_hook(datadir):
     ]
 
     ert_config_fname = "test.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 

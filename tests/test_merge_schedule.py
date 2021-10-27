@@ -47,8 +47,7 @@ def test_main(datadir, mocker):
     with pytest.warns(FutureWarning):
         merge_schedule.main()
 
-    assert Path("merged.sch").exists()
-    assert len(open("merged.sch").readlines()) == 32
+    assert len(Path("merged.sch").read_text(encoding="utf8").splitlines()) == 32
 
 
 def test_initwithdates(datadir, mocker):
@@ -67,8 +66,7 @@ def test_initwithdates(datadir, mocker):
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    assert Path("merged.sch").exists()
-    merged = open("merged.sch").read()
+    merged = Path("merged.sch").read_text(encoding="utf8")
     assert merged.count("\n") == 28
     assert "BAR-FOO" in merged  # This magic string is first in initwithdates
     assert "5 'NOV' 2020" in merged
@@ -86,7 +84,7 @@ def test_dummy_1(datadir, mocker):
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    assert len(open("merged.sch").readlines()) == 12
+    assert len(Path("merged.sch").read_text(encoding="utf8").splitlines()) == 12
 
 
 def test_dummy2(datadir, mocker):
@@ -96,7 +94,7 @@ def test_dummy2(datadir, mocker):
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    assert len(open("merged.sch").readlines()) == 16
+    assert len(Path("merged.sch").read_text(encoding="utf8").splitlines()) == 16
 
 
 def test_statements_prior_to_dates(datadir, mocker):
@@ -116,19 +114,19 @@ def test_statements_prior_to_dates(datadir, mocker):
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    merged_str = open("merged.sch").read()
+    merged_str = Path("merged.sch").read_text(encoding="utf8")
     assert merged_str.find("BAR-FOO") < merged_str.find("DATES")
 
 
 def test_force(datadir, mocker):
     """Test that --force is working"""
-    Path("existing.sch").write_text("bogus")
+    Path("existing.sch").write_text("bogus", encoding="utf8")
     mocker.patch(
         "sys.argv", ["merge_schedule", "mergeme.sch", "merge2.sch", "existing.sch"]
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    assert len(open("existing.sch").readlines()) == 1
+    assert len(Path("existing.sch").read_text(encoding="utf8").splitlines()) == 1
 
     mocker.patch(
         "sys.argv",
@@ -142,7 +140,7 @@ def test_force(datadir, mocker):
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    assert len(open("existing.sch").readlines()) == 32
+    assert len(Path("existing.sch").read_text(encoding="utf8").splitlines()) == 32
 
 
 def test_clip_end(datadir, mocker):
@@ -161,4 +159,4 @@ def test_clip_end(datadir, mocker):
     )
     with pytest.warns(FutureWarning):
         merge_schedule.main()
-    assert len(open("merged.sch").readlines()) == 21
+    assert len(Path("merged.sch").read_text(encoding="utf8").splitlines()) == 21

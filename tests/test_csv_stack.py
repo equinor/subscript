@@ -256,19 +256,17 @@ def test_ert_forward_model(tmp_path):
     # pylint: disable=unused-argument
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
         "RUNPATH .",
-        ("FORWARD_MODEL CSV_STACK(" "<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv)"),
+        "FORWARD_MODEL CSV_STACK(<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv)",
     ]
 
     ert_config_fname = "stacktest.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
@@ -286,8 +284,7 @@ def test_ert_forward_model_keepminimal(tmp_path):
     # pylint: disable=unused-argument
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
@@ -300,8 +297,7 @@ def test_ert_forward_model_keepminimal(tmp_path):
     ]
 
     ert_config_fname = "stacktest.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
@@ -319,8 +315,7 @@ def test_ert_forward_model_keepconstants(tmp_path):
     # pylint: disable=unused-argument
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
@@ -333,8 +328,7 @@ def test_ert_forward_model_keepconstants(tmp_path):
     ]
 
     ert_config_fname = "stacktest.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
@@ -374,7 +368,8 @@ def test_csv_stack_ert_workflow(tmp_path):
                 "LOAD_WORKFLOW CSV_STACK_WELLS",
                 "HOOK_WORKFLOW CSV_STACK_WELLS POST_SIMULATION",
             ]
-        )
+        ),
+        encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
 

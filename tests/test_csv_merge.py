@@ -84,7 +84,7 @@ def test_main_merge(tmp_path, mocker):
     mocker.patch("sys.argv", ["csv_merge", test_csv_1, test_csv_2, "-o", merged_csv])
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
-
+    # pylint: disable=unsubscriptable-object  # false positive on Pandas dataframe
     assert len(merged) == 4
     assert len(merged.columns) == 5  # 4 unique in input, and 1 FILENAME-col
     assert test_csv_1 in merged["FILENAME"].unique()
@@ -105,7 +105,7 @@ def test_main_merge(tmp_path, mocker):
     )
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
-
+    # pylint: disable=no-member  # false positive on Pandas dataframe
     assert len(merged) == 4
     assert "CONST" not in merged.columns
     assert len(merged.columns) == 4
@@ -162,6 +162,7 @@ def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
 
     Warning: This test is fragile if the other test functions manipulate
     the loglevel"""
+    # pylint: disable=too-many-arguments
     os.chdir(tmp_path)
     pd.DataFrame(
         columns=["REAL", "FOO", "CONST"], data=[[0, 10, 1], [1, 20, 1]]
@@ -171,7 +172,7 @@ def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
     ).to_csv("bar.csv", index=False)
     mocker.patch(
         "sys.argv",
-        ["csv_merge", "foo.csv", "bar.csv" "--filecolumn", "FILETYPE"]
+        ["csv_merge", "foo.csv", "bar.csv", "--filecolumn", "FILETYPE"]
         + options
         + [
             "-o",
@@ -191,7 +192,7 @@ def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
 
 def test_empty_files(tmp_path):
     """Test behaviour when some files are missing or are empty"""
-
+    os.chdir(tmp_path)
     # Empty but existing file:
     pd.DataFrame().to_csv("real1.csv", index=False)
     pd.DataFrame([{"FOO": 1.0}]).to_csv("real2.csv", index=False)
@@ -241,12 +242,15 @@ def test_empty_files(tmp_path):
 def test_ert_hook(tmp_path):
     """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
     realizations"""
+    os.chdir(tmp_path)
     Path("realization-0/iter-0").mkdir(parents=True)
     Path("realization-1/iter-0").mkdir(parents=True)
-    Path("realization-0/iter-0/foo.csv").write_text("FOO\nreal0")
-    Path("realization-1/iter-0/foo.csv").write_text("FOO\nreal1")
+    Path("realization-0/iter-0/foo.csv").write_text("FOO\nreal0", encoding="utf8")
+    Path("realization-1/iter-0/foo.csv").write_text("FOO\nreal1", encoding="utf8")
 
-    Path("MERGE_FOO").write_text("CSV_MERGE realization-*/iter-*/foo.csv merged.csv")
+    Path("MERGE_FOO").write_text(
+        "CSV_MERGE realization-*/iter-*/foo.csv merged.csv", encoding="utf8"
+    )
 
     ert_config = [
         "ECLBASE FOO.DATA",
@@ -259,7 +263,7 @@ def test_ert_hook(tmp_path):
     ]
 
     ert_config_fname = "test.ert"
-    Path(ert_config_fname).write_text("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 

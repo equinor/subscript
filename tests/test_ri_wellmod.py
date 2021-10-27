@@ -61,9 +61,8 @@ def file_contains(filename, string_to_find):
     if not Path(filename).exists():
         return False
 
-    with open(filename) as fhandle:
-        filetext = fhandle.read()
-        return filetext.find(string_to_find) >= 0
+    filetext = Path(filename).read_text(encoding="utf8")
+    return filetext.find(string_to_find) >= 0
 
 
 @pytest.mark.integration
@@ -214,24 +213,22 @@ def test_ert_forward_model(tmp_path):
     init_case_name = str(drogon_runpath() / "eclipse/model/DROGON-0_NOSIM")
     outfile = "welldefs_lgr.sch"
 
-    with open("FOO.DATA", "w") as file_h:
-        file_h.write("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
         "RUNPATH .",
         "FORWARD_MODEL RI_WELLMOD("
-        + "<RI_PROJECT>={},".format(proj_name)
-        + "<ECLBASE>={},".format(init_case_name)
-        + "<OUTPUTFILE>={},".format(outfile)
+        + f"<RI_PROJECT>={proj_name},"
+        + f"<ECLBASE>={init_case_name},"
+        + f"<OUTPUTFILE>={outfile},"
         + "<MSW>='A4'"
         + ")",
     ]
 
     ert_config_fname = "riwmtest.ert"
-    with open(ert_config_fname, "w") as file_h:
-        file_h.write("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 

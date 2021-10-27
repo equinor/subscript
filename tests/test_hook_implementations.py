@@ -1,5 +1,6 @@
 import shutil
 from os import path
+from pathlib import Path
 
 import pytest
 import rstcheck
@@ -66,19 +67,19 @@ def test_job_config_syntax(expected_jobs):
     """Check for syntax errors made in job configuration files"""
     for _, job_config in expected_jobs.items():
         # Check (loosely) that double-dashes are enclosed in quotes:
-        with open(job_config) as f_handle:
-            for line in f_handle.readlines():
-                if not line.strip().startswith("--") and "--" in line:
-                    assert '"--' in line and " --" not in line
+        for line in Path(job_config).read_text(encoding="utf8").splitlines():
+            if not line.strip().startswith("--") and "--" in line:
+                assert '"--' in line and " --" not in line
 
 
 @pytest.mark.integration
 def test_executables(expected_jobs):
     """Test executables listed in job configurations exist in $PATH"""
     for _, job_config in expected_jobs.items():
-        with open(job_config) as f_handle:
-            executable = f_handle.readlines()[0].split()[1]
-            assert shutil.which(executable)
+        executable = (
+            Path(job_config).read_text(encoding="utf8").splitlines()[0].split()[1]
+        )
+        assert shutil.which(executable)
 
 
 def test_hook_implementations_job_docs():

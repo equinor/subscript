@@ -77,17 +77,17 @@ def test_scan_mocked_rms(tmp_path):
 
     # Mock a .master:
     dot_master = Path(mocked_rms) / ".master"
-    dot_master.write_text("")
+    dot_master.write_text("", encoding="utf8")
     runner.scan_rms()  # No errors from this
     assert runner.version_fromproject is None
 
     # Add version to the .master:
-    dot_master.write_text("release : 18.0.0")
+    dot_master.write_text("release : 18.0.0", encoding="utf8")
     runner.scan_rms()
     assert runner.version_fromproject == "18.0.0"
 
     # Add version in wrong place to the .master:
-    dot_master.write_text("End GEOMATIC\nrelease : 18.0.0")
+    dot_master.write_text("End GEOMATIC\nrelease : 18.0.0", encoding="utf8")
     runner = rr.RunRMS()
     runner.project = mocked_rms
     runner.scan_rms()
@@ -95,7 +95,8 @@ def test_scan_mocked_rms(tmp_path):
 
     # Test mkeys:
     dot_master.write_text(
-        "fileversion : foo\nuser : foobert\nvariant : bogus bogus bogus"
+        "fileversion : foo\nuser : foobert\nvariant : bogus bogus bogus",
+        encoding="utf8",
     )
     runner = rr.RunRMS()
     runner.project = mocked_rms
@@ -106,6 +107,7 @@ def test_scan_mocked_rms(tmp_path):
 
 
 def test_runlogger(tmp_path):
+    """Test that we can log to files"""
     os.chdir(tmp_path)
 
     runner = rr.RunRMS()
@@ -114,11 +116,11 @@ def test_runlogger(tmp_path):
     runner.runlogger()
 
     # Make an empty file and prove that it will be logged to:
-    Path("foo-log").write_text("")
-    assert not Path("foo-log").read_text()
+    Path("foo-log").write_text("", encoding="utf8")
+    assert not Path("foo-log").read_text(encoding="utf8")
     runner.runloggerfile = "foo-log"
     runner.runlogger()
-    assert Path("foo-log").read_text()
+    assert Path("foo-log").read_text(encoding="utf8")
 
 
 @pytest.mark.parametrize(
@@ -131,15 +133,17 @@ def test_runlogger(tmp_path):
     ],
 )
 def test_detect_os(os_id, expected, tmp_path, mocker):
+    """Test parsing of Redhat release text file"""
     os.chdir(tmp_path)
     release_file = Path("redhat-release")
-    release_file.write_text(os_id)
+    release_file.write_text(os_id, encoding="utf8")
     mocker.patch("subscript.runrms.runrms.RHEL_ID", release_file)
     runner = rr.RunRMS()
     assert runner.osver == expected
 
 
 def test_detect_os_default(tmp_path, mocker):
+    """Test the default OS if we don't find a redhat release file"""
     os.chdir(tmp_path)
     release_file = Path("not-existing-file")
     mocker.patch("subscript.runrms.runrms.RHEL_ID", release_file)
@@ -148,6 +152,7 @@ def test_detect_os_default(tmp_path, mocker):
 
 
 def test_store_pythonpath(mocker):
+    """Test that the PYTHONPATH env variable will be stored by the script"""
     mocker.patch("os.environ", {"PYTHONPATH": "foo/bar/com"})
     runner = rr.RunRMS()
     assert "foo/bar/com" in runner.oldpythonpath
@@ -165,6 +170,7 @@ def test_store_pythonpath(mocker):
 
 
 def test_store_rmspluginpath(mocker):
+    """Test that the RMS_PLUGINS_LIBRARY env variable will be stored by the script"""
     mocker.patch("os.environ", {"RMS_PLUGINS_LIBRARY": "foo/bar/com"})
     runner = rr.RunRMS()
     assert "foo/bar/com" in runner.oldpluginspath
@@ -177,6 +183,7 @@ def test_store_rmspluginpath(mocker):
 
 
 def test_parse_setup(tmp_path, mocker):
+    """Test parsing of a setup yaml file"""
     os.chdir(tmp_path)
     setupfile = "foo.yml"
     mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
@@ -186,7 +193,7 @@ def test_parse_setup(tmp_path, mocker):
         runner.parse_setup()
 
     # Write dummy file:
-    Path(setupfile).write_text(yaml.dump({}))
+    Path(setupfile).write_text(yaml.dump({}), encoding="utf8")
     # No errors from this, even if the setup is empty:
     runner.parse_setup()
     assert runner.setup == {}
@@ -194,6 +201,7 @@ def test_parse_setup(tmp_path, mocker):
 
 
 def test_requested_rms_version(tmp_path, mocker):
+    """Test handling of a requested RMS version (in yaml setup file)"""
     os.chdir(tmp_path)
     setupfile = "setup.yml"
     mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
@@ -201,17 +209,21 @@ def test_requested_rms_version(tmp_path, mocker):
     runner.do_parse_args(["runrms", "--debug"])
 
     with pytest.raises(KeyError, match="rms"):
-        Path(setupfile).write_text(yaml.dump({}))
+        Path(setupfile).write_text(yaml.dump({}), encoding="utf8")
         runner.parse_setup()
         runner.requested_rms_version()
 
     with pytest.raises(RuntimeError, match="Executable is not found"):
-        Path(setupfile).write_text(yaml.dump({"rms": {"18.0.0": {"default": True}}}))
+        Path(setupfile).write_text(
+            yaml.dump({"rms": {"18.0.0": {"default": True}}}), encoding="utf8"
+        )
         runner.parse_setup()
         runner.requested_rms_version()
 
     with pytest.raises(KeyError, match="rms_nonstandard"):
-        Path(setupfile).write_text(yaml.dump({"rms": {"18.0.0": {"default": True}}}))
+        Path(setupfile).write_text(
+            yaml.dump({"rms": {"18.0.0": {"default": True}}}), encoding="utf8"
+        )
         runner.parse_setup()
         runner.version_fromproject = "17.0.0"
         runner.requested_rms_version()
@@ -219,7 +231,8 @@ def test_requested_rms_version(tmp_path, mocker):
     Path(setupfile).write_text(
         yaml.dump(
             {"rms": {"18.0.0": {"default": True, "exe": "somefile", "pythonpath": ""}}}
-        )
+        ),
+        encoding="utf8",
     )
     runner.parse_setup()
     runner.version_fromproject = "18.0.0"
@@ -273,15 +286,14 @@ if errors:
         print(e)
     sys.exit(1)
 sys.exit(0)
-"""
+""",
+        encoding="utf8",
     )
 
-    st = os.stat("rms_fake")
-    os.chmod("rms_fake", st.st_mode | stat.S_IEXEC)
+    os.chmod("rms_fake", os.stat("rms_fake").st_mode | stat.S_IEXEC)
     monkeypatch.setenv("KOMODO_RELEASE", f"{os.getcwd()}/bleeding")
     monkeypatch.setenv("_PRE_KOMODO_MANPATH", "some/man/path")
     monkeypatch.setenv("_PRE_KOMODO_LD_LIBRARY_PATH", "some/ld/path")
-
     runner = rr.RunRMS()
     runner.do_parse_args(["-v", "10.1.3"])
     runner.parse_setup()

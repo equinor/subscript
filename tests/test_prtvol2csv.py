@@ -32,7 +32,8 @@ def test_currently_in_place_from_prt(tmp_path):
       :       1 :             8.:             9.:            10.:            11.:            12.:
       :       2 :            13.:            14.:            15.:            16.:            17.:
       ===========================================================================================
-    """  # noqa
+    """,  # noqa
+        encoding="utf8",
     )
     expected_dframe = pd.DataFrame(
         columns=["PORV_TOTAL", "HCPV_OIL", "WATPV_TOTAL", "HCPV_GAS", "HCPV_TOTAL"],
@@ -151,7 +152,7 @@ def test_find_prtfile(tmp_path):
     assert prtvol2csv.find_prtfile("FOO.") == "FOO."
 
     # When we have some files there, it works:
-    Path("FOO.PRT").write_text("dummy")
+    Path("FOO.PRT").write_text("dummy", encoding="utf8")
     assert prtvol2csv.find_prtfile("FOO") == "FOO.PRT"
     assert prtvol2csv.find_prtfile("FOO.DATA") == "FOO.PRT"
     assert prtvol2csv.find_prtfile("FOO.") == "FOO.PRT"
@@ -159,6 +160,7 @@ def test_find_prtfile(tmp_path):
 
 
 def test_prtvol2df(tmp_path):
+    """Test concatenation of dtaframes with volumes"""
     simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
     resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
 
@@ -199,7 +201,9 @@ def test_prtvol2df(tmp_path):
 
     # Check integer handling through yaml:
     os.chdir(tmp_path)
-    Path("z2f_int.yml").write_text(yaml.dump({"zone2fipnum": {"Upper": 1}}))
+    Path("z2f_int.yml").write_text(
+        yaml.dump({"zone2fipnum": {"Upper": 1}}), encoding="utf8"
+    )
     assert prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="z2f_int.yml"))[
         "ZONE"
     ].values == ["Upper"]
@@ -232,7 +236,7 @@ def test_prtvol2df(tmp_path):
 
     # Simple global_master_config support:
     Path("global_master_config.yml").write_text(
-        yaml.dump({"global": {"zone2fipnum": {"Upper": 1}}})
+        yaml.dump({"global": {"zone2fipnum": {"Upper": 1}}}), encoding="utf8"
     )
     assert prtvol2csv.prtvol2df(
         simv, resv, FipMapper(yamlfile="global_master_config.yml")
@@ -240,12 +244,14 @@ def test_prtvol2df(tmp_path):
 
 
 def test_webviz_regiontofipnum_format():
+    """Test that the webviz format for mapping regions to fipnums also works"""
     simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
     resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
     Path("webviz_fip.yml").write_text(
         yaml.dump(
             {"FIPNUM": {"groups": {"REGION": {"West": [1]}, "ZONE": {"Volon": [1]}}}}
-        )
+        ),
+        encoding="utf8",
     )
     dframe = prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="webviz_fip.yml"))
     assert dframe["ZONE"].values == ["Volon"]
@@ -290,7 +296,7 @@ def test_prtvol2csv_regions(tmp_path, mocker):
         ]
     )
     os.chdir(tmp_path)
-    Path("regions.yml").write_text(yaml.dump(yamlexample))
+    Path("regions.yml").write_text(yaml.dump(yamlexample), encoding="utf8")
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     with pytest.warns(FutureWarning):
         prtvol2csv.main()
@@ -340,12 +346,13 @@ def test_prtvol2csv_regions_typemix(tmp_path, mocker):
     }
 
     os.chdir(tmp_path)
-    Path("regions.yml").write_text(yaml.dump(yamlexample))
+    Path("regions.yml").write_text(yaml.dump(yamlexample), encoding="utf8")
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     with pytest.warns(FutureWarning, match="Output directories"):
         prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
+    # pylint: disable=unsubscriptable-object
     assert not dframe.empty
     assert "REGION" in dframe
     assert "ZONE" not in dframe
@@ -373,7 +380,7 @@ def test_prtvol2csv_webvizyaml(tmp_path, mocker):
             }
         }
     }
-    Path("regions.yml").write_text(yaml.dump(webvizmap))
+    Path("regions.yml").write_text(yaml.dump(webvizmap), encoding="utf8")
     mocker.patch(
         "sys.argv",
         ["prtvol2csv", str(prtfile), "--yaml", "regions.yml", "--dir", "."],
@@ -404,8 +411,12 @@ def test_prtvol2csv_noresvol(tmp_path, mocker):
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
     os.chdir(tmp_path)
-    prtlines = Path(prtfile).read_text().replace("RESERVOIR VOLUMES", "foobar volumes")
-    Path("MODIFIED.PRT").write_text(prtlines)
+    prtlines = (
+        Path(prtfile)
+        .read_text(encoding="utf8")
+        .replace("RESERVOIR VOLUMES", "foobar volumes")
+    )
+    Path("MODIFIED.PRT").write_text(prtlines, encoding="utf8")
     mocker.patch("sys.argv", ["prtvol2csv", "MODIFIED.PRT"])
     with pytest.warns(FutureWarning, match="Output directories"):
         prtvol2csv.main()
@@ -417,11 +428,12 @@ def test_prtvol2csv_noresvol(tmp_path, mocker):
 
 @pytest.mark.integration
 def test_ert_forward_model(tmp_path):
+    """Run ERT with the registered forward model PRTVOL2CSV"""
     os.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
-    Path("FOO.DATA").write_text("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
 
     yamlexample = {
         "region2fipnum": {
@@ -429,7 +441,7 @@ def test_ert_forward_model(tmp_path):
             8: [2, 5],
         }
     }
-    Path("regions.yml").write_text(yaml.dump(yamlexample))
+    Path("regions.yml").write_text(yaml.dump(yamlexample), encoding="utf8")
 
     Path("test.ert").write_text(
         "\n".join(
@@ -446,7 +458,8 @@ def test_ert_forward_model(tmp_path):
                     + ', <REGIONS>=regions.yml, <DIR>=".",<OUTPUTFILENAME>=sim.csv)'  # noqa
                 ),
             ]
-        )
+        ),
+        encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
     assert Path("sim.csv").is_file()
@@ -459,7 +472,7 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
-    Path("FOO.DATA").write_text("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
 
     yamlexample = {
         "region2fipnum": {
@@ -467,7 +480,7 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
             8: [2, 5],
         }
     }
-    Path("regions.yml").write_text(yaml.dump(yamlexample))
+    Path("regions.yml").write_text(yaml.dump(yamlexample), encoding="utf8")
 
     Path("test.ert").write_text(
         "\n".join(
@@ -482,12 +495,13 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
                     "<DATAFILE>=" + str(prtfile) + ")"  # noqa
                 ),
             ]
-        )
+        ),
+        encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
     assert Path("share/results/volumes/simulator_volume_fipnum.csv").is_file()
-    stdout = Path("PRTVOL2CSV.stdout.0").read_text()
-    stderr = Path("PRTVOL2CSV.stderr.0").read_text()
+    stdout = Path("PRTVOL2CSV.stdout.0").read_text(encoding="utf8")
+    stderr = Path("PRTVOL2CSV.stderr.0").read_text(encoding="utf8")
     assert "You MUST set the directory option" in stdout
     assert (
         "FutureWarning: Output directories for prtvol2csv should be created upfront"

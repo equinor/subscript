@@ -115,9 +115,7 @@ def test_datesfile(dates, date_mode, expected_files, tmp_path, mocker):
     assert date_mode in {"space", "colon", "file"}
 
     if date_mode == "file":
-        with open("dates.txt", "w") as date_f:
-            for date in dates:
-                date_f.write(date + "\n")
+        Path("dates.txt").write_text("\n".join(dates), encoding="utf8")
         dateargument = "dates.txt"
     elif date_mode == "space":
         dateargument = " ".join(dates)

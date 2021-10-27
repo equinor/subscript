@@ -12,6 +12,8 @@ def path_to_subscript():
 
 
 def pytest_addoption(parser):
+    """Add options that will be available when running `pytest` on the command line
+    in this directory"""
     parser.addoption(
         "--plot",
         action="store_true",
