@@ -26,8 +26,8 @@ def readonly_datadir():
 
 
 @pytest.fixture
-def testdata(tmpdir):
-    tmpdir.chdir()
+def testdata(tmp_path):
+    os.chdir(tmp_path)
     cwd = os.getcwd()
     shutil.copytree(DATADIR, "testdata_sunsch")
     try:
@@ -156,9 +156,9 @@ def test_dump_stdout(testdata, mocker):
     assert "DEBUG:subscript" not in result.stdout.decode()
 
 
-def test_config_schema(tmpdir):
+def test_config_schema(tmp_path):
     """Test the implementation of configsuite"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
     cfg_suite = configsuite.ConfigSuite(
         cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
@@ -185,9 +185,9 @@ def test_config_schema(tmpdir):
     assert cfg_suite.valid
 
 
-def test_templating(tmpdir):
+def test_templating(tmp_path):
     """Test templating"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("template.tmpl").write_text(
         "WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/"
     )
@@ -423,7 +423,7 @@ def test_nonisodate(readonly_datadir):
         sunsch.process_sch_config(sunschconf)
 
 
-def test_merge_include_nonexist(tmpdir):
+def test_merge_include_nonexist(tmp_path):
     """If a user merges in a sch file which contains INCLUDE
     statements, these files may not exist yet (or only for a
     different path and so on.
@@ -431,7 +431,7 @@ def test_merge_include_nonexist(tmpdir):
     The way to get around this, is to do string insertions
     in the insert section.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("mergewithexistinginclude.sch").write_text(
         """
 DATES
@@ -486,13 +486,13 @@ INCLUDE
     assert "something.sch" in str(sch)
 
 
-def test_merge_paths_in_use(tmpdir, caplog):
+def test_merge_paths_in_use(tmp_path, caplog):
     """If the PATHS keyword is in use for getting includes,
     there will be "variables" in use in INCLUDE-statements.
 
     These variables are defined in the DATA file and outside
     sunsch's scope, but we should ensure a proper error message"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("pathsinclude.sch").write_text(
         """
 DATES
@@ -533,9 +533,9 @@ def test_merge(readonly_datadir):
     assert "WRFTPLT" in str(sch)
 
 
-def test_sch_file_nonempty(tmpdir):
+def test_sch_file_nonempty(tmp_path):
     """Test that we can detect empty files"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     Path("empty.sch").write_text("")
     assert not sunsch.sch_file_nonempty("empty.sch")
@@ -556,10 +556,10 @@ def test_sch_file_nonempty(tmpdir):
     assert sunsch.sch_file_nonempty("wconprod.sch")
 
 
-def test_emptyfiles(tmpdir):
+def test_emptyfiles(tmp_path):
     """Test that we don't crash when we try to include files
     which are empty (or only contains comments)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("empty.sch").write_text("")
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["empty.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
@@ -717,8 +717,8 @@ def test_wrap_long_lines():
     )
 
 
-def test_long_vfp_lines(tmpdir, caplog, mocker):
-    tmpdir.chdir()
+def test_long_vfp_lines(tmp_path, caplog, mocker):
+    os.chdir(tmp_path)
     Path("vfp.inc").write_text(
         """VFPPROD
 1 100 'GAS' 'WGR' 'GOR' 'THP' ' ' 'METRIC' 'BHP' /
@@ -783,9 +783,9 @@ insert:
     assert mycomment in str(sunsch.process_sch_config(conf))
 
 
-def test_weltarg_uda(tmpdir):
+def test_weltarg_uda(tmp_path):
     """WELTARG supports UDA from opm-common 2020.10"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     weltargkeyword = """WELTARG
   'OP-1' ORAT SOMEUDA /
 /
@@ -816,7 +816,7 @@ def test_weltarg_uda(tmpdir):
     assert "SOMEUDA" in str(sch)
 
 
-def test_long_udq_lines(tmpdir):
+def test_long_udq_lines(tmp_path):
     # UDQ statements must not be line-wrapped, there is special code in OPM to
     # avoid that.
     inputstr = """UDQ

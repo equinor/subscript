@@ -39,7 +39,7 @@ logger.setLevel(logging.INFO)
         ),
     ],
 )
-def test_dateparsing(datetxt, expected, tmpdir):
+def test_dateparsing(datetxt, expected, tmp_path):
     """Test parsing of dates"""
     # pylint: disable=unused-argument
     Path("datediff.txt").write_text(datetxt)
@@ -47,7 +47,7 @@ def test_dateparsing(datetxt, expected, tmpdir):
 
 
 @pytest.fixture
-def reek_data(tmpdir):
+def reek_data(tmp_path):
     """Prepare a data directory with Reek Eclipse binary output"""
     reekdir = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 
@@ -57,7 +57,7 @@ def reek_data(tmpdir):
     #    13:  2001-02-01
     #    19:  2001-08-01
 
-    reekdest = tmpdir / "reekdata"
+    reekdest = tmp_path / "reekdata"
     shutil.copytree(reekdir, reekdest, copy_function=os.symlink)
     cwd = os.getcwd()
     os.chdir(reekdest)

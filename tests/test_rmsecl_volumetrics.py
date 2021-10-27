@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import List
 
@@ -281,9 +282,9 @@ def test_disjoint_sets_to_dict(dframe: list, expected: dict):
     assert _disjoint_sets_to_dict(pd.DataFrame(dframe)) == expected
 
 
-def test_documentation_example(tmpdir, mocker, capsys):
-    tmpdir.chdir()
-    print(f"\nLook in {tmpdir} for input and output to be used in documentation")
+def test_documentation_example(tmp_path, mocker, capsys):
+    os.chdir(tmp_path)
+    print(f"\nLook in {tmp_path} for input and output to be used in documentation")
     Path("FOO.PRT").write_text(
         """
   REPORT   0     1 JAN 2000
@@ -409,8 +410,8 @@ FIPNUM:
     pd.testing.assert_frame_equal(disjoint_sets_1, disjoint_sets_3)
 
 
-def test_command_line(tmpdir, mocker):
-    tmpdir.chdir()
+def test_command_line(tmp_path, mocker):
+    os.chdir(tmp_path)
     Path("FOO.PRT").write_text(
         """
   REPORT   0     1 JAN 2000

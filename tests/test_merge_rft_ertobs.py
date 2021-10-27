@@ -28,11 +28,11 @@ logger.setLevel(logging.INFO)
 
 
 @pytest.fixture
-def drogondata(tmpdir):
+def drogondata(tmp_path):
     """Prepare a directory with Drogon testdata"""
     # pylint: disable=unused-argument
     drogondir = Path(__file__).absolute().parent / "testdata_merge_rft_ertobs/drogon"
-    drogondest = tmpdir / "drogondata"
+    drogondest = tmp_path / "drogondata"
     shutil.copytree(drogondir, drogondest)
     cwd = os.getcwd()
     os.chdir(drogondest)
@@ -80,9 +80,9 @@ def test_get_observations(drogondata):
         ("12 -1", 1),  # Might change later. -1 as error does not make sense
     ],
 )
-def test_get_observations_invalid(obsstring, validlength, tmpdir):
+def test_get_observations_invalid(obsstring, validlength, tmp_path):
     """Check observation parsing"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("foo.obs").write_text(obsstring)
     assert len(get_observations(".")) == validlength
 

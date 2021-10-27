@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -508,9 +509,9 @@ def test_compute_pc(propslist, satfunc_df, expected_pc):
             assert pc_series.values[0] == expected_pc
 
 
-def test_eqlnum2(tmpdir, mocker):
+def test_eqlnum2(tmp_path, mocker):
     """What if a model does not have EQLNUM=1 cells present"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     pd.DataFrame(
         [
             # This dataframe is a minimum dataset for check_swatinit
@@ -684,11 +685,11 @@ def test_volplot_manynegative():
     pyplot.show()
 
 
-def test_reek(tmpdir, mocker):
+def test_reek(tmp_path, mocker):
     """Test that we can run on the Reek dataset with no crashes,
     and with plotting to file"""
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         [
@@ -743,8 +744,8 @@ def test_reek(tmpdir, mocker):
 
 
 @pytest.mark.integration
-def test_ert_integration(tmpdir):
-    tmpdir.chdir()
+def test_ert_integration(tmp_path):
+    os.chdir(tmp_path)
     Path("test.ert").write_text(
         "\n".join(
             [

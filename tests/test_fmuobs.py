@@ -82,11 +82,11 @@ def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
         ("rft: foo", "yaml"),
     ],
 )
-def test_autoparse_string(string, expected_format, tmpdir):
+def test_autoparse_string(string, expected_format, tmp_path):
     """Test that difficult-to-parse-strings are recognized correctly
     (or not recognized at all). The filetype detector code has very mild
     requirements on dataframe validitiy."""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("inputfile.txt").write_text(string)
     assert autoparse_file("inputfile.txt")[0] == expected_format
 
@@ -257,14 +257,14 @@ def test_integration():
 
 @pytest.mark.integration
 @pytest.mark.parametrize("verbose", ["", "--verbose", "--debug"])
-def test_commandline(tmpdir, verbose, mocker, caplog):
+def test_commandline(tmp_path, verbose, mocker, caplog):
     """Test the executable versus on the ERT doc observation data
     and compare to precomputed CSV and YML.
 
     When code changes, updates to the CSV and YML might
     be necessary.
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         list(
@@ -342,12 +342,12 @@ def test_commandline(tmpdir, verbose, mocker, caplog):
 
 @pytest.mark.integration
 @pytest.mark.parametrize("verbose", ["", '"--verbose"', '"--debug"'])
-def test_ert_workflow_hook(verbose, tmpdir):
+def test_ert_workflow_hook(verbose, tmp_path):
     """Mock an ERT config with FMUOBS as a workflow and run it"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
     obs_file = TESTDATA_DIR / "ert-doc.obs"
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     Path("FOO.DATA").write_text("--Empty")
 

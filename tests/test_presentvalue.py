@@ -1,3 +1,4 @@
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -34,28 +35,37 @@ def test_dict_to_parameterstxt(res_dict, paramname, expected_str):
     assert presentvalue.dict_to_parameterstxt(res_dict, paramname) == expected_str
 
 
-def test_get_paramfilename(tmpdir):
+def test_get_paramfilename(tmp_path):
     """Test that we can locate the parameters.txt relative to an Eclipse file"""
-    tmpdir.chdir()
-    tmpdir.mkdir("foo1")
-    tmpdir.mkdir("foo1/foo2")
-    tmpdir.mkdir("foo1/foo2/foo3")
+    os.chdir(tmp_path)
+    (tmp_path / "foo1").mkdir()
+    (tmp_path / "foo1" / "foo2").mkdir(parents=True)
+    (tmp_path / "foo1" / "foo2" / "foo3").mkdir(parents=True)
 
     assert presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA") == ""
 
-    Path("foo1/parameters.txt").write_text("foo1")
+    Path("foo1/parameters.txt").write_text("foo1", encoding="utf8")
     assert (
-        open(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read() == "foo1"
+        Path(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read_text(
+            encoding="utf8"
+        )
+        == "foo1"
     )
 
-    Path("foo1/foo2/parameters.txt").write_text("foo2")
+    Path("foo1/foo2/parameters.txt").write_text("foo2", encoding="utf8")
     assert (
-        open(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read() == "foo2"
+        Path(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read_text(
+            encoding="utf8"
+        )
+        == "foo2"
     )
 
-    Path("foo1/foo2/foo3/parameters.txt").write_text("foo3")
+    Path("foo1/foo2/foo3/parameters.txt").write_text("foo3", encoding="utf8")
     assert (
-        open(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read() == "foo3"
+        Path(presentvalue.get_paramfilename("foo1/foo2/foo3/FOO.DATA")).read_text(
+            encoding="utf8"
+        )
+        == "foo3"
     )
 
 
@@ -73,10 +83,12 @@ def test_prepare_econ_table_simpletest():
     assert econ_df.index.name == "year"
 
 
-def test_prepare_econ_table_csv(tmpdir):
+def test_prepare_econ_table_csv(tmp_path):
     """Testing loading economics data from a CSV file"""
-    tmpdir.chdir()
-    Path("econ.csv").write_text("year, oilprice, gasprice, costs\n2030, 60, 2, 100")
+    os.chdir(tmp_path)
+    Path("econ.csv").write_text(
+        "year, oilprice, gasprice, costs\n2030, 60, 2, 100", encoding="utf8"
+    )
 
     with pytest.raises(ValueError):
         # usdtonok is not present:
@@ -268,23 +280,22 @@ def test_calc_pv_irr():
     assert presentvalue.calc_pv_irr(results["IRR"] * 2, IRR_DF, 2100) < 0.0
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test the main functionality of presentvalue as endpoint script, writing
     back results to parameters.txt in the original runpath"""
-    tmpdir.chdir()
     shutil.copytree(
         ECLDIR,
-        "model"
+        tmp_path / "model"
         # This is somewhat spacious, 39M, but the test will fail
         # if you try with a symlink (presentvalue.py looks through symlinks)
     )
-    tmpdir.join("model").chdir()
+    os.chdir(tmp_path / "model")
 
     parameterstxt_fname = "parameters.txt"
 
     # Create an empty file called parameters.txt, otherwise
     # the presentvalue script will not write to it.
-    Path(parameterstxt_fname).write_text("")
+    Path(parameterstxt_fname).write_text("", encoding="utf8")
     mocker.patch(
         "sys.argv",
         [
@@ -298,15 +309,17 @@ def test_main(tmpdir, mocker):
         ],
     )
     presentvalue.main()
-    parametersline = open(parameterstxt_fname).readlines()[0].strip()
+    parametersline = (
+        Path(parameterstxt_fname).read_text(encoding="utf8").splitlines()[0].strip()
+    )
     assert parametersline.split()[0] == "PresentValue"
     assert round(float(parametersline.split()[1]), 1) == 11653.9
 
 
-def test_no_gasinj(tmpdir):
+def test_no_gasinj(tmp_path):
     """Test that summary files with no gas injection works
     (missing GIT is the same as zero GIT)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     smry = pd.DataFrame(
         [
             {"DATE": "2030-01-01", "FOPT": 0, "FGPT": 0},
@@ -328,10 +341,10 @@ def test_no_gasinj(tmpdir):
     )
 
 
-def test_no_gas(tmpdir):
+def test_no_gas(tmp_path):
     """Test that summary files with no gas prod/injection works
     (missing GPT is the same as zero GPT)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     smry = pd.DataFrame(
         [
             {"DATE": "2030-01-01", "FOPT": 0},
@@ -353,10 +366,10 @@ def test_no_gas(tmpdir):
     )
 
 
-def test_no_oil(tmpdir):
+def test_no_oil(tmp_path):
     """Test that summary files with only gas prod/injection works"""
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     smry = pd.DataFrame(
         [
             {"DATE": "2030-01-01", "FGPT": 0},

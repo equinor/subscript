@@ -1,4 +1,5 @@
 """Test prtvol2csv, both as library and as command line"""
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -14,9 +15,9 @@ from subscript.prtvol2csv import prtvol2csv
 TESTDATADIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
 
 
-def test_currently_in_place_from_prt(tmpdir):
+def test_currently_in_place_from_prt(tmp_path):
     """Test parsing of PRT to find currently in place"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("FOO.PRT").write_text(
         """
 
@@ -47,11 +48,11 @@ def test_currently_in_place_from_prt(tmpdir):
     )
 
 
-def test_prtvol2csv(tmpdir, mocker):
+def test_prtvol2csv(tmp_path, mocker):
     """Test invocation from command line"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     with pytest.warns(FutureWarning, match="Output directories"):
         mocker.patch("sys.argv", ["prtvol2csv", "--debug", str(prtfile)])
         prtvol2csv.main()
@@ -140,9 +141,9 @@ def test_prtvol2csv(tmpdir, mocker):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
-def test_find_prtfile(tmpdir):
+def test_find_prtfile(tmp_path):
     """Test location service for PRT files"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     # When nothing is in the current dir, it will not find it:
     assert prtvol2csv.find_prtfile("FOO") == "FOO"
@@ -157,7 +158,7 @@ def test_find_prtfile(tmpdir):
     assert prtvol2csv.find_prtfile("FOO.PRT") == "FOO.PRT"
 
 
-def test_prtvol2df(tmpdir):
+def test_prtvol2df(tmp_path):
     simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
     resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
 
@@ -197,7 +198,7 @@ def test_prtvol2df(tmpdir):
     # that yet, perhaps it will be fixed later.
 
     # Check integer handling through yaml:
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("z2f_int.yml").write_text(yaml.dump({"zone2fipnum": {"Upper": 1}}))
     assert prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="z2f_int.yml"))[
         "ZONE"
@@ -261,7 +262,7 @@ def test_integration():
     sys.version_info < (3, 7), reason="Test function requires Python 3.7 or higher"
 )
 @pytest.mark.integration
-def test_prtvol2csv_regions(tmpdir, mocker):
+def test_prtvol2csv_regions(tmp_path, mocker):
     """Test region support, getting data from yaml.
 
     The functionality of writing CSV data grouped by regions will
@@ -288,7 +289,7 @@ def test_prtvol2csv_regions(tmpdir, mocker):
             {"FIPNUM": 6, "REGION": "RegionA", "ZONE": "Lower"},
         ]
     )
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("regions.yml").write_text(yaml.dump(yamlexample))
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     with pytest.warns(FutureWarning):
@@ -306,11 +307,11 @@ def test_prtvol2csv_regions(tmpdir, mocker):
 @pytest.mark.skipif(
     sys.version_info < (3, 7), reason="Test function requires Python 3.7 or higher"
 )
-def test_prtvol2csv_backwards_compat(tmpdir):
+def test_prtvol2csv_backwards_compat(tmp_path):
     """Test that we  have managed to keep backwards compatibility at least in
     the deprecation period"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     result = subprocess.run(
         ["prtvol2csv", str(prtfile)],
@@ -327,7 +328,7 @@ def test_prtvol2csv_backwards_compat(tmpdir):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_regions_typemix(tmpdir, mocker):
+def test_prtvol2csv_regions_typemix(tmp_path, mocker):
     """Test merging in region data, getting data from yaml"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -338,7 +339,7 @@ def test_prtvol2csv_regions_typemix(tmpdir, mocker):
         }
     }
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("regions.yml").write_text(yaml.dump(yamlexample))
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
@@ -354,9 +355,9 @@ def test_prtvol2csv_regions_typemix(tmpdir, mocker):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_webvizyaml(tmpdir, mocker):
+def test_prtvol2csv_webvizyaml(tmp_path, mocker):
     """Test region2fipnum-map in webviz-yaml-format"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -395,14 +396,14 @@ def test_prtvol2csv_webvizyaml(tmpdir, mocker):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_noresvol(tmpdir, mocker):
+def test_prtvol2csv_noresvol(tmp_path, mocker):
     """Test when FIPRESV is not included
 
     Perform the test by just fiddling with the test PRT file
     """
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     prtlines = Path(prtfile).read_text().replace("RESERVOIR VOLUMES", "foobar volumes")
     Path("MODIFIED.PRT").write_text(prtlines)
     mocker.patch("sys.argv", ["prtvol2csv", "MODIFIED.PRT"])
@@ -415,8 +416,8 @@ def test_prtvol2csv_noresvol(tmpdir, mocker):
 
 
 @pytest.mark.integration
-def test_ert_forward_model(tmpdir):
-    tmpdir.chdir()
+def test_ert_forward_model(tmp_path):
+    os.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -452,9 +453,9 @@ def test_ert_forward_model(tmpdir):
 
 
 @pytest.mark.integration
-def test_ert_forward_model_backwards_compat_deprecation(tmpdir):
+def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
     """Test that the deprecated behaviour still works for backwards compat"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 

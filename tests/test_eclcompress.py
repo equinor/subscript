@@ -79,9 +79,9 @@ def test_find_keyword_sets():
     assert compress_multiple_keywordsets(kw_sets, kw_nodata) == kw_nodata
 
 
-def test_empty_file(tmpdir):
+def test_empty_file(tmp_path):
     """Check that compression of empty files is a noop"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     emptyfilename = "emptyfile.grdecl"
     with open(emptyfilename, "w"):
         pass
@@ -90,10 +90,10 @@ def test_empty_file(tmpdir):
     assert os.stat(emptyfilename).st_size == 0
 
 
-def test_no_touch_non_eclipse(tmpdir):
+def test_no_touch_non_eclipse(tmp_path):
     """Check that we do not change a file that does not contain
     any Eclipse data"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     filename = "foo.txt"
     with open(filename, "w") as file_h:
         file_h.write("Some random text\nAnother line\nbut no Eclipse keywords")
@@ -228,7 +228,7 @@ def test_multiplerecords():
     ]
 
 
-def test_whitespace(tmpdir):
+def test_whitespace(tmp_path):
     """Ensure excessive whitespace is not added"""
     kw_string = """
 MULTIPLY
@@ -241,7 +241,7 @@ MULTIPLY
     )
 
     # Test the same when the string is read from a file:
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     Path("test.inc").write_text(kw_string)
     eclcompress("test.inc")
     compressed_lines = Path("test.inc").read_text().splitlines()
@@ -321,11 +321,11 @@ def test_integration():
     assert subprocess.check_output(["eclcompress", "-h"])
 
 
-def test_vfpprod(tmpdir, mocker):
+def test_vfpprod(tmp_path, mocker):
     """VFPPROD contains multiple record data, for which E100
     fails if the record-ending slash is not on the same line as the data
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     vfpstr = """
 VFPPROD
   10 2021.3 LIQ WCT GOR THP GRAT METRIC BHP /
@@ -358,10 +358,10 @@ VFPPROD
     assert "8000 10000 /" in open("vfpfile.inc").read()
 
 
-def test_main(tmpdir, mocker):
+def test_main(tmp_path, mocker):
     """Test installed endpoint"""
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     with open("testdeck.inc", "w") as testdeck:
         for line in FILELINES:
@@ -400,10 +400,10 @@ def test_binary_file():
     assert "Skipped wrong.grdecl, not text file" in proc_output
 
 
-def test_iso8859(tmpdir):
+def test_iso8859(tmp_path):
     """Test that a text file with ISO-8859 encoding does
     not trigger bugs (and is written back as utf-8)"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     nastyfile = "nastyfile.inc"
     Path(nastyfile).write_text(
         "-- Gullfaks Sør\nPORO\n 1 1 1 1/\n", encoding="ISO-8859-1"
@@ -412,9 +412,9 @@ def test_iso8859(tmpdir):
     assert "4*1" in open(nastyfile).read()  # Outputted file is always UTF-8
 
 
-def test_utf8(tmpdir):
+def test_utf8(tmp_path):
     """Test that we can parse and write a file with utf-8 chars"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     nastyfile = "nastyfile.inc"
     Path(nastyfile).write_text("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
     main_eclcompress(nastyfile, None)
@@ -422,9 +422,9 @@ def test_utf8(tmpdir):
 
 
 @pytest.fixture(name="eclincludes")
-def fixture_eclincludes(tmpdir):
+def fixture_eclincludes(tmp_path):
     """Provide a directory structure with grdecl files in it"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     os.makedirs("eclipse/include/props")
     os.makedirs("eclipse/include/regions")
     open("eclipse/include/props/perm.grdecl", "w").write(
@@ -463,9 +463,9 @@ def test_files_override_default_wildcards():
 
 
 @pytest.fixture
-def twofiles(tmpdir):
-    """Provide a tmpdir with two sample grdecl files and a filepattern file"""
-    tmpdir.chdir()
+def twofiles(tmp_path):
+    """Provide a tmp_path with two sample grdecl files and a filepattern file"""
+    os.chdir(tmp_path)
 
     open("perm.grdecl", "w").write("PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/")
     open("poro.grdecl", "w").write("PORO\n1 1 1 1 1 1 1\n/")
@@ -532,9 +532,9 @@ def text_compress_argparse_3(mocker):
     assert "7*1" not in open("poro.grdecl").read()
 
 
-def test_glob_patterns(tmpdir):
+def test_glob_patterns(tmp_path):
     """Test globbing filepatterns from a file with patterns"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     dummyfiles = ["perm.grdecl", "poro.grdecl"]
 
@@ -574,10 +574,10 @@ perm.grdecl"""
         parse_wildcardfile("notthere")
 
 
-def test_eclkw_regexp(tmpdir, mocker):
+def test_eclkw_regexp(tmp_path, mocker):
     """Test that custom regular expressions can be supplied to compress
     otherwise unknown (which implies no compression) keywords"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     uncompressed_str = "G1\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/"
 
@@ -614,12 +614,12 @@ def test_eclkw_regexp(tmpdir, mocker):
     assert "13*0" in compressed
 
 
-def test_binary_example_file(tmpdir, mocker):
+def test_binary_example_file(tmp_path, mocker):
     """Test that a particular binary file is not touched by eclcompress
 
     (historical bug)
     """
-    tmpdir.chdir()
+    os.chdir(tmp_path)
     filename = "permxyz.grdecl"
     shutil.copy(TESTDATADIR / filename, filename)
     origfilehash = hashlib.sha256(open(filename, "rb").read()).hexdigest()
@@ -645,7 +645,7 @@ def test_binary_example_file(tmpdir, mocker):
         (bytearray([7] * 1024 + [0]), False),
     ],
 )
-def test_file_is_binary(byte_sequence, expected, tmpdir):
+def test_file_is_binary(byte_sequence, expected, tmp_path):
     if isinstance(byte_sequence, str):
         Path("foo-utf8.txt").write_text(byte_sequence, encoding="utf-8")
         assert file_is_binary("foo-utf8.txt") == expected

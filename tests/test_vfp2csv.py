@@ -1,3 +1,4 @@
+import os
 import subprocess
 from pathlib import Path
 
@@ -7,9 +8,9 @@ import pytest
 from subscript.vfp2csv import vfp2csv
 
 
-def test_vfp2csv(tmpdir, mocker):
+def test_vfp2csv(tmp_path, mocker):
     """Test the command line utility on sample input files"""
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     testdatadir = Path(__file__).absolute().parent / "data" / "vfp"
 

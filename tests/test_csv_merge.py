@@ -1,4 +1,5 @@
 """Test csv_merge"""
+import os
 import subprocess
 from pathlib import Path
 
@@ -61,12 +62,12 @@ def test_taglist():
     assert csv_merge.taglist(files4, csv_merge.ENSEMBLE_REGEXP) == []
 
 
-def test_main_merge(tmpdir, mocker):
+def test_main_merge(tmp_path, mocker):
     """Test command line interface for csv_merge"""
 
     assert subprocess.check_output(["csv_merge", "-h"])
 
-    tmpdir.chdir()
+    os.chdir(tmp_path)
 
     test_csv_1 = "foo.csv"
     test_csv_2 = "bar.csv"
@@ -150,7 +151,7 @@ def test_main_merge(tmpdir, mocker):
     assert set(merged["FILETYPE"].unique()) == set([test_csv_1, test_csv_2])
 
 
-def test_empty_files(tmpdir):
+def test_empty_files(tmp_path):
     """Test behaviour when some files are missing or are empty"""
 
     # Empty but existing file:
@@ -199,7 +200,7 @@ def test_empty_files(tmpdir):
 
 @pytest.mark.integration
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
-def test_ert_hook(tmpdir):
+def test_ert_hook(tmp_path):
     """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
     realizations"""
     Path("realization-0/iter-0").mkdir(parents=True)
