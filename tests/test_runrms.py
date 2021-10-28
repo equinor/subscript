@@ -233,9 +233,9 @@ def test_requested_rms_version(tmp_path, mocker):
 )
 def test_runrms_disable_komodo_exec(tmp_path, monkeypatch):
     """Testing integration with Komodo."""
-    with tmp_path.as_cwd():
-        Path("rms_fake").write_text(
-            """\
+    os.chdir(tmp_path)
+    Path("rms_fake").write_text(
+        """\
 #!/usr/bin/env python3
 import os
 import sys
@@ -274,21 +274,21 @@ if errors:
     sys.exit(1)
 sys.exit(0)
 """
-        )
+    )
 
-        st = os.stat("rms_fake")
-        os.chmod("rms_fake", st.st_mode | stat.S_IEXEC)
-        monkeypatch.setenv("KOMODO_RELEASE", f"{os.getcwd()}/bleeding")
-        monkeypatch.setenv("_PRE_KOMODO_MANPATH", "some/man/path")
-        monkeypatch.setenv("_PRE_KOMODO_LD_LIBRARY_PATH", "some/ld/path")
+    st = os.stat("rms_fake")
+    os.chmod("rms_fake", st.st_mode | stat.S_IEXEC)
+    monkeypatch.setenv("KOMODO_RELEASE", f"{os.getcwd()}/bleeding")
+    monkeypatch.setenv("_PRE_KOMODO_MANPATH", "some/man/path")
+    monkeypatch.setenv("_PRE_KOMODO_LD_LIBRARY_PATH", "some/ld/path")
 
-        runner = rr.RunRMS()
-        runner.do_parse_args(["-v", "10.1.3"])
-        runner.parse_setup()
-        runner.version_requested = "10.1.3"
-        runner.exe = "./rms_fake"
-        runner.pythonpath = ""
-        runner.pluginspath = "rms/plugins/path"
+    runner = rr.RunRMS()
+    runner.do_parse_args(["-v", "10.1.3"])
+    runner.parse_setup()
+    runner.version_requested = "10.1.3"
+    runner.exe = "./rms_fake"
+    runner.pythonpath = ""
+    runner.pluginspath = "rms/plugins/path"
 
-        return_code = runner.launch_rms(empty=True)
-        assert return_code == 0
+    return_code = runner.launch_rms(empty=True)
+    assert return_code == 0
