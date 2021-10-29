@@ -388,9 +388,18 @@ def mock_family_1():
         columns=columns,
         data=[[1, 3, 3, 3, 3, 0.1, 2, -2, 0.25, 300, 150]],
     )
-    PyscalFactory.create_pyscal_list(dframe_pess).dump_family_1("pess.inc")
-    PyscalFactory.create_pyscal_list(dframe_base).dump_family_1("base.inc")
-    PyscalFactory.create_pyscal_list(dframe_opt).dump_family_1("opt.inc")
+    Path("pess.inc").write_text(
+        PyscalFactory.create_pyscal_list(dframe_pess).build_eclipse_data(family=1),
+        encoding="utf8",
+    )
+    Path("base.inc").write_text(
+        PyscalFactory.create_pyscal_list(dframe_base).build_eclipse_data(family=1),
+        encoding="utf8",
+    )
+    Path("opt.inc").write_text(
+        PyscalFactory.create_pyscal_list(dframe_opt).build_eclipse_data(family=1),
+        encoding="utf8",
+    )
 
 
 def test_mock(tmp_path):
@@ -492,16 +501,6 @@ def test_mock_two_satnums_via_files(tmp_path):
     """
     # pylint: disable=no-value-for-parameter
     os.chdir(tmp_path)
-    PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["low"]).dump_family_1(
-        "pess.inc"
-    )
-    PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["base"]).dump_family_1(
-        "base.inc"
-    )
-    PyscalFactory.create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["high"]).dump_family_1(
-        "opt.inc"
-    )
-
     config = {
         "base": ["base.inc"],
         "low": ["pess.inc"],
@@ -510,6 +509,13 @@ def test_mock_two_satnums_via_files(tmp_path):
         "interpolations": [{"param_w": -0.5, "param_g": 0.5}],
         "delta_s": 0.1,
     }
+    for case in ["low", "base", "high"]:
+        Path(config[case][0]).write_text(
+            PyscalFactory.create_pyscal_list(
+                TWO_SATNUM_PYSCAL_MOCK.loc[case]
+            ).build_eclipse_data(family=1),
+            encoding="utf8",
+        )
 
     interp_relperm.process_config(config)
     outfile_str = Path("outfile.inc").read_text()
@@ -583,15 +589,24 @@ def test_mock_two_satnums_via_files(tmp_path):
 )
 def test_mock_two_satnums_via_fam2_files(tmp_path, int_param, expected_file):
     os.chdir(tmp_path)
-    PyscalFactory.create_pyscal_list(
-        TWO_SATNUM_PYSCAL_MOCK.loc["low"], h=0.1
-    ).dump_family_2("pess.inc")
-    PyscalFactory.create_pyscal_list(
-        TWO_SATNUM_PYSCAL_MOCK.loc["base"], h=0.1
-    ).dump_family_2("base.inc")
-    PyscalFactory.create_pyscal_list(
-        TWO_SATNUM_PYSCAL_MOCK.loc["high"], h=0.1
-    ).dump_family_2("opt.inc")
+    Path("pess.inc").write_text(
+        PyscalFactory.create_pyscal_list(
+            TWO_SATNUM_PYSCAL_MOCK.loc["low"], h=0.1
+        ).build_eclipse_data(family=2),
+        encoding="utf8",
+    )
+    Path("base.inc").write_text(
+        PyscalFactory.create_pyscal_list(
+            TWO_SATNUM_PYSCAL_MOCK.loc["base"], h=0.1
+        ).build_eclipse_data(family=2),
+        encoding="utf8",
+    )
+    Path("opt.inc").write_text(
+        PyscalFactory.create_pyscal_list(
+            TWO_SATNUM_PYSCAL_MOCK.loc["high"], h=0.1
+        ).build_eclipse_data(family=2),
+        encoding="utf8",
+    )
     config = {
         "base": ["base.inc"],
         "low": ["pess.inc"],

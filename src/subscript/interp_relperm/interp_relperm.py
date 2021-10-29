@@ -538,11 +538,10 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
             )
         )
 
-    if cfg_suite.snapshot.family == 1:
-        interpolants.dump_family_1(cfg_suite.snapshot.result_file)
-    else:
-        interpolants.dump_family_2(cfg_suite.snapshot.result_file)
-
+    Path(cfg_suite.snapshot.result_file).write_text(
+        interpolants.build_eclipse_data(family=cfg_suite.snapshot.family),
+        encoding="utf8",
+    )
     logger.info(
         "Done; interpolated relperm curves written to file: %s",
         str(cfg_suite.snapshot.result_file),
