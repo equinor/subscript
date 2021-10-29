@@ -24,6 +24,7 @@ def test_autoconvert():
 
 
 def test_choice_1():
+    """Mock a user selecting choice 1"""
     result = subprocess.run(
         ["sw_model_utilities"], check=True, input=b"1\n1\n1\n", stdout=subprocess.PIPE
     )
@@ -32,6 +33,7 @@ def test_choice_1():
 
 
 def test_choice_2():
+    """Mock a user selecting choice 2"""
     result = subprocess.run(
         ["sw_model_utilities"], check=True, input=b"2\n1\n1\n", stdout=subprocess.PIPE
     )
@@ -40,6 +42,7 @@ def test_choice_2():
 
 
 def test_choice_3():
+    """Mock a user selecting choice 3"""
     subprocess.run(
         ["sw_model_utilities", "--dryrun"],
         check=True,
@@ -49,6 +52,7 @@ def test_choice_3():
 
 
 def test_choice_4():
+    """Mock a user selecting choice 4"""
     subprocess.run(
         ["sw_model_utilities", "--dryrun"],
         check=True,

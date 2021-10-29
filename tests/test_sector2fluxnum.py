@@ -7,8 +7,11 @@ from subscript.sector2fluxnum import sector2fluxnum
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_sector2fluxnum"
 
+# pylint: disable=invalid-name  # All those CAPS are due to Eclipse
+
 
 def test_main_test(tmp_path, mocker):
+    """Test the command line utility"""
     os.chdir(tmp_path)
 
     input_ECL_CASE = TESTDATA / "TEST.DATA"

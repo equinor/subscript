@@ -87,7 +87,7 @@ def test_get_restart_indices_filenotfound(tmp_path):
         restartthinner.get_restart_indices(Path("foo"))
 
     os.chdir(tmp_path)
-    Path("FOO.UNRST").write_text("this is not an unrst file")
+    Path("FOO.UNRST").write_text("this is not an unrst file", encoding="utf8")
     with pytest.raises(TypeError, match="which is not a restart file"):
         restartthinner.get_restart_indices("FOO.UNRST")
 

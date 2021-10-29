@@ -16,9 +16,11 @@ from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
 TESTDATA_DIR = Path(__file__).absolute().parent / "testdata_fmuobs"
 
+# pylint: disable=unused-argument  # false positive from fixtures
 
-@pytest.fixture()
-def readonly_testdata_dir():
+
+@pytest.fixture(name="readonly_testdata_dir")
+def fixture_readonly_testdata_dir():
     """When used as a fixture, the test function will run in the testdata
     directory. Do not write new or temporary files in here"""
     cwd = os.getcwd()
@@ -87,7 +89,7 @@ def test_autoparse_string(string, expected_format, tmp_path):
     (or not recognized at all). The filetype detector code has very mild
     requirements on dataframe validitiy."""
     os.chdir(tmp_path)
-    Path("inputfile.txt").write_text(string)
+    Path("inputfile.txt").write_text(string, encoding="utf8")
     assert autoparse_file("inputfile.txt")[0] == expected_format
 
 
@@ -311,8 +313,12 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         reference_dframe_from_disk.sort_index(axis=1),
     )
 
-    dict_from_yml_on_disk = yaml.safe_load(Path("output.yml").read_text())
-    reference_dict_from_yml = yaml.safe_load((TESTDATA_DIR / "ert-doc.yml").read_text())
+    dict_from_yml_on_disk = yaml.safe_load(
+        Path("output.yml").read_text(encoding="utf8")
+    )
+    reference_dict_from_yml = yaml.safe_load(
+        (TESTDATA_DIR / "ert-doc.yml").read_text(encoding="utf8")
+    )
     assert dict_from_yml_on_disk == reference_dict_from_yml
 
     ri_from_csv_on_disk = pd.read_csv("ri_output.csv")
@@ -334,6 +340,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     ]
     run_result = subprocess.run(arguments, check=True, stdout=subprocess.PIPE)
     dframe_from_stdout = pd.read_csv(io.StringIO(run_result.stdout.decode("utf-8")))
+    # pylint: disable=no-member  # false positive on Pandas object
     pd.testing.assert_frame_equal(
         dframe_from_stdout.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
@@ -349,7 +356,7 @@ def test_ert_workflow_hook(verbose, tmp_path):
     obs_file = TESTDATA_DIR / "ert-doc.obs"
     os.chdir(tmp_path)
 
-    Path("FOO.DATA").write_text("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
 
     Path("wf_fmuobs").write_text(
         "FMUOBS "
@@ -358,7 +365,8 @@ def test_ert_workflow_hook(verbose, tmp_path):
         + str(obs_file)
         + ' "--yaml" ert-obs.yml "--resinsight" ri-obs.csv "--includedir" '
         + str(TESTDATA_DIR)
-        + "\n"
+        + "\n",
+        encoding="utf8",
     )
 
     ert_config = [
@@ -371,7 +379,7 @@ def test_ert_workflow_hook(verbose, tmp_path):
     ]
 
     ert_config_fname = "test.ert"
-    Path(ert_config_fname).write_text("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
@@ -382,7 +390,7 @@ def test_ert_workflow_hook(verbose, tmp_path):
     # is emitted:
     ert_log_filename = "ert-log.txt"  # Beware, this filename is controlled by ERT
     assert Path(ert_log_filename).exists()
-    ert_output = Path(ert_log_filename).read_text()
+    ert_output = Path(ert_log_filename).read_text(encoding="utf8")
 
     # This is slightly tricky, as ERT has its own logging handler which is able
     # to pick up the log messages, but whose level cannot be controlled by

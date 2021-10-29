@@ -86,7 +86,7 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
     Returns:
         pd.DataFrame if perform_qc is True, else None
     """
-    Path("FOO.DATA").write_text(str(resmodel))
+    Path("FOO.DATA").write_text(str(resmodel), encoding="utf8")
     simulator_option = []
     if "runeclipse" in simulator:
         simulator_option = ["-i"]
@@ -635,7 +635,7 @@ def test_swu(simulator, tmp_path):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swu_equal_swatinit(simulator, tmp_path):
+def test_swu_equal_swatinit(simulator):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
     Eclipse will ignore SWATINIT because it is equal to SWU.
@@ -663,7 +663,7 @@ def test_swu_equal_swatinit(simulator, tmp_path):
 
 
 @pytest.mark.parametrize("simulator", SIMULATORS)
-def test_swu_lessthan_swatinit(simulator, tmp_path):
+def test_swu_lessthan_swatinit(simulator):
     """Test SWU equal to SWATINIT
 
     In Eclipse this looks like the same situation as SWATINIT_1,

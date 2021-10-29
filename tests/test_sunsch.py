@@ -12,9 +12,11 @@ from subscript.sunsch import sunsch
 
 DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"
 
+# pylint: disable=unused-argument
 
-@pytest.fixture
-def readonly_datadir():
+
+@pytest.fixture(name="readonly_datadir")
+def fixture_readonly_datadir():
     """When used as a fixture, the test function will run in the testdata
     directory. Do not write new or temporary files in here"""
     cwd = Path.cwd()
@@ -25,8 +27,9 @@ def readonly_datadir():
         os.chdir(cwd)
 
 
-@pytest.fixture
-def testdata(tmp_path):
+@pytest.fixture(name="testdata")
+def fixture_testdata(tmp_path):
+    """Fixture providing test data for test functions"""
     os.chdir(tmp_path)
     cwd = os.getcwd()
     shutil.copytree(DATADIR, "testdata_sunsch")
@@ -46,34 +49,34 @@ def test_main(testdata, caplog, mocker):
     assert "DEPRECATED" not in caplog.text
     assert Path(outfile).exists()
 
-    schlines = open(outfile).readlines()
+    schlines = Path(outfile).read_text(encoding="utf8").splitlines()
     assert len(schlines) > 70
 
     # Check footemplate.sch was included:
-    assert any(["A-90" in x for x in schlines])
+    assert any("A-90" in x for x in schlines)
 
     # Sample check for mergeme.sch:
-    assert any(["WRFTPLT" in x for x in schlines])
+    assert any("WRFTPLT" in x for x in schlines)
 
     # Check for foo1.sch, A-1 should occur twice
-    assert sum(["A-1" in x for x in schlines]) == 2
+    assert sum("A-1" in x for x in schlines) == 2
 
     # Check for substitutetest:
-    assert any(["400000" in x for x in schlines])
+    assert any("400000" in x for x in schlines)
 
     # Check for randomid:
-    assert any(["A-4" in x for x in schlines])
+    assert any("A-4" in x for x in schlines)
 
     # Test that we can have statements in the init file
     # before the first DATES that are kept:
 
-    sch_conf = yaml.safe_load(open("config_v2.yml"))
+    sch_conf = yaml.safe_load(Path("config_v2.yml").read_text(encoding="utf8"))
     print(sch_conf)
     sch_conf["init"] = "initwithdates.sch"
     sunsch.process_sch_config(sch_conf)
 
     # BAR-FOO is a magic string that occurs before any DATES in initwithdates.sch
-    assert "BAR-FOO" in "".join(open(outfile).readlines())
+    assert "BAR-FOO" in "".join(Path(outfile).read_text(encoding="utf8").splitlines())
 
 
 def test_cmdline_output(testdata, mocker):
@@ -90,14 +93,14 @@ def test_cmdline_startdate(testdata, mocker):
     """Test that --startdate on command line overrides config"""
     mocker.patch("sys.argv", ["sunsch", "--startdate", "2020-01-01", "config_v2.yml"])
     sunsch.main()
-    assert "2018" not in Path("schedule.inc").read_text()
+    assert "2018" not in Path("schedule.inc").read_text(encoding="utf8")
 
 
 def test_cmdline_enddate(testdata, mocker):
     """Test that --enddate on command line overrides config"""
     mocker.patch("sys.argv", ["sunsch", "--enddate", "2020-01-01", "config_v2.yml"])
     sunsch.main()
-    assert "2021" not in Path("schedule.inc").read_text()
+    assert "2021" not in Path("schedule.inc").read_text(encoding="utf8")
 
 
 def test_cmdline_refdate(testdata, mocker):
@@ -106,24 +109,24 @@ def test_cmdline_refdate(testdata, mocker):
     mocker.patch("sys.argv", ["sunsch", "config_v2.yml"])
     sunsch.main()
     # 40 days after refdate, which is 2018-01-01 in yaml:
-    assert "10 'FEB' 2018" in Path("schedule.inc").read_text()
+    assert "10 'FEB' 2018" in Path("schedule.inc").read_text(encoding="utf8")
 
     mocker.patch("sys.argv", ["sunsch", "--refdate", "2019-01-01", "config_v2.yml"])
     sunsch.main()
     # It  should not be 40 days after startdate,
-    assert "10 'FEB' 2018" not in Path("schedule.inc").read_text()
+    assert "10 'FEB' 2018" not in Path("schedule.inc").read_text(encoding="utf8")
     # but 40 days after command line refdate:
-    assert "10 'FEB' 2019" in Path("schedule.inc").read_text()
+    assert "10 'FEB' 2019" in Path("schedule.inc").read_text(encoding="utf8")
 
 
 def test_cmdline_dategrid(testdata, mocker):
     """Test that dategrid can be overridden on command line"""
     mocker.patch("sys.argv", ["sunsch", "--dategrid", "daily", "config_v2.yml"])
     sunsch.main()
-    assert "6 'JAN' 2017" in Path("schedule.inc").read_text()
-    assert "7 'JAN' 2017" in Path("schedule.inc").read_text()
-    assert "8 'JAN' 2017" in Path("schedule.inc").read_text()
-    assert "9 'JAN' 2017" in Path("schedule.inc").read_text()
+    assert "6 'JAN' 2017" in Path("schedule.inc").read_text(encoding="utf8")
+    assert "7 'JAN' 2017" in Path("schedule.inc").read_text(encoding="utf8")
+    assert "8 'JAN' 2017" in Path("schedule.inc").read_text(encoding="utf8")
+    assert "9 'JAN' 2017" in Path("schedule.inc").read_text(encoding="utf8")
 
 
 def test_dump_stdout(testdata, mocker):
@@ -165,7 +168,7 @@ def test_config_schema(tmp_path):
     )
     assert not cfg_suite.valid  # file missing
 
-    Path("existingfile.sch").write_text("foo")
+    Path("existingfile.sch").write_text("foo", encoding="utf8")
     cfg_suite = configsuite.ConfigSuite(
         cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
     )
@@ -189,7 +192,7 @@ def test_templating(tmp_path):
     """Test templating"""
     os.chdir(tmp_path)
     Path("template.tmpl").write_text(
-        "WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/"
+        "WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/", encoding="utf8"
     )
 
     sunschconf = {
@@ -251,7 +254,7 @@ def test_templating(tmp_path):
     # Sunsch lets this though, but logs an error.
 
     # Let the template file be empty:
-    Path("empty.tmpl").write_text("")
+    Path("empty.tmpl").write_text("", encoding="utf8")
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "insert": [
@@ -314,6 +317,7 @@ def test_days_float(readonly_datadir):
 
 
 def test_starttime(readonly_datadir):
+    """Test that startime as a datetime is written as a date"""
     sunschconf = {
         "starttime": datetime.datetime(2020, 2, 1, 0, 0, 0),
         "enddate": datetime.date(2021, 1, 1),
@@ -440,14 +444,16 @@ DATES
 
 INCLUDE
   'something.sch' /
-"""
+""",
+        encoding="utf8",
     )
     Path("something.sch").write_text(
         """
 WRFTPLT
   2 /
 /
-"""
+""",
+        encoding="utf8",
     )
 
     sunschconf = {
@@ -466,7 +472,8 @@ DATES
 
 INCLUDE
   'somethingnotexistingyet.sch' /
-"""
+""",
+        encoding="utf8",
     )
     sunschconf = {
         "startdate": datetime.date(2000, 1, 1),
@@ -501,7 +508,8 @@ DATES
 
 INCLUDE
   '$MYSCHFILES/something.sch' /
-"""
+""",
+        encoding="utf8",
     )
 
     sunschconf = {
@@ -537,19 +545,19 @@ def test_sch_file_nonempty(tmp_path):
     """Test that we can detect empty files"""
     os.chdir(tmp_path)
 
-    Path("empty.sch").write_text("")
+    Path("empty.sch").write_text("", encoding="utf8")
     assert not sunsch.sch_file_nonempty("empty.sch")
 
-    Path("commentonly.sch").write_text("-- an Eclipse comment")
+    Path("commentonly.sch").write_text("-- an Eclipse comment", encoding="utf8")
     assert not sunsch.sch_file_nonempty("commentonly.sch")
 
-    Path("dates.sch").write_text("DATES\n 1 NOV 2080 / \n/")
+    Path("dates.sch").write_text("DATES\n 1 NOV 2080 / \n/", encoding="utf8")
     assert sunsch.sch_file_nonempty("dates.sch")
 
-    Path("wconprod.sch").write_text("WCONPROD\n A ORAT 0 / \n/")
+    Path("wconprod.sch").write_text("WCONPROD\n A ORAT 0 / \n/", encoding="utf8")
     assert sunsch.sch_file_nonempty("wconprod.sch")
 
-    Path("bogus.sch").write_text("BOGUSrn A ORAT 0 / \n/")
+    Path("bogus.sch").write_text("BOGUSrn A ORAT 0 / \n/", encoding="utf8")
     # Such a bogus file will give errors later, but
     # it should be treated as nonempty to be able
     # to catch the error elsewhere.
@@ -560,12 +568,12 @@ def test_emptyfiles(tmp_path):
     """Test that we don't crash when we try to include files
     which are empty (or only contains comments)"""
     os.chdir(tmp_path)
-    Path("empty.sch").write_text("")
+    Path("empty.sch").write_text("", encoding="utf8")
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["empty.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert str(sch) == ""
 
-    Path("commentonly.sch").write_text("-- an Eclipse comment")
+    Path("commentonly.sch").write_text("-- an Eclipse comment", encoding="utf8")
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["commentonly.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
     assert str(sch) == ""
@@ -718,6 +726,7 @@ def test_wrap_long_lines():
 
 
 def test_long_vfp_lines(tmp_path, caplog, mocker):
+    """Make sure that lines can't get too long for Eclipse"""
     os.chdir(tmp_path)
     Path("vfp.inc").write_text(
         """VFPPROD
@@ -745,7 +754,7 @@ def test_long_vfp_lines(tmp_path, caplog, mocker):
     )
     mocker.patch("sys.argv", ["sunsch", "conf.yml"])
     sunsch.main()
-    schinc = Path("sch.inc").read_text()
+    schinc = Path("sch.inc").read_text(encoding="utf8")
     assert max([len(line) for line in schinc.split("\n")]) <= 129
     assert "Line 7 had length 146, wrapped" in caplog.text
 
@@ -790,14 +799,14 @@ def test_weltarg_uda(tmp_path):
   'OP-1' ORAT SOMEUDA /
 /
 """
-    with open("weltarg.sch", "w") as file_h:
-        file_h.write(
-            """DATES
+    Path("weltarg.sch").write_text(
+        """DATES
   1 'NOV' 2022 /
 /
 """
-            + weltargkeyword
-        )
+        + weltargkeyword,
+        encoding="utf8",
+    )
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "files": ["weltarg.sch"],
@@ -817,8 +826,8 @@ def test_weltarg_uda(tmp_path):
 
 
 def test_long_udq_lines(tmp_path):
-    # UDQ statements must not be line-wrapped, there is special code in OPM to
-    # avoid that.
+    """UDQ statements must not be line-wrapped, there is special code in OPM to
+    avoid that."""
     inputstr = """UDQ
 
 DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_05' + WWIR 'A_06' + WWIR 'A_07' + WWIR 'A_08' + WWIR 'A_09' + WWIR 'A_10'  + WWIR 'A_11' + WWIR 'A_12' + WWIR 'A_13' + WWIR 'A_14' + WWIR 'A_15'/
@@ -826,7 +835,7 @@ DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_
 /"""  # noqa
     assert len(inputstr.split("\n")) == 5  # Avoid editor-spoiled test.
 
-    Path("longudq.sch").write_text(inputstr)
+    Path("longudq.sch").write_text(inputstr, encoding="utf8")
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "insert": [{"date": datetime.date(2020, 2, 1), "filename": "longudq.sch"}],
@@ -842,7 +851,7 @@ DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_
     assert "' A" not in schstr
 
     # Redo test without quotes in the input string:
-    Path("longudq-noquotes.sch").write_text(inputstr.replace("'", ""))
+    Path("longudq-noquotes.sch").write_text(inputstr.replace("'", ""), encoding="utf8")
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "insert": [
@@ -882,7 +891,7 @@ def test_integration():
 @pytest.mark.integration
 def test_ert_forward_model(testdata):
     """Test that the ERT forward model configuration is correct"""
-    Path("FOO.DATA").write_text("--Empty")
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
 
     Path("test.ert").write_text(
         "\n".join(
@@ -894,7 +903,8 @@ def test_ert_forward_model(testdata):
                 "",
                 "FORWARD_MODEL SUNSCH(<config>=config_v2.yml)",
             ]
-        )
+        ),
+        encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
     assert Path("schedule.inc").is_file()

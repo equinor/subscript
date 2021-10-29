@@ -37,6 +37,8 @@ def test_main(tmp_path, mocker):
 
 
 def test_main_fmu(tmp_path, mocker):
+    """Test the --fmu option on the command line, yielding
+    a different directory layout"""
     os.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
@@ -52,6 +54,7 @@ def test_main_fmu(tmp_path, mocker):
 
 
 def test_repeated_run(tmp_path, mocker):
+    """Test what happens on repeated incovations"""
     os.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
@@ -81,6 +84,7 @@ def test_repeated_run(tmp_path, mocker):
     ],
 )
 def test_restart_warning(injected, expectedwarning, tmp_path, mocker, capsys):
+    """Test that warnings are emitted on various contents in the DATA file"""
     os.chdir(tmp_path)
 
     shutil.copytree(ECLDIR.parent / "include", "include", copy_function=os.symlink)
@@ -91,8 +95,10 @@ def test_restart_warning(injected, expectedwarning, tmp_path, mocker, capsys):
     datafile = Path("model") / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafile), "."])
 
-    modifieddata = "\n".join(datafile.read_text().splitlines() + [injected])
-    datafile.write_text(modifieddata)
+    modifieddata = "\n".join(
+        datafile.read_text(encoding="utf8").splitlines() + [injected]
+    )
+    datafile.write_text(modifieddata, encoding="utf8")
 
     pack_sim.main()
 
@@ -109,15 +115,13 @@ def test_binary_file_detection(tmp_path):
     tmp_data_file = Path("TMP.DATA")
     egrid_file = "2_R001_REEK-0.EGRID"
 
-    tmp_data_file.write_text(f"GDFILE\n'{egrid_file}' /")
+    tmp_data_file.write_text(f"GDFILE\n'{egrid_file}' /", encoding="utf8")
 
     (packing_path / "include").mkdir(parents=True)
 
     pack_sim.inspect_file(tmp_data_file, ECLDIR, packing_path, "", "", False)
 
-    assert filecmp.cmp(
-        "%s/%s" % (ECLDIR, egrid_file), "%s/include/%s" % (packing_path, egrid_file)
-    )
+    assert filecmp.cmp(f"{ECLDIR}/{egrid_file}", f"{packing_path}/include/{egrid_file}")
 
 
 def test_empty_file_inspection(tmp_path):
@@ -128,7 +132,7 @@ def test_empty_file_inspection(tmp_path):
     empty_include_file = Path("empty.inc")
 
     packing_path = Path("packed")
-    empty_include_file.write_text("")
+    empty_include_file.write_text("", encoding="utf8")
 
     (packing_path / "include").mkdir(parents=True)
 
@@ -150,7 +154,7 @@ def test_strip_comments(tmp_path, mocker):
     pack_sim.main()
     size_no_comments = os.stat(ECLCASE).st_size
     assert size_no_comments < size_with_comments
-    assert "--" not in Path(ECLCASE).read_text()
+    assert "--" not in Path(ECLCASE).read_text(encoding="utf8")
     for includefile in os.listdir("include"):
         assert "--" not in (Path("include") / includefile).read_text()
 
@@ -169,7 +173,7 @@ def test_get_paths(tmp_path):
     os.chdir(tmp_path)
     file_with_path = Path("pathfile")
     Path("somepath").mkdir()
-    file_with_path.write_text("PATHS\n  'IDENTIFIER' 'somepath'/\n")
+    file_with_path.write_text("PATHS\n  'IDENTIFIER' 'somepath'/\n", encoding="utf8")
     path_dict = pack_sim._get_paths(file_with_path, Path("."))
     assert path_dict["IDENTIFIER"] == Path("somepath")
 
@@ -216,8 +220,7 @@ def test_md5sum(tmp_path):
     """Check md5sum computations from files"""
     os.chdir(tmp_path)
     test_str = "foo bar com"
-    with open("foo.txt", "w") as fhandle:
-        fhandle.write(test_str)
+    Path("foo.txt").write_text(test_str, encoding="utf8")
     assert pack_sim._md5checksum("foo.txt") == pack_sim._md5checksum(data=test_str)
     with pytest.raises(ValueError):
         pack_sim._md5checksum("foo.txt", test_str)
@@ -233,6 +236,6 @@ def test_utf8(tmp_path):
 TITLE
 Smørbukk Sør
 """
-    Path("FOO.DATA").write_text(datafile_str)
+    Path("FOO.DATA").write_text(datafile_str, encoding="utf8")
     pack_sim.pack_simulation(Path("FOO.DATA"), Path("somedir"), True, False)
-    assert Path("somedir/FOO.DATA").read_text() == datafile_str
+    assert Path("somedir/FOO.DATA").read_text(encoding="utf8") == datafile_str

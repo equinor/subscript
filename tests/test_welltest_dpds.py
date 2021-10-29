@@ -69,6 +69,8 @@ def test_main(tmp_path, mocker):
     welltest_dpds.main()
     assert Path("welltest_output.csv").exists()
     suptimew = pd.read_csv("spt.csv")
+    # pylint: disable=no-member
+    # (false positive)
     assert suptimew.iloc[0][0] == pytest.approx(-9.87037983)
     assert suptimew.iloc[-1][0] == pytest.approx(-0.65693308)
     Path("welltest_output.csv").unlink()
@@ -93,7 +95,7 @@ def test_main(tmp_path, mocker):
     0\t0
     1\t1
     """
-    Path("results.txt").write_text(mockcsv)
+    Path("results.txt").write_text(mockcsv, encoding="utf8")
     welltest_dpds.main()
     assert Path("welltest_output.csv").exists()
 
@@ -229,7 +231,7 @@ def test_genobs_vec(tmp_path):
     0\t0
     1\t1
     """
-    Path("index.txt").write_text(mockcsv)
+    Path("index.txt").write_text(mockcsv, encoding="utf8")
 
     vec = np.array([0, 0.5, 1, 2])
     time = np.array([0, 1, 2, 3])
@@ -247,20 +249,20 @@ def test_to_csv(tmp_path):
     vec = np.array([0, 0.5, 1, 2])
     welltest_dpds.to_csv("mock.csv", [vec])
     assert Path("mock.csv").exists()
-    lines = open("mock.csv", "r").readlines()
-    assert 4 == len(lines)
+    lines = Path("mock.csv").read_text(encoding="utf8").splitlines()
+    assert len(lines) == 4
 
     welltest_dpds.to_csv("mock.csv", [vec], ["vec"])
     assert Path("mock.csv").exists()
-    lines = open("mock.csv", "r").readlines()
-    assert 5 == len(lines)
+    lines = Path("mock.csv").read_text(encoding="utf8").splitlines()
+    assert len(lines) == 5
 
     vecb = np.array([1, 0.5, 3, 100])
     welltest_dpds.to_csv("mock.csv", [vec, vecb], ["vec", "vecb"])
     assert Path("mock.csv").exists()
-    lines = open("mock.csv", "r").readlines()
-    assert 5 == len(lines)
+    lines = Path("mock.csv").read_text(encoding="utf8").splitlines()
+    assert len(lines) == 5
 
-    df = pd.read_csv("mock.csv", skipinitialspace=True)
-    assert df["vec"].size == 4
-    assert pytest.approx(df["vecb"].iloc[-1] == 100)
+    dframe = pd.read_csv("mock.csv", skipinitialspace=True)
+    assert dframe["vec"].size == 4
+    assert pytest.approx(dframe["vecb"].iloc[-1] == 100)

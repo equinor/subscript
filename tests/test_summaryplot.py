@@ -18,8 +18,7 @@ def get_plot_cmds(plot):
     if plot:
         print("Close plot window, then press q to continue")
         return [SCRIPTNAME]
-    else:
-        return [SCRIPTNAME, "--dumpimages"]
+    return [SCRIPTNAME, "--dumpimages"]
 
 
 @pytest.mark.parametrize(
@@ -73,8 +72,8 @@ def test_two_datafiles(cmd_args, tmp_path, mocker, plot):
             shutil.copy(filename, "realization-0/")
             shutil.copy(filename, "realization-1/")
 
-    Path("realization-0/parameters.txt").write_text("FOO 1\nSAME 10")
-    Path("realization-1/parameters.txt").write_text("FOO 2\nSAME 10")
+    Path("realization-0/parameters.txt").write_text("FOO 1\nSAME 10", encoding="utf8")
+    Path("realization-1/parameters.txt").write_text("FOO 2\nSAME 10", encoding="utf8")
     mocker.patch(
         "sys.argv",
         get_plot_cmds(plot)
@@ -143,6 +142,7 @@ def test_sysexit(cmd_args, tmp_path, mocker):
 
 
 def test_splitvectorsdatafiles():
+    """Test that we can separate vectors from DATA files"""
     result = summaryplot.split_vectorsdatafiles(["FOPT", "FOPR", str(DATAFILE)])
     assert isinstance(result[0][0], ecl.summary.EclSum)
     print(result)
@@ -164,11 +164,12 @@ def test_splitvectorsdatafiles():
 
 
 def test_find_parameterstxt_in_current(tmp_path):
+    """Test that we are able to locate a parameters.txt in current directory"""
     os.chdir(tmp_path)
     shutil.copy(DATAFILE, "FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "FOO.SMSPEC")
-    Path("parameters.txt").write_text("FOO 1")
+    Path("parameters.txt").write_text("FOO 1", encoding="utf8")
     print(summaryplot.split_vectorsdatafiles(["FOO.DATA"]))
     assert summaryplot.split_vectorsdatafiles(["FOO.DATA"])[3] == [
         str(Path("FOO.DATA").absolute().parent / "parameters.txt")
@@ -176,12 +177,14 @@ def test_find_parameterstxt_in_current(tmp_path):
 
 
 def test_find_parameterstxt_two_levels_up(tmp_path):
+    """Test that we are able to locate a parameters.txt located
+    two levels up relative to DATA file"""
     os.chdir(tmp_path)
     Path("eclipse/model").mkdir(parents=True)
     shutil.copy(DATAFILE, "eclipse/model/FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/model/FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "eclipse/model/FOO.SMSPEC")
-    Path("parameters.txt").write_text("FOO 1")
+    Path("parameters.txt").write_text("FOO 1", encoding="utf8")
     assert summaryplot.split_vectorsdatafiles(["eclipse/model/FOO.DATA"])[3] == [
         str(
             Path("eclipse/model/FOO.DATA").absolute().parent.parent.parent
@@ -191,12 +194,14 @@ def test_find_parameterstxt_two_levels_up(tmp_path):
 
 
 def test_find_parameterstxt_one_level_up(tmp_path):
+    """Test that we are able to locate a parameters.txt located
+    one level up relative to DATA file"""
     os.chdir(tmp_path)
     Path("eclipse").mkdir()
     shutil.copy(DATAFILE, "eclipse/FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "eclipse/FOO.SMSPEC")
-    Path("parameters.txt").write_text("FOO 1")
+    Path("parameters.txt").write_text("FOO 1", encoding="utf8")
     assert summaryplot.split_vectorsdatafiles(["eclipse/FOO.DATA"])[3] == [
         str(Path("eclipse/FOO.DATA").absolute().parent.parent / "parameters.txt")
     ]

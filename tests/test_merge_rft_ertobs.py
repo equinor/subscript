@@ -15,6 +15,8 @@ from subscript.merge_rft_ertobs.merge_rft_ertobs import (
     split_wellname_reportstep,
 )
 
+# pylint: disable=unused-argument  # false positive on fixtures
+
 try:
     # pylint: disable=unused-import
     import ert_shared  # noqa
@@ -27,10 +29,9 @@ logger = getLogger("subscript.merge_rft_ertobs.merge_rft_ertobs")
 logger.setLevel(logging.INFO)
 
 
-@pytest.fixture
-def drogondata(tmp_path):
+@pytest.fixture(name="drogondata")
+def fixture_drogondata(tmp_path):
     """Prepare a directory with Drogon testdata"""
-    # pylint: disable=unused-argument
     drogondir = Path(__file__).absolute().parent / "testdata_merge_rft_ertobs/drogon"
     drogondest = tmp_path / "drogondata"
     shutil.copytree(drogondir, drogondest)
@@ -46,8 +47,6 @@ def drogondata(tmp_path):
 
 def test_get_observations(drogondata):
     """Try to parse observations"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     dframe = get_observations("rft")
     expected = pd.DataFrame(
         columns=["order", "well", "report_step", "observed", "error"],
@@ -83,7 +82,7 @@ def test_get_observations(drogondata):
 def test_get_observations_invalid(obsstring, validlength, tmp_path):
     """Check observation parsing"""
     os.chdir(tmp_path)
-    Path("foo.obs").write_text(obsstring)
+    Path("foo.obs").write_text(obsstring, encoding="utf8")
     assert len(get_observations(".")) == validlength
 
 
@@ -103,13 +102,12 @@ def test_get_observations_invalid(obsstring, validlength, tmp_path):
     ],
 )
 def test_split_wellname_reportstep(well_step, expected):
+    """Check splitting of reportsteps out from wellnames"""
     assert split_wellname_reportstep(well_step) == expected
 
 
 def test_merge_drogon(drogondata):
     """Test main merge functionality"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     dframe = merge_rft_ertobs("gendata_rft.csv", "rft")
     assert not dframe.empty
     assert {"pressure", "observed", "error", "well", "time"}.issubset(dframe.columns)
@@ -120,11 +118,8 @@ def test_merge_drogon(drogondata):
 def test_merge_drogon_inactive(drogondata):
     """Check that inactive cells are taken care of as such"""
     # Modify simulated data:
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
-
-    # Modify simulated data:
     gdata = pd.read_csv("gendata_rft.csv")
+    # pylint: disable=no-member  # false positive on Pandas objects
     gdata.loc[0, "pressure"] = -1.0
     gdata.to_csv("gendata_rft.csv")
 
@@ -139,9 +134,7 @@ def test_merge_drogon_inactive(drogondata):
 
 def test_extra_obs_file(drogondata):
     """Test that we will not bail on a stray file"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
-    Path("rft/FOO.obs").write_text("FOBOBAR")
+    Path("rft/FOO.obs").write_text("FOBOBAR", encoding="utf8")
     dframe = merge_rft_ertobs("gendata_rft.csv", "rft")
     assert len(dframe) == 9
 
@@ -149,8 +142,6 @@ def test_extra_obs_file(drogondata):
 @pytest.mark.integration
 def test_endpoint(drogondata):
     """Test that the endpoint is installed"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     subprocess.run(
         "merge_rft_ertobs gendata_rft.csv rft --output mergedrft.csv",
         shell=True,
@@ -158,6 +149,7 @@ def test_endpoint(drogondata):
     )
     dframe = pd.read_csv("mergedrft.csv")
     assert not dframe.empty
+    # pylint: disable=no-member  # false positive on Pandas objects
     assert {
         "pressure",
         "observed",
@@ -173,9 +165,7 @@ def test_endpoint(drogondata):
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(drogondata):
     """Test that the ERT hook can run on a mocked case"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
-    Path("DROGON.DATA").write_text("--Empty")
+    Path("DROGON.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE DROGON.DATA",
         "QUEUE_SYSTEM LOCAL",
@@ -188,11 +178,12 @@ def test_ert_hook(drogondata):
     ]
 
     ert_config_fname = "mergetest.ert"
-    Path(ert_config_fname).write_text("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     dframe = pd.read_csv("mergedrft.csv")
+    # pylint: disable=no-member  # false positive on Pandas objects
     assert not dframe.empty
     assert {"pressure", "observed", "error", "well", "report_step", "time"}.issubset(
         dframe.columns

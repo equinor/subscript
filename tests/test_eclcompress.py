@@ -83,8 +83,7 @@ def test_empty_file(tmp_path):
     """Check that compression of empty files is a noop"""
     os.chdir(tmp_path)
     emptyfilename = "emptyfile.grdecl"
-    with open(emptyfilename, "w"):
-        pass
+    Path(emptyfilename).write_text("", encoding="utf8")
     assert os.stat(emptyfilename).st_size == 0
     main_eclcompress(emptyfilename, None)
     assert os.stat(emptyfilename).st_size == 0
@@ -95,8 +94,9 @@ def test_no_touch_non_eclipse(tmp_path):
     any Eclipse data"""
     os.chdir(tmp_path)
     filename = "foo.txt"
-    with open(filename, "w") as file_h:
-        file_h.write("Some random text\nAnother line\nbut no Eclipse keywords")
+    Path(filename).write_text(
+        "Some random text\nAnother line\nbut no Eclipse keywords", encoding="utf8"
+    )
     origsize = os.stat(filename).st_size
     main_eclcompress(filename, None)
     assert origsize == os.stat(filename).st_size
@@ -242,9 +242,9 @@ MULTIPLY
 
     # Test the same when the string is read from a file:
     os.chdir(tmp_path)
-    Path("test.inc").write_text(kw_string)
+    Path("test.inc").write_text(kw_string, encoding="utf8")
     eclcompress("test.inc")
-    compressed_lines = Path("test.inc").read_text().splitlines()
+    compressed_lines = Path("test.inc").read_text(encoding="utf8").splitlines()
 
     # The compressed output should have only two header lines added and one
     # empty lines after the header added:
@@ -343,19 +343,20 @@ VFPPROD
     assert opm.io.Parser().parse_string(vfpstr, OPMIO_PARSECONTEXT)
 
     # Call eclcompress as script on vfpstr:
-    with open("vfpfile.inc", "w") as testdeck:
-        testdeck.write(vfpstr)
+    Path("vfpfile.inc").write_text(vfpstr, encoding="utf8")
     mocker.patch("sys.argv", ["eclcompress", "--keeporiginal", "vfpfile.inc"])
     main()
 
     # Check that OPM can parse the output (but in this case, OPM allows
     # having the slashes on the next line, so it is not a good test)
-    assert opm.io.Parser().parse_string(open("vfpfile.inc").read(), OPMIO_PARSECONTEXT)
+    assert opm.io.Parser().parse_string(
+        Path("vfpfile.inc").read_text(encoding="utf8"), OPMIO_PARSECONTEXT
+    )
 
     # Verify that a slash at record-end is still there. This test will pass
     # whether eclcompress is just skipping the file, or of it is able to
     # compress it correctly.
-    assert "8000 10000 /" in open("vfpfile.inc").read()
+    assert "8000 10000 /" in Path("vfpfile.inc").read_text(encoding="utf8")
 
 
 def test_main(tmp_path, mocker):
@@ -363,19 +364,14 @@ def test_main(tmp_path, mocker):
 
     os.chdir(tmp_path)
 
-    with open("testdeck.inc", "w") as testdeck:
-        for line in FILELINES:
-            testdeck.write(line + "\n")
-
-    if os.path.exists("testdeck.inc.orig"):
-        os.unlink("testdeck.inc.orig")
+    Path("testdeck.inc").write_text("\n".join(FILELINES), encoding="utf8")
 
     mocker.patch("sys.argv", ["eclcompress", "--keeporiginal", "testdeck.inc"])
     main()
 
     assert os.path.exists("testdeck.inc.orig")
     assert os.path.exists("testdeck.inc")
-    compressedlines = open("testdeck.inc").readlines()
+    compressedlines = Path("testdeck.inc").read_text(encoding="utf8").splitlines()
     compressedbytes = sum([len(x) for x in compressedlines if not x.startswith("--")])
     origbytes = sum([len(x) for x in FILELINES])
 
@@ -409,16 +405,16 @@ def test_iso8859(tmp_path):
         "-- Gullfaks Sør\nPORO\n 1 1 1 1/\n", encoding="ISO-8859-1"
     )
     main_eclcompress(nastyfile, None)
-    assert "4*1" in open(nastyfile).read()  # Outputted file is always UTF-8
+    assert "4*1" in Path(nastyfile).read_text(encoding="utf8")
 
 
 def test_utf8(tmp_path):
     """Test that we can parse and write a file with utf-8 chars"""
     os.chdir(tmp_path)
     nastyfile = "nastyfile.inc"
-    Path(nastyfile).write_text("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n")
+    Path(nastyfile).write_text("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n", encoding="utf8")
     main_eclcompress(nastyfile, None)
-    assert "4*1" in open(nastyfile).read()
+    assert "4*1" in Path(nastyfile).read_text(encoding="utf8")
 
 
 @pytest.fixture(name="eclincludes")
@@ -427,11 +423,11 @@ def fixture_eclincludes(tmp_path):
     os.chdir(tmp_path)
     os.makedirs("eclipse/include/props")
     os.makedirs("eclipse/include/regions")
-    open("eclipse/include/props/perm.grdecl", "w").write(
-        "PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/"
+    Path("eclipse/include/props/perm.grdecl").write_text(
+        "PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
     )
-    open("eclipse/include/regions/fipnum.grdecl", "w").write(
-        "FIPNUM\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/"
+    Path("eclipse/include/regions/fipnum.grdecl").write_text(
+        "FIPNUM\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
     )
     yield
 
@@ -441,25 +437,29 @@ def test_default_pattern():
     """Check how eclcompress behaves as a command line
     tool in a standardized directory structure"""
     main_eclcompress(None, None)
-    assert (
-        "File compressed with eclcompress"
-        in open("eclipse/include/props/perm.grdecl").read()
+    assert "File compressed with eclcompress" in Path(
+        "eclipse/include/props/perm.grdecl"
+    ).read_text(encoding="utf8")
+    assert "File compressed with eclcompress" in Path(
+        "eclipse/include/regions/fipnum.grdecl"
+    ).read_text(encoding="utf8")
+    assert "13*0" in Path("eclipse/include/props/perm.grdecl").read_text(
+        encoding="utf8"
     )
-    assert (
-        "File compressed with eclcompress"
-        in open("eclipse/include/regions/fipnum.grdecl").read()
-    )
-    assert "13*0" in open("eclipse/include/props/perm.grdecl").read()
 
 
 @pytest.mark.usefixtures("eclincludes", "twofiles")
 def test_files_override_default_wildcards():
     """Default wildcardlist will not be used if explicit files are provided"""
-    assert "0 0 0 0" in open("perm.grdecl").read()
-    assert "0 0 0 0" in open("eclipse/include/props/perm.grdecl").read()
+    assert "0 0 0 0" in Path("perm.grdecl").read_text(encoding="utf8")
+    assert "0 0 0 0" in Path("eclipse/include/props/perm.grdecl").read_text(
+        encoding="utf8"
+    )
     main_eclcompress("perm.grdecl", None)
-    assert "13*0" in open("perm.grdecl").read()
-    assert "13*0" not in open("eclipse/include/props/perm.grdecl").read()
+    assert "13*0" in Path("perm.grdecl").read_text(encoding="utf8")
+    assert "13*0" not in Path("eclipse/include/props/perm.grdecl").read_text(
+        encoding="utf8"
+    )
 
 
 @pytest.fixture
@@ -467,10 +467,12 @@ def twofiles(tmp_path):
     """Provide a tmp_path with two sample grdecl files and a filepattern file"""
     os.chdir(tmp_path)
 
-    open("perm.grdecl", "w").write("PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/")
-    open("poro.grdecl", "w").write("PORO\n1 1 1 1 1 1 1\n/")
+    Path("perm.grdecl").write_text(
+        "PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
+    )
+    Path("poro.grdecl").write_text("PORO\n1 1 1 1 1 1 1\n/", encoding="utf8")
 
-    open("filelist", "w").write("*.grdecl")
+    Path("filelist").write_text("*.grdecl", encoding="utf8")
     yield
 
 
@@ -493,10 +495,14 @@ def test_compress_files_filelist(args):
 
     main_eclcompress(args[0], args[1])
 
-    assert "File compressed with eclcompress" in open("perm.grdecl").read()
-    assert "File compressed with eclcompress" in open("poro.grdecl").read()
-    assert "13*0" in open("perm.grdecl").read()
-    assert "7*1" in open("poro.grdecl").read()
+    assert "File compressed with eclcompress" in Path("perm.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "File compressed with eclcompress" in Path("poro.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "13*0" in Path("perm.grdecl").read_text(encoding="utf8")
+    assert "7*1" in Path("poro.grdecl").read_text(encoding="utf8")
 
 
 @pytest.mark.usefixtures("twofiles")
@@ -504,10 +510,14 @@ def text_compress_argparse_1(mocker):
     """Test also the command line interface with --files"""
     mocker.patch("sys.argv", ["eclcompress", "--files", "files"])
     main()
-    assert "File compressed with eclcompress" in open("perm.grdecl").read()
-    assert "File compressed with eclcompress" in open("poro.grdecl").read()
-    assert "13*0" in open("perm.grdecl").read()
-    assert "7*1" in open("poro.grdecl").read()
+    assert "File compressed with eclcompress" in Path("perm.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "File compressed with eclcompress" in Path("poro.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "13*0" in Path("perm.grdecl").read_text(encoding="utf8")
+    assert "7*1" in Path("poro.grdecl").read_text(encoding="utf8")
 
 
 @pytest.mark.usefixtures("twofiles")
@@ -515,10 +525,14 @@ def text_compress_argparse_2(mocker):
     """Command line options, explicit files vs. --files"""
     mocker.patch("sys.argv", ["eclcompress", "perm.grdecl", "--files", "files"])
     main()
-    assert "File compressed with eclcompress" in open("perm.grdecl").read()
-    assert "File compressed with eclcompress" in open("poro.grdecl").read()
-    assert "13*0" in open("perm.grdecl").read()
-    assert "7*1" in open("poro.grdecl").read()
+    assert "File compressed with eclcompress" in Path("perm.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "File compressed with eclcompress" in Path("poro.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "13*0" in Path("perm.grdecl").read_text(encoding="utf8")
+    assert "7*1" in Path("poro.grdecl").read_text(encoding="utf8")
 
 
 @pytest.mark.usefixtures("twofiles")
@@ -526,10 +540,14 @@ def text_compress_argparse_3(mocker):
     """Command line options, explicit files vs. --files"""
     mocker.patch("sys.argv", ["eclcompress", "perm.grdecl"])
     main()
-    assert "File compressed with eclcompress" in open("perm.grdecl").read()
-    assert "File compressed with eclcompress" not in open("poro.grdecl").read()
-    assert "13*0" in open("perm.grdecl").read()
-    assert "7*1" not in open("poro.grdecl").read()
+    assert "File compressed with eclcompress" in Path("perm.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "File compressed with eclcompress" not in Path("poro.grdecl").read_text(
+        encoding="utf8"
+    )
+    assert "13*0" in Path("perm.grdecl").read_text(encoding="utf8")
+    assert "7*1" not in Path("poro.grdecl").read_text(encoding="utf8")
 
 
 def test_glob_patterns(tmp_path):
@@ -539,31 +557,32 @@ def test_glob_patterns(tmp_path):
     dummyfiles = ["perm.grdecl", "poro.grdecl"]
 
     for dummyfile in dummyfiles:
-        open(dummyfile, "w").write("")
-    open("filelist", "w").write("*.grdecl")
+        Path(dummyfile).write_text("", encoding="utf8")
+    Path("filelist").write_text("*.grdecl", encoding="utf8")
 
     assert set(glob_patterns(parse_wildcardfile("filelist"))) == set(dummyfiles)
 
-    open("filelist_dups", "w").write(
+    Path("filelist_dups").write_text(
         """
 *.grdecl
 poro.grdecl
 p*ecl
-perm.grdecl"""
+perm.grdecl""",
+        encoding="utf8",
     )
     assert set(glob_patterns(parse_wildcardfile("filelist_dups"))) == set(dummyfiles)
 
-    open("filelist_comments", "w").write(
-        "-- this is a comment\n*.grdecl\n# some  comment"
+    Path("filelist_comments").write_text(
+        "-- this is a comment\n*.grdecl\n# some  comment", encoding="utf8"
     )
     assert set(glob_patterns(parse_wildcardfile("filelist_dups"))) == set(dummyfiles)
 
-    open("filelist_comments", "w").write(
-        "# this is a comment\n*.grdecl\n# some  comment"
+    Path("filelist_comments").write_text(
+        "# this is a comment\n*.grdecl\n# some  comment", encoding="utf8"
     )
     assert set(glob_patterns(parse_wildcardfile("filelist_dups"))) == set(dummyfiles)
-    open("filelist_comments", "w").write(
-        "  # this is a comment\n*.grdecl # comment along pattern"
+    Path("filelist_comments").write_text(
+        "  # this is a comment\n*.grdecl # comment along pattern", encoding="utf8"
     )
     assert set(glob_patterns(parse_wildcardfile("filelist_dups"))) == set(dummyfiles)
 
@@ -595,8 +614,7 @@ def test_eclkw_regexp(tmp_path, mocker):
         "/",
     ]
 
-    with open("g1.grdecl", "w") as f_handle:
-        f_handle.write(uncompressed_str)
+    Path("g1.grdecl").write_text(uncompressed_str, encoding="utf8")
 
     # Alternative regexpes that should also work with this G1:
     kw_sets = find_keyword_sets(
@@ -609,7 +627,7 @@ def test_eclkw_regexp(tmp_path, mocker):
 
     mocker.patch("sys.argv", ["eclcompress", "g1.grdecl", "--eclkw_regexp", "G1"])
     main()
-    compressed = open("g1.grdecl").read()
+    compressed = Path("g1.grdecl").read_text(encoding="utf8")
     assert "File compressed with eclcompress" in compressed
     assert "13*0" in compressed
 
@@ -622,10 +640,10 @@ def test_binary_example_file(tmp_path, mocker):
     os.chdir(tmp_path)
     filename = "permxyz.grdecl"
     shutil.copy(TESTDATADIR / filename, filename)
-    origfilehash = hashlib.sha256(open(filename, "rb").read()).hexdigest()
+    origfilehash = hashlib.sha256(Path(filename).read_bytes()).hexdigest()
     mocker.patch("sys.argv", ["eclcompress", "--verbose", filename])
     main()
-    afterfilehash = hashlib.sha256(open(filename, "rb").read()).hexdigest()
+    afterfilehash = hashlib.sha256(Path(filename).read_bytes()).hexdigest()
     assert origfilehash == afterfilehash
 
 
@@ -645,7 +663,8 @@ def test_binary_example_file(tmp_path, mocker):
         (bytearray([7] * 1024 + [0]), False),
     ],
 )
-def test_file_is_binary(byte_sequence, expected, tmp_path):
+def test_file_is_binary(byte_sequence, expected):
+    """Test binary file detection"""
     if isinstance(byte_sequence, str):
         Path("foo-utf8.txt").write_text(byte_sequence, encoding="utf-8")
         assert file_is_binary("foo-utf8.txt") == expected

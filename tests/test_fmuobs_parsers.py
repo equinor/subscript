@@ -30,13 +30,11 @@ from subscript.fmuobs.writers import df2ertobs, df2obsdict
 def test_expand_includes(tmp_path):
     """Test that include <filename> statements can be resolved"""
     os.chdir(tmp_path)
-    with open("foo.txt", "w") as f_handle:
-        f_handle.write("foo;")
+    Path("foo.txt").write_text("foo;", encoding="utf8")
     assert expand_includes("hallo; include foo.txt; hei") == "hallo; foo; hei"
 
     # Multiple files:
-    with open("bar.txt", "w") as f_handle:
-        f_handle.write("bar;")
+    Path("bar.txt").write_text("bar;", encoding="utf8")
     assert (
         expand_includes("hallo; include foo.txt; hei; include bar.txt;")
         == "hallo; foo; hei; bar;"
@@ -44,8 +42,7 @@ def test_expand_includes(tmp_path):
 
     # Test relative directory support:
     Path("subdir").mkdir()
-    with open("subdir/leaf.txt", "w") as f_handle:
-        f_handle.write("foo;")
+    (Path("subdir") / "leaf.txt").write_text("foo;", encoding="utf8")
     assert (
         expand_includes("hallo; include leaf.txt; hei", cwd="subdir")
         == "hallo; foo; hei"

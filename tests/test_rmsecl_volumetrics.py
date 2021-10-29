@@ -2,10 +2,10 @@ import os
 from pathlib import Path
 from typing import List
 
-import fmu.tools.fipmapper.fipmapper as fipmapper
 import pandas as pd
 import pytest
 import yaml
+from fmu.tools.fipmapper import fipmapper
 
 from subscript.rmsecl_volumetrics.rmsecl_volumetrics import (
     _compare_volumetrics,
@@ -215,6 +215,7 @@ def test_compare_volumetrics(
     volumetrics: List[dict],
     expected: List[dict],
 ):
+    """Test comparisons of example datasets"""
     comparison_df = _compare_volumetrics(
         pd.DataFrame(disjoint_sets),
         pd.DataFrame(simvolumes).set_index("FIPNUM"),
@@ -279,10 +280,13 @@ def test_compare_volumetrics(
     ],
 )
 def test_disjoint_sets_to_dict(dframe: list, expected: dict):
+    """Test that disjoint sets can be converted into dictionaries"""
     assert _disjoint_sets_to_dict(pd.DataFrame(dframe)) == expected
 
 
-def test_documentation_example(tmp_path, mocker, capsys):
+def test_documentation_example(tmp_path, mocker):
+    """Test the example that is used in the documentation"""
+    # pylint: disable=line-too-long
     os.chdir(tmp_path)
     print(f"\nLook in {tmp_path} for input and output to be used in documentation")
     Path("FOO.PRT").write_text(
@@ -307,7 +311,8 @@ def test_documentation_example(tmp_path, mocker, capsys):
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  :CURRENTLY IN PLACE       :          200.                         200.:           400. :           800.           0.           800.:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
-"""  # noqa
+""",  # noqa
+        encoding="utf8",
     )
     Path("volumetrics_sim_oil_1.txt").write_text(
         """
@@ -316,7 +321,8 @@ Upper  West                             500.0              400.                3
 Lower  West                             500.0              400.                300.00              50.40
 Upper  East                            1000.0              800.                600.00              100.40
 Lower  East                            1000.0              800.                600.00              100.40
-"""  # noqa
+""",  # noqa
+        encoding="utf8",
     )
     Path("volumetrics_sim_gas_1.txt").write_text(
         """
@@ -325,7 +331,8 @@ Upper  West                             500.0              400.                3
 Lower  West                             500.0              400.                300.00              200.40
 Upper  East                            1000.0              800.                600.00              404.40
 Lower  East                            1000.0              800.                600.00              404.40
-"""  # noqa
+""",  # noqa
+        encoding="utf8",
     )
     Path("fipmap_config_1.yml").write_text(
         """
@@ -334,7 +341,8 @@ region2fipnum:
   East: [2]
 zone2fipnum:
   Upper: [1, 2]
-  Lower: [1, 2]"""
+  Lower: [1, 2]""",
+        encoding="utf8",
     )
     Path("fipmap_config_2.yml").write_text(
         """
@@ -347,7 +355,8 @@ fipnum2zone:
    - Lower
   2:
    - Upper
-   - Lower"""
+   - Lower""",
+        encoding="utf8",
     )
     Path("fipmap_config_3.yml").write_text(
         """
@@ -358,7 +367,8 @@ FIPNUM:
       East: [2]
     ZONE:
       Upper: [1, 2]
-      Lower: [1, 2]"""
+      Lower: [1, 2]""",
+        encoding="utf8",
     )
     mocker.patch(
         "sys.argv",
@@ -374,10 +384,10 @@ FIPNUM:
         ],
     )
     main()
-    print(Path("sets.yml").read_text())
-    print(Path("volcomp.csv").read_text())
+    print(Path("sets.yml").read_text(encoding="utf8"))
+    print(Path("volcomp.csv").read_text(encoding="utf8"))
     print(pd.read_csv("volcomp.csv"))
-    sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text())
+    sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text(encoding="utf8"))
     assert sets_fromdisk == {
         0: {"FIPNUM": [2], "REGION": ["East"], "ZONE": ["Lower", "Upper"]},
         1: {"FIPNUM": [1], "REGION": ["West"], "ZONE": ["Lower", "Upper"]},
@@ -411,6 +421,8 @@ FIPNUM:
 
 
 def test_command_line(tmp_path, mocker):
+    """Test the command line utility with options"""
+    # pylint: disable=line-too-long
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(
         """
@@ -424,26 +436,30 @@ def test_command_line(tmp_path, mocker):
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
  :CURRENTLY IN PLACE       :          100.                         100.:           200. :           400.           0.           400.:
  :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
-"""  # noqa
+""",  # noqa
+        encoding="utf8",
     )
     Path("volumetrics_sim_oil_1.txt").write_text(
         """
    Zone      Region index          Bulk                Pore                Hcpv               Stoiip
 UpperReek  1                             500.0              400.                300.00              100.40
-"""  # noqa
+""",  # noqa
+        encoding="utf8",
     )
     Path("volumetrics_sim_gas_1.txt").write_text(
         """
    Zone      Region index          Bulk                Pore                Hcpv               Giip
 UpperReek  1                             500.0              400.                300.00              100.0
-"""  # noqa
+""",  # noqa
+        encoding="utf8",
     )
     Path("fipmap_config.yml").write_text(
         """
 fipnum2region:
   1: 1
 fipnum2zone:
-  1: UpperReek"""
+  1: UpperReek""",
+        encoding="utf8",
     )
     mocker.patch(
         "sys.argv",
@@ -492,5 +508,5 @@ fipnum2zone:
         check_dtype=False,
     )
 
-    sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text())
+    sets_fromdisk = yaml.safe_load(Path("sets.yml").read_text(encoding="utf8"))
     assert sets_fromdisk == {0: {"FIPNUM": [1], "REGION": ["1"], "ZONE": ["UpperReek"]}}

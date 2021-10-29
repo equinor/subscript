@@ -14,6 +14,8 @@ from subscript.ecldiff2roff import ecldiff2roff
 logger = getLogger("subscript.ecldiff2roff.ecldiff2roff")
 logger.setLevel(logging.INFO)
 
+# pylint: disable=unused-argument  # false positive on fixtures
+
 
 @pytest.mark.parametrize(
     "datetxt, expected",
@@ -42,12 +44,12 @@ logger.setLevel(logging.INFO)
 def test_dateparsing(datetxt, expected, tmp_path):
     """Test parsing of dates"""
     # pylint: disable=unused-argument
-    Path("datediff.txt").write_text(datetxt)
+    Path("datediff.txt").write_text(datetxt, encoding="utf8")
     assert ecldiff2roff.parse_diff_dates("datediff.txt") == expected
 
 
-@pytest.fixture
-def reek_data(tmp_path):
+@pytest.fixture(name="reek_data")
+def fixture_reek_data(tmp_path):
     """Prepare a data directory with Reek Eclipse binary output"""
     reekdir = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 
@@ -162,7 +164,7 @@ def test_mainfunction(
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
     # pylint: disable=too-many-arguments
-    Path("datediff.txt").write_text(diffdates)
+    Path("datediff.txt").write_text(diffdates, encoding="utf8")
 
     ecldiff2roff.ecldiff2roff_main(
         eclroot, prop, "datediff.txt", outputfilebase, sep, datesep, datefmt
@@ -273,9 +275,9 @@ def test_errors(reek_data):
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
 
-    Path("validdates.txt").write_text("2000-01-01 2000-07-01")
-    Path("invaliddates.txt").write_text("1860-01-01 2000-07-01")
-    Path("singledate.txt").write_text("2000-07-01")
+    Path("validdates.txt").write_text("2000-01-01 2000-07-01", encoding="utf8")
+    Path("invaliddates.txt").write_text("1860-01-01 2000-07-01", encoding="utf8")
+    Path("singledate.txt").write_text("2000-07-01", encoding="utf8")
 
     with pytest.raises(OSError):
         ecldiff2roff.ecldiff2roff_main("NOTEXISTING", "SGAS", "validdates.txt")
@@ -296,7 +298,7 @@ def test_errors(reek_data):
 @pytest.mark.integration
 def test_commandline(reek_data, mocker):
     """Test the command line API"""
-    Path("validdates.txt").write_text("2000-01-01 2000-07-01")
+    Path("validdates.txt").write_text("2000-01-01 2000-07-01", encoding="utf8")
 
     mocker.patch("sys.argv", ["ecldiff2roff", "2_R001_REEK-0", "SGAS"])
     ecldiff2roff.main()  # (gives message: Nothing to do)

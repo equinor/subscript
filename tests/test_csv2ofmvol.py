@@ -371,6 +371,7 @@ def test_cvs2volstr():
 
 def test_main(datadir, mocker):
     """Test command line interface"""
+    # pylint: disable=unused-argument  # false positive on fixture
     # Test installation
     assert subprocess.check_output(["csv2ofmvol", "-h"])
 
@@ -378,7 +379,7 @@ def test_main(datadir, mocker):
         "sys.argv", ["csv2ofmvol", "prodA3.csv", "prodA4.csv", "-o", "outfile.vol"]
     )
     csv2ofmvol.main()
-    vollines = open("outfile.vol").readlines()
+    vollines = Path("outfile.vol").read_text(encoding="utf8").splitlines()
     assert sum(["*NAME" in line for line in vollines]) == 2
     assert sum(["*METRIC" in line for line in vollines]) == 1
     assert sum(["NAME A-3" in line for line in vollines]) == 1
@@ -390,31 +391,31 @@ def test_emptyfile(tmp_path):
     """Verify behaviour on empty input"""
     os.chdir(tmp_path)
     # All empty file.
-    Path("empty.csv").write_text("")
+    Path("empty.csv").write_text("", encoding="utf8")
     with pytest.raises(pd.errors.EmptyDataError):
         csv2ofmvol.csv2ofmvol_main("empty.csv", "empty.vol")
     assert not Path("empty.vol").exists()
 
     # CSV file with wrong columns:
-    Path("columns.csv").write_text("FOO")
+    Path("columns.csv").write_text("FOO", encoding="utf8")
     with pytest.raises(ValueError, match="WELL not found in dataset"):
         csv2ofmvol.csv2ofmvol_main("columns.csv", "columns.vol")
     assert not Path("columns.vol").exists()
 
     # CSV file with index columns:
-    Path("indexcols.csv").write_text("DATE,WELL")
+    Path("indexcols.csv").write_text("DATE,WELL", encoding="utf8")
     with pytest.raises(ValueError, match="No supported data columns provided"):
         csv2ofmvol.csv2ofmvol_main("indexcols.csv", "columns.vol")
 
     # CSV file with index columns and one data column
-    Path("oilcol.csv").write_text("DATE,WELL,OIL")
+    Path("oilcol.csv").write_text("DATE,WELL,OIL", encoding="utf8")
     csv2ofmvol.csv2ofmvol_main("oilcol.csv", "oilcol.vol")
-    lines = Path("oilcol.vol").read_text().splitlines()
+    lines = Path("oilcol.vol").read_text(encoding="utf8").splitlines()
     assert len(lines) == 6  # comments + three header lines (metric, daily, date+oil)
 
 
-@pytest.fixture
-def datadir(tmp_path):
+@pytest.fixture(name="datadir")
+def fixture_datadir(tmp_path):
     """Prepare a tmp directory with some example data preloaded"""
     os.chdir(tmp_path)
     PRODDATA_A3.to_csv("prodA3.csv", index=False)
@@ -426,9 +427,8 @@ def datadir(tmp_path):
 @pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(datadir):
     """Mock an ERT config with CSV2OFMVOL as a FORWARD_MODEL and run it"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
-    Path("FOO.DATA").write_text("--Empty")
+    # pylint: disable=unused-argument  # false positive on fixture
+    Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
@@ -438,12 +438,12 @@ def test_ert_hook(datadir):
     ]
 
     ert_config_fname = "test.ert"
-    Path(ert_config_fname).write_text("\n".join(ert_config))
+    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     assert Path("proddata.vol").exists()
-    lines = Path("proddata.vol").read_text().splitlines()
+    lines = Path("proddata.vol").read_text(encoding="utf8").splitlines()
     assert any("A-3" in line for line in lines)
     assert any("A-4" in line for line in lines)
     assert any("2012-01-01" in line for line in lines)
