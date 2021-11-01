@@ -19,6 +19,7 @@ FILESTRUCTURE = [
     "rms/input/faults/f2.dat",
     "rms/input/faults/f3.dat",
     "rms/output/any_out.dat",
+    "rms/output/anyfolder/some_out.dat",
     ".git/some.txt",
     "attic/any.file",
     "backup/whatever.txt",
@@ -125,6 +126,42 @@ def test_rsync_profile3(datatree):
     runner.do_rsyncing()
 
     assert (datatree / target / "rms" / "input" / "faults" / "f1.dat").exists()
+
+    # profile 3: rms/output folders shall be kept but not files
+    assert (datatree / target / "rms" / "output").exists()
+    assert (datatree / target / "rms" / "output" / "anyfolder").exists()
+    assert not (
+        datatree / target / "rms" / "output" / "anyfolder" / "some_out.dat"
+    ).exists()
+
+    assert not (datatree / target / "rms" / "input" / "faults" / "x.dat").exists()
+    assert not (datatree / target / "backup").is_dir()
+
+
+def test_rsync_profile4(datatree):
+    """Testing vs filter profile 4."""
+    os.chdir(datatree)
+    target = "mytest3"
+    source = "20.1.1"
+    runner = fcr.CopyFMU()
+    runner.do_parse_args("")
+    runner.profile = 4
+    runner.source = source
+    runner.construct_target(target)
+    runner.define_filterpattern()
+    print(runner.filter)
+    runner.do_rsyncing()
+
+    assert (datatree / target / "rms" / "input" / "faults" / "f1.dat").exists()
+
+    # profile 4: rms/output folders shall will be empty as in option 3 and
+    # hence removed accoridng to option 4
+    assert not (datatree / target / "rms" / "output").exists()
+    assert not (datatree / target / "rms" / "output" / "anyfolder").exists()
+    assert not (
+        datatree / target / "rms" / "output" / "anyfolder" / "some_out.dat"
+    ).exists()
+
     assert not (datatree / target / "rms" / "input" / "faults" / "x.dat").exists()
     assert not (datatree / target / "backup").is_dir()
 
@@ -234,8 +271,30 @@ def test_choice_profile3(datatree):
     assert "Sync files using multiple threads" in result.stdout.decode()
     assert target in result.stdout.decode()
     assert (datatree / target / "rms" / "input" / "faults" / "f1.dat").exists()
+    assert (datatree / target / "rms" / "output").exists()
     assert not (datatree / target / "rms" / "output" / "any_out.dat").exists()
     assert not (datatree / target / "rms" / "input" / "faults" / "x.dat").exists()
+    assert not (datatree / target / "backup").is_dir()
+
+
+def test_choice_profile4(datatree):
+    """Test interactive mode, using profile 4."""
+    os.chdir(datatree)
+    profile = 4
+    target = "users/jriv/xx3"
+    user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
+    result = subprocess.run(
+        ["fmu_copy_revision"], check=True, input=user_input, stdout=subprocess.PIPE
+    )
+    print(result.stdout.decode())
+
+    assert "Sync files using multiple threads" in result.stdout.decode()
+    assert target in result.stdout.decode()
+    assert (datatree / target / "rms" / "input" / "faults" / "f1.dat").exists()
+    assert not (datatree / target / "rms" / "output").exists()
+    assert not (datatree / target / "rms" / "output" / "any_out.dat").exists()
+    assert not (datatree / target / "rms" / "input" / "faults" / "x.dat").exists()
+    assert (datatree / target / "rms" / "input" / "faults").exists()
     assert not (datatree / target / "backup").is_dir()
 
 

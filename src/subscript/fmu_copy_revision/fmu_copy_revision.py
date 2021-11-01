@@ -35,6 +35,10 @@ Usage:
 
     fmu_copy_revision --source 21.0.0  (...other options are defaulted)
 
+Backup:
+    This script is rewritten. Use fmu_copy_revision_old and report issues if something
+    seems wrong!
+
 """
 
 USERMENU = """\
@@ -140,7 +144,6 @@ DIRFILTER3 = """
 - ert/output/
 - ert/storage/
 - ert/**/storage/
-- rms/output
 - rms/input/seismic/
 - share/results/
 - share/templates/
