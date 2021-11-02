@@ -180,7 +180,6 @@ def test_rsync_profile4(datatree):
         (0o000, 4),
     ],
 )
-@pytest.mark.skip("hh")
 def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
     """Test what happens if one directory is unreadable.
 
