@@ -161,38 +161,42 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
     (tmp_path / source / "rms" / "input" / "unreachabledir").mkdir(parents=True)
     (tmp_path / source / "rms" / "xx" / "reachabledir").mkdir(parents=True)
     (tmp_path / source / "rms" / "input" / "unreachablefile").touch()
-    os.chmod(source + "/rms/input", rmsinputperm)  # Remove all permissions
 
-    target = "missing_rms_input"
-    (tmp_path / source / "ert").mkdir()
-    (tmp_path / source / "ert" / "xcopyme").touch()
-    (tmp_path / source / "rms" / "model" / "includeme").touch()
-    (tmp_path / source / "rms" / "xx" / "reachabledir" / "a_file").touch()
-
-    subprocess.run(
-        [
-            "fmu_copy_revision",
-            "--source",
-            source,
-            "--target",
-            target,
-            "--profile",
-            str(profile),
-        ],
-        check=True,
-        stdout=subprocess.PIPE,
-    )
-    assert (tmp_path / target / "ert" / "xcopyme").exists()
-    assert (tmp_path / target / "rms" / "model" / "includeme").exists()
-    assert (tmp_path / target / "rms" / "xx" / "reachabledir").exists()
     try:
-        assert not (tmp_path / target / "rms" / "input" / "unreachabledir").exists()
-        assert not (tmp_path / target / "rms" / "input" / "unreachablefile").exists()
-    except PermissionError:
-        pass
+        os.chmod(source + "/rms/input", rmsinputperm)  # Manipulate permissions
 
-    # Reinstate write permission for pytest garbage collection
-    os.chmod(source + "/rms/input", 0o0700)
+        target = "missing_rms_input"
+        (tmp_path / source / "ert").mkdir()
+        (tmp_path / source / "ert" / "xcopyme").touch()
+        (tmp_path / source / "rms" / "model" / "includeme").touch()
+        (tmp_path / source / "rms" / "xx" / "reachabledir" / "a_file").touch()
+
+        subprocess.run(
+            [
+                "fmu_copy_revision",
+                "--source",
+                source,
+                "--target",
+                target,
+                "--profile",
+                str(profile),
+            ],
+            check=True,
+            stdout=subprocess.PIPE,
+        )
+        assert (tmp_path / target / "ert" / "xcopyme").exists()
+        assert (tmp_path / target / "rms" / "model" / "includeme").exists()
+        assert (tmp_path / target / "rms" / "xx" / "reachabledir").exists()
+        try:
+            assert not (tmp_path / target / "rms" / "input" / "unreachabledir").exists()
+            assert not (
+                tmp_path / target / "rms" / "input" / "unreachablefile"
+            ).exists()
+        except PermissionError:
+            pass
+    finally:
+        # Reinstate all user permissions for pytest garbage collection
+        os.chmod(source + "/rms/input", 0o0700)
 
 
 @pytest.mark.integration
