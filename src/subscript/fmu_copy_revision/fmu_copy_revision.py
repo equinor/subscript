@@ -39,7 +39,7 @@ Note:
     This script is fully rewritten Q3/Q4 2021. If you encounter a problem, then
 
       a) Report the issue to https://github.com/equinor/subscript/issues
-         or to JRIV@equinor.com so we can improve
+         or to Yammer FMU channel so we can improve
 
       b) If the issue is critical for your work, use the previous version
          'fmu_copy_revision_old' instead. This option will be removed soon.
