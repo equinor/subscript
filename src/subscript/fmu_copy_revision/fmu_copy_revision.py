@@ -35,6 +35,15 @@ Usage:
 
     fmu_copy_revision --source 21.0.0  (...other options are defaulted)
 
+Note:
+    This script is fully rewritten Q3/Q4 2021. If you encounter a problem, then
+
+      a) Report the issue to https://github.com/equinor/subscript/issues
+         or to Yammer FMU channel so we can improve
+
+      b) If the issue is critical for your work, use the previous version
+         'fmu_copy_revision_old' instead. This option will be removed soon.
+
 """
 
 USERMENU = """\
@@ -44,39 +53,35 @@ By default some file types and directories will be skipped. Here are some profil
 1. Copy everything
 
 2. Copy everything, except:
-    * Files and folders containing 'backup' in name
-    * Directories and files with name 'users'
-    * Directories and files with name 'attic'
-    * Directories and files with names '.git' or '.svn'
+    * Directories with name 'backup'
+    * Directories with name 'users'
+    * Directories with name 'attic'
+    * Directories and files with names or extension '.git' or '.svn'
     * Files ending with ~
     * Empty folders (except those listed above) will be kept
 
 3. Copy everything, except:
-    * Files and folders containing 'backup' and in name
-    * Directories and files with name 'users'
-    * Directories and files with name 'attic'
-    * Directories and files with names '.git' or '.svn'
-    * Files ending with ~
+    * All folders and files mentioned in option 2
     * The following folders under ert/ (if they exist):
-        - output
-        - ert/*/storage, including ert/storage (for backw compat.)
+        - 'output'
+        - 'ert/*/storage', including 'ert/storage' (for backw compat.)
     * The following folders or files under rms/ (if they exist):
-        - input/seismic, model/*.log
+        - 'input/seismic', 'model/*.log'
     * The following files under rms/ (if they exist):
-        - Files under output folders (folders will be kept!)
+        - All files under 'output' folders (folders will be kept!)
     * The following files and folders under spotfire/:
-        - input/*.csv, input/*/.csv model/*.dxp, model/*/*.dxp
+        - 'input/*.csv', 'input/*/.csv' 'model/*.dxp', 'model/*/*.dxp'
     * The following folders under share/:
-        - results
-        - templates
+        - 'results'
+        - 'templates'
     * Empty folders (at destination) except those listed above will kept
 
-4. As profile 3, but all empty folder (at destination) will removed.
+4. As profile 3, but also all empty folder (at destination) will removed.
     This the DEFAULT profile!
 
 5. As profile 3, but keeps more data:
-    * Folder rms/output will be copied (~old behaviour)
-    * Folders share/results and share/templates will be copied.
+    * Folders and files rms/output will be kept (~old behaviour)
+    * Folders and files share/results and share/templates will be kept.
 
 6. Only copy the <coviz> folder (if present), which shall be under
     <revision>/share/coviz:
@@ -90,10 +95,12 @@ DEFAULT_PROFILE = 4
 # FILTER* are per file filters, used in the second rsync command in the shell file below
 # DIRFILTER* are per folder, used if DIRTREE is 1 or 2 in the shell script below.
 
+# option 1 is keep all files and folders as is
 FILTER1 = """
 + **
 """
 
+# option 2 keep all files except those in FILTER2
 FILTER2 = """
 - backup/**
 - users/**
@@ -103,7 +110,7 @@ FILTER2 = """
 - *.svn
 - *~
 """
-
+# option 2 additional: spesific address that these folders with '-' shall be removed
 DIRFILTER2 = """
 - backup/
 - users/
@@ -111,12 +118,6 @@ DIRFILTER2 = """
 - .git/
 + */
 - *
-"""
-
-FILTER5_ADD = """
-+ rms/output/**
-+ share/results/**
-+ share/templates/**
 """
 
 FILTER3_ADD = """
@@ -132,6 +133,10 @@ FILTER3_ADD = """
 - share/templates/**
 """
 
+FILTER3 = FILTER2 + FILTER3_ADD
+
+# The DIRFILTER3 means that these folders shall be explicitly removed when using
+# option 3 while rest shall be kept
 DIRFILTER3 = """
 - backup/
 - users/
@@ -140,13 +145,21 @@ DIRFILTER3 = """
 - ert/output/
 - ert/storage/
 - ert/**/storage/
-- rms/output
 - rms/input/seismic/
 - share/results/
 - share/templates/
 + */
 - *
 """
+
+FILTER5_ADD = """
++ rms/output/**
++ share/results/**
++ share/templates/**
+"""
+
+FILTER5 = FILTER2 + FILTER5_ADD + FILTER3_ADD  # order matters!
+
 
 DIRFILTER5 = """
 - backup/
@@ -166,8 +179,6 @@ DIRFILTERX = """
 - *
 """
 
-FILTER5 = FILTER2 + FILTER3_ADD + FILTER5_ADD
-FILTER3 = FILTER2 + FILTER3_ADD
 
 FILTER6 = """
 + share/coviz/**
@@ -185,7 +196,7 @@ DESTDIR="$2"  # must be an absolute path!
 FILTERFILE="$3"
 THREADS=$4
 RSYNCARGS="$5"
-DIRTREE=$6  # if 1 first copy folder tree, if 2 do it afterwards with dirfilterfile
+KEEPFOLDERS=$6  # if 1 first copy folder tree, if 2 do it afterwards with dirfilterfile
 DIRFILTERFILE="$7"
 
 PWD=$(pwd)
@@ -199,8 +210,8 @@ mkdir -p $DESTDIR
 
 echo " ** Sync folders and files!"
 
-if [ $DIRTREE -eq 1 ]; then
-    echo " ** Sync all folders first..."  # this is usually fast
+if [ $KEEPFOLDERS -eq 1 ]; then
+    echo " ** Sync all folders first... ($KEEPFOLDERS)"  # this is usually fast
     rsync -a -f"+ */" -f"- *" . $DESTDIR
 fi
 
@@ -208,8 +219,8 @@ echo " ** Sync files using multiple threads..."
 find -L . -type f | xargs -n1 -P$THREADS -I% \
     rsync $RSYNCARGS -f"merge $FILTERFILE" % $DESTDIR
 
-if [ $DIRTREE -eq 2 ]; then
-    echo " ** Sync all folders (also empty) except some..."
+if [ $KEEPFOLDERS -eq 2 ]; then
+    echo " ** Sync all folders (also empty) except some... ($KEEPFOLDERS)"
     rsync -a -f"merge $DIRFILTERFILE" . $DESTDIR
 fi
 
@@ -509,7 +520,26 @@ class CopyFMU:
                 self.filter = stream.read()
 
     def define_filterpattern(self):
-        """Define filterpattern pattern based on menu choice or command line input."""
+        """Define filterpattern pattern based on menu choice or command line input.
+
+        Some explanation here:
+
+        'filterpattern' 'keepfolders' and 'dirfilterpattern' are linked.
+
+        'filterpattern' includes which files to exclude. In general, if a folder is
+        empty after the file is skipped, or the folder was empty originally, then the
+        proecedure will also skip the empty folder.
+
+        'keepfolder' is a flag that determines if a folder shall be kept although
+        empty
+          - 0 to delete all folders that are empty after copy/filtering
+          - 1 to keep all folders, even the empty ones
+          - 2 to keep all folders except those in dirfilterpattern
+
+        So 'dirfilterpattern' is only used if keepfolders == 2
+
+
+        """
 
         filterpattern = ""
         dirfilterpattern = ""
@@ -518,10 +548,10 @@ class CopyFMU:
         if self.profile == 1:
             filterpattern = FILTER1
             self.keepfolders = 1
-            dirfilterpattern = DIRFILTERX
+            dirfilterpattern = DIRFILTERX  # dummy, since keepfolder == 1
         elif self.profile == 2:
             filterpattern = FILTER2
-            self.keepfolders = 1
+            self.keepfolders = 2
             dirfilterpattern = DIRFILTER2
         elif self.profile == 3:
             filterpattern = FILTER3
@@ -530,7 +560,7 @@ class CopyFMU:
         elif self.profile == 4:
             filterpattern = FILTER3
             self.keepfolders = 0
-            dirfilterpattern = DIRFILTERX
+            dirfilterpattern = DIRFILTERX  # dummy, since keepfolder == 0
         elif self.profile == 5:
             filterpattern = FILTER5
             self.keepfolders = 2
@@ -538,7 +568,7 @@ class CopyFMU:
         elif self.profile == 6:
             filterpattern = FILTER6
             self.keepfolders = 0
-            dirfilterpattern = DIRFILTERX
+            dirfilterpattern = DIRFILTERX  # dummy
 
         if self.profile != 9:  # already stored if profile is 9
             self.filter = filterpattern
@@ -604,7 +634,7 @@ class CopyFMU:
             filterpatternname,  # $FILTERFILE
             str(self.nthreads),  # $THREADS
             str(rsyncargs),  # $RSYNCARGS
-            str(self.keepfolders),  # $DIRTREE
+            str(self.keepfolders),  # $KEEPFOLDERS
             dirfilterpatternname,  # $DIRFILTERFILE
         ]
         logger.info(" ".join(command))
