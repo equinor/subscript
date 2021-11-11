@@ -154,13 +154,13 @@
 equivalent DataFrame representation</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="subscript.fmuobs.parsers.INCLUDE_RE">
-<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">INCLUDE_RE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">re.compile('\\s*(include\\s+[\\&quot;\']*)([\\w\\s\\.\\-_]+)([\\&quot;\']*[\\s]*;)')</span></em><a class="headerlink" href="#subscript.fmuobs.parsers.INCLUDE_RE" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">INCLUDE_RE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('\\s*(include\\s+[\\&quot;\']*)([\\w\\s\\.\\-_]+)([\\&quot;\']*[\\s]*;)')</span></em><a class="headerlink" href="#subscript.fmuobs.parsers.INCLUDE_RE" title="Permalink to this definition"></a></dt>
 <dd><p>Regular expression for capturing include statements in input file</p>
 </dd></dl>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="subscript.fmuobs.parsers.OBS_ARGS_RE">
-<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">OBS_ARGS_RE</span></span><em class="property"> <span class="pre">=</span> <span class="pre">re.compile('[\\s]*([\\nA-Za-z:/=_\\+\\-\\.,0-9\\s]*)[\\s]*(\\{[A-Za-z=0-9\\+\\.,_;/\\s]*\\})?[\\s]*;[\\s]*')</span></em><a class="headerlink" href="#subscript.fmuobs.parsers.OBS_ARGS_RE" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">OBS_ARGS_RE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('[\\s]*([\\nA-Za-z:/=_\\+\\-\\.,0-9\\s]*)[\\s]*(\\{[A-Za-z=0-9\\+\\.,_;/\\s]*\\})?[\\s]*;[\\s]*')</span></em><a class="headerlink" href="#subscript.fmuobs.parsers.OBS_ARGS_RE" title="Permalink to this definition"></a></dt>
 <dd><p>Regular expression for splitting observation arguments into a
 key-values element, and a curly-braces element. The curly braces
 can not be nested.</p>
