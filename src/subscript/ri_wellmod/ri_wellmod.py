@@ -228,8 +228,10 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
 
     # Start with trying to find standard install, then search RI_HOME
     resinsight_exe = get_resinsight_exe()
+    if not resinsight_exe:
+        return None
 
-    riexe_path = Path(resinsight_exe)
+    riexe_path = Path(str(resinsight_exe))
     if (
         len(riexe_path.parts) >= 2
         and riexe_path.parts[0] == "/"
