@@ -236,7 +236,8 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
             return False
         wrapper = True
 
-    # First launch attempt (always try twice, occationally times out on busy nodes)
+    # First launch attempt (always try twice, occasionally times out on busy nodes)
+    resinsight = False
     try:
         resinsight = rips.Instance.launch(
             resinsight_executable=resinsight_exe,
