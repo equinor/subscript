@@ -30,28 +30,24 @@ def drogon_runpath():
     return None
 
 
-def has_display():
-    """
-    Check if an X display is available
-    """
-    return "DISPLAY" in os.environ and os.environ["DISPLAY"]
-
-
 def has_resinsight():
     """
     Check for a valid ResInsight install
     """
-    if ri_wellmod.get_resinsight_exe():
-        return True
+    resinsight_exe = ri_wellmod.get_resinsight_exe()
 
-    wrapper = ri_wellmod.find_and_wrap_resinsight_version(
-        ri_wellmod.get_rips_version_triplet()
-    )
-    if wrapper:
-        Path(wrapper).unlink()
-        return True
+    if not resinsight_exe:
+        return False
 
-    return False
+    riexe_path = Path(resinsight_exe)
+    if (
+        len(riexe_path.parts) >= 2
+        and riexe_path.parts[0] == "/"
+        and riexe_path.parts[1] == "tmp"
+    ):
+        riexe_path.unlink()
+
+    return True
 
 
 def file_contains(filename, string_to_find):
@@ -165,7 +161,6 @@ def test_drogon_lgr(tmp_path, mocker):
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
-@pytest.mark.skipif(not has_display(), reason="Requires X display")
 def test_main_lgr_cmdline(tmp_path, mocker):
     """Test creation of LGR"""
     os.chdir(tmp_path)
@@ -252,11 +247,9 @@ def test_main_initcase_reek(tmp_path, mocker):
     assert Path(outfile).exists() and file_contains(outfile, "OP_1")
 
 
-# This one requires a GUI (for now)
 @pytest.mark.skipif(
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
-@pytest.mark.skipif(not has_display(), reason="Requires X display")
 def test_main_lgr_reek(tmp_path, mocker):
     """Test creation of LGR on Reek"""
     os.chdir(tmp_path)

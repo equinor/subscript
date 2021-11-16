@@ -74,7 +74,9 @@ logger = getLogger(__name__)
 RI_HOME = "/prog/ResInsight"
 WRAPPER_TEMPLATE = """#!/bin/bash
 unset LD_LIBRARY_PATH
-export LD_LIBRARY_PATH=/prog/ResInsight/6.14-3_odb_api/lib
+INSTALL_DIR={}
+export LD_LIBRARY_PATH="$INSTALL_DIR/../2020_odb_api/lib:$INSTALL_DIR"
+export QT_PLUGIN_PATH="$INSTALL_DIR/plugins:$QT_PLUGIN_PATH"
 """
 RI_VERSION_REX = re.compile(r".*(\d{4}\.\d{2}\.\d+).*", re.DOTALL)
 
@@ -94,21 +96,25 @@ class CustomFormatter(
 def get_resinsight_exe() -> Optional[str]:
     """
     Return the path to a ResInsight executable (or wrapper script).
-    Returns None if not found or major version < rips major version.
+    Returns None if not able to find a version matching the rips major.minor version.
     """
     ri_exe = shutil.which("ResInsight")
     if not ri_exe:
         ri_exe = shutil.which("resinsight")
 
+    rips_triplet = get_rips_version_triplet()
+    if ri_exe == "/global/distbin/resinsight":
+        ri_exe = find_and_wrap_resinsight_version(rips_triplet)
+
     if not ri_exe:
         return None
 
     ri_triplet = get_resinsight_version_triplet(ri_exe)
-    rips_triplet = get_rips_version_triplet()
-    if ri_triplet[0] != rips_triplet[0]:
+    if not (ri_triplet[0] == rips_triplet[0] and ri_triplet[1] == rips_triplet[1]):
         logger.debug(
-            "ResInsight version in path does not match rips version (%d)",
+            "ResInsight version in path does not match rips version (%d.%d)",
             rips_triplet[0],
+            rips_triplet[1],
         )
         return None
 
@@ -188,19 +194,19 @@ def find_and_wrap_resinsight_version(
         return None
 
     # First, search for full match, including patch version
-    resinsight_exe = _find_ri_exe(f"*{major}.{minor}.{patch}*")
+    resinsight_exe = _find_ri_exe(f"*{major}.{minor:02d}.{patch}*/")
     if not resinsight_exe:
         # Then try to find a matching major.minor
-        resinsight_exe = _find_ri_exe(f"*{major}.{minor}*")
+        resinsight_exe = _find_ri_exe(f"*{major}.{minor:02d}*/")
 
     if not resinsight_exe:
         return None
 
     logger.info("Found ResInsight version: %s", resinsight_exe)
-
+    install_dir = Path(resinsight_exe).parent
     with tempfile.NamedTemporaryFile(delete=False) as wrapper_file:
         with open(wrapper_file.name, "w", encoding="utf8") as fhandle:
-            print(WRAPPER_TEMPLATE, file=fhandle)
+            print(WRAPPER_TEMPLATE.format(install_dir), file=fhandle)
             print(f'exec {resinsight_exe} "$@"', file=fhandle)
             fhandle.flush()
         os.chmod(wrapper_file.name, 0o770)
@@ -222,18 +228,13 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
 
     # Start with trying to find standard install, then search RI_HOME
     resinsight_exe = get_resinsight_exe()
-    wrapper = False
-    if not resinsight_exe:
-        # Get rips version
-        rips_version_triplet = get_rips_version_triplet()
-        resinsight_exe = find_and_wrap_resinsight_version(rips_version_triplet)
-        if not resinsight_exe:
-            logger.critical(
-                "Unable to find the %d version of ResInsight (to match \
-                    the rips version)",
-                rips_version_triplet[0],
-            )
-            return False
+
+    riexe_path = Path(resinsight_exe)
+    if (
+        len(riexe_path.parts) >= 2
+        and riexe_path.parts[0] == "/"
+        and riexe_path.parts[1] == "tmp"
+    ):
         wrapper = True
 
     # First launch attempt (always try twice, occasionally times out on busy nodes)
@@ -262,7 +263,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
             )
 
     if wrapper:
-        Path(resinsight_exe).unlink()  # Delete wrapper
+        riexe_path.unlink()  # Delete wrapper
 
     return resinsight
 
@@ -594,22 +595,6 @@ def main() -> int:
                         ResInsight to recognize it as an Eclipse input property file."
                 )
                 return 1
-
-    # Until fix in next ResInsight release for LGR cases, exit if:
-    #  * No X display (unable to start with GUI)
-    #  * No .UNRST
-    if lgr_specs is not None and len(lgr_specs) > 0:
-        has_display = "DISPLAY" in os.environ and os.environ["DISPLAY"]
-        if not has_display and not resinsightdev:
-            logger.error("Currently LGR creation requires an X display (GUI mode).")
-            return 1
-        if not (init_case and has_restart_file(ecl_path)):
-            logger.error(
-                "Can currently only create LGRs for init cases with restart file."
-            )
-            return 1
-
-        console_mode = resinsightdev is not None
 
     # Input cases must be loaded by a cmdline workaround
     if not init_case:
