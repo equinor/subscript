@@ -402,12 +402,12 @@ class SegmentPlot:
             compstr = compstr + "\n" + mydata[j]
             j = j + 1
         completion = pd.read_csv(StringIO(compstr), sep=" ", index_col=False)
-        completion["WELL"] = completion["WELL"].astype(np.str)
+        completion["WELL"] = completion["WELL"].astype(str)
         completion["LATERAL"] = completion["LATERAL"].astype(np.int32)
-        completion["TUBINGSEGMENT"] = completion["TUBINGSEGMENT"].astype(np.str)
-        completion["DEVICESEGMENT"] = completion["DEVICESEGMENT"].astype(np.str)
-        completion["ANNULUSSEGMENT"] = completion["ANNULUSSEGMENT"].astype(np.str)
-        completion["DAYS"] = completion["DAYS"].astype(np.str)
+        completion["TUBINGSEGMENT"] = completion["TUBINGSEGMENT"].astype(str)
+        completion["DEVICESEGMENT"] = completion["DEVICESEGMENT"].astype(str)
+        completion["ANNULUSSEGMENT"] = completion["ANNULUSSEGMENT"].astype(str)
+        completion["DAYS"] = completion["DAYS"].astype(str)
 
         self.information = completion.copy(deep=True)
 
