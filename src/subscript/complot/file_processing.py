@@ -14,11 +14,11 @@ def clear_comments(input_file: str):
 
     try:
         my_data = open(input_file, "r").readlines()
-    except Exception:
+    except FileNotFoundError:
         my_data = input_file.split("\n")
-    nline = len(my_data)
+    n_line = len(my_data)
     no_comments = " " * 15
-    for i in range(nline):
+    for i in range(n_line):
         my_line = my_data[i].lstrip("\t")
         my_line = my_line.lstrip(" ")
         my_line = my_line.replace("\t", " ")

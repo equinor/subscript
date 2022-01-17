@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from pandas._testing import assert_frame_equal
 
-inputfile = """
+input_file = """
 DATAFILE
   testfile.DATA
   testfile_advanced_wells.DATA
@@ -31,7 +31,7 @@ OUTPUTFILE
 /
 """
 
-wellfile = """
+well_file = """
 --- This is a test schedule file for complot.
 COMPDAT
 --well i  j  k1 k2 stat. sn     T        ID    KH     s  D
@@ -59,7 +59,7 @@ COMPSEGS
 /
 """
 
-datafile = """
+data_file = """
 PATHS
  'ECL' '../include/schedule' /
 /
@@ -86,43 +86,43 @@ def test_format_subplot():
     plt.figure(num=1)
     ax = plt.gca()
     title = "myplot"
-    xlabel = "myxaxis"
-    ylabel = "myylabel"
-    xlim = [0.0, 100.0]
-    ylim = [5.0, 10.0]
+    x_label = "myxaxis"
+    y_label = "myylabel"
+    x_lim = (0.0, 100.0)
+    y_lim = (5.0, 10.0)
 
-    complot.format_subplot(ax, title, xlabel, ylabel, xlim, ylim)
+    complot.format_subplot(ax, title, x_label, y_label, x_lim, y_lim)
     assert ax.get_title() == title
-    assert ax.xaxis.get_label().get_text() == xlabel
-    assert ax.yaxis.get_label().get_text() == ylabel
+    assert ax.xaxis.get_label().get_text() == x_label
+    assert ax.yaxis.get_label().get_text() == y_label
     assert ax.get_xlim() == (0.0, 100.0)
     assert ax.get_ylim() == (5.0, 10.0)
 
 
-def test_segmentplot_datafile_kw():
+def test_segment_plot_datafile_kw():
     """
     Test the datafile_kw() method in the complot SegmentPlot class
     """
 
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.data_file == ["testfile.DATA", "testfile_advanced_wells.DATA"]
+    segment_plot = complot.SegmentPlot(input_file)
+    assert segment_plot.data_file == ["testfile.DATA", "testfile_advanced_wells.DATA"]
 
 
-def test_SegmentPlot_casename_kw():
+def test_segment_plot_casename_kw():
     """
     Test the datafile_kw() method in the complot SegmentPlot class.
     """
 
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.case_name == "testfile.case"
+    segment_plot = complot.SegmentPlot(input_file)
+    assert segment_plot.case_name == "testfile.case"
 
 
-def test_read_wellfile():
+def test_read_well_file():
     """
     Test the method read_well_file() in the SegmentPlot class.
     """
 
-    welsegsheader_columns = [
+    welsegs_header_columns = [
         "WELL",
         "SEGMENTTVD",
         "SEGMENTMD",
@@ -136,7 +136,7 @@ def test_read_wellfile():
         "ITEM11",
         "ITEM12",
     ]
-    welsegsheader_true = pd.DataFrame(
+    welsegs_header_true = pd.DataFrame(
         [
             [
                 "WELL",
@@ -153,9 +153,9 @@ def test_read_wellfile():
                 "1*",
             ]
         ],
-        columns=welsegsheader_columns,
+        columns=welsegs_header_columns,
     )
-    welsegstable_columns = [
+    welsegs_table_columns = [
         "TUBINGSEGMENT",
         "TUBINGSEGMENT2",
         "TUBINGBRANCH",
@@ -172,7 +172,7 @@ def test_read_wellfile():
         "ITEM14",
         "ITEM15",
     ]
-    welsegstable_true = pd.DataFrame(
+    welsegs_table_true = pd.DataFrame(
         [
             [
                 "2",
@@ -277,9 +277,9 @@ def test_read_wellfile():
                 "1*",
             ],
         ],
-        columns=welsegstable_columns,
+        columns=welsegs_table_columns,
     )
-    welsegstable_true = welsegstable_true.astype(
+    welsegs_table_true = welsegs_table_true.astype(
         {
             "TUBINGSEGMENT": np.int32,
             "TUBINGSEGMENT2": np.int32,
@@ -289,7 +289,7 @@ def test_read_wellfile():
             "TUBINGTVD": np.float64,
         }
     )
-    compsegstable_columns = [
+    compsegs_table_columns = [
         "I",
         "J",
         "K",
@@ -302,11 +302,11 @@ def test_read_wellfile():
         "THERM",
         "SEGMENT",
     ]
-    compsegstable_true = pd.DataFrame(
+    compsegs_table_true = pd.DataFrame(
         [[1, 2, 5, 1, 0.0, 501.0, "Z", "1*", "1*", "1*", "1*"]],
-        columns=compsegstable_columns,
+        columns=compsegs_table_columns,
     )
-    compsegstable_true = compsegstable_true.astype(
+    compsegs_table_true = compsegs_table_true.astype(
         {
             "I": np.int32,
             "J": np.int32,
@@ -316,7 +316,7 @@ def test_read_wellfile():
             "ENDMD": np.float64,
         }
     )
-    compdattable_columns = [
+    compdat_table_columns = [
         "WELL",
         "I",
         "J",
@@ -332,7 +332,7 @@ def test_read_wellfile():
         "COMPDAT_DIRECTION",
         "RO",
     ]
-    compdattable_true = pd.DataFrame(
+    compdat_table_true = pd.DataFrame(
         [
             [
                 "WELL",
@@ -351,9 +351,9 @@ def test_read_wellfile():
                 "1*",
             ]
         ],
-        columns=compdattable_columns,
+        columns=compdat_table_columns,
     )
-    compdattable_true = compdattable_true.astype(
+    compdat_table_true = compdat_table_true.astype(
         {
             "I": np.int32,
             "J": np.int32,
@@ -361,16 +361,16 @@ def test_read_wellfile():
             "K2": np.int32,
         }
     )
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.read_well_file(wellfile)
-    welsegsheader = classinst.welsegs_header[0]
-    welsegstable = classinst.welsegs_table[0]
-    compsegstable = classinst.compsegs_table[0]
-    compdattable = classinst.compdat_table
-    assert_frame_equal(welsegsheader.content, welsegsheader_true)
-    assert_frame_equal(welsegstable.content, welsegstable_true)
-    assert_frame_equal(compsegstable.content, compsegstable_true)
-    assert_frame_equal(compdattable, compdattable_true)
+    segment_plot = complot.SegmentPlot(input_file)
+    segment_plot.read_well_file(well_file)
+    welsegs_header = segment_plot.welsegs_header[0]
+    welsegs_table = segment_plot.welsegs_table[0]
+    compsegs_table = segment_plot.compsegs_table[0]
+    compdat_table = segment_plot.compdat_table
+    assert_frame_equal(welsegs_header.content, welsegs_header_true)
+    assert_frame_equal(welsegs_table.content, welsegs_table_true)
+    assert_frame_equal(compsegs_table.content, compsegs_table_true)
+    assert_frame_equal(compdat_table, compdat_table_true)
 
 
 def test_clean_trailing():
@@ -378,16 +378,16 @@ def test_clean_trailing():
     Test the clean_trailing method in the SegmentPlot class.
     """
 
-    classinst = complot.SegmentPlot(inputfile)
-    mystr_spc = " This is a string with trailing spaces "
-    mystr_tab = "\t This is a string with trailing tabs \t"
-    mystr_nln = "\n This is a string with trailing newlines \n"
+    segment_plot = complot.SegmentPlot(input_file)
+    str_with_trailing_spaces = " This is a string with trailing spaces "
+    str_with_trailing_tabs = "\t This is a string with trailing tabs \t"
+    str_with_trailing_new_lines = "\n This is a string with trailing newlines \n"
 
-    spc = classinst.clean_trailing(mystr_spc)
+    spc = segment_plot.clean_trailing(str_with_trailing_spaces)
     assert spc == "Thisisastringwithtrailingspaces"
-    tab = classinst.clean_trailing(mystr_tab)
+    tab = segment_plot.clean_trailing(str_with_trailing_tabs)
     assert tab == "Thisisastringwithtrailingtabs"
-    nln = classinst.clean_trailing(mystr_nln)
+    nln = segment_plot.clean_trailing(str_with_trailing_new_lines)
     assert nln == "Thisisastringwithtrailingnewlines"
 
 
@@ -396,28 +396,28 @@ def test_relative_path():
     Test the relative_path method in the SegmentPlot class.
     """
 
-    classinst = complot.SegmentPlot(inputfile)
-    relativepath_true = "../include/schedule"
-    relativepath = classinst.relative_path(datafile)
-    assert relativepath["ECL"] == relativepath_true
+    segment_plot = complot.SegmentPlot(input_file)
+    relative_path_true = "../include/schedule"
+    relative_path = segment_plot.relative_path(data_file)
+    assert relative_path["ECL"] == relative_path_true
 
 
-def test_wellfile_kw():
+def test_well_file_kw():
     """
-    Test the wellfile_kw method in the SegmentPlot class.
-    """
-
-    classinst = complot.SegmentPlot(inputfile)
-    assert classinst.well_file == ["testfile.SCH", "testfile_advanced.wells"]
-
-
-def test_outputfile_kw():
-    """
-    Test the outputfile_kw method in the SegmentsPlot class.
+    Test the well_file_kw method in the SegmentPlot class.
     """
 
-    classinst = complot.SegmentPlot(inputfile)
-    assert classinst.output_file == "a_sample_output_file.org"
+    segment_plot = complot.SegmentPlot(input_file)
+    assert segment_plot.well_file == ["testfile.SCH", "testfile_advanced.wells"]
+
+
+def test_output_file_kw():
+    """
+    Test the output_file_kw method in the SegmentsPlot class.
+    """
+
+    segment_plot = complot.SegmentPlot(input_file)
+    assert segment_plot.output_file == "a_sample_output_file.org"
 
 
 def test_information_kw():
@@ -425,7 +425,7 @@ def test_information_kw():
     Test the information_kw method in the SegmentsPlot class.
     """
 
-    classinst = complot.SegmentPlot(inputfile)
+    segment_plot = complot.SegmentPlot(input_file)
     info_columns = [
         "WELL",
         "LATERAL",
@@ -447,19 +447,19 @@ def test_information_kw():
             "DAYS": np.str,
         }
     )
-    info = classinst.information
+    info = segment_plot.information
     assert_frame_equal(info, info_true)
 
 
-def test_get_info_perwell():
+def test_get_info_per_well():
     """
-    Test the get_info_perwell method in the SegmentsPlot class.
+    Test the get_info_per_well method in the SegmentsPlot class.
     """
 
     well = "WELL"
     lateral = 1
-    classinst = complot.SegmentPlot(inputfile)
-    tubing_segment, device_segment, annulus_segment, days = classinst.get_info_perwell(
+    segment_plot = complot.SegmentPlot(input_file)
+    tubing_segment, device_segment, annulus_segment, days = segment_plot.get_info_perwell(
         well, lateral
     )
     assert all([a == b for a, b in zip(tubing_segment, [2, 3, 4, 5, 6])])
@@ -475,9 +475,9 @@ def test_get_trajectory():
 
     well = "WELL"
     tubing_segment = [2]
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.read_well_file(wellfile)
-    welsegs = classinst.get_trajectory(well, tubing_segment)
+    segment_plot = complot.SegmentPlot(input_file)
+    segment_plot.read_well_file(well_file)
+    welsegs = segment_plot.get_trajectory(well, tubing_segment)
     welsegs_true = pd.DataFrame([[500.0, 500.0]], columns=["TUBINGMD", "TUBINGTVD"])
     assert_frame_equal(welsegs, welsegs_true)
 
@@ -489,9 +489,9 @@ def test_get_packer():
 
     well = "WELL"
     annulus_segment = [5, 6, 7]
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.read_well_file(wellfile)
-    packer_segments, annulus_segments = classinst.get_packer(well, annulus_segment)
+    segment_plot = complot.SegmentPlot(input_file)
+    segment_plot.read_well_file(well_file)
+    packer_segments, annulus_segments = segment_plot.get_packer(well, annulus_segment)
     packer_columns = ["PACKERMD", "PACKERTVD"]
     annulus_columns = ["SEGMENT", "MD", "ANNULUS_ZONE"]
     packer_true = pd.DataFrame([[250.2, 250.2], [500.2, 500.2]], columns=packer_columns)
@@ -503,15 +503,15 @@ def test_get_packer():
     assert_frame_equal(annulus_segments, annulus_true)
 
 
-def test_get_dayindex(capfd):
+def test_get_day_index(capfd):
     """
     Test the get_dayindex method in the SegmentsPlot class.
     """
 
     list_of_days = [1, 2, 3, 4]
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.eclipse_days = np.array([1, 3, 5, 7])
-    day_idx = classinst.get_dayindex(list_of_days)
+    segment_plot = complot.SegmentPlot(input_file)
+    segment_plot.eclipse_days = np.array([1, 3, 5, 7])
+    day_idx = segment_plot.get_dayindex(list_of_days)
     assert all([a == b for a, b in zip(day_idx, [0, 0, 1, 1])])
     output_true = (
         "Warning: No exact day is found in Eclipse for 2 "
@@ -566,17 +566,19 @@ def test_get_md():
     lateral = 1
     segment = [2]
     section = "tubing"
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.read_well_file(wellfile)
-    welsegs = classinst.get_md(well, segment, lateral, section)
+    segment_plot = complot.SegmentPlot(input_file)
+    segment_plot.read_well_file(well_file)
+    welsegs = segment_plot.get_md(well, segment, lateral, section)
     assert_frame_equal(welsegs, welsegs_tubing)
+
     segment = [3, 4]
     section = "device"
-    welsegs = classinst.get_md(well, segment, lateral, section)
+    welsegs = segment_plot.get_md(well, segment, lateral, section)
     assert_frame_equal(welsegs, welsegs_device)
+
     segment = [5, 6, 7]
     section = "annulus"
-    welsegs = classinst.get_md(well, segment, lateral, section)
+    welsegs = segment_plot.get_md(well, segment, lateral, section)
     assert_frame_equal(welsegs, welsegs_annulus)
 
 
@@ -585,11 +587,11 @@ def test_get_well_profile():
     Test the method get_well_profile in the SegmentPlot class.
     """
 
-    classinst = complot.SegmentPlot(inputfile)
-    classinst.eclipse = EclSum("tests/data/TEST.DATA")
-    classinst.eclipse_days = np.asarray(classinst.eclipse.days)
-    classinst.eclipse_dates = classinst.eclipse.dates
-    classinst.get_well_profile("WELL")
+    segment_plot = complot.SegmentPlot(input_file)
+    segment_plot.eclipse = EclSum("tests/data/TEST.DATA")
+    segment_plot.eclipse_days = np.asarray(segment_plot.eclipse.days)
+    segment_plot.eclipse_dates = segment_plot.eclipse.dates
+    segment_plot.get_well_profile("WELL")
     well_columns = [
         "DAY",
         "DATE",
@@ -629,8 +631,8 @@ def test_get_well_profile():
         columns=well_columns,
     )
     well_true["DATE"] = pd.to_datetime(well_true["DATE"], format="%Y-%m-%d")
-    classinst.df_well = classinst.df_well.round({"WWCT": 6})
-    assert_frame_equal(classinst.df_well, well_true)
+    segment_plot.df_well = segment_plot.df_well.round({"WWCT": 6})
+    assert_frame_equal(segment_plot.df_well, well_true)
 
 
 def test_get_data():
@@ -638,9 +640,9 @@ def test_get_data():
     Test the method get_data in the SegmentPlot class.
     """
 
-    classinst = complot.SegmentPlot("tests/data/test.plot")
-    classinst.main()
-    output_df = classinst.df_output
+    segment_plot = complot.SegmentPlot("tests/data/test.plot")
+    segment_plot.main()
+    output_df = segment_plot.df_output
     columns_true = [
         "WELL",
         "SECTION",
