@@ -13,7 +13,7 @@ from matplotlib import rcParams
 from matplotlib import ticker
 import numpy as np
 import pandas as pd
-import fileprocessing as fp
+import file_processing as fp
 import schedule_reader as sr
 
 fontP = FontProperties()
@@ -156,7 +156,7 @@ class SegmentPlot:
     def __init__(self, inputfile):
         self.input_file_name = inputfile
         self.output_pdf = inputfile.split(".")[0] + ".pdf"
-        self.clean_input_file = fp.ClearComments(inputfile)
+        self.clean_input_file = fp.clear_comments(inputfile)
         self.read_clean_input = self.clean_input_file.readlines()
         self.datafile_kw()
         self.casename_kw()
@@ -233,7 +233,7 @@ class SegmentPlot:
         self.eclipse_days = np.asarray(self.eclipse.days)
         self.eclipse_dates = self.eclipse.dates
 
-    def read_well_file(self, wellfile):
+    def read_well_file(self, well_file):
         """
         Reads an Eclipse schedule file keywords COMPDAT, COMPSEGS and WELSEG.
 

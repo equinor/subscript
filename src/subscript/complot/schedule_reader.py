@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-class kw(list):
+class KW(list):
     """
     A subclass of list that can accept additional attributes.
     Should be able to be used just like a regular list.
@@ -33,7 +33,7 @@ class kw(list):
     """
 
     def __new__(self, *args, **kwargs):
-        return super(kw, self).__new__(self, args, kwargs)
+        return super(KW, self).__new__(self, args, kwargs)
 
     def __init__(self, *args, **kwargs):
         if len(args) == 1 and hasattr(args[0], "__iter__"):
@@ -47,7 +47,7 @@ class kw(list):
         return self
 
 
-class pandacollection:
+class PandaCollection:
     def __init__(self, panda):
         self.content = panda.copy(deep=True)
 
@@ -56,32 +56,32 @@ class pandacollection:
         return self
 
 
-def stripcomments(code):
+def strip_comments(code):
     code = str(code)
     code = code.split("--", 1)
     return code[0]
 
 
-def cleantolist(string):
-    myline = stripcomments(string)
-    myline = myline.replace("\t", " ")
-    myline = myline.replace("\n", " ")
-    myline = myline.split("/")[0]
-    mylist = myline.split(" ")
-    mylist = list(filter(None, mylist))
-    return mylist
+def clean_to_list(text: str):
+    my_line = strip_comments(text)
+    my_line = my_line.replace("\t", " ")
+    my_line = my_line.replace("\n", " ")
+    my_line = my_line.split("/")[0]
+    my_list = my_line.split(" ")
+    my_list = list(filter(None, my_list))
+    return my_list
 
 
-def cleantolist2(string):
-    myline = stripcomments(string)
-    myline = myline.replace("\t", " ")
-    myline = myline.replace("\n", " ")
-    mylist = myline.split(" ")
-    mylist = list(filter(None, mylist))
-    return mylist
+def clean_to_list2(text: str):
+    my_line = strip_comments(text)
+    my_line = my_line.replace("\t", " ")
+    my_line = my_line.replace("\n", " ")
+    my_list = my_line.split(" ")
+    my_list = list(filter(None, my_list))
+    return my_list
 
 
-def expanddefaultcolumn(xin):
+def expand_default_column(xin):
     x = copy.deepcopy(xin)
     a = len(x)
     i = -1
@@ -96,111 +96,111 @@ def expanddefaultcolumn(xin):
     return x
 
 
-def read_schedule_keywords(wellfile, keywordlist):
+def read_schedule_keywords(well_file, keyword_list):
     """"""
-    mydata = deepcopy(wellfile)
-    nline = len(mydata)
+    my_data = deepcopy(well_file)
+    n_line = len(my_data)
     i = -1
-    allkw = []
-    while i < nline - 1:
+    all_kw = []
+    while i < n_line - 1:
         i = i + 1
-        mylist = cleantolist(mydata[i])
-        if len(mylist) > 0:
-            keyword = mylist[0]
-            if keyword in keywordlist:
+        my_list = clean_to_list(my_data[i])
+        if len(my_list) > 0:
+            keyword = my_list[0]
+            if keyword in keyword_list:
                 kw_idx = i
-                keyword = str(mylist[0])
+                keyword = str(my_list[0])
                 content = []
-                while i < nline:
+                while i < n_line:
                     i = i + 1
-                    mylist2 = cleantolist2(mydata[i])
+                    mylist2 = clean_to_list2(my_data[i])
                     if len(mylist2) > 0:
                         if mylist2[0] == "/":
                             break
                         else:
-                            mydata[i] = mydata[i].replace("'", "")
-                            mydata[i] = mydata[i].replace('"', "")
-                            mylist = cleantolist(mydata[i])
-                            if len(mylist) > 0:
-                                mylist = expanddefaultcolumn(mylist)
+                            my_data[i] = my_data[i].replace("'", "")
+                            my_data[i] = my_data[i].replace('"', "")
+                            my_list = clean_to_list(my_data[i])
+                            if len(my_list) > 0:
+                                my_list = expand_default_column(my_list)
                                 if keyword == "WELSPECS":
-                                    mylist = fill_default_columns(mylist, 17)
+                                    my_list = fill_default_columns(my_list, 17)
                                 elif keyword == "COMPDAT":
-                                    mylist = fill_default_columns(mylist, 14)
+                                    my_list = fill_default_columns(my_list, 14)
                                 elif keyword == "WELSEGS" and i > (kw_idx + 1):
                                     # print mylist
-                                    mylist = fill_default_columns(mylist, 15)
+                                    my_list = fill_default_columns(my_list, 15)
                                 # print mylist
                                 elif keyword == "WELSEGS" and i == (kw_idx + 1):
-                                    mylist = fill_default_columns(mylist, 12)
+                                    my_list = fill_default_columns(my_list, 12)
                                 # print mylist
                                 elif keyword == "COMPSEGS" and i > (kw_idx + 1):
-                                    mylist = fill_default_columns(mylist, 11)
-                                content.append(mylist)
-                obj = kw(content)
+                                    my_list = fill_default_columns(my_list, 11)
+                                content.append(my_list)
+                obj = KW(content)
                 obj.name = keyword
                 if keyword == "WELSEGS" or keyword == "COMPSEGS":
-                    wellname = content[0][0]
-                    wellname = wellname.replace("'", "")
-                    obj.well = wellname
-                allkw.append(obj)
-    return allkw
+                    well_name = content[0][0]
+                    well_name = well_name.replace("'", "")
+                    obj.well = well_name
+                all_kw.append(obj)
+    return all_kw
 
 
-def read_schedule_keywords_backup(wellfile, keyword):
+def read_schedule_keywords_backup(well_file, keyword):
     """"""
-    mydata = deepcopy(wellfile)
-    nline = len(mydata)
+    my_data = deepcopy(well_file)
+    n_line = len(my_data)
     i = -1
-    allkw = []
-    while i < nline - 1:
+    all_kw = []
+    while i < n_line - 1:
         i = i + 1
-        mylist = cleantolist(mydata[i])
-        if len(mylist) > 0:
-            if mylist[0] == keyword:
+        my_list = clean_to_list(my_data[i])
+        if len(my_list) > 0:
+            if my_list[0] == keyword:
                 kw_idx = i
-                keyword = str(mylist[0])
+                keyword = str(my_list[0])
                 content = []
-                while i < nline:
+                while i < n_line:
                     i = i + 1
-                    mylist2 = cleantolist2(mydata[i])
-                    if len(mylist2) > 0:
-                        if mylist2[0] == "/":
+                    my_list2 = clean_to_list2(my_data[i])
+                    if len(my_list2) > 0:
+                        if my_list2[0] == "/":
                             break
                         else:
-                            mydata[i] = mydata[i].replace("'", "")
-                            mydata[i] = mydata[i].replace('"', "")
-                            mylist = cleantolist(mydata[i])
-                            if len(mylist) > 0:
-                                mylist = expanddefaultcolumn(mylist)
+                            my_data[i] = my_data[i].replace("'", "")
+                            my_data[i] = my_data[i].replace('"', "")
+                            my_list = clean_to_list(my_data[i])
+                            if len(my_list) > 0:
+                                my_list = expand_default_column(my_list)
                                 if keyword == "WELSPECS":
-                                    mylist = fill_default_columns(mylist, 17)
+                                    my_list = fill_default_columns(my_list, 17)
                                 elif keyword == "COMPDAT":
-                                    mylist = fill_default_columns(mylist, 14)
+                                    my_list = fill_default_columns(my_list, 14)
                                 elif keyword == "WELSEGS" and i > (kw_idx + 1):
                                     # print(mylist)
-                                    mylist = fill_default_columns(mylist, 15)
+                                    my_list = fill_default_columns(my_list, 15)
                                 # print(mylist)
                                 elif keyword == "COMPSEGS" and i > (kw_idx + 1):
-                                    mylist = fill_default_columns(mylist, 11)
-                                content.append(mylist)
-                obj = kw(content)
+                                    my_list = fill_default_columns(my_list, 11)
+                                content.append(my_list)
+                obj = KW(content)
                 obj.name = keyword
                 if keyword == "WELSEGS" or keyword == "COMPSEGS":
                     # print(content)
-                    wellname = content[0][0]
-                    wellname = wellname.replace("'", "")
-                    obj.well = wellname
-                allkw.append(obj)
-    return allkw
+                    well_name = content[0][0]
+                    well_name = well_name.replace("'", "")
+                    obj.well = well_name
+                all_kw.append(obj)
+    return all_kw
 
 
-def fill_default_columns(mylist, n):
-    ncol = len(mylist)
-    if ncol < n:
-        extension = ["1*"] * (n - ncol)
-        mylist.extend(extension)
-    return mylist
+def fill_default_columns(my_list, n):
+    n_col = len(my_list)
+    if n_col < n:
+        extension = ["1*"] * (n - n_col)
+        my_list.extend(extension)
+    return my_list
 
 
 def welspecs_panda(myobject):
@@ -234,15 +234,15 @@ def welspecs_panda(myobject):
     return pd.DataFrame(welspecs, columns=welspecs_header)
 
 
-def compdat_panda(myobject):
+def compdat_panda(my_object):
     i = -1
-    for iobject in myobject:
-        if iobject.name == "COMPDAT" and len(iobject) > 0:
+    for i_object in my_object:
+        if i_object.name == "COMPDAT" and len(i_object) > 0:
             i = i + 1
             if i == 0:
-                compdat = np.asarray(iobject)
+                compdat = np.asarray(i_object)
             else:
-                compdat = np.row_stack((compdat, iobject))
+                compdat = np.row_stack((compdat, i_object))
     compdat_header = [
         "WELL",
         "I",
@@ -273,7 +273,7 @@ def compdat_panda(myobject):
     return compdat
 
 
-def welsegs_panda(myobject):
+def welsegs_panda(my_object):
     i = -1
     welsegs_header = [
         "TUBINGSEGMENT",
@@ -306,23 +306,27 @@ def welsegs_panda(myobject):
         "ITEM11",
         "ITEM12",
     ]
-    for iobject in myobject:
-        if iobject.name == "WELSEGS":
+
+    welsegs_content_collection = []
+    welsegs_opening_collection = []
+
+    for i_object in my_object:
+        if i_object.name == "WELSEGS":
             i = i + 1
             if i == 0:
                 welsegs_content_collection = []
                 welsegs_opening_collection = []
 
-            welsegs_opening = np.asarray(iobject[:1])
+            welsegs_opening = np.asarray(i_object[:1])
             welsegs_opening = pd.DataFrame(
                 welsegs_opening, columns=welsegs_opening_header
             )
 
-            welsegs_opening = pandacollection(welsegs_opening)
-            welsegs_opening.well = iobject.well
+            welsegs_opening = PandaCollection(welsegs_opening)
+            welsegs_opening.well = i_object.well
             welsegs_opening_collection.append(welsegs_opening)
 
-            welsegs = np.asarray(iobject[1:])
+            welsegs = np.asarray(i_object[1:])
             welsegs = pd.DataFrame(welsegs, columns=welsegs_header)
             welsegs[
                 ["TUBINGSEGMENT", "TUBINGSEGMENT2", "TUBINGBRANCH", "TUBINGOUTLET"]
@@ -335,8 +339,8 @@ def welsegs_panda(myobject):
                 ["TUBINGMD", "TUBINGTVD"]
             ].astype(np.float64)
 
-            welsegs = pandacollection(welsegs)
-            welsegs.well = iobject.well
+            welsegs = PandaCollection(welsegs)
+            welsegs.well = i_object.well
             welsegs_content_collection.append(welsegs)
     return welsegs_opening_collection, welsegs_content_collection
 
@@ -356,12 +360,12 @@ def compsegs_panda(myobject):
         "THERM",
         "SEGMENT",
     ]
-    for iobject in myobject:
-        if iobject.name == "COMPSEGS":
+    for i_object in myobject:
+        if i_object.name == "COMPSEGS":
             i = i + 1
             if i == 0:
                 compsegs_collection = []
-            compsegs = np.asarray(iobject[1:])
+            compsegs = np.asarray(i_object[1:])
             compsegs = pd.DataFrame(compsegs, columns=compsegs_header)
             compsegs[["I", "J", "K", "BRANCH"]] = compsegs[
                 ["I", "J", "K", "BRANCH"]
@@ -370,7 +374,7 @@ def compsegs_panda(myobject):
                 np.float64
             )
 
-            compsegs = pandacollection(compsegs)
-            compsegs.well = iobject.well
+            compsegs = PandaCollection(compsegs)
+            compsegs.well = i_object.well
             compsegs_collection.append(compsegs)
     return compsegs_collection
