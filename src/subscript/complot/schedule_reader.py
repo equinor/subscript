@@ -33,8 +33,8 @@ class KW(list):
     a = L( 2 )                                     # [2]
     """
 
-    def __new__(self, *args, **kwargs):
-        return super(KW, self).__new__(self, args, kwargs)
+    def __new__(cls, *args, **kwargs):
+        return super(KW, cls).__new__(cls, args, kwargs)
 
     def __init__(self, *args, **kwargs):
         if len(args) == 1 and hasattr(args[0], "__iter__"):
@@ -48,7 +48,7 @@ class KW(list):
         return self
 
 
-class PandaCollection:
+class PandasCollection:
     def __init__(self, panda):
         self.content = panda.copy(deep=True)
 
@@ -323,7 +323,7 @@ def welsegs_panda(my_object):
                 welsegs_opening, columns=welsegs_opening_header
             )
 
-            welsegs_opening = PandaCollection(welsegs_opening)
+            welsegs_opening = PandasCollection(welsegs_opening)
             welsegs_opening.well = i_object.well
             welsegs_opening_collection.append(welsegs_opening)
 
@@ -340,7 +340,7 @@ def welsegs_panda(my_object):
                 ["TUBINGMD", "TUBINGTVD"]
             ].astype(np.float64)
 
-            welsegs = PandaCollection(welsegs)
+            welsegs = PandasCollection(welsegs)
             welsegs.well = i_object.well
             welsegs_content_collection.append(welsegs)
     return welsegs_opening_collection, welsegs_content_collection
@@ -375,7 +375,7 @@ def compsegs_panda(myobject):
                 np.float64
             )
 
-            compsegs = PandaCollection(compsegs)
+            compsegs = PandasCollection(compsegs)
             compsegs.well = i_object.well
             compsegs_collection.append(compsegs)
     return compsegs_collection

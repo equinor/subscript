@@ -1,10 +1,11 @@
-"""Complot is a plotting tool for Completor to visualise flow along a
-multisegmented well path."""
+"""Complot is a plotting tool for Completor to visualise flow along a multi-segmented well path."""
 
 from io import StringIO
 from copy import deepcopy
 import math
 import sys
+from typing import Dict
+
 from ecl.summary import EclSum
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
@@ -41,10 +42,10 @@ def update_fonts(family="DejaVu Serif", size=12):
 def format_subplot(
     axis,
     title,
-    xlabel,
-    ylabel,
-    xlim=[],
-    ylim=[],
+    x_label,
+    y_label,
+    x_lim=(),
+    y_lim=(),
     categorical=False,
     max_val=1.0,
     min_val=0.0,
@@ -55,12 +56,12 @@ def format_subplot(
     Format a subplot with labels, limits and legend.
 
     Args:
-        axis (object): An axis object
+        axis (AxesSubplot): An axis object
         title (str): Subplot title
-        xlabel (str): X-axis label
-        ylabel (str): Y-axis label
-        xlim (tuple): X-axis view limits
-        ylim (tuple): Y-axis view limits
+        x_label (str): X-axis label
+        y_label (str): Y-axis label
+        x_lim (tuple): X-axis view limits
+        y_lim (tuple): Y-axis view limits
         categorical (bool): Minor ticks activated on False (default)
         max_val (float): Maximum Y-axis view limit
         min_val (float): Minimum Y-axis view limit
@@ -71,8 +72,9 @@ def format_subplot(
         None
     """
     min_val, max_val = axis.get_ylim()
-    axis.set_xlabel(xlabel)
-    axis.set_ylabel(ylabel)
+    axis.set_xlabel(x_label)
+    axis.set_ylabel(y_label)
+
     if categorical:
         axis.minorticks_on()
         axis.tick_params(
@@ -106,10 +108,10 @@ def format_subplot(
         )
     axis.yaxis.set_ticks_position("both")
     axis.xaxis.set_ticks_position("both")
-    if len(xlim) > 0:
-        axis.set_xlim(xlim)
-    if len(ylim) > 0:
-        axis.set_ylim(ylim)
+    if len(x_lim) > 0:
+        axis.set_xlim(x_lim)
+    if len(y_lim) > 0:
+        axis.set_ylim(y_lim)
     axis.grid(which="both", linestyle="-", linewidth=0.1, color="grey", alpha=0.1)
     if legend:
         if legend_location == "top":
@@ -131,8 +133,8 @@ class SegmentPlot:
     """
     Class with methods for parsing the input file and plotting data along the well path.
 
-    Args:
-        inputfile (str): The input file name containing the keywords DATAFILE,
+    Attributes:
+        input_file (str): The input file name containing the keywords DATAFILE,
             WELLFILE, OUTPUTFILE, and INFORMATION.
         output_pdf (str): The pdf output file name.
         clean_input_file (object): A clean version of the input file content in
@@ -153,24 +155,42 @@ class SegmentPlot:
         Class object with input file information and methods for plotting.
     """
 
-    def __init__(self, inputfile):
-        self.input_file_name = inputfile
-        self.output_pdf = inputfile.split(".")[0] + ".pdf"
-        self.clean_input_file = fp.clear_comments(inputfile)
+    def __init__(self, input_file):
+        self.input_file_name = input_file
+        self.output_pdf = input_file.split(".")[0] + ".pdf"
+        self.clean_input_file = fp.clear_comments(input_file)
         self.read_clean_input = self.clean_input_file.readlines()
+        self.data_file = []
+        self.n_file = 0
+        self.case_name = ""
+        self.information = None
+        self.eclipse = None
+        self.eclipse_dates = None
+        self.eclipse_days = None
+        self.df_well = None
+        self.list_keywords = []
+        self.kw_valid = []
+        self.df_annulus_zone = None
+        self.my_days_idx = None
+        self.df_tubing = None
+        self.df_device = None
+        self.df_annulus = None
+        self.df_reservoir = None
+        self.output_file = None
+        self.well_file = []
+        self.compdat_table = None
+        self.compsegs_table = None
+        self.welsegs_header = None
+        self.welsegs_table = None
         self.datafile_kw()
         self.casename_kw()
-        self.wellfile_kw()
-        self.outputfile_kw()
+        self.well_file_kw()
+        self.output_file_kw()
         self.information_kw()
 
     def datafile_kw(self):
         """
-        Parse the cleaned input file in list-line format and returns a list of
-        datafiles found in the DATAFILE keyword.
-
-        Args:
-            read_clean_input (list): List of cleaned lines in the input file.
+        Parse the cleaned input file in list-line format and returns a list of datafiles found in the DATAFILE keyword.
 
         Returns:
             A list of data files read from the DATAFILE keyword in the input file.
@@ -180,11 +200,12 @@ class SegmentPlot:
         """
 
         mydata = deepcopy(self.read_clean_input)
-        nline = len(mydata)
+        n_line = len(mydata)
+
         self.data_file = []
-        for i in range(nline):
+        for i in range(n_line):
             mydata[i] = mydata[i].strip("\n")
-        for i in range(nline):
+        for i in range(n_line):
             if mydata[i] == "DATAFILE":
                 i = i + 1
                 while str(mydata[i]) != "/":
@@ -195,19 +216,14 @@ class SegmentPlot:
             raise ValueError("Error : Eclipse file is not specified")
 
     def casename_kw(self):
-        """
-        Read the CASENAME keyword content in the input file.
-
-        Args:
-            read_clean_input (object): A StringIO object of the input file.
-        """
+        """Read the CASENAME keyword content in the input file."""
 
         mydata = deepcopy(self.read_clean_input)
-        nline = len(mydata)
+        n_line = len(mydata)
         self.case_name = []
-        for i in range(nline):
+        for i in range(n_line):
             mydata[i] = mydata[i].strip("\n")
-        for i in range(nline):
+        for i in range(n_line):
             if mydata[i] == "CASENAME":
                 i = i + 1
                 while str(mydata[i]) != "/":
@@ -216,12 +232,12 @@ class SegmentPlot:
         if len(self.case_name) == 0:
             self.case_name = deepcopy(self.data_file)
 
-    def read_data_file(self, datafile):
+    def read_data_file(self, data_file):
         """
         Read a datafile using the method EclSum from ecl.
 
         Args:
-            datafile (str): Data file name.
+            data_file (str): Data file name.
 
         Returns:
             Data file content.\n
@@ -229,7 +245,7 @@ class SegmentPlot:
             Array of Eclipse format dates.\n
         """
 
-        self.eclipse = EclSum(datafile)
+        self.eclipse = EclSum(data_file)
         self.eclipse_days = np.asarray(self.eclipse.days)
         self.eclipse_dates = self.eclipse.dates
 
@@ -238,7 +254,7 @@ class SegmentPlot:
         Read an Eclipse schedule file keywords COMPDAT, COMPSEGS and WELSEG.
 
         Args:
-            wellfile (str): Schedule file name.
+            well_file (str): Schedule file name.
 
         Returns:
             The WELSEGS header line.\n
@@ -246,33 +262,32 @@ class SegmentPlot:
             The COMPSEGS keyword content.\n
             The COMPDAT keyword content.\n
         """
-        sch = fp.ClearComments(well_file)
+        sch = fp.clear_comments(well_file)
         sch = sch.readlines()
         sch = sr.read_schedule_keywords(sch, ["COMPDAT", "COMPSEGS", "WELSEGS"])
         self.welsegs_header, self.welsegs_table = sr.welsegs_panda(sch)
         self.compsegs_table = sr.compsegs_panda(sch)
         self.compdat_table = sr.compdat_panda(sch)
 
-    def clean_trailing(self, mystr):
+    def clean_trailing(self, dirty_str: str) -> str:
         """
         Cleans trailing spaces, tabs and newline markers.
 
         Args:
-            mystr (str): A dirty string
+            dirty_str (str): A dirty string
 
         Returns:
             A clean string
         """
 
-        mystr = mystr.replace(" ", "")
-        mystr = mystr.replace("\t", "")
-        mystr = mystr.replace("\n", "")
-        return mystr
+        clean_str = dirty_str.replace(" ", "")
+        clean_str = clean_str.replace("\t", "")
+        clean_str = clean_str.replace("\n", "")
+        return clean_str
 
-    def relative_path(self, datafile):
+    def relative_path(self, datafile: str) -> Dict[str, str]:
         """
-        Find the relative path from the PATHS keyword in the
-        Eclipse data file.
+        Find the relative path from the PATHS keyword in the Eclipse data file.
 
         Args:
             datafile (str): Eclipse data file name.
@@ -281,11 +296,11 @@ class SegmentPlot:
             A dictionary of paths in PATHS.
         """
 
-        ecl = fp.ClearComments(datafile)
+        ecl = fp.clear_comments(datafile)
         ecl = ecl.readlines()
         path_dict = {}
-        for idx, iline in enumerate(ecl):
-            keyword = iline.replace(" ", "")
+        for idx, idx_line in enumerate(ecl):
+            keyword = idx_line.replace(" ", "")
             keyword = keyword.replace("\t", "")
             keyword = keyword.replace("\n", "")
             if keyword == "PATHS" and idx < (len(ecl) - 2):
@@ -300,12 +315,11 @@ class SegmentPlot:
                     idx = idx + 1
         return path_dict
 
-    def wellfile_kw(self):
+    def well_file_kw(self):
         """
         Read the content of the WELLFILE keyword in the input file to complot.
 
-        Args:
-            read_clean_input (object): A StringIO object of the input file.
+        Uses read_clean_input, a StringIO object of the input file.
 
         Returns:
             A list of WellFile strings for each schedule file
@@ -317,60 +331,57 @@ class SegmentPlot:
                 not match the number of schedule files.
         """
 
-        mydata = deepcopy(self.read_clean_input)
-        nline = len(mydata)
+        my_data = deepcopy(self.read_clean_input)
+        n_line = len(my_data)
         self.well_file = []
-        for i in range(nline):
-            mydata[i] = mydata[i].strip("\n")
-        for i in range(nline):
-            if mydata[i] == "WELLFILE":
+        for i in range(n_line):
+            my_data[i] = my_data[i].strip("\n")
+        for i in range(n_line):
+            if my_data[i] == "WELLFILE":
                 i = i + 1
-                while str(mydata[i]) != "/":
-                    self.well_file.append(str(mydata[i]).replace("'", ""))
+                while str(my_data[i]) != "/":
+                    self.well_file.append(str(my_data[i]).replace("'", ""))
                     i = i + 1
         if len(self.well_file) == 0:
             for i, ifile in enumerate(self.data_file):
-                ecl_data = fp.ClearComments(ifile + ".DATA")
+                ecl_data = fp.clear_comments(ifile + ".DATA")
                 ecl_data = ecl_data.readlines()
                 for length in range(len(ecl_data)):
                     if "_advanced.wells" in ecl_data[length]:
-                        wellfile = ecl_data[length].replace("'", "")
-                        wellfile = wellfile.replace(" ", "")
-                        wellfile = wellfile.replace("\n", "")
-                        wellfile_split = wellfile.split("/")
-                        wellfile_split = list(filter(None, wellfile_split))
+                        well_file = ecl_data[length].replace("'", "")
+                        well_file = well_file.replace(" ", "")
+                        well_file = well_file.replace("\n", "")
+                        well_file_split = well_file.split("/")
+                        well_file_split = list(filter(None, well_file_split))
                         path_dict = self.relative_path(ifile + ".DATA")
-                        if "$" in wellfile_split[0]:
-                            short = wellfile_split[0].replace("$", "")
-                            wellfile_split[0] = path_dict[short]
-                        wellfile = "/".join(wellfile_split)
-                        self.well_file.append(wellfile)
+                        if "$" in well_file_split[0]:
+                            short = well_file_split[0].replace("$", "")
+                            well_file_split[0] = path_dict[short]
+                        well_file = "/".join(well_file_split)
+                        self.well_file.append(well_file)
         if len(self.well_file) == 0:
             raise ValueError("Error : Well file is not specified")
         if self.n_file != len(self.well_file):
             raise ValueError("Error : Well file must be given for each Data file")
 
-    def outputfile_kw(self):
+    def output_file_kw(self):
         """
         Read the content of the OUTPUTFILE keyword in the input file.
-
-        Args:
-            read_clean_input (object): A StringIO object of the input file.
 
         Returns:
             Output file name
         """
         mydata = deepcopy(self.read_clean_input)
-        nline = len(mydata)
+        n_line = len(mydata)
         self.output_file = ""
-        for i in range(nline):
+        for i in range(n_line):
             mydata[i] = mydata[i].strip("\n")
-        for i in range(nline):
+        for i in range(n_line):
             if mydata[i] == "OUTPUTFILE":
                 if str(mydata[i + 1]) == "/":
-                    mywarn = "Warning : Output file is not specified. "
-                    mywarn += "WellBuilderPlot will not export the results."
-                    print(mywarn)
+                    my_warning = "Warning : Output file is not specified. "
+                    my_warning += "WellBuilderPlot will not export the results."
+                    print(my_warning)
                 else:
                     self.output_file = str(mydata[i + 1])
                     self.output_file = self.output_file.replace("'", "")
@@ -379,29 +390,28 @@ class SegmentPlot:
         """
         Read the content of the INFORMATION keyword in the input file.
 
-        Args:
-            read_clean_input (object): A StringIO object of the input file.
+        Uses read_clean_input, a StringIO object of the input file.
 
         Returns:
             Content of the INFORMATION keyword.
         """
 
-        compstr = "WELL LATERAL TUBINGSEGMENT "
-        compstr += "DEVICESEGMENT ANNULUSSEGMENT DAYS\n"
-        mydata = deepcopy(self.read_clean_input)
-        nline = len(mydata)
-        for i in range(nline):
-            mydata[i] = mydata[i].strip("\n")
+        completion_str = "WELL LATERAL TUBINGSEGMENT "
+        completion_str += "DEVICESEGMENT ANNULUSSEGMENT DAYS\n"
+        my_data = deepcopy(self.read_clean_input)
+        n_line = len(my_data)
+        for i in range(n_line):
+            my_data[i] = my_data[i].strip("\n")
 
-        for i in range(nline):
-            myline = mydata[i]
-            if myline == "INFORMATION":
+        for i in range(n_line):
+            my_line = my_data[i]
+            if my_line == "INFORMATION":
                 break
         j = i + 1
-        while mydata[j] != "/":
-            compstr = compstr + "\n" + mydata[j]
+        while my_data[j] != "/":
+            completion_str = completion_str + "\n" + my_data[j]
             j = j + 1
-        completion = pd.read_csv(StringIO(compstr), sep=" ", index_col=False)
+        completion = pd.read_csv(StringIO(completion_str), sep=" ", index_col=False)
         completion["WELL"] = completion["WELL"].astype(str)
         completion["LATERAL"] = completion["LATERAL"].astype(np.int32)
         completion["TUBINGSEGMENT"] = completion["TUBINGSEGMENT"].astype(str)
@@ -411,14 +421,13 @@ class SegmentPlot:
 
         self.information = completion.copy(deep=True)
 
-    def get_info_perwell(self, well, lateral):
+    def get_info_per_well(self, well, lateral):
         """
         Get information per well and lateral from INFORMATION keyword in the input file.
 
         Args:
             well (str): Well name
             lateral (int): Branch number
-            information (pd.DataFrame): Content of the INFORMATION keyword.
 
         Returns:
             List of tubing segments in the current well/branch\n
@@ -444,9 +453,9 @@ class SegmentPlot:
         else:
             content = content.split("-")
             if len(content) != 2:
-                myerror = "Error : Tubing Segment must be defined "
-                myerror += "by interval segment number e.g 1-200"
-                print(myerror)
+                my_error = "Error : Tubing Segment must be defined "
+                my_error += "by interval segment number e.g 1-200"
+                print(my_error)
                 sys.exit()
             else:
                 start = int(content[0])
@@ -463,15 +472,15 @@ class SegmentPlot:
                 end = int(content[1])
                 device_segment = np.arange(start, end + 1, 1)
             else:
-                myerror = "Error : Device Segment must be defined "
-                myerror += "by interval segment number e.g 1-200"
-                raise ValueError(myerror)
+                my_error = "Error : Device Segment must be defined "
+                my_error += "by interval segment number e.g 1-200"
+                raise ValueError(my_error)
             # Check if the number of device segments are
             # equal to the number of tubing segments
             if len(tubing_segment) != len(device_segment):
-                myerror = "Error : the number of device segments are "
-                myerror += "not the same with the number of tubing segments."
-                raise ValueError(myerror)
+                my_error = "Error : the number of device segments are "
+                my_error += "not the same with the number of tubing segments."
+                raise ValueError(my_error)
         # Annulus segment
         content = info["ANNULUSSEGMENT"].iloc[0]
         if content == "1*":
@@ -483,20 +492,20 @@ class SegmentPlot:
                 end = int(content[1])
                 annulus_segment = np.arange(start, end + 1, 1)
             else:
-                myerror = "Error : Annulus Segment must be "
-                myerror += "defined by interval segment number e.g 1-200"
-                raise ValueError(myerror)
+                my_error = "Error : Annulus Segment must be "
+                my_error += "defined by interval segment number e.g 1-200"
+                raise ValueError(my_error)
         # Days
         content = info["DAYS"].iloc[0]
         if content == "1*":
-            mywarn = "Warning : Column DAYS is not supplied. "
-            mywarn += "Selects the first time step by default."
-            print(mywarn)
-            mydays = np.zeros(1)
+            my_warning = "Warning : Column DAYS is not supplied. "
+            my_warning += "Selects the first time step by default."
+            print(my_warning)
+            my_days = np.zeros(1)
         else:
-            mydays = np.asarray(content.split("-"))
-            mydays = mydays.astype(np.float64)
-        return tubing_segment, device_segment, annulus_segment, mydays
+            my_days = np.asarray(content.split("-"))
+            my_days = my_days.astype(np.float64)
+        return tubing_segment, device_segment, annulus_segment, my_days
 
     def get_trajectory(self, well, tubing_segment):
         """
@@ -504,7 +513,7 @@ class SegmentPlot:
 
         Args:
             well (str): Well name
-            tubing_segment (list): List of tubing segments
+            tubing_segment (ndarray): List of tubing segments
 
         Returns:
             A DataFrame containing the TUBINGMD and TUBINGTVD columns of the\n
@@ -512,9 +521,9 @@ class SegmentPlot:
             current well.
         """
 
-        for welsegs_iwell in self.welsegs_table:
-            if welsegs_iwell.well == well:
-                welsegs = welsegs_iwell.content.copy(deep=True)
+        for welsegs_i_well in self.welsegs_table:
+            if welsegs_i_well.well == well:
+                welsegs = welsegs_i_well.content.copy(deep=True)
                 welsegs = welsegs[welsegs["TUBINGSEGMENT"].isin(tubing_segment)]
                 welsegs = welsegs[["TUBINGMD", "TUBINGTVD"]]
                 welsegs.sort_values(by=["TUBINGMD"], ascending=True, inplace=True)
@@ -526,7 +535,7 @@ class SegmentPlot:
 
         Args:
             well (str): Well name
-            annulus_segment (list): List of annulus segments
+            annulus_segment (ndarray): List of annulus segments
 
         Returns:
             Packer information DataFrame\n
@@ -572,14 +581,14 @@ class SegmentPlot:
         else:
             return pd.DataFrame(), pd.DataFrame()
 
-    def get_dayindex(self, list_of_days):
+    def get_day_index(self, list_of_days):
         """
         Gets the day index or nearest day index by comparing the input file
         INFORMATION keyword day parameters with the simulation days from
         Eclipse.
 
         Args:
-            list_of_days (list): A list of days from the input file.
+            list_of_days (ndarray): A list of days from the input file.
 
         Returns:
             List of day indices.
@@ -591,9 +600,9 @@ class SegmentPlot:
             if len(idx) > 0:
                 day_idx[i] = idx[0]
             else:
-                mywarn = f"Warning: No exact day is found in Eclipse for {day}"
-                mywarn = mywarn + " . The program uses the closest day."
-                print(mywarn)
+                my_warning = f"Warning: No exact day is found in Eclipse for {day}"
+                my_warning = my_warning + " . The program uses the closest day."
+                print(my_warning)
                 dif = abs(self.eclipse_days - day)
                 idx = np.argsort(dif)
                 idx = idx.reshape(idx.shape[0])
@@ -609,7 +618,7 @@ class SegmentPlot:
 
         Args:
             well (str): Well name
-            segment (list): List of segments
+            segment (ndarray): List of segments
             lateral (int): Lateral number
             section (str): Section name (tubing, device or annulus)
             device_interval (float): . Default to 0.1
@@ -619,9 +628,9 @@ class SegmentPlot:
             DataFrame with well segment data, including the measured depth.
         """
 
-        for welsegs_iwell in self.welsegs_table:
-            if welsegs_iwell.well == well:
-                welsegs = welsegs_iwell.content.copy(deep=True)
+        for welsegs_i_well in self.welsegs_table:
+            if welsegs_i_well.well == well:
+                welsegs = welsegs_i_well.content.copy(deep=True)
                 welsegs = welsegs[["TUBINGSEGMENT", "TUBINGMD", "TUBINGID"]]
                 welsegs["TUBINGID"] = welsegs["TUBINGID"].astype(np.float64)
                 welsegs["WELL"] = well
@@ -635,14 +644,14 @@ class SegmentPlot:
                 break
         welsegs = welsegs[welsegs["Segment"].isin(segment)]
 
-        for compsegs_iwell in self.compsegs_table:
-            if compsegs_iwell.well == well:
-                compsegs = compsegs_iwell.content.copy(deep=True)
+        for compsegs_i_well in self.compsegs_table:
+            if compsegs_i_well.well == well:
+                compsegs = compsegs_i_well.content.copy(deep=True)
                 compsegs = compsegs[["I", "J", "K", "STARTMD", "ENDMD"]]
-                ilateral = 0
-                arow = 0
+                i_lateral = 0
+                a_row = 0
                 for idx in range(compsegs.shape[0]):
-                    endmd_branch = compsegs["ENDMD"].iloc[idx]
+                    end_md_branch = compsegs["ENDMD"].iloc[idx]
                     if idx < compsegs.shape[0] - 3:
                         # Define a new lateral branch if the start MD
                         # of the three consecutive cells is less than
@@ -652,21 +661,21 @@ class SegmentPlot:
                         start_2 = compsegs["STARTMD"].iloc[idx + 2]
                         start_3 = compsegs["STARTMD"].iloc[idx + 3]
                         if (
-                            (start_1 < endmd_branch)
-                            and (start_2 < endmd_branch)
-                            and (start_3 < endmd_branch)
+                            (start_1 < end_md_branch)
+                            and (start_2 < end_md_branch)
+                            and (start_3 < end_md_branch)
                         ):
-                            ilateral = ilateral + 1
+                            i_lateral = i_lateral + 1
                             zrow = idx
-                            if ilateral == lateral:
+                            if i_lateral == lateral:
                                 break
-                            arow = idx + 1
+                            a_row = idx + 1
                     else:
-                        ilateral = ilateral + 1
+                        i_lateral = i_lateral + 1
                         zrow = compsegs.shape[0] - 1
-                        if ilateral == lateral:
+                        if i_lateral == lateral:
                             break
-                compsegs = compsegs.loc[arow : zrow + 1, :]
+                compsegs = compsegs.loc[a_row : zrow + 1, :]
                 compsegs["WELL"] = well
                 compsegs = compsegs[["WELL", "I", "J", "K", "STARTMD", "ENDMD"]]
                 break
@@ -677,25 +686,25 @@ class SegmentPlot:
             measured_depth = welsegs["MD"].values - device_interval
         elif section == "annulus":
             measured_depth = welsegs["MD"].values - annulus_interval
-        startmd = compsegs["STARTMD"].values
-        endmd = compsegs["ENDMD"].values
+        start_md = compsegs["STARTMD"].values
+        end_md = compsegs["ENDMD"].values
         comp_i = compsegs["I"].values
         comp_j = compsegs["J"].values
         comp_k = compsegs["K"].values
 
         # Merge welsegs and compsegs
-        mystart = np.zeros(len(measured_depth))
-        myend = np.zeros(len(measured_depth))
+        my_start = np.zeros(len(measured_depth))
+        my_end = np.zeros(len(measured_depth))
         my_i = np.full(len(measured_depth), -1)
         my_j = np.full(len(measured_depth), -1)
         my_k = np.full(len(measured_depth), -1)
         for i, imd in enumerate(measured_depth):
-            idx = np.argwhere((startmd <= imd) & (imd <= endmd))
+            idx = np.argwhere((start_md <= imd) & (imd <= end_md))
             idx = idx.reshape(idx.shape[0])
             if len(idx) > 0:
                 idx = idx[0]
-                mystart[i] = startmd[idx]
-                myend[i] = endmd[idx]
+                my_start[i] = start_md[idx]
+                my_end[i] = end_md[idx]
                 my_i[i] = comp_i[idx]
                 my_j[i] = comp_j[idx]
                 my_k[i] = comp_k[idx]
@@ -704,8 +713,8 @@ class SegmentPlot:
                 raise ValueError(
                     f"Error : Segment {segment} is not" + " found inside grid cells"
                 )
-        welsegs["STARTMD"] = mystart
-        welsegs["ENDMD"] = myend
+        welsegs["STARTMD"] = my_start
+        welsegs["ENDMD"] = my_end
         welsegs["I"] = my_i
         welsegs["J"] = my_j
         welsegs["K"] = my_k
@@ -786,18 +795,18 @@ class SegmentPlot:
         # Device section
         n_device = len(self.device_segment)
         if n_device > 1:
-            for i_x, idx in enumerate(self.mydays_idx):
+            for i_x, idx in enumerate(self.my_days_idx):
                 np_well = np.full(n_device, well)
                 np_section = np.full(n_device, "Device")
                 np_date = np.full(n_device, self.eclipse_dates[idx])
                 np_segment = deepcopy(self.device_segment)
                 welsegs = self.get_md(well, np_segment, lateral, section="device")
                 np_md = welsegs["MD"].values
-                np_startmd = welsegs["STARTMD"].values
-                np_endmd = welsegs["ENDMD"].values
+                np_start_md = welsegs["STARTMD"].values
+                np_end_md = welsegs["ENDMD"].values
                 np_cf = welsegs["CF"].values
                 np_kh = welsegs["KH"].values
-                np_thickness = np_endmd - np_startmd
+                np_thickness = np_end_md - np_start_md
                 np_diameter = welsegs["DIAMETER"].values
                 data_frame = np.column_stack(
                     (
@@ -806,8 +815,8 @@ class SegmentPlot:
                         np_date,
                         np_segment,
                         np_md,
-                        np_startmd,
-                        np_endmd,
+                        np_start_md,
+                        np_end_md,
                         np_cf,
                         np_kh,
                         np_thickness,
@@ -815,6 +824,7 @@ class SegmentPlot:
                     )
                 )
                 data_frame = pd.DataFrame(data_frame, columns=header)
+
                 for keyword in self.kw_valid:
                     if (
                         keyword == "SPR"
@@ -830,6 +840,7 @@ class SegmentPlot:
                             )
                             value[i] = prof[idx]
                         data_frame[keyword] = value
+
                 try:
                     swct = np.where(
                         (abs(data_frame["SWFR"]) + abs(data_frame["SOFR"])) < min_rate,
@@ -840,20 +851,22 @@ class SegmentPlot:
                     data_frame["SWCT"] = swct
                 except Exception:
                     pass
+
                 try:
                     data_frame["SGOR"] = abs(data_frame["SGFRF"]) / (
                         abs(data_frame["SOFR"]) + 0.00001
                     )
                 except Exception:
                     pass
+
                 if i_x == 0:
                     df_all = data_frame.copy(deep=True)
-                else:
+                if i_x > 0:
                     df_all = pd.concat([df_all, data_frame])
 
         # Tubing section
         n_tubing = len(self.tubing_segment)
-        for i_x, idx in enumerate(self.mydays_idx):
+        for i_x, idx in enumerate(self.my_days_idx):
             np_well = np.full(n_tubing, well)
             np_section = np.full(n_tubing, "Tubing")
             np_date = np.full(n_tubing, self.eclipse_dates[idx])
@@ -862,12 +875,12 @@ class SegmentPlot:
             welsegs = self.get_md(well, np_segment, lateral, section="tubing")
 
             np_md = welsegs["MD"].values
-            np_startmd = welsegs["STARTMD"].values
-            np_endmd = welsegs["ENDMD"].values
+            np_start_md = welsegs["STARTMD"].values
+            np_end_md = welsegs["ENDMD"].values
             np_cf = welsegs["CF"].values
             np_kh = welsegs["KH"].values
 
-            np_thickness = np_endmd - np_startmd
+            np_thickness = np_end_md - np_start_md
             np_diameter = welsegs["DIAMETER"].values
             data_frame = np.column_stack(
                 (
@@ -876,8 +889,8 @@ class SegmentPlot:
                     np_date,
                     np_segment,
                     np_md,
-                    np_startmd,
-                    np_endmd,
+                    np_start_md,
+                    np_end_md,
                     np_cf,
                     np_kh,
                     np_thickness,
@@ -926,18 +939,18 @@ class SegmentPlot:
         # Annulus section
         n_annulus = len(self.annulus_segment)
         if n_annulus > 1:
-            for i_x, idx in enumerate(self.mydays_idx):
+            for i_x, idx in enumerate(self.my_days_idx):
                 np_well = np.full(n_annulus, well)
                 np_section = np.full(n_annulus, "Annulus")
                 np_date = np.full(n_annulus, self.eclipse_dates[idx])
                 np_segment = deepcopy(self.annulus_segment)
                 welsegs = self.get_md(well, np_segment, lateral, section="annulus")
                 np_md = welsegs["MD"].values
-                np_startmd = welsegs["STARTMD"].values
-                np_endmd = welsegs["ENDMD"].values
+                np_start_md = welsegs["STARTMD"].values
+                np_end_md = welsegs["ENDMD"].values
                 np_cf = welsegs["CF"].values
                 np_kh = welsegs["KH"].values
-                np_thickness = np_endmd - np_startmd
+                np_thickness = np_end_md - np_start_md
                 np_diameter = welsegs["DIAMETER"].values
                 data_frame = np.column_stack(
                     (
@@ -946,8 +959,8 @@ class SegmentPlot:
                         np_date,
                         np_segment,
                         np_md,
-                        np_startmd,
-                        np_endmd,
+                        np_start_md,
+                        np_end_md,
                         np_cf,
                         np_kh,
                         np_thickness,
@@ -973,31 +986,36 @@ class SegmentPlot:
                     data_frame["SWCT"] = swct
                 except Exception:
                     pass
+
                 try:
                     data_frame["SGOR"] = abs(data_frame["SGFRF"]) / (
                         abs(data_frame["SOFR"]) + 0.00001
                     )
                 except Exception:
                     pass
+
                 df_all = pd.concat([df_all, data_frame])
 
         df_all["SEGMENT"] = df_all["SEGMENT"].astype(np.int32)
         df_all["MD"] = df_all["MD"].astype(np.float64)
         df_all["STARTMD"] = df_all["STARTMD"].astype(np.float64)
         df_all["ENDMD"] = df_all["ENDMD"].astype(np.float64)
+
         try:
             df_all["CF"] = df_all["CF"].astype(np.float64)
         except Exception:
             df_all["CF"] = 1.0e-10
+
         try:
             df_all["KH"] = df_all["KH"].astype(np.float64)
         except Exception:
             df_all["KH"] = 1.0e-10
+
         df_all["THICKNESS"] = df_all["THICKNESS"].astype(np.float64)
         df_all["DIAMETER"] = df_all["DIAMETER"].astype(np.float64)
 
         # Reservoir section
-        for i_x, idx in enumerate(self.mydays_idx):
+        for i_x, idx in enumerate(self.my_days_idx):
             np_well = np.full(n_device, well)
             np_section = np.full(n_device, "Reservoir")
             np_date = np.full(n_device, self.eclipse_dates[idx])
@@ -1006,12 +1024,12 @@ class SegmentPlot:
             welsegs = self.get_md(well, np_segment, lateral, section="tubing")
 
             np_md = welsegs["MD"].values
-            np_startmd = welsegs["STARTMD"].values
-            np_endmd = welsegs["ENDMD"].values
+            np_start_md = welsegs["STARTMD"].values
+            np_end_md = welsegs["ENDMD"].values
             np_cf = welsegs["CF"].values
             np_kh = welsegs["KH"].values
 
-            np_thickness = np_endmd - np_startmd
+            np_thickness = np_end_md - np_start_md
             np_diameter = welsegs["DIAMETER"].values
             data_frame = np.column_stack(
                 (
@@ -1020,8 +1038,8 @@ class SegmentPlot:
                     np_date,
                     np_segment,
                     np_md,
-                    np_startmd,
-                    np_endmd,
+                    np_start_md,
+                    np_end_md,
                     np_cf,
                     np_kh,
                     np_thickness,
@@ -1190,14 +1208,16 @@ class SegmentPlot:
 
         self.df_output = df_all.copy(deep=True)
 
-    def plot_pressure(self, sub_pr, date, idate, well, lateral, case=""):
+    def plot_pressure(self, sub_pr, date, date_idx, well, lateral, case=""):
         """
-        Plot the tubing and device layer pressures along the wellbore. Sets labels.
+        Plot the tubing and device layer pressures along the well bore.
+
+        Set labels.
 
         Args:
-            sub_pr (object): AxesSubPlot object
+            sub_pr (AxesSubplot): AxesSubPlot object
             date (object): Datetime date object.
-            idate (int): Date index
+            date_idx (int): Date index
             well (str): Well name
             lateral (int): Lateral index
             case (str): Case identifier
@@ -1211,7 +1231,7 @@ class SegmentPlot:
             time_step = pd.to_datetime(str(date))
             date_label = time_step.strftime("%Y-%m-%d")
 
-        if idate == 0:
+        if date_idx == 0:
             tub_curve = "r-"
             ann_curve = "b-"
         else:
@@ -1245,15 +1265,16 @@ class SegmentPlot:
             legend_location="right",
         )
 
-    def plot_cummulative(self, sub_pr_owg, date, idate, df_packer, case=""):
+    def plot_cumulative(self, sub_pr_owg, date, date_idx, df_packer, case=""):
         """
-        Plot cumulative production along the tubing and annulus layers. Sets
-        labels, colors and styles.
+        Plot cumulative production along the tubing and annulus layers.
+
+        Set labels, colors and styles.
 
         Args:
             sub_pr_owg (object): AxesSubPlot object
             date (object): Datetime date object.
-            idate (int): Date index
+            date_idx (int): Date index
             df_packer (pd.DataFrame): DataFrame with packer information.
             case (str): Case identifier
 
@@ -1267,7 +1288,7 @@ class SegmentPlot:
             date_label = time_step.strftime("%Y-%m-%d")
         parameter = ["SOFR", "SWFR", "SGFRF"]
         title = ["Cum Qo, sm3/d", "Cum Qw, sm3/d", "Cum Qg, sm3/d"]
-        if idate == 0:
+        if date_idx == 0:
             tub_curve = ["g-", "b-", "r-"]
             ann_curve = ["g--", "b--", "r--"]
             face_color = ["green", "blue", "red"]
@@ -1275,13 +1296,13 @@ class SegmentPlot:
             tub_curve = ["g-.", "b-.", "r-."]
             ann_curve = ["g:", "b:", "r:"]
 
-        for i, sub_pr in enumerate(sub_pr_owg):
-            iparam = parameter[i]
+        for idx, sub_pr in enumerate(sub_pr_owg):
+            idx_param = parameter[idx]
             try:
                 # Annulus
                 if self.df_annulus.shape[0] > 0:
                     x = self.df_annulus["MD"].values
-                    y = self.df_annulus[iparam].values
+                    y = self.df_annulus[idx_param].values
                     df_xy = pd.DataFrame(np.column_stack((x, y)), columns=["X", "Y"])
                     df_xy_add = pd.DataFrame()
                     df_xy_add["X"] = df_packer["PACKERMD"].values
@@ -1297,30 +1318,31 @@ class SegmentPlot:
                     y = np.insert(y, 0, 0.0)
                     y = np.insert(y, len(y), 0.0)
                     sub_pr.plot(
-                        x, y, ann_curve[i], label=case + " " + "Annulus : " + date_label
+                        x, y, ann_curve[idx], label=case + " " + "Annulus : " + date_label
                     )
-                    sub_pr.fill_between(x, 0, y, facecolor=face_color[i], alpha=0.5)
+                    sub_pr.fill_between(x, 0, y, facecolor=face_color[idx], alpha=0.5)
                 # tubing
                 if self.df_tubing.shape[0] > 0:
                     sub_pr.plot(
                         self.df_tubing["MD"].values,
-                        self.df_tubing[iparam].values,
-                        tub_curve[i],
+                        self.df_tubing[idx_param].values,
+                        tub_curve[idx],
                         label=case + " " + "Tubing : " + date_label,
                     )
             except Exception:
                 pass
-            format_subplot(sub_pr, "", "mMD", title[i], legend_location="right")
+            format_subplot(sub_pr, "", "mMD", title[idx], legend_location="right")
 
-    def plot_velocity(self, sub_pr_owg, date, idate, case=""):
+    def plot_velocity(self, sub_pr_owg, date, date_idx, case=""):
         """
-        Plot fluid velocity in the annulus layer and the 1 m/s erosional
-        limit. Sets labels, colors and styles.
+        Plot fluid velocity in the annulus layer and the 1 m/s erosional limit.
+
+        Set labels, colors and styles.
 
         Args:
             sub_pr_owg (object): AxesSubPlot object
             date (object): Datetime date object.
-            idate (int): Date index
+            date_idx (int): Date index
             case (str): Case identifier
 
         Returns:
@@ -1336,14 +1358,14 @@ class SegmentPlot:
             "WATER_VELOCITY_M/S_10CM",
             "GAS_VELOCITY_M/S_10CM",
         ]
-        if idate == 0:
+        if date_idx == 0:
             ann_curve = ["g--", "b--", "r--"]
         else:
             ann_curve = ["g:", "b:", "r:"]
 
-        for i, sub_pr in enumerate(sub_pr_owg):
-            iparam = parameter[i]
-            if i == 0:
+        for idx, sub_pr in enumerate(sub_pr_owg):
+            idx_param = parameter[idx]
+            if idx == 0:
                 # plot boundary 1m/s
                 sub_pr.plot(
                     self.df_annulus["MD"].values,
@@ -1356,22 +1378,22 @@ class SegmentPlot:
                 if self.df_annulus.shape[0] > 0:
                     sub_pr.plot(
                         self.df_annulus["MD"].values,
-                        self.df_annulus[iparam].values,
-                        ann_curve[i],
+                        self.df_annulus[idx_param].values,
+                        ann_curve[idx],
                         label=case + " " + "Annulus : " + date_label,
                     )
             except Exception:
                 pass
             format_subplot(sub_pr, "", "mMD", "Vel.m/d@STD", legend_location="right")
 
-    def plot_inflow(self, sub_pr_owg, date, idate, case=""):
+    def plot_inflow(self, sub_pr_owg, date, date_idx, case=""):
         """
         Plot inflow from the reservoir to the well. Sets labels, colors and styles.
 
         Args:
             sub_pr_owg (object): AxesSubPlot object
             date (object): Datetime date object.
-            idate (int): Date index
+            date_idx (int): Date index
             case (str): Case identifier
 
         Returns:
@@ -1385,37 +1407,37 @@ class SegmentPlot:
         parameter = ["SOFR", "SWFR", "SGFRF"]
         title = ["Qo, sm3/d", "Qw, sm3/d", "Qg, sm3/d"]
 
-        if idate == 0:
+        if date_idx == 0:
             tub_curve = ["g-", "b-", "r-"]
             ann_curve = ["g--", "b--", "r--"]
         else:
             tub_curve = ["g-.", "b-.", "r-."]
             ann_curve = ["g:", "b:", "r:"]
-        for i, sub_pr in enumerate(sub_pr_owg):
-            iparam = parameter[i]
+        for idx, sub_pr in enumerate(sub_pr_owg):
+            idx_param = parameter[idx]
             try:
                 # Reservoir
                 if self.df_reservoir.shape[0] > 0:
                     sub_pr.plot(
                         self.df_reservoir["MD"].values,
-                        self.df_reservoir[iparam].values,
-                        ann_curve[i],
+                        self.df_reservoir[idx_param].values,
+                        ann_curve[idx],
                         label=case + " " + "Reservoir : " + date_label,
                     )
                 # device
                 if self.df_device.shape[0] > 0:
                     sub_pr.plot(
                         self.df_device["MD"].values,
-                        self.df_device[iparam].values,
-                        tub_curve[i],
+                        self.df_device[idx_param].values,
+                        tub_curve[idx],
                         label=case + " " + "Device : " + date_label,
                     )
 
             except Exception:
                 pass
-            format_subplot(sub_pr, "", "mMD", title[i], legend_location="right")
+            format_subplot(sub_pr, "", "mMD", title[idx], legend_location="right")
 
-    def plot_inflow_permeter(self, sub_pr_owg, date, idate, case=""):
+    def plot_inflow_per_meter(self, sub_pr_owg, date, date_idx, case=""):
         """
         Create the plots showing production rate pr meter. Sets labels, colors
         and legends.
@@ -1423,7 +1445,7 @@ class SegmentPlot:
         Args:
             sub_pr_owg (object): AxesSubPlot object
             date (object): Datetime date object.
-            idate (int): Date index
+            date_idx (int): Date index
             case (str): Case identifier
 
         Returns:
@@ -1436,33 +1458,33 @@ class SegmentPlot:
             date_label = time_step.strftime("%Y-%m-%d")
         parameter = ["SOFR_M", "SWFR_M", "SGFRF_M"]
         title = ["Qo, sm3/d/m", "Qw, sm3/d/m", "Qg, sm3/d/m"]
-        if idate == 0:
+        if date_idx == 0:
             tub_curve = ["g-", "b-", "r-"]
         else:
             tub_curve = ["g-.", "b-.", "r-."]
-        for i, sub_pr in enumerate(sub_pr_owg):
-            iparam = parameter[i]
+        for idx, sub_pr in enumerate(sub_pr_owg):
+            idx_param = parameter[idx]
             try:
                 # Reservoir
                 if self.df_reservoir.shape[0] > 0:
                     sub_pr.plot(
                         self.df_reservoir["MD"].values,
-                        self.df_reservoir[iparam].values,
-                        tub_curve[i],
+                        self.df_reservoir[idx_param].values,
+                        tub_curve[idx],
                         label=case + " " + "Reservoir : " + date_label,
                     )
             except Exception:
                 pass
-            format_subplot(sub_pr, "", "mMD", title[i], legend_location="right")
+            format_subplot(sub_pr, "", "mMD", title[idx], legend_location="right")
 
-    def plot_fraction(self, sub_pr_owg, date, idate, case=""):
+    def plot_fraction(self, sub_pr_owg, date, date_idx, case=""):
         """
         Plot water cut and gor along the device and annulus layers.
 
         Args:
             sub_pr_owg (object): AxesSubPlot object
             date (object): Datetime date object.
-            idate (int): Date index
+            date_idx (int): Date index
             case (str): Case identifier
 
         Returns:
@@ -1476,7 +1498,7 @@ class SegmentPlot:
             date_label = time_step.strftime("%Y-%m-%d")
         parameter = ["SWCT", "SGOR"]
         title = ["WCT", "GOR"]
-        if idate == 0:
+        if date_idx == 0:
             tub_curve = ["b-", "r-"]
             ann_curve = ["b--", "r--"]
         else:
@@ -1503,27 +1525,28 @@ class SegmentPlot:
                     )
             except Exception:
                 pass
+
             format_subplot(sub_pr, "", "mMD", title[i], legend_location="right")
 
-    def plot_well_profile(self, fig, well, case=""):
+    def plot_well_profile(self, figure, well, case=""):
         """
         Plot well profiles.
 
         Args:
-            fig (object): A matplotlib figure object.
+            figure (Figure): A matplotlib figure object.
             well (str): Well name
             case (str): Case identifier
 
         Returns:
-            Plots profiles along the wellbore.
+            Plots profiles along the well bore.
         """
-        fig.suptitle(well)
+        figure.suptitle(well)
         update_fonts(size=8)
-        plt_wbhp = fig.add_subplot(2, 2, 1)
-        plt_ow = fig.add_subplot(2, 2, 2)
-        plt_gas = fig.add_subplot(2, 2, 3)
+        plt_wbhp = figure.add_subplot(2, 2, 1)
+        plt_ow = figure.add_subplot(2, 2, 2)
+        plt_gas = figure.add_subplot(2, 2, 3)
         plt_gas_twin = plt_gas.twinx()
-        plt_wct = fig.add_subplot(2, 2, 4)
+        plt_wct = figure.add_subplot(2, 2, 4)
 
         plt_wbhp.plot(
             self.df_well["DAY"].values,
@@ -1591,19 +1614,19 @@ class SegmentPlot:
             sub_pr.grid(which="both", linestyle=":", linewidth=0.5, color="grey")
             sub_pr.tick_params(which="both", direction="in")
 
-        fig.subplots_adjust(hspace=0.3, wspace=0.3)
+        figure.subplots_adjust(hspace=0.3, wspace=0.3)
 
-    def arrange_subplots(self, fig):
+    def arrange_subplots(self, figure):
         """
         Set the horizontal spacing between subplots.
 
         Args:
-            fig (object): matplotlib figure object.
+            figure (object): matplotlib figure object.
 
         Returns:
             Figure with horizontal spacing adjusted by 0.3
         """
-        fig.subplots_adjust(hspace=0.3)
+        figure.subplots_adjust(hspace=0.3)
 
     def plot_trajectory(self, sub_pr_trajectory, trajectory, df_packer, case=""):
         """
@@ -1613,6 +1636,7 @@ class SegmentPlot:
             sub_pr_trajectory (object): AxesSubPlot object
             trajectory (pd.DataFrame): TVD vs MD dataframe
             df_packer (pd.DataFrame): Packer dataframe
+            case (str): Case name
 
         Returns:
             Trajectory plot with connection factor is exists. Add packer information.
@@ -1643,7 +1667,7 @@ class SegmentPlot:
                 for ip in range(n_annulus_zones):
                     start = df_packer["PACKERMD"].iloc[(ip * 2)] - 0.3
                     end = df_packer["PACKERMD"].iloc[(ip * 2) + 1]
-                    thiszone_trajectory = trajectory[
+                    this_zone_trajectory = trajectory[
                         (trajectory["TUBINGMD"] >= start)
                         & (trajectory["TUBINGMD"] <= end)
                     ]
@@ -1651,9 +1675,9 @@ class SegmentPlot:
                         df_packer["PACKERMD"].values, df_packer["PACKERTVD"].values
                     )
                     sub_pr.fill_between(
-                        thiszone_trajectory["TUBINGMD"].values,
-                        thiszone_trajectory["TUBINGTVD"].values - interval,
-                        thiszone_trajectory["TUBINGTVD"].values + interval,
+                        this_zone_trajectory["TUBINGMD"].values,
+                        this_zone_trajectory["TUBINGTVD"].values - interval,
+                        this_zone_trajectory["TUBINGTVD"].values + interval,
                         facecolor="green",
                         alpha=0.2,
                     )
@@ -1724,10 +1748,10 @@ class SegmentPlot:
                     self.tubing_segment,
                     self.device_segment,
                     self.annulus_segment,
-                    self.mydays,
-                ) = self.get_info_perwell(well, lateral)
+                    self.my_days,
+                ) = self.get_info_per_well(well, lateral)
                 # find the index of the given day in the eclipse report
-                self.mydays_idx = self.get_dayindex(self.mydays)
+                self.my_days_idx = self.get_day_index(self.my_days)
                 # get the well trajectory
                 trajectory = self.get_trajectory(well, self.tubing_segment)
                 # get packer location
@@ -1745,11 +1769,11 @@ class SegmentPlot:
                 else:
                     df_export = pd.concat([df_export, self.df_output])
                 self.plot_well_profile(fig_5, well)
-                mydates = self.df_output["DATE"].unique()
+                my_dates = self.df_output["DATE"].unique()
                 if self.n_file > 1:
-                    mydates = mydates[0:1]
+                    my_dates = my_dates[0:1]
                 # plot pressure along the annulus and the tubing
-                for idate, date in enumerate(mydates):
+                for date_idx, date in enumerate(my_dates):
                     df_this_date = self.df_output[self.df_output["DATE"] == date]
                     self.df_tubing = df_this_date[df_this_date["SECTION"] == "Tubing"]
                     self.df_device = df_this_date[df_this_date["SECTION"] == "Device"]
@@ -1759,30 +1783,30 @@ class SegmentPlot:
                     ]
                     if self.n_file > 1:
                         date = ""
-                        idate = ifi
-                    self.plot_pressure(sub_pr_1, date, idate, well, lateral, case=case)
-                    self.plot_cummulative(
+                        date_idx = ifi
+                    self.plot_pressure(sub_pr_1, date, date_idx, well, lateral, case=case)
+                    self.plot_cumulative(
                         [sub_qo_cum, sub_qw_cum, sub_qg_cum],
                         date,
-                        idate,
+                        date_idx,
                         df_packer,
                         case=case,
                     )
-                    self.plot_pressure(sub_pr_2, date, idate, well, lateral, case=case)
+                    self.plot_pressure(sub_pr_2, date, date_idx, well, lateral, case=case)
                     self.plot_inflow(
                         [sub_qo_inflow, sub_qw_inflow, sub_qg_inflow],
                         date,
-                        idate,
+                        date_idx,
                         case=case,
                     )
-                    self.plot_pressure(sub_pr_4, date, idate, well, lateral, case=case)
-                    self.plot_inflow_permeter(
-                        [sub_qo_perm, sub_qw_perm, sub_qg_perm], date, idate, case=case
+                    self.plot_pressure(sub_pr_4, date, date_idx, well, lateral, case=case)
+                    self.plot_inflow_per_meter(
+                        [sub_qo_perm, sub_qw_perm, sub_qg_perm], date, date_idx, case=case
                     )
-                    self.plot_pressure(sub_pr_3, date, idate, well, lateral, case=case)
-                    self.plot_fraction([sub_wct, sub_gor], date, idate, case=case)
-                    self.plot_velocity([sub_velocity] * 3, date, idate, case=case)
-                    if idate == 0:
+                    self.plot_pressure(sub_pr_3, date, date_idx, well, lateral, case=case)
+                    self.plot_fraction([sub_wct, sub_gor], date, date_idx, case=case)
+                    self.plot_velocity([sub_velocity] * 3, date, date_idx, case=case)
+                    if date_idx == 0:
                         self.plot_trajectory(
                             [sub_well_1, sub_well_2, sub_well_3, sub_well_4],
                             trajectory,
@@ -1796,10 +1820,10 @@ class SegmentPlot:
 if __name__ == "__main__":
     arg = sys.argv[1]
     if arg == "-i":
-        inputfile = sys.argv[2]
+        input_file = sys.argv[2]
         print("-----------------------------------------------------------")
         print("Running complot .......")
-        mplot = SegmentPlot(inputfile)
+        mplot = SegmentPlot(input_file)
         if "-day" in sys.argv:
             s_idx = sys.argv.index("-day")
             selected_day = sys.argv[s_idx + 1]
