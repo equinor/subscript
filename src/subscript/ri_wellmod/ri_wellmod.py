@@ -231,6 +231,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
     if not resinsight_exe:
         return None
 
+    wrapper = False
     riexe_path = Path(str(resinsight_exe))
     if (
         len(riexe_path.parts) >= 2
