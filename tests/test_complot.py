@@ -68,7 +68,7 @@ PATHS
 
 def test_update_fonts():
     """
-    Tests the update_fonts function in complot.
+    Test the update_fonts function in complot.
     """
 
     family = "DejaVu Serif"
@@ -80,7 +80,7 @@ def test_update_fonts():
 
 def test_format_subplot():
     """
-    Tests the format_subplot function in completor.
+    Test the format_subplot function in completor.
     """
 
     plt.figure(num=1)
@@ -101,7 +101,7 @@ def test_format_subplot():
 
 def test_segmentplot_datafile_kw():
     """
-    Tests the datafile_kw() method in the complot SegmentPlot class
+    Test the datafile_kw() method in the complot SegmentPlot class
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -110,7 +110,7 @@ def test_segmentplot_datafile_kw():
 
 def test_SegmentPlot_casename_kw():
     """
-    Tests the datafile_kw() method in the complot SegmentPlot class.
+    Test the datafile_kw() method in the complot SegmentPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -119,7 +119,7 @@ def test_SegmentPlot_casename_kw():
 
 def test_read_wellfile():
     """
-    Tests the method read_well_file() in the SegmentPlot class.
+    Test the method read_well_file() in the SegmentPlot class.
     """
 
     welsegsheader_columns = [
@@ -375,7 +375,7 @@ def test_read_wellfile():
 
 def test_clean_trailing():
     """
-    Tests the clean_trailing method in the SegmentPlot class.
+    Test the clean_trailing method in the SegmentPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -393,7 +393,7 @@ def test_clean_trailing():
 
 def test_relative_path():
     """
-    Tests the relative_path method in the SegmentPlot class.
+    Test the relative_path method in the SegmentPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -404,7 +404,7 @@ def test_relative_path():
 
 def test_wellfile_kw():
     """
-    Tests the wellfile_kw method in the SegmentPlot class.
+    Test the wellfile_kw method in the SegmentPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -413,7 +413,7 @@ def test_wellfile_kw():
 
 def test_outputfile_kw():
     """
-    Tests the outputfile_kw method in the SegmentsPlot class.
+    Test the outputfile_kw method in the SegmentsPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -422,7 +422,7 @@ def test_outputfile_kw():
 
 def test_information_kw():
     """
-    Tests the information_kw method in the SegmentsPlot class.
+    Test the information_kw method in the SegmentsPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -453,7 +453,7 @@ def test_information_kw():
 
 def test_get_info_perwell():
     """
-    Tests the get_info_perwell method in the SegmentsPlot class.
+    Test the get_info_perwell method in the SegmentsPlot class.
     """
 
     well = "WELL"
@@ -470,7 +470,7 @@ def test_get_info_perwell():
 
 def test_get_trajectory():
     """
-    Tests the get_trajectory method in the SegmentsPlot class.
+    Test the get_trajectory method in the SegmentsPlot class.
     """
 
     well = "WELL"
@@ -484,7 +484,7 @@ def test_get_trajectory():
 
 def test_get_packer():
     """
-    Tests the get_packer method in the SegmentsPlot class.
+    Test the get_packer method in the SegmentsPlot class.
     """
 
     well = "WELL"
@@ -505,7 +505,7 @@ def test_get_packer():
 
 def test_get_dayindex(capfd):
     """
-    Tests the get_dayindex method in the SegmentsPlot class.
+    Test the get_dayindex method in the SegmentsPlot class.
     """
 
     list_of_days = [1, 2, 3, 4]
@@ -525,7 +525,7 @@ def test_get_dayindex(capfd):
 
 def test_get_md():
     """
-    Tests the method get_md in the SegmentsPlot class.
+    Test the method get_md in the SegmentsPlot class.
     """
     welsegs_columns = [
         "WELL",
@@ -582,7 +582,7 @@ def test_get_md():
 
 def test_get_well_profile():
     """
-    Tests the method get_well_profile in the SegmentPlot class.
+    Test the method get_well_profile in the SegmentPlot class.
     """
 
     classinst = complot.SegmentPlot(inputfile)
@@ -635,7 +635,7 @@ def test_get_well_profile():
 
 def test_get_data():
     """
-    Tests the method get_data in the SegmentPlot class.
+    Test the method get_data in the SegmentPlot class.
     """
 
     classinst = complot.SegmentPlot("tests/data/test.plot")

@@ -24,7 +24,7 @@ PI = math.pi
 
 def update_fonts(family="DejaVu Serif", size=12):
     """
-    Updates font type and size.
+    Update font type and size.
 
     Args:
         family (str): Font family
@@ -52,7 +52,7 @@ def format_subplot(
     legend_location="right",
 ):
     """
-    Formats a subplot with labels, limits and legend.
+    Format a subplot with labels, limits and legend.
 
     Args:
         axis (object): An axis object
@@ -166,7 +166,7 @@ class SegmentPlot:
 
     def datafile_kw(self):
         """
-        Parses the cleaned input file in list-line format and returns a list of
+        Parse the cleaned input file in list-line format and returns a list of
         datafiles found in the DATAFILE keyword.
 
         Args:
@@ -196,7 +196,7 @@ class SegmentPlot:
 
     def casename_kw(self):
         """
-        Reads the CASENAME keyword content in the input file.
+        Read the CASENAME keyword content in the input file.
 
         Args:
             read_clean_input (object): A StringIO object of the input file.
@@ -218,7 +218,7 @@ class SegmentPlot:
 
     def read_data_file(self, datafile):
         """
-        Reads a datafile using the method EclSum from ecl.
+        Read a datafile using the method EclSum from ecl.
 
         Args:
             datafile (str): Data file name.
@@ -235,7 +235,7 @@ class SegmentPlot:
 
     def read_well_file(self, well_file):
         """
-        Reads an Eclipse schedule file keywords COMPDAT, COMPSEGS and WELSEG.
+        Read an Eclipse schedule file keywords COMPDAT, COMPSEGS and WELSEG.
 
         Args:
             wellfile (str): Schedule file name.
@@ -246,7 +246,7 @@ class SegmentPlot:
             The COMPSEGS keyword content.\n
             The COMPDAT keyword content.\n
         """
-        sch = fp.ClearComments(wellfile)
+        sch = fp.ClearComments(well_file)
         sch = sch.readlines()
         sch = sr.read_schedule_keywords(sch, ["COMPDAT", "COMPSEGS", "WELSEGS"])
         self.welsegs_header, self.welsegs_table = sr.welsegs_panda(sch)
@@ -271,7 +271,7 @@ class SegmentPlot:
 
     def relative_path(self, datafile):
         """
-        Finds the relative path from the PATHS keyword in the
+        Find the relative path from the PATHS keyword in the
         Eclipse data file.
 
         Args:
@@ -302,7 +302,7 @@ class SegmentPlot:
 
     def wellfile_kw(self):
         """
-        Reads the content of the WELLFILE keyword in the input file to complot.
+        Read the content of the WELLFILE keyword in the input file to complot.
 
         Args:
             read_clean_input (object): A StringIO object of the input file.
@@ -352,7 +352,7 @@ class SegmentPlot:
 
     def outputfile_kw(self):
         """
-        Reads the content of the OUTPUTFILE keyword in the input file.
+        Read the content of the OUTPUTFILE keyword in the input file.
 
         Args:
             read_clean_input (object): A StringIO object of the input file.
@@ -377,7 +377,7 @@ class SegmentPlot:
 
     def information_kw(self):
         """
-        Reads the content of the INFORMATION keyword in the input file.
+        Read the content of the INFORMATION keyword in the input file.
 
         Args:
             read_clean_input (object): A StringIO object of the input file.
@@ -413,8 +413,7 @@ class SegmentPlot:
 
     def get_info_perwell(self, well, lateral):
         """
-        Gets information pr well and lateral from the INFORMATION keyword in the
-        input file.
+        Get information per well and lateral from INFORMATION keyword in the input file.
 
         Args:
             well (str): Well name
@@ -501,7 +500,7 @@ class SegmentPlot:
 
     def get_trajectory(self, well, tubing_segment):
         """
-        Gets the well trajectory from the DATA file WELSEGS keyword.
+        Get the well trajectory from the DATA file WELSEGS keyword.
 
         Args:
             well (str): Well name
@@ -605,7 +604,7 @@ class SegmentPlot:
         self, well, segment, lateral, section, device_interval=0.1, annulus_interval=0.1
     ):
         """
-        Gets the measured depth of the welsegs segments. Pairing the WELSEGS
+        Get the measured depth of the welsegs segments. Pairing the WELSEGS
         keyword with COMPSEGS.
 
         Args:
@@ -732,7 +731,7 @@ class SegmentPlot:
 
     def get_well_profile(self, well):
         """
-        Sets up dataframe of Eclipse well summary keywords and extracts.
+        Set up dataframe of Eclipse well summary keywords and extracts.
 
         Args:
             well (str): Well name
@@ -1193,7 +1192,7 @@ class SegmentPlot:
 
     def plot_pressure(self, sub_pr, date, idate, well, lateral, case=""):
         """
-        Plots the tubing and device layer pressures along the wellbore. Sets labels.
+        Plot the tubing and device layer pressures along the wellbore. Sets labels.
 
         Args:
             sub_pr (object): AxesSubPlot object
@@ -1248,7 +1247,7 @@ class SegmentPlot:
 
     def plot_cummulative(self, sub_pr_owg, date, idate, df_packer, case=""):
         """
-        Plots cumulative production along the tubing and annulus layers. Sets
+        Plot cumulative production along the tubing and annulus layers. Sets
         labels, colors and styles.
 
         Args:
@@ -1315,7 +1314,7 @@ class SegmentPlot:
 
     def plot_velocity(self, sub_pr_owg, date, idate, case=""):
         """
-        Plots fluid velocity in the annulus layer and the 1 m/s erosional
+        Plot fluid velocity in the annulus layer and the 1 m/s erosional
         limit. Sets labels, colors and styles.
 
         Args:
@@ -1367,7 +1366,7 @@ class SegmentPlot:
 
     def plot_inflow(self, sub_pr_owg, date, idate, case=""):
         """
-        Plots inflow from the reservoir to the well. Sets labels, colors and styles.
+        Plot inflow from the reservoir to the well. Sets labels, colors and styles.
 
         Args:
             sub_pr_owg (object): AxesSubPlot object
@@ -1418,7 +1417,7 @@ class SegmentPlot:
 
     def plot_inflow_permeter(self, sub_pr_owg, date, idate, case=""):
         """
-        Creates the plots showing production rate pr meter. Sets labels, colors
+        Create the plots showing production rate pr meter. Sets labels, colors
         and legends.
 
         Args:
@@ -1458,7 +1457,7 @@ class SegmentPlot:
 
     def plot_fraction(self, sub_pr_owg, date, idate, case=""):
         """
-        Plots water cut and gor along the device and annulus layers.
+        Plot water cut and gor along the device and annulus layers.
 
         Args:
             sub_pr_owg (object): AxesSubPlot object
@@ -1508,7 +1507,7 @@ class SegmentPlot:
 
     def plot_well_profile(self, fig, well, case=""):
         """
-        Plots well profiles.
+        Plot well profiles.
 
         Args:
             fig (object): A matplotlib figure object.
@@ -1596,7 +1595,7 @@ class SegmentPlot:
 
     def arrange_subplots(self, fig):
         """
-        Sets the horizontal spacing between subplots.
+        Set the horizontal spacing between subplots.
 
         Args:
             fig (object): matplotlib figure object.
@@ -1608,7 +1607,7 @@ class SegmentPlot:
 
     def plot_trajectory(self, sub_pr_trajectory, trajectory, df_packer, case=""):
         """
-        Plots the well trajectory.
+        Plot the well trajectory.
 
         Args:
             sub_pr_trajectory (object): AxesSubPlot object

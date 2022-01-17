@@ -8,6 +8,7 @@ import pandas as pd
 class KW(list):
     """
     A subclass of list that can accept additional attributes.
+
     Should be able to be used just like a regular list.
 
     The problem:
