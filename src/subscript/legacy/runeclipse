@@ -31,7 +31,7 @@ my $arch64 = "x86_64Linux";    # bsub resource string for 64bit
 # ---------------------------------------------------
 
 my $que_name  = "daily";
-my $version   = "2020.2";
+my $version   = "2021.3";
 my $memoryreq = 512;
 
 my $progname    = "eclipse";
