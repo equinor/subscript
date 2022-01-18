@@ -227,10 +227,12 @@ class PillarModel:
         Returns:
             pc
         """
-        return np.interp(
-            s_water,
-            [self.swl[satnum - 1], 1],
-            [self.maxpc[satnum - 1] * scaling, self.minpc[satnum - 1] * scaling],
+        return float(
+            np.interp(
+                s_water,
+                [self.swl[satnum - 1], 1],
+                [self.maxpc[satnum - 1] * scaling, self.minpc[satnum - 1] * scaling],
+            )
         )
 
     def evaluate_sw(self, p_cap: float, scaling: float = 1.0, satnum: int = 1) -> float:
@@ -245,10 +247,12 @@ class PillarModel:
         Returns:
             sw: Between 0 and 1
         """
-        return np.interp(
-            p_cap,
-            [self.minpc[satnum - 1] * scaling, self.maxpc[satnum - 1] * scaling],
-            [self.swu[satnum - 1], self.swl[satnum - 1]],
+        return float(
+            np.interp(
+                p_cap,
+                [self.minpc[satnum - 1] * scaling, self.maxpc[satnum - 1] * scaling],
+                [self.swu[satnum - 1], self.swl[satnum - 1]],
+            )
         )
 
     def regions(self) -> str:
