@@ -1,7 +1,7 @@
 """SWATINIT qc tool"""
 import argparse
 import sys
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import ecl2df
 import numpy as np
@@ -478,7 +478,7 @@ def _evaluate_pc(
     satfunc: pd.DataFrame,
     sat_name: str = "SW",
     pc_name: str = "PCOW",
-) -> List[float]:
+) -> List[Any]:
     """Evaluate pc as a function of saturation on a scaled Pc-curve
 
     Args:
