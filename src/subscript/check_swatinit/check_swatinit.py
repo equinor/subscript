@@ -1,7 +1,7 @@
 """SWATINIT qc tool"""
 import argparse
 import sys
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 import ecl2df
 import numpy as np
