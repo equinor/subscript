@@ -76,9 +76,6 @@ perforated by the well A4 and a 1x1x3 refinement around A6::
 The corresponding CARFIN keywords are found in a separate file (here ``lgr_definitions.inc``), to
 be included in the GRID section of the Eclipse .DATA file.
 
-.. note:: The command-line LGR creation currently only works for init cases and in GUI mode, but
-     this will be fixed with the next release (March 2021).
-
 Syntax
 ------
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUNSCH &mdash; subscript 0.14.2.dev1+g0e539c00 documentation</title>
+  <title>SUNSCH &mdash; subscript 0.14.3.dev1+g705254ce documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -32,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.2.dev1+g0e539c00
+                0.14.3.dev1+g705254ce
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -274,28 +274,28 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 </section>
 <section id="yaml-example">
 <h2>YAML example<a class="headerlink" href="#yaml-example" title="Permalink to this headline"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1995-06-01</span>
-<span class="nt">refdate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2022-01-01</span>
-<span class="nt">enddate</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2030-12-01</span>
-<span class="nt">output</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/schedule.sch</span>
-<span class="nt">files</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/history.sch</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/receptionpressures.sch</span>
-<span class="nt">dategrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">monthly</span>
-<span class="nt">insert</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span>
-    <span class="nt">filename</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iorwell1.sch</span>
-    <span class="nt">date</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2020-01-01</span>
-  <span class="p p-Indicator">-</span>
-    <span class="nt">filename</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">iorwell2.sch</span>
-    <span class="nt">days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">100</span>  <span class="c1"># Relative to refdate</span>
-  <span class="p p-Indicator">-</span>
-    <span class="nt">string</span><span class="p">:</span> <span class="s">&quot;WCONHIST\n</span><span class="nv"> </span><span class="s">A-5</span><span class="nv"> </span><span class="s">OPEN</span><span class="nv"> </span><span class="s">ORAT</span><span class="nv"> </span><span class="s">5000/\n/&quot;</span>
-    <span class="nt">days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">40</span>
-  <span class="p p-Indicator">-</span>
-    <span class="nt">template</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/prediction_existing_wells.sch</span>
-    <span class="nt">days</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-    <span class="nt">substitute</span><span class="p">:</span> <span class="p p-Indicator">{</span><span class="nt"> ORAT</span><span class="p">:</span> <span class="nv">3000</span><span class="p p-Indicator">,</span><span class="nt"> GRAT</span><span class="p">:</span> <span class="nv">400000</span><span class="p p-Indicator">}</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1995-06-01</span><span class="w"></span>
+<span class="nt">refdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2022-01-01</span><span class="w"></span>
+<span class="nt">enddate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2030-12-01</span><span class="w"></span>
+<span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/schedule.sch</span><span class="w"></span>
+<span class="nt">files</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/history.sch</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/receptionpressures.sch</span><span class="w"></span>
+<span class="nt">dategrid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monthly</span><span class="w"></span>
+<span class="nt">insert</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iorwell1.sch</span><span class="w"></span>
+<span class="w">    </span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2020-01-01</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iorwell2.sch</span><span class="w"></span>
+<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># Relative to refdate</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">    </span><span class="nt">string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;WCONHIST\n</span><span class="nv"> </span><span class="s">A-5</span><span class="nv"> </span><span class="s">OPEN</span><span class="nv"> </span><span class="s">ORAT</span><span class="nv"> </span><span class="s">5000/\n/&quot;</span><span class="w"></span>
+<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
+<span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/prediction_existing_wells.sch</span><span class="w"></span>
+<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">    </span><span class="nt">substitute</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> ORAT</span><span class="p">:</span><span class="w"> </span><span class="nv">3000</span><span class="p p-Indicator">,</span><span class="nt"> GRAT</span><span class="p">:</span><span class="w"> </span><span class="nv">400000</span><span class="p p-Indicator">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

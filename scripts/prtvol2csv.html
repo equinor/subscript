@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PRTVOL2CSV &mdash; subscript 0.14.2.dev1+g0e539c00 documentation</title>
+  <title>PRTVOL2CSV &mdash; subscript 0.14.3.dev1+g705254ce documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -32,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.2.dev1+g0e539c00
+                0.14.3.dev1+g705254ce
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -210,30 +210,30 @@ Zone the particular FIPNUM belongs to. This is accomplished by supplying a YAML
 file which defines the map between regions and/or zones to FIPNUM.</p>
 <p>The YAML file for the mapping between FIPNUM and regions can be
 structured like in this example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span>
-  <span class="nt">RegionA</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">3</span><span class="p p-Indicator">]</span>
-  <span class="nt">RegionB</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
-<span class="nt">zone2fipnum</span><span class="p">:</span>
-  <span class="nt">Upper</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">]</span>
-  <span class="nt">Mid</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">]</span>
-  <span class="nt">Lower</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">RegionA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">RegionB</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">zone2fipnum</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Mid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
 <p>It is possible to supply inverse maps instead (they will be inverted if needed):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span>
-  <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionA</span>
-  <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionA</span>
-  <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionA</span>
-  <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionB</span>
-  <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionB</span>
-  <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RegionB</span>
-<span class="nt">fipnum2zone</span><span class="p">:</span>
-  <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
-  <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mid</span>
-  <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
-  <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
-  <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Mid</span>
-  <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span><span class="w"></span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span><span class="w"></span>
+<span class="w">  </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span><span class="w"></span>
+<span class="w">  </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span><span class="w"></span>
+<span class="w">  </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span><span class="w"></span>
+<span class="w">  </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span><span class="w"></span>
+<span class="nt">fipnum2zone</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mid</span><span class="w"></span>
+<span class="w">  </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
+<span class="w">  </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
+<span class="w">  </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mid</span><span class="w"></span>
+<span class="w">  </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The keys <code class="docutils literal notranslate"><span class="pre">region2fipnum</span></code> etc. can be at the root level of the yaml file, or
@@ -242,15 +242,15 @@ yaml file.</p>
 <p>You may also use the same YAML file as used for the <code class="docutils literal notranslate"><span class="pre">webviz-subsurface</span></code> plugin
 “ReservoirSimulationTimeSeriesRegional”, the same configuration as above would then look
 like</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span>
-  <span class="nt">groups</span><span class="p">:</span>
-    <span class="nt">REGION</span><span class="p">:</span>
-      <span class="nt">RegionA</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">3</span><span class="p p-Indicator">]</span>
-      <span class="nt">RegionB</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
-    <span class="nt">ZONE</span><span class="p">:</span>
-      <span class="nt">Upper</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">4</span><span class="p p-Indicator">]</span>
-      <span class="nt">Mid</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span> <span class="nv">5</span><span class="p p-Indicator">]</span>
-      <span class="nt">Lower</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span> <span class="nv">6</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">groups</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">RegionA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">RegionB</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Mid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
 </section>

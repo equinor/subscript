@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RMSECL_VOLUMETRICS &mdash; subscript 0.14.2.dev1+g0e539c00 documentation</title>
+  <title>RMSECL_VOLUMETRICS &mdash; subscript 0.14.3.dev1+g705254ce documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -32,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.2.dev1+g0e539c00
+                0.14.3.dev1+g705254ce
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -168,38 +168,38 @@ supplied in multiple ways (either from FIPNUMs to regions/zones, or from
 regions/zones to FIPNUMs).</p>
 <p>If the region named “West” is modelled as FIPNUM 1, covering both the zones
 named “Upper” and “Lower”, the mapping could be specified as such:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span>
-  <span class="nt">West</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
-  <span class="nt">East</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span>
-<span class="nt">zone2fipnum</span><span class="p">:</span>
-  <span class="nt">Upper</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">]</span>
-  <span class="nt">Lower</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">West</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">East</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="nt">zone2fipnum</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">  </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
 <p>An identical way of supplying this map would be to write up the inverse:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span>
-  <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">West</span>
-  <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">East</span>
-<span class="nt">fipnum2zone</span><span class="p">:</span>
-  <span class="nt">1</span><span class="p">:</span>
-   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
-   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
-  <span class="nt">2</span><span class="p">:</span>
-   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
-   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">West</span><span class="w"></span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">East</span><span class="w"></span>
+<span class="nt">fipnum2zone</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"></span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"></span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
 </pre></div>
 </div>
 <p>A third way of specifying this is to use the syntax also used by the
 <code class="docutils literal notranslate"><span class="pre">webviz-subsurface</span></code> plugin “ReservoirSimulationTimeSeriesRegional”, where the
 same map as above would be specified as:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span>
-  <span class="nt">groups</span><span class="p">:</span>
-    <span class="nt">REGION</span><span class="p">:</span>
-      <span class="nt">West</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
-      <span class="nt">East</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span>
-    <span class="nt">ZONE</span><span class="p">:</span>
-      <span class="nt">Upper</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">]</span>
-      <span class="nt">Lower</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span> <span class="nv">2</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">groups</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">West</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">East</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">      </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
 </pre></div>
 </div>
 <p>The command line syntax would then typically look like:</p>
@@ -215,22 +215,22 @@ and FIPNUMs are contained in each set), and the second table contains summed
 volumes and differences in volumes for the identified sets.</p>
 <p>The example above is simple in that each FIPNUM is a set, but complex arrangements
 are possible. The sets are listed in the outputted file <code class="docutils literal notranslate"><span class="pre">sets.yml</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">0</span><span class="p">:</span>
-  <span class="nt">FIPNUM</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-  <span class="nt">REGION</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">East</span>
-  <span class="nt">ZONE</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
-<span class="nt">1</span><span class="p">:</span>
-  <span class="nt">FIPNUM</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
-  <span class="nt">REGION</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">West</span>
-  <span class="nt">ZONE</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Lower</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Upper</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">0</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
+<span class="w">  </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">East</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
+<span class="nt">1</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">  </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">West</span><span class="w"></span>
+<span class="w">  </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
 </pre></div>
 </div>
 <p>Do not rely on the exact enumeration of sets, whichever FIPNUM-region-zone

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>INTERP_RELPERM &mdash; subscript 0.14.2.dev1+g0e539c00 documentation</title>
+  <title>INTERP_RELPERM &mdash; subscript 0.14.3.dev1+g705254ce documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -32,7 +32,7 @@
             <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.14.2.dev1+g0e539c00
+                0.14.3.dev1+g705254ce
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -143,57 +143,57 @@ KROG and PCOG. These parameters can be set individually pr. SATNUM.</p>
 </dd>
 </dl>
 </section>
-<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for interp_relperm</span>
+<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for interp_relperm</span><span class="w"></span>
 
-<span class="nt">base</span><span class="p">:</span>
-  <span class="c1"># SWOF and SGOF in one unified or two separate files.</span>
-  <span class="c1"># Absolute or relative paths are accepted. Relative paths are</span>
-  <span class="c1"># interpreted with respect to command line option --root-path</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">swof_base.inc</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/project/snakeoil/r017f/ert/input/relperm/sgof_base.inc</span>
+<span class="nt">base</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># SWOF and SGOF in one unified or two separate files.</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># Absolute or relative paths are accepted. Relative paths are</span><span class="w"></span>
+<span class="w">  </span><span class="c1"># interpreted with respect to command line option --root-path</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">swof_base.inc</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/project/snakeoil/r017f/ert/input/relperm/sgof_base.inc</span><span class="w"></span>
 
-<span class="nt">high</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">swof_opt.inc</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">../include/sgof_opt.inc</span>
+<span class="nt">high</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">swof_opt.inc</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../include/sgof_opt.inc</span><span class="w"></span>
 
-<span class="nt">low</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">swof_pes.inc</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc</span>
+<span class="nt">low</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">swof_pes.inc</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/project/snakeoil/user/best/r001/ert/input/relperm/sgof_low.inc</span><span class="w"></span>
 
-<span class="nt">pyscalfile</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">scal_input.xlsx</span>  <span class="c1"># Optional, alternative to providing low/base/high</span>
+<span class="nt">pyscalfile</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">scal_input.xlsx</span><span class="w">  </span><span class="c1"># Optional, alternative to providing low/base/high</span><span class="w"></span>
 
-<span class="nt">result_file</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">outfile.inc</span>  <span class="c1"># Required: Name of output file with interpolated tables</span>
+<span class="nt">result_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">outfile.inc</span><span class="w">  </span><span class="c1"># Required: Name of output file with interpolated tables</span><span class="w"></span>
 
-<span class="nt">family</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>  <span class="c1"># Eclipse keyword family. Optional. 1 is default, 2 is the alternative</span>
+<span class="nt">family</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">  </span><span class="c1"># Eclipse keyword family. Optional. 1 is default, 2 is the alternative</span><span class="w"></span>
 
-<span class="nt">delta_s</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.02</span>  <span class="c1"># Optional: resolution of Sw/Sg, defaulted to 0.01</span>
+<span class="nt">delta_s</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span><span class="w">  </span><span class="c1"># Optional: resolution of Sw/Sg, defaulted to 0.01</span><span class="w"></span>
 
-<span class="c1"># Required: applied in order of appearance so that</span>
-<span class="c1"># a default value for all tables can set and overrided</span>
-<span class="c1"># for individual satnums later.</span>
-<span class="nt">interpolations</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">tables</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
-    <span class="c1"># Required: list of satnums to be interpolated</span>
-    <span class="c1"># empty list interpreted as all entries</span>
-    <span class="c1"># for individual satnums later.</span>
-    <span class="nt">param_w</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.23</span>
-    <span class="nt">param_g</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.44</span>
+<span class="c1"># Required: applied in order of appearance so that</span><span class="w"></span>
+<span class="c1"># a default value for all tables can set and overrided</span><span class="w"></span>
+<span class="c1"># for individual satnums later.</span><span class="w"></span>
+<span class="nt">interpolations</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># Required: list of satnums to be interpolated</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># empty list interpreted as all entries</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># for individual satnums later.</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param_w</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.23</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param_g</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">0.44</span><span class="w"></span>
 
-<span class="c1"># Required: list of satnums to be interpolated</span>
-<span class="c1"># empty list interpreted as all entries</span>
+<span class="c1"># Required: list of satnums to be interpolated</span><span class="w"></span>
+<span class="c1"># empty list interpreted as all entries</span><span class="w"></span>
 
-  <span class="p p-Indicator">-</span> <span class="nt">tables</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
-    <span class="c1"># will only apply to satnum nr. 1, for SWOF and SGOF</span>
-    <span class="nt">param_w</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-0.23</span>
-    <span class="nt">param_g</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.24</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># will only apply to satnum nr. 1, for SWOF and SGOF</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param_w</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">-0.23</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param_g</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">0.24</span><span class="w"></span>
 
-  <span class="p p-Indicator">-</span> <span class="nt">tables</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="nv">75</span><span class="p p-Indicator">]</span>
-    <span class="c1"># applies to satnum 2, 5, and 75, for SWOF</span>
-    <span class="c1"># (not SGOF since param_g not declared) SGOF</span>
-    <span class="c1"># will be interpolated using 0.44, from above.</span>
-    <span class="c1"># If a parameter not set, no interpolation will</span>
-    <span class="c1"># be applied ie base table is returned</span>
-    <span class="nt">param_w</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">0.5</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tables</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="nv">75</span><span class="p p-Indicator">]</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># applies to satnum 2, 5, and 75, for SWOF</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># (not SGOF since param_g not declared) SGOF</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># will be interpolated using 0.44, from above.</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># If a parameter not set, no interpolation will</span><span class="w"></span>
+<span class="w">    </span><span class="c1"># be applied ie base table is returned</span><span class="w"></span>
+<span class="w">    </span><span class="nt">param_w</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">0.5</span><span class="w"></span>
 </pre></div>
 </div>
 </p>
