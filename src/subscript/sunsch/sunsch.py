@@ -21,9 +21,12 @@ import dateutil.parser
 import yaml
 from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 from configsuite import types  # lgtm [py/import-and-import-from]
-from opm.tools import TimeVector  # type: ignore
 
 from subscript import __version__, getLogger
+from subscript.sunsch.time_vector import TimeVector  # type: ignore
+
+# from opm.tools import TimeVector  # type: ignore
+
 
 logger = getLogger(__name__)
 
@@ -79,13 +82,13 @@ def _shuffle_start_refdate(config: dict) -> dict:
     * startdate is always defined, if not given, it is picked
       from starttime or refdate. If neither of these, then default
       value 1900-01-01 is chosen.
-    * starttime is always defined, set to 00:00 of startdate if not
+    * starttime is always defined, use clocktime if defined
       explicit
     * refdate is always defined, set to startdate if not excplicit.
     """
     if "startdate" not in config:
         if "starttime" in config:
-            config["startdate"] = config["starttime"].date()
+            config["startdate"] = config["starttime"]
         elif "refdate" in config:
             config["startdate"] = config["refdate"]
         else:
@@ -238,7 +241,9 @@ def get_schema() -> dict:
 def datetime_from_date(
     date: Union[str, datetime.datetime, datetime.date]
 ) -> datetime.datetime:
-    """Set time to 00:00:00 in a date"""
+    """Set time to 00:00:00 in a date, keep time info if given a datetime object"""
+    if isinstance(date, datetime.datetime):
+        return date
     if isinstance(date, str):
         raise ValueError(f"Is the string {date} a date?")
     return datetime.datetime.combine(date, datetime.datetime.min.time())

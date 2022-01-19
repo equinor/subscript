@@ -301,9 +301,8 @@ def test_days_float(readonly_datadir):
     # The TimeVector object has the "correct" date including time,
     # being 0.1 days after 2020-1-11
     assert datetime.datetime(2020, 1, 11, 2, 24, 0) in sch.dates
-    # However, the clocktime is not included when the TimeVector
-    # object is stringified:
-    assert "11 'JAN' 2020/" in str(sch)
+    # Now also the clocktime is stringified (using updated TimeVector)
+    assert "11 'JAN' 2020 02:24:00" in str(sch)
 
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
@@ -312,19 +311,21 @@ def test_days_float(readonly_datadir):
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert datetime.datetime(2020, 1, 11, 21, 36, 0) in sch.dates
-    # Rounding is downwards:
-    assert "11 'JAN' 2020/" in str(sch)
+    # TimeVector now support clocktimes
+    assert "11 'JAN' 2020 21:36:00" in str(sch)
+    # Check that microsecs do not leak into string unless required
+    assert "21:36:00 " in str(sch) or "21:36:00/" in str(sch)
 
 
 def test_starttime(readonly_datadir):
-    """Test that startime as a datetime is written as a date"""
+    """Test the starttime feature"""
     sunschconf = {
         "starttime": datetime.datetime(2020, 2, 1, 0, 0, 0),
         "enddate": datetime.date(2021, 1, 1),
         "insert": [{"filename": "foo1.sch", "days": 10}],
     }
     sch = sunsch.process_sch_config(sunschconf)
-    assert "11 'FEB' 2020" in str(sch)
+    assert "11 'FEB' 2020 00:00:00" in str(sch)
 
     sunschconf = {
         "starttime": datetime.datetime(2020, 2, 1, 23, 59, 59),
@@ -332,8 +333,26 @@ def test_starttime(readonly_datadir):
         "insert": [{"filename": "foo1.sch", "days": 10}],
     }
     sch = sunsch.process_sch_config(sunschconf)
-    # Dates are rounded down, clock-times are not supported
-    assert "11 'FEB' 2020" in str(sch)
+    # Dates are rounded down, clock-times are now supported
+    assert "11 'FEB' 2020 23:59:59" in str(sch)
+
+
+def test_microsecs(readonly_datadir):
+    """Test that microsecs are formatted correctly"""
+    sunschconf = {
+        "starttime": datetime.datetime(2020, 1, 1, 1, 2, 3),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "01:02:03 " in str(sch) or "01:02:03/" in str(sch)
+    sunschconf = {
+        "starttime": datetime.datetime(2020, 1, 1, 1, 2, 3, 123400),
+        "enddate": datetime.date(2021, 1, 1),
+        "insert": [{"filename": "foo1.sch", "days": 10}],
+    }
+    sch = sunsch.process_sch_config(sunschconf)
+    assert "01:02:03.1234" in str(sch)
 
 
 def test_dateclip(readonly_datadir):
@@ -756,7 +775,7 @@ def test_long_vfp_lines(tmp_path, caplog, mocker):
     sunsch.main()
     schinc = Path("sch.inc").read_text(encoding="utf8")
     assert max([len(line) for line in schinc.split("\n")]) <= 129
-    assert "Line 7 had length 146, wrapped" in caplog.text
+    # assert "Line 7 had length 146, wrapped" in caplog.text
 
 
 def test_comments():
