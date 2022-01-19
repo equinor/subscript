@@ -1,0 +1,10 @@
+================================
+``subscript.sunsch.time_vector``
+================================
+
+.. automodule:: subscript.sunsch.time_vector
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.sunsch.time_vector
