@@ -265,4 +265,4 @@ def test_to_csv(tmp_path):
 
     dframe = pd.read_csv("mock.csv", skipinitialspace=True)
     assert dframe["vec"].size == 4
-    assert pytest.approx(dframe["vecb"].iloc[-1] == 100)
+    assert dframe["vecb"].iloc[-1] == pytest.approx(100)
