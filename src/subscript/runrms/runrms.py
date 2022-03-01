@@ -54,7 +54,7 @@ RHEL_ID = pathlib.Path("/etc/redhat-release")
 
 
 # location of setup file; for testing this can be overriden by the --setup argument
-SETUP = "/prog/res/roxapi/aux/runrms.yml"
+SETUP = "/prog/res/roxapi/config/runrms.yml"
 
 
 def xwarn(mystring):
