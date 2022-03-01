@@ -224,7 +224,7 @@ class RunRMS:
         self.extstatus = "OK"
         self.beta = None
         self.rmsinstallsite = None
-        self.command = "rms"
+        self.command = "/prog/roxar/rms/rms"
         self.setdpiscaling = ""
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
         self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
