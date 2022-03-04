@@ -425,7 +425,7 @@ def prepend_root_path_to_relative_files(
 
     Note: This function is before prior to validation of the configuration!
 
-    Will look for list of filenames in the keys "base, low and high"
+    Will look for list of filenames in the keys "pyscalfile, base, low and high"
 
     Args:
         cfg: interp_relperm configuration dictionary
@@ -446,6 +446,10 @@ def prepend_root_path_to_relative_files(
         for idx in range(len(cfg["low"])):
             if not os.path.isabs(cfg["low"][idx]):
                 cfg["low"][idx] = str(root_path / Path(cfg["low"][idx]))
+    if "pyscalfile" in cfg.keys():
+        if not os.path.isabs(cfg["pyscalfile"]):
+            cfg["pyscalfile"] = str(root_path / Path(cfg["pyscalfile"]))
+
     return cfg
 
 
