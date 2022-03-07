@@ -54,7 +54,7 @@ RHEL_ID = pathlib.Path("/etc/redhat-release")
 
 
 # location of setup file; for testing this can be overriden by the --setup argument
-SETUP = "/project/res/roxapi/aux/runrms.yml"
+SETUP = "/prog/res/roxapi/config/runrms.yml"
 
 
 def xwarn(mystring):
@@ -224,7 +224,7 @@ class RunRMS:
         self.extstatus = "OK"
         self.beta = None
         self.rmsinstallsite = None
-        self.command = "rms"
+        self.command = "/prog/roxar/rms/rms"
         self.setdpiscaling = ""
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
         self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
