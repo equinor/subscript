@@ -482,6 +482,13 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
     high_df: pd.DataFrame = pd.DataFrame()
 
     if cfg_suite.snapshot.pyscalfile is not None:
+        if ( cfg_suite.snapshot.base or 
+             cfg_suite.snapshot.low  or 
+             cfg_suite.snapshot.high 
+           ):
+            logger.error("Inconsistent configuration. You cannot define both pyscalfile and base/low/high")
+            sys.exit(1)
+
         logger.info(
             "Loading relperm parametrization from %s", cfg_suite.snapshot.pyscalfile
         )
