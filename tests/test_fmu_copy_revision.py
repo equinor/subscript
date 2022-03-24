@@ -234,6 +234,10 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
     finally:
         # Reinstate all user permissions for pytest garbage collection
         os.chmod(source + "/rms/input", 0o0700)
+        if Path(target + "/rms/input").exists():
+            # Some of the fmu_copy_revision setups in this test
+            # manage to copy the target directory.
+            os.chmod(target + "/rms/input", 0o0700)
 
 
 @pytest.mark.integration
