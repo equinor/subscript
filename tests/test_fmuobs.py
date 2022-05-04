@@ -388,7 +388,11 @@ def test_ert_workflow_hook(verbose, tmp_path):
 
     # Verify that we can control whether INFO messages from fmuobs through ERT
     # is emitted:
-    ert_log_filename = "ert-log.txt"  # Beware, this filename is controlled by ERT
+    ert_log_filename = "ert-log"  # Beware, this filename is controlled by ERT
+    for file in os.listdir():
+        if file.startswith(ert_log_filename):
+            ert_log_filename = file
+            break
     assert Path(ert_log_filename).exists()
     ert_output = Path(ert_log_filename).read_text(encoding="utf8")
 
