@@ -26,19 +26,40 @@ logger = getLogger(__name__)
 DESCRIPTION = """
 Script to run a rms project from command line, which will in turn use the
 'rms...' command OR will look at /prog/roxar/site. Note that not all
-options valid for 'rms' should be covered.
+options valid for the base script 'rms' should be covered.
 
-* It should understand current RMS version in project and launch correct RMS executable
-* It should be able to run test versions of RMS
-* It should be able to set the correct Equinor valid PYTHONPATH.
-* Company wide plugin path
+  * It should understand current RMS version from project and launch correct
+    RMS executable
+  * It should be able to run test versions of RMS
+  * Set the correct Equinor valid PYTHONPATH.
+  * Set company wide plugin path
 
-Example of usage::
+Example of usage:
 
     runrms newreek.rms10.1.3 (if new project: warn and just start rms default)
     runrms reek.rms10.1.3  (automatically detect version from .master)
-    runrms -project reek.10.1.3  (same as previous)
+    runrms -project reek.10.1.3  (alternative to previous, but using -project as in
+        former rms command)
     runrms reek.rms10.1.3 -v 11.0.1 (force version 11.0.1)
+
+Notes:
+
+    (1) The 'runrms' will be aliased to 'rms' in Equinor after summer 2022. When that
+        implemented, running the original 'rms' script can still be done with (where
+        the '$' means terminal prompt):
+          $ /prog/roxar/rms/rms.
+
+    (2) For backward compatibility a project name can be prepended with -project.
+        Hence, to specify a project use either:
+          $ runrms myproject.rms13.0.3
+        which is preferred, or
+          $ runrms -project myproject.rms13.0.3
+        or
+          $ runrms --project myproject.rms13.0.3
+        If both are used, e.g.:
+          $ runrms foo.rms13.0.3 -project bar.rms12.1.2
+        then the alternative without -project will 'win', here 'foo.rms13.0.3' and
+        a warning will be issued.
 
 """
 
@@ -82,6 +103,23 @@ def get_parser():
     prs.add_argument("project", type=str, nargs="?", help="RMS project name")
 
     prs.add_argument(
+        "--project",
+        "-project",
+        dest="project_alt",
+        help="RMS project name. Alternative option for backward user experience "
+        "compatibility. See details in Note (2) above",
+    )
+
+    prs.add_argument(
+        "--listversions",
+        "-l",
+        dest="listversions",
+        action="store_true",
+        help="Use this option to list current RMS versions available. If this option "
+        "is set then all other options are disabled",
+    )
+
+    prs.add_argument(
         "--debug",
         dest="debug",
         action="store_true",
@@ -101,6 +139,7 @@ def get_parser():
         dest="rversion",
         type=str,
         default=None,
+        nargs="?",
         help="RMS version, e.g. 10.1.3",
     )
 
@@ -137,6 +176,18 @@ def get_parser():
         type=str,
         help=(
             "Runs project in batch mode (req. project) with workflows as argument(s)"
+        ),
+    )
+
+    prs.add_argument(
+        "--seed",
+        "-seed",
+        dest="seed",
+        nargs=1,
+        type=str,
+        help=(
+            "Runs project with seed number set. Needs to be combined with --batch "
+            "and project!"
         ),
     )
 
@@ -228,6 +279,7 @@ class RunRMS:
         self.setdpiscaling = ""
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
         self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
+        self.warn_empty_version = False
 
         self.detect_os()
 
@@ -259,10 +311,30 @@ class RunRMS:
             args = sys.argv[1:]
 
         myparser = get_parser()
+        parsed_args = myparser.parse_args(args)
 
-        args = myparser.parse_args(args)
+        # just 'runrms' shall not trigger listing, hence test of len(inargs)
+        if (
+            parsed_args.rversion is None
+            and len(args) > 0
+            and ("-v" in args or "--version" in args)
+        ):
+            parsed_args.listversions = True
+            self.warn_empty_version = True
 
-        self.args = args
+        if parsed_args.project is None and parsed_args.project_alt:
+            parsed_args.project = parsed_args.project_alt
+        elif parsed_args.project and parsed_args.project_alt:
+            xwarn("Conflict use two types of project input. First argument will win!")
+            parsed_args.project_alt = None
+
+        if parsed_args.seed and (
+            parsed_args.bworkflows is None or parsed_args.project is None
+        ):
+            xcritical("The --seed option must be combined with --batch and a project!")
+            raise SystemExit(" Cannot continue")
+
+        self.args = parsed_args
 
         if self.args.debug:
             logger.setLevel(logging.DEBUG)
@@ -491,46 +563,57 @@ class RunRMS:
 
         if self.args.ronly:
             args_list.append("-readonly")
+
         if self.args.bworkflows:
             args_list.append("-batch")
             for bjobs in self.args.bworkflows:
                 args_list.append(bjobs)
 
+        if self.args.seed:
+            args_list.append("-seed")
+            args_list.append(*self.args.seed)
+
         if not empty:
             args_list += ["-project", self.project]
 
+        # this should override all other settings
+        if self.args.listversions:
+            args_list = args_list[0:2]  # just to get ['/prog/roxar/rms/rms', '-v']
+
         self.command = " ".join(args_list)
-        print(_BColors.BOLD, "\nRunning: {}\n".format(self.command), _BColors.ENDC)
+
+        print(_BColors.BOLD, "\n -> Launch: {}\n".format(self.command), _BColors.ENDC)
+
         print("=" * shutil.get_terminal_size((132, 20)).columns)
 
         self._handle_locked_project()
 
-        if not self.args.debug:
-            print(_BColors.OKGREEN)
+        if not self.args.listversions:
+            if not self.args.debug:
+                print(_BColors.OKGREEN)
 
-        rms_exec_env = self._collect_env_settings()
+            rms_exec_env = self._collect_env_settings()
 
-        env_args = ["env"]
-        for key, value in rms_exec_env.items():
-            env_args.append(f"{key}={value}")
+            env_args = ["env"]
+            for key, value in rms_exec_env.items():
+                env_args.append(f"{key}={value}")
 
-        if shutil.which("disable_komodo_exec"):
-            args_list = (
-                [
-                    "env",
-                    f"PATH_PREFIX={self.setup['roxenv_path']}",
-                    "disable_komodo_exec",
-                ]
-                + env_args
-                + args_list
-            )
-        else:
-            args_list = env_args + args_list
-        logger.debug("args_list    : %s", args_list)
+            if shutil.which("disable_komodo_exec"):
+                args_list = (
+                    [
+                        "env",
+                        f"PATH_PREFIX={self.setup['roxenv_path']}",
+                        "disable_komodo_exec",
+                    ]
+                    + env_args
+                    + args_list
+                )
+            else:
+                args_list = env_args + args_list
+            logger.debug("args_list    : %s", args_list)
 
         if self.args.dryrun:
             xwarn("<<<< DRYRUN, do not start RMS >>>>")
-            print(_BColors.ENDC)
         else:
             rms_process = subprocess.run(args_list, check=True)
             print(_BColors.ENDC)
@@ -617,7 +700,6 @@ class RunRMS:
                     _BColors.ENDC,
                 )
             )
-        print("{0:30s}: {1}".format("Setup for runrms", self.setupfile))
         print("{0:30s}: {1}".format("RMS version requested", self.version_requested))
         print("{0:30s}: {1}".format("Equinor current default ver.", self.defaultver))
         print("{0:30s}: {1}".format("RMS version in project", self.version_fromproject))
@@ -731,13 +813,21 @@ def main(args=None):
         runner.version_fromproject = runner.version_requested
 
     runner.get_scaledpi()
-    runner.showinfo()
+    if not runner.args.listversions:
+        runner.showinfo()
     status = runner.launch_rms(empty=emptyproject)
 
     logger.debug("Status from subprocess: %s", status)
 
     if not runner.args.dryrun:
         runner.runlogger()
+
+    if runner.warn_empty_version:
+        xwarn(
+            "Avoid using empty --version/-v to list RMS versions; rather use "
+            "runrms --listversions"
+        )
+        print("\n")
 
 
 if __name__ == "__main__":
