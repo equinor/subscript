@@ -300,7 +300,7 @@ class RunRMS:
     def detect_os(self):
         """Detect operating system string in runtime, just use default if not found."""
         if RHEL_ID.is_file():
-            with open(RHEL_ID, "r") as buffer:
+            with open(RHEL_ID, "r", encoding="utf-8") as buffer:
                 major = buffer.read().split(" ")[6].split(".")[0].replace("'", "")
                 self.osver = "x86_64_RH_" + str(major)
                 logger.debug("RHEL version found in %s", RHEL_ID)
@@ -353,7 +353,7 @@ class RunRMS:
             xcritical(f"Requested setup <{setup}> does not exist!")
             raise FileNotFoundError()
 
-        with open(setup, "r") as stream:
+        with open(setup, "r", encoding="utf-8") as stream:
             logger.debug("Actual setup file: %s", setup)
             self.setupfile = setup
             self.setup = yaml.safe_load(stream)
@@ -521,11 +521,13 @@ class RunRMS:
             raise SystemExit
 
         try:
-            with open(pathlib.Path(self.project) / "project_lock_file", "r") as lockf:
-                for line in lockf.readlines():
-                    self.lockf = line.replace("\n", "")
-                    self.locked = True
-                    break
+            lockfiletxt = (pathlib.Path(self.project) / "project_lock_file").read_text(
+                encoding="utf-8"
+            )
+            for line in lockfiletxt:
+                self.lockf = line.replace("\n", "")
+                self.locked = True
+                break
         except EnvironmentError:
             pass
 
@@ -782,7 +784,7 @@ class RunRMS:
             # if file is missing, simply skip!
             return
 
-        with open(self.runloggerfile, "a") as logg:
+        with open(self.runloggerfile, "a", encoding="utf-8") as logg:
             logg.write(lline)
 
         logger.debug("Logging usage to %s:", self.runloggerfile)
