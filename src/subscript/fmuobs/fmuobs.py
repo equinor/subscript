@@ -13,6 +13,7 @@ import yaml
 from ert_shared.plugins.plugin_manager import hook_implementation  # type: ignore
 from res.job_queue import ErtScript  # type: ignore
 
+import subscript
 from subscript import __version__, getLogger
 from subscript.fmuobs.parsers import (
     compute_date_from_days,
@@ -431,6 +432,14 @@ class FmuObs(ErtScript):
         # pylint: disable=no-self-use
         """Pass the ERT workflow arguments on to the same parser as the command
         line."""
+
+        # Reset the logger to let ERT have control over log levels and handlers:
+        # pylint: disable=redefined-outer-name, unused-variable
+        logger = logging.getLogger("fmuobs")  # noqa
+        # Also apply to submodules from here:
+        subscript.fmuobs.parsers.logger = logging.getLogger("fmuobs.parsers")
+        subscript.fmuobs.writers.logger = logging.getLogger("fmuobs.writers")
+
         parser = get_parser()
         parsed_args = parser.parse_args(args)
         fmuobs(**vars(parsed_args))
