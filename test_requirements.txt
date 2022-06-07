@@ -6,7 +6,7 @@ mypy
 pytest
 pytest-cov
 pytest-mock
-rstcheck
+rstcheck<6
 types-Jinja2
 types-PyYAML
 types-pkg_resources
