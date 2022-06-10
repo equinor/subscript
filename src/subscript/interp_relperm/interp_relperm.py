@@ -3,17 +3,17 @@ import logging
 import os
 import sys
 from pathlib import Path
-
-import pandas as pd
-import yaml
+from typing import Any, Dict, List, Optional
 
 import configsuite  # lgtm [py/import-and-import-from]
+import pandas as pd
 import pyscal
-import subscript
+import yaml
 from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 from configsuite import types  # lgtm [py/import-and-import-from]
 from ecl2df import satfunc
-from typing import Any, Dict, List, Optional
+
+import subscript
 
 logger = subscript.getLogger(__name__)
 
@@ -484,7 +484,8 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
     if cfg_suite.snapshot.pyscalfile is not None:
         if cfg_suite.snapshot.base or cfg_suite.snapshot.low or cfg_suite.snapshot.high:
             logger.error(
-                "Inconsistent configuration. You cannot define both pyscalfile and base/low/high"
+                "Inconsistent configuration. "
+                "You cannot define both pyscalfile and base/low/high"
             )
             sys.exit(1)
 
