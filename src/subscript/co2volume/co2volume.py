@@ -32,33 +32,22 @@ def calculate_out_of_bounds_co2(grid_file, unrst_file, init_file, polygon_file):
     print("*** Reading Grid ***")
     grid = xtgeo.grid_from_file(grid_file)
     print("*** Reading Properties ***")
-    if unrst_file.lower().endswith('.unrst'):
-        sgas = xtgeo.gridproperties_from_file(
-            unrst_file, grid=grid, names=["SGAS"], dates="all"
-        )
-    else:
-        sgas = [
-            xtgeo.gridproperty_from_file(f, grid=grid, name="SGAS")
-            for f in glob.glob(unrst_file)
-        ]
-    for s in sgas:
-        if s.date is None and "--" in s.filesrc.stem:
-            s.date = s.filesrc.stem.split('--')[1]
+    densities = _effective_densities(grid, unrst_file)
     try:
-        poro = xtgeo.gridproperty_from_file(init_file, grid=grid, name="PORO")
+        poro = xtgeo.gridproperty_from_file(init_file, grid=grid, name="PORO", date="first")
     except (TypeError, ValueError):
         poro = xtgeo.gridproperty_from_file(init_file)
     xyz = grid.get_xyz()
     xp = xyz[0].values1d[grid.actnum_indices]
     yp = xyz[1].values1d[grid.actnum_indices]
     poly_xy = np.genfromtxt(polygon_file, skip_header=1, delimiter=",")[:, :2]
-    outside = calculate_containment(xp, yp, poly_xy)
+    outside = ~calculate_containment(xp, yp, poly_xy)
     print("*** Calculating volumes ***")
     vols = grid.get_bulk_volume()
     vols = vols.values1d[grid.actnum_indices] * poro.values1d[grid.actnum_indices]
     co2_vol = {
         s.date: (vols * s.values1d[grid.actnum_indices])
-        for s in sgas
+        for s in densities
     }
     records = [
         (d, np.sum(v[~outside]), np.sum(v[outside]))
@@ -67,6 +56,51 @@ def calculate_out_of_bounds_co2(grid_file, unrst_file, init_file, polygon_file):
     df = pandas.DataFrame.from_records(records, columns=("date", "co2_inside", "co2_outside"))
     print("*** Done ***")
     return df
+
+
+def _effective_densities(grid, unrst_file):
+    if not unrst_file.lower().endswith('.unrst'):
+        dens = [
+            xtgeo.gridproperty_from_file(f, grid=grid, name="SGAS")
+            for f in glob.glob(unrst_file)
+        ]
+        for s in dens:
+            if s.date is None and "--" in s.filesrc.stem:
+                s.date = s.filesrc.stem.split('--')[1]
+        return dens
+    else:
+        props = xtgeo.gridproperties_from_file(
+            unrst_file, grid=grid, names=["SGAS", "SWAT", "DGAS", "DWAT", "AMFG", "YMFG"], dates="all"
+        )
+        dens = []
+        for d in props.dates:
+            swat = _fetch_prop(props, "SWAT", d)
+            dwat = _fetch_prop(props, "DWAT", d)
+            sgas = _fetch_prop(props, "SGAS", d)
+            dgas = _fetch_prop(props, "DGAS", d)
+            amfg = _fetch_prop(props, "AMFG", d)
+            ymfg = _fetch_prop(props, "YMFG", d)
+
+            w_gas = sgas * dgas * _mole_to_mass_fraction(ymfg)
+            w_aqu = swat * dwat * _mole_to_mass_fraction(amfg)
+
+            dens.append(props.props[0].copy("tmp"))
+            dens[-1].values = w_gas + w_aqu
+            dens[-1].date = d
+        return dens
+
+
+def _mole_to_mass_fraction(x):
+    m_co2 = 44
+    m_h20 = 18
+    return x * m_co2 / (m_h20 + (m_co2 - m_h20) * x)
+
+
+
+def _fetch_prop(grid_props: xtgeo.GridProperties, name, date):
+    search = [p for p in grid_props.props if p.date == date and p.name.startswith(name)]
+    assert len(search) == 1
+    return search[0].values
 
 
 def make_parser():
