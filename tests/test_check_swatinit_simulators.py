@@ -33,38 +33,6 @@ from subscript.check_swatinit.pillarmodel import PillarModel
 pd.set_option("display.max_columns", 100)
 
 
-def find_flow_simulator():
-    """Locate the flow reservoir simulator executable"""
-
-    # Executables to look for, in prioritized order:
-    candidates = ["flow", "flowdaily"]
-
-    # Extra paths we also want to look in, to make
-    # this work in relevant runtime contexts:
-    extrapaths = ["/project/res/x86_64_RH_7/bin"]
-
-    for candidate in candidates:
-        for path in os.environ["PATH"].split(os.pathsep) + extrapaths:
-            candidatepath = Path(path) / candidate
-            if candidatepath.exists():
-                return str(candidatepath)
-    return None
-
-
-def find_eclipse_simulator():
-    """Always using "runeclipse" which should be in PATH,
-    but runeclipse might be installed (from subscript)
-    without Eclipse being installed, so check for that"""
-    if Path("/prog/res/ecl/grid").exists():
-        return "runeclipse"
-    return None
-
-
-SIMULATORS: tuple = tuple(
-    filter(None, [find_flow_simulator(), find_eclipse_simulator()])
-)
-
-
 def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
     """Run the given simulator (Eclipse100 or OPM-flow)
     on a dictionary representing a dynamical reservoir model
@@ -105,7 +73,6 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
     return None
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
     """If SWL is set higher than SWATINIT, both Eclipse and flow
     truncates SWAT to SWL.
@@ -134,7 +101,6 @@ def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
     assert pd.isnull(qc_frame["PC"][0])
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
     """Test PPCWMAX far above contact. This keyword is only supported by Eclipse100
     and will be ignored by flow.
@@ -193,7 +159,6 @@ def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
         assert np.isclose(qc_vols[__PC_SCALED__], 0, atol=0.001)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
     """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will be applied
     some meters above the contact
@@ -236,7 +201,6 @@ def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
         # Note: For e100, this does not change with oip_init (!)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_accepted_swatinit_far_above_contact(simulator, tmp_path):
     """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will be applied
     far above the contact
@@ -282,7 +246,6 @@ def test_accepted_swatinit_far_above_contact(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"], actual_pc)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_accepted_swatinit_in_gas(simulator, tmp_path):
     """Repeat the test above, but with a gas-oil contact below the reservoir cell
 
@@ -322,7 +285,6 @@ def test_accepted_swatinit_in_gas(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"], actual_pc)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_1_far_above_contact(simulator, tmp_path):
     """If SWATINIT is 1 far above the contact, we are in an unstable
     situation (water should not be mobile e.g)
@@ -382,7 +344,6 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     assert np.isnan(qc_frame["PC"][0])
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     """If we are slightly above the contact, item 9 in EQUIL plays
     a small role.
@@ -428,7 +389,6 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     assert np.isclose(qc_frame["SWAT"][0], expected_swat, atol=0.001)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_capillary_entry_pressure(simulator, tmp_path):
     """With some capillary entry pressure, we should have SWATINIT=1 some
     distance above the contact and also SWAT=1 there. Above the capillary entry
@@ -461,7 +421,6 @@ def test_capillary_entry_pressure(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_below_capillary_entry_pressure(simulator, tmp_path):
     """Test what we get below the capillary entry pressure"""
     os.chdir(tmp_path)
@@ -490,7 +449,6 @@ def test_below_capillary_entry_pressure(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
     """The result is discontinuous close to swatinit=1 for Eclipse100, because
     at swatinit = 1 - epsilon, Eclipse will try to scale  the capillary
@@ -519,7 +477,6 @@ def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
     assert np.isclose(qc_vols[__PC_SCALED__], 0.0, atol=0.0003)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
     """SWATINIT below the contact is ignored, and SWAT is set based on the
     input SWOF table. In water-wet system (pc>0), this always yields SWAT=1
@@ -547,7 +504,6 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
             assert pd.isnull(qc_frame["PC"][0])
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
     """For an oil-wet system, there can be oil below free water level.
 
@@ -605,7 +561,6 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
         )
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swu(simulator, tmp_path):
     """Test SWATINIT < SWU < 1.
 
@@ -634,7 +589,6 @@ def test_swu(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swu_equal_swatinit(simulator):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
@@ -662,7 +616,6 @@ def test_swu_equal_swatinit(simulator):
     print(qc_frame)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swu_lessthan_swatinit(simulator):
     """Test SWU equal to SWATINIT
 
@@ -695,7 +648,6 @@ def test_swu_lessthan_swatinit(simulator):
     print(qc_frame)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swatinit_1_below_contact(simulator, tmp_path):
     """An all-good scenario, below contact, water-wet, ask for water, we get water."""
     os.chdir(tmp_path)
@@ -721,7 +673,6 @@ def test_swatinit_1_below_contact(simulator, tmp_path):
     assert np.isclose(qc_vols[__WATER__], 0.0)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swlpc_trunc(simulator, tmp_path):
     """SWAT truncated by SWLPC is the same as being truncated by SWL"""
     os.chdir(tmp_path)
@@ -743,7 +694,6 @@ def test_swlpc_trunc(simulator, tmp_path):
         assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swlpc_correcting_swl(simulator, tmp_path):
     """SWLPC should be allowed to override SWL, so that
     if an SWL value would trigger SWL_TRUNC, we can save the day by SWLPC"""
@@ -766,7 +716,6 @@ def test_swlpc_correcting_swl(simulator, tmp_path):
         assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_swlpc_scaling(simulator, tmp_path):
     """Test that PC is scaled differently when SWLPC is included"""
     os.chdir(tmp_path)
@@ -798,9 +747,8 @@ def test_swlpc_scaling(simulator, tmp_path):
         assert np.isclose(qc_frame["PC_SCALING"], 0.269131)
 
 
-@pytest.mark.parametrize("simulator", filter(None, [find_eclipse_simulator()]))
 # Gas-water is not supported by flow.
-def test_pc_scaled_above_gwc(simulator, tmp_path):
+def test_pc_scaled_above_gwc(eclipse_simulator, tmp_path):
     """Test a two-phase gas-water problem, scaled capillary pressure above contact"""
 
     os.chdir(tmp_path)
@@ -813,13 +761,12 @@ def test_pc_scaled_above_gwc(simulator, tmp_path):
         swl=[0.1],
         maxpc=[3.0],
     )
-    qc_frame = run_reservoir_simulator(simulator, model)
+    qc_frame = run_reservoir_simulator(eclipse_simulator, model)
     assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
     assert np.isclose(qc_frame["PPCW"][0], 16.913918)
     assert np.isclose(qc_frame["PC"][0], 9.396621)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_ppcwmax_gridvector(simulator, tmp_path):
     """Test that ppcwmax_gridvector maps ppcwmax values correctly in the grid"""
     os.chdir(tmp_path)
@@ -844,8 +791,7 @@ def test_ppcwmax_gridvector(simulator, tmp_path):
         assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCW"].unique(), 0.02)
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
-def test_ppcwmax_gridvector_eqlnum(simulator, tmp_path):
+def test_ppcwmax_gridvector_eqlnum(flow_simulator, tmp_path):
     """Test that ppcwmax unrolling also works with EQLNUM (historical bug)"""
     os.chdir(tmp_path)
     model = PillarModel(
@@ -856,54 +802,53 @@ def test_ppcwmax_gridvector_eqlnum(simulator, tmp_path):
         maxpc=[0.001, 0.002],
         ppcwmax=[0.01, 0.02],
     )
-    qc_frame = run_reservoir_simulator(simulator, model)
+    qc_frame = run_reservoir_simulator(flow_simulator, model)
     assert qc_frame[qc_frame["SATNUM"] == 1]["PPCWMAX"].unique() == [0.01]
     assert qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique() == [0.02]
 
 
-def test_no_swatinit(tmp_path, mocker, caplog):
+def test_no_swatinit(tmp_path, mocker, caplog, flow_simulator):
     """Test what check_swatinit does on a case not initialized by SWATINIT"""
     os.chdir(tmp_path)
     model = PillarModel(swatinit=[None])
-    run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
+    run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     main()
     assert "INIT-file/deck does not have SWATINIT" in caplog.text
 
 
-def test_no_filleps(tmp_path, mocker, caplog):
+def test_no_filleps(tmp_path, mocker, caplog, flow_simulator):
     """Test the output when we don't have SWL (FILLEPS is needed)"""
     os.chdir(tmp_path)
     model = PillarModel(filleps="")
-    run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
+    run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     main()
     assert "SWL not found" in caplog.text
     assert "FILLEPS" in caplog.text
 
 
-def test_no_unrst(tmp_path, mocker):
+def test_no_unrst(tmp_path, mocker, flow_simulator):
     """Test what happens when there is no restart file with SWAT[0]"""
     os.chdir(tmp_path)
     model = PillarModel()
-    run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
+    run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     os.unlink("FOO.UNRST")
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     with pytest.raises(SystemExit, match="UNRST"):
         main()
 
 
-def test_no_rptrst(tmp_path, mocker):
+def test_no_rptrst(tmp_path, mocker, flow_simulator):
     """Test what happens when RPTRST is not included, no UNRST"""
     os.chdir(tmp_path)
     model = PillarModel(rptrst="")
-    run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
+    run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     with pytest.raises(SystemExit, match="UNRST"):
         main()
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_rptrst_basic_1(simulator, tmp_path, mocker):
     """Test what happens when RPTRST is BASIC=1"""
     os.chdir(tmp_path)
@@ -913,7 +858,6 @@ def test_rptrst_basic_1(simulator, tmp_path, mocker):
     main()  # No exceptions/errors.
 
 
-@pytest.mark.parametrize("simulator", SIMULATORS)
 def test_rptrst_allprops(simulator, tmp_path, mocker):
     """Test what happens when RPTRST is ALLPROPS (which probably implies BASIC=1)"""
     os.chdir(tmp_path)
@@ -923,11 +867,11 @@ def test_rptrst_allprops(simulator, tmp_path, mocker):
     main()  # No exceptions.
 
 
-def test_no_unifout(tmp_path, mocker):
+def test_no_unifout(tmp_path, mocker, flow_simulator):
     """Test what happens when UNIFOUT is not included"""
     os.chdir(tmp_path)
     model = PillarModel(unifout="")
-    run_reservoir_simulator(find_flow_simulator(), model, perform_qc=False)
+    run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     with pytest.raises(SystemExit, match="UNIFOUT"):
         main()
