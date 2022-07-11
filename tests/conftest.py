@@ -1,3 +1,4 @@
+import shutil
 from os import path
 
 import pytest
@@ -31,14 +32,17 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         help="The path to flow simulator,"
-        " defaults to not running tests depending on flow",
+        " defaults to looking for executable"
+        " flow in path and not running"
+        " tests depending on flow if not found there",
     )
     parser.addoption(
         "--eclipse-simulator",
         action="store",
         default=None,
-        help="The path to eclipse simulator,"
-        " defaults to not running tests depending on eclipse",
+        help="The path to eclipse simulator executable."
+        " Expects parameters like the runeclipse utility provided,"
+        " by subscript. Defaults to not running tests with eclipse.",
     )
 
 
@@ -61,24 +65,24 @@ def plot(request):
 
 @pytest.fixture
 def flow_simulator(request):
-    flow_path = request.config.getoption("--flow-simulator")
-    if flow_path is None:
-        pytest.skip("No flow executable given, see --flow-simulator")
-    return flow_path
+    flow = request.config.getoption("--flow-simulator")
+    if flow is None:
+        in_path = shutil.which("flow")
+        if in_path is None:
+            pytest.skip("No flow executable given, see --flow-simulator")
+        else:
+            flow = in_path
+    return flow
 
 
 @pytest.fixture
 def eclipse_simulator(request):
-    eclipse_path = request.config.getoption("--eclipse-simulator")
-    if eclipse_path is None:
+    eclipse = request.config.getoption("--eclipse-simulator")
+    if eclipse is None:
         pytest.skip("No eclipse executable given, see --eclipse-simulator")
-    return eclipse_path
+    return eclipse
 
 
 @pytest.fixture(params=["eclipse", "flow"])
 def simulator(request):
-    simulator = request.param
-    simulator_path = request.config.getoption(f"--{simulator}-simulator")
-    if simulator_path is None:
-        pytest.skip(f"No {simulator} executable given, see --{simulator}-simulator")
-    return simulator_path
+    return request.getfixturevalue(f"{request.param}_simulator")
