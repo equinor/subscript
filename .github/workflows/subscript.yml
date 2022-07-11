@@ -70,7 +70,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests
+          pytest --flow-simulator="flow" tests
           # Check that repository is untainted by test code:
           git status --porcelain
           test -z "$(git status --porcelain)"

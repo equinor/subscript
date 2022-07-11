@@ -26,6 +26,20 @@ def pytest_addoption(parser):
         default=False,
         help="run tests that display plots to the screen",
     )
+    parser.addoption(
+        "--flow-simulator",
+        action="store",
+        default=None,
+        help="The path to flow simulator,"
+        " defaults to not running tests depending on flow",
+    )
+    parser.addoption(
+        "--eclipse-simulator",
+        action="store",
+        default=None,
+        help="The path to eclipse simulator,"
+        " defaults to not running tests depending on eclipse",
+    )
 
 
 def pytest_collection_modifyitems(config, items):
@@ -43,3 +57,28 @@ def plot(request):
     """Provide a fixture that tests can use to evaluate whether
     --plot was present on the command line"""
     return request.config.getoption("--plot")
+
+
+@pytest.fixture
+def flow_simulator(request):
+    flow_path = request.config.getoption("--flow-simulator")
+    if flow_path is None:
+        pytest.skip("No flow executable given, see --flow-simulator")
+    return flow_path
+
+
+@pytest.fixture
+def eclipse_simulator(request):
+    eclipse_path = request.config.getoption("--eclipse-simulator")
+    if eclipse_path is None:
+        pytest.skip("No eclipse executable given, see --eclipse-simulator")
+    return eclipse_path
+
+
+@pytest.fixture(params=["eclipse", "flow"])
+def simulator(request):
+    simulator = request.param
+    simulator_path = request.config.getoption(f"--{simulator}-simulator")
+    if simulator_path is None:
+        pytest.skip(f"No {simulator} executable given, see --{simulator}-simulator")
+    return simulator_path
