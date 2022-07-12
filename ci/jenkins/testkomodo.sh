@@ -9,7 +9,5 @@ copy_test_files () {
 }
 
 start_tests () {
-    pushd $CI_TEST_ROOT/testpath
     pytest --flow-simulator="/project/res/x86_64_RH_7/bin/flowrc15" --eclipse-simulator="runeclipse"
-    popd
 }
