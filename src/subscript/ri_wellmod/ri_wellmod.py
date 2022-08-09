@@ -401,15 +401,15 @@ def get_parser() -> argparse.ArgumentParser:
         "-w",
         nargs="+",
         default=None,
-        help="Optional comma-separated list of wells (wildcards allowed) to generate completions \
-            for (default=all wells in project)",
+        help="Optional comma-separated list of wells (wildcards allowed) to \
+            generate completions for (default=all wells in project)",
     )
     parser.add_argument(
         "--msw",
         nargs="+",
         default=None,
-        help="Optional comma-separated list of wells (wildcards allowed) to generate msw \
-            well definitions for (default=none)",
+        help="Optional comma-separated list of wells (wildcards allowed) to \
+            generate msw well definitions for (default=none)",
     )
     parser.add_argument(
         "--lgr",

@@ -213,7 +213,8 @@ def human_report_pc_scaling(qc_frame: pd.DataFrame) -> str:
 
 
 def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
-    """Construct a dataframe with needed information for swatinit qc from an Eclipse run.
+    """Construct a dataframe with needed information for swatinit qc from an
+    Eclipse run.
 
     Makes a dataframe with one row for each active cell. Information from
     satfunc and equil merged in.
