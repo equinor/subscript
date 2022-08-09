@@ -160,10 +160,11 @@ def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
 
 
 def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
-    """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will be applied
-    some meters above the contact
+    """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will
+    be applied some meters above the contact
 
-    QC-wise, these cells will not be flagged, but contribute to average PC_SCALING
+    QC-wise, these cells will not be flagged, but contribute to average
+    PC_SCALING
     """
     os.chdir(tmp_path)
     model = PillarModel(
@@ -202,8 +203,8 @@ def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
 
 
 def test_accepted_swatinit_far_above_contact(simulator, tmp_path):
-    """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will be applied
-    far above the contact
+    """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will
+    be applied far above the contact
     """
     os.chdir(tmp_path)
     model = PillarModel(
