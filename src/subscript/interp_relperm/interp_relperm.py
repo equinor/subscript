@@ -309,22 +309,14 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
         wo_dframe = dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
         go_dframe = dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
 
-    wog.wateroil.add_fromtable(
-        wo_dframe,
-        # For pyscal <= 0.7.7:
-        swcolname="SW",
-        krwcolname="KRW",
-        krowcolname="KROW",
-        pccolname="PCOW",
-    )
-    wog.gasoil.add_fromtable(
-        go_dframe,
-        # For pyscal <= 0.7.7:
-        sgcolname="SG",
-        krgcolname="KRG",
-        krogcolname="KROG",
-        pccolname="PCOG",
-    )
+    wog.wateroil.add_fromtable(wo_dframe)
+    wog.gasoil.add_fromtable(go_dframe)
+
+    # socr can for floating point reasons become estimated to be larger than
+    # sorw, which means we are in an oil paleo zone setting. This is not
+    # supported by interp_relperm. Reset the property to ensure interpolation
+    # is not affected:
+    wog.wateroil.socr = wog.wateroil.sorw
 
     # If sgro > 0, it is a gas condensate object, which cannot be
     # mixed with non-gas condensate (during interpolation). Avoid pitfalls
@@ -549,10 +541,9 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
             )
         )
 
-    if cfg_suite.snapshot.family == 1:
-        interpolants.dump_family_1(cfg_suite.snapshot.result_file)
-    else:
-        interpolants.dump_family_2(cfg_suite.snapshot.result_file)
+    Path(cfg_suite.snapshot.result_file).write_text(
+        interpolants.build_eclipse_data(cfg_suite.snapshot.family), encoding="utf-8"
+    )
 
     logger.info(
         "Done; interpolated relperm curves written to file: %s",
