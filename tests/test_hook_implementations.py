@@ -3,7 +3,7 @@ from os import path
 from pathlib import Path
 
 import pytest
-import rstcheck
+import rstcheck_core.checker
 from ert.shared.plugins.plugin_manager import ErtPluginManager
 
 import subscript.hook_implementations.jobs
@@ -97,7 +97,7 @@ def test_hook_implementations_job_docs():
     for job_name in installable_jobs.keys():
         desc = docs[job_name]["description"]
         assert desc != ""
-        assert not list(rstcheck.check(desc))
+        assert not list(rstcheck_core.checker.check_source(desc))
         category = docs[job_name]["category"]
         assert category != "other"
         assert category.split(".")[0] in ACCEPTED_JOB_CATEGORIES
