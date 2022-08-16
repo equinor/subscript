@@ -2,8 +2,8 @@ import importlib
 import os
 from typing import Any, Optional
 
-from ert_shared.plugins.plugin_manager import hook_implementation
-from ert_shared.plugins.plugin_response import plugin_response
+from ert.shared.plugins.plugin_manager import hook_implementation
+from ert.shared.plugins.plugin_response import plugin_response
 from pkg_resources import resource_filename
 
 # pylint: disable=no-value-for-parameter
