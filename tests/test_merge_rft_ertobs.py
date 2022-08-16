@@ -19,7 +19,7 @@ from subscript.merge_rft_ertobs.merge_rft_ertobs import (
 
 try:
     # pylint: disable=unused-import
-    import ert_shared  # noqa
+    import ert.shared  # noqa
 
     HAVE_ERT = True
 except ImportError:

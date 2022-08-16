@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 import rstcheck
-from ert_shared.plugins.plugin_manager import ErtPluginManager
+from ert.shared.plugins.plugin_manager import ErtPluginManager
 
 import subscript.hook_implementations.jobs
 

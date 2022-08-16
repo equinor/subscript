@@ -12,7 +12,7 @@ from subscript.csv_stack import csv_stack
 
 try:
     # pylint: disable=unused-import
-    import ert_shared  # noqa
+    import ert.shared  # noqa
 
     HAVE_ERT = True
 except ImportError:

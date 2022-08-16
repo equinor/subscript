@@ -12,7 +12,7 @@ RI_DEV = "/project/res/x86_64_RH_7/share/resinsight/jenkins_dev/ResInsight"
 
 try:
     # pylint: disable=unused-import
-    import ert_shared  # noqa
+    import ert.shared  # noqa
 
     HAVE_ERT = True
 except ImportError:

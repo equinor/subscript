@@ -10,7 +10,7 @@ from subscript.csv_merge import csv_merge
 
 try:
     # pylint: disable=unused-import
-    import ert_shared  # noqa
+    import ert.shared  # noqa
 
     HAVE_ERT = True
 except ImportError:
