@@ -8,8 +8,8 @@ import sys
 from typing import Dict, List
 
 import pandas as pd
+from ert import ErtScript
 from ert.shared.plugins.plugin_manager import hook_implementation  # type: ignore
-from res.job_queue import ErtScript  # type: ignore
 
 from subscript import __version__, getLogger
 from subscript.eclcompress.eclcompress import glob_patterns
