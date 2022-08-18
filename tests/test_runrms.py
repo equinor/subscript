@@ -276,7 +276,7 @@ PATH_PREFIX = os.environ["PATH_PREFIX"]
 if PATH.split(":")[0] != PATH_PREFIX:
     errors.append(f"PATH_PREFIX ({PATH_PREFIX}), was not prepended to PATH ({PATH})")
 if PATH_PREFIX != "/prog/res/roxapi/bin":
-    errors.append(f"The path for run_external is not corrent {PATH_PREFIX}")
+    errors.append(f"The path for run_external is not correct {PATH_PREFIX}")
 
 if "KOMODO_RELEASE" in os.environ:
     errors.append(f"komodo release set: {os.environ['KOMODO_RELEASE']}")
