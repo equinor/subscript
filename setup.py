@@ -65,7 +65,7 @@ REQUIREMENTS = [
     "fmu-tools",
     "matplotlib",
     "numpy",
-    "opm==2021.10",
+    "opm>=2021.10",
     "packaging",
     "pandas",
     "protobuf",

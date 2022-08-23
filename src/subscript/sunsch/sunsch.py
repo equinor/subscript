@@ -416,8 +416,15 @@ def sch_file_nonempty(filename: str) -> bool:
         tmpschedule = TimeVector(datetime.date(1900, 1, 1))
         tmpschedule.load(filename)
     except IndexError as err:
+        if (
+            "vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)"
+            in str(err)
+        ):
+            # This is what we get from opm>=2022.04 for empty files.
+            return False
+
         if "Keyword index 0 is out of range" in str(err):
-            # This is what we get from opm for empty files.
+            # This is what we get from opm<2022.04 for empty files.
             return False
 
         # Try to workaround a non-explanatory error from opm-common:
