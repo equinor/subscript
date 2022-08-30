@@ -387,14 +387,9 @@ def test_ert_workflow_hook(verbose, tmp_path):
     assert Path("ri-obs.csv").exists()
 
     # Verify that we can control whether INFO messages from fmuobs through ERT
-    # is emitted:
-    ert_log_filename = "ert-log"  # Beware, this filename is controlled by ERT
-    for file in os.listdir():
-        if file.startswith(ert_log_filename):
-            ert_log_filename = file
-            break
-    assert Path(ert_log_filename).exists()
-    ert_output = Path(ert_log_filename).read_text(encoding="utf8")
+    # is emitted.
+    log_file = next(Path("logs").glob("ert-log*txt"))
+    ert_output = log_file.read_text(encoding="utf-8")
 
     # This is slightly tricky, as ERT has its own logging handler which is able
     # to pick up the log messages, but whose level cannot be controlled by
