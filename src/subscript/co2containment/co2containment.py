@@ -47,7 +47,7 @@ def _co2mass_from_unrst(grid, poro, unrst_file):
     )
     for d in props.dates:
         for p in prop_names:
-            prop_names[p].append(_fetch_prop(props, p, d))
+            prop_names[p].append(_fetch_prop(props, p.upper(), d))
     return dict(zip(props.dates, calculate_co2_mass(grid, poro, **prop_names)))
 
 
@@ -71,7 +71,7 @@ def _co2mass_from_non_unrst(grid, poro, sat_glob_expr):
 def _fetch_prop(grid_props: xtgeo.GridProperties, name, date):
     search = [p for p in grid_props.props if p.date == date and p.name.startswith(name)]
     assert len(search) == 1
-    return search[0].values
+    return search[0]
 
 
 def _read_polygon(polygon_file):
