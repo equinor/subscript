@@ -17,7 +17,7 @@ def calculate_out_of_bounds_co2(grid_file, unrst_file, init_file, polygon_file):
     co2_masses = _extract_co2_mass(grid, unrst_file, init_file)
     poly = _read_polygon(polygon_file)
     contained_mass = calculate_co2_containment(poly, grid, co2_masses.values())
-    return _construct_containment_table(co2_masses.keys(), contained_mass)
+    return _construct_containment_table(co2_masses.keys(), contained_mass, poly)
 
 
 def _extract_co2_mass(grid, unrst_file, init_file) -> Dict[str, xtgeo.GridProperty]:
@@ -82,12 +82,15 @@ def _read_polygon(polygon_file):
 def _construct_containment_table(
     dates: Iterable[str],
     contained_mass: Iterable[Tuple[float, float]],
+    geometry: shapely.geometry.base.BaseGeometry,
 ):
     records = [
-        (d, out, within)
+        (d, out, within, geometry.wkt)
         for d, (out, within) in zip(dates, contained_mass)
     ]
-    return pandas.DataFrame.from_records(records, columns=("date", "co2_inside", "co2_outside"))
+    return pandas.DataFrame.from_records(
+        records, columns=("date", "co2_inside", "co2_outside", "geometry")
+    )
 
 
 def make_parser():
