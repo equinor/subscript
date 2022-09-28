@@ -28,39 +28,45 @@ Script to run a rms project from command line, which will in turn use the
 'rms...' command OR will look at /prog/roxar/site. Note that not all
 options valid for the base script 'rms' should be covered.
 
-  * It should understand current RMS version from project and launch correct
-    RMS executable
-  * It should be able to run test versions of RMS
-  * Set the correct Equinor valid PYTHONPATH.
-  * Set company wide plugin path
+* It should understand current RMS version from project and launch correct
+  RMS executable
+* It should be able to run test versions of RMS
+* Set the correct Equinor valid PYTHONPATH.
+* Set company wide plugin path
 
 Example of usage:
 
-    runrms newreek.rms10.1.3 (if new project: warn and just start rms default)
-    runrms reek.rms10.1.3  (automatically detect version from .master)
-    runrms -project reek.10.1.3  (alternative to previous, but using -project as in
-        former rms command)
-    runrms reek.rms10.1.3 -v 11.0.1 (force version 11.0.1)
+* runrms newreek.rms10.1.3 (if new project: warn and just start rms default)
+* runrms reek.rms10.1.3  (automatically detect version from .master)
+* runrms -project reek.10.1.3 (alternative to previous, but using -project as in
+  former rms command)
+* runrms reek.rms10.1.3 -v 11.0.1 (force version 11.0.1)
 
 Notes:
 
-    (1) The 'runrms' will be aliased to 'rms' in Equinor after summer 2022. When that
-        implemented, running the original 'rms' script can still be done with (where
-        the '$' means terminal prompt):
-          $ /prog/roxar/rms/rms.
+1. The 'runrms' will be aliased to 'rms' in Equinor after summer 2022. When that
+   implemented, running the original 'rms' script can still be done with (where
+   the '$' means terminal prompt):
 
-    (2) For backward compatibility a project name can be prepended with -project.
-        Hence, to specify a project use either:
-          $ runrms myproject.rms13.0.3
-        which is preferred, or
-          $ runrms -project myproject.rms13.0.3
-        or
-          $ runrms --project myproject.rms13.0.3
-        If both are used, e.g.:
-          $ runrms foo.rms13.0.3 -project bar.rms12.1.2
-        then the alternative without -project will 'win', here 'foo.rms13.0.3' and
-        a warning will be issued.
+     $ /prog/roxar/rms/rms.
 
+2. For backward compatibility a project name can be prepended with -project.
+   Hence, to specify a project use either:
+   $ runrms myproject.rms13.0.3
+   which is preferred, or
+
+     $ runrms -project myproject.rms13.0.3
+
+   or
+
+     $ runrms --project myproject.rms13.0.3
+
+   If both are used, e.g.:
+
+     $ runrms foo.rms13.0.3 -project bar.rms12.1.2
+
+   then the alternative without -project will 'win', here 'foo.rms13.0.3' and
+   a warning will be issued.
 """
 
 try:
