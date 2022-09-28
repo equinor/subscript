@@ -532,6 +532,7 @@ class CopyFMU:
 
         'keepfolder' is a flag that determines if a folder shall be kept although
         empty
+
           - 0 to delete all folders that are empty after copy/filtering
           - 1 to keep all folders, even the empty ones
           - 2 to keep all folders except those in dirfilterpattern
