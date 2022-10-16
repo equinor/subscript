@@ -4,7 +4,6 @@ import numpy as np
 import xtgeo
 from shapely.geometry import Polygon, MultiPolygon
 
-
 DEFAULT_CO2_MOLAR_MASS = 44
 DEFAULT_WATER_MOLAR_MASS = 18
 
@@ -52,7 +51,7 @@ def calculate_co2_mass(
 def _calculate_containment(
     grid: xtgeo.Grid,
     poly: Union[Polygon, MultiPolygon]
-):
+) -> np.ndarray:
     xyz = grid.get_xyz()
     xp = xyz[0].values1d[grid.actnum_indices]
     yp = xyz[1].values1d[grid.actnum_indices]
@@ -64,10 +63,9 @@ def _calculate_containment(
         return pygeos.contains(poly, points)
     except ImportError:
         import shapely.geometry as sg
-        import tqdm
         return np.array([
             poly.contains(sg.Point(x, y))
-            for x, y in tqdm.tqdm(zip(xp, yp), desc="Calculating containment")
+            for x, y in zip(xp, yp)
         ])
 
 
@@ -80,9 +78,11 @@ def _effective_density(
     ymfg: xtgeo.GridProperty,
     co2_molar_mass: float,
     water_molar_mass: float,
-):
-    w_gas = sgas.values * dgas.values * _mole_to_mass_fraction(ymfg.values, co2_molar_mass, water_molar_mass)
-    w_aqu = swat.values * dwat.values * _mole_to_mass_fraction(amfg.values, co2_molar_mass, water_molar_mass)
+) -> xtgeo.GridProperty:
+    gas_mass_frac = _mole_to_mass_fraction(ymfg.values, co2_molar_mass, water_molar_mass)
+    aqu_mass_frac = _mole_to_mass_fraction(amfg.values, co2_molar_mass, water_molar_mass)
+    w_gas = sgas.values * dgas.values * gas_mass_frac
+    w_aqu = swat.values * dwat.values * aqu_mass_frac
     e_dens = swat.copy("effective-density")
     e_dens.values = w_gas + w_aqu
     return e_dens
