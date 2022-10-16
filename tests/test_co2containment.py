@@ -1,7 +1,8 @@
-import scipy.ndimage
+from pathlib import Path
+
 import numpy as np
-import numpy.testing as nptest
 import pytest
+import scipy.ndimage
 import shapely.geometry
 import xtgeo
 
@@ -57,6 +58,12 @@ def _calc_and_compare(poly, grid, masses):
     )
 
 
+def _copy_prop_and_set_value(orig_prop, new_name, value):
+    prop = orig_prop.copy(new_name)
+    prop.values1d[~prop.values1d.mask] = value
+    return prop
+
+
 def test_single_poly_co2_containment(dummy_co2_grid, dummy_co2_masses):
     assert len(dummy_co2_masses) == 10
     poly = shapely.geometry.Polygon([
@@ -87,3 +94,36 @@ def test_multi_poly_co2_containment(dummy_co2_grid, dummy_co2_masses):
         ]),
     ])
     _calc_and_compare(poly, dummy_co2_grid, dummy_co2_masses)
+
+
+def test_reek_grid():
+    reek_gridfile = (
+        Path(__file__).absolute().parent
+        / "data"
+        / "reek"
+        / "eclipse"
+        / "model"
+        / "2_R001_REEK-0.EGRID"
+    )
+    reek_poly = shapely.geometry.Polygon([
+        [461339, 5932377],
+        [461339 + 1000, 5932377],
+        [461339 + 1000, 5932377 + 1000],
+        [461339, 5932377 + 1000],
+    ])
+    grid = xtgeo.grid_from_file(reek_gridfile)
+    poro = xtgeo.gridproperty_from_file(
+        reek_gridfile.with_suffix(".INIT"), name="PORO", grid=grid
+    )
+    mass = calculate_co2_mass(
+        grid,
+        _copy_prop_and_set_value(poro, "poro", 0.1),
+        [_copy_prop_and_set_value(poro, "swat", 0.1)],
+        [_copy_prop_and_set_value(poro, "dwat", 1000.0)],
+        [_copy_prop_and_set_value(poro, "sgas", 0.1)],
+        [_copy_prop_and_set_value(poro, "dgas", 100.0)],
+        [_copy_prop_and_set_value(poro, "amfg", 0.1)],
+        [_copy_prop_and_set_value(poro, "ymfg", 0.1)],
+    )
+    table = calculate_co2_containment(reek_poly, grid, mass)
+    assert table[0][1] == pytest.approx(89498504)
