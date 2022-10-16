@@ -1,41 +1,45 @@
+import argparse
+import pathlib
+import sys
 from typing import Dict, Iterable, Tuple
 
+import numpy as np
 import pandas
 import shapely.geometry
 import xtgeo
-import argparse
-import glob
-import sys
-import pathlib
-import numpy as np
 
 from .calculate import calculate_co2_mass, calculate_co2_containment
 
 
-def calculate_out_of_bounds_co2(grid_file, unrst_file, init_file, polygon_file):
+def calculate_out_of_bounds_co2(
+    grid_file: str,
+    unrst_file: str,
+    init_file: str,
+    polygon_file: str,
+    poro_keyword: str,
+) -> pandas.DataFrame:
     grid = xtgeo.grid_from_file(grid_file)
-    co2_masses = _extract_co2_mass(grid, unrst_file, init_file)
+    co2_masses = _extract_co2_mass(grid, unrst_file, init_file, poro_keyword)
     poly = _read_polygon(polygon_file)
     contained_mass = calculate_co2_containment(poly, grid, co2_masses.values())
     return _construct_containment_table(co2_masses.keys(), contained_mass, poly)
 
 
-def _extract_co2_mass(grid, unrst_file, init_file) -> Dict[str, xtgeo.GridProperty]:
-    poro = _extract_poro(grid, init_file)
-    if unrst_file.lower().endswith('.unrst'):
-        return _co2mass_from_unrst(grid, poro, unrst_file)
-    else:
-        return _co2mass_from_non_unrst(grid, poro, unrst_file)
+def _extract_co2_mass(
+    grid: xtgeo.Grid,
+    unrst_file: str,
+    init_file: str,
+    poro_keyword: str,
+) -> Dict[str, xtgeo.GridProperty]:
+    poro = xtgeo.gridproperty_from_file(
+        init_file, grid=grid, name=poro_keyword, date="first"
+    )
+    return _co2mass_from_unrst(grid, poro, unrst_file)
 
 
-def _extract_poro(grid, init_file):
-    try:
-        return xtgeo.gridproperty_from_file(init_file, grid=grid, name="PORO", date="first")
-    except (TypeError, ValueError):
-        return xtgeo.gridproperty_from_file(init_file)
-
-
-def _co2mass_from_unrst(grid, poro, unrst_file):
+def _co2mass_from_unrst(
+    grid: xtgeo.Grid, poro: xtgeo.GridProperty, unrst_file: str
+) -> Dict[str, xtgeo.GridProperty]:
     prop_names = dict.fromkeys(["sgas", "swat", "dgas", "dwat", "amfg", "ymfg"])
     for p in prop_names:
         prop_names[p] = []
@@ -51,30 +55,17 @@ def _co2mass_from_unrst(grid, poro, unrst_file):
     return dict(zip(props.dates, calculate_co2_mass(grid, poro, **prop_names)))
 
 
-def _co2mass_from_non_unrst(grid, poro, sat_glob_expr):
-    sats = [
-        xtgeo.gridproperty_from_file(f, grid=grid, name="SGAS")
-        for f in glob.glob(sat_glob_expr)
-    ]
-    masses = {}
-    vols = grid.get_bulk_volume().values * poro.values
-    for s in sats:
-        date = s.date
-        if date is None and "--" in s.filesrc.stem:
-            date = s.filesrc.stem.split('--')[1]
-        assert date is not None
-        masses[date] = s.copy("mass")
-        masses[date].values *= vols
-    return masses
-
-
-def _fetch_prop(grid_props: xtgeo.GridProperties, name, date):
+def _fetch_prop(
+    grid_props: xtgeo.GridProperties,
+    name: str,
+    date: str,
+) -> xtgeo.GridProperty:
     search = [p for p in grid_props.props if p.date == date and p.name.startswith(name)]
     assert len(search) == 1
     return search[0]
 
 
-def _read_polygon(polygon_file):
+def _read_polygon(polygon_file: str) -> shapely.geometry.Polygon:
     poly_xy = np.genfromtxt(polygon_file, skip_header=1, delimiter=",")[:, :2]
     return shapely.geometry.Polygon(poly_xy)
 
@@ -83,7 +74,7 @@ def _construct_containment_table(
     dates: Iterable[str],
     contained_mass: Iterable[Tuple[float, float]],
     geometry: shapely.geometry.base.BaseGeometry,
-):
+) -> pandas.DataFrame:
     records = [
         (d, out, within, geometry.wkt)
         for d, (out, within) in zip(dates, contained_mass)
@@ -101,7 +92,7 @@ def make_parser():
     parser.add_argument("outfile", help="Output filename")
     parser.add_argument("--unrst", help="Path to UNRST file. Will assume same base name as grid if not provided", default=None)
     parser.add_argument("--init", help="Path to INIT file. Will assume same base name as grid if not provided", default=None)
-    # parser.add_argument("--zone", help="Path to zone property file", default=None)
+    parser.add_argument("--poro", help="Name of porosity parameter to look for in the INIT file", default="PORO")
     return parser
 
 
@@ -120,7 +111,8 @@ def main(arguments):
         arguments.grid,
         arguments.unrst,
         arguments.init,
-        arguments.polygon
+        arguments.polygon,
+        arguments.poro,
     )
     df.to_csv(arguments.outfile, index=False)
 

@@ -34,8 +34,6 @@ def calculate_co2_mass(
     co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,
     water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS,
 ) -> List[xtgeo.GridProperty]:
-    # TODO: implementation may be inefficient. May want to use values1d instead of values.
-    #  However, reading data may be the actual bottle-neck
     densities = [
         _effective_density(
             _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
