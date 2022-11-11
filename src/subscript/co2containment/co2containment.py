@@ -8,7 +8,7 @@ import pandas
 import shapely.geometry
 import xtgeo
 
-from .calculate import calculate_co2_mass, calculate_co2_containment
+from .calculate import calculate_co2_mass, calculate_co2_containment, SourceData
 
 
 def calculate_out_of_bounds_co2(
@@ -18,20 +18,11 @@ def calculate_out_of_bounds_co2(
     polygon_file: str,
     poro_keyword: str,
 ) -> pandas.DataFrame:
-    grid = xtgeo.grid_from_file(grid_file)
-    props = _fetch_properties(grid, unrst_file)
-    poro = xtgeo.gridproperty_from_file(
-        init_file, grid=grid, name=poro_keyword, date="first"
-    )
-    _deactivate_gas_less_cells(grid, props["sgas"], props["amfg"])
-    co2_masses = _calculate_co2_mass(
-        grid,
-        props,
-        poro,
-    )
+    source_data = _extract_source_data(grid_file, unrst_file, init_file, poro_keyword)
+    co2_masses = calculate_co2_mass(source_data)
     poly = _read_polygon(polygon_file)
-    contained_mass = calculate_co2_containment(poly, grid, co2_masses.values())
-    return _construct_containment_table(co2_masses.keys(), contained_mass, poly)
+    contained_mass = calculate_co2_containment(source_data.x, source_data.y, co2_masses.values(), poly)
+    return _construct_containment_table(list(co2_masses.keys()), contained_mass, poly)
 
 
 def _fetch_properties(
@@ -46,10 +37,35 @@ def _fetch_properties(
         names=[n.upper() for n in prop_names],
         dates="all",
     )
-    for d in props.dates:
+    for d in sorted(set(props.dates)):
         for p in prop_names:
             prop_names[p].append(_fetch_prop(props, p.upper(), d))
     return prop_names
+
+
+def _extract_source_data(grid_file, unrst_file, init_file, poro_keyword) -> SourceData:
+    grid = xtgeo.grid_from_file(grid_file)
+    props = _fetch_properties(grid, unrst_file)
+    poro = xtgeo.gridproperty_from_file(
+        init_file, grid=grid, name=poro_keyword, date="first"
+    )
+    _deactivate_gas_less_cells(grid, props["sgas"], props["amfg"])
+    xyz = grid.get_xyz()
+    vols = grid.get_bulk_volume()
+    active = grid.actnum_array.astype(bool)
+    sd = SourceData(
+        xyz[0].values.data[active],
+        xyz[1].values.data[active],
+        poro.values.data[active],
+        vols.values.data[active],
+        [p.date for p in props["sgas"]],
+        **{
+            p: [_v.values.data[active] for _v in v]
+            for p, v in props.items()
+        }
+    )
+    return sd
+
 
 
 def _deactivate_gas_less_cells(
@@ -63,17 +79,6 @@ def _deactivate_gas_less_cells(
     actnum = grid.get_actnum().copy()
     actnum.values[grid.actnum_array.astype(bool)] = (~gas_less).astype(int)
     grid.set_actnum(actnum)
-
-
-def _calculate_co2_mass(
-    grid: xtgeo.Grid,
-    props: Dict[str, List[xtgeo.GridProperty]],
-    poro: xtgeo.GridProperty,
-) -> Dict[str, xtgeo.GridProperty]:
-    mass = calculate_co2_mass(grid, poro, **props)
-    return {  # TODO: return type perhaps a bit odd?
-        m.date: m for m in mass
-    }
 
 
 def _fetch_prop(

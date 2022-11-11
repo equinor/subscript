@@ -1,97 +1,100 @@
-from typing import List, Union, Tuple, Iterable
+from dataclasses import dataclass
+from typing import Dict, List, Union, Tuple
 
 import numpy as np
-import xtgeo
 from shapely.geometry import Polygon, MultiPolygon
 
 DEFAULT_CO2_MOLAR_MASS = 44
 DEFAULT_WATER_MOLAR_MASS = 18
 
 
+@dataclass
+class SourceData:
+    x: np.ndarray
+    y: np.ndarray
+    poro: np.ndarray
+    volumes: np.ndarray
+    dates: List[str]
+    swat: List[np.ndarray]
+    dwat: List[np.ndarray]
+    sgas: List[np.ndarray]
+    dgas: List[np.ndarray]
+    amfg: List[np.ndarray]
+    ymfg: List[np.ndarray]
+
+
 def calculate_co2_containment(
+    x: np.ndarray,
+    y: np.ndarray,
+    weights: List[np.ndarray],
     polygon: Union[Polygon, MultiPolygon],
-    grid: xtgeo.Grid,
-    co2_mass: Iterable[xtgeo.GridProperty],
 ) -> List[Tuple[float, float]]:
-    outside = ~_calculate_containment(grid, polygon)
-    co2_mass_1d = [m.values1d[grid.actnum_indices] for m in co2_mass]
+    outside = ~_calculate_containment(x, y, polygon)
     return [
         (m[outside].sum(), m[~outside].sum())
-        for m in co2_mass_1d
+        for m in weights
     ]
 
 
 def calculate_co2_mass(
-    grid: xtgeo.Grid,
-    poro: xtgeo.GridProperty,
-    swat: List[xtgeo.GridProperty],
-    dwat: List[xtgeo.GridProperty],
-    sgas: List[xtgeo.GridProperty],
-    dgas: List[xtgeo.GridProperty],
-    amfg: List[xtgeo.GridProperty],
-    ymfg: List[xtgeo.GridProperty],
+    source_data: SourceData,
     co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,
     water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS,
-) -> List[xtgeo.GridProperty]:
-    weights = [
-        _effective_density(
-            grid, _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
+) -> Dict[str, np.ndarray]:
+    weights = {
+        d: _effective_density(
+            _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
         )
-        for (_swat, _dwat, _sgas, _dgas, _amfg, _ymfg)
-        in zip(swat, dwat, sgas, dgas, amfg, ymfg)
-    ]
-    vols = grid.get_bulk_volume()
-    active = grid.actnum_array.astype(bool)
-    eff_vols = vols.values[active] * poro.values[active]
-    for w in weights:
-        w.values[active] *= eff_vols
-        w.name = "mass"
+        for (d, _swat, _dwat, _sgas, _dgas, _amfg, _ymfg)
+        in zip(
+            source_data.dates,
+            source_data.swat,
+            source_data.dwat,
+            source_data.sgas,
+            source_data.dgas,
+            source_data.amfg,
+            source_data.ymfg,
+        )
+    }
+    eff_vols = source_data.volumes * source_data.poro
+    for w in weights.values():
+        w *= eff_vols
     return weights
 
 
 def _calculate_containment(
-    grid: xtgeo.Grid,
+    x: np.ndarray,
+    y: np.ndarray,
     poly: Union[Polygon, MultiPolygon]
 ) -> np.ndarray:
-    xyz = grid.get_xyz()
-    xp = xyz[0].values1d[grid.actnum_indices]
-    yp = xyz[1].values1d[grid.actnum_indices]
     try:
         import pygeos
-        # raise ImportError
-        print("Calculating containment using pygeos")
-        points = pygeos.points(xp, yp)
+        points = pygeos.points(x, y)
         poly = pygeos.from_shapely(poly)
         return pygeos.contains(poly, points)
     except ImportError:
         import shapely.geometry as sg
-        import tqdm
         return np.array([
-            poly.contains(sg.Point(x, y))
-            for x, y in tqdm(zip(xp, yp), desc="Calculating containment using shapely", totel=len(xp))
+            poly.contains(sg.Point(_x, _y))
+            for _x, _y in zip(x, y)
         ])
 
 
 def _effective_density(
-    grid: xtgeo.Grid,
-    swat: xtgeo.GridProperty,
-    dwat: xtgeo.GridProperty,
-    sgas: xtgeo.GridProperty,
-    dgas: xtgeo.GridProperty,
-    amfg: xtgeo.GridProperty,
-    ymfg: xtgeo.GridProperty,
+    swat: np.ndarray,
+    dwat: np.ndarray,
+    sgas: np.ndarray,
+    dgas: np.ndarray,
+    amfg: np.ndarray,
+    ymfg: np.ndarray,
     co2_molar_mass: float,
     water_molar_mass: float,
-) -> xtgeo.GridProperty:
-    active = grid.actnum_array.astype(bool)
-    gas_mass_frac = _mole_to_mass_fraction(ymfg.values[active], co2_molar_mass, water_molar_mass)
-    aqu_mass_frac = _mole_to_mass_fraction(amfg.values[active], co2_molar_mass, water_molar_mass)
-    w_gas = sgas.values[active] * dgas.values[active] * gas_mass_frac
-    w_aqu = swat.values[active] * dwat.values[active] * aqu_mass_frac
-    e_dens = swat.copy("effective-density")
-    e_dens.values[~active] = 0.0
-    e_dens.values[active] = w_gas + w_aqu
-    return e_dens
+) -> np.ndarray:
+    gas_mass_frac = _mole_to_mass_fraction(ymfg, co2_molar_mass, water_molar_mass)
+    aqu_mass_frac = _mole_to_mass_fraction(amfg, co2_molar_mass, water_molar_mass)
+    w_gas = sgas * dgas * gas_mass_frac
+    w_aqu = swat * dwat * aqu_mass_frac
+    return w_gas + w_aqu
 
 
 def _mole_to_mass_fraction(x, m_co2, m_h20):
