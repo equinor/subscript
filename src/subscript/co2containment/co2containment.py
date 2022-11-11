@@ -1,7 +1,7 @@
 import argparse
 import pathlib
 import sys
-from typing import Dict, Iterable, Tuple
+from typing import Dict, Iterable, List, Tuple
 
 import numpy as np
 import pandas
@@ -19,27 +19,24 @@ def calculate_out_of_bounds_co2(
     poro_keyword: str,
 ) -> pandas.DataFrame:
     grid = xtgeo.grid_from_file(grid_file)
-    co2_masses = _extract_co2_mass(grid, unrst_file, init_file, poro_keyword)
+    props = _fetch_properties(grid, unrst_file)
+    poro = xtgeo.gridproperty_from_file(
+        init_file, grid=grid, name=poro_keyword, date="first"
+    )
+    _deactivate_gas_less_cells(grid, props["sgas"], props["amfg"])
+    co2_masses = _calculate_co2_mass(
+        grid,
+        props,
+        poro,
+    )
     poly = _read_polygon(polygon_file)
     contained_mass = calculate_co2_containment(poly, grid, co2_masses.values())
     return _construct_containment_table(co2_masses.keys(), contained_mass, poly)
 
 
-def _extract_co2_mass(
-    grid: xtgeo.Grid,
-    unrst_file: str,
-    init_file: str,
-    poro_keyword: str,
-) -> Dict[str, xtgeo.GridProperty]:
-    poro = xtgeo.gridproperty_from_file(
-        init_file, grid=grid, name=poro_keyword, date="first"
-    )
-    return _co2mass_from_unrst(grid, poro, unrst_file)
-
-
-def _co2mass_from_unrst(
-    grid: xtgeo.Grid, poro: xtgeo.GridProperty, unrst_file: str
-) -> Dict[str, xtgeo.GridProperty]:
+def _fetch_properties(
+    grid: xtgeo.Grid, unrst_file: str
+) -> Dict[str, List[xtgeo.GridProperty]]:
     prop_names = dict.fromkeys(["sgas", "swat", "dgas", "dwat", "amfg", "ymfg"])
     for p in prop_names:
         prop_names[p] = []
@@ -52,7 +49,31 @@ def _co2mass_from_unrst(
     for d in props.dates:
         for p in prop_names:
             prop_names[p].append(_fetch_prop(props, p.upper(), d))
-    return dict(zip(props.dates, calculate_co2_mass(grid, poro, **prop_names)))
+    return prop_names
+
+
+def _deactivate_gas_less_cells(
+    grid: xtgeo.Grid,
+    sgases: List[xtgeo.GridProperty],
+    amfgs: List[xtgeo.GridProperty]
+):
+    active = grid.actnum_array.astype(bool)
+    gas_less = np.logical_and.reduce([np.abs(s.values[active]) < 1e-16 for s in sgases])
+    gas_less &= np.logical_and.reduce([np.abs(a.values[active]) < 1e-16 for a in amfgs])
+    actnum = grid.get_actnum().copy()
+    actnum.values[grid.actnum_array.astype(bool)] = (~gas_less).astype(int)
+    grid.set_actnum(actnum)
+
+
+def _calculate_co2_mass(
+    grid: xtgeo.Grid,
+    props: Dict[str, List[xtgeo.GridProperty]],
+    poro: xtgeo.GridProperty,
+) -> Dict[str, xtgeo.GridProperty]:
+    mass = calculate_co2_mass(grid, poro, **props)
+    return {  # TODO: return type perhaps a bit odd?
+        m.date: m for m in mass
+    }
 
 
 def _fetch_prop(
@@ -118,4 +139,4 @@ def main(arguments):
 
 
 if __name__ == '__main__':
-    main(sys.argv[:])
+    main(sys.argv[1:])
