@@ -9,19 +9,24 @@ import xtgeo
 from subscript.co2containment.calculate import (
     calculate_co2_containment,
     calculate_co2_mass,
+    SourceData,
 )
 
 
-def _random_prop(pname, dims, rng, low, high):
+def _random_prop(dims, rng, low, high):
     white = rng.normal(size=dims)
     smooth = scipy.ndimage.gaussian_filter(white, max(dims) / 10)
     values = smooth - np.min(smooth)
     values /= np.max(values)
     values *= high
     values += low
-    return xtgeo.GridProperty(
-        ncol=dims[0], nrow=dims[1], nlay=dims[2], name=pname, values=values
-    )
+    return values.flatten()
+
+
+def _xy_and_volume(grid: xtgeo.Grid):
+    xyz = grid.get_xyz()
+    vol = grid.get_bulk_volume().values1d.compressed()
+    return xyz[0].values1d.compressed(), xyz[1].values1d.compressed(), vol
 
 
 @pytest.fixture
@@ -35,33 +40,32 @@ def dummy_co2_masses(dummy_co2_grid):
     dims = dummy_co2_grid.dimensions
     nt = 10
     rng = np.random.RandomState(123)
-    poro = _random_prop("poro", dims, rng, 0.1, 0.3)
-    swat = [_random_prop("swat", dims, rng, 0.05, 0.6) for _ in range(nt)]
-    dwat = [_random_prop("dwat", dims, rng, 950, 1050) for _ in range(nt)]
-    dgas = [_random_prop("dgas", dims, rng, 700, 850) for _ in range(nt)]
-    sgas = [_random_prop("sgas", dims, rng, 0.05, 0.6) for _ in range(nt)]
-    amfg = [_random_prop("amfg", dims, rng, 0.001, 0.01) for _ in range(nt)]
-    ymfg = [_random_prop("ymfg", dims, rng, 0.001, 0.01) for _ in range(nt)]
-    return calculate_co2_mass(dummy_co2_grid, poro, swat, dwat, sgas, dgas, amfg, ymfg)
+    poro = _random_prop(dims, rng, 0.1, 0.3)
+    swat = [_random_prop(dims, rng, 0.05, 0.6) for _ in range(nt)]
+    dwat = [_random_prop(dims, rng, 950, 1050) for _ in range(nt)]
+    dgas = [_random_prop(dims, rng, 700, 850) for _ in range(nt)]
+    sgas = [_random_prop(dims, rng, 0.05, 0.6) for _ in range(nt)]
+    amfg = [_random_prop(dims, rng, 0.001, 0.01) for _ in range(nt)]
+    ymfg = [_random_prop(dims, rng, 0.001, 0.01) for _ in range(nt)]
+    x, y, vol = _xy_and_volume(dummy_co2_grid)
+    dates = [str(2020 + i) for i in range(nt)]
+    source_data = SourceData(x, y, poro, vol, dates, swat, dwat, sgas, dgas, amfg, ymfg)
+    return calculate_co2_mass(source_data)
 
 
 def _calc_and_compare(poly, grid, masses):
-    mu = np.mean([np.mean(d.values) for d in masses])
-    totals = np.array([np.sum(d.values) for d in masses])
-    containment = np.array(
-        calculate_co2_containment(poly, grid, masses)
-    )
+    masses = masses.values()  # Date information (dict keys) currently not in use
+    mu = np.mean([np.mean(d) for d in masses])
+    totals = np.array([np.sum(d) for d in masses])
+    xyz = grid.get_xyz()
+    containment = np.array(calculate_co2_containment(
+        xyz[0].values1d.compressed(), xyz[1].values1d.compressed(), masses, poly
+    ))
     assert np.allclose(containment.sum(axis=1), totals, rtol=1e-5, atol=1e-8)
     assert (
         pytest.approx(np.mean(containment[:, 1]), rel=0.10)
         == (poly.area * grid.nlay * mu)
     )
-
-
-def _copy_prop_and_set_value(orig_prop, new_name, value):
-    prop = orig_prop.copy(new_name)
-    prop.values1d[~prop.values1d.mask] = value
-    return prop
 
 
 def test_single_poly_co2_containment(dummy_co2_grid, dummy_co2_masses):
@@ -114,16 +118,23 @@ def test_reek_grid():
     grid = xtgeo.grid_from_file(reek_gridfile)
     poro = xtgeo.gridproperty_from_file(
         reek_gridfile.with_suffix(".INIT"), name="PORO", grid=grid
+    ).values1d.compressed()
+    x, y, vol = _xy_and_volume(grid)
+    source_data = SourceData(
+        x,
+        y,
+        np.ones_like(poro) * 0.1,
+        vol,
+        ["2042"],
+        [np.ones_like(poro) * 0.1],
+        [np.ones_like(poro) * 1000.0],
+        [np.ones_like(poro) * 0.1],
+        [np.ones_like(poro) * 100.0],
+        [np.ones_like(poro) * 0.1],
+        [np.ones_like(poro) * 0.1],
     )
-    mass = calculate_co2_mass(
-        grid,
-        _copy_prop_and_set_value(poro, "poro", 0.1),
-        [_copy_prop_and_set_value(poro, "swat", 0.1)],
-        [_copy_prop_and_set_value(poro, "dwat", 1000.0)],
-        [_copy_prop_and_set_value(poro, "sgas", 0.1)],
-        [_copy_prop_and_set_value(poro, "dgas", 100.0)],
-        [_copy_prop_and_set_value(poro, "amfg", 0.1)],
-        [_copy_prop_and_set_value(poro, "ymfg", 0.1)],
+    mass = calculate_co2_mass(source_data)
+    table = calculate_co2_containment(
+        source_data.x, source_data.y, [mass["2042"]], reek_poly
     )
-    table = calculate_co2_containment(reek_poly, grid, mass)
     assert table[0][1] == pytest.approx(89498504)
