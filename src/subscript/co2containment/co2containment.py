@@ -157,7 +157,7 @@ def main(arguments):
         arguments.polygon,
         arguments.poro,
     )
-    df.to_csv(arguments.outfile, index=False)
+    df.to_csv(arguments.outfile)
 
 
 if __name__ == '__main__':
