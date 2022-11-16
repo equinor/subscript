@@ -23,16 +23,61 @@ class SourceData:
     ymfg: List[np.ndarray]
 
 
+@dataclass
+class Co2WeightData:
+    date: str
+    gas_phase_kg: np.ndarray
+    aqu_phase_kg: np.ndarray
+
+    def total_weight(self) -> np.ndarray:
+        return self.aqu_phase_kg + self.gas_phase_kg
+
+
+@dataclass
+class ContainedCo2:
+    date: str
+    gas_phase_outside: float
+    gas_phase_inside: float
+    aqu_phase_outside: float
+    aqu_phase_inside: float
+
+    def total(self) -> float:
+        return (
+            self.gas_phase_inside
+            + self.gas_phase_outside
+            + self.aqu_phase_inside
+            + self.aqu_phase_outside
+        )
+
+    def gas_phase(self) -> float:
+        return self.gas_phase_inside + self.gas_phase_outside
+
+    def aqu_phase(self) -> float:
+        return self.aqu_phase_inside + self.aqu_phase_outside
+
+    def inside(self) -> float:
+        return self.gas_phase_inside + self. aqu_phase_inside
+
+    def outside(self) -> float:
+        return self.gas_phase_outside + self.aqu_phase_outside
+
+
 def calculate_co2_containment(
     x: np.ndarray,
     y: np.ndarray,
-    weights: List[np.ndarray],
+    weights: List[Co2WeightData],
     polygon: Union[Polygon, MultiPolygon],
-) -> List[Tuple[float, float]]:
+) -> List[ContainedCo2]:
     outside = ~_calculate_containment(x, y, polygon)
     return [
-        (m[outside].sum(), m[~outside].sum())
-        for m in weights
+        ContainedCo2(
+            w.date,
+            w.gas_phase_kg[outside].sum(),
+            w.gas_phase_kg[~outside].sum(),
+            w.aqu_phase_kg[outside].sum(),
+            w.aqu_phase_kg[~outside].sum(),
+        )
+        for w in weights
     ]
 
 
@@ -40,10 +85,13 @@ def calculate_co2_mass(
     source_data: SourceData,
     co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,
     water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS,
-) -> Dict[str, np.ndarray]:
-    weights = {
-        d: _effective_density(
-            _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
+) -> List[Co2WeightData]:
+    eff_dens = [
+        (
+            d,
+            _effective_densities(
+                _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
+            )
         )
         for (d, _swat, _dwat, _sgas, _dgas, _amfg, _ymfg)
         in zip(
@@ -55,10 +103,12 @@ def calculate_co2_mass(
             source_data.amfg,
             source_data.ymfg,
         )
-    }
+    ]
     eff_vols = source_data.volumes * source_data.poro
-    for w in weights.values():
-        w *= eff_vols
+    weights = [
+        Co2WeightData(date, wg * eff_vols, wa * eff_vols)
+        for date, (wg, wa) in eff_dens
+    ]
     return weights
 
 
@@ -80,7 +130,7 @@ def _calculate_containment(
         ])
 
 
-def _effective_density(
+def _effective_densities(
     swat: np.ndarray,
     dwat: np.ndarray,
     sgas: np.ndarray,
@@ -89,12 +139,12 @@ def _effective_density(
     ymfg: np.ndarray,
     co2_molar_mass: float,
     water_molar_mass: float,
-) -> np.ndarray:
+) -> Tuple[np.ndarray, np.ndarray]:
     gas_mass_frac = _mole_to_mass_fraction(ymfg, co2_molar_mass, water_molar_mass)
     aqu_mass_frac = _mole_to_mass_fraction(amfg, co2_molar_mass, water_molar_mass)
     w_gas = sgas * dgas * gas_mass_frac
     w_aqu = swat * dwat * aqu_mass_frac
-    return w_gas + w_aqu
+    return w_gas, w_aqu
 
 
 def _mole_to_mass_fraction(x, m_co2, m_h20):

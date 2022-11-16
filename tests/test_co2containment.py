@@ -54,16 +54,19 @@ def dummy_co2_masses(dummy_co2_grid):
 
 
 def _calc_and_compare(poly, grid, masses):
-    masses = masses.values()  # Date information (dict keys) currently not in use
-    mu = np.mean([np.mean(d) for d in masses])
-    totals = np.array([np.sum(d) for d in masses])
+    total = [m.total_weight() for m in masses]
+    mu = np.mean([np.mean(d) for d in total])
+    totals = np.array([np.sum(d) for d in total])
     xyz = grid.get_xyz()
-    containment = np.array(calculate_co2_containment(
+    contained = calculate_co2_containment(
         xyz[0].values1d.compressed(), xyz[1].values1d.compressed(), masses, poly
-    ))
-    assert np.allclose(containment.sum(axis=1), totals, rtol=1e-5, atol=1e-8)
+    )
+    assert np.allclose(np.array([c.total() for c in contained]), totals, rtol=1e-5, atol=1e-8)
     assert (
-        pytest.approx(np.mean(containment[:, 1]), rel=0.10)
+        pytest.approx(
+            np.mean([(c.inside() for c in contained)]),
+            rel=0.10,
+        )
         == (poly.area * grid.nlay * mu)
     )
 
@@ -135,6 +138,6 @@ def test_reek_grid():
     )
     mass = calculate_co2_mass(source_data)
     table = calculate_co2_containment(
-        source_data.x, source_data.y, [mass["2042"]], reek_poly
+        source_data.x, source_data.y, mass, reek_poly
     )
-    assert table[0][1] == pytest.approx(89498504)
+    assert table[0].inside() == pytest.approx(89498504)

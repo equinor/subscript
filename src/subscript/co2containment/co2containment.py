@@ -1,14 +1,19 @@
 import argparse
 import pathlib
 import sys
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, List
 
 import numpy as np
 import pandas
 import shapely.geometry
 import xtgeo
 
-from .calculate import calculate_co2_mass, calculate_co2_containment, SourceData
+from .calculate import (
+    calculate_co2_mass,
+    calculate_co2_containment,
+    SourceData,
+    ContainedCo2,
+)
 
 
 def calculate_out_of_bounds_co2(
@@ -21,8 +26,8 @@ def calculate_out_of_bounds_co2(
     source_data = _extract_source_data(grid_file, unrst_file, init_file, poro_keyword)
     co2_masses = calculate_co2_mass(source_data)
     poly = _read_polygon(polygon_file)
-    contained_mass = calculate_co2_containment(source_data.x, source_data.y, co2_masses.values(), poly)
-    return _construct_containment_table(list(co2_masses.keys()), contained_mass, poly)
+    contained_mass = calculate_co2_containment(source_data.x, source_data.y, co2_masses, poly)
+    return _construct_containment_table(contained_mass)
 
 
 def _fetch_properties(
@@ -67,7 +72,6 @@ def _extract_source_data(grid_file, unrst_file, init_file, poro_keyword) -> Sour
     return sd
 
 
-
 def _deactivate_gas_less_cells(
     grid: xtgeo.Grid,
     sgases: List[xtgeo.GridProperty],
@@ -97,17 +101,21 @@ def _read_polygon(polygon_file: str) -> shapely.geometry.Polygon:
 
 
 def _construct_containment_table(
-    dates: Iterable[str],
-    contained_mass: Iterable[Tuple[float, float]],
-    geometry: shapely.geometry.base.BaseGeometry,
+    contained_co2: List[ContainedCo2],
 ) -> pandas.DataFrame:
     records = [
-        (d, out, within, geometry.wkt)
-        for d, (out, within) in zip(dates, contained_mass)
+        {
+            "date": c.date,
+            "co2_inside": c.inside(),
+            "co2_outside": c.outside(),
+            "gas_phase_inside": c.gas_phase_inside,
+            "gas_phase_outside": c.gas_phase_outside,
+            "aqu_phase_inside": c.aqu_phase_inside,
+            "aqu_phase_outside": c.aqu_phase_outside,
+        }
+        for c in contained_co2
     ]
-    return pandas.DataFrame.from_records(
-        records, columns=("date", "co2_inside", "co2_outside", "geometry")
-    )
+    return pandas.DataFrame.from_records(records)
 
 
 def make_parser():
