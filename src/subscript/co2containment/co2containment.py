@@ -24,9 +24,18 @@ def calculate_out_of_bounds_co2(
     poro_keyword: str,
 ) -> pandas.DataFrame:
     source_data = _extract_source_data(grid_file, unrst_file, init_file, poro_keyword)
-    co2_masses = calculate_co2_mass(source_data)
     poly = _read_polygon(polygon_file)
-    contained_mass = calculate_co2_containment(source_data.x, source_data.y, co2_masses, poly)
+    return calculate_from_source_data(source_data, poly)
+
+
+def calculate_from_source_data(
+    source_data: SourceData,
+    polygon: shapely.geometry.Polygon,
+):
+    co2_masses = calculate_co2_mass(source_data)
+    contained_mass = calculate_co2_containment(
+        source_data.x, source_data.y, co2_masses, polygon
+    )
     return _construct_containment_table(contained_mass)
 
 
@@ -115,7 +124,7 @@ def _construct_containment_table(
         }
         for c in contained_co2
     ]
-    return pandas.DataFrame.from_records(records)
+    return pandas.DataFrame.from_records(records, index="date")
 
 
 def make_parser():
