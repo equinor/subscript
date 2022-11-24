@@ -21,6 +21,7 @@ class SourceData:
     dgas: List[np.ndarray]
     amfg: List[np.ndarray]
     ymfg: List[np.ndarray]
+    zone: Optional[np.ndarray] = None
 
 
 @dataclass
@@ -47,18 +48,41 @@ def calculate_co2_containment(
     y: np.ndarray,
     weights: List[Co2WeightData],
     polygon: Union[Polygon, MultiPolygon],
+    zones: Optional[np.ndarray] = None,
 ) -> List[ContainedCo2]:
     outside = ~_calculate_containment(x, y, polygon)
-    return [
-        c
-        for w in weights
-        for c in [
-            ContainedCo2(w.date, w.gas_phase_kg[outside].sum(), "gas", False),
-            ContainedCo2(w.date, w.gas_phase_kg[~outside].sum(), "gas", True),
-            ContainedCo2(w.date, w.aqu_phase_kg[outside].sum(), "aqueous", False),
-            ContainedCo2(w.date, w.aqu_phase_kg[~outside].sum(), "aqueous", True),
+    if zones is None:
+        return [
+            c
+            for w in weights
+            for c in [
+                ContainedCo2(w.date, w.gas_phase_kg[outside].sum(), "gas", False),
+                ContainedCo2(w.date, w.gas_phase_kg[~outside].sum(), "gas", True),
+                ContainedCo2(w.date, w.aqu_phase_kg[outside].sum(), "aqueous", False),
+                ContainedCo2(w.date, w.aqu_phase_kg[~outside].sum(), "aqueous", True),
+            ]
         ]
-    ]
+    else:
+        zone_map = {z: zones == z for z in np.unique(zones)}
+        return [
+            c
+            for w in weights
+            for zn, zm in zone_map.items()
+            for c in [
+                ContainedCo2(
+                    w.date, w.gas_phase_kg[outside & zm].sum(), "gas", False, zn
+                ),
+                ContainedCo2(
+                    w.date, w.gas_phase_kg[(~outside) & zm].sum(), "gas", True, zn
+                ),
+                ContainedCo2(
+                    w.date, w.aqu_phase_kg[outside & zm].sum(), "aqueous", False, zn
+                ),
+                ContainedCo2(
+                    w.date, w.aqu_phase_kg[(~outside) & zm].sum(), "aqueous", True, zn
+                ),
+            ]
+        ]
 
 
 def calculate_co2_mass(

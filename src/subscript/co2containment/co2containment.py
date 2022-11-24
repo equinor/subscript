@@ -2,7 +2,7 @@ import argparse
 import dataclasses
 import pathlib
 import sys
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas
@@ -23,8 +23,11 @@ def calculate_out_of_bounds_co2(
     init_file: str,
     polygon_file: str,
     poro_keyword: str,
+    zone_file: Optional[str] = None,
 ) -> pandas.DataFrame:
-    source_data = _extract_source_data(grid_file, unrst_file, init_file, poro_keyword)
+    source_data = _extract_source_data(
+        grid_file, unrst_file, init_file, poro_keyword, zone_file
+    )
     poly = _read_polygon(polygon_file)
     return calculate_from_source_data(source_data, poly)
 
@@ -35,7 +38,7 @@ def calculate_from_source_data(
 ):
     co2_masses = calculate_co2_mass(source_data)
     contained_mass = calculate_co2_containment(
-        source_data.x, source_data.y, co2_masses, polygon
+        source_data.x, source_data.y, co2_masses, polygon, source_data.zone
     )
     return _construct_containment_table(contained_mass)
 
@@ -58,7 +61,13 @@ def _fetch_properties(
     return prop_names
 
 
-def _extract_source_data(grid_file, unrst_file, init_file, poro_keyword) -> SourceData:
+def _extract_source_data(
+    grid_file: str,
+    unrst_file: str,
+    init_file: str,
+    poro_keyword: str,
+    zone_file: Optional[str],
+) -> SourceData:
     grid = xtgeo.grid_from_file(grid_file)
     props = _fetch_properties(grid, unrst_file)
     poro = xtgeo.gridproperty_from_file(
@@ -68,16 +77,21 @@ def _extract_source_data(grid_file, unrst_file, init_file, poro_keyword) -> Sour
     xyz = grid.get_xyz()
     vols = grid.get_bulk_volume()
     active = grid.actnum_array.astype(bool)
+    zone = None
+    if zone_file is not None:
+        zone = xtgeo.gridproperty_from_file(zone_file, grid=grid)
+        zone = zone.values.data[active]
     sd = SourceData(
         xyz[0].values.data[active],
         xyz[1].values.data[active],
         poro.values.data[active],
         vols.values.data[active],
         [p.date for p in props["sgas"]],
+        zone=zone,
         **{
             p: [_v.values.data[active] for _v in v]
             for p, v in props.items()
-        }
+        },
     )
     return sd
 
@@ -129,6 +143,7 @@ def make_parser():
     parser.add_argument("--unrst", help="Path to UNRST file. Will assume same base name as grid if not provided", default=None)
     parser.add_argument("--init", help="Path to INIT file. Will assume same base name as grid if not provided", default=None)
     parser.add_argument("--poro", help="Name of porosity parameter to look for in the INIT file", default="PORO")
+    parser.add_argument("--zonefile", help="Path to file containing zone information", default=None)
     return parser
 
 
@@ -149,6 +164,7 @@ def main(arguments):
         arguments.init,
         arguments.polygon,
         arguments.poro,
+        arguments.zonefile,
     )
     df.to_csv(arguments.outfile, index=False)
 
