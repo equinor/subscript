@@ -1,4 +1,5 @@
 import argparse
+import dataclasses
 import pathlib
 import sys
 from typing import Dict, List
@@ -113,18 +114,10 @@ def _construct_containment_table(
     contained_co2: List[ContainedCo2],
 ) -> pandas.DataFrame:
     records = [
-        {
-            "date": c.date,
-            "co2_inside": c.inside(),
-            "co2_outside": c.outside(),
-            "gas_phase_inside": c.gas_phase_inside,
-            "gas_phase_outside": c.gas_phase_outside,
-            "aqu_phase_inside": c.aqu_phase_inside,
-            "aqu_phase_outside": c.aqu_phase_outside,
-        }
+        dataclasses.asdict(c)
         for c in contained_co2
     ]
-    return pandas.DataFrame.from_records(records, index="date")
+    return pandas.DataFrame.from_records(records)
 
 
 def make_parser():
@@ -157,7 +150,7 @@ def main(arguments):
         arguments.polygon,
         arguments.poro,
     )
-    df.to_csv(arguments.outfile)
+    df.to_csv(arguments.outfile, index=False)
 
 
 if __name__ == '__main__':

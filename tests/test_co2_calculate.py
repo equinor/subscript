@@ -1,3 +1,4 @@
+import itertools
 from pathlib import Path
 
 import numpy as np
@@ -56,15 +57,17 @@ def dummy_co2_masses(dummy_co2_grid):
 def _calc_and_compare(poly, grid, masses):
     total = [m.total_weight() for m in masses]
     mu = np.mean([np.mean(d) for d in total])
-    totals = np.array([np.sum(d) for d in total])
+    totals = {m.date: np.sum(m.total_weight()) for m in masses}
     xyz = grid.get_xyz()
     contained = calculate_co2_containment(
         xyz[0].values1d.compressed(), xyz[1].values1d.compressed(), masses, poly
     )
-    assert np.allclose(np.array([c.total() for c in contained]), totals, rtol=1e-5, atol=1e-8)
+    contained = sorted(contained, key=lambda c: c.date)
+    for date, c_tot in itertools.groupby(contained, key=lambda c: c.date):
+        assert c_tot == pytest.approx(totals[date], rel=1e-5, abs=1e-8)
     assert (
         pytest.approx(
-            np.mean([(c.inside() for c in contained)]),
+            np.mean([(c.amount_kg for c in contained if c.inside_boundary)]),
             rel=0.10,
         )
         == (poly.area * grid.nlay * mu)
@@ -140,4 +143,4 @@ def test_reek_grid():
     table = calculate_co2_containment(
         source_data.x, source_data.y, mass, reek_poly
     )
-    assert table[0].inside() == pytest.approx(89498504)
+    assert sum(t.amount_kg for t in table if t.inside_boundary) == pytest.approx(89498504)

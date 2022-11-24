@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, List, Union, Tuple
+from typing import List, Union, Tuple, Literal, Optional
 
 import numpy as np
 from shapely.geometry import Polygon, MultiPolygon
@@ -36,30 +36,10 @@ class Co2WeightData:
 @dataclass
 class ContainedCo2:
     date: str
-    gas_phase_outside: float
-    gas_phase_inside: float
-    aqu_phase_outside: float
-    aqu_phase_inside: float
-
-    def total(self) -> float:
-        return (
-            self.gas_phase_inside
-            + self.gas_phase_outside
-            + self.aqu_phase_inside
-            + self.aqu_phase_outside
-        )
-
-    def gas_phase(self) -> float:
-        return self.gas_phase_inside + self.gas_phase_outside
-
-    def aqu_phase(self) -> float:
-        return self.aqu_phase_inside + self.aqu_phase_outside
-
-    def inside(self) -> float:
-        return self.gas_phase_inside + self. aqu_phase_inside
-
-    def outside(self) -> float:
-        return self.gas_phase_outside + self.aqu_phase_outside
+    amount_kg: float
+    phase: Literal["gas", "aqueous"]
+    inside_boundary: bool
+    zone: Optional[str] = None
 
 
 def calculate_co2_containment(
@@ -70,14 +50,14 @@ def calculate_co2_containment(
 ) -> List[ContainedCo2]:
     outside = ~_calculate_containment(x, y, polygon)
     return [
-        ContainedCo2(
-            w.date,
-            w.gas_phase_kg[outside].sum(),
-            w.gas_phase_kg[~outside].sum(),
-            w.aqu_phase_kg[outside].sum(),
-            w.aqu_phase_kg[~outside].sum(),
-        )
+        c
         for w in weights
+        for c in [
+            ContainedCo2(w.date, w.gas_phase_kg[outside].sum(), "gas", False),
+            ContainedCo2(w.date, w.gas_phase_kg[~outside].sum(), "gas", True),
+            ContainedCo2(w.date, w.aqu_phase_kg[outside].sum(), "aqueous", False),
+            ContainedCo2(w.date, w.aqu_phase_kg[~outside].sum(), "aqueous", True),
+        ]
     ]
 
 

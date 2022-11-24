@@ -41,5 +41,6 @@ def test_simple_cube_grid():
         [-0.45, -0.38],
     ]))
     df = calculate_from_source_data(source_data, poly)
-    assert len(df) == len(dates)
-    assert np.all(np.diff(df.values, axis=0) >= 0)
+    assert len(df["date"].unique()) == len(dates)
+    totals = df.groupby("date").sum()["amount_kg"]
+    assert np.all(np.diff(totals.values, axis=0) >= 0)
