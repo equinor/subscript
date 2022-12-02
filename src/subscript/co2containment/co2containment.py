@@ -48,7 +48,7 @@ def calculate_from_source_data(
     if source_data.zone is None:
         return _merge_date_rows(df)
     return {
-        z: _merge_date_rows(g.reset_index())
+        z: _merge_date_rows(g)
         for z, g in df.groupby("zone")
     }
 

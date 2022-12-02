@@ -1,11 +1,15 @@
+import dataclasses
+
 import numpy as np
+import pytest
 import shapely.geometry
 
 from subscript.co2containment.calculate import SourceData
 from subscript.co2containment.co2containment import calculate_from_source_data
 
 
-def test_simple_cube_grid():
+@pytest.fixture
+def simple_cube_grid():
     dims = (13, 17, 19)
     mx, my, mz = np.meshgrid(
         np.linspace(-1, 1, dims[0]),
@@ -20,7 +24,7 @@ def test_simple_cube_grid():
         for i in range(len(dates))
     ]
     size = np.prod(dims)
-    source_data = SourceData(
+    return SourceData(
         mx.flatten(),
         my.flatten(),
         poro=np.ones(size) * 0.3,
@@ -33,14 +37,33 @@ def test_simple_cube_grid():
         amfg=[np.ones(size) * 0.02 * s for s in gas_saturations],
         ymfg=[np.ones(size) * 0.99] * len(dates),
     )
-    poly = shapely.geometry.Polygon(np.array([
+
+
+@pytest.fixture
+def simple_poly():
+    return shapely.geometry.Polygon(np.array([
         [-0.45, -0.38],
         [0.41, -0.39],
         [0.33, 0.76],
         [-0.27, 0.75],
         [-0.45, -0.38],
     ]))
-    df = calculate_from_source_data(source_data, poly, False)
-    assert len(df["date"].unique()) == len(dates)
+
+
+def test_simple_cube_grid(simple_cube_grid, simple_poly):
+    df = calculate_from_source_data(simple_cube_grid, simple_poly, True)
+    assert len(df["date"].unique()) == len(simple_cube_grid.dates)
     totals = df.groupby("date").sum()["amount_kg"]
     assert np.all(np.diff(totals.values, axis=0) >= 0)
+
+
+def test_zoned_simple_cube_grid(simple_cube_grid, simple_poly):
+    rs = np.random.RandomState(123)
+    zone = rs.choice([1, 2, 3], size=simple_cube_grid.poro.shape)
+    sd = dataclasses.replace(simple_cube_grid, zone=zone)
+    df = calculate_from_source_data(sd, simple_poly, False)
+    assert isinstance(df, dict)
+    assert all(
+        len(_df["date"].unique()) == len(simple_cube_grid.dates)
+        for _df in df.values()
+    )
