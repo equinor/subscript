@@ -231,7 +231,7 @@ def main(arguments):
     if isinstance(df, dict):
         of = pathlib.Path(arguments.outfile)
         [
-            _df.to_csv(of.with_stem(f"{of.stem}_{z}"), index=False)
+            _df.to_csv(of.with_name(f"{of.stem}_{z}{of.suffix}"), index=False)
             for z, _df in df.items()
         ]
     else:
