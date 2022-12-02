@@ -191,11 +191,7 @@ def _merge_date_rows(
     total_df = df1.copy()
     for _df in [df2a, df2b, df3a, df3b, df4a, df4b, df4c, df4d]:
         total_df = total_df.merge(_df, on="date", how="left")
-    norm_df = (total_df / max_amount).rename(columns={
-        n: n.replace("total", "norm")
-        for n in total_df.columns
-    })
-    return total_df.merge(norm_df, on="date")
+    return total_df
 
 
 def make_parser():
@@ -208,7 +204,7 @@ def make_parser():
     parser.add_argument("--init", help="Path to INIT file. Will assume same base name as grid if not provided", default=None)
     parser.add_argument("--poro", help="Name of porosity parameter to look for in the INIT file", default="PORO")
     parser.add_argument("--zonefile", help="Path to file containing zone information", default=None)
-    parser.add_argument("--compact", help="Write the output to a single file as compact as possible", action="store_false")
+    parser.add_argument("--compact", help="Write the output to a single file as compact as possible", action="store_true")
     return parser
 
 
