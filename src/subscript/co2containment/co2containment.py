@@ -45,10 +45,11 @@ def calculate_from_source_data(
     df = _construct_containment_table(contained_mass)
     if compact:
         return df
+    max_amount = df["amount_kg"].max()
     if source_data.zone is None:
-        return _merge_date_rows(df)
+        return _merge_date_rows(df, max_amount)
     return {
-        z: _merge_date_rows(g.reset_index())
+        z: _merge_date_rows(g.reset_index(), max_amount)
         for z, g in df.groupby("zone")
     }
 
@@ -144,7 +145,10 @@ def _construct_containment_table(
     return pd.DataFrame.from_records(records)
 
 
-def _merge_date_rows(df: pd.DataFrame) -> pd.DataFrame:
+def _merge_date_rows(
+    df: pd.DataFrame,
+    max_amount: float,
+) -> pd.DataFrame:
     df = df.drop("zone", axis=1)
     # Total
     akg = "amount_kg"
@@ -187,7 +191,7 @@ def _merge_date_rows(df: pd.DataFrame) -> pd.DataFrame:
     total_df = df1.copy()
     for _df in [df2a, df2b, df3a, df3b, df4a, df4b, df4c, df4d]:
         total_df = total_df.merge(_df, on="date", how="left")
-    norm_df = (total_df / total_df["total"].max()).rename(columns={
+    norm_df = (total_df / max_amount).rename(columns={
         n: n.replace("total", "norm")
         for n in total_df.columns
     })
