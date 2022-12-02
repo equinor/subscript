@@ -36,7 +36,7 @@ def calculate_out_of_bounds_co2(
 def calculate_from_source_data(
     source_data: SourceData,
     polygon: shapely.geometry.Polygon,
-    compact: bool = False,
+    compact: bool,
 ) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
     co2_masses = calculate_co2_mass(source_data)
     contained_mass = calculate_co2_containment(
@@ -45,11 +45,10 @@ def calculate_from_source_data(
     df = _construct_containment_table(contained_mass)
     if compact:
         return df
-    max_amount = df["amount_kg"].max()
     if source_data.zone is None:
-        return _merge_date_rows(df, max_amount)
+        return _merge_date_rows(df)
     return {
-        z: _merge_date_rows(g.reset_index(), max_amount)
+        z: _merge_date_rows(g.reset_index())
         for z, g in df.groupby("zone")
     }
 
@@ -145,10 +144,7 @@ def _construct_containment_table(
     return pd.DataFrame.from_records(records)
 
 
-def _merge_date_rows(
-    df: pd.DataFrame,
-    max_amount: float,
-) -> pd.DataFrame:
+def _merge_date_rows(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop("zone", axis=1)
     # Total
     akg = "amount_kg"
@@ -191,7 +187,7 @@ def _merge_date_rows(
     total_df = df1.copy()
     for _df in [df2a, df2b, df3a, df3b, df4a, df4b, df4c, df4d]:
         total_df = total_df.merge(_df, on="date", how="left")
-    return total_df
+    return total_df.reset_index()
 
 
 def make_parser():

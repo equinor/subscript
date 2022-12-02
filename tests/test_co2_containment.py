@@ -13,7 +13,7 @@ def test_simple_cube_grid():
         np.linspace(-1, 1, dims[2]),
         indexing="ij"
     )
-    dates = [f"{d}" for d in range(2030, 2050)]
+    dates = [f"{d}0101" for d in range(2030, 2050)]
     dists = np.sqrt(mx ** 2 + my ** 2 + mz ** 2)
     gas_saturations = [
         np.maximum(np.exp(-3 * (dists.flatten() / ((i + 1) / len(dates))) ** 2) - 0.05, 0.0)
