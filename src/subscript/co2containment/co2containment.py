@@ -2,10 +2,10 @@ import argparse
 import dataclasses
 import pathlib
 import sys
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 import numpy as np
-import pandas
+import pandas as pd
 import shapely.geometry
 import xtgeo
 
@@ -23,24 +23,34 @@ def calculate_out_of_bounds_co2(
     init_file: str,
     polygon_file: str,
     poro_keyword: str,
+    compact: bool,
     zone_file: Optional[str] = None,
-) -> pandas.DataFrame:
+) -> pd.DataFrame:
     source_data = _extract_source_data(
         grid_file, unrst_file, init_file, poro_keyword, zone_file
     )
     poly = _read_polygon(polygon_file)
-    return calculate_from_source_data(source_data, poly)
+    return calculate_from_source_data(source_data, poly, compact)
 
 
 def calculate_from_source_data(
     source_data: SourceData,
     polygon: shapely.geometry.Polygon,
-):
+    compact: bool = False,
+) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
     co2_masses = calculate_co2_mass(source_data)
     contained_mass = calculate_co2_containment(
         source_data.x, source_data.y, co2_masses, polygon, source_data.zone
     )
-    return _construct_containment_table(contained_mass)
+    df = _construct_containment_table(contained_mass)
+    if compact:
+        return df
+    if source_data.zone is None:
+        return _merge_date_rows(df)
+    return {
+        z: _merge_date_rows(g.reset_index())
+        for z, g in df.groupby("zone")
+    }
 
 
 def _fetch_properties(
@@ -126,12 +136,62 @@ def _read_polygon(polygon_file: str) -> shapely.geometry.Polygon:
 
 def _construct_containment_table(
     contained_co2: List[ContainedCo2],
-) -> pandas.DataFrame:
+) -> pd.DataFrame:
     records = [
         dataclasses.asdict(c)
         for c in contained_co2
     ]
-    return pandas.DataFrame.from_records(records)
+    return pd.DataFrame.from_records(records)
+
+
+def _merge_date_rows(df: pd.DataFrame) -> pd.DataFrame:
+    df = df.drop("zone", axis=1)
+    # Total
+    akg = "amount_kg"
+    df1 = (
+        df
+        .drop(["phase", "inside_boundary"], axis=1)
+        .groupby(["date"])
+        .sum()
+        .rename(columns={akg: "total"})
+    )
+    # Total by phase
+    df2 = (
+        df
+        .drop("inside_boundary", axis=1)
+        .groupby(["phase", "date"])
+        .sum()
+    )
+    df2a = df2.loc["gas"].rename(columns={akg: "total_gas"})
+    df2b = df2.loc["aqueous"].rename(columns={akg: "total_aqueous"})
+    # Total by containment
+    df3 = (
+        df
+        .drop("phase", axis=1)
+        .groupby(["inside_boundary", "date"])
+        .sum()
+    )
+    df3a = df3.loc[(True,)].rename(columns={akg: "total_inside"})
+    df3b = df3.loc[(False,)].rename(columns={akg: "total_outside"})
+    # Total by containment and phase
+    df4 = (
+        df
+        .groupby(["phase", "inside_boundary", "date"])
+        .sum()
+    )
+    df4a = df4.loc["gas", True].rename(columns={akg: "total_gas_inside"})
+    df4b = df4.loc["aqueous", True].rename(columns={akg: "total_aqueous_inside"})
+    df4c = df4.loc["gas", False].rename(columns={akg: "total_gas_outside"})
+    df4d = df4.loc["aqueous", False].rename(columns={akg: "total_aqueous_outside"})
+    # Merge data frames and append normalized values
+    total_df = df1.copy()
+    for _df in [df2a, df2b, df3a, df3b, df4a, df4b, df4c, df4d]:
+        total_df = total_df.merge(_df, on="date", how="left")
+    norm_df = (total_df / total_df["total"].max()).rename(columns={
+        n: n.replace("total", "norm")
+        for n in total_df.columns
+    })
+    return total_df.merge(norm_df, on="date")
 
 
 def make_parser():
@@ -144,6 +204,7 @@ def make_parser():
     parser.add_argument("--init", help="Path to INIT file. Will assume same base name as grid if not provided", default=None)
     parser.add_argument("--poro", help="Name of porosity parameter to look for in the INIT file", default="PORO")
     parser.add_argument("--zonefile", help="Path to file containing zone information", default=None)
+    parser.add_argument("--compact", help="Write the output to a single file as compact as possible", action="store_false")
     return parser
 
 
@@ -164,9 +225,17 @@ def main(arguments):
         arguments.init,
         arguments.polygon,
         arguments.poro,
+        arguments.compact,
         arguments.zonefile,
     )
-    df.to_csv(arguments.outfile, index=False)
+    if isinstance(df, dict):
+        of = pathlib.Path(arguments.outfile)
+        [
+            _df.to_csv(of.with_stem(f"{of.stem}_{z}"), index=False)
+            for z, _df in df.items()
+        ]
+    else:
+        df.to_csv(arguments.outfile, index=False)
 
 
 if __name__ == '__main__':
