@@ -42,6 +42,11 @@ class ContainedCo2:
     inside_boundary: bool
     zone: Optional[str] = None
 
+    def __post_init__(self):
+        if "-" not in self.date:
+            d = self.date
+            self.date = f"{d[:4]}-{d[4:6]}-{d[6:]}"
+
 
 def calculate_co2_containment(
     x: np.ndarray,
