@@ -2,12 +2,14 @@ import argparse
 import dataclasses
 import pathlib
 import sys
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union, Tuple
 
 import numpy as np
 import pandas as pd
 import shapely.geometry
 import xtgeo
+from ecl.eclfile import EclFile
+from ecl.grid import EclGrid
 
 from .calculate import (
     calculate_co2_mass,
@@ -54,21 +56,32 @@ def calculate_from_source_data(
 
 
 def _fetch_properties(
-    grid: xtgeo.Grid, unrst_file: str
-) -> Dict[str, List[xtgeo.GridProperty]]:
+    grid: EclGrid,
+    unrst: EclFile,
+) -> Tuple[Dict[str, List[np.ndarray]], List[str]]:
     prop_names = dict.fromkeys(["sgas", "swat", "dgas", "dwat", "amfg", "ymfg"])
     for p in prop_names:
         prop_names[p] = []
-    props = xtgeo.gridproperties_from_file(
-        unrst_file,
-        grid=grid,
-        names=[n.upper() for n in prop_names],
-        dates="all",
-    )
-    for d in sorted(set(props.dates)):
-        for p in prop_names:
-            prop_names[p].append(_fetch_prop(props, p.upper(), d))
-    return prop_names
+    dates = [d.strftime("%Y%m%d") for d in unrst.report_dates]
+    return {
+        p: [_read_prop(grid, unrst, p, i) for i in range(len(dates))]
+        for p in prop_names
+    }, dates
+
+
+def _read_prop(
+    grid: EclGrid,
+    unrst: EclFile,
+    prop: str,
+    date_ix: int,
+) -> np.ndarray:
+    actnum = grid.export_actnum().numpy_copy().astype(bool)
+    p_vals = unrst[prop.upper()][date_ix].numpy_view()
+    vals1d = np.full_like(actnum, fill_value=np.nan, dtype=float)
+    vals1d[actnum] = p_vals
+    vals3d = vals1d.reshape(grid.get_dims()[:3], order="F")
+    re_vals1d = vals3d.flatten()
+    return re_vals1d[~np.isnan(re_vals1d)]
 
 
 def _extract_source_data(
@@ -79,11 +92,14 @@ def _extract_source_data(
     zone_file: Optional[str],
 ) -> SourceData:
     grid = xtgeo.grid_from_file(grid_file)
-    props = _fetch_properties(grid, unrst_file)
+    ecl_grid = EclGrid(grid_file)
+    unrst = EclFile(unrst_file)
+    props, dates = _fetch_properties(ecl_grid, unrst)
     poro = xtgeo.gridproperty_from_file(
         init_file, grid=grid, name=poro_keyword, date="first"
     )
-    _deactivate_gas_less_cells(grid, props["sgas"], props["amfg"])
+    gasless = _identify_gas_less_cells(props["sgas"], props["amfg"])
+    _contract_actnum(grid, ~gasless)
     xyz = grid.get_xyz()
     vols = grid.get_bulk_volume()
     active = grid.actnum_array.astype(bool)
@@ -96,37 +112,32 @@ def _extract_source_data(
         xyz[1].values.data[active],
         poro.values.data[active],
         vols.values.data[active],
-        [p.date for p in props["sgas"]],
+        dates,
         zone=zone,
         **{
-            p: [_v.values.data[active] for _v in v]
+            p: [_v[~gasless] for _v in v]
             for p, v in props.items()
         },
     )
     return sd
 
 
-def _deactivate_gas_less_cells(
+def _identify_gas_less_cells(
+    sgases: List[np.ndarray],
+    amfgs: List[np.ndarray]
+) -> np.ndarray:
+    gas_less = np.logical_and.reduce([np.abs(s) < 1e-16 for s in sgases])
+    gas_less &= np.logical_and.reduce([np.abs(a) < 1e-16 for a in amfgs])
+    return gas_less
+
+
+def _contract_actnum(
     grid: xtgeo.Grid,
-    sgases: List[xtgeo.GridProperty],
-    amfgs: List[xtgeo.GridProperty]
+    is_active: np.ndarray,
 ):
-    active = grid.actnum_array.astype(bool)
-    gas_less = np.logical_and.reduce([np.abs(s.values[active]) < 1e-16 for s in sgases])
-    gas_less &= np.logical_and.reduce([np.abs(a.values[active]) < 1e-16 for a in amfgs])
     actnum = grid.get_actnum().copy()
-    actnum.values[grid.actnum_array.astype(bool)] = (~gas_less).astype(int)
+    actnum.values[grid.actnum_array.astype(bool)] = is_active.astype(int)
     grid.set_actnum(actnum)
-
-
-def _fetch_prop(
-    grid_props: xtgeo.GridProperties,
-    name: str,
-    date: str,
-) -> xtgeo.GridProperty:
-    search = [p for p in grid_props.props if p.date == date and p.name.startswith(name)]
-    assert len(search) == 1
-    return search[0]
 
 
 def _read_polygon(polygon_file: str) -> shapely.geometry.Polygon:
