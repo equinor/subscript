@@ -64,24 +64,27 @@ def _fetch_properties(
         prop_names[p] = []
     dates = [d.strftime("%Y%m%d") for d in unrst.report_dates]
     return {
-        p: [_read_prop(grid, unrst, p, i) for i in range(len(dates))]
+        p: _read_props(grid, unrst, p)
         for p in prop_names
     }, dates
 
 
-def _read_prop(
+def _find_c_order(grid: EclGrid):
+    actnum = grid.export_actnum().numpy_copy()
+    actnum[actnum == 0] = -1
+    actnum[actnum == 1] = np.arange(grid.get_num_active())
+    actnum3d = actnum.reshape(grid.get_dims()[:3], order="F")
+    order = actnum3d.flatten()
+    return order[order != -1]
+
+
+def _read_props(
     grid: EclGrid,
     unrst: EclFile,
     prop: str,
-    date_ix: int,
-) -> np.ndarray:
-    actnum = grid.export_actnum().numpy_copy().astype(bool)
-    p_vals = unrst[prop.upper()][date_ix].numpy_view()
-    vals1d = np.full_like(actnum, fill_value=np.nan, dtype=float)
-    vals1d[actnum] = p_vals
-    vals3d = vals1d.reshape(grid.get_dims()[:3], order="F")
-    re_vals1d = vals3d.flatten()
-    return re_vals1d[~np.isnan(re_vals1d)]
+) -> List[np.ndarray]:
+    c_order = _find_c_order(grid)
+    return [p.numpy_view()[c_order].astype(float) for p in unrst[prop.upper()]]
 
 
 def _extract_source_data(
