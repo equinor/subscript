@@ -450,9 +450,9 @@ def get_yearly_summary(
 
 def prepare_econ_table(
     filename: Optional[str] = None,
-    oilprice: float = None,
-    gasprice: float = None,
-    usdtonok: float = None,
+    oilprice: Optional[float] = None,
+    gasprice: Optional[float] = None,
+    usdtonok: Optional[float] = None,
     discountrate: float = 8,
 ) -> pd.DataFrame:
     """Parse a CSV file with economical input

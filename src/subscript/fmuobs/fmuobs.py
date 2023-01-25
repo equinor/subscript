@@ -303,7 +303,7 @@ def fmuobs(
     verbose: bool = False,
     debug: bool = False,
     starttime: Optional[str] = None,
-    includedir: bool = None,
+    includedir: Optional[bool] = None,
 ):
     # pylint: disable=too-many-arguments
     """Alternative to main() with named arguments"""

@@ -296,7 +296,10 @@ def find_candidate_modules(top_path: Path) -> Set[str]:
 
 
 def deep_reload(
-    module: ModuleType, top_path: Path, loaded: Set = None, ok_names: Set[str] = None
+    module: ModuleType,
+    top_path: Path,
+    loaded: Optional[Set] = None,
+    ok_names: Optional[Set[str]] = None,
 ):
     """
     Deep module reload constrained to names possibly found in a given folder

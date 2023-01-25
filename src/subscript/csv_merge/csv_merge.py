@@ -5,7 +5,7 @@ import logging
 import os
 import re
 import sys
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import pandas as pd
 from ert import ErtScript
@@ -155,7 +155,7 @@ def get_ertwf_parser() -> argparse.ArgumentParser:
 
 
 def merge_csvfiles(
-    csvfiles: list, tags: Dict[str, List] = None, memoryconservative: bool = False
+    csvfiles: list, tags: Optional[Dict[str, List]], memoryconservative: bool = False
 ) -> pd.DataFrame:
     """
     Load CSV files from disk. Tag each row with filename origin.

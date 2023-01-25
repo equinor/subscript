@@ -95,7 +95,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def prep_output_dir(tablesdir: str = None, suffix: str = None) -> Path:
+def prep_output_dir(tablesdir: Optional[str], suffix: Optional[str]) -> Path:
     """Ensures an output directory exists, and returns
     the name of the directory.
 
@@ -158,7 +158,7 @@ def find_prtfile(basefile: str) -> str:
 
 
 def currently_in_place_from_prt(
-    prt_file: str, fipname: str = "FIPNUM", date: str = None
+    prt_file: str, fipname: str = "FIPNUM", date: Optional[str] = None
 ) -> pd.DataFrame:
     """Extracts currently-in-place volumes from a PRT file
 

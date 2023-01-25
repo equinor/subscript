@@ -54,7 +54,7 @@ def eclcompress(
     files: Union[str, List[str]],
     keeporiginal: bool = False,
     dryrun: bool = False,
-    eclkw_regexp: str = None,
+    eclkw_regexp: Optional[str] = None,
 ) -> int:
     """Run-length encode a set of grdecl files.
 
