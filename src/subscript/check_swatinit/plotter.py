@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -30,7 +30,7 @@ QC_PALETTE = {
 
 
 def plot_qc_panels(
-    qc_frame: pd.DataFrame, eqlnum: int = None, show: bool = False
+    qc_frame: pd.DataFrame, eqlnum: Optional[int] = None, show: bool = False
 ) -> None:
     """Make a plotting panel (multiple plots) on cell-based dataframe.
 

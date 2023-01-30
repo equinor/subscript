@@ -128,7 +128,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 def summaryplotter(
     summaryfiles: list,
-    datafiles: list = None,
+    datafiles: Optional[list] = None,
     vectors: Optional[list] = None,
     parameterfiles: Optional[list] = None,
     histvectors: bool = False,

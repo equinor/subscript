@@ -3,7 +3,7 @@ equivalent DataFrame representation"""
 import datetime
 import re
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -368,7 +368,7 @@ def flatten_observation_unit(
     return obs_subunits
 
 
-def ertobs2df(input_str: str, cwd=".", starttime: str = None) -> pd.DataFrame:
+def ertobs2df(input_str: str, cwd=".", starttime: Optional[str] = None) -> pd.DataFrame:
     """Parse a string with ERT observations and convert into
     the internal dataframe format.
 
@@ -414,7 +414,7 @@ def ertobs2df(input_str: str, cwd=".", starttime: str = None) -> pd.DataFrame:
     return compute_date_from_days(pd.DataFrame(obs_list), starttime)
 
 
-def compute_date_from_days(dframe: pd.DataFrame, starttime: str = None):
+def compute_date_from_days(dframe: pd.DataFrame, starttime: Optional[str] = None):
     """Fill in DATE cells in a dataframe computed from
     a given starttime and data in DAYS cells.
 
