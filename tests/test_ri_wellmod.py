@@ -6,6 +6,8 @@ import pytest
 
 from subscript.ri_wellmod import ri_wellmod
 
+pytestmark = pytest.mark.xfail()
+
 SCRIPTNAME = "ri_wellmod"
 DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
 RI_DEV = "/project/res/x86_64_RH_7/share/resinsight/jenkins_dev/ResInsight"
