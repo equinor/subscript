@@ -62,6 +62,9 @@ class Model:
         origin_x=0.0,
         origin_y=0.0,
         rotation=0.0,
+        origin_x_pos=0.0,
+        origin_y_pos=0.0,
+        origin_top=0.0,
         fracture_length_x=1.0,
         fracture_offset_x=0.0,
         fracture_height_x=1.0,
@@ -156,6 +159,9 @@ class Model:
         self._origin_x = origin_x
         self._origin_y = origin_y
         self._rotation = rotation
+        self._origin_x_pos = origin_x_pos
+        self._origin_y_pos = origin_y_pos
+        self._origin_top = origin_top
 
         self._n_faults_x = self._matrix_x_count + (1 if fracture_at_boundary else -1)
         self._n_faults_y = self._matrix_y_count + (1 if fracture_at_boundary else -1)
@@ -337,34 +343,37 @@ class Model:
 
         self._throws = []
 
-        print("Initializing model")
-        print(f"  LX x LY x LZ: {self._lx} x {self._ly} x {self._lz}")
-        print(f"  NX x NY x NZ: {self._total_nx} x {self._total_ny} x {self._total_nz}")
-        print(f"  dx x dy x dz: {dx} x {dy} x {dz}")
-
-        print(f"  Matrix Element in X-direction: {nMatrixY}")
-        print(f"  Matrix Element in Y-direction: {nMatrixX}")
-        print(f"  Layers: {nz}")
-        print(f"  Shape Factor: {radius_x} (a), {radius_y} (b), {radius_z} (c)")
-        print(f"  Top geometry: {top}")
-        print(f"  Model origin: {origin_x}, {origin_y}")
-        print(f"  Model coordinate rotation: {rotation}°")
-        print(f"  Tilting: {tilt}")
-        print("  Fracture:")
-        print(f"    Thickness: {fractureThickness}")
-        print(f"    Cell Count: {fracture_cell_count}")
-        print(f"    At Boundary: {fracture_at_boundary}")
-        print("    X-dir fractures:")
-        print(f"      Length: {fracture_length_x}")
-        print(f"      Offset: {fracture_offset_x}")
-        print(f"      Height: {fracture_height_x}")
-        print(f"      Z-offset: {fracture_zoffset_x}")
-        print("    Y-dir fractures:")
-        print(f"      Length: {fracture_length_y}")
-        print(f"      Offset: {fracture_offset_y}")
-        print(f"      Height: {fracture_height_y}")
-        print("      Z-offset: {fracture_zoffset_y}")
-
+        print(
+            f"""
+Initializing model
+  LX x LY x LZ: {self._lx} x {self._ly} x {self._lz}
+  NX x NY x NZ: {self._total_nx} x {self._total_ny} x {self._total_nz}
+  dx x dy x dz: {dx} x {dy} x {dz}
+  Matrix Element in X-direction: {nMatrixY}
+  Matrix Element in Y-direction: {nMatrixX}
+  Layers: {nz}
+  Shape Factor: {radius_x} (a), {radius_y} (b), {radius_z} (c)
+  Top geometry: {top}
+  Model origin top: {origin_top}
+  Model origin: {origin_x}, {origin_y} at {origin_x_pos}, {origin_y_pos}
+  Model coordinate rotation: {rotation}°
+  Tilting: {tilt}
+  Fracture:
+    Thickness: {fractureThickness}
+    Cell Count: {fracture_cell_count}
+    At Boundary: {fracture_at_boundary}
+    X-dir fractures:
+      Length: {fracture_length_x}
+      Offset: {fracture_offset_x}
+      Height: {fracture_height_x}
+      Z-offset: {fracture_zoffset_x}
+    Y-dir fractures:
+      Length: {fracture_length_y}
+      Offset: {fracture_offset_y}
+      Height: {fracture_height_y}
+      Z-offset: {fracture_zoffset_y}
+"""
+        )
         self.dict_info["nx"] = self._total_nx
         self.dict_info["ny"] = self._total_ny
         self.dict_info["nz"] = self._total_nz
@@ -468,6 +477,18 @@ class Model:
         x_mid = self._centroid_x * self._lx
         y_mid = self._centroid_y * self._ly
 
+        rotation = np.radians(self._rotation)
+
+        origin_x_base = self._origin_x_pos * self._lx
+        origin_y_base = self._origin_y_pos * self._ly
+
+        origin_x_turn = (
+            math.cos(rotation) * origin_x_base + math.sin(rotation) * origin_y_base
+        )
+        origin_y_turn = (
+            -math.sin(rotation) * origin_x_base + math.cos(rotation) * origin_y_base
+        )
+
         cell_dx = np.full((self._total_nx, self._total_ny, self._total_nz), self._dx)
         cell_dy = np.full((self._total_nx, self._total_ny, self._total_nz), self._dy)
         cell_dz = np.empty((self._total_nx, self._total_ny, self._total_nz))
@@ -490,6 +511,15 @@ class Model:
 
         self._xv, self._yv = np.meshgrid(self._x, self._y)
         if self._a * self._b * self._c != 0.0:
+            origin_z = -self._c * np.sqrt(
+                np.clip(
+                    1.0
+                    - (origin_x_base - x_mid) ** 2 / self._a**2
+                    - (origin_y_base - y_mid) ** 2 / self._b**2,
+                    0,
+                    None,
+                )
+            ) + (origin_x_base - x_mid) * math.tan(math.radians(self._tilt))
             self._zv = -self._c * np.sqrt(
                 np.clip(
                     1.0
@@ -500,21 +530,26 @@ class Model:
                 )
             ) + (self._xv - x_mid) * math.tan(math.radians(self._tilt))
         else:
+            origin_z = (origin_x_base - x_mid) * math.tan(math.radians(self._tilt))
             self._zv = (self._xv - x_mid) * math.tan(math.radians(self._tilt))
 
-        rotation = np.radians(self._rotation)
-        rotation_matrix = np.array(
+        rotationMatrix = np.array(
             [
                 [np.cos(rotation), np.sin(rotation)],
                 [-np.sin(rotation), np.cos(rotation)],
             ]
         )
         self._xv, self._yv = np.einsum(
-            "ji, mni -> jmn", rotation_matrix, np.dstack([self._xv, self._yv])
+            "ji, mni -> jmn", rotationMatrix, np.dstack([self._xv, self._yv])
         )
-        self._xv += self._origin_x
-        self._yv += self._origin_y
-        self._zv += self._top - self._zv.min()
+
+        self._xv += self._origin_x - origin_x_turn
+        self._yv += self._origin_y - origin_y_turn
+
+        if self._origin_top > 0:
+            self._zv += self._origin_top - origin_z
+        else:
+            self._zv += self._top - self._zv.min()
 
     def distribute_property(self):
         """

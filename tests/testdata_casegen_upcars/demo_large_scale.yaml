@@ -48,7 +48,12 @@ Geometry:
   origin_y: 0
   # Coordinate rotation angle in degree ('--rotation')
   rotation: 0
-
+  # The location of origin as fraction of the model lx (0 = West most - Default, 1 = East most) ('--origin_x_pos', '--originXPos')
+  origin_x_pos: 1.0
+  # The location of origin as fraction of the model ly (0 = South most - Default, 1 = North most) ('--origin_y_pos', '--originYPos')
+  origin_y_pos: 1.0
+  # The top of origin point, default = 0 in which case it's ignored and model will use top keyword, if > 0, CaseGen will ensure that the origin point will start at this depth ('--origin_top', '--originTop')
+  origin_top: 0.0
 Layers:
   Background Matrix:
     NZ : 27                   # Total number of cells in z-direction, including heterogeneous layers ('--matrix_nz)

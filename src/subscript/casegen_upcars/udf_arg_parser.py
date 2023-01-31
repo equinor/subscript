@@ -570,12 +570,39 @@ def fill_parser(parser):
     )
 
     parser.add_argument(
+        "--originXPos",
+        "--origin_x_pos",
+        type=float,
+        dest="origin_x_pos",
+        required=False,
+        help="Origin position as fraction of model size in X-direction",
+    )
+
+    parser.add_argument(
         "--originY",
         "--origin_y",
         type=float,
         dest="origin_y",
         required=False,
         help="Origin coordinate of model in Y-direction",
+    )
+
+    parser.add_argument(
+        "--originYPos",
+        "--origin_y_pos",
+        type=float,
+        dest="origin_y_pos",
+        required=False,
+        help="Origin position as fraction of model size in Y-direction",
+    )
+
+    parser.add_argument(
+        "--originTop",
+        "--origin_top",
+        type=float,
+        dest="origin_top",
+        required=False,
+        help="Origin top depth",
     )
 
     parser.add_argument(
