@@ -161,7 +161,10 @@ def main():
         centroid_x = get_value(geometry["centroid_x"], parser.centroid_x)
         centroid_y = get_value(geometry["centroid_y"], parser.centroid_y)
         origin_x = get_value(geometry.get("origin_x", 0.0), parser.origin_x)
+        origin_x_pos = get_value(geometry.get("origin_x_pos", 0.0), parser.origin_x_pos)
         origin_y = get_value(geometry.get("origin_y", 0.0), parser.origin_y)
+        origin_y_pos = get_value(geometry.get("origin_y_pos", 0.0), parser.origin_y_pos)
+        origin_top = get_value(geometry.get("origin_top", 0.0), parser.origin_top)
         rotation = get_value(geometry.get("rotation", 0.0), parser.rotation)
 
         # Merge streak intro background matrix
@@ -419,6 +422,9 @@ def main():
         origin_x,
         origin_y,
         rotation,
+        origin_x_pos,
+        origin_y_pos,
+        origin_top,
         fracture_length_x,
         fracture_offset_x,
         fracture_height_x,

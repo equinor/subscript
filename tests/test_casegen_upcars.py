@@ -235,6 +235,56 @@ def test_demo_large_scale_with_coordinate_transformation(tmp_path, mocker):
     assert data_frame.Values["rotation"] == 15.0
 
 
+def test_demo_large_scale_with_origin_shifting(tmp_path, mocker):
+    """Test casegen_upcars on demo_large_scale.yaml with coordinate transformation"""
+    shutil.copytree(DATADIR, tmp_path / TESTDATA)
+    os.chdir(tmp_path / TESTDATA)
+
+    base_name = "TEST_LARGE_WITH_ORIGIN_SHIFTING"
+    mocker.patch(
+        "sys.argv",
+        [
+            "casegen_upcars",
+            "demo_large_scale.yaml",
+            "--et",
+            "dump_value.tmpl",
+            "--origin_x_pos",
+            "0.1",
+            "--origin_y_pos",
+            "0.8",
+            "--origin_top",
+            "1000.0",
+            "--base",
+            base_name,
+        ],
+    )
+    casegen_upcars.main()
+
+    # check that all output files are generated
+    for pre, suf in zip(
+        ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
+        [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+    ):
+        assert Path(pre + base_name + suf).exists()
+        if suf != ".DATA":
+            assert opm.io.Parser().parse(str(pre + base_name + suf))
+
+    # check some key parameters in output file
+    data_frame = pd.read_csv(base_name + ".DATA", index_col=0)
+    assert data_frame.Values["nx"] == 77
+    assert data_frame.Values["ny"] == 72
+    assert data_frame.Values["nz"] == 27
+    assert data_frame.Values["lx"] == 7700.0
+    assert data_frame.Values["ly"] == 7200.0
+    assert data_frame.Values["lz"] == 355.0
+    assert data_frame.Values["poro"] == 0.1711
+    assert data_frame.Values["originX"] == 0.0
+    assert data_frame.Values["originY"] == 0.0
+    assert data_frame.Values["rotation"] == 0.0
+    assert data_frame.Values["top"] == 1000.0
+    assert data_frame.Values["bottom"] == 1355.0
+
+
 def test_demo_large_scale_with_cmdline_streaks(tmp_path, mocker):
     """Test casegen_upcars on demo_large_scale.yaml with some streaks"""
     shutil.copytree(DATADIR, tmp_path / TESTDATA)
