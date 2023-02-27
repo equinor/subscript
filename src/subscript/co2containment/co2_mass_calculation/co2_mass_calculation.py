@@ -82,7 +82,6 @@ def _read_props(
     unrst: EclFile,
     prop: str,
 ) -> List[np.ndarray]:
-    print("_read_props(), prop = " + str(prop))
     c_order = _find_c_order(grid)
     return [p.numpy_view()[c_order].astype(float) for p in unrst[prop.upper()]]
 
@@ -196,9 +195,6 @@ def _calculate_co2_mass_from_source_data(
         )
         for date, x, y, (wg, wa) in eff_dens
     ]
-    print(weights[0])
-    print(weights[0].date)
-    print(weights[0].x)
     return weights
 
 
@@ -209,17 +205,14 @@ def calculate_co2_mass(
     poro_keyword: str,
     zone_file: Optional[str] = None
 ) -> List[CO2WeightData]:
-    print("calculate_co2_mass()")
     source_data = _extract_source_data(
         grid_file, unrst_file, init_file, poro_keyword, zone_file
     )
-    print("_calculate_co2_mass_from_source_data()")
     co2_mass_data = _calculate_co2_mass_from_source_data(source_data)
     return co2_mass_data
 
 
 def main(arguments):
-    print(arguments)
     pass
 
 

@@ -27,12 +27,10 @@ def calculate_out_of_bounds_co2(
     compact: bool,
     zone_file: Optional[str] = None,
 ) -> pd.DataFrame:
-    print("Start calculating co2_mass_data")
     co2_mass_data = calculate_co2_mass(grid_file,
                                        unrst_file,
                                        init_file,
                                        poro_keyword)
-    print("Done calculating co2_mass_data")
     poly = _read_polygon(polygon_file)
     return calculate_from_co2_mass_data(co2_mass_data, poly, compact)
 
