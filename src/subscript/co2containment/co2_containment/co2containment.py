@@ -10,9 +10,11 @@ import shapely.geometry
 import xtgeo
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
+from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import calculate_co2_mass
+from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import CO2WeightData
 
 from .calculate import (
-    calculate_co2_mass,
+    # calculate_co2_mass,
     calculate_co2_containment,
     SourceData,
     ContainedCo2,
@@ -28,26 +30,31 @@ def calculate_out_of_bounds_co2(
     compact: bool,
     zone_file: Optional[str] = None,
 ) -> pd.DataFrame:
-    source_data = _extract_source_data(
-        grid_file, unrst_file, init_file, poro_keyword, zone_file
-    )
+    # source_data = _extract_source_data(
+    #     grid_file, unrst_file, init_file, poro_keyword, zone_file
+    # )
+    print("Start calculating co2_mass_data")
+    co2_mass_data = calculate_co2_mass(grid_file,
+                                       unrst_file,
+                                       init_file,
+                                       "PORO")
+    print("Done calculating co2_mass_data")
     poly = _read_polygon(polygon_file)
-    return calculate_from_source_data(source_data, poly, compact)
+    return calculate_from_source_data(co2_mass_data, poly, compact)
 
 
 def calculate_from_source_data(
-    source_data: SourceData,
+    co2_mass_data: CO2WeightData,
     polygon: shapely.geometry.Polygon,
     compact: bool,
 ) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
-    co2_masses = calculate_co2_mass(source_data)
     contained_mass = calculate_co2_containment(
-        source_data.x, source_data.y, co2_masses, polygon, source_data.zone
+        co2_mass_data, polygon  #  co2_mass_data.x, co2_mass_data.y,  , source_data.zone
     )
     df = _construct_containment_table(contained_mass)
     if compact:
         return df
-    if source_data.zone is None:
+    if True:  # source_data.zone is None:
         return _merge_date_rows(df)
     return {
         z: _merge_date_rows(g)

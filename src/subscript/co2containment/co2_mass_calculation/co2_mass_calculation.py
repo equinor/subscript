@@ -38,12 +38,13 @@ class Co2WeightData_old:
         return self.aqu_phase_kg + self.gas_phase_kg
 
 @dataclass
-class Co2WeightData:
+class CO2WeightData:
     date: str
     x: np.ndarray
     y: np.ndarray
     gas_phase_kg: np.ndarray
     aqu_phase_kg: np.ndarray
+    zone: Optional[np.ndarray] = None
 
     def total_weight(self) -> np.ndarray:
         return self.aqu_phase_kg + self.gas_phase_kg
@@ -163,21 +164,19 @@ def _calculate_co2_mass_from_source_data(
     source_data: SourceData,
     co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,
     water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS
-) -> List[Co2WeightData]:
+) -> List[CO2WeightData]:
     eff_dens = [
         (
             d,
-            x,
-            y,
+            source_data.x,  # Can change this, repeated for each time step
+            source_data.y,  # Can change this, repeated for each time step
             _effective_densities(
                 _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
             )
         )
-        for (d, x, y, _swat, _dwat, _sgas, _dgas, _amfg, _ymfg)
+        for (d, _swat, _dwat, _sgas, _dgas, _amfg, _ymfg)
         in zip(
             source_data.dates,
-            source_data.x,
-            source_data.y,
             source_data.swat,
             source_data.dwat,
             source_data.sgas,
@@ -188,7 +187,7 @@ def _calculate_co2_mass_from_source_data(
     ]
     eff_vols = source_data.volumes * source_data.poro
     weights = [
-        Co2WeightData(
+        CO2WeightData(
             date,
             x,
             y,
@@ -197,14 +196,19 @@ def _calculate_co2_mass_from_source_data(
         )
         for date, x, y, (wg, wa) in eff_dens
     ]
+    print(weights[0])
+    print(weights[0].date)
+    print(weights[0].x)
     return weights
 
 
-def calculate_co2_mass(grid_file: str,
-                       unrst_file: str,
-                       init_file: str,
-                       poro_keyword: str,
-                       zone_file: Optional[str] = None):
+def calculate_co2_mass(
+    grid_file: str,
+    unrst_file: str,
+    init_file: str,
+    poro_keyword: str,
+    zone_file: Optional[str] = None
+) -> List[CO2WeightData]:
     print("calculate_co2_mass()")
     source_data = _extract_source_data(
         grid_file, unrst_file, init_file, poro_keyword, zone_file
