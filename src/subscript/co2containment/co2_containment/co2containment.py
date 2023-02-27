@@ -2,21 +2,18 @@ import argparse
 import dataclasses
 import pathlib
 import sys
-from typing import Dict, List, Optional, Union, Tuple
+from typing import Dict, List, Optional, Union
 
 import numpy as np
 import pandas as pd
 import shapely.geometry
-import xtgeo
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import calculate_co2_mass
 from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import CO2WeightData
 
 from .calculate import (
-    # calculate_co2_mass,
     calculate_co2_containment,
-    SourceData,
     ContainedCo2,
 )
 
@@ -30,21 +27,18 @@ def calculate_out_of_bounds_co2(
     compact: bool,
     zone_file: Optional[str] = None,
 ) -> pd.DataFrame:
-    # source_data = _extract_source_data(
-    #     grid_file, unrst_file, init_file, poro_keyword, zone_file
-    # )
     print("Start calculating co2_mass_data")
     co2_mass_data = calculate_co2_mass(grid_file,
                                        unrst_file,
                                        init_file,
-                                       "PORO")
+                                       poro_keyword)
     print("Done calculating co2_mass_data")
     poly = _read_polygon(polygon_file)
-    return calculate_from_source_data(co2_mass_data, poly, compact)
+    return calculate_from_co2_mass_data(co2_mass_data, poly, compact)
 
 
-def calculate_from_source_data(
-    co2_mass_data: CO2WeightData,
+def calculate_from_co2_mass_data(
+    co2_mass_data: List[CO2WeightData],
     polygon: shapely.geometry.Polygon,
     compact: bool,
 ) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
@@ -60,94 +54,6 @@ def calculate_from_source_data(
         z: _merge_date_rows(g)
         for z, g in df.groupby("zone")
     }
-
-
-def _fetch_properties(  # xxx
-    grid: EclGrid,
-    unrst: EclFile,
-) -> Tuple[Dict[str, List[np.ndarray]], List[str]]:
-    prop_names = dict.fromkeys(["sgas", "swat", "dgas", "dwat", "amfg", "ymfg"])
-    for p in prop_names:
-        prop_names[p] = []
-    dates = [d.strftime("%Y%m%d") for d in unrst.report_dates]
-    return {
-        p: _read_props(grid, unrst, p)
-        for p in prop_names
-    }, dates
-
-
-def _find_c_order(grid: EclGrid):  # xxx
-    actnum = grid.export_actnum().numpy_copy()
-    actnum[actnum == 0] = -1
-    actnum[actnum == 1] = np.arange(grid.get_num_active())
-    actnum3d = actnum.reshape(grid.get_dims()[:3], order="F")
-    order = actnum3d.flatten()
-    return order[order != -1]
-
-
-def _read_props(  # xxx
-    grid: EclGrid,
-    unrst: EclFile,
-    prop: str,
-) -> List[np.ndarray]:
-    c_order = _find_c_order(grid)
-    return [p.numpy_view()[c_order].astype(float) for p in unrst[prop.upper()]]
-
-
-def _extract_source_data(  # xxx
-    grid_file: str,
-    unrst_file: str,
-    init_file: str,
-    poro_keyword: str,
-    zone_file: Optional[str],
-) -> SourceData:
-    grid = xtgeo.grid_from_file(grid_file)
-    ecl_grid = EclGrid(grid_file)
-    unrst = EclFile(unrst_file)
-    props, dates = _fetch_properties(ecl_grid, unrst)
-    poro = xtgeo.gridproperty_from_file(
-        init_file, grid=grid, name=poro_keyword, date="first"
-    )
-    gasless = _identify_gas_less_cells(props["sgas"], props["amfg"])
-    _contract_actnum(grid, ~gasless)
-    xyz = grid.get_xyz()
-    vols = grid.get_bulk_volume()
-    active = grid.actnum_array.astype(bool)
-    zone = None
-    if zone_file is not None:
-        zone = xtgeo.gridproperty_from_file(zone_file, grid=grid)
-        zone = zone.values.data[active]
-    sd = SourceData(
-        xyz[0].values.data[active],
-        xyz[1].values.data[active],
-        poro.values.data[active],
-        vols.values.data[active],
-        dates,
-        zone=zone,
-        **{
-            p: [_v[~gasless] for _v in v]
-            for p, v in props.items()
-        },
-    )
-    return sd
-
-
-def _identify_gas_less_cells(  # xxx
-    sgases: List[np.ndarray],
-    amfgs: List[np.ndarray]
-) -> np.ndarray:
-    gas_less = np.logical_and.reduce([np.abs(s) < 1e-16 for s in sgases])
-    gas_less &= np.logical_and.reduce([np.abs(a) < 1e-16 for a in amfgs])
-    return gas_less
-
-
-def _contract_actnum(  # xxx
-    grid: xtgeo.Grid,
-    is_active: np.ndarray,
-):
-    actnum = grid.get_actnum().copy()
-    actnum.values[grid.actnum_array.astype(bool)] = is_active.astype(int)
-    grid.set_actnum(actnum)
 
 
 def _read_polygon(polygon_file: str) -> shapely.geometry.Polygon:
