@@ -28,8 +28,9 @@ class SourceData:
     ymfg: List[np.ndarray]
     zone: Optional[np.ndarray] = None
 
+
 @dataclass
-class Co2WeightData_old:
+class Co2MassDataAtTimeStep:
     date: str
     gas_phase_kg: np.ndarray
     aqu_phase_kg: np.ndarray
@@ -37,17 +38,12 @@ class Co2WeightData_old:
     def total_weight(self) -> np.ndarray:
         return self.aqu_phase_kg + self.gas_phase_kg
 
+
 @dataclass
-class CO2WeightData:
-    date: str
+class Co2MassData:
     x: np.ndarray
     y: np.ndarray
-    gas_phase_kg: np.ndarray
-    aqu_phase_kg: np.ndarray
-    zone: Optional[np.ndarray] = None
-
-    def total_weight(self) -> np.ndarray:
-        return self.aqu_phase_kg + self.gas_phase_kg
+    data_list: List[Co2MassDataAtTimeStep]
 
 
 def _identify_gas_less_cells(
@@ -163,12 +159,10 @@ def _calculate_co2_mass_from_source_data(
     source_data: SourceData,
     co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,
     water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS
-) -> List[CO2WeightData]:
+) -> Co2MassData:
     eff_dens = [
         (
             d,
-            source_data.x,  # Can change this, repeated for each time step
-            source_data.y,  # Can change this, repeated for each time step
             _effective_densities(
                 _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
             )
@@ -185,16 +179,18 @@ def _calculate_co2_mass_from_source_data(
         )
     ]
     eff_vols = source_data.volumes * source_data.poro
-    weights = [
-        CO2WeightData(
-            date,
-            x,
-            y,
-            wg * eff_vols,
-            wa * eff_vols
-        )
-        for date, x, y, (wg, wa) in eff_dens
-    ]
+    weights = Co2MassData(
+        source_data.x,
+        source_data.y,
+        [
+            Co2MassDataAtTimeStep(
+                date,
+                wg * eff_vols,
+                wa * eff_vols
+            )
+            for date, (wg, wa) in eff_dens
+        ]
+    )
     return weights
 
 
@@ -204,7 +200,7 @@ def calculate_co2_mass(
     init_file: str,
     poro_keyword: str,
     zone_file: Optional[str] = None
-) -> List[CO2WeightData]:
+) -> Co2MassData:
     source_data = _extract_source_data(
         grid_file, unrst_file, init_file, poro_keyword, zone_file
     )

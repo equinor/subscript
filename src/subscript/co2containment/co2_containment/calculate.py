@@ -4,10 +4,7 @@ from typing import List, Union, Literal, Optional
 import numpy as np
 from shapely.geometry import Polygon, MultiPolygon
 
-from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import CO2WeightData
-
-DEFAULT_CO2_MOLAR_MASS = 44
-DEFAULT_WATER_MOLAR_MASS = 18
+from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import Co2MassData
 
 
 @dataclass
@@ -25,17 +22,15 @@ class ContainedCo2:
 
 
 def calculate_co2_containment(
-    weights: List[CO2WeightData],
+    weights: Co2MassData,
     polygon: Union[Polygon, MultiPolygon],
     zones: Optional[np.ndarray] = None,
 ) -> List[ContainedCo2]:
-    x = weights[0].x
-    y = weights[0].y
-    outside = ~_calculate_containment(x, y, polygon)
+    outside = ~_calculate_containment(weights.x, weights.y, polygon)
     if zones is None:
         return [
             c
-            for w in weights
+            for w in weights.data_list
             for c in [
                 ContainedCo2(w.date, w.gas_phase_kg[outside].sum(), "gas", False),
                 ContainedCo2(w.date, w.gas_phase_kg[~outside].sum(), "gas", True),
@@ -47,7 +42,7 @@ def calculate_co2_containment(
         zone_map = {z: zones == z for z in np.unique(zones)}
         return [
             c
-            for w in weights
+            for w in weights.data_list
             for zn, zm in zone_map.items()
             for c in [
                 ContainedCo2(

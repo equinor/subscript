@@ -10,7 +10,7 @@ import shapely.geometry
 from ecl.eclfile import EclFile
 from ecl.grid import EclGrid
 from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import calculate_co2_mass
-from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import CO2WeightData
+from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import Co2MassData
 
 from .calculate import (
     calculate_co2_containment,
@@ -34,9 +34,8 @@ def calculate_out_of_bounds_co2(
     poly = _read_polygon(polygon_file)
     return calculate_from_co2_mass_data(co2_mass_data, poly, compact)
 
-
 def calculate_from_co2_mass_data(
-    co2_mass_data: List[CO2WeightData],
+    co2_mass_data: Co2MassData,
     polygon: shapely.geometry.Polygon,
     compact: bool,
 ) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
