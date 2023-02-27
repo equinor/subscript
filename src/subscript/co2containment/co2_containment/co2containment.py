@@ -55,7 +55,7 @@ def calculate_from_source_data(
     }
 
 
-def _fetch_properties(
+def _fetch_properties(  # xxx
     grid: EclGrid,
     unrst: EclFile,
 ) -> Tuple[Dict[str, List[np.ndarray]], List[str]]:
@@ -69,7 +69,7 @@ def _fetch_properties(
     }, dates
 
 
-def _find_c_order(grid: EclGrid):
+def _find_c_order(grid: EclGrid):  # xxx
     actnum = grid.export_actnum().numpy_copy()
     actnum[actnum == 0] = -1
     actnum[actnum == 1] = np.arange(grid.get_num_active())
@@ -78,7 +78,7 @@ def _find_c_order(grid: EclGrid):
     return order[order != -1]
 
 
-def _read_props(
+def _read_props(  # xxx
     grid: EclGrid,
     unrst: EclFile,
     prop: str,
@@ -87,7 +87,7 @@ def _read_props(
     return [p.numpy_view()[c_order].astype(float) for p in unrst[prop.upper()]]
 
 
-def _extract_source_data(
+def _extract_source_data(  # xxx
     grid_file: str,
     unrst_file: str,
     init_file: str,
@@ -125,7 +125,7 @@ def _extract_source_data(
     return sd
 
 
-def _identify_gas_less_cells(
+def _identify_gas_less_cells(  # xxx
     sgases: List[np.ndarray],
     amfgs: List[np.ndarray]
 ) -> np.ndarray:
@@ -134,7 +134,7 @@ def _identify_gas_less_cells(
     return gas_less
 
 
-def _contract_actnum(
+def _contract_actnum(  # xxx
     grid: xtgeo.Grid,
     is_active: np.ndarray,
 ):
