@@ -34,6 +34,8 @@ class Co2MassDataAtTimeStep:
     date: str
     gas_phase_kg: np.ndarray
     aqu_phase_kg: np.ndarray
+    # volume_actual_co2: np.ndarray
+    # volume_coverage_co2: np.ndarray
 
     def total_weight(self) -> np.ndarray:
         return self.aqu_phase_kg + self.gas_phase_kg
@@ -44,6 +46,7 @@ class Co2MassData:
     x: np.ndarray
     y: np.ndarray
     data_list: List[Co2MassDataAtTimeStep]
+    zone: Optional[np.ndarray] = None
 
 
 def _identify_gas_less_cells(
@@ -189,8 +192,10 @@ def _calculate_co2_mass_from_source_data(
                 wa * eff_vols
             )
             for date, (wg, wa) in eff_dens
-        ]
+        ],
+        source_data.zone
     )
+
     return weights
 
 

@@ -22,15 +22,14 @@ class ContainedCo2:
 
 
 def calculate_co2_containment(
-    weights: Co2MassData,
-    polygon: Union[Polygon, MultiPolygon],
-    zones: Optional[np.ndarray] = None,
+    co2_mass_data: Co2MassData,
+    polygon: Union[Polygon, MultiPolygon]
 ) -> List[ContainedCo2]:
-    outside = ~_calculate_containment(weights.x, weights.y, polygon)
-    if zones is None:
+    outside = ~_calculate_containment(co2_mass_data.x, co2_mass_data.y, polygon)
+    if co2_mass_data.zone is None:
         return [
             c
-            for w in weights.data_list
+            for w in co2_mass_data.data_list
             for c in [
                 ContainedCo2(w.date, w.gas_phase_kg[outside].sum(), "gas", False),
                 ContainedCo2(w.date, w.gas_phase_kg[~outside].sum(), "gas", True),
@@ -39,10 +38,10 @@ def calculate_co2_containment(
             ]
         ]
     else:
-        zone_map = {z: zones == z for z in np.unique(zones)}
+        zone_map = {z: co2_mass_data.zone == z for z in np.unique(co2_mass_data.zone)}
         return [
             c
-            for w in weights.data_list
+            for w in co2_mass_data.data_list
             for zn, zm in zone_map.items()
             for c in [
                 ContainedCo2(

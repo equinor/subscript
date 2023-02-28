@@ -30,7 +30,8 @@ def calculate_out_of_bounds_co2(
     co2_mass_data = calculate_co2_mass(grid_file,
                                        unrst_file,
                                        init_file,
-                                       poro_keyword)
+                                       poro_keyword,
+                                       zone_file)
     poly = _read_polygon(polygon_file)
     return calculate_from_co2_mass_data(co2_mass_data, poly, compact)
 
@@ -40,12 +41,12 @@ def calculate_from_co2_mass_data(
     compact: bool,
 ) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
     contained_mass = calculate_co2_containment(
-        co2_mass_data, polygon  #  co2_mass_data.x, co2_mass_data.y,  , source_data.zone
+        co2_mass_data, polygon
     )
     df = _construct_containment_table(contained_mass)
     if compact:
         return df
-    if True:  # source_data.zone is None:
+    if co2_mass_data.zone is None:
         return _merge_date_rows(df)
     return {
         z: _merge_date_rows(g)
