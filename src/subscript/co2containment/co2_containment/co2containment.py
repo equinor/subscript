@@ -7,8 +7,6 @@ from typing import Dict, List, Optional, Union
 import numpy as np
 import pandas as pd
 import shapely.geometry
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
 from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import calculate_co2_mass
 from subscript.co2containment.co2_mass_calculation.co2_mass_calculation import Co2MassData
 
