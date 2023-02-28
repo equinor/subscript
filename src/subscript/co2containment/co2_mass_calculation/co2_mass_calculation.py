@@ -34,8 +34,6 @@ class Co2MassDataAtTimeStep:
     date: str
     gas_phase_kg: np.ndarray
     aqu_phase_kg: np.ndarray
-    # volume_actual_co2: np.ndarray
-    # volume_coverage_co2: np.ndarray
 
     def total_weight(self) -> np.ndarray:
         return self.aqu_phase_kg + self.gas_phase_kg
@@ -46,6 +44,24 @@ class Co2MassData:
     x: np.ndarray
     y: np.ndarray
     data_list: List[Co2MassDataAtTimeStep]
+    zone: Optional[np.ndarray] = None
+
+
+@dataclass
+class Co2VolumeDataAtTimeStep:
+    date: str
+    volume_coverage: np.ndarray  # Or volume_extent ?
+    volume_actual_co2: np.ndarray
+
+    def total_weight(self) -> np.ndarray:
+        return self.aqu_phase_kg + self.gas_phase_kg
+
+
+@dataclass
+class Co2VolumeData:
+    x: np.ndarray
+    y: np.ndarray
+    data_list: List[Co2VolumeDataAtTimeStep]
     zone: Optional[np.ndarray] = None
 
 
@@ -182,7 +198,7 @@ def _calculate_co2_mass_from_source_data(
         )
     ]
     eff_vols = source_data.volumes * source_data.poro
-    weights = Co2MassData(
+    co2_mass_data = Co2MassData(
         source_data.x,
         source_data.y,
         [
@@ -196,7 +212,16 @@ def _calculate_co2_mass_from_source_data(
         source_data.zone
     )
 
-    return weights
+    return co2_mass_data
+
+
+def _calculate_co2_volume_from_source_data(
+    source_data: SourceData,
+    co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,  # Not needed ?
+    water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS  # Not needed ?
+) -> Co2VolumeData:
+    # Similar to _calculate_co2_mass_from_source_data
+    pass
 
 
 def calculate_co2_mass(
@@ -213,7 +238,23 @@ def calculate_co2_mass(
     return co2_mass_data
 
 
+def calculate_co2_volume(
+    grid_file: str,
+    unrst_file: str,
+    init_file: str,
+    poro_keyword: str,
+    zone_file: Optional[str] = None
+) -> Co2VolumeData:
+    source_data = _extract_source_data(
+        grid_file, unrst_file, init_file, poro_keyword, zone_file
+    )
+    co2_volume_data = _calculate_co2_volume_from_source_data(source_data)
+    return co2_volume_data
+
+
 def main(arguments):
+    # Not implemented (yet)
+    # Use calculate_co2_mass() or calculate_co2_volume() directly
     pass
 
 
