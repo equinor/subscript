@@ -17,15 +17,20 @@ DEFAULT_WATER_MOLAR_MASS = 18.0
 class SourceData:
     x: np.ndarray
     y: np.ndarray
-    poro: np.ndarray
-    volumes: np.ndarray
-    dates: List[str]
-    swat: List[np.ndarray]
-    dwat: List[np.ndarray]
-    sgas: List[np.ndarray]
-    dgas: List[np.ndarray]
-    amfg: List[np.ndarray]
-    ymfg: List[np.ndarray]
+    DATES: List[str]
+    VOL: List[np.ndarray] = None
+    SWAT: List[np.ndarray] = None
+    SGAS: List[np.ndarray] = None
+    RPORV: Optional[np.ndarray] = None
+    PORV: Optional[np.ndarray] = None
+    AMFG: Optional[np.ndarray] = None
+    YMFG: Optional[np.ndarray] = None
+    XMF2: Optional[np.ndarray] = None
+    YMF2: Optional[np.ndarray] = None
+    DWAT: Optional[np.ndarray] = None
+    DGAS: Optional[np.ndarray] = None
+    BWAT: Optional[np.ndarray] = None
+    BGAS: Optional[np.ndarray] = None
     zone: Optional[np.ndarray] = None
 
 
@@ -64,91 +69,78 @@ class Co2VolumeData:
     data_list: List[Co2VolumeDataAtTimeStep]
     zone: Optional[np.ndarray] = None
 
-
-def _identify_gas_less_cells(
-    sgases: List[np.ndarray],
-    amfgs: List[np.ndarray]
-) -> np.ndarray:
-    gas_less = np.logical_and.reduce([np.abs(s) < TRESHOLD_SGAS for s in sgases])
-    gas_less &= np.logical_and.reduce([np.abs(a) < TRESHOLD_AMFG for a in amfgs])
-    return gas_less
-
-
-def _contract_actnum(
-    grid: xtgeo.Grid,
-    is_active: np.ndarray,
-):
-    actnum = grid.get_actnum().copy()
-    actnum.values[grid.actnum_array.astype(bool)] = is_active.astype(int)
-    grid.set_actnum(actnum)
-
-
-def _find_c_order(grid: EclGrid):
-    actnum = grid.export_actnum().numpy_copy()
-    actnum[actnum == 0] = -1
-    actnum[actnum == 1] = np.arange(grid.get_num_active())
-    actnum3d = actnum.reshape(grid.get_dims()[:3], order="F")
-    order = actnum3d.flatten()
-    return order[order != -1]
-
+def _try_prop(unrst:EclFile,
+              prop_name: str):
+    try:
+        prop = unrst[prop_name]
+    except KeyError:
+        prop = None
+    return prop
 
 def _read_props(
-    grid: EclGrid,
     unrst: EclFile,
-    prop: str,
+    prop_names: List,
 ) -> List[np.ndarray]:
-    c_order = _find_c_order(grid)
-    return [p.numpy_view()[c_order].astype(float) for p in unrst[prop.upper()]]
-
+    props_att = [_try_prop(unrst,p) for p in prop_names]
+    act_prop_names = [k[1] for k in enumerate(prop_names) if props_att[k[0]] is not None]
+    act_props = [props_att[k[0]] for k in enumerate(prop_names) if props_att[k[0]] is not None]
+    return dict(zip(act_prop_names,act_props))
 
 def _fetch_properties(
-    grid: EclGrid,
     unrst: EclFile,
+    prop_names: List
 ) -> Tuple[Dict[str, List[np.ndarray]], List[str]]:
-    prop_names = dict.fromkeys(["sgas", "swat", "dgas", "dwat", "amfg", "ymfg"])
-    for p in prop_names:
-        prop_names[p] = []
     dates = [d.strftime("%Y%m%d") for d in unrst.report_dates]
-    return {
-        p: _read_props(grid, unrst, p)
-        for p in prop_names
-    }, dates
+    properties = _read_props(unrst,prop_names)
+    return properties, dates
 
+def _transform_properties(properties: List,
+                 time: List):
+    props_dict = {}
+    for k in enumerate(properties.keys()):
+        props_dict_t = {}
+        for l in enumerate(time):
+            if len(properties[k[1]]) == 1:
+                props_dict_t[l[1]] = properties[k[1]][0]
+            else:
+                props_dict_t[l[1]] = properties[k[1]][l[0]].numpy_copy()
+        props_dict[k[1]] = props_dict_t
+    return props_dict
 
 def _extract_source_data(
     grid_file: str,
     unrst_file: str,
-    init_file: str,
-    poro_keyword: str,
-    zone_file: Optional[str],
+    props: List[str],
+    init_file: Optional[str] = None,
+    zone_file: Optional[str] = None
 ) -> SourceData:
-    grid = xtgeo.grid_from_file(grid_file)
-    ecl_grid = EclGrid(grid_file)
+    grid = EclGrid(grid_file)
     unrst = EclFile(unrst_file)
-    props, dates = _fetch_properties(ecl_grid, unrst)
-    poro = xtgeo.gridproperty_from_file(
-        init_file, grid=grid, name=poro_keyword, date="first"
-    )
-    gasless = _identify_gas_less_cells(props["sgas"], props["amfg"])
-    _contract_actnum(grid, ~gasless)
-    xyz = grid.get_xyz()
-    vols = grid.get_bulk_volume()
-    active = grid.actnum_array.astype(bool)
+    init = EclFile(init_file)
+    properties, dates = _fetch_properties(unrst,props)
+    active = np.where(grid.export_actnum().numpy_copy() > 0)[0]
+    xyz = [grid.get_xyz(global_index=a) for a in active] #Tuple with (x,y,z) for each cell
+    cells_x = [coord[0] for coord in xyz]
+    cells_y = [coord[1] for coord in xyz]
     zone = None
     if zone_file is not None:
         zone = xtgeo.gridproperty_from_file(zone_file, grid=grid)
         zone = zone.values.data[active]
+    properties['VOL'] = [[grid.cell_volume(global_index=x) for x in active]]
+    try:
+        PORV = init["PORV"]
+        properties['PORV'] = [p.numpy_copy()[active] for p in PORV]
+    except KeyError:
+        pass
+    properties = _transform_properties(properties,dates)
     sd = SourceData(
-        xyz[0].values.data[active],
-        xyz[1].values.data[active],
-        poro.values.data[active],
-        vols.values.data[active],
+        cells_x,
+        cells_y,
         dates,
-        zone=zone,
         **{
-            p: [_v[~gasless] for _v in v]
-            for p, v in props.items()
+            p: v for p, v in properties.items()
         },
+        **{zone: zone}
     )
     return sd
 
@@ -156,62 +148,83 @@ def _extract_source_data(
 def _mole_to_mass_fraction(x, m_co2, m_h20):
     return x * m_co2 / (m_h20 + (m_co2 - m_h20) * x)
 
+def cut_threshold(x, threshold):
+    return np.where(x > threshold)
 
-def _effective_densities(
-    swat: np.ndarray,
-    dwat: np.ndarray,
-    sgas: np.ndarray,
-    dgas: np.ndarray,
-    amfg: np.ndarray,
-    ymfg: np.ndarray,
-    co2_molar_mass: float,
-    water_molar_mass: float,
-) -> Tuple[np.ndarray, np.ndarray]:
-    gas_mass_frac = _mole_to_mass_fraction(ymfg, co2_molar_mass, water_molar_mass)
-    aqu_mass_frac = _mole_to_mass_fraction(amfg, co2_molar_mass, water_molar_mass)
-    w_gas = sgas * dgas * gas_mass_frac
-    w_aqu = swat * dwat * aqu_mass_frac
-    return w_gas, w_aqu
+def _pflotran_co2mass(source_data,
+                     co2_molar_mass=DEFAULT_CO2_MOLAR_MASS,
+                     water_molar_mass=DEFAULT_WATER_MOLAR_MASS):
+    dates = source_data.DATES
+    dwat = source_data.DWAT
+    dgas = source_data.DGAS
+    amfg = source_data.AMFG
+    ymfg = source_data.YMFG
+    sgas = source_data.SGAS
+    swat = source_data.SWAT
+    eff_vols = source_data.PORV
+    co2_mass = {}
+    for t in dates:
+        co2_mass[t] = [
+            eff_vols[t] * sgas[t] * dgas[t] * _mole_to_mass_fraction(ymfg[t], co2_molar_mass, water_molar_mass),
+            eff_vols[t] * swat[t] * dwat[t] * _mole_to_mass_fraction(amfg[t], co2_molar_mass, water_molar_mass)]
+    return co2_mass
 
+def _eclipse_co2mass(source_data, co2_molar_mass=DEFAULT_CO2_MOLAR_MASS):
+    dates = source_data.DATES
+    bgas = source_data.BGAS
+    bwat = source_data.BWAT
+    xmf2 = source_data.XMF2
+    ymf2 = source_data.YMF2
+    sgas = source_data.SGAS
+    swat = source_data.SWAT
+    eff_vols = source_data.RPORV
+    conv_fact = co2_molar_mass
+    co2_mass = {}
+    for t in dates:
+        co2_mass[t] = [conv_fact * bgas[t] * ymf2[t] * sgas[t] * eff_vols[t],
+                       conv_fact * bwat[t] * xmf2[t] * swat[t] * eff_vols[t]]
+    return co2_mass
 
 def _calculate_co2_mass_from_source_data(
     source_data: SourceData,
     co2_molar_mass: float = DEFAULT_CO2_MOLAR_MASS,
     water_molar_mass: float = DEFAULT_WATER_MOLAR_MASS
 ) -> Co2MassData:
-    eff_dens = [
-        (
-            d,
-            _effective_densities(
-                _swat, _dwat, _sgas, _dgas, _amfg, _ymfg, co2_molar_mass, water_molar_mass
-            )
-        )
-        for (d, _swat, _dwat, _sgas, _dgas, _amfg, _ymfg)
-        in zip(
-            source_data.dates,
-            source_data.swat,
-            source_data.dwat,
-            source_data.sgas,
-            source_data.dgas,
-            source_data.amfg,
-            source_data.ymfg,
-        )
-    ]
-    eff_vols = source_data.volumes * source_data.poro
+    props_check = list(set([field.name for field in fields(source_data)]).difference(set(['x','y','DATES','VOL','zone'])))
+    active_props_idx = np.where([getattr(source_data, x) is not None for x in props_check])[0]
+    active_props = [props_check[i] for i in active_props_idx]
+
+    if set(['PORV','RPORV']).issubset(set(active_props)):
+        active_props.remove('PORV')
+
+    if set(['PORV','SGAS', 'SWAT', 'DGAS', 'DWAT', 'AMFG', 'YMFG']).issubset(set(active_props)):
+        source = 'PFlotran'
+        print('Data Source is ' + source)
+    else:
+        if set(['RPORV', 'SGAS', 'SWAT', 'BGAS', 'BWAT', 'XMF2', 'YMF2']).issubset(set(active_props)):
+            source = 'Eclipse'
+            print('Data Source is ' + source)
+        else:
+            print('Information is not enough to compute CO2 mass')
+            exit()
+
+    if source == 'PFlotran':
+        co2_mass_cell = _pflotran_co2mass(source_data,co2_molar_mass,water_molar_mass)
+    else:
+        co2_mass_cell = _eclipse_co2mass(source_data,co2_molar_mass)
     co2_mass_data = Co2MassData(
         source_data.x,
         source_data.y,
         [
             Co2MassDataAtTimeStep(
-                date,
-                wg * eff_vols,
-                wa * eff_vols
+                x,
+                co2_mass_cell[x][0],
+                co2_mass_cell[x][1]
             )
-            for date, (wg, wa) in eff_dens
+            for x in co2_mass_cell
         ],
         source_data.zone
     )
-
     return co2_mass_data
 
 
@@ -227,12 +240,11 @@ def _calculate_co2_volume_from_source_data(
 def calculate_co2_mass(
     grid_file: str,
     unrst_file: str,
-    init_file: str,
-    poro_keyword: str,
+    props: List[str],
     zone_file: Optional[str] = None
 ) -> Co2MassData:
     source_data = _extract_source_data(
-        grid_file, unrst_file, init_file, poro_keyword, zone_file
+        grid_file, unrst_file, props, zone_file = zone_file
     )
     co2_mass_data = _calculate_co2_mass_from_source_data(source_data)
     return co2_mass_data
