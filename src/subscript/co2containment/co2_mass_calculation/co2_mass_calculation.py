@@ -140,7 +140,7 @@ def _extract_source_data(
         **{
             p: v for p, v in properties.items()
         },
-        **{zone: zone}
+        **{'zone': zone}
     )
     return sd
 
