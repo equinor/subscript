@@ -21,14 +21,12 @@ def calculate_out_of_bounds_co2(
     unrst_file: str,
     init_file: str,
     polygon_file: str,
-    poro_keyword: str,
     compact: bool,
     zone_file: Optional[str] = None,
 ) -> pd.DataFrame:
     co2_mass_data = calculate_co2_mass(grid_file,
                                        unrst_file,
                                        init_file,
-                                       poro_keyword,
                                        zone_file)
     poly = _read_polygon(polygon_file)
     return calculate_from_co2_mass_data(co2_mass_data, poly, compact)
@@ -121,7 +119,6 @@ def make_parser():
     parser.add_argument("outfile", help="Output filename")
     parser.add_argument("--unrst", help="Path to UNRST file. Will assume same base name as grid if not provided", default=None)
     parser.add_argument("--init", help="Path to INIT file. Will assume same base name as grid if not provided", default=None)
-    parser.add_argument("--poro", help="Name of porosity parameter to look for in the INIT file", default="PORO")
     parser.add_argument("--zonefile", help="Path to file containing zone information", default=None)
     parser.add_argument("--compact", help="Write the output to a single file as compact as possible", action="store_true")
     return parser
@@ -143,7 +140,6 @@ def main(arguments):
         arguments.unrst,
         arguments.init,
         arguments.polygon,
-        arguments.poro,
         arguments.compact,
         arguments.zonefile,
     )
