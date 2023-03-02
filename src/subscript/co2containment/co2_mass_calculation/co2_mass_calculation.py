@@ -240,12 +240,13 @@ def _calculate_co2_volume_from_source_data(
 def calculate_co2_mass(
     grid_file: str,
     unrst_file: str,
+    init_file: Optional[str] = None
     zone_file: Optional[str] = None
 ) -> Co2MassData:
     props = ["RPORV", "SWAT", "DWAT", "BWAT", "SGAS", "DGAS",
              "BGAS", "AMFG", "YMFG", "XMF2", "YMF2"]
     source_data = _extract_source_data(
-        grid_file, unrst_file, props, zone_file = zone_file
+        grid_file, unrst_file, props, init_file, zone_file
     )
     co2_mass_data = _calculate_co2_mass_from_source_data(source_data)
     return co2_mass_data
