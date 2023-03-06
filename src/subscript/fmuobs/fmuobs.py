@@ -379,7 +379,7 @@ def dump_results(
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
             dframe.to_csv(sys.stdout, index=False)
 
-    if yamlfile and yamlfile:
+    if yamlfile:
         obs_dict_for_yaml = df2obsdict(dframe)
         if not obs_dict_for_yaml and not dframe.empty:
             logger.error("None of your observations are supported in YAML")
@@ -388,7 +388,7 @@ def dump_results(
         if yamlfile != __MAGIC_STDOUT__:
             logger.info(
                 "Writing observations in YAML (webviz) format to file: %s",
-                resinsightfile,
+                yamlfile
             )
             Path(yamlfile).write_text(yaml_str, encoding="utf8")
         else:
