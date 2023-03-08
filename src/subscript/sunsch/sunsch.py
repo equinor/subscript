@@ -510,7 +510,7 @@ def substitute(insert_statement) -> str:
         substdict = insert_statement.substitute
         # Perform substitution and put into a tmp file
         for line in templatelines:
-            for (key, value) in substdict:
+            for key, value in substdict:
                 if "<" + key + ">" in line:
                     line = line.replace("<" + key + ">", str(value))
             resultfile.write(line + "\n")

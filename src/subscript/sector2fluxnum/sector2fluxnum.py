@@ -78,7 +78,6 @@ def get_parser():
 
 
 def sector_to_fluxnum(args):
-
     """
     Wrapper function that generates an ECL DATA file with single FLUXNUM based on
     user Region-of-Interest.

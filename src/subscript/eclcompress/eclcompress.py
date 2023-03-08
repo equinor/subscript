@@ -76,7 +76,6 @@ def eclcompress(
     totalsavings = 0
 
     for filename in files:
-
         if file_is_binary(filename):
             logger.info("Skipped %s, not text file", filename)
             continue
