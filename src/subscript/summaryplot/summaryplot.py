@@ -417,7 +417,7 @@ def summaryplotter(
         fig.patch.set_facecolor("white")
 
         # Add grey major gridlines:
-        pyplot.grid(b=True, which="both", color="0.85", linestyle="-")
+        pyplot.grid(visible=True, which="both", color="0.85", linestyle="-")
 
         if not singleplot:
             if colourby:
@@ -523,7 +523,7 @@ def summaryplotter(
         fig.patch.set_facecolor("white")
 
         # Add grey major gridlines:
-        pyplot.grid(b=True, which="both", color="0.85", linestyle="-")
+        pyplot.grid(visible=True, which="both", color="0.85", linestyle="-")
 
         if datafiles is None:
             datafiles = []
