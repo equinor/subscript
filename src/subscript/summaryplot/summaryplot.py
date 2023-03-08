@@ -407,7 +407,6 @@ def summaryplotter(
         pyplot.close()
 
     for vector_idx, vector in enumerate(matchedsummaryvectors):
-
         if (not singleplot) or vector == matchedsummaryvectors[0]:
             fig = pyplot.figure()
             if colourby or logcolourby:
@@ -502,7 +501,6 @@ def summaryplotter(
         if not nolegend:
             pyplot.legend(loc="best", fancybox=True, framealpha=0.5)
     for rstvec_idx, rstvec in enumerate(restartvectors):
-
         if not singleplot or (
             rstvec == restartvectors[0] and not matchedsummaryvectors
         ):
@@ -531,7 +529,6 @@ def summaryplotter(
             datafiles = []
 
         for datafile_idx, _ in enumerate(datafiles):
-
             if singleplot:
                 rstlabel = rstvec + " " + datafiles[datafile_idx].lower()
             else:

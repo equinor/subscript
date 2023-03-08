@@ -250,7 +250,6 @@ class Datafile:
 
         for idx_s, _ in enumerate(range(start_idx)):
             for idx in range(start_idx[idx_s] + 1, end_idx[idx_s] + 1):
-
                 if lines_clean[idx] == "":
                     continue
 
@@ -420,7 +419,6 @@ class Datafile:
 
         # Call ECL subprocess
         with subprocess.Popen(args, stdout=subprocess.PIPE) as proc:
-
             (output, error) = proc.communicate()
 
             if error:
@@ -437,7 +435,6 @@ class Datafile:
                     and "Errors" in line_elements
                     and "0" not in line_elements
                 ):
-
                     print("ERROR: Some errors occured during DUMPFLUX run.\n")
                     print("Please check PRT output...")
                     print(line_elements)

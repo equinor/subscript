@@ -87,7 +87,6 @@ def create_map_rst(
     print("Creating map...")
 
     for index in dest_flux.flux[6][0 : dest_flux.number_flux_cells]:
-
         # Find global coordinates in the fine grid
         (i_f, j_f, k_f) = dest_flux.grid.get_ijk(global_index=index - 1)
 
@@ -177,7 +176,6 @@ def write_new_fluxfile_from_rst(
     prev_days_flux = flux_fine.iget_named_kw("DTIME", 0)[0]
 
     for index, _ in enumerate(source_restart.report_dates):
-
         i_coarse_grid = index * (source_grid.getNumLGR() + 1)
 
         current_date = source_restart.dates[index]
@@ -186,7 +184,6 @@ def write_new_fluxfile_from_rst(
         prev_date = current_date
 
         for j_idx in range(n_common_elements, n_common_elements + block_size):
-
             # Not related to grid cells
             if flux_fine[j_idx].header[0] == "ITIME":
                 kw_temp = flux_fine[j_idx].deep_copy()

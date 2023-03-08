@@ -317,7 +317,7 @@ class TimeVector(object):
 
     def delete(self, dt):
         del self.time_steps_dict[dt]
-        for (index, ts) in enumerate(self.time_steps_list):
+        for index, ts in enumerate(self.time_steps_list):
             if ts.dt == dt:
                 del self.time_steps_list[index]
                 break
@@ -354,7 +354,6 @@ class TimeVector(object):
 
         keywords = []
         for kw in deck:
-
             if kw.name == "DATES":
                 self.add_keywords(dt, keywords)
 

@@ -207,7 +207,6 @@ def main() -> None:
         )
 
     if option >= 3:
-
         avorig = av
         bvorig = bv
 

@@ -387,8 +387,7 @@ def dump_results(
 
         if yamlfile != __MAGIC_STDOUT__:
             logger.info(
-                "Writing observations in YAML (webviz) format to file: %s",
-                yamlfile
+                "Writing observations in YAML (webviz) format to file: %s", yamlfile
             )
             Path(yamlfile).write_text(yaml_str, encoding="utf8")
         else:

@@ -170,7 +170,6 @@ def _convert_ecl2roff(
             dates_list = None
 
         if fext in (".UNRST", ".INIT", ""):
-
             myprops = xtgeo.grid3d.GridProperties()
 
             usext = f".{fformat.upper()}"

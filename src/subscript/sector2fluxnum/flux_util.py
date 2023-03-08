@@ -4,7 +4,6 @@ from ecl.grid import EclRegion
 def filter_region(
     grid, idx_i, idx_j, idx_k, fipnum, fipnum_kw, combine_operator="intersect"
 ):
-
     # Filter out the selected grid cells
     region = EclRegion(grid, False)
     region1 = EclRegion(grid, False)
@@ -68,7 +67,6 @@ def filter_region(
 
 
 def unpack_filter(filter_list):
-
     filter_list = filter_list.split(",")
     filter_list_return = []
     for idx, _ in enumerate(filter_list):
@@ -83,7 +81,6 @@ def unpack_filter(filter_list):
 
 
 def unpack_ijk(i_str, j_str, k_str):
-
     i_str_split = i_str.split("-")
     if len(i_str_split) < 2:
         raise Exception("Wrong format of i range. Should be: i_start-i_end")

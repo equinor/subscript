@@ -312,7 +312,6 @@ def weighted_avg_press_time_derivative_lag1(delta_p, dspt):
 def weighted_avg_press_time_derivative_lag2(
     delta_p, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
 ):
-
     """
     Compute weighted average using LAG 2 for pressure time derivative
 

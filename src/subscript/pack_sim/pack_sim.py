@@ -348,7 +348,6 @@ def inspect_file(
 
                             # Check if file already exists
                             if new_include.exists():
-
                                 # Calculate MD5 hashes for the files with equal file
                                 # names to be able to compare the contents
                                 md5a = _md5checksum(filepath=Path(new_include))
@@ -409,7 +408,6 @@ def inspect_file(
                                 f"{fmu_include}include/{section}{new_include.name}",
                             )
                         else:
-
                             new_data_file += include_line.replace(
                                 str(include_stripped_in_file),
                                 f"'{fmu_include}include/{section}{new_include.name}'",
