@@ -283,10 +283,7 @@ def test_find_wellstart_indices(inputlines, expected):
                 "*DATE *Days *Oil",
                 "*NAME A-1",
             ],
-            pd.DataFrame(
-                columns=[],
-                data=[],
-            ),
+            pd.DataFrame(),
         ),
     ],
 )
@@ -367,10 +364,7 @@ def test_parse_well(inputlines, expected):
         (
             # Another empty dataset:
             ["*METRIC", "*DAILY", "*DATE *OIL"],
-            pd.DataFrame(
-                columns=[],
-                data=[],
-            ),
+            pd.DataFrame(),
         ),
         (
             [
@@ -487,7 +481,7 @@ def test_cmdline_globbing(datadir):
     assert not output.empty
     assert set(output["OFMVOLFILE"]) == {"fileA.vol", "fileB.vol", "fileC.vol"}
     assert len(output) == 17
-    assert output["WELL"].is_monotonic
+    assert output["WELL"].is_monotonic_increasing
 
     ofmvol2csv.ofmvol2csv_main(
         ["fileA.vol", "fileB.vol", "fileC.vol"],

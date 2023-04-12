@@ -76,7 +76,7 @@ def _compare_volumetrics(
     absolute differences of eclipse volumes minus RMS volumes.
     """
     set_data_list = []
-    for set_idx, regzonfip_set in disjoint_sets_df.groupby(["SET"]):
+    for set_idx, regzonfip_set in disjoint_sets_df.groupby("SET"):
         set_results = {"SET": set_idx}
         # Slice and sum simvolumes_df for the FIPNUMS in this set:
         set_fipnums = set(regzonfip_set["FIPNUM"]).intersection(simvolumes_df.index)
@@ -88,7 +88,7 @@ def _compare_volumetrics(
             )
             continue
         set_results.update(
-            _prefix_keys("ECL_", dict(simvolumes_df.loc[set_fipnums].sum()))
+            _prefix_keys("ECL_", dict(simvolumes_df.loc[list(set_fipnums)].sum()))
         )
 
         # Slicing in multiindex requires a list of unique tuples:
@@ -104,7 +104,7 @@ def _compare_volumetrics(
             continue
         # Slice and sum RMS volumetrics:
         set_results.update(
-            _prefix_keys("RMS_", dict(volumetrics_df.loc[regzones].sum()))
+            _prefix_keys("RMS_", dict(volumetrics_df.loc[list(regzones)].sum()))
         )
 
         if "RMS_FACIES" in set_results:

@@ -283,7 +283,10 @@ def parse_ofmtable(
             on_bad_lines="skip",  # pylint: disable=unexpected-keyword-arg
         )
 
-    data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
+    if version.parse(pd.__version__) >= version.parse("2.0"):
+        data["DATE"] = pd.to_datetime(data["DATE"], format="mixed", dayfirst=True)
+    else:
+        data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
 
     if "WELL" in data and "DATE" in data:
         data = data.set_index(["WELL", "DATE"]).sort_index()
