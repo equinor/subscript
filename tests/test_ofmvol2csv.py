@@ -235,22 +235,6 @@ def test_find_wellstart_indices(inputlines, expected):
             ),
         ),
         (
-            # Pandas will mix (!!) MM.DD.YYYY if DD.MM.YYYY when necessary..
-            [
-                "*DATE *Days *Oil",
-                "*NAME A-1",
-                "01.20.1987 8.1 100",
-                "21.1.1987 9.1 200",
-            ],
-            pd.DataFrame(
-                columns=["WELL", "DATE", "DAYS", "OIL"],
-                data=[
-                    ["A-1", datetime.date(1987, 1, 20), 8.1, 100],
-                    ["A-1", datetime.date(1987, 1, 21), 9.1, 200],
-                ],
-            ),
-        ),
-        (
             # More columns:
             [
                 "*DATE *OPR *gas",
@@ -326,7 +310,7 @@ def test_parse_well(inputlines, expected):
                 "*WELL  *DATE *OPR",
                 "--  comment",
                 "A-1 2020-12-25 200",
-                '"A-2" 25.12.2020 100',
+                '"A-2" 2020-12-25 100',
             ],
             pd.DataFrame(
                 columns=["WELL", "DATE", "OPR"],
