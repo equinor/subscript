@@ -274,7 +274,10 @@ def test_df2vol(dframe, expected_lines):
     # Ensure dates in the multiindes are datetime types, needed for comparison.
     if not dframe.empty:
         dframe.index = dframe.index.set_levels(
-            [dframe.index.levels[0], pd.to_datetime(dframe.index.levels[1])]
+            [
+                dframe.index.levels[0],
+                pd.to_datetime(dframe.index.levels[1], dayfirst=True),
+            ]
         )
 
     # Need to convert column names also as in ofmvol2csv for comparison:
