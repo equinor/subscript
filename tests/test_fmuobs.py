@@ -373,7 +373,7 @@ def test_ert_workflow_hook(verbose, tmp_path):
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         "LOAD_WORKFLOW wf_fmuobs",
         "HOOK_WORKFLOW wf_fmuobs PRE_SIMULATION",
     ]

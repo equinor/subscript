@@ -170,7 +170,7 @@ def test_ert_hook(drogondata):
         "ECLBASE DROGON.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         (
             "FORWARD_MODEL MERGE_RFT_ERTOBS("
             "<GENDATACSV>=gendata_rft.csv, <OBSDIR>=rft, <OUTPUT>=mergedrft.csv)"

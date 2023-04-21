@@ -515,7 +515,7 @@ def test_ert_hook(datadir):
         "ECLBASE FOOBAR.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         "FORWARD_MODEL OFMVOL2CSV(<VOLFILES>=file*.vol, <OUTPUT>=proddata.csv)",
     ]
 
