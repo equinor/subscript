@@ -35,8 +35,6 @@ def test_main_test(tmp_path, mocker):
             str(input_INPUT_DUMPFLUX),
             str(input_ECL_CASE),
             str(input_OUTPUT_FLUX),
-            "--ecl_version",
-            "2014.2",
         ],
     )
     sector2fluxnum.main()
@@ -65,8 +63,6 @@ def test_main_test_fipnum(tmp_path, mocker):
             str(input_INPUT_DUMPFLUX),
             str(input_ECL_CASE),
             str(input_OUTPUT_FLUX),
-            "--ecl_version",
-            "2014.2",
         ],
     )
     sector2fluxnum.main()
@@ -101,8 +97,6 @@ def test_main_with_ecl_run(tmp_path, mocker):
             str(input_RESTART),
             str(input_ECL_CASE),
             str(input_OUTPUT_FLUX),
-            "--ecl_version",
-            "2014.2",
         ],
     )
     sector2fluxnum.main()

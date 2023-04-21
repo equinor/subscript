@@ -389,18 +389,13 @@ class Datafile:
         if not os.path.isfile(self.USEFLUX_name):
             raise Exception("ERROR: USEFLUX file not created!")
 
-    def run_DUMPFLUX_nosim(self, ecl_version="2014.2"):
+    def run_DUMPFLUX_nosim(self, ecl_version=None):
         # pylint: disable=invalid-name
         """
         Executes interactive ECLIPSE run with DUMPFLUX DATA file.
 
         Checks for errors in the output PRT file
         """
-
-        if ecl_version != "2014.2":
-            print(
-                f"WARNING: Not a default ECL version. ECL version is {ecl_version} ..."
-            )
 
         if not os.path.isfile(self.DUMPFLUX_name):
             raise Exception("ERROR: DUMPFLUX file not found!")
@@ -414,7 +409,11 @@ class Datafile:
                 print("Could not remove old FLUX file ", err)
                 raise
 
-        commandline = f"runeclipse -i -v {ecl_version} {self.DUMPFLUX_name}"
+        if ecl_version:
+            commandline = f"runeclipse -i -v {ecl_version} {self.DUMPFLUX_name}"
+        else:
+            commandline = f"runeclipse -i {self.DUMPFLUX_name}"
+
         args = shlex.split(commandline)
 
         # Call ECL subprocess
