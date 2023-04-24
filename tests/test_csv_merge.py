@@ -256,7 +256,7 @@ def test_ert_hook(tmp_path):
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         "",
         "LOAD_WORKFLOW MERGE_FOO",
         "HOOK_WORKFLOW MERGE_FOO POST_SIMULATION",

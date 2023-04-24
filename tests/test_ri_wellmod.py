@@ -215,7 +215,7 @@ def test_ert_forward_model(tmp_path):
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         "FORWARD_MODEL RI_WELLMOD("
         + f"<RI_PROJECT>={proj_name},"
         + f"<ECLBASE>={init_case_name},"

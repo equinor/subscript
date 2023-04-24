@@ -261,7 +261,7 @@ def test_ert_forward_model(tmp_path):
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         "FORWARD_MODEL CSV_STACK(<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv)",
     ]
 
@@ -289,7 +289,7 @@ def test_ert_forward_model_keepminimal(tmp_path):
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         (
             "FORWARD_MODEL CSV_STACK("
             '<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv, <OPTION>="--keepminimal")'
@@ -320,7 +320,7 @@ def test_ert_forward_model_keepconstants(tmp_path):
         "ECLBASE FOO.DATA",
         "QUEUE_SYSTEM LOCAL",
         "NUM_REALIZATIONS 1",
-        "RUNPATH .",
+        "RUNPATH <CONFIG_PATH>",
         (
             "FORWARD_MODEL CSV_STACK("
             '<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv, <OPTION>="--keepconstantcolumns")'  # noqa
@@ -363,7 +363,7 @@ def test_csv_stack_ert_workflow(tmp_path):
                 "DEFINE <CASEDIR> some_ensemble",
                 "QUEUE_SYSTEM LOCAL",
                 "NUM_REALIZATIONS 1",
-                "RUNPATH .",
+                "RUNPATH <CONFIG_PATH>",
                 "",
                 "LOAD_WORKFLOW CSV_STACK_WELLS",
                 "HOOK_WORKFLOW CSV_STACK_WELLS POST_SIMULATION",

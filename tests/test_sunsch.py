@@ -918,7 +918,7 @@ def test_ert_forward_model(testdata):
                 "ECLBASE FOO.DATA",
                 "QUEUE_SYSTEM LOCAL",
                 "NUM_REALIZATIONS 1",
-                "RUNPATH .",
+                "RUNPATH <CONFIG_PATH>",
                 "",
                 "FORWARD_MODEL SUNSCH(<config>=config_v2.yml)",
             ]

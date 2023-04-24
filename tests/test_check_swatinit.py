@@ -759,7 +759,7 @@ def test_ert_integration(tmp_path):
                 "ECLBASE DUMMY.DATA",
                 "QUEUE_SYSTEM LOCAL",
                 "NUM_REALIZATIONS 1",
-                "RUNPATH .",
+                "RUNPATH <CONFIG_PATH>",
                 "",
                 f"FORWARD_MODEL CHECK_SWATINIT(<DATAFILE>={REEK_DATAFILE})",
             ]
@@ -778,7 +778,7 @@ def test_ert_integration(tmp_path):
                 "ECLBASE DUMMY.DATA",
                 "QUEUE_SYSTEM LOCAL",
                 "NUM_REALIZATIONS 1",
-                "RUNPATH .",
+                "RUNPATH <CONFIG_PATH>",
                 "",
                 (
                     f"FORWARD_MODEL CHECK_SWATINIT(<DATAFILE>={REEK_DATAFILE}, "
