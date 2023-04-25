@@ -65,13 +65,13 @@ from subscript.fmuobs.writers import (
 {
     -- FOO BAR
     -- dontcrash
-    DATE = 01/06/2025;
+    DATE = 2025-06-01;
     VALUE = 2222.3;
     ERROR = 100.0;
 };
 SUMMARY_OBSERVATION WOPR:OP2
 {
-    DATE = 01/01/2026;
+    DATE = 2026-01-01;
     VALUE = 222.3;
     ERROR = 10.0;
 };
@@ -120,7 +120,7 @@ def test_dfsummary2ertobs(obs_df, expected_str):
             ),
             """BLOCK_OBSERVATION RFT_2006_OP1
 {
-    DATE = 05/04/1986;
+    DATE = 1986-04-05;
     OBS P1 {};
 };
 """,
@@ -142,7 +142,7 @@ def test_dfsummary2ertobs(obs_df, expected_str):
             """BLOCK_OBSERVATION RFT_2006_OP1
 {
     -- FOO
-    DATE = 05/04/1986;
+    DATE = 1986-04-05;
     -- bza
     OBS P1 {};
 };
@@ -174,7 +174,7 @@ def test_dfsummary2ertobs(obs_df, expected_str):
 {
     -- FOO
     -- dontcrash
-    DATE = 05/04/1986;
+    DATE = 1986-04-05;
     -- bza
     OBS P1 {};
     -- bzarrr
@@ -202,7 +202,7 @@ def test_dfsummary2ertobs(obs_df, expected_str):
             """BLOCK_OBSERVATION RFT_SWAT_2006_OP1
 {
     FIELD = SWAT;
-    DATE = 01/01/1900;
+    DATE = 1900-01-01;
     OBS P1 { I = 1; J = 2;};
 };
 """,
@@ -361,13 +361,13 @@ def test_dfgeneral2ertobs(obs_df, expected_str):
             """
 SUMMARY_OBSERVATION WOPR:OP1
 {
-    DATE = 01/01/2025;
+    DATE = 2025-01-01;
     VALUE = 2222.3;
     ERROR = 100.0;
 };
 BLOCK_OBSERVATION RFT_2006_OP1
 {
-    DATE = 05/04/1986;
+    DATE = 1986-04-05;
     OBS P1 {};
 };
 HISTORY_OBSERVATION WOPR:P1;

@@ -9,7 +9,11 @@ import numpy as np
 import pandas as pd
 
 from subscript import getLogger
-from subscript.fmuobs.util import CLASS_SHORTNAME, ERT_DATE_FORMAT, lowercase_dictkeys
+from subscript.fmuobs.util import (
+    CLASS_SHORTNAME,
+    ERT_ISO_DATE_FORMAT,
+    lowercase_dictkeys,
+)
 
 logger = getLogger(__name__)
 
@@ -36,10 +40,9 @@ def dfsummary2ertobs(obs_df: pd.DataFrame) -> str:
                 + "\n"
             )
         if "DATE" in row and not pd.isnull(row["DATE"]):
-            # Special formatting of the DATE
             ertobs_str += (
                 "    DATE = "
-                + str(pd.to_datetime(row["DATE"]).strftime(ERT_DATE_FORMAT))
+                + str(pd.to_datetime(row["DATE"]).strftime(ERT_ISO_DATE_FORMAT))
                 + ";\n"
             )
         for dataname in ["KEY", "DAYS", "RESTART", "VALUE", "ERROR", "SOURCE"]:
@@ -63,7 +66,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
     block_obs_df = obs_df[obs_df["CLASS"] == "BLOCK_OBSERVATION"].copy()
     if "DATE" in block_obs_df:
         block_obs_df["DATE"] = pd.to_datetime(block_obs_df["DATE"]).dt.strftime(
-            ERT_DATE_FORMAT
+            ERT_ISO_DATE_FORMAT
         )
     for obslabel, block_df in block_obs_df.groupby("LABEL"):
         ertobs_str += "BLOCK_OBSERVATION " + obslabel + "\n{\n"
@@ -169,7 +172,7 @@ def dfgeneral2ertobs(obs_df: pd.DataFrame) -> str:
     gen_obs_df = obs_df[obs_df["CLASS"] == "GENERAL_OBSERVATION"]
     if "DATE" in gen_obs_df:
         gen_obs_df["DATE"] = pd.to_datetime(gen_obs_df["DATE"]).dt.strftime(
-            ERT_DATE_FORMAT
+            ERT_ISO_DATE_FORMAT
         )
     for _, row in gen_obs_df.iterrows():
         ertobs_str += "GENERAL_OBSERVATION " + str(row["LABEL"]) + " {\n"
