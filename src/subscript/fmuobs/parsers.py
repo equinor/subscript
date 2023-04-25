@@ -12,6 +12,7 @@ from subscript import getLogger
 from subscript.fmuobs.util import (
     ERT_ALT_DATE_FORMAT,
     ERT_DATE_FORMAT,
+    ERT_ISO_DATE_FORMAT,
     uppercase_dictkeys,
 )
 
@@ -214,12 +215,15 @@ def fix_dtype(value):
         return float_value
     except ValueError:
         try:
-            return datetime.datetime.strptime(value, ERT_DATE_FORMAT)
+            return datetime.datetime.strptime(value, ERT_ISO_DATE_FORMAT)
         except ValueError:
             try:
-                return datetime.datetime.strptime(value, ERT_ALT_DATE_FORMAT)
+                return datetime.datetime.strptime(value, ERT_DATE_FORMAT)
             except ValueError:
-                return str(value)
+                try:
+                    return datetime.datetime.strptime(value, ERT_ALT_DATE_FORMAT)
+                except ValueError:
+                    return str(value)
 
 
 def remove_enclosing_curly_braces(string: str) -> str:

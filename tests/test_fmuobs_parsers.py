@@ -138,6 +138,7 @@ def test_filter_comments(string, expected):
         ("01/01/1900", datetime.datetime(1900, 1, 1)),
         ("12/24/2020", "12/24/2020"),
         ("01/12/2020", datetime.datetime(2020, 12, 1)),
+        ("2020-12-01", datetime.datetime(2020, 12, 1)),
     ],
 )
 def test_fix_dtype(string, expected):
