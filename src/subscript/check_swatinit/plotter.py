@@ -50,7 +50,7 @@ def plot_qc_panels(
     assert (
         len(qc_frame["EQLNUM"].unique()) == 1
     ), "Can only plot for one EQLNUM at a time"
-    pyplot.style.use("seaborn-darkgrid")
+    pyplot.style.use("seaborn-v0_8-darkgrid")
     seaborn.color_palette("tab10")
 
     pyplot.figure(figsize=(16, 8))
