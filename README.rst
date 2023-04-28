@@ -1,14 +1,8 @@
-.. image:: https://img.shields.io/github/workflow/status/equinor/subscript/subscript
-    :target: https://github.com/equinor/subscript/actions?query=workflow%3Asubscript
-
-.. image:: https://img.shields.io/lgtm/alerts/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
-    :target: https://lgtm.com/projects/g/equinor/subscript/alerts/
+.. image:: https://github.com/equinor/subscript/actions/workflows/subscript.yml/badge.svg
+    :target: https://github.com/equinor/subscript/actions/workflows/subscript.yml?query=workflow%3Asubscript
 
 .. image:: https://codecov.io/gh/equinor/subscript/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/equinor/subscript
-
-.. image:: https://img.shields.io/lgtm/grade/python/g/equinor/subscript.svg?logo=lgtm&logoWidth=18
-    :target: https://lgtm.com/projects/g/equinor/subscript/context:python
 
 .. image:: https://img.shields.io/badge/python-3.6%20|%203.7%20|%203.8%20|%203.9-blue.svg
     :target: https://www.python.org
