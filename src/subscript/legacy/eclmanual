@@ -1,6 +1,6 @@
 #!/bin/bash
 
-eclversion="2022.2"
+eclversion=$(eclrun --report-versions eclipse | xargs -n1 | sort -gr | head -1)
 export ECLPATH="/prog/res/ecl/grid"
 
 if [ "$1" == "-v" ] && [ "$2" != "" ] ; then
@@ -28,4 +28,3 @@ if [ -f $manualpath ] ; then
 else
     echo "Unable to find manuals for version $eclversion"
 fi
-
