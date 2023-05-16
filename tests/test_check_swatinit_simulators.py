@@ -58,6 +58,8 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
     simulator_option = []
     if "runeclipse" in simulator:
         simulator_option = ["-i"]
+    if "flow" in simulator:
+        simulator_option = ["--parsing-strictness=low"]
     result = subprocess.run(  # pylint: disable=subprocess-run-check
         [simulator] + simulator_option + ["FOO.DATA"], stdout=subprocess.PIPE
     )

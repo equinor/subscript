@@ -9,5 +9,5 @@ copy_test_files () {
 }
 
 start_tests () {
-    pytest --flow-simulator="/project/res/x86_64_RH_7/bin/flowrc15" --eclipse-simulator="runeclipse"
+    pytest --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
 }
