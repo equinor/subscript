@@ -64,7 +64,7 @@ REQUIREMENTS = [
     "ert>=2.38.0b7",
     "fmu-tools",
     "matplotlib",
-    "numpy<1.24.3",
+    "numpy",
     "opm>=2021.10",
     "packaging",
     "pandas",
