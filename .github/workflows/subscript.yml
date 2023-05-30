@@ -10,17 +10,19 @@ on:
   release:
     types:
       - published
+  schedule:
+    # Run CI every night and check that tests are working with latest dependencies
+    - cron: "0 0 * * *"
 
 env:
   MPLBACKEND: Agg
 
 jobs:
-
   subscript:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.8', '3.9']
+        python-version: ["3.8", "3.9"]
 
     steps:
       - name: Checkout commit locally
@@ -81,22 +83,22 @@ jobs:
       - name: Update GitHub pages
         if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.6'
         run: |
-            cp -R ./build/sphinx/html ../html
+          cp -R ./build/sphinx/html ../html
 
-            git config --local user.email "subscript-github-action"
-            git config --local user.name "subscript-github-action"
-            git fetch origin gh-pages
-            git checkout --track origin/gh-pages
-            git clean -f -f -d -x  # Double -f is intentional
-            git rm -r *
+          git config --local user.email "subscript-github-action"
+          git config --local user.name "subscript-github-action"
+          git fetch origin gh-pages
+          git checkout --track origin/gh-pages
+          git clean -f -f -d -x  # Double -f is intentional
+          git rm -r *
 
-            cp -R ../html/* .
-            touch .nojekyll  # If not, github pages ignores _* directories.
-            git add .
+          cp -R ../html/* .
+          touch .nojekyll  # If not, github pages ignores _* directories.
+          git add .
 
-            if git diff-index --quiet HEAD; then
-              echo "No changes in documentation. Skip documentation deploy."
-            else
-              git commit -m "Update Github Pages"
-              git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
-            fi
+          if git diff-index --quiet HEAD; then
+            echo "No changes in documentation. Skip documentation deploy."
+          else
+            git commit -m "Update Github Pages"
+            git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+          fi
