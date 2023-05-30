@@ -267,6 +267,7 @@ def inspect_file(
 
         # Remove comments if required
         line_strip = _remove_comments(clear_comments, line_strip)
+        line_strip_no_comment = _remove_comments(True, line_strip).strip()
         line = _remove_comments(clear_comments, line)
 
         if (
@@ -419,43 +420,43 @@ def inspect_file(
                         new_data_file += line
                         if "--" in line:
                             print(line)
-        elif line_strip == "RUNSPEC" and fmu:
+        elif line_strip_no_comment == "RUNSPEC" and fmu:
             section = "runspec/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "GRID" and fmu:
+        elif line_strip_no_comment == "GRID" and fmu:
             section = "grid/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "EDIT" and fmu:
+        elif line_strip_no_comment == "EDIT" and fmu:
             section = "edit/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "PROPS" and fmu:
+        elif line_strip_no_comment == "PROPS" and fmu:
             section = "props/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "REGIONS" and fmu:
+        elif line_strip_no_comment == "REGIONS" and fmu:
             section = "regions/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "SOLUTION" and fmu:
+        elif line_strip_no_comment == "SOLUTION" and fmu:
             section = "solution/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "SUMMARY" and fmu:
+        elif line_strip_no_comment == "SUMMARY" and fmu:
             section = "summary/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "SCHEDULE" and fmu:
+        elif line_strip_no_comment == "SCHEDULE" and fmu:
             section = "schedule/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip == "OPTIMIZE" and fmu:
+        elif line_strip_no_comment == "OPTIMIZE" and fmu:
             section = "optimize/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
             new_data_file += line
-        elif line_strip.startswith("RESTART"):
+        elif line_strip_no_comment == "RESTART":
             # This line defines a restart: raise a warning!
             print(
                 "**********************************************************************"
