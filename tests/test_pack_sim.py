@@ -53,6 +53,35 @@ def test_main_fmu(tmp_path, mocker):
     assert Path("include/props/reek.pvt").exists()
 
 
+def test_helpful_latin1_encoding_exception(tmp_path, mocker):
+    """Test that a more helpful error message is given when a file with an
+    unsupported encoding is given"""
+    tmp_data_file = tmp_path / "TMP.DATA"
+    with open(tmp_data_file, "w", encoding="iso-8859-1") as fout:
+        fout.write("-- død")
+    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file), "."])
+    with pytest.raises(
+        UnicodeDecodeError, match=(f"'ø' found in file: {tmp_data_file.name} on line 1")
+    ):
+        pack_sim.main()
+
+    tmp_data_file2 = tmp_path / "TMP2.DATA"
+    with open(tmp_data_file2, "w", encoding="iso-8859-1") as fout:
+        fout.write("-- A\nRUNSPEC\n-- på sjøen")
+    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file2), "."])
+    with pytest.raises(
+        UnicodeDecodeError,
+        match=(f"'å' found in file: {tmp_data_file2.name} on line 3"),
+    ):
+        pack_sim.main()
+
+    tmp_data_file3 = tmp_path / "TMP3.DATA"
+    with open(tmp_data_file3, "w", encoding="utf-8") as fout:
+        fout.write(f"INCLUDE\n  '{tmp_data_file.name}' /")
+    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file3), "."])
+    pack_sim.main()
+
+
 def test_repeated_run(tmp_path, mocker):
     """Test what happens on repeated incovations"""
     os.chdir(tmp_path)

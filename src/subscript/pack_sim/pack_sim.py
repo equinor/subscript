@@ -7,7 +7,7 @@ import time
 from io import StringIO
 from pathlib import Path
 from shutil import copy
-from typing import Dict, Optional, TextIO, Union
+from typing import Dict, List, Optional, TextIO, Union
 
 from subscript import __version__, getLogger
 
@@ -139,33 +139,57 @@ def _get_paths(filename: Path, org_sim_loc: Path) -> Dict[str, Path]:
     # Check if the filename can be found
     filename = _expand_filename(filename, org_sim_loc)
 
-    with open(filename, "r", encoding="utf8") as fhandle:
-        # Read through all lines of text
-        for line in fhandle:
-            line_strip = line.strip()
+    try:
+        with open(filename, encoding="utf-8") as fin:
+            lines = fin.readlines()
+    except UnicodeDecodeError as e:
+        error_words = str(e).split(" ")
+        hex_str = error_words[error_words.index("byte") + 1]
+        try:
+            bad_char = chr(int(hex_str, 16))
+        except ValueError:
+            bad_char = f"hex:{hex_str}"
+        with open(filename, "rb") as fin:
+            byte_lines: List[bytes] = fin.readlines()
 
-            if line_strip.startswith("PATHS"):
-                logger.info("Found Eclipse PATHS keyword, creating a dictionary.")
+        for i, byte_line in enumerate(byte_lines):
+            try:
+                byte_line.decode("utf-8")
+            except UnicodeDecodeError:
+                bad_line_num = i + 1
+                e.reason = (
+                    f"Unsupported non-UTF-8 character {bad_char!r} "
+                    f"found in file: {filename.name} on line {bad_line_num}"
+                )
+                break
+        raise e
 
-                # In the keyword, find the path definitions and ignore comments
-                for innerline in fhandle:
-                    line_strip = innerline.strip()
-                    if line_strip.startswith("--"):
-                        continue
+    # Read through all lines of text
+    for line in lines:
+        line_strip = line.strip()
 
-                    if innerline.split("--")[0].strip() == "/":
-                        # Finished reading the data for the PATHS keyword
-                        break
+        if line_strip.startswith("PATHS"):
+            logger.info("Found Eclipse PATHS keyword, creating a dictionary.")
 
-                    # Assume we have found a PATHS definition line
-                    try:
-                        path_info = innerline.split("--")[0].strip().split("'")
-                        paths[path_info[1]] = Path(path_info[3])
-                    except IndexError:
-                        logger.warning(
-                            "Could not parse %s as a PATHS definition, skipping",
-                            line_strip,
-                        )
+            # In the keyword, find the path definitions and ignore comments
+            for innerline in lines:
+                line_strip = innerline.strip()
+                if line_strip.startswith("--"):
+                    continue
+
+                if innerline.split("--")[0].strip() == "/":
+                    # Finished reading the data for the PATHS keyword
+                    break
+
+                # Assume we have found a PATHS definition line
+                try:
+                    path_info = innerline.split("--")[0].strip().split("'")
+                    paths[path_info[1]] = Path(path_info[3])
+                except IndexError:
+                    logger.warning(
+                        "Could not parse %s as a PATHS definition, skipping",
+                        line_strip,
+                    )
     logger.debug("Dictionary created: %s", str(paths))
     return paths
 
