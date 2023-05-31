@@ -75,6 +75,7 @@ REQUIREMENTS = [
     "scipy",
     "seaborn",
     "segyio",
+    "urllib3<2",
     "xlrd",
     "xtgeo",
 ]
