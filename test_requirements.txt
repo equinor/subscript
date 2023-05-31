@@ -6,6 +6,7 @@ mypy
 pytest
 pytest-cov
 pytest-mock
+pytest-xdist
 rstcheck
 rstcheck-core
 types-Jinja2

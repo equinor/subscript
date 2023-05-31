@@ -48,7 +48,7 @@ In a fresh virtual environment you should be able to do::
 
 and all dependencies should be installed. Confirm your installation with::
 
-  pytest
+  pytest -n auto
 
 and this should run for some minutes without failures.
 
