@@ -101,7 +101,7 @@ NORSSPEC
 --GRID SECTION
 -------------------------------------------------------------------------
 
-GRID
+GRID -- Grid Section
 
 --Disable echoing of the input file
 NOECHO
