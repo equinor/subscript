@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUMMARYPLOT &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>SUMMARYPLOT &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -74,8 +79,8 @@
 <li class="toctree-l1"><a class="reference internal" href="sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SUMMARYPLOT</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#syntax">Syntax</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#plotting-cell-values">Plotting cell values</a></li>
@@ -104,8 +109,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>SUMMARYPLOT</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SUMMARYPLOT</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/summaryplot.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -116,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="summaryplot">
-<h1>SUMMARYPLOT<a class="headerlink" href="#summaryplot" title="Permalink to this headline"></a></h1>
+<h1>SUMMARYPLOT<a class="headerlink" href="#summaryplot" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">summaryplot</span></code> is a command line utility to generate plots from Eclipse
 simulations, based on <a class="reference external" href="http://github.com/equinor/libecl">libecl</a>
 for processing Eclipse output files and
@@ -129,7 +134,7 @@ for processing Eclipse output files and
 </figcaption>
 </figure>
 <section id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline"></a></h2>
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this heading"></a></h2>
 <p><p>Summaryplot will plot summary vectors from your Eclipse output files.</p>
 <p>To list summary vectors for a specific Eclipse output set, try:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">summary</span><span class="o">.</span><span class="n">x</span> <span class="o">--</span><span class="nb">list</span> <span class="n">ECLFILE</span><span class="o">.</span><span class="n">DATA</span>
@@ -145,16 +150,16 @@ to be a vector to plot. Thus, vectors and datafiles can be mixed.</p>
                    <span class="n">VECTORSDATAFILES</span> <span class="p">[</span><span class="n">VECTORSDATAFILES</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h3>
+<section id="positional-arguments">
+<h3>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>VECTORSDATAFILES</kbd></dt>
 <dd><p>List of vectors to plot and/or DATA-files to include</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h3>
+<section id="named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>-H, --hist</kbd></dt>
 <dd><p>Add historical vectors</p>
@@ -223,7 +228,7 @@ this example. Transparency is adjusted according to number of models plotted.</s
 </figure>
 </section>
 <section id="plotting-cell-values">
-<h2>Plotting cell values<a class="headerlink" href="#plotting-cell-values" title="Permalink to this headline"></a></h2>
+<h2>Plotting cell values<a class="headerlink" href="#plotting-cell-values" title="Permalink to this heading"></a></h2>
 <p>Cell values (f.ex. <code class="docutils literal notranslate"><span class="pre">SWAT</span></code>, <code class="docutils literal notranslate"><span class="pre">SOIL</span></code>, <code class="docutils literal notranslate"><span class="pre">PRESSURE</span></code>) can be plotted by giving
 vector names like <code class="docutils literal notranslate"><span class="pre">keyword:i,j,k</span></code>, f.ex:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ summaryplot SOIL:14,32,1 FILENAME.DATA

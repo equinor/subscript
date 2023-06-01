@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.presentvalue.presentvalue &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.presentvalue.presentvalue &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -135,10 +141,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-          <li><a href="subscript.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.presentvalue.presentvalue.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -149,7 +155,7 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.presentvalue.presentvalue">
-<span id="subscript-presentvalue-presentvalue"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code><a class="headerlink" href="#module-subscript.presentvalue.presentvalue" title="Permalink to this headline"></a></h1>
+<span id="subscript-presentvalue-presentvalue"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code><a class="headerlink" href="#module-subscript.presentvalue.presentvalue" title="Permalink to this heading"></a></h1>
 <p>NPV calculation of oil and gas production income</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.calc_presentvalue_df">
@@ -157,7 +163,7 @@
 <dd><p>Calculate a dataframe for present value computations.</p>
 <p>Discount rate will be obtained from the econ_df dataframe.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>summary_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – summary dataframe,  OPT, GPT, GIT, indexed
 year</p></li>
@@ -166,11 +172,11 @@ costs)</p></li>
 <li><p><strong>discountto</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Which year to discount to.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A column “presentvalue” will be added, which
 can then be summed to obtain the presentvalue over all years.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -183,17 +189,17 @@ can then be summed to obtain the presentvalue over all years.</p>
 <p>Gas price is fixed, from the dataframe, the resulting break-even price
 is in USD/bbl. This can be used to evaluate gas injection/deferral projects.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>oilprice</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Price pr. barrel of oil in USD</p></li>
 <li><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Production and economical data, with gasprice</p></li>
 <li><p><strong>cutoffyear</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Production/costs beyond this year is ignored</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Computed presentvalue.</p>
 </dd>
 </dl>
@@ -207,7 +213,7 @@ oilprice using EPA QX 201X External Assumptions;
 there is a link between gas and oil prices and the
 resulting break-even price is in USD/boe.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>oilprice</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Price pr. barrel of oil in USD</p></li>
 <li><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Production and economical data.</p></li>
@@ -216,10 +222,10 @@ resulting break-even price is in USD/boe.</p>
 (usd/bbl) multiplied with this constant.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Computed presentvalue.</p>
 </dd>
 </dl>
@@ -230,17 +236,17 @@ resulting break-even price is in USD/boe.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_irr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_irr" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate internal rate of return (IRR)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – discountfactor to be used</p></li>
 <li><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Production and economical data</p></li>
 <li><p><strong>cutoffyear</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Ignore production beyond this year.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Computed presentvalue</p>
 </dd>
 </dl>
@@ -252,15 +258,15 @@ resulting break-even price is in USD/boe.</p>
 <dd><p>Calculate economical parameters given a dataframe with
 income and costs.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – A dataframe prepared with data for
 presentvalue computations.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Results, with keys: BEP1, BEP2, IRR, CEI. Keys
 will only exist if computation was successful.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
 </dd>
 </dl>
@@ -271,16 +277,16 @@ will only exist if computation was successful.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">dict_to_parameterstxt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.dict_to_parameterstxt" title="Permalink to this definition"></a></dt>
 <dd><p>Produce a key-value string with newlines from a dict of results</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>results</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – depth-1 dictionary</p></li>
 <li><p><strong>paramname</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Basename for parameters to produce</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>multiline, ready to be appended to parameters.txt</p>
 </dd>
 </dl>
@@ -291,17 +297,15 @@ will only exist if computation was successful.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_paramfilename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_paramfilename" title="Permalink to this definition"></a></dt>
 <dd><p>Locate the parameters.txt file closest to the Eclipse DATA file</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>eclfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse DATA file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 <dl class="simple">
 <dt>Returns.</dt><dd><p>Empty string if no file found. Full path if found.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,10 +315,10 @@ will only exist if computation was successful.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Parser for command line arguments and for documentation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>argparse.ArgumentParser</p>
 </dd>
 </dl>
@@ -329,7 +333,7 @@ an Eclipse output file.</p>
 to 1st of January for each year, and then yearly volumes are
 calculated from the cumulatives.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>eclfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse DATA file</p></li>
 <li><p><strong>oilvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of cumulative summary vector with oil production</p></li>
@@ -337,10 +341,10 @@ calculated from the cumulatives.</p>
 <li><p><strong>gasinjvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of cumulative summary vector with gas injection</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame. Indexed by year, with the columns OPR, GPR, GIR and GSR.</p>
 </dd>
 </dl>
@@ -352,7 +356,7 @@ calculated from the cumulatives.</p>
 <dd><p>Function for command line invocation.</p>
 <p>Parses command line arguments, and writes output to file and/or terminal.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -363,7 +367,7 @@ calculated from the cumulatives.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">prepare_econ_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usdtonok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.prepare_econ_table" title="Permalink to this definition"></a></dt>
 <dd><p>Parse a CSV file with economical input</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to a CSV file to be parsed with pd.read_csv()</p></li>
 <li><p><strong>oilprice</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Default for oilprice if not included in CSV file.</p></li>
@@ -373,11 +377,11 @@ calculated from the cumulatives.</p>
 constant) in CSV file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dataframe with economical data to be given
 to calc_presentvalue_df().</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -385,11 +389,11 @@ to calc_presentvalue_df().</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.presentvalue_main">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">presentvalue_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">economics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2022</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FOPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasinjvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGIT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basedatafile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.presentvalue_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">presentvalue_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">economics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2023</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FOPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasinjvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGIT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basedatafile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.presentvalue_main" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate presentvalue and financial parameters for a single Eclipse
 run</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>datafile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse DATA-file</p></li>
 <li><p><strong>economics</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Year-indexed data with economic parameters</p></li>
@@ -403,11 +407,11 @@ run</p>
 data (production from this file will be deducted)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>“BEP1”, “BEP”,
 “IRR” and “CEI”.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary with keys “PresentValue”, and if input data allows it</p>
 </dd>
 </dl>

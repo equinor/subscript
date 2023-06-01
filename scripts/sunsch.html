@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUNSCH &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>SUNSCH &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -74,8 +79,8 @@
 <li class="toctree-l1"><a class="reference internal" href="sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SUNSCH</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#features-in-short">Features in short</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#when-to-use">When to use</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#yaml-file-syntax">Yaml file syntax</a></li>
@@ -106,8 +111,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>SUNSCH</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">SUNSCH</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/sunsch.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -118,7 +123,7 @@
            <div itemprop="articleBody">
              
   <section id="sunsch">
-<h1>SUNSCH<a class="headerlink" href="#sunsch" title="Permalink to this headline"></a></h1>
+<h1>SUNSCH<a class="headerlink" href="#sunsch" title="Permalink to this heading"></a></h1>
 <p>Sunsch is a tool to build your final Schedule section to Eclipse. This can be done
 through merging multiple partial Schedule files, or inserting small Schedule commands
 at specific dates, possibly with templating included while inserting. Insertion
@@ -136,16 +141,16 @@ Eclipse, checking provided by OPM.</p>
               <span class="n">config</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h2>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>config</kbd></dt>
 <dd><p>Config file in YAML format for Schedule merging</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h2>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Output filename to write to</p>
@@ -201,7 +206,7 @@ Eclipse, checking provided by OPM.</p>
 </div>
 </p>
 <section id="features-in-short">
-<h2>Features in short<a class="headerlink" href="#features-in-short" title="Permalink to this headline"></a></h2>
+<h2>Features in short<a class="headerlink" href="#features-in-short" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Configuration in YAML format</p></li>
 <li><p>Merging via DATE keyword</p></li>
@@ -217,7 +222,7 @@ temporary files.</p></li>
 </ul>
 </section>
 <section id="when-to-use">
-<h2>When to use<a class="headerlink" href="#when-to-use" title="Permalink to this headline"></a></h2>
+<h2>When to use<a class="headerlink" href="#when-to-use" title="Permalink to this heading"></a></h2>
 <p>The tool is designed for FMU runs. It can be used both for the history section
 and for prediction, but probably has its most relevant usage in sensitivities
 for prediction. It will enable usage of the aging Schlumberger Schedule
@@ -227,7 +232,7 @@ planning and Schedule export, the need for this tool is less, and one should
 possibly try not to use both unless needed.</p>
 </section>
 <section id="yaml-file-syntax">
-<h2>Yaml file syntax<a class="headerlink" href="#yaml-file-syntax" title="Permalink to this headline"></a></h2>
+<h2>Yaml file syntax<a class="headerlink" href="#yaml-file-syntax" title="Permalink to this heading"></a></h2>
 <p>Write a configuration file in YAML format, describing which Schedule files you
 are starting from and which you want to merge in, and any other directives to
 insert at specific points in the Schedule file.</p>
@@ -273,34 +278,34 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 <p>See the example below for how the insert statement is used.</p>
 </section>
 <section id="yaml-example">
-<h2>YAML example<a class="headerlink" href="#yaml-example" title="Permalink to this headline"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1995-06-01</span><span class="w"></span>
-<span class="nt">refdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2022-01-01</span><span class="w"></span>
-<span class="nt">enddate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2030-12-01</span><span class="w"></span>
-<span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/schedule.sch</span><span class="w"></span>
-<span class="nt">files</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/history.sch</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/receptionpressures.sch</span><span class="w"></span>
-<span class="nt">dategrid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monthly</span><span class="w"></span>
-<span class="nt">insert</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iorwell1.sch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2020-01-01</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
-<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iorwell2.sch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># Relative to refdate</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
-<span class="w">    </span><span class="nt">string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;WCONHIST\n</span><span class="nv"> </span><span class="s">A-5</span><span class="nv"> </span><span class="s">OPEN</span><span class="nv"> </span><span class="s">ORAT</span><span class="nv"> </span><span class="s">5000/\n/&quot;</span><span class="w"></span>
-<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"></span>
-<span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/prediction_existing_wells.sch</span><span class="w"></span>
-<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">    </span><span class="nt">substitute</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> ORAT</span><span class="p">:</span><span class="w"> </span><span class="nv">3000</span><span class="p p-Indicator">,</span><span class="nt"> GRAT</span><span class="p">:</span><span class="w"> </span><span class="nv">400000</span><span class="p p-Indicator">}</span><span class="w"></span>
+<h2>YAML example<a class="headerlink" href="#yaml-example" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1995-06-01</span>
+<span class="nt">refdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2022-01-01</span>
+<span class="nt">enddate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2030-12-01</span>
+<span class="nt">output</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/schedule.sch</span>
+<span class="nt">files</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/history.sch</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/receptionpressures.sch</span>
+<span class="nt">dategrid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monthly</span>
+<span class="nt">insert</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iorwell1.sch</span>
+<span class="w">    </span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2020-01-01</span>
+<span class="w">  </span><span class="p p-Indicator">-</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">iorwell2.sch</span>
+<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># Relative to refdate</span>
+<span class="w">  </span><span class="p p-Indicator">-</span>
+<span class="w">    </span><span class="nt">string</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;WCONHIST\n</span><span class="nv"> </span><span class="s">A-5</span><span class="nv"> </span><span class="s">OPEN</span><span class="nv"> </span><span class="s">ORAT</span><span class="nv"> </span><span class="s">5000/\n/&quot;</span>
+<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">40</span>
+<span class="w">  </span><span class="p p-Indicator">-</span>
+<span class="w">    </span><span class="nt">template</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eclipse/include/schedule/prediction_existing_wells.sch</span>
+<span class="w">    </span><span class="nt">days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">    </span><span class="nt">substitute</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> ORAT</span><span class="p">:</span><span class="w"> </span><span class="nv">3000</span><span class="p p-Indicator">,</span><span class="nt"> GRAT</span><span class="p">:</span><span class="w"> </span><span class="nv">400000</span><span class="p p-Indicator">}</span>
 </pre></div>
 </div>
 </section>
 <section id="ert-usage">
-<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this headline"></a></h2>
+<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this heading"></a></h2>
 <p>Sunsch is installed as a forward model in ERT. A typical configuration could look like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="p">[</span> <span class="n">various</span> <span class="n">DESIGN_KW</span> <span class="n">statements</span> <span class="n">producing</span> <span class="nb">input</span> <span class="n">files</span> <span class="n">to</span> <span class="n">sunsch</span><span class="p">]</span>
 <span class="n">FORWARD_MODEL</span> <span class="n">DESIGN_KW</span><span class="p">(</span><span class="o">&lt;</span><span class="n">template_file</span><span class="o">&gt;=&lt;</span><span class="n">CONFIG_PATH</span><span class="o">&gt;/../</span><span class="nb">input</span><span class="o">/</span><span class="n">templates</span><span class="o">/</span><span class="n">config_sunsch</span><span class="o">.</span><span class="n">tmpl</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">result_file</span><span class="o">&gt;=&lt;</span><span class="n">RUNPATH</span><span class="o">&gt;/</span><span class="n">sunsch_config</span><span class="o">.</span><span class="n">yml</span><span class="p">)</span>
@@ -310,7 +315,7 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 <p>(if you don’t need to templatize your sunsch configuration, you can simplify)</p>
 </section>
 <section id="caveats">
-<h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this headline"></a></h2>
+<h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Any comments (starting with <code class="docutils literal notranslate"><span class="pre">--</span></code> in the source files) are lost in the final
 output. This is unfortunate, but hard to fix. It is related to the comments in

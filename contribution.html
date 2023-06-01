@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing to subscript &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>Contributing to subscript &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> subscript
-            <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            subscript
+              <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -105,8 +110,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Contributing to subscript</li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Contributing to subscript</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/contribution.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -117,9 +122,9 @@
            <div itemprop="articleBody">
              
   <section id="contributing-to-subscript">
-<h1>Contributing to subscript<a class="headerlink" href="#contributing-to-subscript" title="Permalink to this headline"></a></h1>
+<h1>Contributing to subscript<a class="headerlink" href="#contributing-to-subscript" title="Permalink to this heading"></a></h1>
 <section id="getting-started-on-equinor-linux-computers">
-<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this headline"></a></h2>
+<h2>Getting started on Equinor Linux computers<a class="headerlink" href="#getting-started-on-equinor-linux-computers" title="Permalink to this heading"></a></h2>
 <p>On Equinor Linux computers, is is recommended to run with the Komodo
 environment, which will provide an analogue to <code class="docutils literal notranslate"><span class="pre">virtualenv</span></code> for making a
 virtual environment.</p>
@@ -129,7 +134,7 @@ activating a Komodo release, and perform the instructions for extending Komodo
 in order a functioning <code class="docutils literal notranslate"><span class="pre">pip</span></code> tool.</p>
 </section>
 <section id="getting-started-as-a-developer">
-<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this headline"></a></h2>
+<h2>Getting started as a developer<a class="headerlink" href="#getting-started-as-a-developer" title="Permalink to this heading"></a></h2>
 <p>The first thing to do, is to create a fork of subscript to your personal github
 account. Go to <a class="reference external" href="https://github.com/equinor/subscript">https://github.com/equinor/subscript</a> and click the “Fork”
 button.</p>
@@ -160,12 +165,12 @@ environment for subscript using the commands:</p>
 subscript, its test suite and documentation.</p>
 <p>A good start is to verify that all tests pass after having cloned the
 repository, which you can do by running:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -n auto</span>
 </pre></div>
 </div>
 </section>
 <section id="repository-conventions">
-<h2>Repository conventions<a class="headerlink" href="#repository-conventions" title="Permalink to this headline"></a></h2>
+<h2>Repository conventions<a class="headerlink" href="#repository-conventions" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Each tool has its own subdirectory under <code class="docutils literal notranslate"><span class="pre">src/subscript</span></code>.</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> for installing endpoints that users should have in their <code class="docutils literal notranslate"><span class="pre">$PATH</span></code></p></li>
@@ -185,7 +190,7 @@ mypy.</p></li>
 </ul>
 </section>
 <section id="maintenance-responsibility">
-<h2>Maintenance responsibility<a class="headerlink" href="#maintenance-responsibility" title="Permalink to this headline"></a></h2>
+<h2>Maintenance responsibility<a class="headerlink" href="#maintenance-responsibility" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Equinor (PETEC Reservoir Toolbox) maintains the repository infrastructure,
 monitors that automated tests pass on updated dependencies, and ensures
@@ -199,7 +204,7 @@ by Equinor.</p></li>
 </ul>
 </section>
 <section id="open-source">
-<h2>Open source<a class="headerlink" href="#open-source" title="Permalink to this headline"></a></h2>
+<h2>Open source<a class="headerlink" href="#open-source" title="Permalink to this heading"></a></h2>
 <p>Subscript is both open source and closed source. The twin repository
 <code class="docutils literal notranslate"><span class="pre">subscript-internal</span></code> holds similar infrastructure but with scripts that are
 exempted from the Open Source requirement in TR1621. Internal or confidental
@@ -207,7 +212,7 @@ data should never be submitted to subscript. For each open script, there must
 be accompanying public test data.</p>
 </section>
 <section id="code-style">
-<h2>Code style<a class="headerlink" href="#code-style" title="Permalink to this headline"></a></h2>
+<h2>Code style<a class="headerlink" href="#code-style" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>PEP8 is the rule for naming of files, functions, classes, etc. Exception to
 PEP8 is maximum width at 88 instead of PEP8’s 79; as 88 is the <code class="docutils literal notranslate"><span class="pre">black</span></code>
@@ -242,7 +247,7 @@ pushing code that will fail the code style tests required before merge.</p></li>
 </ul>
 </section>
 <section id="building-documentation">
-<h2>Building documentation<a class="headerlink" href="#building-documentation" title="Permalink to this headline"></a></h2>
+<h2>Building documentation<a class="headerlink" href="#building-documentation" title="Permalink to this heading"></a></h2>
 <p>Assuming the developer instructions above, run the following command to to
 build the documentation for subscript:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">build_sphinx</span>

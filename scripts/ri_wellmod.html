@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RI_WELLMOD &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>RI_WELLMOD &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -77,8 +82,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#syntax">Syntax</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -111,8 +116,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>RI_WELLMOD</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">RI_WELLMOD</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/ri_wellmod.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -123,7 +128,7 @@
            <div itemprop="articleBody">
              
   <section id="ri-wellmod">
-<h1>RI_WELLMOD<a class="headerlink" href="#ri-wellmod" title="Permalink to this headline"></a></h1>
+<h1>RI_WELLMOD<a class="headerlink" href="#ri-wellmod" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">ri_wellmod</span></code> is a command line utility to generate Eclipse well model definitions
 (WELSPECS/WELSPECL, COMPDAT/COMPDATL, WELSEGS, COMPSEGS) using ResInsight. The script
 takes as input a ResInsight project with wells and completions defined, in addition to
@@ -136,9 +141,9 @@ Eclipse well names, i.e., the completion export names as defined in the ResInsig
 wells project.</p>
 </div>
 <section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <section id="example-1">
-<h3>Example 1<a class="headerlink" href="#example-1" title="Permalink to this headline"></a></h3>
+<h3>Example 1<a class="headerlink" href="#example-1" title="Permalink to this heading"></a></h3>
 <p>To create well definitions in a file with the default name <code class="docutils literal notranslate"><span class="pre">welldefs.sch</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">ri_wellmod</span> <span class="n">wells</span><span class="o">.</span><span class="n">rsp</span> <span class="n">DROGON</span><span class="o">-</span><span class="mi">0</span>
 </pre></div>
@@ -154,7 +159,7 @@ and completions defined:</p>
 </figure>
 </section>
 <section id="example-2">
-<h3>Example 2<a class="headerlink" href="#example-2" title="Permalink to this headline"></a></h3>
+<h3>Example 2<a class="headerlink" href="#example-2" title="Permalink to this heading"></a></h3>
 <p>By default multi-segment well definitions are not created, but may be requested for
 some or all wells using a command-line argument. E.g., to add MSW data for the well
 <code class="docutils literal notranslate"><span class="pre">A44</span></code> and any wells starting with <code class="docutils literal notranslate"><span class="pre">C</span></code> based on a NOSIM case:</p>
@@ -163,7 +168,7 @@ some or all wells using a command-line argument. E.g., to add MSW data for the w
 </div>
 </section>
 <section id="example-3">
-<h3>Example 3<a class="headerlink" href="#example-3" title="Permalink to this headline"></a></h3>
+<h3>Example 3<a class="headerlink" href="#example-3" title="Permalink to this heading"></a></h3>
 <p>Instead of using an initialized Eclipse case an input GRDECL case may be used. To
 create meaningful connection factors PERMX/PERMY/PERMZ and NTG (if non-unit) must
 be specified, either in the GRDECL file or in separate files, as in this exapmle:</p>
@@ -173,7 +178,7 @@ be specified, either in the GRDECL file or in separate files, as in this exapmle
 </div>
 </section>
 <section id="example-4">
-<h3>Example 4<a class="headerlink" href="#example-4" title="Permalink to this headline"></a></h3>
+<h3>Example 4<a class="headerlink" href="#example-4" title="Permalink to this heading"></a></h3>
 <p>ResInsight supports local grid refinement, and will automatically create WELSPECL/COMPDATL/COMPSEGL
 when given an initialized Eclipse case with LGR(s):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&gt;</span> <span class="n">ri_wellmod</span> <span class="n">wells</span><span class="o">.</span><span class="n">rsp</span> <span class="n">DROGON</span><span class="o">-</span><span class="mi">0</span><span class="n">_NOSIM_LGR</span> <span class="o">--</span><span class="n">msw</span> <span class="n">A4</span> <span class="o">-</span><span class="n">o</span> <span class="n">wells_lgr</span><span class="o">.</span><span class="n">sch</span>
@@ -181,7 +186,7 @@ when given an initialized Eclipse case with LGR(s):</p>
 </div>
 </section>
 <section id="example-5">
-<h3>Example 5<a class="headerlink" href="#example-5" title="Permalink to this headline"></a></h3>
+<h3>Example 5<a class="headerlink" href="#example-5" title="Permalink to this heading"></a></h3>
 <p>It is also possible to create local LGRs surrounding each well, and this may be specified on the
 script command line. The following example adds a 3x3x2 refinement to the region of cells
 perforated by the well A4 and a 1x1x3 refinement around A6:</p>
@@ -194,7 +199,7 @@ be included in the GRID section of the Eclipse .DATA file.</p>
 </section>
 </section>
 <section id="syntax">
-<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this headline"></a></h2>
+<h2>Syntax<a class="headerlink" href="#syntax" title="Permalink to this heading"></a></h2>
 <p><p>Utility script for creating Eclipse well definitions using ResInsight.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">ri_wellmod</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">verbose</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">silent</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
@@ -207,8 +212,8 @@ be included in the GRID section of the Eclipse .DATA file.</p>
                   <span class="n">well_project</span> <span class="n">ecl_case</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h3>
+<section id="positional-arguments">
+<h3>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>well_project</kbd></dt>
 <dd><p>Path to project with well paths and completions defined.</p>
@@ -218,8 +223,8 @@ be included in the GRID section of the Eclipse .DATA file.</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h3>
+<section id="named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>--verbose, -v</kbd></dt>
 <dd><p>Verbose output</p>
@@ -245,10 +250,10 @@ be included in the GRID section of the Eclipse .DATA file.</p>
 <p>Default: “resinsight/ri_completions”</p>
 </dd>
 <dt><kbd>--wells, -w</kbd></dt>
-<dd><p>Optional comma-separated list of wells (wildcards allowed) to generate completions             for (default=all wells in project)</p>
+<dd><p>Optional comma-separated list of wells (wildcards allowed) to             generate completions for (default=all wells in project)</p>
 </dd>
 <dt><kbd>--msw</kbd></dt>
-<dd><p>Optional comma-separated list of wells (wildcards allowed) to generate msw             well definitions for (default=none)</p>
+<dd><p>Optional comma-separated list of wells (wildcards allowed) to             generate msw well definitions for (default=none)</p>
 </dd>
 <dt><kbd>--lgr, -l</kbd></dt>
 <dd><p>Optional list of comma-separated LGR specs: WELLNAME:REF_I,REF_J,REF_K           (wildcards allowed in well names)</p>

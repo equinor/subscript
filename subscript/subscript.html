@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -132,8 +138,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -144,12 +150,12 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript">
-<span id="subscript"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript</span></code><a class="headerlink" href="#module-subscript" title="Permalink to this headline"></a></h1>
-<div class="contents local topic" id="contents">
+<span id="subscript"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript</span></code><a class="headerlink" href="#module-subscript" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
-</div>
+</nav>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.getLogger">
 <span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">getLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'subscript'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.getLogger" title="Permalink to this definition"></a></dt>
@@ -169,219 +175,642 @@ subscript tool are meant to have their stdout piped into another
 application by default (some of them can, then the programmer and user must
 be careful with log levels).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>module_name</strong> (<em>str</em>) – A suggested name for the logger, usually
 __name__ should be supplied</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A logger object</p>
 </dd>
 </dl>
 </dd></dl>
 
 <section id="submodules">
-<h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.bjobsusers.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers.bjobsusers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers.bjobsusers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.call_bjobs"><code class="docutils literal notranslate"><span class="pre">call_bjobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.call_finger"><code class="docutils literal notranslate"><span class="pre">call_finger()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.get_jobs"><code class="docutils literal notranslate"><span class="pre">get_jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.show_status"><code class="docutils literal notranslate"><span class="pre">show_status()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.bjobsusers.bjobsusers.html#subscript.bjobsusers.bjobsusers.userinfo"><code class="docutils literal notranslate"><span class="pre">userinfo()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.casegen_upcars</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.model</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.udf.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf_arg_parser</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.casegen_upcars</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.get_value"><code class="docutils literal notranslate"><span class="pre">get_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.mask_token"><code class="docutils literal notranslate"><span class="pre">mask_token()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.model</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.bounded_box"><code class="docutils literal notranslate"><span class="pre">Model.bounded_box()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.calculate_avg_prop"><code class="docutils literal notranslate"><span class="pre">Model.calculate_avg_prop()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.clear_throws"><code class="docutils literal notranslate"><span class="pre">Model.clear_throws()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.distribute_property"><code class="docutils literal notranslate"><span class="pre">Model.distribute_property()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.export_grdecl"><code class="docutils literal notranslate"><span class="pre">Model.export_grdecl()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.export_props"><code class="docutils literal notranslate"><span class="pre">Model.export_props()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.grow_box"><code class="docutils literal notranslate"><span class="pre">Model.grow_box()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.remove_vug"><code class="docutils literal notranslate"><span class="pre">Model.remove_vug()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_fracture_anisotropy_property"><code class="docutils literal notranslate"><span class="pre">Model.set_fracture_anisotropy_property()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_fracture_property"><code class="docutils literal notranslate"><span class="pre">Model.set_fracture_property()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_layers_property"><code class="docutils literal notranslate"><span class="pre">Model.set_layers_property()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_throws"><code class="docutils literal notranslate"><span class="pre">Model.set_throws()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_vug"><code class="docutils literal notranslate"><span class="pre">Model.set_vug()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.fracture_idx"><code class="docutils literal notranslate"><span class="pre">fracture_idx()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.udf.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.conversion"><code class="docutils literal notranslate"><span class="pre">conversion()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.iter_flatten"><code class="docutils literal notranslate"><span class="pre">iter_flatten()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.listify"><code class="docutils literal notranslate"><span class="pre">listify()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.uniform_dist"><code class="docutils literal notranslate"><span class="pre">uniform_dist()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf_arg_parser</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser"><code class="docutils literal notranslate"><span class="pre">fill_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser_fracture"><code class="docutils literal notranslate"><span class="pre">fill_parser_fracture()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser_vugs"><code class="docutils literal notranslate"><span class="pre">fill_parser_vugs()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.check_swatinit.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.check_swatinit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.check_swatinit</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.augment_grid_frame_qc_vectors"><code class="docutils literal notranslate"><span class="pre">augment_grid_frame_qc_vectors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.check_applicability"><code class="docutils literal notranslate"><span class="pre">check_applicability()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.compute_pc"><code class="docutils literal notranslate"><span class="pre">compute_pc()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.human_report_pc_scaling"><code class="docutils literal notranslate"><span class="pre">human_report_pc_scaling()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.human_report_qc_vols"><code class="docutils literal notranslate"><span class="pre">human_report_qc_vols()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.make_qc_gridframe"><code class="docutils literal notranslate"><span class="pre">make_qc_gridframe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.merge_equil"><code class="docutils literal notranslate"><span class="pre">merge_equil()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.merge_pc_max"><code class="docutils literal notranslate"><span class="pre">merge_pc_max()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.ppcwmax_gridvector"><code class="docutils literal notranslate"><span class="pre">ppcwmax_gridvector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.qc_flag"><code class="docutils literal notranslate"><span class="pre">qc_flag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.qc_volumes"><code class="docutils literal notranslate"><span class="pre">qc_volumes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.check_swatinit.html#subscript.check_swatinit.check_swatinit.reorder_dframe_for_nonnans"><code class="docutils literal notranslate"><span class="pre">reorder_dframe_for_nonnans()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.constants.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.constants</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.pillarmodel</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.plotter.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.plotter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.pillarmodel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel"><code class="docutils literal notranslate"><span class="pre">PillarModel</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc"><code class="docutils literal notranslate"><span class="pre">PillarModel.evaluate_pc()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw"><code class="docutils literal notranslate"><span class="pre">PillarModel.evaluate_sw()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.grid"><code class="docutils literal notranslate"><span class="pre">PillarModel.grid()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.props"><code class="docutils literal notranslate"><span class="pre">PillarModel.props()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.regions"><code class="docutils literal notranslate"><span class="pre">PillarModel.regions()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.runspec"><code class="docutils literal notranslate"><span class="pre">PillarModel.runspec()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.schedule"><code class="docutils literal notranslate"><span class="pre">PillarModel.schedule()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.check_swatinit.pillarmodel.html#subscript.check_swatinit.pillarmodel.PillarModel.solution"><code class="docutils literal notranslate"><span class="pre">PillarModel.solution()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.plotter.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.plotter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.add_contacts_to_plot"><code class="docutils literal notranslate"><span class="pre">add_contacts_to_plot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.pc_depth"><code class="docutils literal notranslate"><span class="pre">pc_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.plot_qc_panels"><code class="docutils literal notranslate"><span class="pre">plot_qc_panels()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.pressure_depth"><code class="docutils literal notranslate"><span class="pre">pressure_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.swat_depth"><code class="docutils literal notranslate"><span class="pre">swat_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.swatinit_depth"><code class="docutils literal notranslate"><span class="pre">swatinit_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.visual_depth"><code class="docutils literal notranslate"><span class="pre">visual_depth()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.wvol_waterfall"><code class="docutils literal notranslate"><span class="pre">wvol_waterfall()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.convert_grid_format.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format.convert_grid_format</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format.convert_grid_format</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.convert_grid_format.convert_grid_format.html#subscript.convert_grid_format.convert_grid_format.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.convert_grid_format.convert_grid_format.html#subscript.convert_grid_format.convert_grid_format.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.csv2ofmvol.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol.csv2ofmvol</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol.csv2ofmvol</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.check_consecutive_dates"><code class="docutils literal notranslate"><span class="pre">check_consecutive_dates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.csv2ofmvol_main"><code class="docutils literal notranslate"><span class="pre">csv2ofmvol_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.df2vol"><code class="docutils literal notranslate"><span class="pre">df2vol()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv2ofmvol.csv2ofmvol.html#subscript.csv2ofmvol.csv2ofmvol.read_pdm_csv_files"><code class="docutils literal notranslate"><span class="pre">read_pdm_csv_files()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.csv_merge.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge.csv_merge</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge.csv_merge</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.CsvMerge"><code class="docutils literal notranslate"><span class="pre">CsvMerge</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.CsvMerge.run"><code class="docutils literal notranslate"><span class="pre">CsvMerge.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.csv_merge_main"><code class="docutils literal notranslate"><span class="pre">csv_merge_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.get_ertwf_parser"><code class="docutils literal notranslate"><span class="pre">get_ertwf_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.legacy_ertscript_workflow"><code class="docutils literal notranslate"><span class="pre">legacy_ertscript_workflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.merge_csvfiles"><code class="docutils literal notranslate"><span class="pre">merge_csvfiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_merge.csv_merge.html#subscript.csv_merge.csv_merge.taglist"><code class="docutils literal notranslate"><span class="pre">taglist()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.csv_stack.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.csv_stack.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack.csv_stack</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv_stack.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack.csv_stack</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.CsvStack"><code class="docutils literal notranslate"><span class="pre">CsvStack</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.CsvStack.run"><code class="docutils literal notranslate"><span class="pre">CsvStack.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.csv_stack"><code class="docutils literal notranslate"><span class="pre">csv_stack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.csv_stack_main"><code class="docutils literal notranslate"><span class="pre">csv_stack_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.deprecated_main"><code class="docutils literal notranslate"><span class="pre">deprecated_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.drop_constants"><code class="docutils literal notranslate"><span class="pre">drop_constants()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.legacy_ertscript_workflow"><code class="docutils literal notranslate"><span class="pre">legacy_ertscript_workflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.csv_stack.csv_stack.html#subscript.csv_stack.csv_stack.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.eclcompress.html"><code class="docutils literal notranslate"><span class="pre">subscript.eclcompress</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.eclcompress.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.eclcompress.eclcompress.html"><code class="docutils literal notranslate"><span class="pre">subscript.eclcompress.eclcompress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.eclcompress.eclcompress.html"><code class="docutils literal notranslate"><span class="pre">subscript.eclcompress.eclcompress</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.acceptedvalue"><code class="docutils literal notranslate"><span class="pre">acceptedvalue()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.compress_multiple_keywordsets"><code class="docutils literal notranslate"><span class="pre">compress_multiple_keywordsets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.eclcompress"><code class="docutils literal notranslate"><span class="pre">eclcompress()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.file_is_binary"><code class="docutils literal notranslate"><span class="pre">file_is_binary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.find_keyword_sets"><code class="docutils literal notranslate"><span class="pre">find_keyword_sets()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.glob_patterns"><code class="docutils literal notranslate"><span class="pre">glob_patterns()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.main_eclcompress"><code class="docutils literal notranslate"><span class="pre">main_eclcompress()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.eclcompress.eclcompress.html#subscript.eclcompress.eclcompress.parse_wildcardfile"><code class="docutils literal notranslate"><span class="pre">parse_wildcardfile()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.ecldiff2roff.html"><code class="docutils literal notranslate"><span class="pre">subscript.ecldiff2roff</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.ecldiff2roff.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html"><code class="docutils literal notranslate"><span class="pre">subscript.ecldiff2roff.ecldiff2roff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html"><code class="docutils literal notranslate"><span class="pre">subscript.ecldiff2roff.ecldiff2roff</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html#subscript.ecldiff2roff.ecldiff2roff.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html#subscript.ecldiff2roff.ecldiff2roff.ecldiff2roff_main"><code class="docutils literal notranslate"><span class="pre">ecldiff2roff_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html#subscript.ecldiff2roff.ecldiff2roff.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html#subscript.ecldiff2roff.ecldiff2roff.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ecldiff2roff.ecldiff2roff.html#subscript.ecldiff2roff.ecldiff2roff.parse_diff_dates"><code class="docutils literal notranslate"><span class="pre">parse_diff_dates()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.fmu_copy_revision.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmu_copy_revision</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.fmu_copy_revision.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmu_copy_revision.fmu_copy_revision</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmu_copy_revision.fmu_copy_revision</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU"><code class="docutils literal notranslate"><span class="pre">CopyFMU</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.check_disk_space"><code class="docutils literal notranslate"><span class="pre">CopyFMU.check_disk_space()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.check_folders"><code class="docutils literal notranslate"><span class="pre">CopyFMU.check_folders()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.check_rms_lockfile"><code class="docutils literal notranslate"><span class="pre">CopyFMU.check_rms_lockfile()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.construct_default_target"><code class="docutils literal notranslate"><span class="pre">CopyFMU.construct_default_target()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.construct_target"><code class="docutils literal notranslate"><span class="pre">CopyFMU.construct_target()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.define_filterpattern"><code class="docutils literal notranslate"><span class="pre">CopyFMU.define_filterpattern()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.do_parse_args"><code class="docutils literal notranslate"><span class="pre">CopyFMU.do_parse_args()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.do_rsyncing"><code class="docutils literal notranslate"><span class="pre">CopyFMU.do_rsyncing()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.menu_source_folder"><code class="docutils literal notranslate"><span class="pre">CopyFMU.menu_source_folder()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.menu_target_folder"><code class="docutils literal notranslate"><span class="pre">CopyFMU.menu_target_folder()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.CopyFMU.show_possible_profiles_copy"><code class="docutils literal notranslate"><span class="pre">CopyFMU.show_possible_profiles_copy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmu_copy_revision.fmu_copy_revision.html#subscript.fmu_copy_revision.fmu_copy_revision.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.fmuobs.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.fmuobs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.parsers.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.parsers</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.util.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.util</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.writers.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.writers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.fmuobs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.FmuObs"><code class="docutils literal notranslate"><span class="pre">FmuObs</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.FmuObs.run"><code class="docutils literal notranslate"><span class="pre">FmuObs.run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.autoparse_file"><code class="docutils literal notranslate"><span class="pre">autoparse_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.dump_results"><code class="docutils literal notranslate"><span class="pre">dump_results()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.fmuobs"><code class="docutils literal notranslate"><span class="pre">fmuobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.legacy_ertscript_workflow"><code class="docutils literal notranslate"><span class="pre">legacy_ertscript_workflow()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.fmuobs.html#subscript.fmuobs.fmuobs.validate_internal_dframe"><code class="docutils literal notranslate"><span class="pre">validate_internal_dframe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.parsers.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.parsers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.INCLUDE_RE"><code class="docutils literal notranslate"><span class="pre">INCLUDE_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.OBS_ARGS_RE"><code class="docutils literal notranslate"><span class="pre">OBS_ARGS_RE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.blockdictlist2df"><code class="docutils literal notranslate"><span class="pre">blockdictlist2df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.compute_date_from_days"><code class="docutils literal notranslate"><span class="pre">compute_date_from_days()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.ertobs2df"><code class="docutils literal notranslate"><span class="pre">ertobs2df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.expand_includes"><code class="docutils literal notranslate"><span class="pre">expand_includes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.filter_comments"><code class="docutils literal notranslate"><span class="pre">filter_comments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.fix_dtype"><code class="docutils literal notranslate"><span class="pre">fix_dtype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.flatten_observation_unit"><code class="docutils literal notranslate"><span class="pre">flatten_observation_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.mask_curly_braces"><code class="docutils literal notranslate"><span class="pre">mask_curly_braces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.obsdict2df"><code class="docutils literal notranslate"><span class="pre">obsdict2df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.parse_observation_unit"><code class="docutils literal notranslate"><span class="pre">parse_observation_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.parse_subobservation_args"><code class="docutils literal notranslate"><span class="pre">parse_subobservation_args()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.remove_enclosing_curly_braces"><code class="docutils literal notranslate"><span class="pre">remove_enclosing_curly_braces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.resinsight_df2df"><code class="docutils literal notranslate"><span class="pre">resinsight_df2df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.smrydictlist2df"><code class="docutils literal notranslate"><span class="pre">smrydictlist2df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.parsers.html#subscript.fmuobs.parsers.split_by_sep_in_masked_string"><code class="docutils literal notranslate"><span class="pre">split_by_sep_in_masked_string()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.util.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.util</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.util.html#subscript.fmuobs.util.lowercase_dictkeys"><code class="docutils literal notranslate"><span class="pre">lowercase_dictkeys()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.util.html#subscript.fmuobs.util.uppercase_dictkeys"><code class="docutils literal notranslate"><span class="pre">uppercase_dictkeys()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.writers.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.writers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.block_df2obsdict"><code class="docutils literal notranslate"><span class="pre">block_df2obsdict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.convert_dframe_date_to_str"><code class="docutils literal notranslate"><span class="pre">convert_dframe_date_to_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.df2ertobs"><code class="docutils literal notranslate"><span class="pre">df2ertobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.df2obsdict"><code class="docutils literal notranslate"><span class="pre">df2obsdict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.df2resinsight_df"><code class="docutils literal notranslate"><span class="pre">df2resinsight_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.dfblock2ertobs"><code class="docutils literal notranslate"><span class="pre">dfblock2ertobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.dfgeneral2ertobs"><code class="docutils literal notranslate"><span class="pre">dfgeneral2ertobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.dfhistory2ertobs"><code class="docutils literal notranslate"><span class="pre">dfhistory2ertobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.dfsummary2ertobs"><code class="docutils literal notranslate"><span class="pre">dfsummary2ertobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.fmuobs.writers.html#subscript.fmuobs.writers.summary_df2obsdict"><code class="docutils literal notranslate"><span class="pre">summary_df2obsdict()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.hook_implementations.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.hook_implementations.jobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations.jobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.hook_implementations.jobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations.jobs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.hook_implementations.jobs.html#subscript.hook_implementations.jobs.installable_jobs"><code class="docutils literal notranslate"><span class="pre">installable_jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.hook_implementations.jobs.html#subscript.hook_implementations.jobs.installable_workflow_jobs"><code class="docutils literal notranslate"><span class="pre">installable_workflow_jobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.hook_implementations.jobs.html#subscript.hook_implementations.jobs.job_documentation"><code class="docutils literal notranslate"><span class="pre">job_documentation()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.interp_relperm.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.get_cfg_schema"><code class="docutils literal notranslate"><span class="pre">get_cfg_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.make_interpolant"><code class="docutils literal notranslate"><span class="pre">make_interpolant()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.make_wateroilgas"><code class="docutils literal notranslate"><span class="pre">make_wateroilgas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.parse_satfunc_files"><code class="docutils literal notranslate"><span class="pre">parse_satfunc_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.prepend_root_path_to_relative_files"><code class="docutils literal notranslate"><span class="pre">prepend_root_path_to_relative_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.process_config"><code class="docutils literal notranslate"><span class="pre">process_config()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.merge_rft_ertobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_rft_ertobs</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.merge_rft_ertobs.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_rft_ertobs.merge_rft_ertobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_rft_ertobs.merge_rft_ertobs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html#subscript.merge_rft_ertobs.merge_rft_ertobs.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html#subscript.merge_rft_ertobs.merge_rft_ertobs.get_observations"><code class="docutils literal notranslate"><span class="pre">get_observations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html#subscript.merge_rft_ertobs.merge_rft_ertobs.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html#subscript.merge_rft_ertobs.merge_rft_ertobs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html#subscript.merge_rft_ertobs.merge_rft_ertobs.merge_rft_ertobs"><code class="docutils literal notranslate"><span class="pre">merge_rft_ertobs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_rft_ertobs.merge_rft_ertobs.html#subscript.merge_rft_ertobs.merge_rft_ertobs.split_wellname_reportstep"><code class="docutils literal notranslate"><span class="pre">split_wellname_reportstep()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.merge_schedule.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_schedule</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.merge_schedule.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.merge_schedule.merge_schedule.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_schedule.merge_schedule</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.merge_schedule.merge_schedule.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_schedule.merge_schedule</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_schedule.merge_schedule.html#subscript.merge_schedule.merge_schedule.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.merge_schedule.merge_schedule.html#subscript.merge_schedule.merge_schedule.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.ofmvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.ofmvol2csv</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.ofmvol2csv.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.ofmvol2csv.ofmvol2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.ofmvol2csv.ofmvol2csv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.cleanse_ofm_lines"><code class="docutils literal notranslate"><span class="pre">cleanse_ofm_lines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.extract_columnnames"><code class="docutils literal notranslate"><span class="pre">extract_columnnames()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.find_wellstart_indices"><code class="docutils literal notranslate"><span class="pre">find_wellstart_indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.ofmvol2csv_main"><code class="docutils literal notranslate"><span class="pre">ofmvol2csv_main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.parse_ofmtable"><code class="docutils literal notranslate"><span class="pre">parse_ofmtable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.parse_well"><code class="docutils literal notranslate"><span class="pre">parse_well()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.process_volfile"><code class="docutils literal notranslate"><span class="pre">process_volfile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.process_volstr"><code class="docutils literal notranslate"><span class="pre">process_volstr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.split_list"><code class="docutils literal notranslate"><span class="pre">split_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ofmvol2csv.ofmvol2csv.html#subscript.ofmvol2csv.ofmvol2csv.unify_dateformat"><code class="docutils literal notranslate"><span class="pre">unify_dateformat()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.pack_sim.html"><code class="docutils literal notranslate"><span class="pre">subscript.pack_sim</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.pack_sim.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.pack_sim.pack_sim.html"><code class="docutils literal notranslate"><span class="pre">subscript.pack_sim.pack_sim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.pack_sim.pack_sim.html"><code class="docutils literal notranslate"><span class="pre">subscript.pack_sim.pack_sim</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.pack_sim.pack_sim.html#subscript.pack_sim.pack_sim.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.pack_sim.pack_sim.html#subscript.pack_sim.pack_sim.inspect_file"><code class="docutils literal notranslate"><span class="pre">inspect_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.pack_sim.pack_sim.html#subscript.pack_sim.pack_sim.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.pack_sim.pack_sim.html#subscript.pack_sim.pack_sim.pack_simulation"><code class="docutils literal notranslate"><span class="pre">pack_simulation()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.params2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.params2csv</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.params2csv.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.params2csv.params2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.params2csv.params2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.params2csv.params2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.params2csv.params2csv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.params2csv.params2csv.html#subscript.params2csv.params2csv.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.params2csv.params2csv.html#subscript.params2csv.params2csv.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.params2csv.params2csv.html#subscript.params2csv.params2csv.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.presentvalue.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.presentvalue.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.presentvalue.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.calc_presentvalue_df"><code class="docutils literal notranslate"><span class="pre">calc_presentvalue_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.calc_pv_bep_constantgas"><code class="docutils literal notranslate"><span class="pre">calc_pv_bep_constantgas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.calc_pv_bep_relativegas"><code class="docutils literal notranslate"><span class="pre">calc_pv_bep_relativegas()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.calc_pv_irr"><code class="docutils literal notranslate"><span class="pre">calc_pv_irr()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.calculate_financials"><code class="docutils literal notranslate"><span class="pre">calculate_financials()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.dict_to_parameterstxt"><code class="docutils literal notranslate"><span class="pre">dict_to_parameterstxt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.get_paramfilename"><code class="docutils literal notranslate"><span class="pre">get_paramfilename()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.get_yearly_summary"><code class="docutils literal notranslate"><span class="pre">get_yearly_summary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.prepare_econ_table"><code class="docutils literal notranslate"><span class="pre">prepare_econ_table()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.presentvalue.presentvalue.html#subscript.presentvalue.presentvalue.presentvalue_main"><code class="docutils literal notranslate"><span class="pre">presentvalue_main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.prtvol2csv.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv.prtvol2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv.prtvol2csv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt"><code class="docutils literal notranslate"><span class="pre">currently_in_place_from_prt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.find_prtfile"><code class="docutils literal notranslate"><span class="pre">find_prtfile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.prep_output_dir"><code class="docutils literal notranslate"><span class="pre">prep_output_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.prtvol2df"><code class="docutils literal notranslate"><span class="pre">prtvol2df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.prtvol2csv.prtvol2csv.html#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt"><code class="docutils literal notranslate"><span class="pre">reservoir_volumes_from_prt()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.restartthinner.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.date_slicer"><code class="docutils literal notranslate"><span class="pre">date_slicer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.ecl_repacker"><code class="docutils literal notranslate"><span class="pre">ecl_repacker()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.find_libecl_app"><code class="docutils literal notranslate"><span class="pre">find_libecl_app()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.get_restart_indices"><code class="docutils literal notranslate"><span class="pre">get_restart_indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.restartthinner.restartthinner.html#subscript.restartthinner.restartthinner.restartthinner"><code class="docutils literal notranslate"><span class="pre">restartthinner()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.ri_wellmod.html"><code class="docutils literal notranslate"><span class="pre">subscript.ri_wellmod</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.ri_wellmod.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html"><code class="docutils literal notranslate"><span class="pre">subscript.ri_wellmod.ri_wellmod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html"><code class="docutils literal notranslate"><span class="pre">subscript.ri_wellmod.ri_wellmod</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.decode_lgr_spec"><code class="docutils literal notranslate"><span class="pre">decode_lgr_spec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.deep_reload"><code class="docutils literal notranslate"><span class="pre">deep_reload()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.find_and_wrap_resinsight_version"><code class="docutils literal notranslate"><span class="pre">find_and_wrap_resinsight_version()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.find_candidate_modules"><code class="docutils literal notranslate"><span class="pre">find_candidate_modules()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_resinsight_exe"><code class="docutils literal notranslate"><span class="pre">get_resinsight_exe()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_resinsight_version_string"><code class="docutils literal notranslate"><span class="pre">get_resinsight_version_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_resinsight_version_triplet"><code class="docutils literal notranslate"><span class="pre">get_resinsight_version_triplet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.get_rips_version_triplet"><code class="docutils literal notranslate"><span class="pre">get_rips_version_triplet()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.has_restart_file"><code class="docutils literal notranslate"><span class="pre">has_restart_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.is_init_case"><code class="docutils literal notranslate"><span class="pre">is_init_case()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.launch_resinsight"><code class="docutils literal notranslate"><span class="pre">launch_resinsight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.launch_resinsight_dev"><code class="docutils literal notranslate"><span class="pre">launch_resinsight_dev()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.rsp_extract_export_names"><code class="docutils literal notranslate"><span class="pre">rsp_extract_export_names()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.select_matching_strings"><code class="docutils literal notranslate"><span class="pre">select_matching_strings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.ri_wellmod.ri_wellmod.html#subscript.ri_wellmod.ri_wellmod.split_arg_string"><code class="docutils literal notranslate"><span class="pre">split_arg_string()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.rmsecl_volumetrics.html"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.rmsecl_volumetrics.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics.rmsecl_volumetrics</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics.rmsecl_volumetrics</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html#subscript.rmsecl_volumetrics.rmsecl_volumetrics.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.rmsecl_volumetrics.rmsecl_volumetrics.html#subscript.rmsecl_volumetrics.rmsecl_volumetrics.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.runrms.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.runrms.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms.runrms</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.runrms.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms.runrms</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS"><code class="docutils literal notranslate"><span class="pre">RunRMS</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.check_vconsistency"><code class="docutils literal notranslate"><span class="pre">RunRMS.check_vconsistency()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.detect_os"><code class="docutils literal notranslate"><span class="pre">RunRMS.detect_os()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.do_parse_args"><code class="docutils literal notranslate"><span class="pre">RunRMS.do_parse_args()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.get_scaledpi"><code class="docutils literal notranslate"><span class="pre">RunRMS.get_scaledpi()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.launch_rms"><code class="docutils literal notranslate"><span class="pre">RunRMS.launch_rms()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.parse_setup"><code class="docutils literal notranslate"><span class="pre">RunRMS.parse_setup()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.requested_rms_version"><code class="docutils literal notranslate"><span class="pre">RunRMS.requested_rms_version()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.runlogger"><code class="docutils literal notranslate"><span class="pre">RunRMS.runlogger()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.scan_rms"><code class="docutils literal notranslate"><span class="pre">RunRMS.scan_rms()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.showinfo"><code class="docutils literal notranslate"><span class="pre">RunRMS.showinfo()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.xalert"><code class="docutils literal notranslate"><span class="pre">xalert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.xcritical"><code class="docutils literal notranslate"><span class="pre">xcritical()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.xwarn"><code class="docutils literal notranslate"><span class="pre">xwarn()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.completions.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.completions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.datafile_obj</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.flux_obj</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.completions.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.completions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.completions.html#subscript.sector2fluxnum.completions.get_completion_list"><code class="docutils literal notranslate"><span class="pre">get_completion_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.datafile_obj</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile"><code class="docutils literal notranslate"><span class="pre">Datafile</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.create_DUMPFLUX_file"><code class="docutils literal notranslate"><span class="pre">Datafile.create_DUMPFLUX_file()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.create_USEFLUX_file"><code class="docutils literal notranslate"><span class="pre">Datafile.create_USEFLUX_file()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position"><code class="docutils literal notranslate"><span class="pre">Datafile.get_KW_position()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning"><code class="docutils literal notranslate"><span class="pre">Datafile.get_RESTART_warning()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_content"><code class="docutils literal notranslate"><span class="pre">Datafile.get_datafile_content()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content"><code class="docutils literal notranslate"><span class="pre">Datafile.get_datafile_text_content()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean"><code class="docutils literal notranslate"><span class="pre">Datafile.get_lines_clean()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.has_KW"><code class="docutils literal notranslate"><span class="pre">Datafile.has_KW()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.run_DUMPFLUX_nosim"><code class="docutils literal notranslate"><span class="pre">Datafile.run_DUMPFLUX_nosim()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_USEFLUX_header"><code class="docutils literal notranslate"><span class="pre">Datafile.set_USEFLUX_header()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_GRID_DUMPFLUX()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_GRID_USEFLUX()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_INCLUDE()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_NOSIM()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_PARALLEL()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_REGDIMS()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_RUNSPEC()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_SOLUTION()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.flux_obj</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum"><code class="docutils literal notranslate"><span class="pre">Fluxnum</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.copy_actnum"><code class="docutils literal notranslate"><span class="pre">Fluxnum.copy_actnum()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.include_nnc"><code class="docutils literal notranslate"><span class="pre">Fluxnum.include_nnc()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.include_well_completions"><code class="docutils literal notranslate"><span class="pre">Fluxnum.include_well_completions()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_fluxnum_kw"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_fluxnum_kw()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_fluxnum_kw_from_file"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_fluxnum_kw_from_file()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_inner_region"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_inner_region()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_lgr_box_region"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_lgr_box_region()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.write_fluxnum_kw"><code class="docutils literal notranslate"><span class="pre">Fluxnum.write_fluxnum_kw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumBox"><code class="docutils literal notranslate"><span class="pre">FluxnumBox</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumBox.set_inner_region"><code class="docutils literal notranslate"><span class="pre">FluxnumBox.set_inner_region()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumFipnum"><code class="docutils literal notranslate"><span class="pre">FluxnumFipnum</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumFipnum.set_inner_region"><code class="docutils literal notranslate"><span class="pre">FluxnumFipnum.set_inner_region()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_util.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.flux_util</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.fluxfile_obj</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.sector2fluxnum</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.fluxfile_obj</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.Fluxfile"><code class="docutils literal notranslate"><span class="pre">Fluxfile</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.Fluxfile.get_flux"><code class="docutils literal notranslate"><span class="pre">Fluxfile.get_flux()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.create_map_rst"><code class="docutils literal notranslate"><span class="pre">create_map_rst()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.write_new_fluxfile_from_rst"><code class="docutils literal notranslate"><span class="pre">write_new_fluxfile_from_rst()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.sector2fluxnum</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html#subscript.sector2fluxnum.sector2fluxnum.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html#subscript.sector2fluxnum.sector2fluxnum.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html#subscript.sector2fluxnum.sector2fluxnum.sector_to_fluxnum"><code class="docutils literal notranslate"><span class="pre">sector_to_fluxnum()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.summaryplot.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.summaryplot.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot.summaryplot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.summaryplot.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot.summaryplot</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.summaryplot.summaryplot.html#subscript.summaryplot.summaryplot.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.summaryplot.summaryplot.html#subscript.summaryplot.summaryplot.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.summaryplot.summaryplot.html#subscript.summaryplot.summaryplot.split_vectorsdatafiles"><code class="docutils literal notranslate"><span class="pre">split_vectorsdatafiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.summaryplot.summaryplot.html#subscript.summaryplot.summaryplot.summaryplotter"><code class="docutils literal notranslate"><span class="pre">summaryplotter()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.sunsch.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.dategrid"><code class="docutils literal notranslate"><span class="pre">dategrid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.datetime_from_date"><code class="docutils literal notranslate"><span class="pre">datetime_from_date()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.file_startswith_dates"><code class="docutils literal notranslate"><span class="pre">file_startswith_dates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.get_schema"><code class="docutils literal notranslate"><span class="pre">get_schema()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.load_timevector_from_file"><code class="docutils literal notranslate"><span class="pre">load_timevector_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.process_sch_config"><code class="docutils literal notranslate"><span class="pre">process_sch_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.sch_file_nonempty"><code class="docutils literal notranslate"><span class="pre">sch_file_nonempty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.sch_file_starts_with_dates_keyword"><code class="docutils literal notranslate"><span class="pre">sch_file_starts_with_dates_keyword()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.substitute"><code class="docutils literal notranslate"><span class="pre">substitute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.wrap_long_lines"><code class="docutils literal notranslate"><span class="pre">wrap_long_lines()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.time_vector.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.time_vector</span></code></a></li>
 </ul>
 </li>
@@ -389,7 +818,15 @@ __name__ should be supplied</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.sw_model_utilities.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities.sw_model_utilities</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities.sw_model_utilities</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html#subscript.sw_model_utilities.sw_model_utilities.autoformat"><code class="docutils literal notranslate"><span class="pre">autoformat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html#subscript.sw_model_utilities.sw_model_utilities.convert_normal2inverse"><code class="docutils literal notranslate"><span class="pre">convert_normal2inverse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html#subscript.sw_model_utilities.sw_model_utilities.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html#subscript.sw_model_utilities.sw_model_utilities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html#subscript.sw_model_utilities.sw_model_utilities.menu"><code class="docutils literal notranslate"><span class="pre">menu()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.sw_model_utilities.sw_model_utilities.html#subscript.sw_model_utilities.sw_model_utilities.plotting"><code class="docutils literal notranslate"><span class="pre">plotting()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -397,14 +834,31 @@ __name__ should be supplied</p>
 <li class="toctree-l1"><a class="reference internal" href="subscript.version.html"><code class="docutils literal notranslate"><span class="pre">subscript.version</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.vfp2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.vfp2csv</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.vfp2csv.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.vfp2csv.vfp2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.vfp2csv.vfp2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.vfp2csv.vfp2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.vfp2csv.vfp2csv</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.vfp2csv.vfp2csv.html#subscript.vfp2csv.vfp2csv.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.vfp2csv.vfp2csv.html#subscript.vfp2csv.vfp2csv.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.vfp2csv.vfp2csv.html#subscript.vfp2csv.vfp2csv.vfpfile2df"><code class="docutils literal notranslate"><span class="pre">vfpfile2df()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="subscript.welltest_dpds.html#submodules">Submodules</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.CustomFormatter"><code class="docutils literal notranslate"><span class="pre">CustomFormatter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.genobs_vec"><code class="docutils literal notranslate"><span class="pre">genobs_vec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.get_buildup_indices"><code class="docutils literal notranslate"><span class="pre">get_buildup_indices()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.summary_vec"><code class="docutils literal notranslate"><span class="pre">summary_vec()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.supertime"><code class="docutils literal notranslate"><span class="pre">supertime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.to_csv"><code class="docutils literal notranslate"><span class="pre">to_csv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag1"><code class="docutils literal notranslate"><span class="pre">weighted_avg_press_time_derivative_lag1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.welltest_dpds.welltest_dpds.html#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2"><code class="docutils literal notranslate"><span class="pre">weighted_avg_press_time_derivative_lag2()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

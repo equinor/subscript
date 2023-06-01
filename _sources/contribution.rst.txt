@@ -61,7 +61,7 @@ repository, which you can do by running:
 
 .. code-block:: console
 
-  pytest
+  pytest -n auto
 
 
 Repository conventions

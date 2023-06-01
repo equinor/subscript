@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PACK_SIM &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>PACK_SIM &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -63,8 +68,8 @@
 <li class="toctree-l1"><a class="reference internal" href="merge_schedule.html">MERGE_SCHEDULE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PACK_SIM</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
@@ -100,8 +105,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>PACK_SIM</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PACK_SIM</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/pack_sim.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -112,7 +117,7 @@
            <div itemprop="articleBody">
              
   <section id="pack-sim">
-<h1>PACK_SIM<a class="headerlink" href="#pack-sim" title="Permalink to this headline"></a></h1>
+<h1>PACK_SIM<a class="headerlink" href="#pack-sim" title="Permalink to this heading"></a></h1>
 <a class="reference internal image-reference" href="../_images/Pack_sim_overview.png"><img alt="../_images/Pack_sim_overview.png" src="../_images/Pack_sim_overview.png" style="width: 80%;" /></a>
 <p><p>The script pack_sim will read trough a data file and copy all
 include files to one include directory in the so-called packing
@@ -124,8 +129,8 @@ company.  The script also works with include files in include files.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">pack_sim</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">fmu</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="n">ECLIPSE_CASE</span> <span class="n">PACKING_PATH</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h2>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>ECLIPSE_CASE</kbd></dt>
 <dd><p>Name of the Eclipse case to be packed</p>
@@ -135,8 +140,8 @@ company.  The script also works with include files in include files.</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h2>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>-c, --clearcomments</kbd></dt>
 <dd><p>Set this switch (only -c, no further input required) to clear all comments during packing.</p>

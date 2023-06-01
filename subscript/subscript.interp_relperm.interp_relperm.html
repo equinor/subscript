@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.interp_relperm.interp_relperm &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.interp_relperm.interp_relperm &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -135,10 +141,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-          <li><a href="subscript.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.interp_relperm.interp_relperm.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -149,13 +155,13 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.interp_relperm.interp_relperm">
-<span id="subscript-interp-relperm-interp-relperm"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code><a class="headerlink" href="#module-subscript.interp_relperm.interp_relperm" title="Permalink to this headline"></a></h1>
+<span id="subscript-interp-relperm-interp-relperm"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code><a class="headerlink" href="#module-subscript.interp_relperm.interp_relperm" title="Permalink to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.interp_relperm.interp_relperm.get_cfg_schema">
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">get_cfg_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.get_cfg_schema" title="Permalink to this definition"></a></dt>
 <dd><p>Defines the yml config schema</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 </dd>
 </dl>
@@ -166,7 +172,7 @@
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Define the argparse parser</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
 </dl>
@@ -177,7 +183,7 @@
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.main" title="Permalink to this definition"></a></dt>
 <dd><p>Invocated from the command line, parsing command line arguments</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -188,7 +194,7 @@
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">make_interpolant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">low_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">high_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interp_param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.make_interpolant" title="Permalink to this definition"></a></dt>
 <dd><p>Define a pyscal WaterOilGas interpolant</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>base_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – containing the base tables</p></li>
 <li><p><strong>low_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – containing the low tables</p></li>
@@ -199,7 +205,7 @@ the interp parameter values</p></li>
 <li><p><strong>delta_s</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – the saturation spacing to be used in out tables</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">WaterOilGas</span></code></p>
 </dd>
 </dl>
@@ -211,11 +217,11 @@ the interp parameter values</p></li>
 <dd><p>Construct a pyscal WaterOilGas object from a dataframe of tabulated
 relperm and capillary pressure values</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>dframe</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Containing tabulated values with pyscals column naming.
 The data must be restricted to only one SATNUM.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">WaterOilGas</span></code></p>
 </dd>
 </dl>
@@ -226,14 +232,14 @@ The data must be restricted to only one SATNUM.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">parse_satfunc_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filenames</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.parse_satfunc_files" title="Permalink to this definition"></a></dt>
 <dd><p>Routine to gather scal tables (SWOF and SGOF) from ecl include files.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filenames</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – List with filenames to be parsed. Assumed to contain Eclipse
 saturation function keywords.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dataframe with the tables</p>
 </dd>
 </dl>
@@ -247,16 +253,16 @@ dictionary.</p>
 <p>Note: This function is before prior to validation of the configuration!</p>
 <p>Will look for list of filenames in the keys “pyscalfile, base, low and high”</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cfg</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – interp_relperm configuration dictionary</p></li>
 <li><p><strong>root_path</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>) – An relative or absolute path to be prepended</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Modified configuration for interp_relperm</p>
 </dd>
 </dl>
@@ -267,13 +273,13 @@ dictionary.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.interp_relperm.interp_relperm.</span></span><span class="sig-name descname"><span class="pre">process_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.interp_relperm.interp_relperm.process_config" title="Permalink to this definition"></a></dt>
 <dd><p>Process a configuration and dumps produced Eclipse include file to disk.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cfg</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]) – Configuration for files to parse and interpolate in</p></li>
 <li><p><strong>root_path</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]) – Prepended to the file paths</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>

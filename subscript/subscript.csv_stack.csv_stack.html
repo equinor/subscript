@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.csv_stack.csv_stack &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.csv_stack.csv_stack &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -135,10 +141,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-          <li><a href="subscript.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack.csv_stack</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack.csv_stack</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.csv_stack.csv_stack.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -149,12 +155,12 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.csv_stack.csv_stack">
-<span id="subscript-csv-stack-csv-stack"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack.csv_stack</span></code><a class="headerlink" href="#module-subscript.csv_stack.csv_stack" title="Permalink to this headline"></a></h1>
+<span id="subscript-csv-stack-csv-stack"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack.csv_stack</span></code><a class="headerlink" href="#module-subscript.csv_stack.csv_stack" title="Permalink to this heading"></a></h1>
 <p>Tool to stack/pivot CSV files, exposed as command line client,
 ERT workflow and ERT forward model</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.csv_stack.csv_stack.CsvStack">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">CsvStack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ert</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.CsvStack" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">CsvStack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ert</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">storage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.CsvStack" title="Permalink to this definition"></a></dt>
 <dd><p>A class with a run() function that can be registered as an ERT plugin,
 to be used as an ERT workflow (wrapping the command line utility)</p>
 <dl class="py method">
@@ -179,7 +185,7 @@ defaults and raw description formatter</p>
 <dd><p>Reshape an incoming dataframe by stacking/pivoting.</p>
 <p>The dataframe object will be modified in-place.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Data to reshape</p></li>
 <li><p><strong>stackmatcher</strong> (<em>Pattern</em>) – Regular expression that matches columns
@@ -189,10 +195,10 @@ to be stacked.</p></li>
 stacked column names.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
@@ -205,14 +211,14 @@ stacked column names.</p></li>
 when used as an ERT plugin (ERT workflow).</p>
 <p>This function writes to disk or to stdout.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>args</strong> (<em>argparse.Namespace</em>) – Namespace with command line arguments</p></li>
 <li><p><strong>support_magics</strong> (<em>bool</em>) – If True, it is possible to read and write to
 stdin/stdout. Should not be set when used as ERT workflow.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -223,7 +229,7 @@ stdin/stdout. Should not be set when used as ERT workflow.</p></li>
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">deprecated_main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.deprecated_main" title="Permalink to this definition"></a></dt>
 <dd><p>Function to display deprecation warning before going to main()</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -237,7 +243,7 @@ to include in a stacking operation (stacking can blow up the dataframe size)</p>
 <p>Obey a global variable with list of columns that we should always keep, you
 don’t want to remove e.g. the ensemble name even if it is constant.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dframe</strong> (<em>pd.DataFrame</em>) – Dataframe with data</p></li>
 <li><p><strong>keepminimial</strong> (<em>bool</em>) – If True, columns not involved in the stacking
@@ -246,10 +252,10 @@ operation will also  be dropped.</p></li>
 the columns to be stacked.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame, possibly with fewer columns.</p>
 </dd>
 </dl>
@@ -260,7 +266,7 @@ the columns to be stacked.</p></li>
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Set up parser for command line utility</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
 </dl>
@@ -272,7 +278,7 @@ the columns to be stacked.</p></li>
 <dd><p>Hook the CsvStack class into ERT with the name CSV_STACK,
 and inject documentation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -283,7 +289,7 @@ and inject documentation</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.csv_stack.csv_stack.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.csv_stack.csv_stack.main" title="Permalink to this definition"></a></dt>
 <dd><p>Function for command line invocation</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>

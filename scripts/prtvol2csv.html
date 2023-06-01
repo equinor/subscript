@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PRTVOL2CSV &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>PRTVOL2CSV &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -66,8 +71,8 @@
 <li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PRTVOL2CSV</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#eclipse-prt-volumetric-data">Eclipse PRT volumetric data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#region-and-zone-support">Region and zone support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-output">Example output</a></li>
@@ -104,8 +109,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>PRTVOL2CSV</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PRTVOL2CSV</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/prtvol2csv.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -116,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="prtvol2csv">
-<h1>PRTVOL2CSV<a class="headerlink" href="#prtvol2csv" title="Permalink to this headline"></a></h1>
+<h1>PRTVOL2CSV<a class="headerlink" href="#prtvol2csv" title="Permalink to this heading"></a></h1>
 <p><p>Extract reservoir volumes pr FIPNUM from Eclipse PRT files and dump to CSV.</p>
 <p>If a yaml file is specified through options, it is possible to add columns
 with region and zone information to each FIPNUM. The YAML file must contain
@@ -127,16 +132,16 @@ the keys “region2fipnum” and/or “zone2fipnum”.</p>
                   <span class="n">DATAfile</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h2>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>DATAfile</kbd></dt>
 <dd><p>Name of Eclipse DATA file</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h2>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--outputfilename</kbd></dt>
 <dd><p>CSV filename to write, including path. Directory must exist.</p>
@@ -162,7 +167,7 @@ the keys “region2fipnum” and/or “zone2fipnum”.</p>
 </dl>
 </section>
 <section id="eclipse-prt-volumetric-data">
-<h2>Eclipse PRT volumetric data<a class="headerlink" href="#eclipse-prt-volumetric-data" title="Permalink to this headline"></a></h2>
+<h2>Eclipse PRT volumetric data<a class="headerlink" href="#eclipse-prt-volumetric-data" title="Permalink to this heading"></a></h2>
 <p>The script will read numbers from the line with <code class="docutils literal notranslate"><span class="pre">CURRENTLY</span> <span class="pre">IN</span> <span class="pre">PLACE</span></code> in Eclipse PRT files:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                                               =================================
                                                : FIPNUM  REPORT REGION    1    :
@@ -204,36 +209,36 @@ FIPNUM, which will be added to the exported table.</p>
 </div>
 </section>
 <section id="region-and-zone-support">
-<h2>Region and zone support<a class="headerlink" href="#region-and-zone-support" title="Permalink to this headline"></a></h2>
+<h2>Region and zone support<a class="headerlink" href="#region-and-zone-support" title="Permalink to this heading"></a></h2>
 <p>Each row in the exported CSV can be augmented with the corresponding Region and
 Zone the particular FIPNUM belongs to. This is accomplished by supplying a YAML
 file which defines the map between regions and/or zones to FIPNUM.</p>
 <p>The YAML file for the mapping between FIPNUM and regions can be
 structured like in this example:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">RegionA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">  </span><span class="nt">RegionB</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="nt">zone2fipnum</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Mid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">RegionA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">RegionB</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span>
+<span class="nt">zone2fipnum</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">Mid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>It is possible to supply inverse maps instead (they will be inverted if needed):</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span><span class="w"></span>
-<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span><span class="w"></span>
-<span class="w">  </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span><span class="w"></span>
-<span class="w">  </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span><span class="w"></span>
-<span class="w">  </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span><span class="w"></span>
-<span class="w">  </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span><span class="w"></span>
-<span class="nt">fipnum2zone</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
-<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mid</span><span class="w"></span>
-<span class="w">  </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
-<span class="w">  </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
-<span class="w">  </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mid</span><span class="w"></span>
-<span class="w">  </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span>
+<span class="w">  </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionA</span>
+<span class="w">  </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span>
+<span class="w">  </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span>
+<span class="w">  </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegionB</span>
+<span class="nt">fipnum2zone</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mid</span>
+<span class="w">  </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span>
+<span class="w">  </span><span class="nt">4</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span>
+<span class="w">  </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mid</span>
+<span class="w">  </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span>
 </pre></div>
 </div>
 <p>The keys <code class="docutils literal notranslate"><span class="pre">region2fipnum</span></code> etc. can be at the root level of the yaml file, or
@@ -242,41 +247,24 @@ yaml file.</p>
 <p>You may also use the same YAML file as used for the <code class="docutils literal notranslate"><span class="pre">webviz-subsurface</span></code> plugin
 “ReservoirSimulationTimeSeriesRegional”, the same configuration as above would then look
 like</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">groups</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">RegionA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">      </span><span class="nt">RegionB</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Mid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">groups</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">REGION</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">RegionA</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">RegionB</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">4</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">ZONE</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">4</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">Mid</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">5</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">3</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">6</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </section>
 <section id="example-output">
-<h2>Example output<a class="headerlink" href="#example-output" title="Permalink to this headline"></a></h2>
+<h2>Example output<a class="headerlink" href="#example-output" title="Permalink to this heading"></a></h2>
 <p>This example table is from a case where pore volumes are included, and a yaml
 file has been supplied defining the map from zones and regions to FIPNUM:</p>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Example output CSV from prtvol2csv</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
-<colgroup>
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-<col style="width: 7%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>FIPNUM</p></th>
 <th class="head"><p>STOIIP_OIL</p></th>
@@ -332,7 +320,7 @@ file has been supplied defining the map from zones and regions to FIPNUM:</p>
 </table>
 </section>
 <section id="see-also">
-<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this headline"></a></h2>
+<h2>See also<a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://equinor.github.io/ecl2df/usage/fipreports.html">https://equinor.github.io/ecl2df/usage/fipreports.html</a> can be used to extract
 more information from  the PRT files.</p></li>

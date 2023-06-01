@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sunsch.sunsch &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.sunsch.sunsch &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -135,10 +141,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-          <li><a href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.sunsch.sunsch.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -149,7 +155,7 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.sunsch.sunsch">
-<span id="subscript-sunsch-sunsch"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code><a class="headerlink" href="#module-subscript.sunsch.sunsch" title="Permalink to this headline"></a></h1>
+<span id="subscript-sunsch-sunsch"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code><a class="headerlink" href="#module-subscript.sunsch.sunsch" title="Permalink to this heading"></a></h1>
 <p>Tool for generating Eclipse Schedule files</p>
 <p>This script was originally based on a library named sunbeam,
 hence the name. Later, this library has been merged into opm-common</p>
@@ -158,7 +164,7 @@ hence the name. Later, this library has been merged into opm-common</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">dategrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startdate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enddate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.dategrid" title="Permalink to this definition"></a></dt>
 <dd><p>Return a list of dates at given interval</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>startdate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>) – First date in range</p></li>
 <li><p><strong>enddate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>) – Last date in range</p></li>
@@ -166,10 +172,10 @@ hence the name. Later, this library has been merged into opm-common</p>
 ‘biweekly’, ‘bimonthly’</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>]</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of datetime.date. Always includes start-date, might not include end-date</p>
 </dd>
 </dl>
@@ -180,7 +186,7 @@ hence the name. Later, this library has been merged into opm-common</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">datetime_from_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.datetime_from_date" title="Permalink to this definition"></a></dt>
 <dd><p>Set time to 00:00:00 in a date, keep time info if given a datetime object</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></p>
 </dd>
 </dl>
@@ -193,10 +199,10 @@ hence the name. Later, this library has been merged into opm-common</p>
 <p>This information is sometimes needed to determine how to send
 calls off to opm.io.tools.TimeVector</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename to check</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the first statement/keyword is DATES</p>
 </dd>
 </dl>
@@ -213,7 +219,7 @@ calls off to opm.io.tools.TimeVector</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.get_schema" title="Permalink to this definition"></a></dt>
 <dd><p>Return the ConfigSuite schema</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 </dd>
 </dl>
@@ -227,10 +233,10 @@ calls off to opm.io.tools.TimeVector</p>
 delete whatever comes before the first DATES. But if the first DATES
 predates startdate, then we delete it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>opm.tools.TimeVector</p>
 </dd>
 </dl>
@@ -249,14 +255,14 @@ predates startdate, then we delete it.</p>
 <p>Recognized keys in the configuration dict: files, startdate, startime,
 refdate, enddate, dategrid, insert</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>conf</strong> – Configuration dictionary for the schedule
 merges and inserts</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>opm.io.TimeVector</p>
 </dd>
 </dl>
@@ -268,13 +274,13 @@ merges and inserts</p>
 <dd><p>Determine if a file (to be included) has any Eclipse
 keywords at all (excluding comments)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>False if the file is empty or has only comments.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -291,13 +297,13 @@ to carefully handle whatever is in front of that DATES
 keyword (it is tricky, because we can’t know for sure
 which date to anchor that to)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename which will be opened and read.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>true if first keyword is DATES</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -313,16 +319,16 @@ in opm.tools.TimeVector which initializes with a filename.</p>
 <p>Template parameters for which there are no values provided will
 be left untouched.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>insert_statement</strong> (<em>named_dict</em>) – Required keys are “template”, which is
 a filename with parameters to be replaced, and “substitute”
 which is a named_dict with values parameter-value mappings
 to be used.</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Filename on temporary location for immediate use</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>
@@ -334,7 +340,7 @@ to be used.</p>
 <dd><p>Wrap long lines in a multiline string.</p>
 <p>Short enough lines are not touched.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>string</strong> (<em>str</em>) – Multiline string to be possibly wrapped</p></li>
 <li><p><strong>maxchars</strong> (<em>int</em>) – Maximal length of each line</p></li>
@@ -342,11 +348,11 @@ to be used.</p>
 of excessive length</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Multiline string with no lines more than maxchars
 in length. Trailing whitespace is always stripped.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
 </dd>
 </dl>

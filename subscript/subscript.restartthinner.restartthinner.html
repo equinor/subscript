@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.restartthinner.restartthinner &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.restartthinner.restartthinner &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -135,10 +141,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-          <li><a href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.restartthinner.restartthinner.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -149,14 +155,14 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.restartthinner.restartthinner">
-<span id="subscript-restartthinner-restartthinner"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code><a class="headerlink" href="#module-subscript.restartthinner.restartthinner" title="Permalink to this headline"></a></h1>
+<span id="subscript-restartthinner-restartthinner"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code><a class="headerlink" href="#module-subscript.restartthinner.restartthinner" title="Permalink to this heading"></a></h1>
 <p>Restart file (UNRST) thinner, command line application</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.date_slicer">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">date_slicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slicedates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartdates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.date_slicer" title="Permalink to this definition"></a></dt>
 <dd><p>Make a dict that maps a chosen restart date to a report index</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 </dd>
 </dl>
@@ -173,7 +179,7 @@ pack the remainding files into a new UNRST file</p>
 location of the UNRST file, dump temporary files in there, and
 modify the original filename.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>
@@ -187,13 +193,13 @@ modify the original filename.</p>
 <p>Depending on libecl-version, it has the .x or the .c.x suffix
 We prefer .x.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>String with path if found.</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>IOError</strong> – if tool can’t be found</p>
 </dd>
 </dl>
@@ -204,7 +210,7 @@ We prefer .x.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Setup parser</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
 </dd>
 </dl>
@@ -215,7 +221,7 @@ We prefer .x.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_restart_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_restart_indices" title="Permalink to this definition"></a></dt>
 <dd><p>Extract a list of RST indices for a filename</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></p>
 </dd>
 </dl>
@@ -232,7 +238,7 @@ We prefer .x.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">restartthinner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberofslices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dryrun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.restartthinner" title="Permalink to this definition"></a></dt>
 <dd><p>Thin an existing UNRST file to selected number of restarts.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
 </dd>
 </dl>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.casegen_upcars &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.casegen_upcars &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a><ul>
@@ -135,9 +141,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.casegen_upcars.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -148,20 +154,57 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.casegen_upcars">
-<span id="subscript-casegen-upcars"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code><a class="headerlink" href="#module-subscript.casegen_upcars" title="Permalink to this headline"></a></h1>
-<div class="contents local topic" id="contents">
+<span id="subscript-casegen-upcars"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code><a class="headerlink" href="#module-subscript.casegen_upcars" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="submodules">
-<h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.casegen_upcars</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.model.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.model</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.udf.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf_arg_parser</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.casegen_upcars</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.get_value"><code class="docutils literal notranslate"><span class="pre">get_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.casegen_upcars.html#subscript.casegen_upcars.casegen_upcars.mask_token"><code class="docutils literal notranslate"><span class="pre">mask_token()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.model.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.model</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.bounded_box"><code class="docutils literal notranslate"><span class="pre">Model.bounded_box()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.calculate_avg_prop"><code class="docutils literal notranslate"><span class="pre">Model.calculate_avg_prop()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.clear_throws"><code class="docutils literal notranslate"><span class="pre">Model.clear_throws()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.distribute_property"><code class="docutils literal notranslate"><span class="pre">Model.distribute_property()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.export_grdecl"><code class="docutils literal notranslate"><span class="pre">Model.export_grdecl()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.export_props"><code class="docutils literal notranslate"><span class="pre">Model.export_props()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.grow_box"><code class="docutils literal notranslate"><span class="pre">Model.grow_box()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.remove_vug"><code class="docutils literal notranslate"><span class="pre">Model.remove_vug()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_fracture_anisotropy_property"><code class="docutils literal notranslate"><span class="pre">Model.set_fracture_anisotropy_property()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_fracture_property"><code class="docutils literal notranslate"><span class="pre">Model.set_fracture_property()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_layers_property"><code class="docutils literal notranslate"><span class="pre">Model.set_layers_property()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_throws"><code class="docutils literal notranslate"><span class="pre">Model.set_throws()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.Model.set_vug"><code class="docutils literal notranslate"><span class="pre">Model.set_vug()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.model.html#subscript.casegen_upcars.model.fracture_idx"><code class="docutils literal notranslate"><span class="pre">fracture_idx()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.udf.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.conversion"><code class="docutils literal notranslate"><span class="pre">conversion()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.flatten"><code class="docutils literal notranslate"><span class="pre">flatten()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.iter_flatten"><code class="docutils literal notranslate"><span class="pre">iter_flatten()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.listify"><code class="docutils literal notranslate"><span class="pre">listify()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf.html#subscript.casegen_upcars.udf.uniform_dist"><code class="docutils literal notranslate"><span class="pre">uniform_dist()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars.udf_arg_parser</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser"><code class="docutils literal notranslate"><span class="pre">fill_parser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser_fracture"><code class="docutils literal notranslate"><span class="pre">fill_parser_fracture()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.casegen_upcars.udf_arg_parser.html#subscript.casegen_upcars.udf_arg_parser.fill_parser_vugs"><code class="docutils literal notranslate"><span class="pre">fill_parser_vugs()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

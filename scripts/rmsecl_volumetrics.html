@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RMSECL_VOLUMETRICS &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>RMSECL_VOLUMETRICS &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -69,8 +74,8 @@
 <li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ri_wellmod.html">RI_WELLMOD</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">RMSECL_VOLUMETRICS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
@@ -101,8 +106,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>RMSECL_VOLUMETRICS</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">RMSECL_VOLUMETRICS</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/rmsecl_volumetrics.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -113,7 +118,7 @@
            <div itemprop="articleBody">
              
   <section id="rmsecl-volumetrics">
-<h1>RMSECL_VOLUMETRICS<a class="headerlink" href="#rmsecl-volumetrics" title="Permalink to this headline"></a></h1>
+<h1>RMSECL_VOLUMETRICS<a class="headerlink" href="#rmsecl-volumetrics" title="Permalink to this heading"></a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p><code class="docutils literal notranslate"><span class="pre">rmsecl_volumetrics</span></code> is available for interactive testing only. Its
@@ -128,8 +133,8 @@ region/zones is provided in a yaml file.</p>
                           <span class="n">PRTFILE</span> <span class="n">volumetricsbase</span> <span class="n">fipmapconfig</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h2>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>PRTFILE</kbd></dt>
 <dd><p>PRT file from Eclipse, alternatively a CSV file with the output from prtvol2csv</p>
@@ -142,8 +147,8 @@ region/zones is provided in a yaml file.</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h2>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--sets</kbd></dt>
 <dd><p>YAML file for where fipnum-region-zone set lists are written</p>
@@ -154,7 +159,7 @@ region/zones is provided in a yaml file.</p>
 </dl>
 </section>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
 <p>Say you have a geomodel with 2 regions and 2 zones, for which you have exported
 standard volumetrics. In the Eclipse model, you have set up a FIPNUM structure
 which ignores the zone, and only takes the region into account. When comparing
@@ -168,42 +173,42 @@ supplied in multiple ways (either from FIPNUMs to regions/zones, or from
 regions/zones to FIPNUMs).</p>
 <p>If the region named “West” is modelled as FIPNUM 1, covering both the zones
 named “Upper” and “Lower”, the mapping could be specified as such:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">West</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">  </span><span class="nt">East</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="nt">zone2fipnum</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">  </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">region2fipnum</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">West</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">East</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span>
+<span class="nt">zone2fipnum</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>An identical way of supplying this map would be to write up the inverse:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">West</span><span class="w"></span>
-<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">East</span><span class="w"></span>
-<span class="nt">fipnum2zone</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
-<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
-<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">fipnum2region</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">West</span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">East</span>
+<span class="nt">fipnum2zone</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">1</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span>
+<span class="w">  </span><span class="nt">2</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span>
 </pre></div>
 </div>
 <p>A third way of specifying this is to use the syntax also used by the
 <code class="docutils literal notranslate"><span class="pre">webviz-subsurface</span></code> plugin “ReservoirSimulationTimeSeriesRegional”, where the
 same map as above would be specified as:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">groups</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">West</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">      </span><span class="nt">East</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">    </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
-<span class="w">      </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FIPNUM</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">groups</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">REGION</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">West</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">East</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">ZONE</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">Upper</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">Lower</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 <p>The command line syntax would then typically look like:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>rmsecl_volumetrics eclipse/model/MYMODEL.PRT share/results/volumes/geogrid fipmap.yml --sets sets.yml --output volcomp.csv
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>rmsecl_volumetrics<span class="w"> </span>eclipse/model/MYMODEL.PRT<span class="w"> </span>share/results/volumes/geogrid<span class="w"> </span>fipmap.yml<span class="w"> </span>--sets<span class="w"> </span>sets.yml<span class="w"> </span>--output<span class="w"> </span>volcomp.csv
 </pre></div>
 </div>
 <p>The code calculates two tables, both of which are printed to your terminal window, and
@@ -215,34 +220,28 @@ and FIPNUMs are contained in each set), and the second table contains summed
 volumes and differences in volumes for the identified sets.</p>
 <p>The example above is simple in that each FIPNUM is a set, but complex arrangements
 are possible. The sets are listed in the outputted file <code class="docutils literal notranslate"><span class="pre">sets.yml</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">0</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w"></span>
-<span class="w">  </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">East</span><span class="w"></span>
-<span class="w">  </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
-<span class="nt">1</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">  </span><span class="nt">REGION</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">West</span><span class="w"></span>
-<span class="w">  </span><span class="nt">ZONE</span><span class="p">:</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span><span class="w"></span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span><span class="w"></span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">0</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">FIPNUM</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<span class="w">  </span><span class="nt">REGION</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">East</span>
+<span class="w">  </span><span class="nt">ZONE</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span>
+<span class="nt">1</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">FIPNUM</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">REGION</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">West</span>
+<span class="w">  </span><span class="nt">ZONE</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lower</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upper</span>
 </pre></div>
 </div>
 <p>Do not rely on the exact enumeration of sets, whichever FIPNUM-region-zone
 combination comes first is arbitrary.  The compared volumes are in
 <code class="docutils literal notranslate"><span class="pre">volcomp.csv</span></code>, from which an excerpt looks like:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-</colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>SET</p></th>
 <th class="head"><p>RMS_STOIIP_OIL</p></th>

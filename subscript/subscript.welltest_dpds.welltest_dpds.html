@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.welltest_dpds.welltest_dpds &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.welltest_dpds.welltest_dpds &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -27,15 +28,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -80,6 +85,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -134,10 +140,10 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-          <li><a href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.welltest_dpds.welltest_dpds.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -148,7 +154,7 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.welltest_dpds.welltest_dpds">
-<span id="subscript-welltest-dpds-welltest-dpds"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code><a class="headerlink" href="#module-subscript.welltest_dpds.welltest_dpds" title="Permalink to this headline"></a></h1>
+<span id="subscript-welltest-dpds-welltest-dpds"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds.welltest_dpds</span></code><a class="headerlink" href="#module-subscript.welltest_dpds.welltest_dpds" title="Permalink to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.welltest_dpds.welltest_dpds.CustomFormatter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.CustomFormatter" title="Permalink to this definition"></a></dt>
@@ -165,17 +171,17 @@ file format and directy comparable with output from eg Kappa Saphir.
 Note; csv files exported from Saphir are separated with
 and contain headers with space which makes parsing fragile.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filen</strong> – (str) csv file to extract time axis from, using colomn dTime</p></li>
 <li><p><strong>vec</strong> – (np.array) Vector to remap onto the axis</p></li>
 <li><p><strong>time</strong> – (np.array) Original time axis</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(np.array)</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>gen_data</p>
 </dd>
 </dl>
@@ -186,14 +192,14 @@ and contain headers with space which makes parsing fragile.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">get_buildup_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.get_buildup_indices" title="Permalink to this definition"></a></dt>
 <dd><p>Go through the simulated rate and identify bu periods, as defined by zero flow.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>rates</strong> – np.array</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(list) indices associated with start of buildups
 buildup_end_indices : (list) indices associated with end of buildups</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>buildup_indices</p>
 </dd>
 </dl>
@@ -204,7 +210,7 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Define the argparse parser</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>parser (argparse.ArgumentParser)</p>
 </dd>
 </dl>
@@ -216,7 +222,7 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 <dd><p>Main entry point for the script</p>
 <p>Args:</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pass</p>
 </dd>
 </dl>
@@ -227,17 +233,17 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">summary_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.summary_vec" title="Permalink to this definition"></a></dt>
 <dd><p>Read vector corresponding to key from summary instance</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>summary</strong> – (ecl.summary.EclSum)</p></li>
 <li><p><strong>key</strong> – (str)</p></li>
 <li><p><strong>required</strong> – (bool)</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>np.array</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>vec</p>
 </dd>
 </dl>
@@ -248,7 +254,7 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">supertime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_start_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_end_ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.supertime" title="Permalink to this definition"></a></dt>
 <dd><p>Calculate supertime</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>time</strong> (<em>np.array</em>) – </p></li>
 <li><p><strong>rate</strong> (<em>np.array</em>) – </p></li>
@@ -256,7 +262,7 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 <li><p><strong>bu_end_ind</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>supertime (np.array)</p>
 </dd>
 </dl>
@@ -267,17 +273,17 @@ buildup_end_indices : (list) indices associated with end of buildups</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">header_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">','</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.to_csv" title="Permalink to this definition"></a></dt>
 <dd><p>Dump vectors to csv file. Handles arbitrarly number of fields</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filen</strong> (<em>str</em>) – </p></li>
-<li><p><strong>field_list</strong> (<em>list of np.array</em>) – </p></li>
-<li><p><strong>header_list</strong> (<em>list of str</em>) – </p></li>
+<li><p><strong>field_list</strong> (<em>list</em><em> of </em><em>np.array</em>) – </p></li>
+<li><p><strong>header_list</strong> (<em>list</em><em> of </em><em>str</em>) – </p></li>
 <li><p><strong>start</strong> (<em>int</em>) – </p></li>
 <li><p><strong>end</strong> (<em>int</em>) – </p></li>
 <li><p><strong>sep</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>pass</p>
 </dd>
 </dl>
@@ -291,13 +297,13 @@ one time step to each side. Lag1</p>
 <p>Formula: (  (dp_f/dspt_f)*dspt_b + (dp_b/dspt_b)*dspt_f )/(dspt_f + dspt_b)</p>
 <p>spt is SuperPositionedTime and dspt is delta spt</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dp</strong> (<em>np.array</em>) – </p></li>
 <li><p><strong>dspt</strong> (<em>np.array</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dpdspt_weighted (np.array)</p>
 </dd>
 </dl>
@@ -308,7 +314,7 @@ one time step to each side. Lag1</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.welltest_dpds.welltest_dpds.</span></span><span class="sig-name descname"><span class="pre">weighted_avg_press_time_derivative_lag2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dspt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">super_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wbhp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_start_ind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bu_end_ind</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds.weighted_avg_press_time_derivative_lag2" title="Permalink to this definition"></a></dt>
 <dd><p>Compute weighted average using LAG 2 for pressure time derivative</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>delta_p</strong> (<em>np.array</em>) – </p></li>
 <li><p><strong>dspt</strong> (<em>np.array</em>) – </p></li>
@@ -318,7 +324,7 @@ one time step to each side. Lag1</p>
 <li><p><strong>bu_end_ind</strong> (<em>int</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dpdspt_weighted_lag2 (np.array)</p>
 </dd>
 </dl>

@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CHECK_SWATINIT &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>CHECK_SWATINIT &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,8 +62,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#outputted-csv-file">Outputted CSV file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-plots">Example plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-syntax">Command line syntax</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -108,8 +113,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>CHECK_SWATINIT</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CHECK_SWATINIT</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/check_swatinit.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -120,7 +125,7 @@
            <div itemprop="articleBody">
              
   <section id="check-swatinit">
-<h1>CHECK_SWATINIT<a class="headerlink" href="#check-swatinit" title="Permalink to this headline"></a></h1>
+<h1>CHECK_SWATINIT<a class="headerlink" href="#check-swatinit" title="Permalink to this heading"></a></h1>
 <p>check_swatinit is a tool to quality check water initialization in Eclipse runs
 where the keyword SWATINIT has been used. The tool will quantify how much
 the volume changes from SWATINIT to SWAT at time zero in the dynamical model,
@@ -139,7 +144,7 @@ waterfall chart.</p></li>
 plot panel is individual pr. EQLNUM.</p></li>
 </ul>
 <section id="the-eclipse-keyword-swatinit">
-<h2>The Eclipse keyword SWATINIT<a class="headerlink" href="#the-eclipse-keyword-swatinit" title="Permalink to this headline"></a></h2>
+<h2>The Eclipse keyword SWATINIT<a class="headerlink" href="#the-eclipse-keyword-swatinit" title="Permalink to this heading"></a></h2>
 <p>SWATINIT is used as a tool to conserve the water saturation modelling done
 in the geomodel. However, SWATINIT will not set the “initial” water saturation
 in the Eclipse run, it will <em>only</em> scale the capillary pressure table
@@ -161,7 +166,7 @@ specific cell.</span><a class="headerlink" href="#id1" title="Permalink to this 
 </figure>
 </section>
 <section id="cell-by-cell-outcome-of-water-initialization">
-<h2>Cell by cell outcome of water initialization<a class="headerlink" href="#cell-by-cell-outcome-of-water-initialization" title="Permalink to this headline"></a></h2>
+<h2>Cell by cell outcome of water initialization<a class="headerlink" href="#cell-by-cell-outcome-of-water-initialization" title="Permalink to this heading"></a></h2>
 <p>The tool assesses each cell in the dynamical model individually, and flags
 them according to what has happened from SWATINIT to SWAT. The flag will be
 included in the <code class="docutils literal notranslate"><span class="pre">QC_FLAG</span></code> column of the outputted CSV. The possible outcomes
@@ -208,7 +213,7 @@ need to use PPCWMAX you should revisit the modelling.</p>
 </dl>
 </section>
 <section id="text-output-from-check-swatinit">
-<h2>Text output from check_swatinit<a class="headerlink" href="#text-output-from-check-swatinit" title="Permalink to this headline"></a></h2>
+<h2>Text output from check_swatinit<a class="headerlink" href="#text-output-from-check-swatinit" title="Permalink to this heading"></a></h2>
 <p>When run interactively in a terminal on an Eclipse case, check_swatinit will
 print a text output summarizing the results from flagging each cell into
 distinct QC categories.  The table below sums the water volume changes from
@@ -219,7 +224,7 @@ SWATINIT_WVOL (i.e. the water volume that SWATINIT requested).</p>
 <em>reservoir</em> conditions are given. The number 66.571 is SWATINIT_WVOL
 substracted from PORV, and then the percentages below are the volumetric change
 in water volume with respect to this hydrocarbon pore volume.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>check_swatinit DROGON-EXAMPLE.DATA
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>check_swatinit<span class="w"> </span>DROGON-EXAMPLE.DATA
 <span class="go">VOLUME                     3203.1103 Mrm3</span>
 <span class="go">PORV                        571.1770 Mrm3</span>
 <span class="go">SWATINIT_WVOL               504.6057 Mrm3           HC:   66.571 Mrm3</span>
@@ -256,7 +261,7 @@ Still, this table only prints the maximal values, and if severe PC_SCALING only
 occurs in a few cells, it could still be acceptable.</p>
 </section>
 <section id="outputted-csv-file">
-<h2>Outputted CSV file<a class="headerlink" href="#outputted-csv-file" title="Permalink to this headline"></a></h2>
+<h2>Outputted CSV file<a class="headerlink" href="#outputted-csv-file" title="Permalink to this heading"></a></h2>
 <p>Through the <code class="docutils literal notranslate"><span class="pre">--output</span></code> option, a CSV file can be written containing
 information for every cell. This can be used for further analysis, either by
 numerically or visually. The CSV file contains grid data from the EGRID file
@@ -279,7 +284,7 @@ pressure function from SWOF/SWFN. Beware that this will not be correct for all
 cells when item #9 in EQUIL is nonzero.</p>
 </section>
 <section id="example-plots">
-<h2>Example plots<a class="headerlink" href="#example-plots" title="Permalink to this headline"></a></h2>
+<h2>Example plots<a class="headerlink" href="#example-plots" title="Permalink to this heading"></a></h2>
 <figure class="align-center" id="id2">
 <a class="reference internal image-reference" href="../_images/check_swatinit_volplot.png"><img alt="../_images/check_swatinit_volplot.png" src="../_images/check_swatinit_volplot.png" style="width: 70%;" /></a>
 <figcaption>
@@ -300,7 +305,7 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
 </figure>
 </section>
 <section id="command-line-syntax">
-<h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Permalink to this headline"></a></h2>
+<h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Permalink to this heading"></a></h2>
 <p><p>QC tool for SWATINIT vs SWAT in Eclipse runs</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">check_swatinit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplotfile</span> <span class="n">VOLPLOTFILE</span><span class="p">]</span>
@@ -309,16 +314,16 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
                       <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h3>
+<section id="positional-arguments">
+<h3>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Eclipse DATA-file for a finished run with restart data. It is also possible to provide a CSV file that has earlier been exported by this tool, which will trigger a rerun of the volumetric report and plotting.</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h3>
+<section id="named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Output filename for CSV that can be used for QC in other tools</p>

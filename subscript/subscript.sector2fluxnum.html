@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sector2fluxnum &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>subscript.sector2fluxnum &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -81,6 +86,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
@@ -135,9 +141,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a> &raquo;</li>
-      <li><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum</span></code></li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum</span></code></li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/subscript/subscript.sector2fluxnum.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -148,22 +154,82 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.sector2fluxnum">
-<span id="subscript-sector2fluxnum"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum</span></code><a class="headerlink" href="#module-subscript.sector2fluxnum" title="Permalink to this headline"></a></h1>
-<div class="contents local topic" id="contents">
+<span id="subscript-sector2fluxnum"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum</span></code><a class="headerlink" href="#module-subscript.sector2fluxnum" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
-</div>
+</nav>
 <section id="submodules">
-<h2><a class="toc-backref" href="#id1">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.completions.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.completions</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.datafile_obj</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.flux_obj</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.completions.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.completions</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.completions.html#subscript.sector2fluxnum.completions.get_completion_list"><code class="docutils literal notranslate"><span class="pre">get_completion_list()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.datafile_obj</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile"><code class="docutils literal notranslate"><span class="pre">Datafile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.create_DUMPFLUX_file"><code class="docutils literal notranslate"><span class="pre">Datafile.create_DUMPFLUX_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.create_USEFLUX_file"><code class="docutils literal notranslate"><span class="pre">Datafile.create_USEFLUX_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position"><code class="docutils literal notranslate"><span class="pre">Datafile.get_KW_position()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning"><code class="docutils literal notranslate"><span class="pre">Datafile.get_RESTART_warning()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_content"><code class="docutils literal notranslate"><span class="pre">Datafile.get_datafile_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content"><code class="docutils literal notranslate"><span class="pre">Datafile.get_datafile_text_content()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean"><code class="docutils literal notranslate"><span class="pre">Datafile.get_lines_clean()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.has_KW"><code class="docutils literal notranslate"><span class="pre">Datafile.has_KW()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.run_DUMPFLUX_nosim"><code class="docutils literal notranslate"><span class="pre">Datafile.run_DUMPFLUX_nosim()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_USEFLUX_header"><code class="docutils literal notranslate"><span class="pre">Datafile.set_USEFLUX_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_GRID_DUMPFLUX()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_GRID_USEFLUX()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_INCLUDE()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_NOSIM()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_PARALLEL()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_REGDIMS()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_RUNSPEC()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.datafile_obj.html#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION"><code class="docutils literal notranslate"><span class="pre">Datafile.set_update_SOLUTION()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.flux_obj</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum"><code class="docutils literal notranslate"><span class="pre">Fluxnum</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.copy_actnum"><code class="docutils literal notranslate"><span class="pre">Fluxnum.copy_actnum()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.include_nnc"><code class="docutils literal notranslate"><span class="pre">Fluxnum.include_nnc()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.include_well_completions"><code class="docutils literal notranslate"><span class="pre">Fluxnum.include_well_completions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_fluxnum_kw"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_fluxnum_kw()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_fluxnum_kw_from_file"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_fluxnum_kw_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_inner_region"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_inner_region()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.set_lgr_box_region"><code class="docutils literal notranslate"><span class="pre">Fluxnum.set_lgr_box_region()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.Fluxnum.write_fluxnum_kw"><code class="docutils literal notranslate"><span class="pre">Fluxnum.write_fluxnum_kw()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumBox"><code class="docutils literal notranslate"><span class="pre">FluxnumBox</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumBox.set_inner_region"><code class="docutils literal notranslate"><span class="pre">FluxnumBox.set_inner_region()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumFipnum"><code class="docutils literal notranslate"><span class="pre">FluxnumFipnum</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.flux_obj.html#subscript.sector2fluxnum.flux_obj.FluxnumFipnum.set_inner_region"><code class="docutils literal notranslate"><span class="pre">FluxnumFipnum.set_inner_region()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.flux_util.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.flux_util</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.fluxfile_obj</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.sector2fluxnum</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.fluxfile_obj</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.Fluxfile"><code class="docutils literal notranslate"><span class="pre">Fluxfile</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.Fluxfile.get_flux"><code class="docutils literal notranslate"><span class="pre">Fluxfile.get_flux()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.create_map_rst"><code class="docutils literal notranslate"><span class="pre">create_map_rst()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.fluxfile_obj.html#subscript.sector2fluxnum.fluxfile_obj.write_new_fluxfile_from_rst"><code class="docutils literal notranslate"><span class="pre">write_new_fluxfile_from_rst()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.sector2fluxnum</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html#subscript.sector2fluxnum.sector2fluxnum.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html#subscript.sector2fluxnum.sector2fluxnum.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.sector2fluxnum.sector2fluxnum.html#subscript.sector2fluxnum.sector2fluxnum.sector_to_fluxnum"><code class="docutils literal notranslate"><span class="pre">sector_to_fluxnum()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

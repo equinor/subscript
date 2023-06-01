@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PRESENTVALUE &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>PRESENTVALUE &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -65,8 +70,8 @@
 <li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PRESENTVALUE</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#economic-input">Economic input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#difference-profiles">Difference profiles</a></li>
@@ -104,8 +109,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>PRESENTVALUE</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PRESENTVALUE</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/presentvalue.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -116,7 +121,7 @@
            <div itemprop="articleBody">
              
   <section id="presentvalue">
-<h1>PRESENTVALUE<a class="headerlink" href="#presentvalue" title="Permalink to this headline"></a></h1>
+<h1>PRESENTVALUE<a class="headerlink" href="#presentvalue" title="Permalink to this heading"></a></h1>
 <p><p>Calculated present value of oil and gas streams from an Eclipse
 simulation. Optional yearly costs, and optional variation in prices.</p>
 </p>
@@ -131,16 +136,16 @@ simulation. Optional yearly costs, and optional variation in prices.</p>
                     <span class="n">datafiles</span> <span class="p">[</span><span class="n">datafiles</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h2>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>datafiles</kbd></dt>
 <dd><p>Input Eclipse DATA files</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h2>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--oilprice</kbd></dt>
 <dd><p>Constant oil price in USD/bbl</p>
@@ -160,7 +165,7 @@ simulation. Optional yearly costs, and optional variation in prices.</p>
 </dd>
 <dt><kbd>--discountto</kbd></dt>
 <dd><p>Which year to discount to</p>
-<p>Default: 2022</p>
+<p>Default: 2023</p>
 </dd>
 <dt><kbd>--writetoparams</kbd></dt>
 <dd><p>Write results to parameters.txt</p>
@@ -207,7 +212,7 @@ simulation. Optional yearly costs, and optional variation in prices.</p>
 </dl>
 </section>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline"></a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
 <p>The simplest usage if you have a finished simulation named <code class="docutils literal notranslate"><span class="pre">MYSIMULATION.DATA</span></code>
 is the following statement:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ presentvalue MYSIMULATION.DATA
@@ -218,7 +223,7 @@ is the following statement:</p>
 are discounting to (current year by default).</p>
 </section>
 <section id="economic-input">
-<h2>Economic input<a class="headerlink" href="#economic-input" title="Permalink to this headline"></a></h2>
+<h2>Economic input<a class="headerlink" href="#economic-input" title="Permalink to this heading"></a></h2>
 <p>Price parameters can be given as constant values (check the current default by
 typing presentvalue –help), or if you need something more fancy, as a yearly
 table. If you give a yearly table, it must be a CSV (comma separated values)
@@ -240,14 +245,14 @@ as:</p>
 </div>
 </section>
 <section id="difference-profiles">
-<h2>Difference profiles<a class="headerlink" href="#difference-profiles" title="Permalink to this headline"></a></h2>
+<h2>Difference profiles<a class="headerlink" href="#difference-profiles" title="Permalink to this heading"></a></h2>
 <p>The script can be used to produce yearly difference profiles for the chosen oil
 and gas vectors and including discounted values. This is accomplished by
 combining the <code class="docutils literal notranslate"><span class="pre">--basedatafiles</span></code> and <code class="docutils literal notranslate"><span class="pre">--verbose</span></code>. The table output you get
 from the script can be copied into Excel or anywhere else.</p>
 </section>
 <section id="financial-computations">
-<h2>Financial computations<a class="headerlink" href="#financial-computations" title="Permalink to this headline"></a></h2>
+<h2>Financial computations<a class="headerlink" href="#financial-computations" title="Permalink to this heading"></a></h2>
 <p>If you provide <code class="docutils literal notranslate"><span class="pre">costs</span></code> in the economical input, you will get some additional
 financial measures computed:</p>
 <dl class="simple">

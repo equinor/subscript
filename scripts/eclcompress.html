@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ECLCOMPRESS &mdash; subscript 0.16.2.dev1+g337f419b documentation</title>
+  <title>ECLCOMPRESS &mdash; subscript 0.16.6.dev12+g2ff356bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -12,10 +12,11 @@
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -28,15 +29,19 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../index.html" class="icon icon-home"> subscript
-            <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.2.dev1+g337f419b
+                0.16.6.dev12+g2ff356bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -57,8 +62,8 @@
 <li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ECLCOMPRESS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ert-usage">ERT usage</a></li>
@@ -106,8 +111,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>ECLCOMPRESS</li>
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">ECLCOMPRESS</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/scripts/eclcompress.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -118,7 +123,7 @@
            <div itemprop="articleBody">
              
   <section id="eclcompress">
-<h1>ECLCOMPRESS<a class="headerlink" href="#eclcompress" title="Permalink to this headline"></a></h1>
+<h1>ECLCOMPRESS<a class="headerlink" href="#eclcompress" title="Permalink to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">eclcompress</span></code> is a command line utility to compress Eclipse grid files using
 the Eclipse syntax <code class="docutils literal notranslate"><span class="pre">number*value</span></code> so that the dataset:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">0</span>  <span class="mi">1</span>  <span class="mi">2</span>  <span class="mi">3</span>  <span class="mi">2</span>  <span class="mi">2</span>  <span class="mi">2</span>  <span class="mi">2</span>
@@ -140,7 +145,7 @@ to specifying a file list like:</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> option is recommended to see what happens, and is default when
 run via ERT.</p>
 <section id="command-line">
-<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this headline"></a></h2>
+<h2>Command line<a class="headerlink" href="#command-line" title="Permalink to this heading"></a></h2>
 <p><p>Apply run-length encoding to Eclipse input files, such
 that consecutive numbers like “1 1 1 1” are compressed to “4*1”.
 The script processes one file at a time, replacing the files with
@@ -152,16 +157,16 @@ compressed versions.</p>
                    <span class="p">[</span><span class="n">grdeclfiles</span> <span class="p">[</span><span class="n">grdeclfiles</span> <span class="o">...</span><span class="p">]]</span>
 </pre></div>
 </div>
-<section id="Positional Arguments">
-<h3>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline"></a></h3>
+<section id="positional-arguments">
+<h3>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>grdeclfiles</kbd></dt>
 <dd><p>List of Eclipse grdecl files to compress, supporting wildcards. If no files are given, a default wildcard list will be used. Wildcards should be enclosed in quotes when called on the command line.</p>
 </dd>
 </dl>
 </section>
-<section id="Named Arguments">
-<h3>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline"></a></h3>
+<section id="named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>--dryrun</kbd></dt>
 <dd><p>Dry run only. No files on disk will be modified, but compression statistics will be outputted.</p>
@@ -190,7 +195,7 @@ compressed versions.</p>
 </p>
 </section>
 <section id="ert-usage">
-<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this headline"></a></h2>
+<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this heading"></a></h2>
 <p>Eclcompress is available as a pre-installed forward model in ERT. In your ERT
 config, include:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">FORWARD_MODEL</span> <span class="n">ECLCOMPRESS</span>
@@ -203,7 +208,7 @@ add that using the FILES argument to the forward model:</p>
 </div>
 </section>
 <section id="notes">
-<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this headline"></a></h2>
+<h2>Notes<a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Existing whitespace (spaces and end-of-lines and such) are not preserved,
 not around ‘/’ characters either.</p></li>
@@ -227,7 +232,7 @@ can specify them directly or as a regular expression as a command line option.</
 </ul>
 </section>
 <section id="possible-improvements">
-<h2>Possible improvements<a class="headerlink" href="#possible-improvements" title="Permalink to this headline"></a></h2>
+<h2>Possible improvements<a class="headerlink" href="#possible-improvements" title="Permalink to this heading"></a></h2>
 <ul class="simple">
 <li><p>Support for comments inside data sections.</p></li>
 </ul>
