@@ -61,7 +61,8 @@ def test_helpful_latin1_encoding_exception(tmp_path, mocker):
         fout.write("-- død")
     mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file), "."])
     with pytest.raises(
-        UnicodeDecodeError, match=(f"'ø' found in file: {tmp_data_file.name} on line 1")
+        UnicodeDecodeError,
+        match=(f"'ø' found in file: {tmp_data_file.name} on line: 1"),
     ):
         pack_sim.main()
 
@@ -71,15 +72,36 @@ def test_helpful_latin1_encoding_exception(tmp_path, mocker):
     mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file2), "."])
     with pytest.raises(
         UnicodeDecodeError,
-        match=(f"'å' found in file: {tmp_data_file2.name} on line 3"),
+        match=(f"'å' found in file: {tmp_data_file2.name} on line: 3"),
     ):
         pack_sim.main()
 
-    tmp_data_file3 = tmp_path / "TMP3.DATA"
-    with open(tmp_data_file3, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{tmp_data_file.name}' /")
-    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file3), "."])
+
+def test_bad_and_recursive_includes(tmp_path, mocker):
+    binary_include = tmp_path / "blob.perm"
+    with open(binary_include, "wb") as fout:
+        fout.write(b"\xde\xad\xbe\xef\x7f\x00")
+
+    good_include = tmp_path / "good.inc"
+    with open(good_include, "w", encoding="utf-8") as fout:
+        fout.write(f"INCLUDE\n  '{binary_include.name}' /")
+
+    bad_include = tmp_path / "bad.inc"
+    with open(bad_include, "w", encoding="iso-8859-1") as fout:
+        fout.write("-- død")
+
+    tmp_data_file = tmp_path / "TMP.DATA"
+    with open(tmp_data_file, "w", encoding="utf-8") as fout:
+        fout.write(f"INCLUDE\n  '{good_include.name}' /")
+    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file), "."])
     pack_sim.main()
+
+    with open(tmp_data_file, "w", encoding="utf-8") as fout:
+        fout.write(f"INCLUDE\n  '{bad_include.name}' /")
+    with pytest.raises(
+        UnicodeDecodeError, match=(f"'ø' found in file: {bad_include.name} on line: 1")
+    ):
+        pack_sim.main()
 
 
 def test_repeated_run(tmp_path, mocker):
