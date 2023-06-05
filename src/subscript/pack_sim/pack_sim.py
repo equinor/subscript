@@ -10,6 +10,7 @@ from shutil import copy
 from typing import Dict, List, Optional, TextIO, Union
 
 from subscript import __version__, getLogger
+from subscript.eclcompress.eclcompress import file_is_binary
 
 logger = getLogger(__name__)
 
@@ -24,6 +25,34 @@ company.  The script also works with include files in include files.
 EOL_UNIX = r"\n"
 EOL_WINDOWS = r"\r\n"
 EOL_MAC = r"\r"
+
+
+def _read_lines(filename: Path) -> List[str]:
+    try:
+        with open(filename, encoding="utf-8") as fin:
+            lines = fin.readlines()
+    except UnicodeDecodeError as e:
+        error_words = str(e).split(" ")
+        hex_str = error_words[error_words.index("byte") + 1]
+        try:
+            bad_char = chr(int(hex_str, 16))
+        except ValueError:
+            bad_char = f"hex:{hex_str}"
+        with open(filename, "rb") as fin:
+            byte_lines: List[bytes] = fin.readlines()
+
+        for i, byte_line in enumerate(byte_lines):
+            try:
+                byte_line.decode("utf-8")
+            except UnicodeDecodeError:
+                bad_line_num = i + 1
+                e.reason = (
+                    f"Unsupported non-UTF-8 character {bad_char!r} found "
+                    f"in file: {filename.name} on line: {bad_line_num}"
+                )
+                break
+        raise e
+    return lines
 
 
 def _normalize_line_endings(lines: str, line_ending: str = "unix"):
@@ -62,7 +91,6 @@ def _remove_comments(clear_comments: bool, tmp_in: str):
     return tmp_in
 
 
-# def _check_filename_found(filename: Path, org_sim_loc: Path) -> Path:
 def _expand_filename(filename: Path, org_sim_loc: Path) -> Path:
     """Check whether the supplied filename can be found either directly,
     or as a relative path
@@ -138,31 +166,7 @@ def _get_paths(filename: Path, org_sim_loc: Path) -> Dict[str, Path]:
 
     # Check if the filename can be found
     filename = _expand_filename(filename, org_sim_loc)
-
-    try:
-        with open(filename, encoding="utf-8") as fin:
-            lines = fin.readlines()
-    except UnicodeDecodeError as e:
-        error_words = str(e).split(" ")
-        hex_str = error_words[error_words.index("byte") + 1]
-        try:
-            bad_char = chr(int(hex_str, 16))
-        except ValueError:
-            bad_char = f"hex:{hex_str}"
-        with open(filename, "rb") as fin:
-            byte_lines: List[bytes] = fin.readlines()
-
-        for i, byte_line in enumerate(byte_lines):
-            try:
-                byte_line.decode("utf-8")
-            except UnicodeDecodeError:
-                bad_line_num = i + 1
-                e.reason = (
-                    f"Unsupported non-UTF-8 character {bad_char!r} "
-                    f"found in file: {filename.name} on line {bad_line_num}"
-                )
-                break
-        raise e
+    lines = _read_lines(filename)
 
     # Read through all lines of text
     for line in lines:
@@ -211,41 +215,6 @@ def _replace_paths(text: Union[str, Path], paths: Dict[str, Path]) -> Path:
     return Path(text)
 
 
-def _check_file_binary(filename: Path, org_sim_loc: Path) -> bool:
-    """Method that that checks whether a file is binary
-
-    Args:
-        filename: filename to inspect
-        org_sim_loc: original simulation path
-
-    Returns:
-        True if binary
-    """
-
-    # Check if the filename can be found
-    filename = _expand_filename(filename, org_sim_loc)
-
-    # Try to open the file, if fail: show message to user
-    try:
-        with open(filename, "r", encoding="utf8") as fhandle:
-            pass
-    except IOError as orig_exc:
-        raise IOError(
-            f"Script stopped: Could not open '{filename}'. Make sure you have read "
-            "access for this file."
-        ) from orig_exc
-
-    # Check whether the file is binary and should not be inspected
-    try:
-        with open(filename, "r", encoding="utf8") as fhandle:
-            for _ in fhandle:
-                pass
-    except UnicodeDecodeError:
-        return True
-
-    return False
-
-
 def inspect_file(
     filename: Path,
     org_sim_loc: Path,
@@ -277,15 +246,11 @@ def inspect_file(
     """
     filename = _expand_filename(filename, org_sim_loc)
 
-    # Try to open the file, if fail: show message to user
-    filename.read_text()
-
     # Modified text will be stored in new_data_file
     new_data_file = ""
 
-    # Read through all lines of text
-    fhandle = open(filename, "r", encoding="utf8")
-    for line in fhandle:
+    lines = iter(_read_lines(filename))
+    for line in lines:
         line = _normalize_line_endings(line)
         line_strip = line.strip()
 
@@ -306,7 +271,11 @@ def inspect_file(
             # In the INCLUDE or GDFILE keyword, find the include path and
             # ignore comments, continuing iterating the same file handle
             # as in the outer loop:
-            for include_line in fhandle:
+            while True:
+                try:
+                    include_line = next(lines)
+                except StopIteration:
+                    break
                 line_strip = include_line.strip()
 
                 # Remove comments if required
@@ -340,17 +309,17 @@ def inspect_file(
                             packing_path / "include" / section / include_stripped.name
                         )
 
-                        if _check_file_binary(include_stripped, org_sim_loc):
+                        include_filename = _expand_filename(
+                            include_stripped, org_sim_loc
+                        )
+                        if file_is_binary(include_filename):
                             logger.info(
                                 "%sThe file %s seems to be binary; we'll simply copy "
                                 "this file and skip scanning its contents.",
                                 indent,
                                 include_stripped,
                             )
-                            copy(
-                                _expand_filename(include_stripped, org_sim_loc),
-                                new_include,
-                            )
+                            copy(include_filename, new_include)
                         else:
                             file_text = inspect_file(
                                 include_stripped,
@@ -551,8 +520,6 @@ def inspect_file(
             if not (clear_comments and len(line.strip()) == 0):
                 # This line represents anything else: just copy the info.
                 new_data_file += line
-
-    fhandle.close()
 
     # Return modified text of inspected file
     return new_data_file
