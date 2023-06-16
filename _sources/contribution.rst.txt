@@ -144,6 +144,6 @@ Building documentation
 Assuming the developer instructions above, run the following command to to
 build the documentation for subscript::
 
-  python setup.py build_sphinx
+  sphinx-build -b html docs build/docs/html
 
 and then point your browser to the file ``build/docs/index.html``.
