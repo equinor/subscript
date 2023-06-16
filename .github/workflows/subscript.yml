@@ -26,15 +26,12 @@ jobs:
 
     steps:
       - name: Checkout commit locally
-        uses: actions/checkout@v2
-
-      - name: Checkout tags
-        # This seems necessary for setuptools_scm to be able to infer
-        # the correct version.
-        run: git fetch --unshallow --tags
-
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+        
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -78,12 +75,12 @@ jobs:
         run: rstcheck -r docs
 
       - name: Build documentation
-        run: python setup.py build_sphinx
+        run: sphinx-build -b html docs build/docs/html
 
       - name: Update GitHub pages
         if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
         run: |
-          cp -R ./build/sphinx/html ../html
+          cp -R ./build/docs/html ../html
 
           git config --local user.email "subscript-github-action"
           git config --local user.name "subscript-github-action"
