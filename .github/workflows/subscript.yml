@@ -3,10 +3,10 @@ name: subscript
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   release:
     types:
       - published
@@ -78,7 +78,7 @@ jobs:
         run: sphinx-build -b html docs build/docs/html
 
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/master' && matrix.python-version == '3.8'
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/main' && matrix.python-version == '3.8'
         run: |
           cp -R ./build/docs/html ../html
 
