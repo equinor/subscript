@@ -43,7 +43,7 @@ if (! -f $fullname) {
     in_error("Datafile: $fullname does not exist") ;
 } ;
 
-system("cat $fullname | sed -e 's/TITLE/NOSIM\\n\\nTITLE/' > .NOSIMMED.DATA") ;
+system("cat $fullname | sed -e 's/^RUNSPEC.*/RUNSPEC\\nNOSIM/' > .NOSIMMED.DATA") ;
 
 my $args = " -p $progname " ;
 if ($version) { $args .= "-v $version " ; } ;
