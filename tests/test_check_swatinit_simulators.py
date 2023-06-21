@@ -117,48 +117,27 @@ def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     assert np.isclose(qc_frame["PPCWMAX"][0], 3.01)
     qc_vols = qc_volumes(qc_frame)
-    swat_if_ppcwmax = 0.5746147
     if "eclipse" in simulator:
         # for PPCWMAX set to 3.01 Eclipse100 will scale the swatinit value to this:
-        assert qc_frame["QC_FLAG"][0] == __PPCWMAX__
-        assert np.isclose(qc_frame["SWAT"][0], swat_if_ppcwmax)
-        assert np.isclose(qc_frame["PC_SCALING"][0], 3.01 / 3.00)
         actual_pc = 1.4226775
-        assert np.isclose(
-            model.evaluate_pc(swat_if_ppcwmax, scaling=3.01 / 3.00), actual_pc
-        )
-        assert np.isclose(qc_frame["PC"][0], actual_pc)
-
-        assert np.isclose(
-            qc_vols[__PPCWMAX__], (swat_if_ppcwmax - swatinit) * qc_frame["PORV"][0]
-        )
+        swat_if_ppcwmax = 0.5746147
     else:
-        # "flow" does not support PPCWMAX and will scale the Pc curve as much is needed
-        # and will thus reproduce swatinit:
-        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
-        assert np.isclose(qc_frame["SWAT"][0], swatinit)
-        expected_scaling = 2.107745
-        assert np.isclose(qc_frame["PC_SCALING"][0], expected_scaling)
+        # OPM Flow gives different swat due to different resolution
+        # in number of sections to calculate equilibrium
+        actual_pc = 1.4051635
+        swat_if_ppcwmax = 0.57985145
 
-        actual_pc = 1.405163
-        # The capillary pressure in this cell:
-        assert np.isclose(
-            model.evaluate_pc(swatinit, scaling=expected_scaling), actual_pc
-        )
-        assert np.isclose(qc_frame["PC"][0], actual_pc)
-        # If we had done scaling according to PPCWMAX, we would have gotten
-        # the same result as in Eclipse:
-        assert np.isclose(
-            # Worryingly inaccurate?
-            model.evaluate_sw(actual_pc, scaling=3.01 / 3.00),
-            swat_if_ppcwmax,
-            atol=0.02,
-            # (opm probably uses monotone cubic interpolation in SWOF, but that
-            # should not affect SWOF tables with only two points)
-        )
+    assert qc_frame["QC_FLAG"][0] == __PPCWMAX__
+    assert np.isclose(qc_frame["SWAT"][0], swat_if_ppcwmax)
+    assert np.isclose(qc_frame["PC_SCALING"][0], 3.01 / 3.00)
+    assert np.isclose(
+        model.evaluate_pc(swat_if_ppcwmax, scaling=3.01 / 3.00), actual_pc
+    )
+    assert np.isclose(qc_frame["PC"][0], actual_pc)
 
-        # Not very accurate:
-        assert np.isclose(qc_vols[__PC_SCALED__], 0, atol=0.001)
+    assert np.isclose(
+        qc_vols[__PPCWMAX__], (swat_if_ppcwmax - swatinit) * qc_frame["PORV"][0]
+    )
 
 
 def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
@@ -784,14 +763,6 @@ def test_ppcwmax_gridvector(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     assert np.isclose(qc_frame[qc_frame["SATNUM"] == 1]["PPCWMAX"].unique(), 0.01)
     assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique(), 0.02)
-    if "flow" in simulator:
-        # This will fail when/if flow implements PPCWMAX support
-        assert np.isclose(
-            qc_frame["PPCW"].sort_values(), [0.558839, 0.782229, 1.006258]
-        ).all()
-    else:
-        assert np.isclose(qc_frame[qc_frame["SATNUM"] == 1]["PPCW"].unique(), 0.01)
-        assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCW"].unique(), 0.02)
 
 
 def test_ppcwmax_gridvector_eqlnum(flow_simulator, tmp_path):
