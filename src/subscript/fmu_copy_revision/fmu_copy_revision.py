@@ -34,16 +34,6 @@ Usage:
      * or *
 
     fmu_copy_revision --source 21.0.0  (...other options are defaulted)
-
-Note:
-    This script is fully rewritten Q3/Q4 2021. If you encounter a problem, then
-
-      a) Report the issue to https://github.com/equinor/subscript/issues
-         or to Yammer FMU channel so we can improve
-
-      b) If the issue is critical for your work, use the previous version
-         'fmu_copy_revision_old' instead. This option will be removed soon.
-
 """
 
 USERMENU = """\
@@ -80,7 +70,7 @@ By default some file types and directories will be skipped. Here are some profil
     This the DEFAULT profile!
 
 5. As profile 3, but keeps more data:
-    * Folders and files rms/output will be kept (~old behaviour)
+    * Folders and files rms/output will be kept
     * Folders and files share/results and share/templates will be kept.
 
 6. Only copy the <coviz> folder (if present), which shall be under
@@ -88,7 +78,7 @@ By default some file types and directories will be skipped. Here are some profil
     * Symbolic links will be kept, if possible
 
 9. Make your own filter rules in a named file. For syntax, see e.g.
-    https://www.tutorialspoint.com/unix_commands/rsync.htm
+    https://linux.die.net/man/1/rsync
 """
 DEFAULT_PROFILE = 4
 
