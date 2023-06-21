@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FMU_COPY_REVISION &mdash; subscript 0.16.6.dev20+g7c298ff7 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FMUOBS" href="fmuobs.html" />
+    <link rel="prev" title="ECLDIFF2ROFF" href="ecldiff2roff.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.16.6.dev20+g7c298ff7
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="check_swatinit.html">CHECK_SWATINIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FMU_COPY_REVISION</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#copying-profiles">Copying Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_schedule.html">MERGE_SCHEDULE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ri_wellmod.html">RI_WELLMOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rmsecl_volumetrics.html">RMSECL_VOLUMETRICS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runrms.html">RUNRMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">FMU_COPY_REVISION</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/fmu_copy_revision.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fmu-copy-revision">
+<h1>FMU_COPY_REVISION<a class="headerlink" href="#fmu-copy-revision" title="Permalink to this heading"></a></h1>
+<p><p>This is a simple interactive script for copying a FMU revision folder
+with features:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Selective copy, i.e. avoid data that can be regenerated</p></li>
+<li><p>Speed up copying by multithreading</p></li>
+<li><p>Retain correct file dates and user permissions</p></li>
+</ol>
+</div></blockquote>
+<dl>
+<dt>Usage:</dt><dd><p>fmu_copy_revision  (for menu based input)</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>or *</p></li>
+</ul>
+</div></blockquote>
+<p>fmu_copy_revision –source 21.0.0 –target some –profile 3 –threads 6 –cleanup</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>or *</p></li>
+</ul>
+</div></blockquote>
+<p>fmu_copy_revision –source 21.0.0  (…other options are defaulted)</p>
+</dd>
+</dl>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">fmu_copy_revision</span> <span class="o">&lt;</span><span class="n">commandline</span><span class="o">&gt;</span> <span class="n">OR</span> <span class="n">interactive</span>
+</pre></div>
+</div>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<dl class="option-list">
+<dt><kbd>--dryrun</kbd></dt>
+<dd><p>Run dry run for testing</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--all, -all, -a</kbd></dt>
+<dd><p>List all folders</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--verbose, --verbosity, -v</kbd></dt>
+<dd><p>Enable logging (messages) for debugging</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--cleanup</kbd></dt>
+<dd><p>Remove (cleanup) if target already exists, default is False.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--merge</kbd></dt>
+<dd><p>Try a rsync merge if target already exists, default is False. Note this operation is currently somewhat experimental. Cannot be combined with –cleanup</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--skipestimate, --skip, -s</kbd></dt>
+<dd><p>If present, skip estimation of current revision size.</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--source</kbd></dt>
+<dd><p>Add source folder</p>
+</dd>
+<dt><kbd>--target</kbd></dt>
+<dd><p>Add target folder</p>
+</dd>
+<dt><kbd>--profile</kbd></dt>
+<dd><p>profile for copy profile to use, default is 4</p>
+</dd>
+<dt><kbd>--threads</kbd></dt>
+<dd><p>Number of threads, default is computed automatically</p>
+<p>Default: 99</p>
+</dd>
+<dt><kbd>--version</kbd></dt>
+<dd><p>show program’s version number and exit</p>
+</dd>
+</dl>
+</section>
+<section id="copying-profiles">
+<h2>Copying Profiles<a class="headerlink" href="#copying-profiles" title="Permalink to this heading"></a></h2>
+<p>By default some file types and directories will be skipped. Here are some profiles:</p>
+<ol class="arabic">
+<li><p>Copy everything</p></li>
+<li><p>Copy everything, except:</p>
+<ul class="simple">
+<li><p>Directories with name <code class="docutils literal notranslate"><span class="pre">backup</span></code></p></li>
+<li><p>Directories with name <code class="docutils literal notranslate"><span class="pre">users</span></code></p></li>
+<li><p>Directories with name <code class="docutils literal notranslate"><span class="pre">attic</span></code></p></li>
+<li><p>Directories and files with names or extension <code class="docutils literal notranslate"><span class="pre">.git</span></code> or <code class="docutils literal notranslate"><span class="pre">.svn</span></code></p></li>
+<li><p>Files ending with ~</p></li>
+<li><p>Empty folders (except those listed above) will be kept</p></li>
+</ul>
+</li>
+<li><p>Copy everything, except:</p>
+<ul>
+<li><p>All folders and files mentioned in option 2</p></li>
+<li><p>The following folders under <code class="docutils literal notranslate"><span class="pre">ert/</span></code> (if they exist):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">output</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ert/*/storage</span></code>, including <code class="docutils literal notranslate"><span class="pre">ert/storage</span></code> (for backward compatibility)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The following folders or files under <code class="docutils literal notranslate"><span class="pre">rms/</span></code> (if they exist):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input/seismic</span></code>, <code class="docutils literal notranslate"><span class="pre">model/*.log</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The following files under <code class="docutils literal notranslate"><span class="pre">rms/</span></code> (if they exist):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>All files under <code class="docutils literal notranslate"><span class="pre">output</span></code> folders (folders will be kept!)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The following files and folders under <code class="docutils literal notranslate"><span class="pre">spotfire/</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">input/*.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">input/*/.csv</span></code>, <code class="docutils literal notranslate"><span class="pre">model/*.dxp</span></code>, <code class="docutils literal notranslate"><span class="pre">model/*/*.dxp</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The following folders under <code class="docutils literal notranslate"><span class="pre">share/</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">results</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">templates</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Empty folders (at destination) except those listed above will kept</p></li>
+</ul>
+</li>
+<li><p>As profile 3, but also all empty folder (at destination) will removed. This the DEFAULT profile!</p></li>
+<li><p>As profile 3, but keeps more data:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Folders and files <code class="docutils literal notranslate"><span class="pre">rms/output</span></code> will be kept</p></li>
+<li><p>Folders and files <code class="docutils literal notranslate"><span class="pre">share/results</span></code> and share/templates will be kept.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Only copy the <code class="docutils literal notranslate"><span class="pre">&lt;coviz&gt;</span></code> folder (if present), which shall be under <code class="docutils literal notranslate"><span class="pre">&lt;revision&gt;/share/coviz</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Symbolic links will be kept, if possible</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Make your own filter rules in a named file.</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ecldiff2roff.html" class="btn btn-neutral float-left" title="ECLDIFF2ROFF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fmuobs.html" class="btn btn-neutral float-right" title="FMUOBS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Equinor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>
