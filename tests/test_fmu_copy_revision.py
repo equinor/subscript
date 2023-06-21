@@ -10,7 +10,15 @@ import subscript.fmu_copy_revision.fmu_copy_revision as fcr
 
 SCRIPTNAME = "fmu_copy_revision"
 
-TOPLEVELS = ["r001", "r002", "20.1.1", "19.2.1", "32.1.1", "something", "users"]
+TOPLEVELS = [
+    "r001",
+    "r002",
+    "20.1.1",
+    "19.2.1",
+    "32.1.1",
+    "something",
+    "users",
+]
 
 # file structure under folders TOPLEVELS
 FILESTRUCTURE = [
@@ -34,10 +42,13 @@ def fixture_datatree(tmp_path_factory):
     """Create a tmp folder structure for testing."""
     tmppath = tmp_path_factory.mktemp("data")
     for top in TOPLEVELS:
-        (tmppath / top).mkdir(parents=True, exist_ok=True)
+        top_dir = tmppath / top
+        top_dir.mkdir(parents=True, exist_ok=True)
+        (top_dir / "empty").mkdir()
         for file in FILESTRUCTURE:
-            (tmppath / top / file).parent.mkdir(parents=True, exist_ok=True)
-            (tmppath / top / file).touch()
+            filepath = top_dir / file
+            filepath.parent.mkdir(parents=True, exist_ok=True)
+            filepath.touch()
 
     print("Temporary folder: ", tmppath)
     return tmppath
@@ -364,3 +375,24 @@ def test_choice_profile3_double_target(datatree):
             input=user_input,
             stdout=subprocess.PIPE,
         )
+
+
+@pytest.mark.parametrize(
+    "profile,expected",
+    [
+        (1, True),
+        (2, True),
+        (3, True),
+        (4, False),
+        (5, True),
+        (6, False),
+    ],
+)
+def test_profiles_empty_directory_is_copied(datatree, profile, expected):
+    """Ensure that empty directories are copied as well."""
+    os.chdir(datatree)
+    target = f"users/jriv/xxemptydir{profile}"
+    user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
+    subprocess.run(["fmu_copy_revision"], check=True, input=user_input)
+    empty_dir = Path(target) / "empty"
+    assert empty_dir.is_dir() is expected

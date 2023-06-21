@@ -640,20 +640,7 @@ class CopyFMU:
         ]
         logger.info(" ".join(command))
 
-        if sys.version_info[1] >= 7:
-            process = subprocess.run(
-                command, check=True, shell=False, capture_output=True
-            )
-        else:
-            # capture_output is not supported in 3.6 https://www.py4u.net/discuss/195326
-            process = subprocess.run(
-                command,
-                check=True,
-                shell=False,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-
+        process = subprocess.run(command, check=True, shell=False, capture_output=True)
         stdout = process.stdout.decode().splitlines()
         stderr = process.stderr.decode().splitlines()
 
