@@ -129,7 +129,7 @@ def _convert_ecl2roff(
         logger.info("Running GRID conversion...")
 
         logger.info("Convert from EGRID to ROFF...")
-        mygrid = xtgeo.grid3d.Grid(fname + ".EGRID", fformat="egrid")
+        mygrid = xtgeo.grid_from_file(fname + ".EGRID", fformat="egrid")
 
         if mode == "grid":
             xtg.say("Mode is grid")

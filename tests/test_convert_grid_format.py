@@ -50,7 +50,7 @@ def test_convert_grid_format_egrid(tmp_path, mocker):
     cgf.main()
 
     # check number of active cells
-    geogrid = xtgeo.Grid(str(outfile))
+    geogrid = xtgeo.grid_from_file(str(outfile))
     assert geogrid.nactive == 35817
 
 
