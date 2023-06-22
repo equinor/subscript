@@ -1,6 +1,5 @@
 install_test_dependencies () {
-  pip install -r test_requirements.txt
-  pip install -r docs_requirements.txt
+    pip install ".[tests,docs]"
 }
 
 copy_test_files () {
@@ -9,6 +8,5 @@ copy_test_files () {
 }
 
 start_tests () {
-    export PATH=$PATH:/global/bin  # for eclrun
-    pytest --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
+    pytest -n auto --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
 }

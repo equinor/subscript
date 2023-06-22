@@ -1,8 +1,0 @@
-include LICENSE
-graft src/subscript
-graft docs
-graft tests
-include *.txt
-include *.yml
-include .libecl_version
-global-exclude *.py[cod] __pycache__ docs/subscript/subscript*rst

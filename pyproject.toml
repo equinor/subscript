@@ -1,0 +1,158 @@
+[build-system]
+requires = [
+    "setuptools>=45.0",
+    "setuptools_scm[toml]>=6.2",
+    "wheel>=0.38.1",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+write_to = "src/subscript/version.py"
+
+[project]
+name = "subscript"
+description = "Equinor's collection of subsurface reservoir modelling scripts"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Equinor", email = "rnyb@equinor.com" },
+]
+keywords = ["energy", "subsurface", "reservoir", "scientific", "engineering"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Natural Language :: English",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+]
+dynamic = ["version"]
+dependencies = [
+    "configsuite",
+    "ecl",
+    "ecl2df",
+    "ert>=2.38.0b7",
+    "fmu-tools",
+    "matplotlib",
+    "numpy",
+    "opm>=2021.10",
+    "packaging",
+    "pandas",
+    "protobuf",
+    "pyscal",
+    "pyyaml",
+    "rips",
+    "scipy",
+    "seaborn",
+    "segyio",
+    "shapely",
+    "urllib3<2",
+    "xlrd",
+    "xtgeo",
+]
+
+[project.optional-dependencies]
+tests = [
+    "black",
+    "flake8",
+    "isort",
+    "mypy",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-xdist",
+    "rstcheck",
+    "rstcheck-core",
+    "types-Jinja2",
+    "types-PyYAML",
+    "types-pkg_resources",
+    "types-python-dateutil",
+]
+docs = [
+    "autoapi",
+    "sphinx<7",
+    "sphinx-argparse",
+    "sphinx-autodoc-typehints",
+    "sphinx_rtd_theme",
+]
+
+[project.urls]
+homepage = "https://github.com/equinor/subscript"
+documentation = "https://equinor.github.io/subscript"
+repository = "https://github.com/equinor/subscript"
+
+[project.scripts]
+bjobsusers = "subscript.bjobsusers.bjobsusers:main"
+casegen_upcars = "subscript.casegen_upcars.casegen_upcars:main"
+check_swatinit = "subscript.check_swatinit.check_swatinit:main"
+co2_containment = "subscript.co2_containment.co2_containment:main"
+convert_grid_format = "subscript.convert_grid_format.convert_grid_format:main"
+csv2ofmvol = "subscript.csv2ofmvol.csv2ofmvol:main"
+csv_merge = "subscript.csv_merge.csv_merge:main"
+csv_stack = "subscript.csv_stack.csv_stack:main"
+eclcompress = "subscript.eclcompress.eclcompress:main"
+ecldiff2roff = "subscript.ecldiff2roff.ecldiff2roff:main"
+fmu_copy_revision = "subscript.fmu_copy_revision.fmu_copy_revision:main"
+fmuobs = "subscript.fmuobs.fmuobs:main"
+interp_relperm = "subscript.interp_relperm.interp_relperm:main"
+merge_rft_ertobs = "subscript.merge_rft_ertobs.merge_rft_ertobs:main"
+ofmvol2csv = "subscript.ofmvol2csv.ofmvol2csv:main"
+pack_sim = "subscript.pack_sim.pack_sim:main"
+params2csv = "subscript.params2csv.params2csv:main"
+presentvalue = "subscript.presentvalue.presentvalue:main"
+prtvol2csv = "subscript.prtvol2csv.prtvol2csv:main"
+restartthinner = "subscript.restartthinner.restartthinner:main"
+ri_wellmod = "subscript.ri_wellmod.ri_wellmod:main"
+rmsecl_volumetrics = "subscript.rmsecl_volumetrics.rmsecl_volumetrics:main"
+runrms = "subscript.runrms.runrms:main"
+sector2fluxnum = "subscript.sector2fluxnum.sector2fluxnum:main"
+summaryplot = "subscript.summaryplot.summaryplot:main"
+sw_model_utilities = "subscript.sw_model_utilities.sw_model_utilities:main"
+sunsch = "subscript.sunsch.sunsch:main"
+vfp2csv = "subscript.vfp2csv.vfp2csv:main"
+welltest_dpds = "subscript.welltest_dpds.welltest_dpds:main"
+
+[project.entry-points.ert]
+subscript_jobs = "subscript.hook_implementations.jobs"
+CsvMerge = "subscript.csv_merge.csv_merge"
+CsvStack = "subscript.csv_stack.csv_stack"
+FmuObs = "subscript.fmuobs.fmuobs"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+[tool.pylint]
+# Module docstrings are not required, there are other means of documenting at
+# that level in subscript
+disable = "missing-module-docstring"
+
+[tool.pytest.ini_options]
+norecursedirs = [
+    ".git",
+    ".tox",
+    ".env",
+    "dist",
+    "build",
+    "opm-common",
+]
+addopts = "-ra --strict-markers --ignore=docs/conf.py --ignore=setup.py --ignore=.eggs"
+markers = [
+    "integration: Marks a test as an integration test",
+    "plot: Marks a test as interactive, plots will flash to the screen",
+    "ri_dev: A test using a dev version of ResInsight, skipped by default"
+]
+
+[tool.rstcheck]
+ignore_directives = ["argparse", "automodule"]

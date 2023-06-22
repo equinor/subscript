@@ -1,5 +1,0 @@
-autoapi
-sphinx<7
-sphinx-argparse
-sphinx-autodoc-typehints
-sphinx_rtd_theme
