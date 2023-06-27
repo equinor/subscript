@@ -9,5 +9,6 @@ copy_test_files () {
 }
 
 start_tests () {
+    export PATH=$PATH:/global/bin  # for eclrun
     pytest --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
 }
