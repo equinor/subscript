@@ -8,9 +8,11 @@ import shapely.geometry
 import xtgeo
 
 from subscript.co2_containment.co2_calculation import (
+    PROPERTIES_TO_EXTRACT,
     CalculationType,
     SourceData,
     _calculate_co2_data_from_source_data,
+    _extract_source_data,
 )
 from subscript.co2_containment.co2_containment import calculate_from_co2_data
 
@@ -173,7 +175,7 @@ def test_hazardous_poly_co2_containment():
 
 
 def test_reek_grid():
-    """ "
+    """
     Test CO2 containment code, with eclipse Reek data.
     Tests both mass and volume_actual calculations.
     """
@@ -252,3 +254,48 @@ def test_reek_grid():
     assert table2.gas_contained.values[0] == pytest.approx(0.5430000000000004)
     assert table2.total_hazardous.values[0] == pytest.approx(5.289999999999996)
     assert table2.gas_hazardous.values[0] == pytest.approx(0.5290000000000004)
+
+
+def test_reek_grid_extract_source_data():
+    """
+    Test CO2 containment code, with eclipse Reek data.
+    Test extracing source data. Example does not have the
+    required properties, so should get a RuntimeError
+    """
+    reek_gridfile = (
+        Path(__file__).absolute().parent
+        / "data"
+        / "reek"
+        / "eclipse"
+        / "model"
+        / "2_R001_REEK-0.EGRID"
+    )
+    reek_unrstfile = (
+        Path(__file__).absolute().parent
+        / "data"
+        / "reek"
+        / "eclipse"
+        / "model"
+        / "2_R001_REEK-0.UNRST"
+    )
+    reek_initfile = (
+        Path(__file__).absolute().parent
+        / "data"
+        / "reek"
+        / "eclipse"
+        / "model"
+        / "2_R001_REEK-0.INIT"
+    )
+    with pytest.raises(RuntimeError):
+        _extract_source_data(
+            str(reek_gridfile),
+            str(reek_unrstfile),
+            PROPERTIES_TO_EXTRACT,
+            str(reek_initfile),
+        )
+
+
+def test_calculation_type():
+    """Test invalid calculation type exception handling"""
+    with pytest.raises(ValueError):
+        CalculationType.check_for_key("mass")
