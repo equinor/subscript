@@ -315,27 +315,27 @@ def main(arguments: List[str]):
     Args:
         arguments (list of str): Input arguments
     """
-    arguments = process_args(arguments)
-    check_input(arguments)
+    arguments_processed = process_args(arguments)
+    check_input(arguments_processed)
     data_frame = calculate_out_of_bounds_co2(
-        arguments.grid,
-        arguments.unrst,
-        arguments.init,
-        arguments.compact,
-        arguments.calc_type_input,
-        arguments.containment_polygon,
-        arguments.hazardous_polygon,
-        arguments.zonefile,
+        arguments_processed.grid,
+        arguments_processed.unrst,
+        arguments_processed.init,
+        arguments_processed.compact,
+        arguments_processed.calc_type_input,
+        arguments_processed.containment_polygon,
+        arguments_processed.hazardous_polygon,
+        arguments_processed.zonefile,
     )
     if isinstance(data_frame, dict):
-        out_file = pathlib.Path(arguments.outfile)
+        out_file = pathlib.Path(arguments_processed.outfile)
         for key, _df in data_frame.items():
             _df.to_csv(
                 out_file.with_name(f"{out_file.stem}_{key}{out_file.suffix}"),
                 index=False,
             )
     else:
-        data_frame.to_csv(arguments.outfile, index=False)
+        data_frame.to_csv(arguments_processed.outfile, index=False)
 
 
 if __name__ == "__main__":

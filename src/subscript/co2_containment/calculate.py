@@ -83,7 +83,7 @@ def calculate_co2_containment(
     else:
         is_hazardous = np.array([False] * len(co2_data.x_coord))
     # Count as hazardous if the two boundaries overlap:
-    is_contained = [x if not y else False for x, y in zip(is_contained, is_hazardous)]
+    is_inside = [x if not y else False for x, y in zip(is_contained, is_hazardous)]
     is_outside = [not x and not y for x, y in zip(is_contained, is_hazardous)]
     if co2_data.zone is None:
         if calc_type == CalculationType.VOLUME_EXTENT:
@@ -93,7 +93,7 @@ def calculate_co2_containment(
                 for c in [
                     ContainedCo2(
                         w.date,
-                        sum(w.volume_coverage[is_contained]),
+                        sum(w.volume_coverage[is_inside]),
                         "undefined",
                         "contained",
                     ),
@@ -115,15 +115,13 @@ def calculate_co2_containment(
             c
             for w in co2_data.data_list
             for c in [
-                ContainedCo2(
-                    w.date, sum(w.gas_phase[is_contained]), "gas", "contained"
-                ),
+                ContainedCo2(w.date, sum(w.gas_phase[is_inside]), "gas", "contained"),
                 ContainedCo2(w.date, sum(w.gas_phase[is_outside]), "gas", "outside"),
                 ContainedCo2(
                     w.date, sum(w.gas_phase[is_hazardous]), "gas", "hazardous"
                 ),
                 ContainedCo2(
-                    w.date, sum(w.aqu_phase[is_contained]), "aqueous", "contained"
+                    w.date, sum(w.aqu_phase[is_inside]), "aqueous", "contained"
                 ),
                 ContainedCo2(
                     w.date, sum(w.aqu_phase[is_outside]), "aqueous", "outside"
@@ -142,7 +140,7 @@ def calculate_co2_containment(
             for c in [
                 ContainedCo2(
                     w.date,
-                    sum(w.volume_coverage[is_contained & zm]),
+                    sum(w.volume_coverage[is_inside & zm]),
                     "gas",
                     "contained",
                     zn,
@@ -169,7 +167,7 @@ def calculate_co2_containment(
         for zn, zm in zone_map.items()
         for c in [
             ContainedCo2(
-                w.date, sum(w.gas_phase[is_contained & zm]), "gas", "contained", zn
+                w.date, sum(w.gas_phase[is_inside & zm]), "gas", "contained", zn
             ),
             ContainedCo2(
                 w.date, sum(w.gas_phase[is_outside & zm]), "gas", "outside", zn
@@ -178,7 +176,7 @@ def calculate_co2_containment(
                 w.date, sum(w.gas_phase[is_hazardous & zm]), "gas", "hazardous", zn
             ),
             ContainedCo2(
-                w.date, sum(w.aqu_phase[is_contained & zm]), "aqueous", "contained", zn
+                w.date, sum(w.aqu_phase[is_inside & zm]), "aqueous", "contained", zn
             ),
             ContainedCo2(
                 w.date, sum(w.aqu_phase[is_outside & zm]), "aqueous", "outside", zn
