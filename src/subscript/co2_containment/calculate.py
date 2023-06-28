@@ -5,7 +5,7 @@ from typing import List, Literal, Optional, Union
 import numpy as np
 from shapely.geometry import MultiPolygon, Point, Polygon
 
-from subscript.co2containment.co2_calculation import CalculationType, Co2Data
+from subscript.co2_containment.co2_calculation import CalculationType, Co2Data
 
 
 @dataclass

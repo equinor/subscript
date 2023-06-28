@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 import shapely.geometry
 
-from subscript.co2containment.co2_calculation import (
+from subscript.co2_containment.co2_calculation import (
     CalculationType,
     Co2Data,
     SourceData,

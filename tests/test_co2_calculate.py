@@ -7,12 +7,12 @@ import scipy.ndimage
 import shapely.geometry
 import xtgeo
 
-from subscript.co2containment.co2_calculation import (
+from subscript.co2_containment.co2_calculation import (
     CalculationType,
     SourceData,
     _calculate_co2_data_from_source_data,
 )
-from subscript.co2containment.co2_containment import calculate_from_co2_data
+from subscript.co2_containment.co2_containment import calculate_from_co2_data
 
 
 def _random_prop(
