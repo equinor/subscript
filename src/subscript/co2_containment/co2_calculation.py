@@ -101,6 +101,90 @@ class SourceData:
     zone: Optional[np.ndarray] = None
     # pylint: enable=invalid-name
 
+    def get_vol(self):
+        """Get VOL"""
+        if self.VOL is not None:
+            return self.VOL
+        return {}
+
+    def get_swat(self):
+        """Get SWAT"""
+        if self.SWAT is not None:
+            return self.SWAT
+        return {}
+
+    def get_sgas(self):
+        """Get SGAS"""
+        if self.SGAS is not None:
+            return self.SGAS
+        return {}
+
+    def get_rporv(self):
+        """Get RPORV"""
+        if self.RPORV is not None:
+            return self.RPORV
+        return {}
+
+    def get_porv(self):
+        """Get PORV"""
+        if self.PORV is not None:
+            return self.PORV
+        return {}
+
+    def get_amfg(self):
+        """Get AMFG"""
+        if self.AMFG is not None:
+            return self.AMFG
+        return {}
+
+    def get_ymfg(self):
+        """Get YMFG"""
+        if self.YMFG is not None:
+            return self.YMFG
+        return {}
+
+    def get_xmf2(self):
+        """Get XMF2"""
+        if self.XMF2 is not None:
+            return self.XMF2
+        return {}
+
+    def get_ymf2(self):
+        """Get YMF2"""
+        if self.YMF2 is not None:
+            return self.YMF2
+        return {}
+
+    def get_dwat(self):
+        """Get DWAT"""
+        if self.DWAT is not None:
+            return self.DWAT
+        return {}
+
+    def get_dgas(self):
+        """Get DGAS"""
+        if self.DGAS is not None:
+            return self.DGAS
+        return {}
+
+    def get_bwat(self):
+        """Get BWAT"""
+        if self.BWAT is not None:
+            return self.BWAT
+        return {}
+
+    def get_bgas(self):
+        """Get BGAS"""
+        if self.BGAS is not None:
+            return self.BGAS
+        return {}
+
+    def get_zone(self):
+        """Get zone"""
+        if self.zone is not None:
+            return self.zone
+        return None
+
 
 @dataclass
 class Co2DataAtTimeStep:
@@ -384,12 +468,12 @@ def _pflotran_co2mass(
 
     """
     dates = source_data.DATES
-    dwat = source_data.DWAT
-    dgas = source_data.DGAS
-    amfg = source_data.AMFG
-    ymfg = source_data.YMFG
-    sgas = source_data.SGAS
-    eff_vols = source_data.PORV
+    dwat = source_data.get_dwat()
+    dgas = source_data.get_dgas()
+    amfg = source_data.get_amfg()
+    ymfg = source_data.get_ymfg()
+    sgas = source_data.get_sgas()
+    eff_vols = source_data.get_porv()
     co2_mass = {}
     for date in dates:
         co2_mass[date] = [
@@ -421,12 +505,12 @@ def _eclipse_co2mass(
 
     """
     dates = source_data.DATES
-    bgas = source_data.BGAS
-    bwat = source_data.BWAT
-    xmf2 = source_data.XMF2
-    ymf2 = source_data.YMF2
-    sgas = source_data.SGAS
-    eff_vols = source_data.RPORV
+    bgas = source_data.get_bgas()
+    bwat = source_data.get_bwat()
+    xmf2 = source_data.get_xmf2()
+    ymf2 = source_data.get_ymf2()
+    sgas = source_data.get_sgas()
+    eff_vols = source_data.get_rporv()
     conv_fact = co2_molar_mass
     co2_mass = {}
     for date in dates:
@@ -458,10 +542,10 @@ def _pflotran_co2_molar_volume(
 
     """
     dates = source_data.DATES
-    dgas = source_data.DGAS
-    dwat = source_data.DWAT
-    ymfg = source_data.YMFG
-    amfg = source_data.AMFG
+    dgas = source_data.get_dgas()
+    dwat = source_data.get_dwat()
+    ymfg = source_data.get_ymfg()
+    amfg = source_data.get_amfg()
     co2_molar_vol = {}
     for date in dates:
         co2_molar_vol[date] = [
@@ -513,10 +597,10 @@ def _eclipse_co2_molar_volume(
 
     """
     dates = source_data.DATES
-    bgas = source_data.BGAS
-    bwat = source_data.BWAT
-    xmf2 = source_data.XMF2
-    ymf2 = source_data.YMF2
+    bgas = source_data.get_bgas()
+    bwat = source_data.get_bwat()
+    xmf2 = source_data.get_xmf2()
+    ymf2 = source_data.get_ymf2()
     co2_molar_vol = {}
     for date in dates:
         co2_molar_vol[date] = [
@@ -555,10 +639,10 @@ def _pflotran_co2_simple_volume(source_data: SourceData) -> Dict:
 
     """
     dates = source_data.DATES
-    sgas = source_data.SGAS
-    ymfg = source_data.YMFG
-    amfg = source_data.AMFG
-    eff_vols = source_data.PORV
+    sgas = source_data.get_sgas()
+    ymfg = source_data.get_ymfg()
+    amfg = source_data.get_amfg()
+    eff_vols = source_data.get_porv()
     co2_vol_st1 = {}
     for date in dates:
         co2_vol_st1[date] = [
@@ -581,10 +665,10 @@ def _eclipse_co2_simple_volume(source_data: SourceData) -> Dict:
 
     """
     dates = source_data.DATES
-    sgas = source_data.SGAS
-    xmf2 = source_data.XMF2
-    ymf2 = source_data.YMF2
-    eff_vols = source_data.RPORV
+    sgas = source_data.get_sgas()
+    xmf2 = source_data.get_xmf2()
+    ymf2 = source_data.get_ymf2()
+    eff_vols = source_data.get_rporv()
     co2_vol_st1 = {}
     for date in dates:
         co2_vol_st1[date] = [
@@ -657,25 +741,27 @@ def _calculate_co2_data_from_source_data(
                 for key, value in co2_mass_cell.items()
             ],
             "kg",
-            source_data.zone,
+            source_data.get_zone(),
         )
         if calc_type != CalculationType.MASS:
             if source == "PFlotran":
                 water_density = np.array(
                     [
                         x[1]
-                        if 1 - (source_data.AMFG[source_data.DATES[0]][x[0]]) == 1
+                        if 1 - (source_data.get_amfg()[source_data.DATES[0]][x[0]]) == 1
                         else np.mean(
-                            source_data.DWAT[source_data.DATES[0]][
+                            source_data.get_dwat()[source_data.DATES[0]][
                                 np.where(
                                     [
                                         y == 0
-                                        for y in source_data.AMFG[source_data.DATES[0]]
+                                        for y in source_data.get_amfg()[
+                                            source_data.DATES[0]
+                                        ]
                                     ]
                                 )[0]
                             ]
                         )
-                        for x in enumerate(source_data.DWAT[source_data.DATES[0]])
+                        for x in enumerate(source_data.get_dwat()[source_data.DATES[0]])
                     ]
                 )
                 molar_vols_co2 = _pflotran_co2_molar_volume(
@@ -688,18 +774,20 @@ def _calculate_co2_data_from_source_data(
                 water_density = np.array(
                     [
                         water_molar_mass * x[1]
-                        if 1 - (source_data.XMF2[source_data.DATES[0]][x[0]]) == 1
+                        if 1 - (source_data.get_xmf2()[source_data.DATES[0]][x[0]]) == 1
                         else np.mean(
-                            source_data.BWAT[source_data.DATES[0]][
+                            source_data.get_bwat()[source_data.DATES[0]][
                                 np.where(
                                     [
                                         y == 0
-                                        for y in source_data.XMF2[source_data.DATES[0]]
+                                        for y in source_data.get_xmf2()[
+                                            source_data.DATES[0]
+                                        ]
                                     ]
                                 )[0]
                             ]
                         )
-                        for x in enumerate(source_data.BWAT[source_data.DATES[0]])
+                        for x in enumerate(source_data.get_bwat()[source_data.DATES[0]])
                     ]
                 )
                 molar_vols_co2 = _eclipse_co2_molar_volume(
@@ -734,7 +822,7 @@ def _calculate_co2_data_from_source_data(
                     for t in vols_co2
                 ],
                 "m3",
-                source_data.zone,
+                source_data.get_zone(),
             )
         else:
             co2_amount = co2_mass_output
@@ -753,12 +841,12 @@ def _calculate_co2_data_from_source_data(
             for x in source_data.DATES
         }
         vols_ext = {
-            t: np.array([0] * len(source_data.VOL[t])) for t in source_data.DATES
+            t: np.array([0] * len(source_data.get_vol()[t])) for t in source_data.DATES
         }
         for date in source_data.DATES:
-            vols_ext[date][~inactive_gas_cells[date]] = np.array(source_data.VOL[date])[
-                ~inactive_gas_cells[date]
-            ]
+            vols_ext[date][~inactive_gas_cells[date]] = np.array(
+                source_data.get_vol()[date]
+            )[~inactive_gas_cells[date]]
         co2_amount = Co2Data(
             source_data.x_coord,
             source_data.y_coord,
@@ -772,7 +860,7 @@ def _calculate_co2_data_from_source_data(
                 for t in vols_ext
             ],
             "m3",
-            source_data.zone,
+            source_data.get_zone(),
         )
     else:
         if source == "PFlotran":
@@ -793,7 +881,7 @@ def _calculate_co2_data_from_source_data(
                 for t in vols_co2_simp
             ],
             "m3",
-            source_data.zone,
+            source_data.get_zone(),
         )
     return co2_amount
 
@@ -801,7 +889,7 @@ def _calculate_co2_data_from_source_data(
 def calculate_co2(
     grid_file: str,
     unrst_file: str,
-    calc_type_input: Optional[str] = None,
+    calc_type_input: str = "mass",
     init_file: Optional[str] = None,
     zone_file: Optional[str] = None,
 ) -> Co2Data:
@@ -822,7 +910,7 @@ def calculate_co2(
     source_data = _extract_source_data(
         grid_file, unrst_file, PROPERTIES_TO_EXTRACT, init_file, zone_file
     )
-    calc_type = _set_calc_type_from_input_string(calc_type_input.lower())
+    calc_type = _set_calc_type_from_input_string(calc_type_input)
     co2_data = _calculate_co2_data_from_source_data(source_data, calc_type=calc_type)
     return co2_data
 
