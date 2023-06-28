@@ -395,7 +395,7 @@ def _extract_source_data(
         error_text += "SGAS+AMFG or SGAS+XMF2."
         raise RuntimeError(error_text)
     global_active_idx = active[~gasless]
-    properties = _reduce_properties(properties, ~gasless)
+    properties_reduced = _reduce_properties(properties, ~gasless)
     # Tuple with (x,y,z) for each cell:
     xyz = [grid.get_xyz(global_index=a) for a in global_active_idx]
     cells_x = np.array([coord[0] for coord in xyz])
@@ -405,14 +405,16 @@ def _extract_source_data(
         zone = xtgeo.gridproperty_from_file(zone_file, grid=grid)
         zone = zone.values.data[global_active_idx]
     vol0 = [grid.cell_volume(global_index=x) for x in global_active_idx]
-    properties["VOL"] = {d: vol0 for d in dates}
+    properties_reduced["VOL"] = {d: vol0 for d in dates}
     try:
         porv = init["PORV"]
-        properties["PORV"] = {d: porv[0].numpy_copy()[global_active_idx] for d in dates}
+        properties_reduced["PORV"] = {
+            d: porv[0].numpy_copy()[global_active_idx] for d in dates
+        }
     except KeyError:
         pass
     source_data = SourceData(
-        cells_x, cells_y, dates, **dict(properties.items()), **{"zone": zone}
+        cells_x, cells_y, dates, **dict(properties_reduced.items()), **{"zone": zone}
     )
     return source_data
 
