@@ -201,7 +201,7 @@ def _merge_date_rows(
     return total_df.reset_index()
 
 
-def make_parser() -> argparse.ArgumentParser:
+def get_parser() -> argparse.ArgumentParser:
     """
     Make parser and define arguments
 
@@ -260,7 +260,7 @@ def process_args(arguments: List[str]) -> argparse.Namespace:
     Returns:
         argparse.Namespace
     """
-    args = make_parser().parse_args(arguments)
+    args = get_parser().parse_args(arguments)
     if args.unrst is None:
         args.unrst = args.grid.replace(".EGRID", ".UNRST")
     if args.init is None:

@@ -2,23 +2,12 @@
 CO2_CONTAINMENT
 ==============
 
+.. argparse::
+   :module: subscript.co2_containment.co2_contaiment
+   :func: get_parser
+   :prog: co2_containment
+
 Calculates the amount of CO\ :sub:`2` inside and outside a given perimeter, and separates the result per formation and phase (gas/dissolved). Output is a table on CSV format.
-
-Input
-----------------------------
-
-The script takes the following input:
-
-* grid: Grid (.EGRID) from which maps are generated
-* containment_polygon: Polygon that determines the bounds of the containment area. Can use None as input value, defining all as contained.
-* outfile: Output filename (CSV file)
-* unrst: Path to UNRST file. Will assume same base name as grid if not provided
-* init: Path to INIT file. Will assume same base name as grid if not provided
-* zonefile: Path to file containing zone information
-* compact: Write the output to a single file as compact as possible
-* calc_type_input: CO\ :sub:`2` calculation options. See list below.
-* hazardous_polygon: Path to file containing zone information
-* zonefile: Polygon that determines the bounds of the hazardous area
 
 The most common use of the script is to calculate CO\ :sub:`2` mass. Options for calculation type input:
 

@@ -42,7 +42,6 @@ def _xy_and_volume(grid: xtgeo.Grid):
     return xyz[0].values1d.compressed(), xyz[1].values1d.compressed(), vol
 
 
-# @pytest.fixture
 def _get_dummy_co2_masses():
     """
     Create dummy co2 mass data

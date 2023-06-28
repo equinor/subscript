@@ -10,7 +10,6 @@ from subscript.co2containment.co2_calculation import (
 )
 
 
-# @pytest.fixture
 def _simple_cube_grid():
     """
     Create simple cube grid
@@ -48,7 +47,6 @@ def _simple_cube_grid():
     )
 
 
-# @pytest.fixture
 def _simple_poly():
     """
     Create simple polygon
