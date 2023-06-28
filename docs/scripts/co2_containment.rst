@@ -3,7 +3,7 @@ CO2_CONTAINMENT
 ==============
 
 .. argparse::
-   :module: subscript.co2_containment.co2_contaiment
+   :module: subscript.co2_containment.co2_containment
    :func: get_parser
    :prog: co2_containment
 
