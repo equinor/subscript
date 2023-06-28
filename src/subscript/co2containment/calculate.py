@@ -206,13 +206,3 @@ def _calculate_containment(
         np.ndarray
     """
     return np.array([poly.contains(Point(_x, _y)) for _x, _y in zip(x_coord, y_coord)])
-    # try:
-    #     import pygeos
-    #     points = pygeos.points(x_coord, y_coord)
-    #     poly = pygeos.from_shapely(poly)
-    #     return pygeos.contains(poly, points)
-    # except ImportError:
-    #     return np.array([
-    #         poly.contains(Point(_x, _y))
-    #         for _x, _y in zip(x_coord, y_coord)
-    #     ])
