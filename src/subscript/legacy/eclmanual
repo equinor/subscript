@@ -1,7 +1,10 @@
 #!/bin/bash
 
-eclversion=$(eclrun --report-versions eclipse | xargs -n1 | sort -gr | head -1)
 export ECLPATH="/prog/res/ecl/grid"
+eclversion=$($ECLPATH/macros/eclrun --report-versions eclipse | xargs -n1 | sort -gr | head -1)
+if [ -z "$eclversion" ] ; then
+    eclversion="2022.2";
+fi
 
 if [ "$1" == "-v" ] && [ "$2" != "" ] ; then
     eclversion=$2
