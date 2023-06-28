@@ -31,8 +31,10 @@ my $arch64 = "x86_64Linux";    # bsub resource string for 64bit
 # ---------------------------------------------------
 
 my $que_name  = "daily";
-my $version   = `eclrun --report-versions eclipse | xargs -n1 | sort -gr | head -1`;
+my $default_version = "2023.1";
+my $version   = `$ecldir/macros/eclrun --report-versions eclipse | xargs -n1 | sort -gr | head -1`;
 chomp($version);
+if (!$version) {$version = $default_version}
 my $memoryreq = 512;
 
 my $progname    = "eclipse";
