@@ -14,16 +14,12 @@ import numpy as np
 import pandas as pd
 import shapely.geometry
 
+from subscript.co2containment.calculate import ContainedCo2, calculate_co2_containment
 from subscript.co2containment.co2_calculation import (
-    calculate_co2,
-    Co2Data,
     CalculationType,
+    Co2Data,
     _set_calc_type_from_input_string,
-)
-
-from subscript.co2containment.calculate import (
-    calculate_co2_containment,
-    ContainedCo2,
+    calculate_co2,
 )
 
 

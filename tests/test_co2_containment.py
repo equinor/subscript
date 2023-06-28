@@ -3,10 +3,10 @@ import pytest
 import shapely.geometry
 
 from subscript.co2containment.co2_calculation import (
-    SourceData,
-    _calculate_co2_data_from_source_data,
     CalculationType,
     Co2Data,
+    SourceData,
+    _calculate_co2_data_from_source_data,
 )
 
 

@@ -8,11 +8,10 @@ import shapely.geometry
 import xtgeo
 
 from subscript.co2containment.co2_calculation import (
+    CalculationType,
     SourceData,
     _calculate_co2_data_from_source_data,
-    CalculationType,
 )
-
 from subscript.co2containment.co2_containment import calculate_from_co2_data
 
 

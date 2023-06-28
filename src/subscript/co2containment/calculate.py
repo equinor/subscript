@@ -1,11 +1,11 @@
 """CO2 calculation methods"""
 from dataclasses import dataclass
-from typing import List, Union, Literal, Optional
+from typing import List, Literal, Optional, Union
 
 import numpy as np
-from shapely.geometry import Polygon, MultiPolygon, Point
-from subscript.co2containment.co2_calculation import Co2Data
-from subscript.co2containment.co2_calculation import CalculationType
+from shapely.geometry import MultiPolygon, Point, Polygon
+
+from subscript.co2containment.co2_calculation import CalculationType, Co2Data
 
 
 @dataclass

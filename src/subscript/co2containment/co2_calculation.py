@@ -1,7 +1,7 @@
 """Methods for CO2 containment calculations"""
 from dataclasses import dataclass, fields
 from enum import Enum
-from typing import Dict, List, Optional, Literal, Tuple, Union
+from typing import Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 import xtgeo
@@ -117,9 +117,9 @@ class Co2DataAtTimeStep:
     """
 
     date: str
-    aqu_phase: Optional[np.ndarray]
-    gas_phase: Optional[np.ndarray]
-    volume_coverage: Optional[np.ndarray] = None
+    aqu_phase: np.ndarray
+    gas_phase: np.ndarray
+    volume_coverage: np.ndarray
 
     def total_mass(self) -> np.ndarray:
         """
@@ -653,7 +653,7 @@ def _calculate_co2_data_from_source_data(
             source_data.x_coord,
             source_data.y_coord,
             [
-                Co2DataAtTimeStep(key, value[0], value[1], None)
+                Co2DataAtTimeStep(key, value[0], value[1], np.zeros_like(value[1]))
                 for key, value in co2_mass_cell.items()
             ],
             "kg",
@@ -726,7 +726,10 @@ def _calculate_co2_data_from_source_data(
                 source_data.y_coord,
                 [
                     Co2DataAtTimeStep(
-                        t, np.array(vols_co2[t][0]), np.array(vols_co2[t][1]), None
+                        t,
+                        np.array(vols_co2[t][0]),
+                        np.array(vols_co2[t][1]),
+                        np.zeros_like(np.array(vols_co2[t][1])),
                     )
                     for t in vols_co2
                 ],
@@ -759,7 +762,15 @@ def _calculate_co2_data_from_source_data(
         co2_amount = Co2Data(
             source_data.x_coord,
             source_data.y_coord,
-            [Co2DataAtTimeStep(t, None, None, np.array(vols_ext[t])) for t in vols_ext],
+            [
+                Co2DataAtTimeStep(
+                    t,
+                    np.zeros_like(np.array(vols_ext[t])),
+                    np.zeros_like(np.array(vols_ext[t])),
+                    np.array(vols_ext[t]),
+                )
+                for t in vols_ext
+            ],
             "m3",
             source_data.zone,
         )
@@ -777,7 +788,7 @@ def _calculate_co2_data_from_source_data(
                     t,
                     np.array(vols_co2_simp[t][0]),
                     np.array(vols_co2_simp[t][1]),
-                    None,
+                    np.zeros_like(np.array(vols_co2_simp[t][1])),
                 )
                 for t in vols_co2_simp
             ],
