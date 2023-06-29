@@ -14,6 +14,8 @@ from typing import List, Optional, Pattern, Tuple, Union
 
 import subscript
 
+from .allowlist import ALLOWLIST_KEYWORDS
+
 logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """Apply run-length encoding to Eclipse input files, such
@@ -22,12 +24,34 @@ The script processes one file at a time, replacing the files with
 compressed versions.
 
 If called with no arguments, a default file list is used.
+If called with ``<FILES>``, the argument provided must be a filepath to
+a text file containing a file list to compress.
 """
 
 EXAMPLES = """
 .. code-block:: console
 
   FORWARD_MODEL ECLCOMPRESS
+
+You can provide your own list of files to compress with the ``<FILES>``
+argument.
+
+.. code-block:: console
+
+  FORWARD_MODEL ECLCOMPRESS(<FILES>=paths_to_compress.txt)
+
+where ``paths_to_compress.txt`` contains a list of files or filepaths to
+compress.
+
+.. code-block:: text
+  :caption: paths_to_compress.txt
+
+  eclipse/include/grid/*
+  eclipse/include/regions/*
+  eclipse/include/props/*
+
+Note that this list of file paths is the default list used when no file is
+provided.
 """
 
 DEFAULT_FILES_TO_COMPRESS = [
@@ -81,6 +105,12 @@ def eclcompress(
             continue
 
         logger.info("Compressing %s...", filename)
+
+        origbytes = os.stat(filename).st_size
+        if not origbytes:
+            logger.info("File %s is empty, skipping", filename)
+            continue
+
         try:
             filelines = Path(filename).read_text(encoding="utf8").splitlines()
         except UnicodeDecodeError:
@@ -96,12 +126,6 @@ def eclcompress(
         if any(x.find("eclcompress") > -1 for x in filelines):
             logger.warning("Skipped %s, compressed already", filename)
             continue  # to next file
-
-        origbytes = sum([len(x) for x in filelines])
-
-        if not origbytes:
-            logger.info("File %s is empty, skipping", filename)
-            continue
 
         # Index the list of strings (the file contents) by the line numbers
         # where Eclipse keywords start, and where the first data record of the keyword
@@ -209,9 +233,11 @@ def compress_multiple_keywordsets(
     lastslash_linepointer = 0
 
     for keywordtuple in keywordsets:
-        if keywordtuple[0] is None:
+        start_linepointer, end_linepointer = keywordtuple
+        if start_linepointer is None:
             continue  # This happens for an extra /
-        start_linepointer = keywordtuple[0] + 1  # The line number where data starts.
+        if start_linepointer < end_linepointer:
+            start_linepointer += 1
 
         # Append whatever we have gathered since previous keyword
         compressedlines += filelines[lastslash_linepointer:start_linepointer]
@@ -303,7 +329,8 @@ def find_keyword_sets(
     Args:
         filelines: Eclipse deck lines (not necessarily complete decks)
         eclkw_regexp: Regular expression for locating Eclipse keywords.
-            Default is [A-Z]{2-8}$
+            Default is None, in which it uses a predefined allowlist of
+            keywords
 
     Return:
         2-tuples, with start and end line indices for datasets to
@@ -312,19 +339,27 @@ def find_keyword_sets(
     """
     keywordsets = []
     kwstart = None
-    if eclkw_regexp is None:
-        eclkw_regexp = "[A-Z]{2,8}$"
-    if isinstance(eclkw_regexp, str):
+    if eclkw_regexp:
         eclkw_regexp = re.compile(eclkw_regexp)
 
     for lineidx, line in enumerate(filelines):
-        if (
-            re.match(eclkw_regexp, line) is not None
-            and line.strip() not in DENYLIST_KEYWORDS
-        ):
-            kwstart = lineidx
+        line = line.strip()
+        if not line:
             continue
-        if kwstart is not None and line.strip()[0:2] == "--":
+        if eclkw_regexp:
+            if re.match(eclkw_regexp, line) and line not in DENYLIST_KEYWORDS:
+                kwstart = lineidx
+                continue
+        else:
+            # Remove embracing quotes if in a multi-keyword
+            keyword = line.split(" ")[0].strip("'")
+            if keyword in ALLOWLIST_KEYWORDS:
+                kwstart = lineidx
+                if "/" in line:
+                    keywordsets.append((kwstart, lineidx))
+                    kwstart = None
+                continue
+        if kwstart is not None and line[0:2] == "--":
             # This means we found a comment section within a data set
             # In that case it is vital to preserve the current line
             # breaks which we don't do if we try to compress the section
@@ -405,7 +440,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--files",
         help=(
-            "Text file with one wildcard pr. line, "
+            "Path to a text file containing one wildcard filepath per line, "
             "specifying which files to apply compression to. "
             "Defaults to everything below eclipse/include, but only if "
             "no files are specified on the command line."
@@ -415,8 +450,8 @@ def get_parser() -> argparse.ArgumentParser:
         "--eclkw_regexp",
         help=(
             "Regular expression to determine which Eclipse keyword "
-            "to recognize. Default is minimium two and maximum 8 A-Z "
-            "letters."
+            "to recognize. Default is None, using instead a list of known "
+            "compressable keywords."
         ),
     )
     parser.add_argument(
@@ -484,7 +519,7 @@ def main_eclcompress(
         dryrun: Nothing written to disk, only statistics for
             compression printed to terminal.
         eclkw_regexp: Regular expression for locating Eclipse keywords.
-            Default is [A-Z]{2-8}$
+            Default is None
     """
     # A list of wildcards on the command line should always be compressed:
     if grdeclfiles:
