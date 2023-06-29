@@ -210,7 +210,7 @@ def test_multiplerecords():
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "EQUALS",
-        "  2*1 / nasty comment/",  # (only compressing first record)
+        "1 1 / nasty comment/",
         "2 2 / foo",
         "3 3 /",
         "/",
@@ -222,10 +222,42 @@ def test_multiplerecords():
     kwsets = find_keyword_sets(filelines)
     assert compress_multiple_keywordsets(kwsets, filelines) == [
         "EQUALS",
-        "  2*1 //",
+        "1 1//",
         "2 2 / foo",
         "/",
     ]
+
+
+def test_only_allowlist_compressed(tmp_path):
+    """Ensure that only keywords in the allowlist are compressed
+    when no regex is supplied."""
+    given = """
+ZCORN
+  3 3 3 3 /
+PVTO
+  0.000       1.0    1.0              0.645
+             25.0    1.06657          0.668
+/
+FIPNUM
+  2 4 4 5 5 6
+/
+"""
+    filelines = given.splitlines()
+    kw_sets = find_keyword_sets(filelines)
+    expected = [
+        "",
+        "ZCORN",
+        "  4*3 /",
+        "PVTO",
+        "  0.000       1.0    1.0              0.645",
+        "             25.0    1.06657          0.668",
+        "/",
+        "FIPNUM",
+        "  2 2*4 2*5 6",
+        "/",
+    ]
+
+    assert compress_multiple_keywordsets(kw_sets, filelines) == expected
 
 
 def test_whitespace(tmp_path):
@@ -235,10 +267,8 @@ MULTIPLY
   'PORO' 2 /
 /"""
     filelines = kw_string.splitlines()
-    assert (
-        compress_multiple_keywordsets(find_keyword_sets(filelines), filelines)
-        == filelines
-    )
+    kw_sets = find_keyword_sets(filelines)
+    assert compress_multiple_keywordsets(kw_sets, filelines) == filelines
 
     # Test the same when the string is read from a file:
     os.chdir(tmp_path)
@@ -261,7 +291,7 @@ def test_formatting():
     # But, some keywords will not tolerate random
     # newlines in their data-section, at least the multi-record keywords.
     # So we should never wrap a line with a slash in it:
-    filelines = ["VFPPROD", " FOO" * 30 + " /"]
+    filelines = ["MULTZ-", " FOO" * 30 + " /"]
     # If this is fed through eclcompress, it will be wrapped due to its
     # length:
     formatted = compress_multiple_keywordsets(find_keyword_sets(filelines), filelines)
@@ -287,10 +317,10 @@ ZCORN
         compress_multiple_keywordsets(kwsets, filelines)
         == """
 SPECGRID
-  214 669 49 1 F /
+214  669  49   1  F  /
 
 GDORIENT
-  INC INC INC DOWN RIGHT /
+INC INC INC DOWN RIGHT /
 
 ZCORN
   6*1 /
