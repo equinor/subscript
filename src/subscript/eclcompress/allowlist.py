@@ -5,7 +5,7 @@ ALLOWLIST_KEYWORDS = set(
         "ALPHANUI",
         "ALPHANUM",
         "COLLAPSE",
-        "COORDS",
+        "COORD",
         "DEPTH",
         "DIFFMMF",
         "DIFFMR",
