@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CO2_CONTAINMENT &mdash; subscript 0.16.6.dev29+g6b443b8f documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CONVERT_GRID_FORMAT" href="convert_grid_format.html" />
+    <link rel="prev" title="CHECK_SWATINIT" href="check_swatinit.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.16.6.dev29+g6b443b8f
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../contribution.html">Contributing to subscript</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="check_swatinit.html">CHECK_SWATINIT</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CO2_CONTAINMENT</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#csv-file-example">CSV file example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ri_wellmod.html">RI_WELLMOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rmsecl_volumetrics.html">RMSECL_VOLUMETRICS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runrms.html">RUNRMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CO2_CONTAINMENT</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/co2_containment.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="co2-containment">
+<h1>CO2_CONTAINMENT<a class="headerlink" href="#co2-containment" title="Permalink to this heading"></a></h1>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">co2_containment</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">unrst</span> <span class="n">UNRST</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">init</span> <span class="n">INIT</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">zonefile</span> <span class="n">ZONEFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">compact</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">calc_type_input</span> <span class="n">CALC_TYPE_INPUT</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">hazardous_polygon</span> <span class="n">HAZARDOUS_POLYGON</span><span class="p">]</span>
+                       <span class="n">grid</span> <span class="n">containment_polygon</span> <span class="n">outfile</span>
+</pre></div>
+</div>
+<section id="positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
+<dl class="option-list">
+<dt><kbd>grid</kbd></dt>
+<dd><p>Grid (.EGRID) from which maps are generated</p>
+</dd>
+<dt><kbd>containment_polygon</kbd></dt>
+<dd><p>Polygon that determines the bounds of the containment area.Can use None as input value, defining all as contained.</p>
+</dd>
+<dt><kbd>outfile</kbd></dt>
+<dd><p>Output filename</p>
+</dd>
+</dl>
+</section>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<dl class="option-list">
+<dt><kbd>--unrst</kbd></dt>
+<dd><p>Path to UNRST file. Will assume same base name as grid if not provided</p>
+</dd>
+<dt><kbd>--init</kbd></dt>
+<dd><p>Path to INIT file. Will assume same base name as grid if not provided</p>
+</dd>
+<dt><kbd>--zonefile</kbd></dt>
+<dd><p>Path to file containing zone information</p>
+</dd>
+<dt><kbd>--compact</kbd></dt>
+<dd><p>Write the output to a single file as compact as possible</p>
+<p>Default: False</p>
+</dd>
+<dt><kbd>--calc_type_input</kbd></dt>
+<dd><p>CO2 calculation options: mass / volume_extent / volume_actual /              volume_actual_simple</p>
+<p>Default: “mass”</p>
+</dd>
+<dt><kbd>--hazardous_polygon</kbd></dt>
+<dd><p>Polygon that determines the bounds of the hazardous area</p>
+</dd>
+</dl>
+</section>
+<p>Calculates the amount of CO<sub>2</sub> inside and outside a given perimeter, and separates the result per formation and phase (gas/dissolved). Output is a table on CSV format.</p>
+<p>The most common use of the script is to calculate CO<sub>2</sub> mass. Options for calculation type input:</p>
+<ul class="simple">
+<li><p>“mass”: CO<sub>2</sub> mass (kg), the default option</p></li>
+<li><p>“volume_extent”: CO<sub>2</sub> volume (m<sup>3</sup>), a simple calculation finding the grid cells with some CO<sub>2</sub> and summing the volume of those cells</p></li>
+<li><p>“volume_actual”: CO<sub>2</sub> volume (m<sup>3</sup>), an attempt to calculate a more precise representative volume of CO<sub>2</sub></p></li>
+<li><p>“volume_actual_simple”: CO<sub>2</sub> volume (m<sup>3</sup>), simplified version of “volume_actual”</p></li>
+</ul>
+<section id="csv-file-example">
+<h2>CSV file example<a class="headerlink" href="#csv-file-example" title="Permalink to this heading"></a></h2>
+<p>Example of how the output CSV file is structured:</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">CSV file of CO2 mass (kg)</span><a class="headerlink" href="#id1" title="Permalink to this table"></a></caption>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>date</p></th>
+<th class="head"><p>total</p></th>
+<th class="head"><p>total_contained</p></th>
+<th class="head"><p>total_outside</p></th>
+<th class="head"><p>total_hazardous</p></th>
+<th class="head"><p>total_gas</p></th>
+<th class="head"><p>total_aqueous</p></th>
+<th class="head"><p>gas_contained</p></th>
+<th class="head"><p>aqueous_contained</p></th>
+<th class="head"><p>…</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2020-01-01</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>2060-01-01</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>2100-01-01</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/co2_containment_A.png"><img alt="../_images/co2_containment_A.png" src="../_images/co2_containment_A.png" style="width: 40%;" /></a>
+<figcaption>
+<p><span class="caption-text">Example plot of CO<sub>2</sub> mass made from a CO<sub>2</sub> containment output CSV file</span><a class="headerlink" href="#id2" title="Permalink to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="check_swatinit.html" class="btn btn-neutral float-left" title="CHECK_SWATINIT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="convert_grid_format.html" class="btn btn-neutral float-right" title="CONVERT_GRID_FORMAT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Equinor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

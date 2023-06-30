@@ -1,0 +1,10 @@
+=======================================
+``subscript.co2_containment.calculate``
+=======================================
+
+.. automodule:: subscript.co2_containment.calculate
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.co2_containment.calculate

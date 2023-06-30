@@ -1,0 +1,10 @@
+=============================================
+``subscript.co2_containment.co2_containment``
+=============================================
+
+.. automodule:: subscript.co2_containment.co2_containment
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.co2_containment.co2_containment

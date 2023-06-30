@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript &mdash; subscript 0.16.6.dev28+gb7f3efaf documentation</title>
+  <title>subscript &mdash; subscript 0.16.6.dev29+g6b443b8f documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -37,7 +37,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.6.dev28+gb7f3efaf
+                0.16.6.dev29+g6b443b8f
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,6 +56,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../scripts/bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/casegen_upcars.html">CASEGEN_UPCARS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/check_swatinit.html">CHECK_SWATINIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/co2_containment.html">CO2_CONTAINMENT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/csv2ofmvol.html">CSV2OFMVOL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/csv_merge.html">CSV_MERGE</a></li>
@@ -91,6 +92,7 @@
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.co2_containment.html"><code class="docutils literal notranslate"><span class="pre">subscript.co2_containment</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge</span></code></a></li>
@@ -294,6 +296,56 @@ __name__ should be supplied</p>
 <li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.swatinit_depth"><code class="docutils literal notranslate"><span class="pre">swatinit_depth()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.visual_depth"><code class="docutils literal notranslate"><span class="pre">visual_depth()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.check_swatinit.plotter.html#subscript.check_swatinit.plotter.wvol_waterfall"><code class="docutils literal notranslate"><span class="pre">wvol_waterfall()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="subscript.co2_containment.html"><code class="docutils literal notranslate"><span class="pre">subscript.co2_containment</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="subscript.co2_containment.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="subscript.co2_containment.calculate.html"><code class="docutils literal notranslate"><span class="pre">subscript.co2_containment.calculate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.calculate.html#subscript.co2_containment.calculate.ContainedCo2"><code class="docutils literal notranslate"><span class="pre">ContainedCo2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.calculate.html#subscript.co2_containment.calculate.calculate_co2_containment"><code class="docutils literal notranslate"><span class="pre">calculate_co2_containment()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html"><code class="docutils literal notranslate"><span class="pre">subscript.co2_containment.co2_calculation</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.CalculationType"><code class="docutils literal notranslate"><span class="pre">CalculationType</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.CalculationType.check_for_key"><code class="docutils literal notranslate"><span class="pre">CalculationType.check_for_key()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.Co2Data"><code class="docutils literal notranslate"><span class="pre">Co2Data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.Co2DataAtTimeStep"><code class="docutils literal notranslate"><span class="pre">Co2DataAtTimeStep</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.Co2DataAtTimeStep.total_mass"><code class="docutils literal notranslate"><span class="pre">Co2DataAtTimeStep.total_mass()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData"><code class="docutils literal notranslate"><span class="pre">SourceData</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_amfg"><code class="docutils literal notranslate"><span class="pre">SourceData.get_amfg()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_bgas"><code class="docutils literal notranslate"><span class="pre">SourceData.get_bgas()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_bwat"><code class="docutils literal notranslate"><span class="pre">SourceData.get_bwat()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_dgas"><code class="docutils literal notranslate"><span class="pre">SourceData.get_dgas()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_dwat"><code class="docutils literal notranslate"><span class="pre">SourceData.get_dwat()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_porv"><code class="docutils literal notranslate"><span class="pre">SourceData.get_porv()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_rporv"><code class="docutils literal notranslate"><span class="pre">SourceData.get_rporv()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_sgas"><code class="docutils literal notranslate"><span class="pre">SourceData.get_sgas()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_swat"><code class="docutils literal notranslate"><span class="pre">SourceData.get_swat()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_vol"><code class="docutils literal notranslate"><span class="pre">SourceData.get_vol()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_xmf2"><code class="docutils literal notranslate"><span class="pre">SourceData.get_xmf2()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_ymf2"><code class="docutils literal notranslate"><span class="pre">SourceData.get_ymf2()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_ymfg"><code class="docutils literal notranslate"><span class="pre">SourceData.get_ymfg()</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.SourceData.get_zone"><code class="docutils literal notranslate"><span class="pre">SourceData.get_zone()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_calculation.html#subscript.co2_containment.co2_calculation.calculate_co2"><code class="docutils literal notranslate"><span class="pre">calculate_co2()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.co2_containment.co2_containment.html"><code class="docutils literal notranslate"><span class="pre">subscript.co2_containment.co2_containment</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_containment.html#subscript.co2_containment.co2_containment.calculate_from_co2_data"><code class="docutils literal notranslate"><span class="pre">calculate_from_co2_data()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_containment.html#subscript.co2_containment.co2_containment.calculate_out_of_bounds_co2"><code class="docutils literal notranslate"><span class="pre">calculate_out_of_bounds_co2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_containment.html#subscript.co2_containment.co2_containment.check_input"><code class="docutils literal notranslate"><span class="pre">check_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_containment.html#subscript.co2_containment.co2_containment.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_containment.html#subscript.co2_containment.co2_containment.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="subscript.co2_containment.co2_containment.html#subscript.co2_containment.co2_containment.process_args"><code class="docutils literal notranslate"><span class="pre">process_args()</span></code></a></li>
 </ul>
 </li>
 </ul>

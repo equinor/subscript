@@ -1,0 +1,20 @@
+=============================
+``subscript.co2_containment``
+=============================
+
+.. automodule:: subscript.co2_containment
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.co2_containment.calculate
+   subscript.co2_containment.co2_calculation
+   subscript.co2_containment.co2_containment
+
+.. currentmodule:: subscript.co2_containment
