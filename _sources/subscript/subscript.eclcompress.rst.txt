@@ -13,6 +13,7 @@ Submodules
 
 .. toctree::
 
+   subscript.eclcompress.allowlist
    subscript.eclcompress.eclcompress
 
 .. currentmodule:: subscript.eclcompress

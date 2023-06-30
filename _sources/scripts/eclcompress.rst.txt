@@ -45,7 +45,17 @@ add that using the FILES argument to the forward model:
 
 .. code-block:: console
 
-  FORWARD_MODEL ECLCOMPRESS(<FILES>=custom-file-list.txt)
+  FORWARD_MODEL ECLCOMPRESS(<FILES>=paths_to_compress.txt)
+
+where ``paths_to_compress.txt`` contains a list of files or filepaths to
+compress.
+
+.. code-block:: text
+  :caption: paths_to_compress.txt
+
+  eclipse/include/grid/*
+  eclipse/include/regions/*
+  eclipse/include/props/*
 
 Notes
 -----
@@ -66,9 +76,9 @@ Notes
   compressed file into account.
 - Eclipse loading time of the compressed file is probably reduced by the
   same factor as the compression factor.
-- Only keywords that consist of the letters A-Z, minimum length 2 and maximum
-  length 8 are attempted compressed. If you have other odd keyword names, you
-  can specify them directly or as a regular expression as a command line option.
+- Only known compressable keywords are compressed by default. If you wish
+  to specify particular keywords or a regex instead this can be provided
+  directly through the command line.
 
 
 Possible improvements

@@ -1,0 +1,10 @@
+===================================
+``subscript.eclcompress.allowlist``
+===================================
+
+.. automodule:: subscript.eclcompress.allowlist
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.eclcompress.allowlist

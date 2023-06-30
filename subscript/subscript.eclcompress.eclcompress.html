@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.eclcompress.eclcompress &mdash; subscript 0.16.6.dev27+g606e0b3c documentation</title>
+  <title>subscript.eclcompress.eclcompress &mdash; subscript 0.16.6.dev28+gb7f3efaf documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="subscript.ecldiff2roff" href="subscript.ecldiff2roff.html" />
-    <link rel="prev" title="subscript.eclcompress" href="subscript.eclcompress.html" /> 
+    <link rel="prev" title="subscript.eclcompress.allowlist" href="subscript.eclcompress.allowlist.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +37,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.6.dev27+g606e0b3c
+                0.16.6.dev28+gb7f3efaf
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -275,7 +275,8 @@ are skipped (i.e. not recognized as an Eclipse keyword)</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>filelines</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Eclipse deck lines (not necessarily complete decks)</p></li>
 <li><p><strong>eclkw_regexp</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Pattern</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>]) – Regular expression for locating Eclipse keywords.
-Default is [A-Z]{2-8}$</p></li>
+Default is None, in which it uses a predefined allowlist of
+keywords</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -334,7 +335,7 @@ compress</p>
 <li><p><strong>dryrun</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>) – Nothing written to disk, only statistics for
 compression printed to terminal.</p></li>
 <li><p><strong>eclkw_regexp</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Regular expression for locating Eclipse keywords.
-Default is [A-Z]{2-8}$</p></li>
+Default is None</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -366,7 +367,7 @@ wildcards is returned. Magic filename is __NONE__</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="subscript.eclcompress.html" class="btn btn-neutral float-left" title="subscript.eclcompress" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="subscript.eclcompress.allowlist.html" class="btn btn-neutral float-left" title="subscript.eclcompress.allowlist" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="subscript.ecldiff2roff.html" class="btn btn-neutral float-right" title="subscript.ecldiff2roff" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

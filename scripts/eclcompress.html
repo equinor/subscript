@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ECLCOMPRESS &mdash; subscript 0.16.6.dev27+g606e0b3c documentation</title>
+  <title>ECLCOMPRESS &mdash; subscript 0.16.6.dev28+gb7f3efaf documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/graphviz.css" type="text/css" />
@@ -37,7 +37,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.16.6.dev27+g606e0b3c
+                0.16.6.dev28+gb7f3efaf
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -150,7 +150,9 @@ run via ERT.</p>
 that consecutive numbers like “1 1 1 1” are compressed to “4*1”.
 The script processes one file at a time, replacing the files with
 compressed versions.</p>
-<p>If called with no arguments, a default file list is used.</p>
+<p>If called with no arguments, a default file list is used.
+If called with <code class="docutils literal notranslate"><span class="pre">&lt;FILES&gt;</span></code>, the argument provided must be a filepath to
+a text file containing a file list to compress.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">eclcompress</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dryrun</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keeporiginal</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">files</span> <span class="n">FILES</span><span class="p">]</span>
                    <span class="p">[</span><span class="o">--</span><span class="n">eclkw_regexp</span> <span class="n">ECLKW_REGEXP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
@@ -181,10 +183,10 @@ compressed versions.</p>
 <p>Default: False</p>
 </dd>
 <dt><kbd>--files</kbd></dt>
-<dd><p>Text file with one wildcard pr. line, specifying which files to apply compression to. Defaults to everything below eclipse/include, but only if no files are specified on the command line.</p>
+<dd><p>Path to a text file containing one wildcard filepath per line, specifying which files to apply compression to. Defaults to everything below eclipse/include, but only if no files are specified on the command line.</p>
 </dd>
 <dt><kbd>--eclkw_regexp</kbd></dt>
-<dd><p>Regular expression to determine which Eclipse keyword to recognize. Default is minimium two and maximum 8 A-Z letters.</p>
+<dd><p>Regular expression to determine which Eclipse keyword to recognize. Default is None, using instead a list of known compressable keywords.</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -203,8 +205,18 @@ config, include:</p>
 </div>
 <p>between RMS and Eclipse to effectuate compression. If you have a custom file-list,
 add that using the FILES argument to the forward model:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">FORWARD_MODEL ECLCOMPRESS(&lt;FILES&gt;=custom-file-list.txt)</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">FORWARD_MODEL ECLCOMPRESS(&lt;FILES&gt;=paths_to_compress.txt)</span>
 </pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">paths_to_compress.txt</span></code> contains a list of files or filepaths to
+compress.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">paths_to_compress.txt</span><a class="headerlink" href="#id1" title="Permalink to this code"></a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>eclipse/include/grid/*
+eclipse/include/regions/*
+eclipse/include/props/*
+</pre></div>
+</div>
 </div>
 </section>
 <section id="notes">
@@ -226,9 +238,9 @@ the compressed file, does not take the extra header (two lines) in the
 compressed file into account.</p></li>
 <li><p>Eclipse loading time of the compressed file is probably reduced by the
 same factor as the compression factor.</p></li>
-<li><p>Only keywords that consist of the letters A-Z, minimum length 2 and maximum
-length 8 are attempted compressed. If you have other odd keyword names, you
-can specify them directly or as a regular expression as a command line option.</p></li>
+<li><p>Only known compressable keywords are compressed by default. If you wish
+to specify particular keywords or a regex instead this can be provided
+directly through the command line.</p></li>
 </ul>
 </section>
 <section id="possible-improvements">
