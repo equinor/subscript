@@ -20,7 +20,6 @@ SSCRIPTS = [
     "fmu_copy_revision = subscript.fmu_copy_revision.fmu_copy_revision:main",
     "fmuobs = subscript.fmuobs.fmuobs:main",
     "interp_relperm = subscript.interp_relperm.interp_relperm:main",
-    "merge_schedule = subscript.merge_schedule.merge_schedule:main",
     "merge_rft_ertobs = subscript.merge_rft_ertobs.merge_rft_ertobs:main",
     "ofmvol2csv = subscript.ofmvol2csv.ofmvol2csv:main",
     "pack_sim = subscript.pack_sim.pack_sim:main",
@@ -50,9 +49,7 @@ LEGACYSCRIPTS = [
     "duf",
     "eclmanual",
     "ertwatch",
-    "fmu_copy_revision_old",
     "list_rms_usage",
-    "make_3dgrid_regions",
     "nosim",
     "runeclipse",
 ]
