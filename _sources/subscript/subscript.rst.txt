@@ -27,7 +27,6 @@ Submodules
    subscript.hook_implementations
    subscript.interp_relperm
    subscript.merge_rft_ertobs
-   subscript.merge_schedule
    subscript.ofmvol2csv
    subscript.pack_sim
    subscript.params2csv
