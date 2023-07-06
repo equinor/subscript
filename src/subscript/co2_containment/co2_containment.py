@@ -7,7 +7,6 @@ import argparse
 import dataclasses
 import os
 import pathlib
-import sys
 from typing import Dict, List, Optional, Union
 
 import numpy as np
@@ -250,17 +249,14 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def process_args(arguments: List[str]) -> argparse.Namespace:
+def process_args() -> argparse.Namespace:
     """
     Process arguments and do some minor conversions.
-
-    Args:
-        arguments (list of str): Input arguments
 
     Returns:
         argparse.Namespace
     """
-    args = get_parser().parse_args(arguments)
+    args = get_parser().parse_args()
     if args.unrst is None:
         args.unrst = args.grid.replace(".EGRID", ".UNRST")
     if args.init is None:
@@ -306,16 +302,13 @@ def check_input(arguments: argparse.Namespace):
         raise FileNotFoundError(error_text)
 
 
-def main(arguments: List[str]):
+def main() -> None:
     """
     Takes input arguments and calculates total co2 mass or volume at each time
     step, divided into different phases and locations. Creates a data frame,
     then exports the data frame to a csv file.
-
-    Args:
-        arguments (list of str): Input arguments
     """
-    arguments_processed = process_args(arguments)
+    arguments_processed = process_args()
     check_input(arguments_processed)
     data_frame = calculate_out_of_bounds_co2(
         arguments_processed.grid,
@@ -339,4 +332,4 @@ def main(arguments: List[str]):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
