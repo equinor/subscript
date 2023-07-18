@@ -44,8 +44,8 @@ logger.setLevel(logging.INFO)
 def test_dateparsing(datetxt, expected, tmp_path):
     """Test parsing of dates"""
     # pylint: disable=unused-argument
-    Path("datediff.txt").write_text(datetxt, encoding="utf8")
-    assert ecldiff2roff.parse_diff_dates("datediff.txt") == expected
+    Path(tmp_path / "datediff.txt").write_text(datetxt, encoding="utf8")
+    assert ecldiff2roff.parse_diff_dates(tmp_path / "datediff.txt") == expected
 
 
 @pytest.fixture(name="reek_data")
