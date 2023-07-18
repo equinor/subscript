@@ -78,28 +78,29 @@ def test_helpful_latin1_encoding_exception(tmp_path, mocker):
 
 
 def test_bad_and_recursive_includes(tmp_path, mocker):
-    binary_include = tmp_path / "blob.perm"
+    os.chdir(tmp_path)
+    binary_include = "blob.perm"
     with open(binary_include, "wb") as fout:
         fout.write(b"\xde\xad\xbe\xef\x7f\x00")
 
-    good_include = tmp_path / "good.inc"
+    good_include = "good.inc"
     with open(good_include, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{binary_include.name}' /")
+        fout.write(f"INCLUDE\n  '{binary_include}' /")
 
-    bad_include = tmp_path / "bad.inc"
+    bad_include = "bad.inc"
     with open(bad_include, "w", encoding="iso-8859-1") as fout:
         fout.write("-- død")
 
-    tmp_data_file = tmp_path / "TMP.DATA"
+    tmp_data_file = "TMP.DATA"
     with open(tmp_data_file, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{good_include.name}' /")
-    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file), "."])
+        fout.write(f"INCLUDE\n  '{good_include}' /")
+    mocker.patch("sys.argv", ["pack_sim", tmp_data_file, "packed/"])
     pack_sim.main()
 
     with open(tmp_data_file, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{bad_include.name}' /")
+        fout.write(f"INCLUDE\n  '{bad_include}' /")
     with pytest.raises(
-        UnicodeDecodeError, match=(f"'ø' found in file: {bad_include.name} on line: 1")
+        UnicodeDecodeError, match=(f"'ø' found in file: {bad_include} on line: 1")
     ):
         pack_sim.main()
 

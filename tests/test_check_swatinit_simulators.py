@@ -574,11 +574,12 @@ def test_swu(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
 
 
-def test_swu_equal_swatinit(simulator):
+def test_swu_equal_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
     Eclipse will ignore SWATINIT because it is equal to SWU.
     """
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=900,  # pc is around 1.443238 here.
@@ -601,13 +602,14 @@ def test_swu_equal_swatinit(simulator):
     print(qc_frame)
 
 
-def test_swu_lessthan_swatinit(simulator):
+def test_swu_lessthan_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT
 
     In Eclipse this looks like the same situation as SWATINIT_1,
     SWATINIT is totally ignored. In flow, it looks like the SWU
     value (which here is the SWOF table endpoint) is ignored
     """
+    os.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=900,  # pc is around 1.443238 here.

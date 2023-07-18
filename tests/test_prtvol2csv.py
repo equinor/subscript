@@ -243,8 +243,9 @@ def test_prtvol2df(tmp_path):
     )["ZONE"].values == ["Upper"]
 
 
-def test_webviz_regiontofipnum_format():
+def test_webviz_regiontofipnum_format(tmp_path):
     """Test that the webviz format for mapping regions to fipnums also works"""
+    os.chdir(tmp_path)
     simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
     resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
     Path("webviz_fip.yml").write_text(

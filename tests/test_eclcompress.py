@@ -4,7 +4,6 @@ import hashlib
 import os
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -411,9 +410,9 @@ def test_main(tmp_path, mocker):
     assert opm.io.Parser().parse_string(compressedstr, OPMIO_PARSECONTEXT)
 
 
-@pytest.mark.skipif(sys.version_info < (3, 7), reason="Requires Python 3.7 or higher")
-def test_binary_file():
+def test_binary_file(tmp_path):
     """Test that a random binary file is untouched by eclcompress"""
+    os.chdir(tmp_path)
     binfile = "wrong.grdecl"
     Path(binfile).write_bytes(os.urandom(100))
     bytes_before = Path(binfile).read_bytes()
@@ -693,8 +692,9 @@ def test_binary_example_file(tmp_path, mocker):
         (bytearray([7] * 1024 + [0]), False),
     ],
 )
-def test_file_is_binary(byte_sequence, expected):
+def test_file_is_binary(byte_sequence, expected, tmp_path):
     """Test binary file detection"""
+    os.chdir(tmp_path)
     if isinstance(byte_sequence, str):
         Path("foo-utf8.txt").write_text(byte_sequence, encoding="utf-8")
         assert file_is_binary("foo-utf8.txt") == expected
