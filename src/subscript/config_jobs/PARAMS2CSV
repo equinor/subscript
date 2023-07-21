@@ -1,0 +1,6 @@
+EXECUTABLE  params2csv
+
+DEFAULT  <OUTPUT> parameters.csv
+DEFAULT  <FILENAMECOLUMN> filename
+
+ARGLIST  "--verbose" "--filenamecolumnname" <FILENAMECOLUMN> "-o" <OUTPUT> <PARAMETERFILES> "--keepconstantcolumns"
