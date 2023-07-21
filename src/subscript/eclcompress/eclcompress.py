@@ -9,6 +9,7 @@ import os
 import re
 import shutil
 import textwrap
+import warnings
 from pathlib import Path
 from typing import List, Optional, Pattern, Tuple, Union
 
@@ -96,6 +97,12 @@ def eclcompress(
 
     if not isinstance(files, list):
         files = [files]  # List with one element
+
+    if eclkw_regexp:
+        warnings.warn(
+            "Providing a keyword regex will be removed in Komodo 2023.11.",
+            DeprecationWarning,
+        )
 
     totalsavings = 0
 
