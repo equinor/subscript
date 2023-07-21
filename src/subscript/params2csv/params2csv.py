@@ -186,7 +186,6 @@ def params2csv_main(args: argparse.Namespace) -> None:
                 args.filenamecolumnname,
                 parameterfilename,
             )
-            logger.info()
         else:
             transposed.insert(0, args.filenamecolumnname, parameterfilename)
 
