@@ -44,13 +44,11 @@ This forward model will convert all keys in `parameters.txt` to columns in
 In addition, it will add a column `filename` which list the source parameters.txt file. 
 This column will be useful when <PARAMETERFILES> contains wildcards.
 
-The `filename` column can be renamed by adding an argument <FILENAMECOLUMN> to the 
-FORWARD_MODEL.
+The `filename` column can be renamed by adding an argument <FILENAMECOLUMN> to the FORWARD_MODEL.
     
 .. code-block:: console
 
-  FORWARD_MODEL PARAMS2CSV(<PARAMETERFILES>=parameters.txt, <OUTPUT>=parameters.csv, 
-  <FILENAMECOLUMN>=source_file)
+  FORWARD_MODEL PARAMS2CSV(<PARAMETERFILES>=parameters.txt, <OUTPUT>=parameters.csv,<FILENAMECOLUMN>=source_file)
   
 """  # noqa
 
@@ -59,7 +57,7 @@ FORWARD_MODEL.
 WORKFLOW_EXAMPLE = """
 Add a file named e.g. ``ert/bin/workflows/PARAMS2CSV_ITER0`` with the contents::
   MAKE_DIRECTORY <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables
-  PARAMS2CSV "-o" <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables/parameters_iter-0.csv <SCRATCH>/<USER>/<CASE_DIR>/realization-*/iter-0/parameters.txt
+  PARAMS2CSV "--verbose" "-o" <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables/parameters_iter-0.csv <SCRATCH>/<USER>/<CASE_DIR>/realization-*/iter-0/parameters.txt
 
 Add to your ERT config to have the workflow loaded upon launching::
 
@@ -93,7 +91,6 @@ class Params2Csv(ErtScript):
         calling params2csv_main()"""
         parser = get_parser()
         args = parser.parse_args(args)
-        logger.setLevel(logging.INFO)
         params2csv_main(args)
 
 
@@ -184,13 +181,12 @@ def params2csv_main(args: argparse.Namespace) -> None:
         transposed = paramtable.set_index("key").transpose()
         if args.filenamecolumnname in transposed.columns:
             logger.info(
-                "Column name %s was already in %s, not writing",
+                "Column name %s was already in %s, not writing this filename "
+                "into CSV output. Use --filenamecolumnname to avoid this.",
                 args.filenamecolumnname,
                 parameterfilename,
             )
-            logger.info(
-                "this filename into CSV output. Use --filenamecolumnname to avoid this."
-            )
+            logger.info()
         else:
             transposed.insert(0, args.filenamecolumnname, parameterfilename)
 
