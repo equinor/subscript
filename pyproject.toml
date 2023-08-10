@@ -29,6 +29,7 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Natural Language :: English",
     "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 ]
@@ -83,9 +84,9 @@ docs = [
 ]
 
 [project.urls]
-homepage = "https://github.com/equinor/subscript"
-documentation = "https://equinor.github.io/subscript"
-repository = "https://github.com/equinor/subscript"
+Homepage = "https://github.com/equinor/subscript"
+Repository = "https://github.com/equinor/subscript"
+Documentation = "https://equinor.github.io/subscript"
 
 [project.scripts]
 bjobsusers = "subscript.bjobsusers.bjobsusers:main"
