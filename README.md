@@ -15,7 +15,7 @@
 * [**Documentation**](https://equinor.github.io/subscript)
 * [**Installation**](#installation)
 * [**Usage**](#usage)
-* [**Contribution**](https://equinor.github.io/subscript/contribution.html)
+* [**Contributing**](https://equinor.github.io/subscript/contributing.html)
 
 ---
 
@@ -38,10 +38,10 @@ Note that some of these utilities may depend upon commercial third-party
 software.
 
 
-## Developing & Contribution
+## Developing & Contributing
 
 All contributions are welcome. Please see the
-[Contribution document](https://equinor.github.io/subscript/contribution.html)
+[Contributing document](https://equinor.github.io/subscript/contributing.html)
 for more details and instructions for getting started.
 
 

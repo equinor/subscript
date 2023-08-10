@@ -54,14 +54,13 @@ def calculate_co2_containment(
 
     Args:
         co2_data (Co2Data): Information of the amount of CO2 at each cell in
-                            each time step
+            each time step
         containment_polygon (Union[Polygon,Multipolygon]): The polygon that defines
-                                                           the containment area
+            the containment area
         hazardous_polygon (Union[Polygon,Multipolygon]): The polygon that defines
-                                                         the hazardous area
+             the hazardous area
         calc_type (CalculationType): Which calculation is to be performed
-                                     (mass / volume_extent / volume_actual /
-                                      volume_actual_simple)
+             (mass / volume_extent / volume_actual / volume_actual_simple)
 
     Returns:
         List[ContainedCo2]
