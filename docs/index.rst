@@ -1,8 +1,8 @@
 *********
-Subscript
+subscript
 *********
 
-Subscript is an Equinor collection of scripts used for subsurface reservoir
+subscript is Equinor's collection of scripts used for subsurface reservoir
 modelling.
 
 .. include::
@@ -12,7 +12,8 @@ modelling.
    :glob:
    :maxdepth: 1
 
-   contribution.rst
+   overview.rst
+   contributing.rst
    history.rst
 
 .. toctree::

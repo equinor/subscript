@@ -80,6 +80,7 @@ docs = [
     "sphinx<7",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
+    "sphinx-copybutton",
     "sphinx_rtd_theme",
 ]
 

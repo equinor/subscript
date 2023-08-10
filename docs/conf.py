@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../s
 # -- Project information -----------------------------------------------------
 
 project = "subscript"
-copyright = "2020, Equinor"
+copyright = "Equinor"
 author = "Equinor"
 
 import subscript  # noqa
@@ -47,6 +47,7 @@ release = version
 # ones.
 extensions = [
     "autoapi.sphinx",
+    "sphinx_copybutton",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.inheritance_diagram",
