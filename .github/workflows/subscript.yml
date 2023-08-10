@@ -11,7 +11,7 @@ on:
     types:
       - published
   schedule:
-    # Run CI every night and check that tests are working with latest dependencies
+    # Run nightly to check that tests are working with latest dependencies
     - cron: "0 0 * * *"
 
 env:
@@ -22,14 +22,14 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9"]
+        python-version: ["3.8", "3.9", "3.10"]
 
     steps:
       - name: Checkout commit locally
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-        
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -51,20 +51,32 @@ jobs:
 
       - name: Force correct RIPS version
         run: |
-          ResInsight --console --help | grep "ResInsight v. 2021.06" && pip install rips==2021.6.0.1 || true
-          ResInsight --console --help | grep "ResInsight v. 2020.10" && pip install rips==2020.10.0.2 || true
-
-      - name: Check code style and typing
-        run: |
-          isort --check-only --profile black src tests
-          black --check *.py src tests
-          flake8 src tests
-          mypy src/subscript
+          ResInsight --console --help | grep "ResInsight v. 2021.06" \
+            && pip install rips==2021.6.0.1 || true
+          ResInsight --console --help | grep "ResInsight v. 2020.10" \
+            && pip install rips==2020.10.0.2 || true
 
       - name: List all installed packages
         run: pip freeze
 
+      - name: Lint with isort
+        if: ${{ always() }}
+        run: isort --check-only --profile black src tests
+
+      - name: Lint with black
+        if: ${{ always() }}
+        run: black --check *.py src tests
+
+      - name: Lint with flake8
+        if: ${{ always() }}
+        run: flake8 src tests
+
+      - name: Check typing with mypy
+        if: ${{ always() }}
+        run: mypy src/subscript
+
       - name: Run tests
+        if: ${{ always() }}
         run: |
           pytest -n auto tests
           # Check that repository is untainted by test code:
@@ -72,9 +84,11 @@ jobs:
           test -z "$(git status --porcelain)"
 
       - name: Syntax check documentation
+        if: ${{ always() }}
         run: rstcheck -r docs
 
       - name: Build documentation
+        if: ${{ always() }}
         run: sphinx-build -b html docs build/docs/html
 
       - name: Update GitHub pages
