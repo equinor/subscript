@@ -35,6 +35,9 @@ def test_main(tmp_path, mocker):
     assert Path("include/reek.pvt").exists()
     assert Path("include/swof.inc").exists()
 
+    # Test that comment is process properly after INCLUDE keyword
+    assert "INCLUDE\nINCLUDE" not in Path(ECLCASE).read_text(encoding="utf8")
+
 
 def test_main_fmu(tmp_path, mocker):
     """Test the --fmu option on the command line, yielding
