@@ -410,9 +410,7 @@ def inspect_file(
                         # Ignore comments after the include statement
                         break
                     else:
-                        new_data_file += line
-                        if "--" in line:
-                            print(line)
+                        new_data_file += include_line
         elif line_strip_no_comment == "RUNSPEC" and fmu:
             section = "runspec/"
             (packing_path / "include" / section).mkdir(exist_ok=True)
