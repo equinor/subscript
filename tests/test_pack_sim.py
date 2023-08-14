@@ -35,9 +35,6 @@ def test_main(tmp_path, mocker):
     assert Path("include/reek.pvt").exists()
     assert Path("include/swof.inc").exists()
 
-    # Test that comment is process properly after INCLUDE keyword
-    assert "INCLUDE\nINCLUDE" not in Path(ECLCASE).read_text(encoding="utf8")
-
 
 def test_main_fmu(tmp_path, mocker):
     """Test the --fmu option on the command line, yielding
@@ -212,6 +209,24 @@ def test_strip_comments(tmp_path, mocker):
     assert "--" not in Path(ECLCASE).read_text(encoding="utf8")
     for includefile in os.listdir("include"):
         assert "--" not in (Path("include") / includefile).read_text()
+
+
+def test_extra_include_due_to_comment(tmp_path, mocker):
+    """Test that comment after INCLUDE/IMPORT/GDFILE is transferred correctly"""
+    os.chdir(tmp_path)
+
+    some_include = "some.inc"
+    with open(some_include, "w", encoding="utf-8") as fout:
+        fout.write("-- Comment")
+
+    data_file = "TMP.DATA"
+    with open(data_file, "w", encoding="utf-8") as fout:
+        fout.write(f"INCLUDE\n--Comment\n  '{some_include}' /")
+    mocker.patch("sys.argv", ["pack_sim", data_file, "out/"])
+    pack_sim.main()
+
+    # Test that comment is process properly after INCLUDE keyword
+    assert "INCLUDE\nINCLUDE" not in Path(f"out/{data_file}").read_text(encoding="utf8")
 
 
 def test_replace_paths():
