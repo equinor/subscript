@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing &mdash; subscript 0.17.1.dev5+g7c3c59ac documentation</title>
+  <title>Contributing &mdash; subscript 0.17.1.dev6+g0846f26f documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -40,7 +40,7 @@
               <img src="_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.1.dev5+g7c3c59ac
+                0.17.1.dev6+g0846f26f
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -144,7 +144,7 @@ to your machine:</p>
 <p>After cloning, you need a Python virtual environment in which you install
 subscript and its dependencies. If you develop on an Equinor computer you
 should use <code class="docutils literal notranslate"><span class="pre">komodoenv</span></code>; instructions for how to do this can be found
-<cite>here &lt;https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html&gt;</cite>
+<a class="reference external" href="https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html">here</a>
 (internal). Otherwise, set up a normal virtual environment.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv venv-subscript</span>
 <span class="go">source venv-subscript/bin/activate  # append &quot;.csh&quot; if c-shell</span>
@@ -165,7 +165,7 @@ repository, which you can do by running:</p>
 <p>If you want to run the full test-suite within the Equinor Linux environment
 you can invoke the test run in the following manner. This will include
 running tests that rely upon a black oil simulation.</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -n --flow-simulator=&quot;/project/res/x86_64_RH_7/bin/flowdaily&quot; --eclipse-simulator=&quot;runeclipse&quot;</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pytest -n auto --flow-simulator=&quot;/project/res/x86_64_RH_7/bin/flowdaily&quot; --eclipse-simulator=&quot;runeclipse&quot;</span>
 </pre></div>
 </div>
 </section>

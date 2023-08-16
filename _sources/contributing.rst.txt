@@ -27,7 +27,7 @@ Then add the upstream repository:
 After cloning, you need a Python virtual environment in which you install 
 subscript and its dependencies. If you develop on an Equinor computer you
 should use ``komodoenv``; instructions for how to do this can be found
-`here <https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html>`
+`here <https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html>`_
 (internal). Otherwise, set up a normal virtual environment.
 
 .. code-block:: console
@@ -58,7 +58,7 @@ running tests that rely upon a black oil simulation.
 
 .. code-block:: console
 
-  pytest -n --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
+  pytest -n auto --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
 
 
 Code style
