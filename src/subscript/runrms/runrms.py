@@ -286,6 +286,7 @@ class RunRMS:
         self.runloggerfile = "/prog/roxar/site/log/runrms_usage.log"
         self.userwarnings = []  # a list of user warnings to display e.g. upgrade ver.
         self.warn_empty_version = False
+        self.aps_toolbox_path = None
 
         self.detect_os()
 
@@ -421,26 +422,57 @@ class RunRMS:
         if self.exe is None:
             raise RuntimeError("Executable is not found, probably a config/setup error")
 
-        pypath = self.setup[rmssection][proposed_version].get("pythonpath", None)
-        self.pythonpath = self._process_genericpath(pypath)
-
-        # test pythonpath
-        pypathtest = self.setup[rmssection][proposed_version].get(
-            "pythonpathtest", None
-        )
-        if pypathtest:
-            self.testpythonpath = self._process_genericpath(pypathtest)
-
-        pluginspath = self.setup[rmssection][proposed_version].get("pluginspath", None)
-        if pluginspath:
-            self.pluginspath = self._process_genericpath(pluginspath)
-
-        self.tcltkpath = self.setup[rmssection][proposed_version].get("tcltkpath", None)
+        self._pythonpath_etc_extract(rmssection, proposed_version)
 
         logger.debug("EXECUTABLE: %s", self.exe)
         logger.debug("PYTHONPATH: %s", self.pythonpath)
         logger.debug("PLUGINSPATH: %s", self.pluginspath)
         logger.debug("TCLTK: %s", self.tcltkpath)
+        logger.debug("APS_TOOLBOX_PATH: %s", self.aps_toolbox_path)
+
+    def _pythonpath_etc_extract(self, rmssection, proposed_version):
+        """Get the PYTHONPATH etc given various options.
+
+        Set state variables: pythonpath, pluginspath, aps_toolbox_path, tcltkpath
+        """
+        pypath = self.setup[rmssection][proposed_version].get("pythonpath", None)
+        if self.args.testpylib:
+            pypath = self.setup[rmssection][proposed_version].get(
+                "pythonpathtest", None
+            )
+            if not pypath:
+                raise ValueError("Could not retrieve 'pythonpathtest'")
+
+        if isinstance(pypath, str):
+            pypath = [pypath]
+
+        if self.args.incsyspy:
+            pypath.append(self.oldpythonpath)
+
+        if self.args.nopy and not self.args.testpylib:
+            pypath.pop(0)
+
+        if self.args.nopy and self.args.testpylib:
+            raise ValueError("Combing '--nopy' and '--testpylib' is not allowed")
+
+        self.pythonpath = self._process_genericpath(pypath)
+
+        if self.args.testpylib:
+            pluginspath = self.setup[rmssection][proposed_version].get(
+                "pluginspathtest", None
+            )
+        else:
+            pluginspath = self.setup[rmssection][proposed_version].get(
+                "pluginspath", None
+            )
+        self.pluginspath = self._process_genericpath(pluginspath)
+
+        self.tcltkpath = self.setup[rmssection][proposed_version].get("tcltkpath", None)
+
+        if (pathlib.Path(pypath[0]) / "aps").exists():
+            self.aps_toolbox_path = f"{pypath[0]}/aps/toolbox"
+        else:
+            self.aps_toolbox_path = ""
 
     def _process_genericpath(self, pypath):
         """Collect and validate input pythonpath/testpythonpath/pluginspath from setup.
@@ -456,24 +488,26 @@ class RunRMS:
           "/some/main/python3.6/site-packages:/some/other/python3.6/site-packages"
 
         """
-        pypathlist = []
 
+        pypathlist = []
         if not isinstance(pypath, list):
             # Allow both string and list syntax in yml:
             pypath = [pypath]
 
-        if isinstance(pypath, list):
-            for pyp in pypath:
-                pyp = pyp.replace("<PLATFORM>", self.osver)
+        for pyp in pypath:
+            if pyp is None:
+                continue
 
-                if self.args.dryrun:
-                    pypathlist.append(pyp)  # in dryrun mode accept non-existing dirs
-                    continue
+            pyp = pyp.replace("<PLATFORM>", self.osver)
 
-                if pathlib.Path(pyp).is_dir():
-                    pypathlist.append(pyp)
-                else:
-                    xwarn(f"Proposed {pypath} does not exist!")
+            if self.args.dryrun:
+                pypathlist.append(pyp)  # in dryrun mode accept non-existing dirs
+                continue
+
+            if pathlib.Path(pyp).is_dir():
+                pypathlist.append(pyp)
+            else:
+                xwarn(f"Proposed {pypath} does not exist!")
 
         if not pypathlist:
             xwarn("No valid in-house PYTHONPATHS are provided")
@@ -646,14 +680,6 @@ class RunRMS:
         pythonpathlist = []
 
         if not self.args.nopy:
-            if self.args.testpylib:
-                if self.testpythonpath:
-                    pythonpathlist.append(self.testpythonpath)
-                else:
-                    logger.error(
-                        "Test python path asked for, but pythonpathtest in yml is %s",
-                        self.testpythonpath,
-                    )
             if self.pythonpath:
                 pythonpathlist.append(self.pythonpath)
             if self.args.incsyspy:
@@ -682,6 +708,9 @@ class RunRMS:
 
         if self.setdpiscaling:
             rms_exec_env["QT_SCALE_FACTOR"] = self.setdpiscaling
+
+        if self.aps_toolbox_path:
+            rms_exec_env["APS_TOOLBOX_PATH"] = self.aps_toolbox_path
 
         for key, value in rms_exec_env.items():
             logger.debug("rms_exec_env... %s: %s", key, value)
@@ -726,6 +755,7 @@ class RunRMS:
         print("{0:30s}: {1}".format(f"Pythonpath added as {order}**", self.pythonpath))
         print("{0:30s}: {1}".format("RMS plugins path", self.pluginspath))
         print("{0:30s}: {1}".format("TCL/TK path", self.tcltkpath))
+        print("{0:30s}: {1}".format("APS TOOLBOX PATH", self.aps_toolbox_path))
         print("{0:30s}: {1}".format("RMS DPI scaling", self.setdpiscaling))
         print("{0:30s}: {1}".format("RMS executable", self.exe))
         print("=" * shutil.get_terminal_size((132, 20)).columns)
