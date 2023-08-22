@@ -77,7 +77,7 @@ tests = [
 ]
 docs = [
     "autoapi",
-    "sphinx<7",
+    "sphinx",
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
