@@ -583,8 +583,14 @@ class RunRMS:
 
         For RMS 10.0.0 and 11.0.0 (etc) the release is reported as
         10 or 11 in the .master file. Extend this to always have 3
-        fields e.g. 10 --> 10.0.0
+        fields e.g. 10 --> 10.0.0.
+
+        For version 14, there is now a V in front
         """
+
+        if self.version_fromproject.startswith("V"):  # e.g. version V14.1
+            self.version_fromproject = self.version_fromproject[1:]
+
         # valid for beta versions:
         if not self.version_fromproject[0].isdigit():
             return
