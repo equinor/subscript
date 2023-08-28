@@ -60,7 +60,7 @@ def calculate_co2_containment(
         hazardous_polygon (Union[Polygon,Multipolygon]): The polygon that defines
              the hazardous area
         calc_type (CalculationType): Which calculation is to be performed
-             (mass / volume_extent / volume_actual / volume_actual_simple)
+             (mass / cell_volume / actual_volume / actual_volume_simplified)
 
     Returns:
         List[ContainedCo2]
@@ -85,7 +85,7 @@ def calculate_co2_containment(
     is_inside = [x if not y else False for x, y in zip(is_contained, is_hazardous)]
     is_outside = [not x and not y for x, y in zip(is_contained, is_hazardous)]
     if co2_data.zone is None:
-        if calc_type == CalculationType.VOLUME_EXTENT:
+        if calc_type == CalculationType.CELL_VOLUME:
             return [
                 c
                 for w in co2_data.data_list
@@ -131,7 +131,7 @@ def calculate_co2_containment(
             ]
         ]
     zone_map = {z: co2_data.zone == z for z in np.unique(co2_data.zone)}
-    if calc_type == CalculationType.VOLUME_EXTENT:
+    if calc_type == CalculationType.CELL_VOLUME:
         return [
             c
             for w in co2_data.data_list
