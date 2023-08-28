@@ -209,12 +209,12 @@ def get_parser() -> argparse.ArgumentParser:
     path_name = pathlib.Path(__file__).name
     parser = argparse.ArgumentParser(path_name)
     parser.add_argument("grid", help="Grid (.EGRID) from which maps are generated")
-    parser.add_argument(
-        "containment_polygon",
-        help="Polygon that determines the bounds of the containment area."
-        "Can use None as input value, defining all as contained.",
-    )
     parser.add_argument("outfile", help="Output filename")
+    parser.add_argument(
+        "--containment_polygon",
+        help="Polygon that determines the bounds of the containment area."
+        "Count all CO2 as contained if polygon is not provided.",
+    )
     parser.add_argument(
         "--unrst",
         help="Path to UNRST file. Will assume same base name as grid if not provided",
