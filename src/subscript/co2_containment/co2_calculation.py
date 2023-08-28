@@ -35,9 +35,9 @@ class CalculationType(Enum):
     """
 
     MASS = 0
-    VOLUME_EXTENT = 1
-    VOLUME_ACTUAL = 2
-    VOLUME_ACTUAL_SIMPLE = 3
+    CELL_VOLUME = 1
+    ACTUAL_VOLUME = 2
+    ACTUAL_VOLUME_SIMPLIFIED = 3
 
     @classmethod
     def check_for_key(cls, key: str):
@@ -693,8 +693,8 @@ def _calculate_co2_data_from_source_data(
     Args:
         source_data (SourceData): Data with the information of the necessary properties
                                   for the calculation of calc_type
-        calc_type (CalculationType): Which amount is calculated (mass/volume_extent/
-                                     volume_actual/volume_actual_simple)
+        calc_type (CalculationType): Which amount is calculated (mass / cell_volume /
+                                     actual_volume / actual_volume_simpified)
         co2_molar_mass (float): CO2 molar mass - Default is 44 g/mol
         water_molar_mass (float): Water molar mass - Default is 18 g/mol
 
@@ -728,7 +728,7 @@ def _calculate_co2_data_from_source_data(
         error_text += "\nMissing: SGAS"
         raise RuntimeError(error_text)
 
-    if calc_type in (CalculationType.VOLUME_ACTUAL, CalculationType.MASS):
+    if calc_type in (CalculationType.ACTUAL_VOLUME, CalculationType.MASS):
         if source == "PFlotran":
             co2_mass_cell = _pflotran_co2mass(
                 source_data, co2_molar_mass, water_molar_mass
@@ -828,7 +828,7 @@ def _calculate_co2_data_from_source_data(
             )
         else:
             co2_amount = co2_mass_output
-    elif calc_type == CalculationType.VOLUME_EXTENT:
+    elif calc_type == CalculationType.CELL_VOLUME:
         props_idx = np.where(
             [getattr(source_data, x) is not None for x in props_check]
         )[0]

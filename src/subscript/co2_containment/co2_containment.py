@@ -43,8 +43,8 @@ def calculate_out_of_bounds_co2(
         unrst_file (str): Path to UNRST-file
         init_file (str): Path to INIT-file
         compact (bool): Write the output to a single file as compact as possible
-        calc_type_input (str): Choose mass / volume_extent / volume_actual /
-            volume_actual_simple
+        calc_type_input (str): Choose mass / cell_volume / actual_volume /
+            actual_volume_simplified
         file_containment_polygon (str): Path to polygon defining the
             containment area
         file_hazardous_polygon (str): Path to polygon defining the
@@ -89,8 +89,8 @@ def calculate_from_co2_data(
         hazardous_polygon (shapely.geometry.Polygon): Polygon defining the
             hazardous area
         compact (bool):
-        calc_type_input (str): Choose mass / volume_extent / volume_actual /
-            volume_actual_simple
+        calc_type_input (str): Choose mass / cell_volume / actual_volume /
+            actual_volume_simplified
 
     Returns:
         pd.DataFrame
@@ -148,9 +148,8 @@ def _merge_date_rows(
 
     Args:
         data_frame (pd.DataFrame): Input data frame
-        calc_type (pd.DataFrame): Input data frame
-        calc_type_input (CalculationType): Choose mass / volume_extent /
-            volume_actual / volume_actual_simple from enum CalculationType
+        calc_type (CalculationType): Choose mass / cell_volume /
+            actual_volume / actual_volume_simplified from enum CalculationType
 
     Returns:
         pd.DataFrame: Output data frame
@@ -165,7 +164,7 @@ def _merge_date_rows(
         .rename(columns={"amount": "total"})
     )
     total_df = df1.copy()
-    if calc_type == CalculationType.VOLUME_EXTENT:
+    if calc_type == CalculationType.CELL_VOLUME:
         df2 = data_frame.drop("phase", axis=1).groupby(["location", "date"]).sum()
         df2a = df2.loc[("contained",)].rename(columns={"amount": "total_contained"})
         df2b = df2.loc[("outside",)].rename(columns={"amount": "total_outside"})
@@ -236,8 +235,7 @@ def get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--calc_type_input",
-        help="CO2 calculation options: mass / volume_extent / volume_actual / \
-             volume_actual_simple",
+        help="CO2 calculation options: mass / cell_volume / actual_volume",
         default="mass",
     )
     parser.add_argument(
