@@ -12,9 +12,8 @@ Calculates the amount of CO\ :sub:`2` inside and outside a given perimeter, and 
 The most common use of the script is to calculate CO\ :sub:`2` mass. Options for calculation type input:
 
 * "mass": CO\ :sub:`2` mass (kg), the default option
-* "volume_extent": CO\ :sub:`2` volume (m\ :sup:`3`), a simple calculation finding the grid cells with some CO\ :sub:`2` and summing the volume of those cells
-* "volume_actual": CO\ :sub:`2` volume (m\ :sup:`3`), an attempt to calculate a more precise representative volume of CO\ :sub:`2`
-* "volume_actual_simple": CO\ :sub:`2` volume (m\ :sup:`3`), simplified version of "volume_actual"
+* "cell_volume": CO\ :sub:`2` volume (m\ :sup:`3`), a simple calculation finding the grid cells with some CO\ :sub:`2` and summing the volume of those cells
+* "actual_volume": CO\ :sub:`2` volume (m\ :sup:`3`), an attempt to calculate a more precise representative volume of CO\ :sub:`2`
 
 CSV file example
 ----------------------------

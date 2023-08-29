@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CO2_CONTAINMENT &mdash; subscript 0.17.2.dev1+g6c62196a documentation</title>
+  <title>CO2_CONTAINMENT &mdash; subscript 0.17.2.dev3+gdae697e9 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -15,7 +15,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=b84c673e"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=223a527b"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -40,7 +40,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                0.17.2.dev1+g6c62196a
+                0.17.2.dev3+gdae697e9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -124,11 +124,11 @@
              
   <section id="co2-containment">
 <h1>CO2_CONTAINMENT<a class="headerlink" href="#co2-containment" title="Permalink to this heading"></a></h1>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">co2_containment</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">unrst</span> <span class="n">UNRST</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">init</span> <span class="n">INIT</span><span class="p">]</span>
-                       <span class="p">[</span><span class="o">--</span><span class="n">zonefile</span> <span class="n">ZONEFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">compact</span><span class="p">]</span>
-                       <span class="p">[</span><span class="o">--</span><span class="n">calc_type_input</span> <span class="n">CALC_TYPE_INPUT</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">co2_containment</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">containment_polygon</span> <span class="n">CONTAINMENT_POLYGON</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">unrst</span> <span class="n">UNRST</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">init</span> <span class="n">INIT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">zonefile</span> <span class="n">ZONEFILE</span><span class="p">]</span>
+                       <span class="p">[</span><span class="o">--</span><span class="n">compact</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">calc_type_input</span> <span class="n">CALC_TYPE_INPUT</span><span class="p">]</span>
                        <span class="p">[</span><span class="o">--</span><span class="n">hazardous_polygon</span> <span class="n">HAZARDOUS_POLYGON</span><span class="p">]</span>
-                       <span class="n">grid</span> <span class="n">containment_polygon</span> <span class="n">outfile</span>
+                       <span class="n">grid</span> <span class="n">outfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments">
@@ -136,9 +136,6 @@
 <dl class="option-list">
 <dt><kbd>grid</kbd></dt>
 <dd><p>Grid (.EGRID) from which maps are generated</p>
-</dd>
-<dt><kbd>containment_polygon</kbd></dt>
-<dd><p>Polygon that determines the bounds of the containment area.Can use None as input value, defining all as contained.</p>
 </dd>
 <dt><kbd>outfile</kbd></dt>
 <dd><p>Output filename</p>
@@ -148,6 +145,9 @@
 <section id="named-arguments">
 <h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
+<dt><kbd>--containment_polygon</kbd></dt>
+<dd><p>Polygon that determines the bounds of the containment area.Count all CO2 as contained if polygon is not provided.</p>
+</dd>
 <dt><kbd>--unrst</kbd></dt>
 <dd><p>Path to UNRST file. Will assume same base name as grid if not provided</p>
 </dd>
@@ -162,7 +162,7 @@
 <p>Default: False</p>
 </dd>
 <dt><kbd>--calc_type_input</kbd></dt>
-<dd><p>CO2 calculation options: mass / volume_extent / volume_actual /              volume_actual_simple</p>
+<dd><p>CO2 calculation options: mass / cell_volume / actual_volume</p>
 <p>Default: “mass”</p>
 </dd>
 <dt><kbd>--hazardous_polygon</kbd></dt>
@@ -174,9 +174,8 @@
 <p>The most common use of the script is to calculate CO<sub>2</sub> mass. Options for calculation type input:</p>
 <ul class="simple">
 <li><p>“mass”: CO<sub>2</sub> mass (kg), the default option</p></li>
-<li><p>“volume_extent”: CO<sub>2</sub> volume (m<sup>3</sup>), a simple calculation finding the grid cells with some CO<sub>2</sub> and summing the volume of those cells</p></li>
-<li><p>“volume_actual”: CO<sub>2</sub> volume (m<sup>3</sup>), an attempt to calculate a more precise representative volume of CO<sub>2</sub></p></li>
-<li><p>“volume_actual_simple”: CO<sub>2</sub> volume (m<sup>3</sup>), simplified version of “volume_actual”</p></li>
+<li><p>“cell_volume”: CO<sub>2</sub> volume (m<sup>3</sup>), a simple calculation finding the grid cells with some CO<sub>2</sub> and summing the volume of those cells</p></li>
+<li><p>“actual_volume”: CO<sub>2</sub> volume (m<sup>3</sup>), an attempt to calculate a more precise representative volume of CO<sub>2</sub></p></li>
 </ul>
 <section id="csv-file-example">
 <h2>CSV file example<a class="headerlink" href="#csv-file-example" title="Permalink to this heading"></a></h2>
