@@ -28,7 +28,7 @@ def __make_parser():
     parser.add_argument(
         "--output",
         help="Path to output CSV file",
-        default="share/results/tables/plumearea.csv",
+        default=None,
     )
 
     return parser
@@ -154,6 +154,10 @@ def main():
     file.
     """
     input_path, output_path = __read_args()
+
+    if output_path is None:
+        p = pathlib.Path("share") / "results" / "tables" / "plume_area.csv"
+        output_path = str(p)
 
     sgas_df, amfg_df, ymf2_df = None, None, None
     sgas_results = calc_plume_area(input_path, "sgas")

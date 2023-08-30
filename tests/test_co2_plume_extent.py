@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import pandas
 import pytest
@@ -11,7 +12,7 @@ from subscript.co2_plume.plume_extent import (
 
 
 def test_calculate_well_coordinates():
-    well_picks_path = "tests/testdata_co2_plume/well_picks.csv"
+    well_picks_path = str(Path("testdata_co2_plume") / "well_picks.csv")
     x1, y1 = __calculate_well_coordinates("dummmy", "well1", well_picks_path)
     assert x1 == pytest.approx(4050.0)
     assert y1 == pytest.approx(4050.0)
@@ -22,7 +23,7 @@ def test_calculate_well_coordinates():
 
 def test_calc_plume_extents():
     sgas_results, _, _ = calc_plume_extents(
-        "tests/data/reek/eclipse/model/2_R001_REEK-0",
+        "data/reek/eclipse/model/2_R001_REEK-0",
         (462500.0, 5933100.0),
         threshold_sgas=0.1,
     )
@@ -31,14 +32,14 @@ def test_calc_plume_extents():
     assert sgas_results[-1][1] == pytest.approx(1269.1237856341113)
 
     sgas_results_2, _, _ = calc_plume_extents(
-        "tests/data/reek/eclipse/model/2_R001_REEK-0",
+        "data/reek/eclipse/model/2_R001_REEK-0",
         (462500.0, 5933100.0),
     )
     assert len(sgas_results_2) == 4
     assert sgas_results_2[-1][1] == 0.0
 
     sgas_results_3, _, _ = calc_plume_extents(
-        "tests/data/reek/eclipse/model/2_R001_REEK-0",
+        "data/reek/eclipse/model/2_R001_REEK-0",
         (462500.0, 5933100.0),
         threshold_sgas=0.0001,
     )
@@ -48,7 +49,7 @@ def test_calc_plume_extents():
 
 def test_export_to_csv():
     (sgas_results, amfg_results, amfg_key) = calc_plume_extents(
-        "tests/data/reek/eclipse/model/2_R001_REEK-0",
+        "data/reek/eclipse/model/2_R001_REEK-0",
         (462500.0, 5933100.0),
         threshold_sgas=0.1,
     )

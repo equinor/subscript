@@ -35,7 +35,7 @@ def __make_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--output",
         help="Path to output CSV file",
-        default="share/results/tables/plumeextent.csv",
+        default=None,
     )
     parser.add_argument(
         "--threshold_sgas",
@@ -199,7 +199,14 @@ def main():
         args.threshold_amfg,
     )
 
-    __export_to_csv(sgas_results, amfg_results, amfg_key, args.output)
+    if args.output is None:
+        p = Path(args.case).parents[2]
+        p2 = p / "share" / "results" / "tables" / "plume_extent.csv"
+        output_file = str(p2)
+    else:
+        output_file = args.output
+
+    __export_to_csv(sgas_results, amfg_results, amfg_key, output_file)
 
     return 0
 
