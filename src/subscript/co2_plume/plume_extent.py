@@ -60,7 +60,7 @@ def calc_plume_extents(
     threshold_amfg: float = DEFAULT_THRESHOLD_AMFG,
 ) -> Tuple[List[List], Optional[List[List]], str]:
     """
-    Find plume extents per date for SGAS and AMFG/YMF2.
+    Find plume extents per date for SGAS and AMFG/XMF2.
     """
     grid = EclGrid("{}.EGRID".format(case))
     unrst = EclFile("{}.UNRST".format(case))
@@ -82,11 +82,11 @@ def calc_plume_extents(
             "AMFG", threshold_amfg, unrst, dist
         )
         amfg_key = "AMFG"
-    elif "YMF2" in unrst:
+    elif "XMF2" in unrst:
         amfg_results = __find_max_distances_per_time_step(
-            "YMF2", threshold_amfg, unrst, dist
+            "XMF2", threshold_amfg, unrst, dist
         )
-        amfg_key = "YMF2"
+        amfg_key = "XMF2"
     else:
         amfg_results = None
         amfg_key = "-"
@@ -174,7 +174,7 @@ def __calculate_well_coordinates(
 def main():
     """
     Calculate plume extent using EGRID and UNRST-files. Calculated for SGAS
-    and AMFG/YMF2. Output is plume extent per date written to a CSV file.
+    and AMFG/XMF2. Output is plume extent per date written to a CSV file.
     """
     args = __make_parser().parse_args()
 

@@ -159,7 +159,7 @@ def main():
         p = pathlib.Path("share") / "results" / "tables" / "plume_area.csv"
         output_path = str(p)
 
-    sgas_df, amfg_df, ymf2_df = None, None, None
+    sgas_df, amfg_df, xmf2_df = None, None, None
     sgas_results = calc_plume_area(input_path, "sgas")
     if sgas_results:
         print("SGAS plume areas sucessfully collected.")
@@ -170,18 +170,18 @@ def main():
         print("AMFG plume areas sucessfully collected.")
         amfg_df = __convert_to_data_frame(amfg_results, "AMFG")
 
-    ymf2_results = calc_plume_area(input_path, "ymf2")
-    if ymf2_results:
-        print("YMF2 plume areas sucessfully collected.")
-        ymf2_df = __convert_to_data_frame(ymf2_results, "YMF2")
+    xmf2_results = calc_plume_area(input_path, "xmf2")
+    if xmf2_results:
+        print("XMF2 plume areas sucessfully collected.")
+        xmf2_df = __convert_to_data_frame(xmf2_results, "XMF2")
 
     # Merge them together
     if sgas_df is not None:
         if amfg_df is not None:
             df = pd.merge(sgas_df, amfg_df)
             df.to_csv(output_path, index=False)
-        elif ymf2_df is not None:
-            df = pd.merge(sgas_df, ymf2_df)
+        elif xmf2_df is not None:
+            df = pd.merge(sgas_df, xmf2_df)
             df.to_csv(output_path, index=False)
         else:
             sgas_df.to_csv(output_path, index=False)
