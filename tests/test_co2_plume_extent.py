@@ -8,6 +8,7 @@ from subscript.co2_plume.plume_extent import (
     __calculate_well_coordinates,
     __export_to_csv,
     calc_plume_extents,
+    main,
 )
 
 
@@ -82,3 +83,41 @@ def test_export_to_csv():
     assert df["MAX_DISTANCE_SGAS"].iloc[-1] == pytest.approx(1269.1237856341113)
 
     os.remove(out_file)
+
+
+def test_plume_area(mocker):
+    case_path = str(
+        Path(__file__).parents[1]
+        / "tests"
+        / "data"
+        / "reek"
+        / "eclipse"
+        / "model"
+        / "2_R001_REEK-0"
+    )
+    output_path = str(
+        Path(__file__).parents[1] / "tests" / "testdata_co2_plume" / "plume_extent.csv"
+    )
+    mocker.patch(
+        "sys.argv",
+        [
+            "--case",
+            case_path,
+            "--x_coord",
+            "462500.0",
+            "--y_coord",
+            "5933100.0",
+            "--threshold_sgas",
+            "0.02",
+            "--output",
+            output_path,
+        ],
+    )
+    main()
+
+    df = pandas.read_csv(output_path)
+    assert "MAX_DISTANCE_SGAS" in df.keys()
+    assert "MAX_DISTANCE_AMFG" not in df.keys()
+    assert df["MAX_DISTANCE_SGAS"].iloc[-1] == pytest.approx(1915.5936794783647)
+
+    os.remove(output_path)
