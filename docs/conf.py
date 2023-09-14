@@ -48,6 +48,7 @@ release = version
 extensions = [
     "autoapi.sphinx",
     "sphinx_copybutton",
+    "sphinx_togglebutton",
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.inheritance_diagram",
