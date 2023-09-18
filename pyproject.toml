@@ -45,7 +45,6 @@ dependencies = [
     "opm>=2021.10",
     "packaging",
     "pandas",
-    "protobuf",
     "pyscal",
     "pyyaml",
     "rips",
