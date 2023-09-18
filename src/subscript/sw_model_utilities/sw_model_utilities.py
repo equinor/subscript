@@ -175,7 +175,7 @@ def plotting(
         if swirra[ix] > 0.0:
             plt.plot(np.zeros(hei.size) + swirra[ix], hei, "--", color="grey")
 
-    plt.axis([0, 1, 0, hmax])
+    plt.axis((0, 1, 0, hmax))
     plt.legend(loc="upper right", shadow=True, fontsize=10)
     plt.xlabel("$S_w$")
     plt.ylabel("Height above FWL")
