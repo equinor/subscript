@@ -88,7 +88,7 @@ def visual_depth(qc_frame: pd.DataFrame) -> float:
 
 
 def swat_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a SWAT vs depth plot on current axis"""
     if axis is None:
@@ -103,7 +103,7 @@ def swat_depth(
 
 
 def swatinit_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a swatinit vs depth plot on current axis"""
     if axis is None:
@@ -118,7 +118,7 @@ def swatinit_depth(
 
 
 def pressure_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a pressure vs. depth plot on current axis"""
     if axis is None:
@@ -133,7 +133,7 @@ def pressure_depth(
 
 
 def pc_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a pc vs depth plot on current axis"""
     if axis is None:
