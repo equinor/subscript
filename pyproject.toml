@@ -80,6 +80,7 @@ docs = [
     "sphinx-argparse",
     "sphinx-autodoc-typehints",
     "sphinx-copybutton",
+    "sphinx-togglebutton",
     "sphinx_rtd_theme",
 ]
 
