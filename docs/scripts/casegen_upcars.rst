@@ -8,11 +8,11 @@ fault, super-K layers etc. The script is developed as part of UpCaRs (Upscaling
 in complex carbonate reservoirs) project.
 
 Output from casegen_upcars is in the form of Eclipse simulation models. These
-models can be run to investigate impact of changing geological properties on
+models can be run to investigate the impact of changing geological properties on
 fluid flow.
 
-The script can generate various types of grid structure (tilting, dome, and
-hull) amd throws. The input file is in yaml format.
+The script can generate various types of grid structures (tilting, dome, and
+hull) and throws. The input file is in yaml format.
 
 .. figure:: images/casegen_upcars_geometry.png
    :align: center
