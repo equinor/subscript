@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import List, Union
 
 import pandas as pd
-from packaging import version
 
 from subscript import __version__
 from subscript import getLogger as subscriptlogger
@@ -265,24 +264,13 @@ def parse_ofmtable(
 
     assert "DATE" in columnnames
 
-    if version.parse(pd.__version__) < version.parse("1.3.0"):
-        data = pd.read_table(
-            io.StringIO(ofmstring),
-            skiprows=1,
-            sep=r"\s+",
-            names=columnnames,
-            # The following option is deprecated from Pandas 1.3.0:
-            error_bad_lines=False,
-        )
-    else:
-        data = pd.read_table(
-            io.StringIO(ofmstring),
-            skiprows=1,
-            sep=r"\s+",
-            names=columnnames,
-            on_bad_lines="skip",  # pylint: disable=unexpected-keyword-arg
-        )
-
+    data = pd.read_table(
+        io.StringIO(ofmstring),
+        skiprows=1,
+        sep=r"\s+",
+        names=columnnames,
+        on_bad_lines="skip",  # pylint: disable=unexpected-keyword-arg
+    )
     data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
 
     if "WELL" in data and "DATE" in data:

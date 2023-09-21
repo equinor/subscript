@@ -43,7 +43,6 @@ dependencies = [
     "matplotlib",
     "numpy<2",
     "opm>=2021.10",
-    "packaging",
     "pandas",
     "pyscal",
     "pyyaml",
