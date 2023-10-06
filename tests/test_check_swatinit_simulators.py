@@ -10,6 +10,7 @@ which this test code has separate code paths for asserts.
 
 import os
 import subprocess
+import time
 from pathlib import Path
 
 import ecl2df
@@ -60,9 +61,22 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
         simulator_option = ["-i"]
     if "flow" in simulator:
         simulator_option = ["--parsing-strictness=low"]
+
     result = subprocess.run(  # pylint: disable=subprocess-run-check
         [simulator] + simulator_option + ["FOO.DATA"], stdout=subprocess.PIPE
     )
+
+    if (
+        result.returncode != 0
+        and "runeclipse" in simulator
+        and "LICENSE FAILURE" in result.stdout.decode() + result.stderr.decode()
+    ):
+        print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
+        time.sleep(30)
+        result = subprocess.run(  # pylint: disable=subprocess-run-check
+            [simulator] + simulator_option + ["FOO.DATA"], stdout=subprocess.PIPE
+        )
+
     if result.returncode != 0:
         if result.stdout:
             print(result.stdout.decode())
