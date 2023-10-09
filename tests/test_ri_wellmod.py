@@ -227,7 +227,9 @@ def test_ert_forward_model(tmp_path):
     ert_config_fname = "riwmtest.ert"
     Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
-    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", ert_config_fname], check=True
+    )
 
     assert Path(outfile).exists()
 

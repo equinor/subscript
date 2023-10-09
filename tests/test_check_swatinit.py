@@ -766,7 +766,9 @@ def test_ert_integration(tmp_path):
         ),
         encoding="utf8",
     )
-    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", "test.ert"], check=True
+    )
     # Testing the default OUTPUT:
     qc_frame = pd.read_csv("check_swatinit.csv")
     assert not qc_frame.empty
@@ -788,7 +790,9 @@ def test_ert_integration(tmp_path):
         ),
         encoding="utf8",
     )
-    subprocess.run(["ert", "test_run", "test-output.ert"], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", "test-output.ert"], check=True
+    )
     qc_frame = pd.read_csv("foo.csv")
     assert not qc_frame.empty
 

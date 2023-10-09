@@ -462,7 +462,9 @@ def test_ert_forward_model(tmp_path):
         ),
         encoding="utf8",
     )
-    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", "test.ert"], check=True
+    )
     assert Path("sim.csv").is_file()
 
 
@@ -499,7 +501,9 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
         ),
         encoding="utf8",
     )
-    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", "test.ert"], check=True
+    )
     assert Path("share/results/volumes/simulator_volume_fipnum.csv").is_file()
     stdout = Path("PRTVOL2CSV.stdout.0").read_text(encoding="utf8")
     stderr = Path("PRTVOL2CSV.stderr.0").read_text(encoding="utf8")

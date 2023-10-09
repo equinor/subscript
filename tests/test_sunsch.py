@@ -925,5 +925,7 @@ def test_ert_forward_model(testdata):
         ),
         encoding="utf8",
     )
-    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", "test.ert"], check=True
+    )
     assert Path("schedule.inc").is_file()

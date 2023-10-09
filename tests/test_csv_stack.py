@@ -268,7 +268,9 @@ def test_ert_forward_model(tmp_path):
     ert_config_fname = "stacktest.ert"
     Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
-    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", ert_config_fname], check=True
+    )
 
     dframe = pd.read_csv("stacked.csv")
     assert not dframe.empty
@@ -299,7 +301,9 @@ def test_ert_forward_model_keepminimal(tmp_path):
     ert_config_fname = "stacktest.ert"
     Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
-    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", ert_config_fname], check=True
+    )
 
     dframe = pd.read_csv("stacked.csv")
     assert not dframe.empty
@@ -330,7 +334,9 @@ def test_ert_forward_model_keepconstants(tmp_path):
     ert_config_fname = "stacktest.ert"
     Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
-    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", ert_config_fname], check=True
+    )
 
     dframe = pd.read_csv("stacked.csv")
     assert not dframe.empty
@@ -371,7 +377,9 @@ def test_csv_stack_ert_workflow(tmp_path):
         ),
         encoding="utf8",
     )
-    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", "test.ert"], check=True
+    )
 
     assert Path("stacked.csv").is_file()
     pd.testing.assert_frame_equal(

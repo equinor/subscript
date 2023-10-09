@@ -265,7 +265,9 @@ def test_ert_hook(tmp_path):
     ert_config_fname = "test.ert"
     Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
 
-    subprocess.run(["ert", "test_run", ert_config_fname], check=True)
+    subprocess.run(
+        ["ert", "test_run", "--port-range", "1024-65535", ert_config_fname], check=True
+    )
 
     assert Path("merged.csv").exists()
     dframe = pd.read_csv("merged.csv")
