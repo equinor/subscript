@@ -45,6 +45,12 @@ def fixture_drogondata(tmp_path):
         os.chdir(cwd)
 
 
+def test_invalid_obsdir():
+    """Test exception when obsdir is not valid"""
+    with pytest.raises(ValueError, match="Observation directory"):
+        get_observations("/path/to/random/non-existing/directory")
+
+
 def test_get_observations(drogondata):
     """Try to parse observations"""
     dframe = get_observations("rft")

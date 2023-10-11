@@ -1,5 +1,6 @@
 import argparse
 import logging
+from os.path import abspath, isdir
 from pathlib import Path
 from typing import Tuple
 
@@ -154,6 +155,8 @@ def get_observations(obsdir: str = "", filepattern: str = "*.obs") -> pd.DataFra
     """  # noqa
     if "/" in filepattern:
         raise ValueError("Do not include paths in filepattern")
+    if not isdir(obsdir):
+        raise ValueError(f'Observation directory "{abspath(obsdir)}" doesn\'t exist')
 
     obs_dfs = []
     for obsfilename in Path(obsdir).glob(filepattern):
