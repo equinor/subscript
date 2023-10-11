@@ -1,6 +1,6 @@
 import argparse
 import logging
-from os.path import isdir, abspath
+from os.path import abspath, isdir
 from pathlib import Path
 from typing import Tuple
 
