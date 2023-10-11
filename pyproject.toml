@@ -70,7 +70,6 @@ tests = [
     "rstcheck-core",
     "types-Jinja2",
     "types-PyYAML",
-    "types-pkg_resources",
     "types-python-dateutil",
 ]
 docs = [

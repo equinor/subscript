@@ -1,10 +1,10 @@
 import importlib
 import os
+import pkgutil
 from typing import Any, Optional
 
 from ert.shared.plugins.plugin_manager import hook_implementation
 from ert.shared.plugins.plugin_response import plugin_response
-from pkg_resources import resource_filename
 
 # pylint: disable=no-value-for-parameter
 
@@ -12,7 +12,11 @@ from pkg_resources import resource_filename
 def _get_jobs_from_directory(directory):
     """Do a filesystem lookup in a directory to check
     for available ERT forward models"""
-    resource_directory = resource_filename("subscript", directory)
+    resource_directory = (
+        os.path.dirname(pkgutil.get_loader("subscript").get_filename())
+        + "/"
+        + directory
+    )
 
     all_files = [
         os.path.join(resource_directory, f)
