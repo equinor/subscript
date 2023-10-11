@@ -2,10 +2,10 @@ import logging
 import sys
 
 try:
-    import pkg_resources
+    from importlib import metadata
 
-    __version__ = pkg_resources.get_distribution(__name__).version
-except pkg_resources.DistributionNotFound:
+    __version__ = metadata.version(__name__)
+except metadata.PackageNotFoundError:
     pass
 
 
