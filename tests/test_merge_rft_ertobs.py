@@ -138,6 +138,75 @@ def test_merge_drogon_inactive(drogondata):
     )
 
 
+def test_merge_multiple_timesteps(tmp_path):
+    """Check that multiple timesteps is handled properly"""
+    os.chdir(tmp_path)
+    Path("R_A2_1.obs").write_text("299.230  3.000", encoding="utf8")
+    Path("R_A2_2.obs").write_text("289.120  3.000", encoding="utf8")
+    df_gendata = pd.DataFrame(
+        columns=[
+            "order",
+            "utm_x",
+            "utm_y",
+            "measured_depth",
+            "true_vertical_depth",
+            "zone",
+            "pressure",
+            "valid_zone",
+            "is_active",
+            "i",
+            "j",
+            "k",
+            "well",
+            "time",
+            "report_step",
+        ],
+        data=[
+            [
+                0,
+                460994.9,
+                5933813.29,
+                1697.9,
+                1648.9,
+                "Valysar",
+                297.59930419921875,
+                True,
+                True,
+                21,
+                29,
+                2,
+                "R_A2",
+                "2018-03-01",
+                1,
+            ],
+            [
+                0,
+                460994.9,
+                5933813.29,
+                1697.9,
+                1648.9,
+                "Valysar",
+                287.19930419921875,
+                True,
+                True,
+                21,
+                29,
+                2,
+                "R_A2",
+                "2019-03-01",
+                2,
+            ],
+        ],
+    )
+    df_gendata.to_csv("gendata_rft.csv", index=False)
+    dframe = merge_rft_ertobs("gendata_rft.csv", ".")
+    assert not dframe.empty
+    assert {"pressure", "observed", "error", "well", "report_step", "time"}.issubset(
+        dframe.columns
+    )
+    assert len(dframe) == 2
+
+
 def test_extra_obs_file(drogondata):
     """Test that we will not bail on a stray file"""
     Path("rft/FOO.obs").write_text("FOBOBAR", encoding="utf8")
