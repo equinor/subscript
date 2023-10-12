@@ -93,7 +93,7 @@ def split_wellname_reportstep(wellname_reportstep: str) -> Tuple[str, int]:
         A-5_99 gives (A-5_99, 1)  # report steps more than 10 not supported.
         "R_A4_1" gives (R_A4, 1)
         "R_A4" gives (R_A4, 1)
-        "R_A_4" gives (R_A, 4)  # Warning, this is probaly unintended!
+        "R_A_4" gives (R_A, 4)  # Warning, this is probably unintended!
 
     Args:
         wellname_reportstep
@@ -223,8 +223,11 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
 
     # For each simulated well, look up
     logger.info("Parsed %s observations from files in %s", str(len(obs_df)), obsdir)
-
-    return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
+    if "report_step" in sim_df.columns:
+        return pd.merge(sim_df, obs_df, how="left", on=["well", "order", "report_step"])
+    else:
+        # Ensure backward compatibility where gendata_rft
+        return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
 
 
 def main() -> None:
