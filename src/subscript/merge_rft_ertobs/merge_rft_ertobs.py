@@ -219,14 +219,28 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
         )
     else:
         logger.info("Found %s active pressure points", str(len(sim_df)))
-    obs_df = get_observations(obsdir)
 
+    obs_df = get_observations(obsdir)
     # For each simulated well, look up
     logger.info("Parsed %s observations from files in %s", str(len(obs_df)), obsdir)
+
+    # Replace "-1" in observation data with NaN, to avoid trouble later.
+    # pylint: disable=unsubscriptable-object
+    inactive_rows = np.isclose(obs_df["observed"], -1)
+    if inactive_rows.any():
+        obs_df.loc[inactive_rows, "observed"] = np.nan
+        logger.info(
+            "Found %s active and %s inactive observation points",
+            str(len(inactive_rows) - sum(inactive_rows)),  # type: ignore
+            str(sum(inactive_rows)),  # type: ignore
+        )
+    else:
+        logger.info("Found %s active observation points", str(len(obs_df)))
+
     if "report_step" in sim_df.columns:
         return pd.merge(sim_df, obs_df, how="left", on=["well", "order", "report_step"])
     else:
-        # Ensure backward compatibility where gendata_rft
+        # Ensure backward compatibility where gendata_rft doesn't have report_step
         return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
 
 

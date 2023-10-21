@@ -138,6 +138,19 @@ def test_merge_drogon_inactive(drogondata):
     )
 
 
+def test_merge_drogon_missing_observation(drogondata):
+    """Check that missing observation points are taken care of as such"""
+    # Modify observation data:
+    Path("rft/R_A2.obs").write_text("-1.0  0.00", encoding="utf8")
+    dframe = merge_rft_ertobs("gendata_rft.csv", "rft")
+    assert not dframe.empty
+    assert {"pressure", "observed", "error", "well", "time"}.issubset(dframe.columns)
+    assert sum(dframe["observed"].isnull()) == 1
+    assert not np.isclose(
+        (dframe["observed"] - dframe["pressure"]).abs().mean(), 6.2141156
+    )
+
+
 def test_merge_multiple_timesteps(tmp_path):
     """Check that multiple timesteps is handled properly"""
     os.chdir(tmp_path)
