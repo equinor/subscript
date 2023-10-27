@@ -348,7 +348,7 @@ def fmuobs(
 
     # Trigger warning if user specify ERROR_MODE != ABS
     # in BLOCK_OBSERVATION and SUMMARY_OBSERVATION
-    if "ERROR_MODE" in dframe.columns:
+    if isinstance(dframe, pd.DataFrame) and "ERROR_MODE" in dframe.columns:
         error_mode = list(
             dframe[
                 (dframe["CLASS"].isin(["BLOCK_OBSERVATION", "SUMMARY_OBSERVATION"]))
@@ -359,7 +359,8 @@ def fmuobs(
         )
         if len(error_mode) > 0:
             logger.warn(
-                f"Unsupported ERROR_MODE : {', '.join(error_mode)}. Please verify the output file"
+                f"Unsupported ERROR_MODE : {', '.join(error_mode)}. "
+                "Please verify the output file"
             )
 
     dump_results(dframe, csv, yml, resinsight, ertobs)
