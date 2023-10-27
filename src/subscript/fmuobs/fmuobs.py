@@ -346,6 +346,22 @@ def fmuobs(
     if not validate_internal_dframe(dframe):
         logger.error("Observation dataframe is invalid!")
 
+    # Trigger warning if user specify ERROR_MODE != ABS
+    # in BLOCK_OBSERVATION and SUMMARY_OBSERVATION
+    if "ERROR_MODE" in dframe.columns:
+        error_mode = list(
+            dframe[
+                (dframe["CLASS"].isin(["BLOCK_OBSERVATION", "SUMMARY_OBSERVATION"]))
+                & (dframe["ERROR_MODE"] != "ABS")
+            ]["ERROR_MODE"]
+            .dropna()
+            .unique()
+        )
+        if len(error_mode) > 0:
+            logger.warn(
+                f"Unsupported ERROR_MODE : {', '.join(error_mode)}. Please verify the output file"
+            )
+
     dump_results(dframe, csv, yml, resinsight, ertobs)
 
 
