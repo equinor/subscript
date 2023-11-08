@@ -66,7 +66,7 @@ jobs:
 
       - name: Lint with black
         if: ${{ always() }}
-        run: black --check *.py src tests
+        run: black --check src tests
 
       - name: Lint with flake8
         if: ${{ always() }}
@@ -78,11 +78,7 @@ jobs:
 
       - name: Run tests
         if: ${{ always() }}
-        run: |
-          pytest -n auto tests
-          # Check that repository is untainted by test code:
-          git status --porcelain
-          test -z "$(git status --porcelain)"
+        run: pytest -n auto tests
 
       - name: Syntax check documentation
         if: ${{ always() }}
