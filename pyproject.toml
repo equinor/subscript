@@ -125,6 +125,16 @@ CsvStack = "subscript.csv_stack.csv_stack"
 FmuObs = "subscript.fmuobs.fmuobs"
 Params2Csv = "subscript.params2csv.params2csv"
 
+[tool.setuptools]
+script-files = [
+    "src/subscript/legacy/duf",
+    "src/subscript/legacy/eclmanual",
+    "src/subscript/legacy/ertwatch",
+    "src/subscript/legacy/list_rms_usage",
+    "src/subscript/legacy/nosim",
+    "src/subscript/legacy/runeclipse",
+]
+
 [tool.black]
 line-length = 88
 
