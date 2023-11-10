@@ -201,7 +201,7 @@ the number of allocated cores to the job.</p>
 <dd><p>Call the system utility ‘finger’ on a specific username</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p>Unicode string with the first line of output from ‘finger’
@@ -223,7 +223,7 @@ Example return value:</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>status</strong> (<em>str</em>) – Type of job to list, RUN or PEND</p></li>
-<li><p><strong>bjobs_function</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>) – Function handle to a function that can return a string
+<li><p><strong>bjobs_function</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></span>) – Function handle to a function that can return a string
 with bjobs output.</p></li>
 </ul>
 </dd>
@@ -243,7 +243,7 @@ Only one row pr username. Sorted descending by ncpu.</p>
 <dd><p>Prepare a parser for argument parsing and documentation</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -254,7 +254,7 @@ Only one row pr username. Sorted descending by ncpu.</p>
 <dd><p>For invocation on command line</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -265,7 +265,7 @@ Only one row pr username. Sorted descending by ncpu.</p>
 <dd><p>Print job statistics to console user</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,8 +277,8 @@ Only one row pr username. Sorted descending by ncpu.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>username</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – user shortname/loginname</p></li>
-<li><p><strong>finger_function</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code>) – Function handle that can provide output
+<li><p><strong>username</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – user shortname/loginname</p></li>
+<li><p><strong>finger_function</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></span>) – Function handle that can provide output
 from the system finger program (/usr/bin/finger).
 The output must be a Unicode string</p></li>
 </ul>

@@ -177,14 +177,14 @@ hence the name. Later, this library has been merged into opm-common</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>startdate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>) – First date in range</p></li>
-<li><p><strong>enddate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>) – Last date in range</p></li>
-<li><p><strong>interval</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Must be among: ‘monthly’, ‘yearly’, ‘weekly’,
+<li><p><strong>startdate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></span>) – First date in range</p></li>
+<li><p><strong>enddate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code></span>) – Last date in range</p></li>
+<li><p><strong>interval</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Must be among: ‘monthly’, ‘yearly’, ‘weekly’,
 ‘biweekly’, ‘bimonthly’</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>]</p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">List</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">date</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list of datetime.date. Always includes start-date, might not include end-date</p>
@@ -198,7 +198,7 @@ hence the name. Later, this library has been merged into opm-common</p>
 <dd><p>Set time to 00:00:00 in a date, keep time info if given a datetime object</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">datetime</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -231,7 +231,7 @@ calls off to opm.io.tools.TimeVector</p>
 <dd><p>Return the ConfigSuite schema</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -245,7 +245,7 @@ delete whatever comes before the first DATES. But if the first DATES
 predates startdate, then we delete it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>opm.tools.TimeVector</p>
@@ -271,7 +271,7 @@ refdate, enddate, dategrid, insert</p>
 merges and inserts</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeVector</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>opm.io.TimeVector</p>
@@ -286,7 +286,7 @@ merges and inserts</p>
 keywords at all (excluding comments)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – </p>
+<dd class="field-odd"><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – </p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>False if the file is empty or has only comments.</p>

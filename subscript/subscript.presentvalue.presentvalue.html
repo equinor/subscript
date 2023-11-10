@@ -176,11 +176,11 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>summary_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – summary dataframe,  OPT, GPT, GIT, indexed
+<li><p><strong>summary_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – summary dataframe,  OPT, GPT, GIT, indexed
 year</p></li>
-<li><p><strong>econ_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Dataframe with economical input (prices and
+<li><p><strong>econ_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Dataframe with economical input (prices and
 costs)</p></li>
-<li><p><strong>discountto</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Which year to discount to.</p></li>
+<li><p><strong>discountto</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Which year to discount to.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -202,13 +202,13 @@ is in USD/bbl. This can be used to evaluate gas injection/deferral projects.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>oilprice</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Price pr. barrel of oil in USD</p></li>
-<li><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Production and economical data, with gasprice</p></li>
-<li><p><strong>cutoffyear</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Production/costs beyond this year is ignored</p></li>
+<li><p><strong>oilprice</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Price pr. barrel of oil in USD</p></li>
+<li><p><strong>pv_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Production and economical data, with gasprice</p></li>
+<li><p><strong>cutoffyear</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Production/costs beyond this year is ignored</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Computed presentvalue.</p>
@@ -226,15 +226,15 @@ resulting break-even price is in USD/boe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>oilprice</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Price pr. barrel of oil in USD</p></li>
-<li><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Production and economical data.</p></li>
-<li><p><strong>cutoffyear</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Production/costs beyond this year is ignored</p></li>
-<li><p><strong>relativegasprice</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Gasprice (in MNOK/GSm3) is oilprice
+<li><p><strong>oilprice</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Price pr. barrel of oil in USD</p></li>
+<li><p><strong>pv_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Production and economical data.</p></li>
+<li><p><strong>cutoffyear</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Production/costs beyond this year is ignored</p></li>
+<li><p><strong>relativegasprice</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Gasprice (in MNOK/GSm3) is oilprice
 (usd/bbl) multiplied with this constant.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Computed presentvalue.</p>
@@ -249,13 +249,13 @@ resulting break-even price is in USD/boe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>rate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – discountfactor to be used</p></li>
-<li><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Production and economical data</p></li>
-<li><p><strong>cutoffyear</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Ignore production beyond this year.</p></li>
+<li><p><strong>rate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – discountfactor to be used</p></li>
+<li><p><strong>pv_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Production and economical data</p></li>
+<li><p><strong>cutoffyear</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Ignore production beyond this year.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Computed presentvalue</p>
@@ -270,7 +270,7 @@ resulting break-even price is in USD/boe.</p>
 income and costs.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pv_df</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – A dataframe prepared with data for
+<dd class="field-odd"><p><strong>pv_df</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – A dataframe prepared with data for
 presentvalue computations.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -290,12 +290,12 @@ will only exist if computation was successful.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>results</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – depth-1 dictionary</p></li>
-<li><p><strong>paramname</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Basename for parameters to produce</p></li>
+<li><p><strong>results</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – depth-1 dictionary</p></li>
+<li><p><strong>paramname</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Basename for parameters to produce</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>multiline, ready to be appended to parameters.txt</p>
@@ -309,10 +309,10 @@ will only exist if computation was successful.</p>
 <dd><p>Locate the parameters.txt file closest to the Eclipse DATA file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>eclfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse DATA file.</p>
+<dd class="field-odd"><p><strong>eclfile</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to Eclipse DATA file.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 </dl>
 <dl class="simple">
@@ -327,7 +327,7 @@ will only exist if computation was successful.</p>
 <dd><p>Parser for command line arguments and for documentation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>argparse.ArgumentParser</p>
@@ -346,14 +346,14 @@ calculated from the cumulatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>eclfile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse DATA file</p></li>
-<li><p><strong>oilvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of cumulative summary vector with oil production</p></li>
-<li><p><strong>gasvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of cumulative summary vector with gas production</p></li>
-<li><p><strong>gasinjvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Name of cumulative summary vector with gas injection</p></li>
+<li><p><strong>eclfile</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to Eclipse DATA file</p></li>
+<li><p><strong>oilvector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of cumulative summary vector with oil production</p></li>
+<li><p><strong>gasvector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of cumulative summary vector with gas production</p></li>
+<li><p><strong>gasinjvector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Name of cumulative summary vector with gas injection</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame. Indexed by year, with the columns OPR, GPR, GIR and GSR.</p>
@@ -368,7 +368,7 @@ calculated from the cumulatives.</p>
 <p>Parses command line arguments, and writes output to file and/or terminal.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -380,11 +380,11 @@ calculated from the cumulatives.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>filename</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to a CSV file to be parsed with pd.read_csv()</p></li>
-<li><p><strong>oilprice</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Default for oilprice if not included in CSV file.</p></li>
-<li><p><strong>gasprice</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Default for gasprice if not included in CSV file.</p></li>
-<li><p><strong>usdtonok</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]) – Default for usdtonk if not included in CSV file.</p></li>
-<li><p><strong>discountrate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Default for discountrate if not included (as
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Path to a CSV file to be parsed with pd.read_csv()</p></li>
+<li><p><strong>oilprice</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Default for oilprice if not included in CSV file.</p></li>
+<li><p><strong>gasprice</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Default for gasprice if not included in CSV file.</p></li>
+<li><p><strong>usdtonok</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>]</span>) – Default for usdtonk if not included in CSV file.</p></li>
+<li><p><strong>discountrate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Default for discountrate if not included (as
 constant) in CSV file.</p></li>
 </ul>
 </dd>
@@ -406,15 +406,15 @@ run</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>datafile</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Path to Eclipse DATA-file</p></li>
-<li><p><strong>economics</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code>) – Year-indexed data with economic parameters</p></li>
-<li><p><strong>discountrate</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code>) – Yearly discount factor</p></li>
-<li><p><strong>discountto</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Which year to discount to, defaults to current year</p></li>
-<li><p><strong>oilvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Eclipse summary cumulative oil production vector</p></li>
-<li><p><strong>gasvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Eclipse summary cumulative gas production vector</p></li>
-<li><p><strong>gasinjvector</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>) – Eclipse summary cumulative gas injection vector</p></li>
-<li><p><strong>cutoffyear</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Production/costs beyond this year will be dropped</p></li>
-<li><p><strong>basedatafile</strong> (<code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]) – Path to Eclipse DATA file to use as reference
+<li><p><strong>datafile</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to Eclipse DATA-file</p></li>
+<li><p><strong>economics</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span>) – Year-indexed data with economic parameters</p></li>
+<li><p><strong>discountrate</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Yearly discount factor</p></li>
+<li><p><strong>discountto</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Which year to discount to, defaults to current year</p></li>
+<li><p><strong>oilvector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Eclipse summary cumulative oil production vector</p></li>
+<li><p><strong>gasvector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Eclipse summary cumulative gas production vector</p></li>
+<li><p><strong>gasinjvector</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Eclipse summary cumulative gas injection vector</p></li>
+<li><p><strong>cutoffyear</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Production/costs beyond this year will be dropped</p></li>
+<li><p><strong>basedatafile</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span>) – Path to Eclipse DATA file to use as reference
 data (production from this file will be deducted)</p></li>
 </ul>
 </dd>
