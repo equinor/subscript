@@ -3,8 +3,8 @@ import datetime
 import os
 
 import cwrap
-from ecl.eclfile import EclFile, FortIO
-from ecl.grid import EclGrid
+from resdata.grid import Grid
+from resdata.resfile import FortIO, ResdataFile
 
 from subscript.sector2fluxnum import completions, datafile_obj, flux_obj, fluxfile_obj
 
@@ -105,11 +105,11 @@ def sector_to_fluxnum(args):
     print("Reading grid ...")
     if args.egrid:
         args.egrid = os.path.abspath(args.egrid).split(".")[0:1]
-        grid = EclGrid(f"{args.egrid[0]}.EGRID")
+        grid = Grid(f"{args.egrid[0]}.EGRID")
     else:
-        grid = EclGrid(f"{args.ECLIPSE_CASE[0]}.EGRID")
+        grid = Grid(f"{args.ECLIPSE_CASE[0]}.EGRID")
 
-    init = EclFile(f"{args.ECLIPSE_CASE[0]}.INIT")
+    init = ResdataFile(f"{args.ECLIPSE_CASE[0]}.INIT")
 
     # Finding well completions
     completion_list, well_list = completions.get_completion_list(
@@ -170,9 +170,9 @@ def sector_to_fluxnum(args):
         # Needs the coordinates from the
         print("Generating new FLUX file...")
 
-        grid_coarse = EclGrid(f"{args.test[0]}.EGRID")
-        grid_fine = EclGrid(f"{args.test[0]}.EGRID")
-        flux_fine = EclFile(f"{args.test[0]}.FLUX")
+        grid_coarse = Grid(f"{args.test[0]}.EGRID")
+        grid_fine = Grid(f"{args.test[0]}.EGRID")
+        flux_fine = ResdataFile(f"{args.test[0]}.FLUX")
 
     else:
         print("Executing DUMPFLUX NOSIM run ...")
@@ -187,15 +187,15 @@ def sector_to_fluxnum(args):
         # Needs the coordinates from the
         print("Generating new FLUX file...")
 
-        grid_coarse = EclGrid(f"DUMPFLUX_{eclipse_case_root}.EGRID")
-        grid_fine = EclGrid(f"DUMPFLUX_{eclipse_case_root}.EGRID")
-        flux_fine = EclFile(f"DUMPFLUX_{eclipse_case_root}.FLUX")
+        grid_coarse = Grid(f"DUMPFLUX_{eclipse_case_root}.EGRID")
+        grid_fine = Grid(f"DUMPFLUX_{eclipse_case_root}.EGRID")
+        flux_fine = ResdataFile(f"DUMPFLUX_{eclipse_case_root}.FLUX")
 
     # Reads restart file
     if args.restart:
-        rst_coarse = EclFile(f"{args.restart[0]}.UNRST")
+        rst_coarse = ResdataFile(f"{args.restart[0]}.UNRST")
     else:
-        rst_coarse = EclFile(f"{args.ECLIPSE_CASE[0]}.UNRST")
+        rst_coarse = ResdataFile(f"{args.ECLIPSE_CASE[0]}.UNRST")
 
     flux_object_fine = fluxfile_obj.Fluxfile(grid_fine, flux_fine)
 

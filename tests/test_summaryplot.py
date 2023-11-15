@@ -3,8 +3,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import ecl
 import pytest
+from resdata.summary import Summary
 
 from subscript.summaryplot import summaryplot
 
@@ -144,7 +144,7 @@ def test_sysexit(cmd_args, tmp_path, mocker):
 def test_splitvectorsdatafiles():
     """Test that we can separate vectors from DATA files"""
     result = summaryplot.split_vectorsdatafiles(["FOPT", "FOPR", str(DATAFILE)])
-    assert isinstance(result[0][0], ecl.summary.EclSum)
+    assert isinstance(result[0][0], Summary)
     print(result)
     assert result[1:] == (
         [str(DATAFILE)],

@@ -1,9 +1,9 @@
 import os
 import sys
 
-from ecl import EclDataType
-from ecl.eclfile import EclKW
-from ecl.grid import EclRegion
+from resdata import ResDataType
+from resdata.grid import ResdataRegion
+from resdata.resfile import ResdataKW
 
 from subscript.sector2fluxnum import flux_util
 
@@ -20,9 +20,9 @@ class Fluxnum:
 
         Creates a non-initialized  FLUXNUM keyword
         """
-        int_type = EclDataType.ECL_INT
+        int_type = ResDataType.RD_INT
         self.grid = grid
-        self.fluxnum_kw = EclKW("FLUXNUM", grid.getGlobalSize(), int_type)
+        self.fluxnum_kw = ResdataKW("FLUXNUM", grid.getGlobalSize(), int_type)
         self.included_wells = []
         self.dummy_lgr_cell = []
         self.dummy_lgr_well = []
@@ -44,7 +44,7 @@ class Fluxnum:
 
         Initializes inner region used to define the FLUXNUM
         """
-        self.inner_region = EclRegion(self.grid, False)
+        self.inner_region = ResdataRegion(self.grid, False)
         self.inner_region.select_all()
 
     def set_lgr_box_region(self, i, j, k):
@@ -54,7 +54,7 @@ class Fluxnum:
         Only works for Box regions
 
         """
-        self.lgr_region = EclRegion(self.grid, False)
+        self.lgr_region = ResdataRegion(self.grid, False)
         ijk_list = flux_util.unpack_ijk(i, j, k)
 
         # Drags lgr boundaries one cell from box region
@@ -91,11 +91,11 @@ class Fluxnum:
             print("ERROR: FLUXNUM input file not found!")
             sys.exit(1)
 
-        int_type = EclDataType.ECL_INT
+        int_type = ResDataType.RD_INT
 
         with open(fluxnum_file, "r", encoding="utf8") as file_handle:
-            self.fluxnum_kw = EclKW.read_grdecl(
-                file_handle, "FLUXNUM", ecl_type=int_type
+            self.fluxnum_kw = ResdataKW.read_grdecl(
+                file_handle, "FLUXNUM", rd_type=int_type
             )
 
     def get_fluxnum_kw(self):
@@ -203,11 +203,11 @@ class FluxnumBox(Fluxnum):
         self.set_outer_region(i_start, i_end, j_start, j_end, k_start, k_end)
 
     def set_inner_region(self, i_start, i_end, j_start, j_end, k_start, k_end):
-        self.inner_region = EclRegion(self.grid, False)
+        self.inner_region = ResdataRegion(self.grid, False)
         self.inner_region.select_box((i_start, j_start, k_start), (i_end, j_end, k_end))
 
     def set_outer_region(self, i_start, i_end, j_start, j_end, k_start, k_end):
-        self.outer_region = EclRegion(self.grid, False)
+        self.outer_region = ResdataRegion(self.grid, False)
         self.outer_region.select_box((i_start, j_start, k_start), (i_end, j_end, k_end))
         self.outer_region.invert()
 
@@ -247,8 +247,8 @@ class FluxnumFipnum(Fluxnum):
                 raise Exception("ERROR: FIPNUM input file not found!")
 
             with open(fipnum_file, "r", encoding="utf8") as file_handle:
-                fipnum = EclKW.read_grdecl(
-                    file_handle, "FIPNUM", ecl_type=EclDataType.ECL_INT
+                fipnum = ResdataKW.read_grdecl(
+                    file_handle, "FIPNUM", rd_type=ResDataType.RD_INT
                 )
 
         else:

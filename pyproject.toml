@@ -36,7 +36,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "configsuite",
-    "ecl",
+    "resdata",
     "ecl2df",
     "ert>=2.38.0b7",
     "fmu-tools",

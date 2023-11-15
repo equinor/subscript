@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-from ecl.summary import EclSum
+from resdata.summary import Summary
 
 from subscript.welltest_dpds import welltest_dpds
 
@@ -103,7 +103,7 @@ def test_main(tmp_path, mocker):
 def test_summary_vec():
     """Test that summary reading is handled correctly"""
 
-    summary = EclSum(DATAFILEPATH)
+    summary = Summary(DATAFILEPATH)
     with pytest.raises(KeyError, match=r".*No such key.*"):
         welltest_dpds.summary_vec(summary, "no_well")
         welltest_dpds.summary_vec(summary, "NOVEC:55_33-1")
@@ -140,7 +140,7 @@ def test_get_buildup_indices():
     assert bu_start == [2, 4]
     assert bu_end == [2, 5]
 
-    summary = EclSum(DATAFILEPATH)
+    summary = Summary(DATAFILEPATH)
 
     wbhp = welltest_dpds.summary_vec(summary, "WBHP:55_33-1")
     bu_start, bu_end = welltest_dpds.get_buildup_indices(wbhp)
@@ -156,7 +156,7 @@ def test_get_buildup_indices():
 def test_supertime():
     """Test that superpositied time is calculated correctly"""
 
-    summary = EclSum(DATAFILEPATH)
+    summary = Summary(DATAFILEPATH)
 
     rate = welltest_dpds.summary_vec(summary, "WOPR:55_33-1")
     time = np.array(summary.days) * 24.0
@@ -172,7 +172,7 @@ def test_supertime():
 def test_weighted_avg_press_time_derivative_lag1():
     """Test that weighted_avg_press_time_derivative_lag1 is calculated correctly"""
 
-    summary = EclSum(DATAFILEPATH)
+    summary = Summary(DATAFILEPATH)
 
     wbhp = welltest_dpds.summary_vec(summary, "WBHP:55_33-1")
     rate = welltest_dpds.summary_vec(summary, "WOPR:55_33-1")
@@ -194,7 +194,7 @@ def test_weighted_avg_press_time_derivative_lag1():
 def test_get_weighted_avg_press_time_derivative_lag2():
     """Test that weighted_avg_press_time_derivative_lag2 is calcuated correctly"""
 
-    summary = EclSum(DATAFILEPATH)
+    summary = Summary(DATAFILEPATH)
 
     wbhp = welltest_dpds.summary_vec(summary, "WBHP:55_33-1")
     rate = welltest_dpds.summary_vec(summary, "WOPR:55_33-1")

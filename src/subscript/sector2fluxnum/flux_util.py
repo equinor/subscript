@@ -1,16 +1,16 @@
-from ecl.grid import EclRegion
+from resdata.grid import ResdataRegion
 
 
 def filter_region(
     grid, idx_i, idx_j, idx_k, fipnum, fipnum_kw, combine_operator="intersect"
 ):
     # Filter out the selected grid cells
-    region = EclRegion(grid, False)
-    region1 = EclRegion(grid, False)
-    region_i = EclRegion(grid, False)
-    region_j = EclRegion(grid, False)
-    region_k = EclRegion(grid, False)
-    region_fip = EclRegion(grid, False)
+    region = ResdataRegion(grid, False)
+    region1 = ResdataRegion(grid, False)
+    region_i = ResdataRegion(grid, False)
+    region_j = ResdataRegion(grid, False)
+    region_k = ResdataRegion(grid, False)
+    region_fip = ResdataRegion(grid, False)
 
     # Create selected regions for each filter type
     if idx_i:
