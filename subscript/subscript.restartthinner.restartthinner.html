@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.restartthinner.restartthinner &mdash; subscript 1.0.1.dev1+ge4bad264 documentation</title>
+  <title>subscript.restartthinner.restartthinner &mdash; subscript 1.0.1.dev2+ge92301ff documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -16,7 +16,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=38432c78"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=e2349689"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -46,7 +46,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev1+ge4bad264
+                1.0.1.dev2+ge92301ff
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -180,26 +180,9 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.ecl_repacker">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">ecl_repacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slicerstindices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.ecl_repacker" title="Permalink to this definition"></a></dt>
-<dd><p>Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
-utilities are from libecl.</p>
-<p>First unpacking a UNRST file, then deleting dates the dont’t want, then
-pack the remainding files into a new UNRST file</p>
-<p>This function will change working directory to the
-location of the UNRST file, dump temporary files in there, and
-modify the original filename.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.find_libecl_app">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">find_libecl_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toolname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.find_libecl_app" title="Permalink to this definition"></a></dt>
-<dd><p>Locate path of apps in libecl.</p>
+<dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.find_resdata_app">
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">find_resdata_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toolname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.find_resdata_app" title="Permalink to this definition"></a></dt>
+<dd><p>Locate path of apps in resdata.</p>
 <p>These have varying suffixes due through the history of libecl Makefiles.</p>
 <p>Depending on libecl-version, it has the .x or the .c.x suffix
 We prefer .x.</p>
@@ -242,6 +225,23 @@ We prefer .x.</p>
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.main">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.main" title="Permalink to this definition"></a></dt>
 <dd><p>Endpoint for command line script</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.rd_repacker">
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">rd_repacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slicerstindices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.rd_repacker" title="Permalink to this definition"></a></dt>
+<dd><p>Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
+utilities are from resdata.</p>
+<p>First unpacking a UNRST file, then deleting dates the dont’t want, then
+pack the remainding files into a new UNRST file</p>
+<p>This function will change working directory to the
+location of the UNRST file, dump temporary files in there, and
+modify the original filename.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
