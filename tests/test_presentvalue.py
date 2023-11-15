@@ -3,11 +3,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import ecl
 import ecl2df
 import numpy as np
 import pandas as pd
 import pytest
+from resdata.summary import Summary
 
 from subscript.presentvalue import presentvalue
 
@@ -329,7 +329,7 @@ def test_no_gasinj(tmp_path):
     smry["DATE"] = pd.to_datetime(smry["DATE"])
     smry.set_index("DATE")
     eclsum = ecl2df.summary.df2eclsum(smry, "NOGASINJ")
-    ecl.summary.EclSum.fwrite(eclsum)
+    Summary.fwrite(eclsum)
     econ_df = presentvalue.prepare_econ_table(
         oilprice=100, gasprice=0, usdtonok=10, discountrate=0
     )
@@ -354,7 +354,7 @@ def test_no_gas(tmp_path):
     smry["DATE"] = pd.to_datetime(smry["DATE"])
     smry.set_index("DATE")
     eclsum = ecl2df.summary.df2eclsum(smry, "NOGAS")
-    ecl.summary.EclSum.fwrite(eclsum)
+    Summary.fwrite(eclsum)
     econ_df = presentvalue.prepare_econ_table(
         oilprice=100, gasprice=0, usdtonok=10, discountrate=0
     )
@@ -379,7 +379,7 @@ def test_no_oil(tmp_path):
     smry["DATE"] = pd.to_datetime(smry["DATE"])
     smry.set_index("DATE")
     eclsum = ecl2df.summary.df2eclsum(smry, "NOOIL")
-    ecl.summary.EclSum.fwrite(eclsum)
+    Summary.fwrite(eclsum)
     econ_df = presentvalue.prepare_econ_table(
         oilprice=0, gasprice=10, usdtonok=10, discountrate=0
     )

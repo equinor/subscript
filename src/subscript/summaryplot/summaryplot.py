@@ -32,12 +32,12 @@ from typing import Optional
 
 import matplotlib.pyplot
 import numpy as np
-from ecl.eclfile import EclFile  # type: ignore
-from ecl.grid import EclGrid  # type: ignore
-from ecl.summary import EclSum  # type: ignore
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
+from resdata.grid import Grid  # type: ignore
+from resdata.resfile import ResdataFile  # type: ignore
+from resdata.summary import Summary  # type: ignore
 
 import subscript
 
@@ -146,7 +146,7 @@ def summaryplotter(
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 
     Args:
-        eclsums: List of EclSum objects
+        summaryfiles: List of Summary objects
         datafiles: List of Eclipse DATA files
         vectors: List of strings, with Eclipse summary vectors
         parameterfiles:
@@ -161,7 +161,7 @@ def summaryplotter(
         logcolourby:
     """
     rstfiles = []  # EclRst objects
-    gridfiles = []  # EclGrid objects
+    gridfiles = []  # Grid objects
     parametervalues = []  # Vector of values pr. realization for colouring
 
     if parameterfiles is None:
@@ -169,7 +169,7 @@ def summaryplotter(
 
     if datafiles and not summaryfiles:
         logger.info("Reloading summary files from disk")
-        summaryfiles = [EclSum(datafile) for datafile in datafiles]
+        summaryfiles = [Summary(datafile) for datafile in datafiles]
 
     if maxlabels == 0:
         nolegend = True
@@ -308,8 +308,8 @@ def summaryplotter(
             logger.info("Loading grid and restart file %s", rstfile)
             # TODO: Allow some of the rstfiles to be missing
             # TODO: Handle missing rstfiles gracefully
-            rst = EclFile(rstfile)
-            grid = EclGrid(gridfile)
+            rst = ResdataFile(rstfile)
+            grid = Grid(gridfile)
             rstfiles.append(rst)
             gridfiles.append(grid)
             logger.info("RST loading done")
@@ -574,24 +574,24 @@ def summaryplotter(
 def split_vectorsdatafiles(vectorsdatafiles):
     """
     Takes a list of strings and determines which of the arguments are Eclipse runs
-    (by attempting to construct an EclSum object), and which are summary
-    vector names/wildcards (that is, those that are not openable as EclSum)
+    (by attempting to construct an Summary object), and which are summary
+    vector names/wildcards (that is, those that are not openable as Summary)
 
     Args:
         vectorsdatafiles (list): List of strings
 
     Returns:
-        tuple: 4-tuple of lists, with EclSum-filenames, datafilename-strings,
+        tuple: 4-tuple of lists, with Summary-filenames, datafilename-strings,
         vector-strings, parameterfilename-strings
     """
-    summaryfiles = []  # Eclsum instances corresponding to datafiles
+    summaryfiles = []  # Summary instances corresponding to datafiles
     datafiles = []  # strings
     vectors = []  # strings
     parameterfiles = []  # strings
 
     for vecdata in vectorsdatafiles:
         try:
-            sumfn = EclSum(vecdata)
+            sumfn = Summary(vecdata)
             datafiles.append(vecdata)
 
             summaryfiles.append(sumfn)

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from ecl.summary import EclSum
+from resdata.summary import Summary
 from scipy.interpolate import interp1d
 
 from subscript import __version__
@@ -181,7 +181,7 @@ def summary_vec(summary, key, required=True):
     Read vector corresponding to key from summary instance
 
     Args:
-       summary: (ecl.summary.EclSum)
+       summary: (resdata.summary.Summary)
        key: (str)
        required: (bool)
 
@@ -478,7 +478,7 @@ def main():
     if not Path(outdir).exists():
         raise FileNotFoundError("No such outputdirectory:", outdir)
 
-    summary = EclSum(eclcase)
+    summary = Summary(eclcase)
     time = np.array(summary.days) * 24.0
     wbhp = summary_vec(summary, "WBHP:" + well_name)
 

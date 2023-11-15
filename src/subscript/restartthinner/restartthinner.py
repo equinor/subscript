@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy
 import pandas
-from ecl.eclfile import EclFile
+from resdata.resfile import ResdataFile
 
 from subscript import __version__
 
@@ -26,8 +26,8 @@ written to the same filename (keeping the original is optional)
 """
 
 
-def find_libecl_app(toolname: str) -> str:
-    """Locate path of apps in libecl.
+def find_resdata_app(toolname: str) -> str:
+    """Locate path of apps in resdata.
 
     These have varying suffixes due through the history of libecl Makefiles.
 
@@ -61,10 +61,10 @@ def date_slicer(slicedates: list, restartdates: list, restartindices: list) -> d
     return slicedatemap
 
 
-def ecl_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
+def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
     """
     Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
-    utilities are from libecl.
+    utilities are from resdata.
 
     First unpacking a UNRST file, then deleting dates the dont't want, then
     pack the remainding files into a new UNRST file
@@ -79,11 +79,11 @@ def ecl_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
         out = ""
     # Error early if libecl tools are not available
     try:
-        find_libecl_app("ecl_unpack")
-        find_libecl_app("ecl_pack")
+        find_resdata_app("rd_unpack")
+        find_resdata_app("rd_pack")
     except IOError:
         sys.exit(
-            "ERROR: ecl_unpack.x and/or ecl_pack.x not found.\n"
+            "ERROR: rd_unpack.x and/or rd_pack.x not found.\n"
             "These tools are required and must be installed separately"
         )
 
@@ -99,13 +99,13 @@ def ecl_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
         )
         os.chdir(tempdir)
         os.system(
-            find_libecl_app("ecl_unpack") + " " + os.path.basename(rstfilename) + out
+            find_resdata_app("rd_unpack") + " " + os.path.basename(rstfilename) + out
         )
         unpackedfiles = glob.glob("*.X*")
         for file in unpackedfiles:
             if int(file.split(".X")[1]) not in slicerstindices:
                 os.remove(file)
-        os.system(find_libecl_app("ecl_pack") + " *.X*" + out)
+        os.system(find_resdata_app("rd_pack") + " *.X*" + out)
         # We are inside the tmp directory, move file one step up:
         os.rename(
             os.path.join(os.getcwd(), os.path.basename(rstfilename)),
@@ -120,7 +120,7 @@ def get_restart_indices(rstfilename: str) -> list:
     """Extract a list of RST indices for a filename"""
     if Path(rstfilename).exists():
         # This function segfaults if file does not exist
-        return EclFile.file_report_list(str(rstfilename))
+        return ResdataFile.file_report_list(str(rstfilename))
     raise FileNotFoundError(f"{rstfilename} not found")
 
 
@@ -134,7 +134,7 @@ def restartthinner(
     """
     Thin an existing UNRST file to selected number of restarts.
     """
-    rst = EclFile(filename)
+    rst = ResdataFile(filename)
     restart_indices = get_restart_indices(filename)
     restart_dates = [
         rst.iget_restart_sim_time(index) for index in range(0, len(restart_indices))
@@ -177,7 +177,7 @@ def restartthinner(
             if not quiet:
                 print(f"Info: Backing up {filename} to {backupname}")
             shutil.copyfile(filename, backupname)
-        ecl_repacker(filename, slicerstindices, quiet)
+        rd_repacker(filename, slicerstindices, quiet)
     print(f"Written to {filename}")
 
 

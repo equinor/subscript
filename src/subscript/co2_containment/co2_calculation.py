@@ -5,8 +5,8 @@ from typing import Dict, List, Literal, Optional, Tuple, Union
 
 import numpy as np
 import xtgeo
-from ecl.eclfile import EclFile
-from ecl.grid import EclGrid
+from resdata.grid import Grid
+from resdata.resfile import ResdataFile
 
 DEFAULT_CO2_MOLAR_MASS = 44.0
 DEFAULT_WATER_MOLAR_MASS = 18.0
@@ -235,12 +235,12 @@ class Co2Data:
     zone: Optional[np.ndarray] = None
 
 
-def _try_prop(unrst: EclFile, prop_name: str):
+def _try_prop(unrst: ResdataFile, prop_name: str):
     """
-    Function to determine if a property (prop_name) is part of an EclFile (unrst)
+    Function to determine if a property (prop_name) is part of an ResdataFile (unrst)
 
     Args:
-      unrst (EclFile): EclFile to fetch property names from
+      unrst (ResdataFile): ResdataFile to fetch property names from
       prop_name (str): The property name to be searched in unrst
 
     Returns:
@@ -255,14 +255,14 @@ def _try_prop(unrst: EclFile, prop_name: str):
 
 
 def _read_props(
-    unrst: EclFile,
+    unrst: ResdataFile,
     prop_names: List,
 ) -> dict:
     """
-    Reads the properties in prop_names from an EclFile named unrst
+    Reads the properties in prop_names from an ResdataFile named unrst
 
     Args:
-      unrst (EclFile): EclFile to read prop_names from
+      unrst (ResdataFile): ResdataFile to read prop_names from
       prop_names (List): List with property names to be read
 
     Returns:
@@ -275,14 +275,14 @@ def _read_props(
 
 
 def _fetch_properties(
-    unrst: EclFile, properties_to_extract: List
+    unrst: ResdataFile, properties_to_extract: List
 ) -> Tuple[Dict[str, Dict[str, List[np.ndarray]]], List[str]]:
     """
-    Fetches the properties in properties_to_extract from an EclFile
+    Fetches the properties in properties_to_extract from an ResdataFile
     named unrst
 
     Args:
-      unrst (EclFile): EclFile to fetch properties_to_extract from
+      unrst (ResdataFile): ResdataFile to fetch properties_to_extract from
       properties_to_extract: List with property names to be fetched
 
     Returns:
@@ -362,7 +362,7 @@ def _extract_source_data(
 ) -> SourceData:
     # pylint: disable-msg=too-many-locals
     """
-    Extracts the properties in properties_to_extract from EclGrid files
+    Extracts the properties in properties_to_extract from Grid files
 
     Args:
       grid_file (str): Path to EGRID-file
@@ -376,9 +376,9 @@ def _extract_source_data(
 
     """
     print("Start extracting source data")
-    grid = EclGrid(grid_file)
-    unrst = EclFile(unrst_file)
-    init = EclFile(init_file)
+    grid = Grid(grid_file)
+    unrst = ResdataFile(unrst_file)
+    init = ResdataFile(init_file)
     properties, dates = _fetch_properties(unrst, properties_to_extract)
     print("Done fetching properties")
 
