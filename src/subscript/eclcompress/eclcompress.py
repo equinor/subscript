@@ -6,12 +6,10 @@ import glob
 import itertools
 import logging
 import os
-import re
 import shutil
 import textwrap
-import warnings
 from pathlib import Path
-from typing import List, Optional, Pattern, Tuple, Union
+from typing import List, Tuple, Union
 
 import subscript
 
@@ -79,7 +77,6 @@ def eclcompress(
     files: Union[str, List[str]],
     keeporiginal: bool = False,
     dryrun: bool = False,
-    eclkw_regexp: Optional[str] = None,
 ) -> int:
     """Run-length encode a set of grdecl files.
 
@@ -89,20 +86,13 @@ def eclcompress(
         files: Filenames to be compressed
         keeporiginal: Whether to copy the original to a backup file
         dryrun: If true, only print compression efficiency
-        eclkw_regexp: Regular expression for locating Eclipse keywords.
-            Default is [A-Z]{2-8}$
+
     Returns:
         Number of bytes saved by compression.
     """
 
     if not isinstance(files, list):
         files = [files]  # List with one element
-
-    if eclkw_regexp:
-        warnings.warn(
-            "Providing a keyword regex will be removed in Komodo 2023.11.",
-            DeprecationWarning,
-        )
 
     totalsavings = 0
 
@@ -137,7 +127,7 @@ def eclcompress(
         # Index the list of strings (the file contents) by the line numbers
         # where Eclipse keywords start, and where the first data record of the keyword
         # ends (compression is not attempted in record 2 and onwards for any keyword)
-        keywordsets = find_keyword_sets(filelines, eclkw_regexp=eclkw_regexp)
+        keywordsets = find_keyword_sets(filelines)
 
         if not keywordsets:
             logger.info(
@@ -299,9 +289,7 @@ def compress_multiple_keywordsets(
     return compressedlines
 
 
-def find_keyword_sets(
-    filelines: List[str], eclkw_regexp: Optional[Union[str, Pattern[str]]] = None
-) -> List[Tuple[int, int]]:
+def find_keyword_sets(filelines: List[str]) -> List[Tuple[int, int]]:
     """Parse list of strings, looking for Eclipse data sets that we want.
 
     Example:
@@ -335,9 +323,6 @@ def find_keyword_sets(
 
     Args:
         filelines: Eclipse deck lines (not necessarily complete decks)
-        eclkw_regexp: Regular expression for locating Eclipse keywords.
-            Default is None, in which it uses a predefined allowlist of
-            keywords
 
     Return:
         2-tuples, with start and end line indices for datasets to
@@ -346,26 +331,19 @@ def find_keyword_sets(
     """
     keywordsets = []
     kwstart = None
-    if eclkw_regexp:
-        eclkw_regexp = re.compile(eclkw_regexp)
 
     for lineidx, line in enumerate(filelines):
         line = line.strip()
         if not line:
             continue
-        if eclkw_regexp:
-            if re.match(eclkw_regexp, line) and line not in DENYLIST_KEYWORDS:
-                kwstart = lineidx
-                continue
-        else:
-            # Remove embracing quotes if in a multi-keyword
-            keyword = line.split(" ")[0].strip("'")
-            if keyword in ALLOWLIST_KEYWORDS:
-                kwstart = lineidx
-                if "/" in line:
-                    keywordsets.append((kwstart, lineidx))
-                    kwstart = None
-                continue
+        # Remove embracing quotes if in a multi-keyword
+        keyword = line.split(" ")[0].strip("'")
+        if keyword in ALLOWLIST_KEYWORDS:
+            kwstart = lineidx
+            if "/" in line:
+                keywordsets.append((kwstart, lineidx))
+                kwstart = None
+            continue
         if kwstart is not None and line[0:2] == "--":
             # This means we found a comment section within a data set
             # In that case it is vital to preserve the current line
@@ -454,14 +432,6 @@ def get_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "--eclkw_regexp",
-        help=(
-            "Regular expression to determine which Eclipse keyword "
-            "to recognize. Default is None, using instead a list of known "
-            "compressable keywords."
-        ),
-    )
-    parser.add_argument(
         "--version",
         action="version",
         version="%(prog)s (subscript version " + subscript.__version__ + ")",
@@ -506,7 +476,6 @@ def main():
         args.files,
         keeporiginal=args.keeporiginal,
         dryrun=args.dryrun,
-        eclkw_regexp=args.eclkw_regexp,
     )
 
 
@@ -515,7 +484,6 @@ def main_eclcompress(
     wildcardfile: str,
     keeporiginal: bool = False,
     dryrun: bool = False,
-    eclkw_regexp: Optional[str] = None,
 ) -> None:
     """Implements the command line functionality
 
@@ -525,8 +493,6 @@ def main_eclcompress(
         keeporiginal: Whether a backup file should be left behind
         dryrun: Nothing written to disk, only statistics for
             compression printed to terminal.
-        eclkw_regexp: Regular expression for locating Eclipse keywords.
-            Default is None
     """
     # A list of wildcards on the command line should always be compressed:
     if grdeclfiles:
@@ -558,7 +524,6 @@ def main_eclcompress(
             globbedfiles,
             keeporiginal=keeporiginal,
             dryrun=dryrun,
-            eclkw_regexp=eclkw_regexp,
         )
         savings_mb = savings / 1024.0 / 1024.0
         print(f"eclcompress finished. Saved {savings_mb:.1f} Mb from compression")
