@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ECLCOMPRESS &mdash; subscript 1.0.1.dev2+ge92301ff documentation</title>
+  <title>ECLCOMPRESS &mdash; subscript 1.0.1.dev3+g47f93ad2 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -16,7 +16,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=e2349689"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=d5bef1a0"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -46,7 +46,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.0.1.dev2+ge92301ff
+                1.0.1.dev3+g47f93ad2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -166,7 +166,7 @@ If called with <code class="docutils literal notranslate"><span class="pre">&lt;
 a text file containing a file list to compress.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">eclcompress</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dryrun</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keeporiginal</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">files</span> <span class="n">FILES</span><span class="p">]</span>
-                   <span class="p">[</span><span class="o">--</span><span class="n">eclkw_regexp</span> <span class="n">ECLKW_REGEXP</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+                   <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                    <span class="p">[</span><span class="n">grdeclfiles</span> <span class="p">[</span><span class="n">grdeclfiles</span> <span class="o">...</span><span class="p">]]</span>
 </pre></div>
 </div>
@@ -195,9 +195,6 @@ a text file containing a file list to compress.</p>
 </dd>
 <dt><kbd>--files</kbd></dt>
 <dd><p>Path to a text file containing one wildcard filepath per line, specifying which files to apply compression to. Defaults to everything below eclipse/include, but only if no files are specified on the command line.</p>
-</dd>
-<dt><kbd>--eclkw_regexp</kbd></dt>
-<dd><p>Regular expression to determine which Eclipse keyword to recognize. Default is None, using instead a list of known compressable keywords.</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -249,9 +246,7 @@ the compressed file, does not take the extra header (two lines) in the
 compressed file into account.</p></li>
 <li><p>Eclipse loading time of the compressed file is probably reduced by the
 same factor as the compression factor.</p></li>
-<li><p>Only known compressable keywords are compressed by default. If you wish
-to specify particular keywords or a regex instead this can be provided
-directly through the command line.</p></li>
+<li><p>Only known compressable keywords are compressed.</p></li>
 </ul>
 </section>
 <section id="possible-improvements">
