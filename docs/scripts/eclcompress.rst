@@ -76,9 +76,7 @@ Notes
   compressed file into account.
 - Eclipse loading time of the compressed file is probably reduced by the
   same factor as the compression factor.
-- Only known compressable keywords are compressed by default. If you wish
-  to specify particular keywords or a regex instead this can be provided
-  directly through the command line.
+- Only known compressable keywords are compressed.
 
 
 Possible improvements
