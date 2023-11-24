@@ -10,7 +10,6 @@ Script                    CLI  ERT Forward Model  ERT Workflow
 bjobsusers                ✅   ⛔️                 ⛔️
 casegen_upcars            ✅   ⛔️                 ⛔️
 check_swatinit            ✅   ✅                 ⛔️
-co2_containment           ✅   ⛔️                 ⛔️
 convert_grid_format [*]_  ✅   ✅                 ⛔️
 csv2ofmvol                ✅   ✅                 ⛔️
 csv_merge                 ✅   ⛔️                 ✅
