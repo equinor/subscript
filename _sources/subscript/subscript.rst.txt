@@ -16,7 +16,6 @@ Submodules
    subscript.bjobsusers
    subscript.casegen_upcars
    subscript.check_swatinit
-   subscript.co2_containment
    subscript.convert_grid_format
    subscript.csv2ofmvol
    subscript.csv_merge
