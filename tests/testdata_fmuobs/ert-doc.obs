@@ -1,4 +1,4 @@
- -- These observation data are copied from the ERT docs,
+ -- These observation data are mainly copied from the ERT docs,
  -- https://github.com/equinor/ert/blob/master/docs/rst/manual/reference/configuration/observations.rst
 
  SUMMARY_OBSERVATION SEP_TEST_2005
@@ -6,6 +6,14 @@
     VALUE = 100.0;
     ERROR =     5;
     DATE  = 21/08/2005;
+    KEY   = GOPR:BRENT;
+ };
+ -- Duplicate key, but unique label and date.
+ SUMMARY_OBSERVATION SEP_TEST_2006
+ {
+    VALUE = 100.0;
+    ERROR =     5;
+    DATE  = 21/08/2006;
     KEY   = GOPR:BRENT;
  };
  
