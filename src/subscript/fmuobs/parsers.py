@@ -462,7 +462,11 @@ def resinsight_df2df(ri_dframe: pd.DataFrame) -> pd.DataFrame:
 
     dframe = ri_dframe.copy()
     dframe.rename({"VECTOR": "KEY"}, axis="columns", inplace=True)
-    dframe["LABEL"] = dframe["KEY"].astype(str)  # + "-" + dframe["DATE"].astype(str)
+    dframe["LABEL"] = (
+        dframe["KEY"].astype(str)
+        + "-"
+        + (dframe.groupby("KEY").cumcount() + 1).astype(str)
+    )
     dframe["CLASS"] = "SUMMARY_OBSERVATION"
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])

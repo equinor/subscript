@@ -53,6 +53,10 @@ smry:
     error: 5.0
     label: SEP_TEST_2005
     value: 100.0
+  - date: '2006-08-21'
+    error: 5.0
+    label: SEP_TEST_2006
+    value: 100.0
   - error: 5.0
     label: SEP_TEST_RST_2005
     restart: 42.0
