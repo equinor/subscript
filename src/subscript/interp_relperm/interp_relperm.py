@@ -11,7 +11,7 @@ import pyscal
 import yaml
 from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
 from configsuite import types  # lgtm [py/import-and-import-from]
-from ecl2df import satfunc
+from res2df import satfunc
 
 import subscript
 
@@ -397,10 +397,10 @@ def main() -> None:
 
     logger.setLevel(logging.INFO)
 
-    # Mute expected warnings from ecl2df.inferdims, we get these
+    # Mute expected warnings from res2df.inferdims, we get these
     # because we don't tell the module how many SATNUMs there are in
     # input files, which is slightly fragile for opm to parse.
-    logging.getLogger("ecl2df.inferdims").setLevel(logging.ERROR)
+    logging.getLogger("res2df.inferdims").setLevel(logging.ERROR)
 
     # parse the config file
     if not Path(args.configfile).exists():

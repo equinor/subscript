@@ -130,5 +130,5 @@ file has been supplied defining the map from zones and regions to FIPNUM:
 See also
 --------
 
-* https://equinor.github.io/ecl2df/usage/fipreports.html can be used to extract
+* https://equinor.github.io/res2df/usage/fipreports.html can be used to extract
   more information from  the PRT files.

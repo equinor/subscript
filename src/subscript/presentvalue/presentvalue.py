@@ -5,9 +5,9 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional
 
-import ecl2df
 import numpy as np
 import pandas as pd
+import res2df
 import scipy.optimize
 
 from subscript import __version__, getLogger
@@ -422,8 +422,8 @@ def get_yearly_summary(
         vec.split(":")[0].endswith("T") for vec in [oilvector, gasvector, gasinjvector]
     ):
         raise ValueError("Only cumulative Eclipse vectors can be used")
-    eclfiles = ecl2df.EclFiles(eclfile)
-    sum_df = ecl2df.summary.df(
+    eclfiles = res2df.ResdataFiles(eclfile)
+    sum_df = res2df.summary.df(
         eclfiles, column_keys=[oilvector, gasvector, gasinjvector], time_index="yearly"
     )
     sum_df.rename(
