@@ -3,9 +3,9 @@ import argparse
 import sys
 from typing import Any, Dict, List
 
-import ecl2df
 import numpy as np
 import pandas as pd
+import res2df
 from matplotlib import pyplot
 
 import subscript
@@ -58,7 +58,7 @@ def main() -> None:
     if args.DATAFILE.endswith(".csv"):
         qc_frame = pd.read_csv(args.DATAFILE)
     else:
-        eclfiles = ecl2df.EclFiles(args.DATAFILE)
+        eclfiles = res2df.ResdataFiles(args.DATAFILE)
 
         # Fail hard if the deck is not suitable for this tool or
         # give warnings/hints to the user:
@@ -102,11 +102,11 @@ def main() -> None:
         pyplot.savefig(args.plotfile)
 
 
-def check_applicability(eclfiles: ecl2df.EclFiles) -> None:
+def check_applicability(eclfiles: res2df.ResdataFiles) -> None:
     """Check that the input is relevant for usage with check_swatinit. This
     function may raise exceptions, SystemExit or only give warnings"""
 
-    deck = eclfiles.get_ecldeck()
+    deck = eclfiles.get_deck()
 
     init = eclfiles.get_initfile()
     if (
@@ -212,7 +212,7 @@ def human_report_pc_scaling(qc_frame: pd.DataFrame) -> str:
     return string
 
 
-def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
+def make_qc_gridframe(eclfiles: res2df.ResdataFiles) -> pd.DataFrame:
     """Construct a dataframe with needed information for swatinit qc from an
     Eclipse run.
 
@@ -220,7 +220,7 @@ def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
     satfunc and equil merged in.
     """
 
-    grid_df = ecl2df.grid.df(
+    grid_df = res2df.grid.df(
         eclfiles,
         vectors=[
             # All of these are required.
@@ -242,14 +242,14 @@ def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
         rstdates="first",
     )
 
-    # Circumvent bug in ecl2df that will pick SWL from both INIT and restart file:
+    # Circumvent bug in res2df that will pick SWL from both INIT and restart file:
     grid_df = grid_df.loc[:, ~grid_df.columns.duplicated()]
 
     # Merge in PPCWMAX from the deck, it is not reported in binary output files:
-    if "PPCWMAX" in eclfiles.get_ecldeck():
+    if "PPCWMAX" in eclfiles.get_deck():
         grid_df["PPCWMAX"] = ppcwmax_gridvector(eclfiles)
 
-    # This will be unneccessary from ecl2df 0.13.0:
+    # This will be unneccessary from res2df 0.13.0:
     grid_df = grid_df.where(grid_df > -1e20 + 1e13)
 
     if "SWL" not in grid_df:
@@ -257,7 +257,7 @@ def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
         logger.warning("Consider adding FILLEPS to the PROPS section")
         grid_df["SWL"] = 0.0
 
-    deck = eclfiles.get_ecldeck()
+    deck = eclfiles.get_deck()
     if "SWATINIT" in deck:
         swatinit_deckdata = deck["SWATINIT"][0][0].get_raw_data_list()
         # This list includes non-active cells, we must map via GLOBAL_INDEX:
@@ -280,12 +280,12 @@ def make_qc_gridframe(eclfiles: ecl2df.EclFiles) -> pd.DataFrame:
             del grid_df["SWATINIT_DECK"]  # This is not needed
 
     # Exposed to issues with endpoint scaling in peculiar decks:
-    satfunc_df = ecl2df.satfunc.df(eclfiles)
+    satfunc_df = res2df.satfunc.df(eclfiles)
 
     # Merge in the input pcmax pr. satnum for each cell:
     grid_df = merge_pc_max(grid_df, satfunc_df)
 
-    grid_df = merge_equil(grid_df, ecl2df.equil.df(eclfiles, keywords=["EQUIL"]))
+    grid_df = merge_equil(grid_df, res2df.equil.df(eclfiles, keywords=["EQUIL"]))
 
     grid_df = augment_grid_frame_qc_vectors(grid_df)
 
@@ -587,7 +587,7 @@ def compute_pc(qc_frame: pd.DataFrame, satfunc_df: pd.DataFrame) -> pd.Series:
     return p_cap
 
 
-def ppcwmax_gridvector(eclfiles: ecl2df.EclFiles) -> pd.Series:
+def ppcwmax_gridvector(eclfiles: res2df.ResdataFiles) -> pd.Series:
     """Generate a vector of PPCWMAX data pr cell
 
     PPCWMAX is pr. SATNUM in the input deck
@@ -596,11 +596,11 @@ def ppcwmax_gridvector(eclfiles: ecl2df.EclFiles) -> pd.Series:
         eclfiles
 
     Returns:
-        pd.Series, indexed according to ecl2df.grid.df(eclfiles)
+        pd.Series, indexed according to res2df.grid.df(eclfiles)
     """
 
-    satnum_df = ecl2df.grid.df(eclfiles, vectors="SATNUM")
-    deck = eclfiles.get_ecldeck()
+    satnum_df = res2df.grid.df(eclfiles, vectors="SATNUM")
+    deck = eclfiles.get_deck()
     for satnum in satnum_df["SATNUM"].unique():
         ppcwmax = deck["PPCWMAX"][satnum - 1][0].get_raw_data_list()[0]
         satnum_df.loc[satnum_df["SATNUM"] == satnum, "PPCWMAX"] = ppcwmax
@@ -615,7 +615,7 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
     assert "Z" in equil_df
     assert "PRESSURE" in equil_df
 
-    # Be compatible with future change in ecl2df:
+    # Be compatible with future change in res2df:
     equil_df.rename({"ACCURACY": "OIP_INIT"}, axis="columns", inplace=True)
 
     contacts = list(set(["OWC", "GOC", "GWC"]).intersection(set(equil_df.columns)))

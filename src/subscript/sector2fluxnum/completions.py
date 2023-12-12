@@ -1,4 +1,4 @@
-from ecl2df import EclFiles, compdat
+from res2df import ResdataFiles, compdat
 
 
 def get_completion_list(ecl_data_file_name):
@@ -14,7 +14,7 @@ def get_completion_list(ecl_data_file_name):
     List of completions associated to well names
     """
 
-    ecl_file = EclFiles(ecl_data_file_name)
+    ecl_file = ResdataFiles(ecl_data_file_name)
     compdat_df = compdat.df(ecl_file)
 
     # Convert from ECL index

@@ -13,10 +13,10 @@ import subprocess
 import time
 from pathlib import Path
 
-import ecl2df
 import numpy as np
 import pandas as pd
 import pytest
+import res2df
 
 from subscript.check_swatinit.check_swatinit import (
     __HC_BELOW_FWL__,
@@ -85,7 +85,7 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
         raise AssertionError(f"reservoir simulator failed in {os.getcwd()}")
 
     if perform_qc:
-        return make_qc_gridframe(ecl2df.EclFiles("FOO.DATA"))
+        return make_qc_gridframe(res2df.ResdataFiles("FOO.DATA"))
     return None
 
 
@@ -494,7 +494,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"], 0)
     else:
         # E100 will not report a PPCW in this case, libecl gives -1e20,
-        # which becomes a NaN through ecl2df and then NaN columns are dropped.
+        # which becomes a NaN through res2df and then NaN columns are dropped.
         if "PPCW" in qc_frame:
             assert pd.isnull(qc_frame["PPCW"][0])
         if "PC_SCALING" in qc_frame:

@@ -7,8 +7,8 @@ import warnings
 from pathlib import Path
 from typing import Optional
 
-import ecl2df
 import pandas as pd
+import res2df
 from fmu.tools.fipmapper.fipmapper import FipMapper
 
 from subscript import __version__, getLogger
@@ -162,7 +162,7 @@ def currently_in_place_from_prt(
 ) -> pd.DataFrame:
     """Extracts currently-in-place volumes from a PRT file
 
-    This function uses ecl2df.fipreports, and slices its
+    This function uses res2df.fipreports, and slices its
     output for the purpose here.
 
     Args:
@@ -174,7 +174,7 @@ def currently_in_place_from_prt(
     Returns:
         pd.DataFrame
     """
-    inplace_df = ecl2df.fipreports.df(prt_file, fipname=fipname)
+    inplace_df = res2df.fipreports.df(prt_file, fipname=fipname)
 
     available_dates = inplace_df.sort_values("DATE")["DATE"].unique()
     if date is None or date == "first":

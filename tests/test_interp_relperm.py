@@ -6,9 +6,9 @@ import configsuite
 import pandas as pd
 import pytest
 import yaml
-from ecl2df import satfunc
 from pyscal import PyscalFactory
 from pyscal.utils.testing import sat_table_str_ok
+from res2df import satfunc
 
 from subscript.interp_relperm import interp_relperm
 
@@ -201,7 +201,7 @@ def test_garbled_base_input(tmp_path):
 
 def test_parse_satfunc_files():
     """Test that tables in Eclipse format can be converted
-    into dataframes (using ecl2df)"""
+    into dataframes (using res2df)"""
     swoffn = TESTDATA / "swof_base.inc"
     sgoffn = TESTDATA / "sgof_base.inc"
 
