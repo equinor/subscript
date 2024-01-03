@@ -3,12 +3,13 @@
 import datetime
 from operator import attrgetter
 
+from opm.io.parser import Parser
+
 try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
 
-from opm.io.parser import Parser
 
 # This is from the TimeMap.cpp implementation in opm
 ecl_month = {
