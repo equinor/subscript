@@ -42,9 +42,9 @@ def fixture_testdata(tmp_path):
 
 def test_main(testdata, caplog, mocker):
     """Test command line sunsch, loading a yaml file"""
-    outfile = "schedule.inc"  # also in config_v2.yml
+    outfile = "schedule.inc"  # also in config.yml
 
-    mocker.patch("sys.argv", ["sunsch", "config_v2.yml"])
+    mocker.patch("sys.argv", ["sunsch", "config.yml"])
     sunsch.main()
     assert "DEPRECATED" not in caplog.text
     assert Path(outfile).exists()
@@ -70,7 +70,7 @@ def test_main(testdata, caplog, mocker):
     # Test that we can have statements in the init file
     # before the first DATES that are kept:
 
-    sch_conf = yaml.safe_load(Path("config_v2.yml").read_text(encoding="utf8"))
+    sch_conf = yaml.safe_load(Path("config.yml").read_text(encoding="utf8"))
     print(sch_conf)
     sch_conf["init"] = "initwithdates.sch"
     sunsch.process_sch_config(sch_conf)
@@ -82,7 +82,7 @@ def test_main(testdata, caplog, mocker):
 def test_cmdline_output(testdata, mocker):
     """Test that command line options can override configuration file"""
     mocker.patch(
-        "sys.argv", ["sunsch", "--output", "subdir/schedule.inc", "config_v2.yml"]
+        "sys.argv", ["sunsch", "--output", "subdir/schedule.inc", "config.yml"]
     )
     with pytest.warns(FutureWarning, match="Implicit mkdir"):
         sunsch.main()
@@ -91,14 +91,14 @@ def test_cmdline_output(testdata, mocker):
 
 def test_cmdline_startdate(testdata, mocker):
     """Test that --startdate on command line overrides config"""
-    mocker.patch("sys.argv", ["sunsch", "--startdate", "2020-01-01", "config_v2.yml"])
+    mocker.patch("sys.argv", ["sunsch", "--startdate", "2020-01-01", "config.yml"])
     sunsch.main()
     assert "2018" not in Path("schedule.inc").read_text(encoding="utf8")
 
 
 def test_cmdline_enddate(testdata, mocker):
     """Test that --enddate on command line overrides config"""
-    mocker.patch("sys.argv", ["sunsch", "--enddate", "2020-01-01", "config_v2.yml"])
+    mocker.patch("sys.argv", ["sunsch", "--enddate", "2020-01-01", "config.yml"])
     sunsch.main()
     assert "2021" not in Path("schedule.inc").read_text(encoding="utf8")
 
@@ -106,12 +106,12 @@ def test_cmdline_enddate(testdata, mocker):
 def test_cmdline_refdate(testdata, mocker):
     """Test that --refdate on command line overrides config"""
     # Baseline run, proving refdate follows refdate in config yaml:
-    mocker.patch("sys.argv", ["sunsch", "config_v2.yml"])
+    mocker.patch("sys.argv", ["sunsch", "config.yml"])
     sunsch.main()
     # 40 days after refdate, which is 2018-01-01 in yaml:
     assert "10 'FEB' 2018" in Path("schedule.inc").read_text(encoding="utf8")
 
-    mocker.patch("sys.argv", ["sunsch", "--refdate", "2019-01-01", "config_v2.yml"])
+    mocker.patch("sys.argv", ["sunsch", "--refdate", "2019-01-01", "config.yml"])
     sunsch.main()
     # It  should not be 40 days after startdate,
     assert "10 'FEB' 2018" not in Path("schedule.inc").read_text(encoding="utf8")
@@ -121,7 +121,7 @@ def test_cmdline_refdate(testdata, mocker):
 
 def test_cmdline_dategrid(testdata, mocker):
     """Test that dategrid can be overridden on command line"""
-    mocker.patch("sys.argv", ["sunsch", "--dategrid", "daily", "config_v2.yml"])
+    mocker.patch("sys.argv", ["sunsch", "--dategrid", "daily", "config.yml"])
     sunsch.main()
     assert "6 'JAN' 2017" in Path("schedule.inc").read_text(encoding="utf8")
     assert "7 'JAN' 2017" in Path("schedule.inc").read_text(encoding="utf8")
@@ -132,14 +132,14 @@ def test_cmdline_dategrid(testdata, mocker):
 def test_dump_stdout(testdata, mocker):
     """Test that we can write to stdout"""
     result = subprocess.run(
-        ["sunsch", "--output", "-", "config_v2.yml"], check=True, stdout=subprocess.PIPE
+        ["sunsch", "--output", "-", "config.yml"], check=True, stdout=subprocess.PIPE
     )
     assert "1 'FEB' 2020" in result.stdout.decode()
     assert "subscript" not in result.stdout.decode()
 
     # Verify that INFO logging is not included while writing to stdout:
     result = subprocess.run(
-        ["sunsch", "--verbose", "--output", "-", "config_v2.yml"],
+        ["sunsch", "--verbose", "--output", "-", "config.yml"],
         check=True,
         stdout=subprocess.PIPE,
     )
@@ -149,7 +149,7 @@ def test_dump_stdout(testdata, mocker):
 
     # Verify that DEBUG logging is not included while writing to stdout:
     result = subprocess.run(
-        ["sunsch", "--debug", "--output", "-", "config_v2.yml"],
+        ["sunsch", "--debug", "--output", "-", "config.yml"],
         check=True,
         stdout=subprocess.PIPE,
     )
@@ -163,15 +163,11 @@ def test_config_schema(tmp_path):
     """Test the implementation of configsuite"""
     os.chdir(tmp_path)
     cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
-    cfg_suite = configsuite.ConfigSuite(
-        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
-    )
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA, deduce_required=True)
     assert not cfg_suite.valid  # file missing
 
     Path("existingfile.sch").write_text("foo", encoding="utf8")
-    cfg_suite = configsuite.ConfigSuite(
-        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
-    )
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA, deduce_required=True)
     print(cfg_suite.errors)
     assert not cfg_suite.valid  # "foo" is not valid configuration.
 
@@ -181,9 +177,7 @@ def test_config_schema(tmp_path):
         "startdate": datetime.date(2018, 2, 2),
         "insert": [],
     }
-    cfg_suite = configsuite.ConfigSuite(
-        cfg, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
-    )
+    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA, deduce_required=True)
     print(cfg_suite.errors)
     assert cfg_suite.valid
 
@@ -211,7 +205,7 @@ def test_templating(tmp_path):
     assert "200.3" in str(sch)
     assert "1400000" in str(sch)
     cfg_suite = configsuite.ConfigSuite(
-        sunschconf, sunsch.CONFIG_SCHEMA_V2, deduce_required=True
+        sunschconf, sunsch.CONFIG_SCHEMA, deduce_required=True
     )
     assert cfg_suite.valid
 
@@ -920,7 +914,7 @@ def test_ert_forward_model(testdata):
                 "NUM_REALIZATIONS 1",
                 "RUNPATH <CONFIG_PATH>",
                 "",
-                "FORWARD_MODEL SUNSCH(<config>=config_v2.yml)",
+                "FORWARD_MODEL SUNSCH(<config>=config.yml)",
             ]
         ),
         encoding="utf8",
