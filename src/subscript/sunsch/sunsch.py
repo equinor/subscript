@@ -9,29 +9,21 @@ hence the name. Later, this library has been merged into opm-common
 import argparse
 import datetime
 import logging
-import sys
 import tempfile
 import textwrap
 from pathlib import Path
-from typing import List, Union
+from typing import Dict, List, Literal, Optional, Union
 
-import configsuite  # lgtm [py/import-and-import-from]
 import dateutil.parser
 import yaml
-from configsuite import MetaKeys as MK  # lgtm [py/import-and-import-from]
-from configsuite import types  # lgtm [py/import-and-import-from]
+from pydantic import BaseModel, FilePath
 
 from subscript import __version__, getLogger
 from subscript.sunsch.time_vector import TimeVector  # type: ignore
 
-# from opm.tools import TimeVector  # type: ignore
-
-
 logger = getLogger(__name__)
 
 __MAGIC_STDOUT__ = "-"  # When used as a filename on the command line
-
-SUPPORTED_DATEGRIDS = ["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"]
 
 DESCRIPTION = """Generate Eclipse Schedule file from merges and insertions.
 
@@ -52,189 +44,44 @@ EXAMPLES = """
 """
 
 
-@configsuite.validator_msg("Is dategrid a supported frequency")
-def _is_valid_dategrid(dategrid_str: str):
-    return dategrid_str in SUPPORTED_DATEGRIDS
+class InsertStatement(BaseModel):
+    date: Optional[datetime.date] = None
+    filename: Optional[FilePath] = None
+    template: Optional[FilePath] = None
+    days: Optional[float] = None
+    string: Optional[str] = None
+    substitute: Optional[Dict[str, Union[str, float, str]]] = None
 
 
-@configsuite.validator_msg("Is filename an existing file")
-def _is_existing_file(filename: str):
-    return Path(filename).exists()
+class SunschConfig(BaseModel):
+    files: Optional[List[FilePath]] = None
+    output: Optional[str] = "-"
+    startdate: Union[datetime.date, datetime.datetime]
+    starttime: datetime.datetime
+    refdate: Union[datetime.date, datetime.datetime]
+    enddate: Optional[datetime.date] = None
+    dategrid: Optional[
+        Literal["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"]
+    ] = None
+    insert: Optional[List[InsertStatement]] = None
 
+    def __init__(self, **config):
+        """Transform the input to provide defaults to required fields"""
+        if "startdate" not in config:
+            if "starttime" in config:
+                config["startdate"] = config["starttime"]
+            elif "refdate" in config:
+                config["startdate"] = config["refdate"]
+            else:
+                config["startdate"] = datetime.date(1900, 1, 1)
 
-@configsuite.transformation_msg("Defaults handling")
-def _defaults_handling(config: dict):
-    """Handle defaults with dates."""
-    return _shuffle_start_refdate(config)
+        if "starttime" not in config:
+            config["starttime"] = datetime_from_date(config["startdate"])
 
+        if "refdate" not in config:
+            config["refdate"] = config["startdate"]
 
-@configsuite.transformation_msg("Convert to string")
-def _to_string(element):
-    """Convert anything to a string"""
-    return str(element)
-
-
-@configsuite.transformation_msg("Shuffle startdate vs refdate")
-def _shuffle_start_refdate(config: dict) -> dict:
-    """
-    Ensure that:
-    * startdate is always defined, if not given, it is picked
-      from starttime or refdate. If neither of these, then default
-      value 1900-01-01 is chosen.
-    * starttime is always defined, use clocktime if defined
-      explicit
-    * refdate is always defined, set to startdate if not excplicit.
-    """
-    if "startdate" not in config:
-        if "starttime" in config:
-            config["startdate"] = config["starttime"]
-        elif "refdate" in config:
-            config["startdate"] = config["refdate"]
-        else:
-            config["startdate"] = datetime.date(1900, 1, 1)
-
-    if "starttime" not in config:
-        config["starttime"] = datetime_from_date(config["startdate"])
-
-    if "refdate" not in config:
-        config["refdate"] = config["startdate"]
-
-    return config
-
-
-CONFIG_SCHEMA = {
-    MK.Type: types.NamedDict,
-    MK.Transformation: _defaults_handling,
-    MK.Content: {
-        "files": {
-            MK.Type: types.List,
-            MK.Description: "List of filenames to include in merge operation",
-            MK.Content: {
-                MK.Item: {
-                    MK.Type: types.String,
-                    MK.Description: "Filename to merge",
-                    MK.ElementValidators: (_is_existing_file,),
-                }
-            },
-        },
-        "output": {
-            MK.Description: "Output filename, '-' means stdout",
-            MK.Type: types.String,
-            MK.AllowNone: True,
-            MK.Default: "-",
-        },
-        "startdate": {
-            MK.Description: "The start date of the Eclipse run (START keyword).",
-            MK.Type: types.Date,
-            MK.AllowNone: True,
-            # (a transformation will provide the default value here)
-        },
-        "starttime": {
-            MK.Description: (
-                "The start time, used for relative "
-                "inserts if clock accuracy is needed"
-            ),
-            MK.Type: types.DateTime,
-            MK.AllowNone: True,
-            # (a transformation will provide/calculate a default value here)
-        },
-        "refdate": {
-            MK.Description: (
-                "Reference date for relative inserts. "
-                "Only set if it should be different than startdate."
-            ),
-            MK.Type: types.Date,
-            MK.AllowNone: True,
-        },
-        "enddate": {
-            MK.Description: "An end date, events pass this date will be clipped",
-            MK.Type: types.Date,
-            MK.AllowNone: True,
-        },
-        "dategrid": {
-            MK.Description: (
-                "Set to yearly, monthly, etc to get a grid of dates included"
-            ),
-            MK.Type: types.String,
-            MK.AllowNone: True,
-            MK.ElementValidators: (_is_valid_dategrid,),
-        },
-        "insert": {
-            MK.Description: (
-                "List of insert statements to process into the Schedule file"
-            ),
-            MK.Type: types.List,
-            MK.Content: {
-                MK.Item: {
-                    MK.Description: "Insert statement",
-                    MK.Type: types.NamedDict,
-                    MK.Content: {
-                        "date": {
-                            MK.Description: "Date at which to insert something",
-                            MK.Type: types.Date,
-                            MK.AllowNone: True,
-                        },
-                        "filename": {
-                            MK.Description: "Filename with contents to insert",
-                            MK.Type: types.String,
-                            MK.AllowNone: True,
-                            MK.ElementValidators: (_is_existing_file,),
-                        },
-                        "template": {
-                            MK.Description: (
-                                "Template file in which substitution will "
-                                "take place before it is inserted"
-                            ),
-                            MK.Type: types.String,
-                            MK.AllowNone: True,
-                            MK.ElementValidators: (_is_existing_file,),
-                        },
-                        "days": {
-                            MK.Description: (
-                                "Days after refdate/startdate at which "
-                                "insertion should take place"
-                            ),
-                            MK.Type: types.Number,
-                            MK.AllowNone: True,
-                        },
-                        "string": {
-                            MK.Description: ("A string to insert, instead of filename"),
-                            MK.Type: types.String,
-                            MK.AllowNone: True,
-                        },
-                        "substitute": {
-                            MK.Description: (
-                                "Key-value pairs for substitution in a template"
-                            ),
-                            MK.Type: types.Dict,
-                            MK.Content: {
-                                MK.Key: {
-                                    MK.Description: "Template key name",
-                                    MK.AllowNone: False,
-                                    MK.Type: types.String,
-                                },
-                                MK.Value: {
-                                    MK.AllowNone: "Value to insert in template",
-                                    MK.AllowNone: False,
-                                    # Since we allow both numbers and strings here,
-                                    # it is converted to a string as configsuite
-                                    # only allows one type.
-                                    MK.Transformation: _to_string,
-                                    MK.Type: types.String,
-                                },
-                            },
-                        },
-                    },
-                }
-            },
-        },
-    },
-}
-
-
-def get_schema() -> dict:
-    """Return the ConfigSuite schema"""
-    return CONFIG_SCHEMA
+        super().__init__(**config)
 
 
 def datetime_from_date(
@@ -248,7 +95,7 @@ def datetime_from_date(
     return datetime.datetime.combine(date, datetime.datetime.min.time())
 
 
-def process_sch_config(conf) -> TimeVector:
+def process_sch_config(conf: Union[dict, SunschConfig]) -> TimeVector:
     """Process a Schedule configuration into a opm.tools TimeVector
 
     Recognized keys in the configuration dict: files, startdate, startime,
@@ -261,14 +108,12 @@ def process_sch_config(conf) -> TimeVector:
     Returns:
         opm.io.TimeVector
     """
-    # At least test code is calling this function with a dict as
-    # config - convert it to a configsuite snapshot:
     if isinstance(conf, dict):
-        conf = configsuite.ConfigSuite(
-            conf, CONFIG_SCHEMA, deduce_required=True
-        ).snapshot
+        conf = SunschConfig(**conf)
 
-    # Rerun this to ensure error is caught (already done in transformation)
+    assert isinstance(conf, SunschConfig)
+
+    # Rerun this to ensure error is caught
     datetime_from_date(conf.startdate)
 
     # Initialize the opm.tools.TimeVector class, which needs
@@ -302,7 +147,7 @@ def process_sch_config(conf) -> TimeVector:
                 logger.debug("Produced file: %s", str(filename))
             elif insert_statement.template and not insert_statement.substitute:
                 logger.error(
-                    "Missing subsitute for template %s", insert_statement.template
+                    "Missing substitute for template %s", insert_statement.template
                 )
                 continue
             elif insert_statement.filename:
@@ -326,7 +171,7 @@ def process_sch_config(conf) -> TimeVector:
             if date >= conf.starttime:
                 if insert_statement.string is None:
                     if sch_file_nonempty(filename):
-                        schedule.load(filename, date=date)
+                        schedule.load(str(filename), date=date)
                     else:
                         logger.warning(
                             "No Eclipse statements in %s, skipping", filename
@@ -369,7 +214,7 @@ def process_sch_config(conf) -> TimeVector:
 
 
 def load_timevector_from_file(
-    filename: str, startdate: datetime.date, file_starts_with_dates: bool
+    filename: Path, startdate: datetime.date, file_starts_with_dates: bool
 ) -> TimeVector:
     """
     Load a timevector from a file, and clip dates that are  earlier than startdate.
@@ -383,14 +228,14 @@ def load_timevector_from_file(
     """
     tmpschedule = TimeVector(datetime.date(1900, 1, 1))
     if file_starts_with_dates:
-        tmpschedule.load(filename)
+        tmpschedule.load(str(filename))
         early_dates = [date for date in tmpschedule.dates if date.date() < startdate]
         if len(early_dates) > 1:
             logger.info("Clipping away dates: %s", str(early_dates[1:]))
             for date in early_dates:
                 tmpschedule.delete(date)
     else:
-        tmpschedule.load(filename, datetime_from_date(datetime.date(1900, 1, 1)))
+        tmpschedule.load(str(filename), datetime_from_date(datetime.date(1900, 1, 1)))
 
         early_dates = [date for date in tmpschedule.dates if date.date() < startdate]
         if len(early_dates) > 1:
@@ -400,7 +245,7 @@ def load_timevector_from_file(
     return tmpschedule
 
 
-def sch_file_nonempty(filename: str) -> bool:
+def sch_file_nonempty(filename: Path) -> bool:
     """Determine if a file (to be included) has any Eclipse
     keywords at all (excluding comments)
 
@@ -413,7 +258,7 @@ def sch_file_nonempty(filename: str) -> bool:
     # Implementation is by trial and error:
     try:
         tmpschedule = TimeVector(datetime.date(1900, 1, 1))
-        tmpschedule.load(filename)
+        tmpschedule.load(str(filename))
     except IndexError as err:
         if (
             "vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)"
@@ -447,7 +292,7 @@ def sch_file_nonempty(filename: str) -> bool:
     return True
 
 
-def sch_file_starts_with_dates_keyword(filename: str) -> bool:
+def sch_file_starts_with_dates_keyword(filename: Path) -> bool:
     """Determine if a file (to be included) has
     DATES as its first keyword, or something else.
 
@@ -458,7 +303,7 @@ def sch_file_starts_with_dates_keyword(filename: str) -> bool:
     which date to anchor that to)
 
     Args:
-        filename (str): Filename which will be opened and read.
+        filename: Filename which will be opened and read.
     Returns:
         bool: true if first keyword is DATES
     """
@@ -466,13 +311,13 @@ def sch_file_starts_with_dates_keyword(filename: str) -> bool:
     try:
         # Test if it has DATES
         tmpschedule = TimeVector(datetime.date(1900, 1, 1))
-        tmpschedule.load(filename)
+        tmpschedule.load(str(filename))
     except ValueError:
         return False
     return True
 
 
-def substitute(insert_statement) -> str:
+def substitute(insert_statement: InsertStatement) -> Path:
     """
     Perform key-value substitutions and generate the result
     as a file on disk.
@@ -484,20 +329,23 @@ def substitute(insert_statement) -> str:
     be left untouched.
 
     Args:
-        insert_statement (named_dict): Required keys are "template", which is
+        insert_statement: Required keys are "template", which is
             a filename with parameters to be replaced, and "substitute"
             which is a named_dict with values parameter-value mappings
             to be used.
 
     Returns:
-        str: Filename on temporary location for immediate use
+        Filename on temporary location for immediate use
     """
 
-    if len([key for key in list(insert_statement) if key is not None]) > 3:
+    if len([value for _, value in list(insert_statement) if value is not None]) > 3:
         # (there should be also 'days' or 'date' in the dict)
         logger.warning(
             "Too many (?) configuration elements in %s", str(insert_statement)
         )
+
+    assert insert_statement.template is not None
+    assert insert_statement.substitute is not None
 
     with tempfile.NamedTemporaryFile(mode="w", delete=False) as resultfile:
         resultfilename = resultfile.name
@@ -505,15 +353,13 @@ def substitute(insert_statement) -> str:
             Path(insert_statement.template).read_text(encoding="utf8").splitlines()
         )
 
-        # Parse substitution list:
-        substdict = insert_statement.substitute
         # Perform substitution and put into a tmp file
         for line in templatelines:
-            for key, value in substdict:
+            for key, value in insert_statement.substitute.items():
                 if "<" + key + ">" in line:
                     line = line.replace("<" + key + ">", str(value))
             resultfile.write(line + "\n")
-    return resultfilename
+    return Path(resultfilename)
 
 
 def wrap_long_lines(string: str, maxchars: int = 128, warn: bool = True) -> str:
@@ -570,14 +416,6 @@ def dategrid(
     Return:
         list of datetime.date. Always includes start-date, might not include end-date
     """
-
-    if interval not in SUPPORTED_DATEGRIDS:
-        raise ValueError(
-            'Unsupported dategrid interval "'
-            + interval
-            + '". Pick among '
-            + ", ".join(SUPPORTED_DATEGRIDS)
-        )
     dates = [startdate]
     date = startdate + datetime.timedelta(days=1)
     startdateweekday = startdate.weekday()
@@ -706,13 +544,13 @@ def main():
     args = parser.parse_args()
 
     # Application defaults configuration:
-    defaults_config = {"output": "-", "startdate": datetime.date(1900, 1, 1)}
+    defaults_config: dict = {"output": "-", "startdate": datetime.date(1900, 1, 1)}
 
     # Users YAML configuration:
-    yaml_config = yaml.safe_load(Path(args.config).read_text(encoding="utf8"))
+    yaml_config: dict = yaml.safe_load(Path(args.config).read_text(encoding="utf8"))
 
     # Command line configuration:
-    cli_config = {}
+    cli_config: dict = {}
     if args.output:
         cli_config["output"] = args.output
     if args.startdate:
@@ -724,36 +562,28 @@ def main():
     if args.dategrid:
         cli_config["dategrid"] = args.dategrid
 
-    # Merge defaults-, yaml- and command line options, and then validate:
-    config = configsuite.ConfigSuite(
-        {},
-        get_schema(),
-        layers=(defaults_config, yaml_config, cli_config),
-        deduce_required=True,
-    )
-    if not config.valid:
-        logger.error(config.errors)
-        logger.error("Your configuration is invalid. Exiting.")
-        sys.exit(1)
+    merged_config = defaults_config.copy()
+    merged_config.update(yaml_config)
+    merged_config.update(cli_config)
 
-    if args.verbose and config.snapshot.output != __MAGIC_STDOUT__:
+    config = SunschConfig(**merged_config)
+
+    if args.verbose and config.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.INFO)
-    if args.debug and config.snapshot.output != __MAGIC_STDOUT__:
+    if args.debug and config.output != __MAGIC_STDOUT__:
         logger.setLevel(logging.DEBUG)
 
     # Generate the schedule section, as a string:
-    schedule = wrap_long_lines(
-        str(process_sch_config(config.snapshot)), maxchars=128, warn=True
-    )
+    schedule = wrap_long_lines(str(process_sch_config(config)), maxchars=128, warn=True)
 
-    if config.snapshot.output == __MAGIC_STDOUT__:
+    if config.output == __MAGIC_STDOUT__:
         print(schedule)
     else:
-        logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
-        dirname = Path(config.snapshot.output).parent
+        logger.info("Writing Eclipse deck to %s", str(config.output))
+        dirname = Path(config.output).parent
         if dirname and not dirname.exists():
             raise OSError(f"The directory {dirname} does not exist")
-        Path(config.snapshot.output).write_text(schedule, encoding="utf8")
+        Path(config.output).write_text(schedule, encoding="utf8")
 
 
 if __name__ == "__main__":

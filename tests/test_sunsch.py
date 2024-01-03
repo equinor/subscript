@@ -4,9 +4,9 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import configsuite
 import pytest  # noqa: F401
 import yaml
+from pydantic import ValidationError
 
 from subscript.sunsch import sunsch
 
@@ -159,29 +159,6 @@ def test_dump_stdout(testdata, mocker):
     assert "DEBUG:subscript" not in result.stdout.decode()
 
 
-def test_config_schema(tmp_path):
-    """Test the implementation of configsuite"""
-    os.chdir(tmp_path)
-    cfg = {"init": "existingfile.sch", "output": "newfile.sch"}
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA, deduce_required=True)
-    assert not cfg_suite.valid  # file missing
-
-    Path("existingfile.sch").write_text("foo", encoding="utf8")
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA, deduce_required=True)
-    print(cfg_suite.errors)
-    assert not cfg_suite.valid  # "foo" is not valid configuration.
-
-    cfg = {
-        "files": ["existingfile.sch"],
-        "output": "newfile.sch",
-        "startdate": datetime.date(2018, 2, 2),
-        "insert": [],
-    }
-    cfg_suite = configsuite.ConfigSuite(cfg, sunsch.CONFIG_SCHEMA, deduce_required=True)
-    print(cfg_suite.errors)
-    assert cfg_suite.valid
-
-
 def test_templating(tmp_path):
     """Test templating"""
     os.chdir(tmp_path)
@@ -204,10 +181,6 @@ def test_templating(tmp_path):
     assert "A-007" in str(sch)
     assert "200.3" in str(sch)
     assert "1400000" in str(sch)
-    cfg_suite = configsuite.ConfigSuite(
-        sunschconf, sunsch.CONFIG_SCHEMA, deduce_required=True
-    )
-    assert cfg_suite.valid
 
     # Let some of the valued be undefined:
     sunschconf = {
@@ -427,16 +400,11 @@ def test_nonisodate(readonly_datadir):
         sunsch.process_sch_config(sunschconf)
 
     sunschconf = {
-        # Beware that using a ISO-string for a date in this config
-        # will give a wrong error message, since the code assumes
-        # all string dates are already parsed into datimes by the
-        # yaml loader.
-        # "startdate": "2020-01-01",
         "startdate": datetime.date(2020, 1, 1),
         "enddate": "01-01-2020",
         "insert": [{"filename": "foo1.sch", "date": datetime.date(2030, 1, 1)}],
     }
-    with pytest.raises(TypeError):
+    with pytest.raises(ValidationError):
         sunsch.process_sch_config(sunschconf)
 
 
@@ -691,7 +659,7 @@ def test_dategrid():
     assert min(sch.dates) == datetime.datetime(2020, 1, 1, 0, 0)
 
     # Unknown dategrid
-    with pytest.raises(ValueError, match="Unsupported dategrid interval"):
+    with pytest.raises(ValidationError):
         sch = sunsch.process_sch_config(
             {
                 "startdate": datetime.date(2020, 1, 1),
