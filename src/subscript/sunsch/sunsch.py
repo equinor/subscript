@@ -102,7 +102,7 @@ def _shuffle_start_refdate(config: dict) -> dict:
     return config
 
 
-CONFIG_SCHEMA_V2 = {
+CONFIG_SCHEMA = {
     MK.Type: types.NamedDict,
     MK.Transformation: _defaults_handling,
     MK.Content: {
@@ -234,7 +234,7 @@ CONFIG_SCHEMA_V2 = {
 
 def get_schema() -> dict:
     """Return the ConfigSuite schema"""
-    return CONFIG_SCHEMA_V2
+    return CONFIG_SCHEMA
 
 
 def datetime_from_date(
@@ -265,7 +265,7 @@ def process_sch_config(conf) -> TimeVector:
     # config - convert it to a configsuite snapshot:
     if isinstance(conf, dict):
         conf = configsuite.ConfigSuite(
-            conf, CONFIG_SCHEMA_V2, deduce_required=True
+            conf, CONFIG_SCHEMA, deduce_required=True
         ).snapshot
 
     # Rerun this to ensure error is caught (already done in transformation)
