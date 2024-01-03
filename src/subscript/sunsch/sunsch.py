@@ -12,7 +12,6 @@ import logging
 import sys
 import tempfile
 import textwrap
-import warnings
 from pathlib import Path
 from typing import List, Union
 
@@ -753,13 +752,7 @@ def main():
         logger.info("Writing Eclipse deck to %s", str(config.snapshot.output))
         dirname = Path(config.snapshot.output).parent
         if dirname and not dirname.exists():
-            warnings.warn(
-                f"Implicit mkdir of directory {str(dirname)} is deprecated and "
-                f"will be removed later. Please ensure {str(dirname)} exists before "
-                "calling sunsch.",
-                FutureWarning,
-            )
-            dirname.mkdir()
+            raise OSError(f"The directory {dirname} does not exist")
         Path(config.snapshot.output).write_text(schedule, encoding="utf8")
 
 

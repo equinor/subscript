@@ -84,8 +84,8 @@ def test_cmdline_output(testdata, mocker):
     mocker.patch(
         "sys.argv", ["sunsch", "--output", "subdir/schedule.inc", "config_v2.yml"]
     )
-    with pytest.warns(FutureWarning, match="Implicit mkdir"):
-        sunsch.main()
+    Path("subdir").mkdir()
+    sunsch.main()
     assert Path("subdir/schedule.inc").exists()
 
 
