@@ -39,7 +39,7 @@ def fixture_readonly_testdata_dir():
         ("ert-doc.yml", "yaml"),
         ("ert-doc.csv", "csv"),
         ("fmu-ensemble-obs.yml", "yaml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
     ],
 )
 def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
@@ -101,7 +101,7 @@ def test_autoparse_string(string, expected_format, tmp_path):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_ertobs(filename, readonly_testdata_dir):
@@ -170,7 +170,7 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_yaml(filename, readonly_testdata_dir):
@@ -215,7 +215,7 @@ def test_roundtrip_yaml(filename, readonly_testdata_dir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_resinsight(filename, readonly_testdata_dir):
