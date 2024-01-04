@@ -7,7 +7,9 @@ from subscript import __version__, getLogger
 
 DESCRIPTION = """Read two ``UNRST`` files and export a merged version. This is useful in
 cases where history and prediction are run separately and one wants to calculate
-differences across dates in the two files.
+differences across dates in the two files. One should give hist file as first positional
+argument and pred file as the second positional argument (i.e. in the order of smallest
+to largest report step numbers).
 """
 
 CATEGORY = "utility.eclipse"
@@ -34,10 +36,8 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="merge_unrst_files.py", description=DESCRIPTION
     )
-    parser.add_argument("UNRST_HIST_FILE", type=str, help="UNRST file 1, history part")
-    parser.add_argument(
-        "UNRST_PRED_FILE", type=str, help="UNRST file 2, prediction part"
-    )
+    parser.add_argument("UNRST1", type=str, help="UNRST file 1, history part")
+    parser.add_argument("UNRST2", type=str, help="UNRST file 2, prediction part")
     parser.add_argument(
         "-o",
         "--output",
@@ -69,9 +69,9 @@ def _check_report_number(
 
     if current_report_number <= max_report_number_hist:
         logger.warning(
-            f"{args.UNRST_PRED_FILE} file has a restart report number"
-            + f" ({current_report_number}) which is smaller than largest report number"
-            + f" in {args.UNRST_HIST_FILE} ({max_report_number_hist})"
+            f"{args.UNRST2} file has a restart report number ({current_report_number})"
+            + f" which is smaller than largest report number in {args.UNRST1}"
+            + f" ({max_report_number_hist})"
         )
         logger.warning(
             "Check that you have entered arguments in correct order and/or"
@@ -84,9 +84,9 @@ def main() -> None:
 
     args: argparse.Namespace = get_parser().parse_args()
 
-    logger.info(f"Merge unrst files {args.UNRST_HIST_FILE} and {args.UNRST_PRED_FILE}.")
-    unrst_hist = resfo.read(args.UNRST_HIST_FILE)
-    unrst_pred = resfo.read(args.UNRST_PRED_FILE)
+    logger.info(f"Merge unrst files {args.UNRST1} and {args.UNRST2}.")
+    unrst_hist = resfo.read(args.UNRST1)
+    unrst_pred = resfo.read(args.UNRST2)
 
     max_first_seqnum: int = 1
     max_first_solver_step: int = 1
