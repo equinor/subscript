@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sunsch.sunsch &mdash; subscript 1.1.2.dev1+g6c42a88e documentation</title>
+  <title>subscript.sunsch.sunsch &mdash; subscript 1.1.2.dev3+ga37a641b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=9505422b"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=5fa2227b"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.1.2.dev1+g6c42a88e
+                1.1.2.dev3+ga37a641b
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -170,6 +170,44 @@
 <p>Tool for generating Eclipse Schedule files</p>
 <p>This script was originally based on a library named sunbeam,
 hence the name. Later, this library has been merged into opm-common</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.sunsch.sunsch.InsertStatement">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">InsertStatement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.InsertStatement" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.sunsch.sunsch.InsertStatement.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.sunsch.sunsch.InsertStatement.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.sunsch.sunsch.InsertStatement.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'date':</span> <span class="pre">FieldInfo(annotation=Union[date,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'days':</span> <span class="pre">FieldInfo(annotation=Union[float,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'filename':</span> <span class="pre">FieldInfo(annotation=Union[Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')],</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'string':</span> <span class="pre">FieldInfo(annotation=Union[str,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'substitute':</span> <span class="pre">FieldInfo(annotation=Union[Dict[str,</span> <span class="pre">Union[str,</span> <span class="pre">float]],</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'template':</span> <span class="pre">FieldInfo(annotation=Union[Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')],</span> <span class="pre">NoneType],</span> <span class="pre">required=False)}</span></em><a class="headerlink" href="#subscript.sunsch.sunsch.InsertStatement.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.sunsch.sunsch.SunschConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">SunschConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">[</span></span><span class="pre">Path</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'-'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startdate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">starttime</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refdate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enddate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">date</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dategrid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'daily'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'monthly'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'yearly'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'weekly'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'biweekly'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'bimonthly'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">insert</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#subscript.sunsch.sunsch.InsertStatement" title="subscript.sunsch.sunsch.InsertStatement"><span class="pre">InsertStatement</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.SunschConfig" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.sunsch.sunsch.SunschConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.sunsch.sunsch.SunschConfig.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.sunsch.sunsch.SunschConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'dategrid':</span> <span class="pre">FieldInfo(annotation=Union[Literal['daily',</span> <span class="pre">'monthly',</span> <span class="pre">'yearly',</span> <span class="pre">'weekly',</span> <span class="pre">'biweekly',</span> <span class="pre">'bimonthly'],</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'enddate':</span> <span class="pre">FieldInfo(annotation=Union[date,</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'files':</span> <span class="pre">FieldInfo(annotation=Union[List[Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')]],</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'insert':</span> <span class="pre">FieldInfo(annotation=Union[List[subscript.sunsch.sunsch.InsertStatement],</span> <span class="pre">NoneType],</span> <span class="pre">required=False),</span> <span class="pre">'output':</span> <span class="pre">FieldInfo(annotation=Union[str,</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default='-'),</span> <span class="pre">'refdate':</span> <span class="pre">FieldInfo(annotation=Union[date,</span> <span class="pre">datetime],</span> <span class="pre">required=True),</span> <span class="pre">'startdate':</span> <span class="pre">FieldInfo(annotation=Union[date,</span> <span class="pre">datetime],</span> <span class="pre">required=True),</span> <span class="pre">'starttime':</span> <span class="pre">FieldInfo(annotation=datetime,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.sunsch.sunsch.SunschConfig.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.sunsch.sunsch.dategrid">
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">dategrid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">startdate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enddate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.dategrid" title="Permalink to this definition"></a></dt>
@@ -226,17 +264,6 @@ calls off to opm.io.tools.TimeVector</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.sunsch.sunsch.get_schema">
-<span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.get_schema" title="Permalink to this definition"></a></dt>
-<dd><p>Return the ConfigSuite schema</p>
-<dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="subscript.sunsch.sunsch.load_timevector_from_file">
 <span class="sig-prename descclassname"><span class="pre">subscript.sunsch.sunsch.</span></span><span class="sig-name descname"><span class="pre">load_timevector_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">startdate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_starts_with_dates</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sunsch.sunsch.load_timevector_from_file" title="Permalink to this definition"></a></dt>
 <dd><p>Load a timevector from a file, and clip dates that are  earlier than startdate.</p>
@@ -267,7 +294,7 @@ predates startdate, then we delete it.</p>
 refdate, enddate, dategrid, insert</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>conf</strong> – Configuration dictionary for the schedule
+<dd class="field-odd"><p><strong>conf</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <a class="reference internal" href="#subscript.sunsch.sunsch.SunschConfig" title="subscript.sunsch.sunsch.SunschConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">SunschConfig</span></code></a>]</span>) – Configuration dictionary for the schedule
 merges and inserts</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
@@ -286,7 +313,7 @@ merges and inserts</p>
 keywords at all (excluding comments)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – </p>
+<dd class="field-odd"><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – </p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>False if the file is empty or has only comments.</p>
@@ -309,7 +336,7 @@ keyword (it is tricky, because we can’t know for sure
 which date to anchor that to)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – Filename which will be opened and read.</p>
+<dd class="field-odd"><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – Filename which will be opened and read.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>true if first keyword is DATES</p>
@@ -331,16 +358,16 @@ in opm.tools.TimeVector which initializes with a filename.</p>
 be left untouched.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>insert_statement</strong> (<em>named_dict</em>) – Required keys are “template”, which is
+<dd class="field-odd"><p><strong>insert_statement</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#subscript.sunsch.sunsch.InsertStatement" title="subscript.sunsch.sunsch.InsertStatement"><code class="xref py py-class docutils literal notranslate"><span class="pre">InsertStatement</span></code></a></span>) – Required keys are “template”, which is
 a filename with parameters to be replaced, and “substitute”
 which is a named_dict with values parameter-value mappings
 to be used.</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Filename on temporary location for immediate use</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span></p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>str</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Filename on temporary location for immediate use</p>
 </dd>
 </dl>
 </dd></dl>
