@@ -5,7 +5,7 @@ import logging
 import os
 import signal
 import sys
-from pathlib import Path
+from pathlib import Path, PosixPath
 from typing import Optional, Tuple, Union
 
 import pandas as pd
@@ -362,8 +362,8 @@ def fmuobs(
                 f"Unsupported ERROR_MODE : {', '.join(error_mode)}. "
                 "Please verify the output file"
             )
-
-    dump_results(dframe, csv, yml, resinsight, ertobs)
+    logger.debug("After all the hard work, what is returned is this %s", dframe)
+    dump_results(dframe, csv, yml, resinsight, ertobs, Path(inputfile).parent)
 
 
 def dump_results(
@@ -372,6 +372,7 @@ def dump_results(
     yamlfile: Optional[str] = None,
     resinsightfile: Optional[str] = None,
     ertfile: Optional[str] = None,
+    parent_dir: Optional[PosixPath] = Path("."),
 ) -> None:
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips
@@ -397,7 +398,7 @@ def dump_results(
             dframe.to_csv(sys.stdout, index=False)
 
     if yamlfile:
-        obs_dict_for_yaml = df2obsdict(dframe)
+        obs_dict_for_yaml = df2obsdict(dframe, parent_dir)
         if not obs_dict_for_yaml and not dframe.empty:
             logger.error("None of your observations are supported in YAML")
         yaml_str = yaml.safe_dump(obs_dict_for_yaml)
