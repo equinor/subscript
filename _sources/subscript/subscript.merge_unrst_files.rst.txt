@@ -1,0 +1,18 @@
+===============================
+``subscript.merge_unrst_files``
+===============================
+
+.. automodule:: subscript.merge_unrst_files
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.merge_unrst_files.merge_unrst_files
+
+.. currentmodule:: subscript.merge_unrst_files

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PARAMS2CSV &mdash; subscript 1.1.2.dev4+g549b6bf2 documentation</title>
+  <title>MERGE_UNRST_FILES &mdash; subscript 1.1.2.dev4+g549b6bf2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -31,8 +31,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="PRESENTVALUE" href="presentvalue.html" />
-    <link rel="prev" title="PACK_SIM" href="pack_sim.html" /> 
+    <link rel="next" title="OFMVOL2CSV" href="ofmvol2csv.html" />
+    <link rel="prev" title="MERGE_RFT_ERTOBS" href="merge_rft_ertobs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -78,14 +78,14 @@
 <li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="merge_unrst_files.html">MERGE_UNRST_FILES</a></li>
-<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PARAMS2CSV</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">MERGE_UNRST_FILES</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
@@ -119,9 +119,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">PARAMS2CSV</li>
+      <li class="breadcrumb-item active">MERGE_UNRST_FILES</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/scripts/params2csv.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/scripts/merge_unrst_files.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -129,28 +129,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="params2csv">
-<h1>PARAMS2CSV<a class="headerlink" href="#params2csv" title="Permalink to this heading"></a></h1>
-<p><p>Turn parameters.txt for an ensemble into a CSV file.  Optionally
-also clean parameters.txt for inconsistencies (differing number of
-records)</p>
-<p>parameters.txt is any text file with &lt;key&gt; &lt;value&gt; on each line</p>
-<p>In the CSV file, each individual parameter file will be represented by
-one data row. The order of parameters in each text file is not
-conserved.</p>
-<p>The original filename for each file is written to the column
-‘filename’. Beware if you have that as a &lt;key&gt; in the text files.</p>
+  <section id="merge-unrst-files">
+<h1>MERGE_UNRST_FILES<a class="headerlink" href="#merge-unrst-files" title="Permalink to this heading"></a></h1>
+<p><p>Read two <code class="docutils literal notranslate"><span class="pre">UNRST</span></code> files and export a merged version. This is useful in
+cases where history and prediction are run separately and one wants to calculate
+differences across dates in the two files. One should give hist file as first positional
+argument and pred file as the second positional argument (i.e. in the order of smallest
+to largest report step numbers).</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">params2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">filenamecolumnname</span> <span class="n">FILENAMECOLUMNNAME</span><span class="p">]</span>
-                  <span class="p">[</span><span class="o">--</span><span class="n">keepconstantcolumns</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">clean</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
-                  <span class="n">parameterfile</span> <span class="p">[</span><span class="n">parameterfile</span> <span class="o">...</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">merge_unrst_files</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">UNRST1</span> <span class="n">UNRST2</span>
 </pre></div>
 </div>
 <section id="positional-arguments">
 <h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
-<dt><kbd>parameterfile</kbd></dt>
-<dd><p>all parameter files to be merged</p>
+<dt><kbd>UNRST1</kbd></dt>
+<dd><p>UNRST file 1, history part</p>
+</dd>
+<dt><kbd>UNRST2</kbd></dt>
+<dd><p>UNRST file 2, prediction part</p>
 </dd>
 </dl>
 </section>
@@ -158,26 +155,10 @@ conserved.</p>
 <h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
-<dd><p>name of output csv file</p>
-<p>Default: “params.csv”</p>
+<dd><p>Name of the merged UNRST file</p>
+<p>Default: “MERGED.UNRST”</p>
 </dd>
-<dt><kbd>--filenamecolumnname</kbd></dt>
-<dd><p>Column name that will contain the name of the parameter file</p>
-<p>Default: “filename”</p>
-</dd>
-<dt><kbd>--keepconstantcolumns</kbd></dt>
-<dd><p>Keep constant columns</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>--clean</kbd></dt>
-<dd><p>Write back cleaned parameters.txt</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>-v, --verbose</kbd></dt>
-<dd><p>Be verbose</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>--version</kbd></dt>
+<dt><kbd>-v, --version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
@@ -188,8 +169,8 @@ conserved.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pack_sim.html" class="btn btn-neutral float-left" title="PACK_SIM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="presentvalue.html" class="btn btn-neutral float-right" title="PRESENTVALUE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="merge_rft_ertobs.html" class="btn btn-neutral float-left" title="MERGE_RFT_ERTOBS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ofmvol2csv.html" class="btn btn-neutral float-right" title="OFMVOL2CSV" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

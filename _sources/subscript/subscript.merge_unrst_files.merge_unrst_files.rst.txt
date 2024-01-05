@@ -1,0 +1,10 @@
+=================================================
+``subscript.merge_unrst_files.merge_unrst_files``
+=================================================
+
+.. automodule:: subscript.merge_unrst_files.merge_unrst_files
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.merge_unrst_files.merge_unrst_files
