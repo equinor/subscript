@@ -4,7 +4,7 @@ format"""
 
 import re
 from typing import List
-
+from pathlib import Path, PosixPath
 import numpy as np
 import pandas as pd
 
@@ -353,13 +353,14 @@ def block_df2obsdict(block_df: pd.DataFrame) -> List[dict]:
     return block_obs_list
 
 
-def df2obsdict(obs_df: pd.DataFrame) -> dict:
+def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = Path(".")) -> dict:
     """Generate a dictionary structure of all observations, this data structure
     is designed to look good in yaml, and is supported by WebViz and
     fmu-ensemble.
 
     Args:
         obs_df (pd.DataFrame): Dataframe representing ERT observations.
+        parent_dir (str): parent directory to observations file
 
     Returns:
         dict
