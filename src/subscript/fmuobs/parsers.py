@@ -71,6 +71,7 @@ def expand_includes(input_str: str, cwd: str = ".") -> str:
             it is the directory of the ERT config file.
     """
     match = INCLUDE_RE.search(input_str)
+    been_in_loop = False
     while match:
         include_filename = Path(cwd) / Path(match.groups()[1])
         logger.info(
@@ -79,6 +80,13 @@ def expand_includes(input_str: str, cwd: str = ".") -> str:
         include_txt = include_filename.read_text(encoding="utf8")
         input_str = input_str.replace("".join(match.groups()), include_txt)
         match = INCLUDE_RE.search(input_str)
+        been_in_loop = True
+    if not been_in_loop:
+        logger.debug(
+            "No changes done to string %s, no match with %s",
+            input_str,
+            INCLUDE_RE.pattern,
+        )
     return input_str
 
 
