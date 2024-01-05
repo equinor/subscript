@@ -35,7 +35,6 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "configsuite",
     "resdata",
     "res2df",
     "ert>=2.38.0b7",

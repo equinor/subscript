@@ -2,15 +2,16 @@ import os
 import subprocess
 from pathlib import Path
 
-import configsuite
 import pandas as pd
 import pytest
 import yaml
+from pydantic import ValidationError
 from pyscal import PyscalFactory
 from pyscal.utils.testing import sat_table_str_ok
 from res2df import satfunc
 
 from subscript.interp_relperm import interp_relperm
+from subscript.interp_relperm.interp_relperm import InterpRelpermConfig
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_interp_relperm"
 
@@ -40,76 +41,49 @@ TWO_SATNUM_PYSCAL_MOCK = pd.DataFrame(
 ).set_index("CASE")
 
 
-def test_get_cfg_schema():
-    """Test the configsuite schema"""
-    cfg_filen = TESTDATA / "cfg.yml"
-
-    cfg = yaml.safe_load(cfg_filen.read_text(encoding="utf8"))
-
-    # add root-path to all include files
-    if "base" in cfg.keys():
-        for idx in range(len(cfg["base"])):
-            cfg["base"][idx] = str(TESTDATA / cfg["base"][idx])
-    if "high" in cfg.keys():
-        for idx in range(len(cfg["high"])):
-            cfg["high"][idx] = str(TESTDATA / cfg["high"][idx])
-    if "low" in cfg.keys():
-        for idx in range(len(cfg["low"])):
-            cfg["low"][idx] = str(TESTDATA / cfg["low"][idx])
-
-    schema = interp_relperm.get_cfg_schema()
-    suite = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
-
-    assert suite.valid
-
-
 def test_prepend_root_path():
     """Test that we need to prepend with root-path"""
     cfg_filen = TESTDATA / "cfg.yml"
 
     cfg = yaml.safe_load(cfg_filen.read_text(encoding="utf8"))
-    schema = interp_relperm.get_cfg_schema()
 
-    suite_no_rootpath = configsuite.ConfigSuite(cfg, schema, deduce_required=True)
-    assert not suite_no_rootpath.valid
+    with pytest.raises(ValidationError):
+        InterpRelpermConfig(**cfg)
 
     cfg_with_rootpath = interp_relperm.prepend_root_path_to_relative_files(
         cfg, TESTDATA
     )
-    suite = configsuite.ConfigSuite(cfg_with_rootpath, schema, deduce_required=True)
-    assert suite.valid
+    InterpRelpermConfig(**cfg_with_rootpath)
 
     # When root-path is prepended (with an absolute part) it should not
     # matter if we reapply:
     cfg_with_double_rootpath = interp_relperm.prepend_root_path_to_relative_files(
         cfg_with_rootpath, TESTDATA
     )
-    suite_double = configsuite.ConfigSuite(
-        cfg_with_double_rootpath, schema, deduce_required=True
-    )
-    assert suite_double.valid
+    InterpRelpermConfig(**cfg_with_double_rootpath)
 
 
 @pytest.mark.parametrize(
     "dictupdates, expected_error",
     [
-        ({"base": ["foo.inc"]}, "Valid file name"),
-        ({}, "Valid interpolator list"),
-        ({"interpolations": [{"tables": []}]}, "Valid interpolator"),
-        ({"interpolations": [{"param_w": 1.5}]}, "Valid interpolator"),
-        ({"interpolations": [{"param_w": -1.1}]}, "Valid interpolator"),
+        ({"base": ["foo.inc"]}, "Path does not point to a file"),
+        ({}, "Field required"),
+        ({"interpolations": [{"tables": []}]}, "Provide either param_w or param_g"),
+        ({"interpolations": [{"param_w": 1.5}]}, "Input should be less than"),
+        ({"interpolations": [{"param_w": -1.1}]}, "Input should be greater than"),
         ({"interpolations": [{"param_w": 0}]}, None),
         ({"interpolations": [{"param_g": 0}]}, None),
         ({"interpolations": [{"param_w": 0, "param_g": 0}]}, None),
         ({"interpolations": [{"param_w": 0.1, "param_g": -0.1}]}, None),
-        ({"interpolations": [{"param_g": -1.5}]}, "Valid interpolator"),
-        ({"interpolations": [{"param_g": 1.5}]}, "Valid interpolator"),
-        ({"interpolations": [{"param_w": "weird"}]}, "Is x a number"),
-        ({"interpolations": [{"param_g": "Null"}]}, "Is x a number"),
+        ({"interpolations": [{"param_g": -1.5}]}, "Input should be greater than"),
+        ({"interpolations": [{"param_g": 1.5}]}, "Input should be less than"),
+        ({"interpolations": [{"param_w": "weird"}]}, "Input should be a valid number"),
+        ({"interpolations": [{"param_g": "Null"}]}, "Input should be a valid number"),
     ],
 )
-def test_schema_errors(dictupdates, expected_error):
-    """Test that configsuite errors correctly with some hint to the resolution"""
+def test_config_errors(dictupdates, expected_error):
+    """Test that the pydantic model errors correctly with some hint to the
+    resolution"""
     os.chdir(TESTDATA)
     cfg = {
         "base": ["swof_base.inc", "sgof_base.inc"],
@@ -118,19 +92,17 @@ def test_schema_errors(dictupdates, expected_error):
         "result_file": "foo.inc",
     }
     cfg.update(dictupdates)
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
+
     if expected_error is not None:
-        assert not parsed_cfg.valid
-        assert expected_error in str(parsed_cfg.errors)
+        with pytest.raises(ValidationError) as validation_error:
+            InterpRelpermConfig(**cfg)
+        assert expected_error in str(validation_error)
     else:
-        print(parsed_cfg.errors)
-        assert parsed_cfg.valid
+        InterpRelpermConfig(**cfg)
 
 
 def test_schema_errors_low_base_high():
-    """Test for detection of schema errors related to low/base/high"""
+    """Test for detection of config errors related to low/base/high"""
     os.chdir(TESTDATA)
     cfg = {
         "base": ["swof_base.inc", "sgof_base.inc"],
@@ -139,42 +111,32 @@ def test_schema_errors_low_base_high():
         "result_file": "foo.inc",
         "interpolations": [{"param_w": 0.1, "param_g": -0.1}],
     }
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
-    assert parsed_cfg.valid
+    InterpRelpermConfig(**cfg)
 
     cfg_no_low = cfg.copy()
     del cfg_no_low["low"]
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg_no_low, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
-    assert not parsed_cfg.valid
-    assert "Low, base and high are provided is false" in str(parsed_cfg.errors)
+    with pytest.raises(ValidationError) as validation_error:
+        InterpRelpermConfig(**cfg_no_low)
+    assert "low is not provided" in str(validation_error)
 
     cfg_no_high = cfg.copy()
     del cfg_no_high["high"]
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg_no_high, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
-    assert not parsed_cfg.valid
-    assert "Low, base and high are provided is false" in str(parsed_cfg.errors)
+    with pytest.raises(ValidationError) as validation_error:
+        InterpRelpermConfig(**cfg_no_high)
+    assert "high is not provided" in str(validation_error)
 
     cfg_no_base = cfg.copy()
     del cfg_no_base["base"]
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg_no_base, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
-    assert not parsed_cfg.valid
-    assert "Low, base and high are provided is false" in str(parsed_cfg.errors)
+    with pytest.raises(ValidationError) as validation_error:
+        InterpRelpermConfig(**cfg_no_base)
+    assert "base is not provided" in str(validation_error)
 
     cfg_string_for_high = cfg.copy()
     cfg_string_for_high["high"] = "sgof_opt.inc"
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg_string_for_high, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
-    assert not parsed_cfg.valid
-    assert "Is x a list is false on input 'sgof_opt.inc'" in str(parsed_cfg.errors)
+    with pytest.raises(ValidationError) as validation_error:
+        InterpRelpermConfig(**cfg_string_for_high)
+    assert "Input should be a valid list" in str(validation_error)
+    assert "sgof_opt.inc" in str(validation_error)
 
 
 def test_garbled_base_input(tmp_path):
@@ -190,11 +152,6 @@ def test_garbled_base_input(tmp_path):
         "result_file": str(tmp_path / "foo.inc"),
         "interpolations": [{"param_w": 0.1, "param_g": -0.1}],
     }
-    parsed_cfg = configsuite.ConfigSuite(
-        cfg, interp_relperm.get_cfg_schema(), deduce_required=True
-    )
-    assert parsed_cfg.valid  # Error can't be captured by schema
-
     with pytest.raises(SystemExit):
         interp_relperm.process_config(cfg)
 
@@ -375,12 +332,11 @@ def test_wrong_family(tmp_path):
         "family": "Rockefeller",
         "delta_s": 0.1,
     }
-    with pytest.raises(
-        SystemExit, match="Is x a number is false on input 'Rockefeller'"
-    ):
+    with pytest.raises(ValidationError, match="Input should be 1 or 2"):
         interp_relperm.process_config(config)
+
     config["family"] = 3
-    with pytest.raises(SystemExit):
+    with pytest.raises(ValidationError):
         interp_relperm.process_config(config)
 
 
