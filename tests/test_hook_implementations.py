@@ -25,6 +25,7 @@ def expected_jobs(path_to_subscript):
         "ECLRST2ROFF",
         "INTERP_RELPERM",
         "MERGE_RFT_ERTOBS",
+        "MERGE_UNRST_FILES",
         "OFMVOL2CSV",
         "PARAMS2CSV",
         "RI_WELLMOD",

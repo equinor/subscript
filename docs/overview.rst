@@ -20,6 +20,7 @@ fmu_copy_revision         ✅   ⛔️                 ⛔️
 fmuobs                    ✅   ⛔️                 ✅
 interp_relperm            ✅   ✅                 ⛔️
 merge_rft_ertobs          ✅   ✅                 ⛔️
+merge_unrst_files         ✅   ✅                 ⛔️
 ofmvol2csv                ✅   ✅                 ⛔️
 pack_sim                  ✅   ⛔️                 ⛔️
 params2csv                ✅   ✅                 ✅
@@ -38,5 +39,5 @@ welltest_dpds             ✅   ✅                 ⛔️
 ========================  ===  =================  ============
 
 .. [*] ``convert_grid_format`` is the script that contains functionality
-   for the ``ECLGRID2ROFF``, ``ECLINIT2ROFF``, and ``ECLRST2ROFF`` forward 
+   for the ``ECLGRID2ROFF``, ``ECLINIT2ROFF``, and ``ECLRST2ROFF`` forward
    models.
