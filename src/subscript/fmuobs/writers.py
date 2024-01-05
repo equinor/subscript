@@ -14,6 +14,7 @@ from subscript.fmuobs.util import (
     ERT_ISO_DATE_FORMAT,
     lowercase_dictkeys,
 )
+from subscript.fmuobs.readers import dump_content_to_dict
 
 logger = getLogger(__name__)
 
@@ -275,6 +276,31 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     return smry_obs_list
 
 
+def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[dict]:
+    """Generate a dictionary structure suitable for yaml
+    for general observations in dataframe representation
+
+    Args:
+        general_df (pd.DataFrame): dataframe with general observations
+
+    Returns:
+        dict: dict of dicts with first level key being datatype
+    """
+    general_df.dropna(axis=1, how="all", inplace=True)
+    general_df.to_csv("drogon_tracer.csv")
+    assert isinstance(general_df, pd.DataFrame), "You didn't input a dataframe"
+    logger.debug("This is/These are the general observations to include %s", general_df)
+    gen_obs_dict = {}
+    for _, general_row in general_df.iterrows():
+        file_to_read = parent_dir / general_row["OBS_FILE"]
+        gen_obs_key = file_to_read.parent.name
+        gen_obs = dump_content_to_dict(file_to_read, ["observation", "error"])
+        logger.debug(gen_obs)
+        gen_obs_dict[gen_obs_key] = gen_obs
+    logger.debug(gen_obs_dict)
+    return gen_obs_dict
+
+
 def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     """Convert the DATE column in a dataframe to a string.
     Replace "NaT" (Not-a-Time) with np.nan after conversion
@@ -373,6 +399,11 @@ def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = Path(".")) -> dict:
     if "SUMMARY_OBSERVATION" in obs_df["CLASS"].values:
         obsdict[CLASS_SHORTNAME["SUMMARY_OBSERVATION"]] = summary_df2obsdict(
             obs_df.set_index("CLASS").loc[["SUMMARY_OBSERVATION"]]
+        )
+
+    if "GENERAL_OBSERVATION" in obs_df["CLASS"].values:
+        obsdict[CLASS_SHORTNAME["GENERAL_OBSERVATION"]] = general_df2obsdict(
+            obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]], parent_dir
         )
 
     # Process BLOCK_OBSERVATION:
