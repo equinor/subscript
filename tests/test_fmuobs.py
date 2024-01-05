@@ -290,9 +290,9 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         ),
     )
     main()
-    assert Path("output.csv").exists()
-    assert Path("output.yml").exists()
-    assert Path("ri_output.csv").exists()
+    assert Path("output.csv").exists(), "csv file not produced"
+    assert Path("output.yml").exists(), "yml file not produced"
+    assert Path("ri_output.csv").exists(), "resinsight output not produced"
 
     if verbose == "--verbose":
         # This is from the logger "subscript.fmuobs":
@@ -311,7 +311,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
-    )
+    ), "csv not as expected"  # pylint: disable=expression-not-assigned
 
     dict_from_yml_on_disk = yaml.safe_load(
         Path("output.yml").read_text(encoding="utf8")
@@ -319,7 +319,9 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     reference_dict_from_yml = yaml.safe_load(
         (TESTDATA_DIR / "ert-doc.yml").read_text(encoding="utf8")
     )
-    assert dict_from_yml_on_disk == reference_dict_from_yml
+    print(reference_dict_from_yml)
+    print(dict_from_yml_on_disk)
+    assert dict_from_yml_on_disk == reference_dict_from_yml, "Yml file not as expected"
 
     ri_from_csv_on_disk = pd.read_csv("ri_output.csv")
     reference_ri_from_disk = pd.read_csv(TESTDATA_DIR / "ri-obs.csv")
@@ -327,7 +329,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         # Enforce correct column order
         ri_from_csv_on_disk,
         reference_ri_from_disk,
-    )
+    ), "Resinsight file not as expected"  # pylint: disable=expression-not-assigned
 
     # Test CSV to stdout:
     arguments = [
@@ -344,7 +346,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     pd.testing.assert_frame_equal(
         dframe_from_stdout.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
-    )
+    ), "Output csv to stdout not as expected"  # pylint: disable=expression-not-assigned
 
 
 @pytest.mark.integration
