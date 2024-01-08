@@ -287,7 +287,6 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
         dict: dict of dicts with first level key being datatype
     """
     general_df.dropna(axis=1, how="all", inplace=True)
-    general_df.to_csv("drogon_tracer.csv")
     assert isinstance(general_df, pd.DataFrame), "You didn't input a dataframe"
     logger.debug("This is/These are the general observations to include %s", general_df)
     gen_obs_dict = {}
