@@ -295,6 +295,9 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
         file_to_read = parent_dir / general_row["OBS_FILE"]
         gen_obs_key = file_to_read.parent.name
         gen_obs = dump_content_to_dict(file_to_read, ["observation", "error"])
+        gen_obs["label"] = general_row["LABEL"]
+        gen_obs["data"] = general_row["DATA"]
+        gen_obs["restart"] = general_row["RESTART"]
         logger.debug(gen_obs)
         gen_obs_dict[gen_obs_key] = gen_obs
     logger.debug(gen_obs_dict)
