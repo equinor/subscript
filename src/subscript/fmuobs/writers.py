@@ -294,9 +294,10 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
         file_to_read = parent_dir / general_row["OBS_FILE"]
         gen_obs_key = file_to_read.parent.name
         the_obs = dump_content_to_dict(file_to_read)
-        gen_obs = {general_row["LABEL"]: the_obs}
-        gen_obs["data"] = general_row["DATA"]
-        gen_obs["restart"] = general_row["RESTART"]
+        the_obs.update({"data": general_row["DATA"], "restart": general_row["RESTART"]})
+        gen_obs = {
+            general_row["LABEL"]: the_obs,
+        }
         logger.debug(gen_obs)
         if gen_obs_key not in gen_obs_dict:
             gen_obs_dict[gen_obs_key] = gen_obs
