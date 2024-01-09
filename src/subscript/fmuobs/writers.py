@@ -14,7 +14,7 @@ from subscript.fmuobs.util import (
     ERT_ISO_DATE_FORMAT,
     lowercase_dictkeys,
 )
-from subscript.fmuobs.readers import dump_content_to_dict
+from subscript.fmuobs.gen_obs_writers import dump_content_to_dict
 
 logger = getLogger(__name__)
 
