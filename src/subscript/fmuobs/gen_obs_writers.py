@@ -1,5 +1,6 @@
 """Read contents from simple text files"""
 import logging
+import warnings
 import re
 from datetime import datetime
 from pathlib import Path, PosixPath
@@ -69,6 +70,83 @@ def ensure_correct_well_info_format(info):
     elif len(info) != 3:
         raise ValueError("list needs to have 5 or 3 in length")
     return info
+
+
+def find_well_file_info(folder_path):
+    """Find file with well information in folder
+
+    Args:
+        folder_path (str): the path to search
+
+    Returns:
+        pd.DataFrame: the digested results
+    """
+    well_file_pattern = re.compile(r"well.*rft.*\.txt", re.IGNORECASE)
+    the_one = None
+    well_info = None
+    potential_candidates = list(folder_path.glob("*.*"))
+    for candidate in potential_candidates:
+        # LOGGER.debug(candidate)
+        if well_file_pattern.match(candidate.name):
+            the_one = candidate
+    # LOGGER.debug(the_one)
+    if the_one is not None:
+        well_info = dump_content_to_dict(
+            the_one, ["well_name", "date", "restart_number"]
+        )
+
+    LOGGER.debug("Returning %s", well_info)
+    return well_info
+
+
+def extract_wells_and_dates(obs_parent):
+    """Extract additional well info
+
+    Args:
+        obs_parent (PosixPath): parent folder, in case relative path
+
+    Returns:
+        list: contains list that are the lines extracted
+    """
+
+    well_info = {}
+    try:
+        well_info = find_well_file_info(obs_parent)
+    except FileNotFoundError:
+        warnings.warn("No file to read", UserWarning)
+    return well_info
+
+
+def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir):
+    """Add information about well name and date if keys with rft exists in dict
+
+    Args:
+        dict_to_change (dict): the dictionary up for potential modifications
+        parent_dir (PosixPath): folder path to look for file with relevant information
+    """
+    rft_keys = [key for key in dict_to_change.keys() if "rft" in key]
+    if len(rft_keys) > 0:
+        for rft_key in rft_keys:
+            names_and_dates = extract_wells_and_dates(parent_dir / rft_key)
+            if len(names_and_dates) > 0:
+                well_names = names_and_dates["well_name"]
+                restarts = names_and_dates["restart_number"]
+                print(names_and_dates)
+                for obs_key, obs_dict in dict_to_change[rft_key].items():
+                    print(obs_dict["restart"])
+                    well_pattern = re.compile(".*" + obs_key.replace("_OBS", "") + ".*")
+                    potential_lines = [
+                        i
+                        for i in range(len(well_names))
+                        if (
+                            well_pattern.match(well_names[i])
+                            and restarts[i] == obs_dict["restart"]
+                        )
+                    ]
+                    right_index = potential_lines.pop()
+                    obs_dict["well_name"] = well_names[right_index]
+                    obs_dict["date"] = names_and_dates["date"][right_index]
+    print("After modification dict is ", dict_to_change)
 
 
 def attach_spacial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:

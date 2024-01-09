@@ -14,7 +14,10 @@ from subscript.fmuobs.util import (
     ERT_ISO_DATE_FORMAT,
     lowercase_dictkeys,
 )
-from subscript.fmuobs.gen_obs_writers import dump_content_to_dict
+from subscript.fmuobs.gen_obs_writers import (
+    dump_content_to_dict,
+    add_extra_well_data_if_rft,
+)
 
 logger = getLogger(__name__)
 
@@ -305,6 +308,7 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
             gen_obs_dict[gen_obs_key].update(gen_obs)
     logger.debug("All general observations from file:")
     logger.debug(gen_obs_dict)
+    add_extra_well_data_if_rft(gen_obs_dict, parent_dir)
     return gen_obs_dict
 
 
