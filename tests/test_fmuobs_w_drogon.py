@@ -54,6 +54,26 @@ def _fix_drogon_seismic():
     return pd.read_csv(_find_observation_file("drogon_seismic.csv"))
 
 
+@pytest.fixture(name="drogon_allgen_df")
+def _fix_drogon_allgen():
+    """Return path to observation file
+
+    Returns:
+        PosixPath: the path to observation file
+    """
+    return pd.read_csv(_find_observation_file("drogon_allgen.csv"))
+
+
+@pytest.fixture(name="drogon_rft_df")
+def _fix_drogon_rft():
+    """Return path to observation file
+
+    Returns:
+        PosixPath: the path to observation file
+    """
+    return pd.read_csv(_find_observation_file("drogon_rft.csv"))
+
+
 @pytest.fixture(name="drogon_full_obs_file")
 def _fix_drogon_full_file():
     """Return path to observation file
@@ -116,3 +136,7 @@ def test_general_df2obsdict(dataframe, drogon_full_obs_file, request):
             assert (
                 values == answer[primary_key][key]
             ), f"{key} not equal to what it should be like"
+
+
+def test_general_df2obsdict_rft(drogon_allgen_df, drogon_full_obs_file):
+    results = general_df2obsdict(drogon_allgen_df, drogon_full_obs_file.parent)
