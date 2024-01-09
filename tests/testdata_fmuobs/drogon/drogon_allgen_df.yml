@@ -1,6 +1,120 @@
+rft:
+  R_A2_OBS:
+    MD:
+    - 1648.9
+    X:
+    - 460994.9
+    Y:
+    - 5933813.29
+    Z:
+    - 1697.9
+    Zone:
+    - Valysar
+    data: DATA
+    error:
+    - 3
+    observations:
+    - 299.23
+    restart: R_A2_SIM
+  R_A3_OBS:
+    MD:
+    - 1624.4
+    - 1641.7
+    X:
+    - 462753.44
+    - 462753.44
+    Y:
+    - 5932869.64
+    - 5932869.64
+    Z:
+    - 1673.4
+    - 1690.7
+    Zone:
+    - Therys
+    - Volon
+    data: DATA
+    error:
+    - 3
+    - 3
+    observations:
+    - 298.52
+    - 280.43
+    restart: R_A3_SIM
+  R_A4_OBS:
+    MD:
+    - 1634.5380612147899
+    - 1643.6550211658794
+    X:
+    - 464008.8224258357
+    - 464291.7607514142
+    Y:
+    - 5931878.9185539
+    - 5932429.154921389
+    Z:
+    - 2578.7
+    - 3197.5
+    Zone:
+    - Valysar
+    - Volon
+    data: DATA
+    error:
+    - 3
+    - 3
+    observations:
+    - 288.6
+    - 282.13
+    restart: R_A4_SIM
+  R_A5_OBS:
+    MD:
+    - 1688.8
+    - 1720.1
+    X:
+    - 461519.21
+    - 461519.21
+    Y:
+    - 5935692.65
+    - 5935692.65
+    Z:
+    - 1737.8
+    - 1769.1
+    Zone:
+    - Valysar
+    - Volon
+    data: DATA
+    error:
+    - 3
+    - 3
+    observations:
+    - 278.7
+    - 286.55
+    restart: R_A5_SIM
+  R_A6_OBS:
+    MD:
+    - 1710.9
+    - 1728.4
+    X:
+    - 461292.74
+    - 461292.74
+    Y:
+    - 5931883.26
+    - 5931883.26
+    Z:
+    - 1759.9
+    - 1777.4
+    Zone:
+    - Therys
+    - Volon
+    data: DATA
+    error:
+    - 3
+    - 3
+    observations:
+    - 280.85
+    - 286.41
+    restart: R_A6_SIM
 seismic:
-  ' AMP_2020_2018_BASE':
-    data: AMP_2020_2018_BASE
+  AMP_2020_2018_BASE:
+    data: DATA
     error:
     - 0.005
     - 0.005
@@ -6689,9 +6803,9 @@ seismic:
     - 0.000776
     - -0.001069
     - -0.000203
-    restart: 1.0
-  ' AMP_2020_2018_TOP':
-    data: AMP_2020_2018_TOP
+    restart: AMP_2020_2018_BASE
+  AMP_2020_2018_TOP:
+    data: DATA
     error:
     - 0.005
     - 0.005
@@ -13410,4 +13524,26 @@ seismic:
     - 0.001059
     - 0.000225
     - 0.00093
-    restart: 1.0
+    restart: AMP_2020_2018_TOP
+tracer:
+  TRACER_OBS:
+    data: DATA
+    error:
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    observations:
+    - 421
+    - 904
+    - 912
+    - 912
+    - 912
+    - 912
+    - 773
+    - 912
+    restart: TRACER_SIM

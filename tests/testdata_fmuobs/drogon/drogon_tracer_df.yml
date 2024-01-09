@@ -1,22 +1,22 @@
 tracer:
-  data: TRACER_SIM
-  error:
-  - 30
-  - 30
-  - 30
-  - 30
-  - 30
-  - 30
-  - 30
-  - 30
-  label: TRACER_OBS
-  observations:
-  - 421
-  - 904
-  - 912
-  - 912
-  - 912
-  - 912
-  - 773
-  - 912
-  restart: 1
+  TRACER_OBS:
+    data: TRACER_SIM
+    error:
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    observations:
+    - 421
+    - 904
+    - 912
+    - 912
+    - 912
+    - 912
+    - 773
+    - 912
+    restart: 1
