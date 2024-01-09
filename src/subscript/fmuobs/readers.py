@@ -71,7 +71,36 @@ def ensure_correct_well_info_format(info):
     return info
 
 
-def dump_content_to_dict(file_path: PosixPath, col_names: list) -> dict:
+def attach_spacial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:
+    """Attach data from secondary file if it exists
+
+    Args:
+        file_path (PosixPath): path to primary file
+
+    Returns:
+        dict: results from reading the secondary file
+    """
+    LOGGER.debug("Checking if %s has twin", str(file_path))
+    spacial_content = {}
+    if file_path.suffix == ".obs":
+        well_file_path = file_path.parent / re.sub(
+            r"_\d+\.obs$", r".obs", file_path.name
+        ).replace(file_path.suffix, ".txt")
+
+        if well_file_path.exists():
+            LOGGER.debug("Yup")
+            spacial_content = dump_content_to_dict(
+                well_file_path, ["X", "Y", "Z", "MD", "Zone"]
+            )
+            LOGGER.debug("Extracted %s", spacial_content)
+        else:
+            LOGGER.debug("Nope")
+    primary_content.update(spacial_content)
+
+
+def dump_content_to_dict(
+    file_path: PosixPath, col_names: list = ("observations", "error")
+) -> dict:
     """Read contents of file into list
 
     Args:
@@ -96,4 +125,6 @@ def dump_content_to_dict(file_path: PosixPath, col_names: list) -> dict:
                 content_dict[col_name] = [convert(element)]
             else:
                 content_dict[col_name].append(convert(element))
+    attach_spacial_data_if_exists(file_path, content_dict)
+
     return content_dict
