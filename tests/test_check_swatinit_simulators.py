@@ -69,6 +69,8 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
     if (
         result.returncode != 0
         and "runeclipse" in simulator
+        and result.stdout is not None
+        and result.stderr is not None
         and "LICENSE FAILURE" in result.stdout.decode() + result.stderr.decode()
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
