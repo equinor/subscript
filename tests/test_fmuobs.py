@@ -319,8 +319,6 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     reference_dict_from_yml = yaml.safe_load(
         (TESTDATA_DIR / "ert-doc.yml").read_text(encoding="utf8")
     )
-    print(reference_dict_from_yml)
-    print(dict_from_yml_on_disk)
     assert dict_from_yml_on_disk == reference_dict_from_yml, "Yml file not as expected"
 
     ri_from_csv_on_disk = pd.read_csv("ri_output.csv")
