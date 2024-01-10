@@ -149,7 +149,7 @@ def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir):
     print("After modification dict is ", dict_to_change)
 
 
-def attach_spacial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:
+def attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:
     """Attach data from secondary file if it exists
 
     Args:
@@ -159,7 +159,7 @@ def attach_spacial_data_if_exists(file_path: PosixPath, primary_content: dict) -
         dict: results from reading the secondary file
     """
     LOGGER.debug("Checking if %s has twin", str(file_path))
-    spacial_content = {}
+    spatial_content = {}
     if file_path.suffix == ".obs":
         well_file_path = file_path.parent / re.sub(
             r"_\d+\.obs$", r".obs", file_path.name
@@ -167,13 +167,13 @@ def attach_spacial_data_if_exists(file_path: PosixPath, primary_content: dict) -
 
         if well_file_path.exists():
             LOGGER.debug("Yup")
-            spacial_content = dump_content_to_dict(
+            spatial_content = dump_content_to_dict(
                 well_file_path, ["X", "Y", "Z", "MD", "Zone"]
             )
-            LOGGER.debug("Extracted %s", spacial_content)
+            LOGGER.debug("Extracted %s", spatial_content)
         else:
             LOGGER.debug("Nope")
-    primary_content.update(spacial_content)
+    primary_content.update(spatial_content)
 
 
 def dump_content_to_dict(
@@ -203,6 +203,6 @@ def dump_content_to_dict(
                 content_dict[col_name] = [convert(element)]
             else:
                 content_dict[col_name].append(convert(element))
-    attach_spacial_data_if_exists(file_path, content_dict)
+    attach_spatial_data_if_exists(file_path, content_dict)
 
     return content_dict
