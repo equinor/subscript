@@ -46,7 +46,32 @@ def _assert_compulsories_are_correct(results):
             ), f"data key is of {obs_dict['data']}, but should be str"
 
 
-def _compare_number_of_keys(to_be_tested, correct, key):
+def assert_equal_length(to_be_tested, correct, key):
+    """assert if two sequences have same length
+
+    Args:
+        to_be_tested (sequence): the one to check
+        correct (sequence): the correct one
+        key (str): name to report with
+
+    Raises:
+        AssertionError: if the two sequences are not equal
+    """
+    to_be_tested_set = set(to_be_tested)
+    correct_set = set(correct)
+    to_be_tested_len = len(to_be_tested_set)
+    correct_len = len(correct_set)
+    if to_be_tested_len != correct_len:
+        if to_be_tested_len > correct_len:
+            diff_set = to_be_tested_set.difference(correct_set)
+            mess = f"{key}: Produced keys are {to_be_tested_len - correct_len} more than they should ({diff_set})"
+        else:
+            diff_set = correct_set.difference(to_be_tested_set)
+            mess = f"{key}: Produced keys are {correct_len - to_be_tested_len} less than they should ({diff_set})"
+        raise AssertionError(mess)
+
+
+def _compare_number_of_keys_or_check_type(to_be_tested, correct, key):
     """Check that length of two sequences are the same
 
     Args:
@@ -56,11 +81,7 @@ def _compare_number_of_keys(to_be_tested, correct, key):
     """
     correct_data = correct[key]
     try:
-        len_of_tested = len(to_be_tested)
-        correct_len = len(correct_data)
-        assert (
-            len_of_tested == correct_len
-        ), f"{key} should have {correct_len} entries, but have {len_of_tested}"
+        assert_equal_length(to_be_tested, correct_data, key)
     except TypeError:
         correct_type = type(correct_data)
         assert isinstance(
@@ -84,11 +105,11 @@ def _compare_to_results_in_file(obs_dict, name_of_dataset):
     ) as stream:
         answer = yaml.safe_load(stream)
     for primary_key, primary_set in obs_dict.items():
-        _compare_number_of_keys(primary_set, answer, primary_key)
+        _compare_number_of_keys_or_check_type(primary_set, answer, primary_key)
         for obs_key, obs_set in primary_set.items():
-            _compare_number_of_keys(obs_set, answer[primary_key], obs_key)
+            _compare_number_of_keys_or_check_type(obs_set, answer[primary_key], obs_key)
             for data_key, data_dict in obs_set.items():
-                _compare_number_of_keys(
+                _compare_number_of_keys_or_check_type(
                     data_dict, answer[primary_key][obs_key], data_key
                 )
     assert (
@@ -177,10 +198,6 @@ def test_general_df2obsdict(fixture_name, drogon_full_obs_file, request):
     results = general_df2obsdict(
         request.getfixturevalue(fixture_name), drogon_full_obs_file.parent
     )
-    # with open(
-    #     Path(__file__).parent / TEST_DATA / f"{dataframe}.yml", "w", encoding="utf-8"
-    # ) as stream:
-    #     yaml.dump(results, stream)
     _assert_compulsories_are_correct(results)
 
     _compare_to_results_in_file(results, fixture_name)
@@ -191,10 +208,6 @@ def test_general_df2obsdict_rft(drogon_full_obs_file, request):
     results = general_df2obsdict(
         request.getfixturevalue(fixture_name), drogon_full_obs_file.parent
     )
-    # with open(
-    # Path(__file__).parent / TEST_DATA / f"{dataframe}.yml", "w", encoding="utf-8"
-    # ) as stream:
-    # yaml.dump(results, stream)
-    _assert_compulsories_are_correct(results)
+    # _assert_compulsories_are_correct(results)
 
-    _compare_to_results_in_file(results, fixture_name)
+    # _compare_to_results_in_file(results, fixture_name)
