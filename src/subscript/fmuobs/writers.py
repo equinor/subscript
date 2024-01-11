@@ -293,9 +293,11 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
     assert isinstance(general_df, pd.DataFrame), "You didn't input a dataframe"
     logger.debug("This is/These are the general observations to include %s", general_df)
     gen_obs_dict = {}
+    gen_obs_files = {}
     for _, general_row in general_df.iterrows():
         file_to_read = parent_dir / general_row["OBS_FILE"]
         gen_obs_key = file_to_read.parent.name
+        gen_obs_files[gen_obs_key] = file_to_read.parent
         the_obs = dump_content_to_dict(file_to_read)
         the_obs.update({"data": general_row["DATA"], "restart": general_row["RESTART"]})
         gen_obs = {
@@ -308,7 +310,7 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
             gen_obs_dict[gen_obs_key].update(gen_obs)
     logger.debug("All general observations from file:")
     logger.debug(gen_obs_dict)
-    add_extra_well_data_if_rft(gen_obs_dict, parent_dir)
+    add_extra_well_data_if_rft(gen_obs_dict, parent_dir, gen_obs_files)
     return gen_obs_dict
 
 

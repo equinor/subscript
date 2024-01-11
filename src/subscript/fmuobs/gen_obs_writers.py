@@ -142,7 +142,7 @@ def extract_wells_and_dates(obs_parent):
     return well_info
 
 
-def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir):
+def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir, obs_folders):
     """Add information about well name and date if keys with rft exists in dict
 
     Args:
@@ -152,7 +152,7 @@ def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir):
     rft_keys = [key for key in dict_to_change.keys() if "rft" in key]
     if len(rft_keys) > 0:
         for rft_key in rft_keys:
-            names_and_dates = extract_wells_and_dates(parent_dir / rft_key)
+            names_and_dates = extract_wells_and_dates(parent_dir / obs_folders[rft_key])
             if len(names_and_dates) > 0:
                 well_names = names_and_dates["well_name"]
                 restarts = names_and_dates["restart_number"]
