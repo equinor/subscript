@@ -1,0 +1,3037 @@
+general:
+  rft_ERT_use_MDadjusted:
+    RFT_R_4_12A_OBS:
+      MD:
+      - 2452
+      - 2461
+      - 2461
+      - 2472
+      - 2477
+      - 2477
+      - 2477
+      - 2483
+      - 2486
+      - 2515
+      - 2515
+      - 2515
+      - 2527
+      - 2527
+      - 2533
+      - 2556
+      - 2556
+      - 2556
+      - 2568
+      - 2574
+      - 2574
+      - 2574
+      - 2586
+      - 2592
+      - 2610
+      X:
+      - 462129.86
+      - 462132.69
+      - 462132.69
+      - 462135.95
+      - 462137.65
+      - 462137.65
+      - 462137.65
+      - 462139.36
+      - 462089.33
+      - 462017.41
+      - 462017.41
+      - 462017.41
+      - 462021.08
+      - 462021.08
+      - 462022.92
+      - 462030.25
+      - 462030.25
+      - 462030.25
+      - 462033.92
+      - 462035.76
+      - 462035.76
+      - 462035.76
+      - 462039.43
+      - 462041.26
+      - 462046.77
+      Y:
+      - 6824569.82
+      - 6824573.49
+      - 6824573.49
+      - 6824577.72
+      - 6824579.93
+      - 6824579.93
+      - 6824579.93
+      - 6824582.15
+      - 6824491.64
+      - 6824555.76
+      - 6824555.76
+      - 6824555.76
+      - 6824560.33
+      - 6824560.33
+      - 6824562.62
+      - 6824571.75
+      - 6824571.75
+      - 6824571.75
+      - 6824576.32
+      - 6824578.61
+      - 6824578.61
+      - 6824578.61
+      - 6824583.18
+      - 6824585.46
+      - 6824592.32
+      Z:
+      - 2565.6
+      - 2572.6
+      - 2575
+      - 2590
+      - 2594.7
+      - 2594.72
+      - 2594.73
+      - 2600
+      - 2605
+      - 2623.8
+      - 2624.2
+      - 2624.21
+      - 2636
+      - 2640.4
+      - 2642.5
+      - 2668.3
+      - 2671
+      - 2671.1
+      - 2687.6
+      - 2696.8
+      - 2699.7
+      - 2699.71
+      - 2715.3
+      - 2722.5
+      - 2736.6
+      Zone:
+      - SNML1_3
+      - SNML1_3
+      - SNML1_3
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      - SNLL
+      data: RFT_R_4_12A_DATA
+      date: '2010-02-07'
+      error:
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      observations:
+      - 371.9
+      - 373.23
+      - 373.35
+      - 374.2
+      - 374.5
+      - 374.48
+      - 374.51
+      - 374.77
+      - 375.08
+      - 378.1
+      - 378.15
+      - 378.09
+      - 380.48
+      - 380.74
+      - 380.81
+      - 382.42
+      - 382.65
+      - 382.67
+      - 384.09
+      - 385.08
+      - 385.14
+      - 385.09
+      - 386.71
+      - 387.4
+      - 388.79
+      restart: 1.0
+      well_name: R_4_12A
+    RFT_R_P45_OBS:
+      MD:
+      - 2344
+      - 2355
+      - 2376
+      - 2377
+      - 2386
+      - 2399
+      - 2393
+      - 2414
+      - 2415
+      - 2429
+      - 2443
+      - 2471
+      - 2488
+      - 2498
+      - 2509
+      - 2527
+      - 2517
+      - 2528
+      - 2528
+      - 2538
+      - 2562
+      - 2568
+      - 2573
+      - 2583
+      - 2594
+      - 2604
+      - 2609
+      - 2624
+      - 2624
+      - 2624
+      - 2634
+      - 2649
+      - 2674
+      - 2674
+      - 2685
+      - 2697
+      - 2708
+      - 2714
+      X:
+      - 458884.81
+      - 458885.19
+      - 458885.91
+      - 458937.8
+      - 458938.02
+      - 458938.34
+      - 459023.34
+      - 459023.95
+      - 459075.27
+      - 459075.56
+      - 459075.83
+      - 459076.4
+      - 459076.73
+      - 459127.38
+      - 459127.51
+      - 459127.71
+      - 459213.14
+      - 459213.29
+      - 459213.29
+      - 459213.44
+      - 459263.53
+      - 459263.56
+      - 459263.6
+      - 459263.66
+      - 459263.72
+      - 459263.79
+      - 459263.82
+      - 459263.91
+      - 459263.91
+      - 459263.91
+      - 459263.97
+      - 459264.07
+      - 459264.22
+      - 459264.22
+      - 459264.29
+      - 459264.36
+      - 459264.43
+      - 459264.47
+      Y:
+      - 6816180.9
+      - 6816179.47
+      - 6816176.72
+      - 6816261.86
+      - 6816260.74
+      - 6816259.07
+      - 6816207.84
+      - 6816205.1
+      - 6816290.41
+      - 6816288.61
+      - 6816286.87
+      - 6816283.29
+      - 6816281.2
+      - 6816365.27
+      - 6816363.83
+      - 6816361.62
+      - 6816311.67
+      - 6816310.38
+      - 6816310.38
+      - 6816309.12
+      - 6816391.68
+      - 6816391.04
+      - 6816390.4
+      - 6816389.12
+      - 6816387.83
+      - 6816386.6
+      - 6816385.99
+      - 6816384.17
+      - 6816384.17
+      - 6816384.17
+      - 6816382.95
+      - 6816381.13
+      - 6816378.09
+      - 6816378.09
+      - 6816376.72
+      - 6816375.3
+      - 6816373.89
+      - 6816373.18
+      Z:
+      - 6546
+      - 6574
+      - 6634
+      - 6651
+      - 6666.5
+      - 6700
+      - 6713
+      - 6754
+      - 6767
+      - 6787
+      - 6817
+      - 6857
+      - 6884
+      - 6907
+      - 6924
+      - 6949.9
+      - 6962.1
+      - 6972.5
+      - 6976
+      - 6985.1
+      - 7030
+      - 7032
+      - 7038.3
+      - 7050
+      - 7063
+      - 7074
+      - 7079.4
+      - 7095.1
+      - 7096
+      - 7097.1
+      - 7106.5
+      - 7123
+      - 7150.5
+      - 7152
+      - 7162.1
+      - 7176.1
+      - 7192
+      - 7193.2
+      Zone:
+      - SN8.1
+      - SN8.1
+      - SN7
+      - SN7
+      - SN7
+      - SN7
+      - SN7
+      - SN6U
+      - SN6U
+      - SN6U
+      - SN6L
+      - SN5
+      - SN5
+      - SN5
+      - SN4
+      - SN4
+      - SN4
+      - SN3
+      - SN3
+      - SN3
+      - SN3
+      - SN3
+      - SN3
+      - SN3
+      - SN3
+      - SN2
+      - SN2
+      - SN2
+      - SN2
+      - SN2
+      - SN2
+      - SN2
+      - SN2
+      - SN2
+      - SN1
+      - SN1
+      - SN1
+      - SN1
+      data: RFT_R_P45_DATA
+      date: '1999-08-10'
+      error:
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      observations:
+      - 343.5
+      - 343.8
+      - 271.3
+      - 270.6
+      - 271.1
+      - 267.2
+      - 267.6
+      - 264.1
+      - 264.1
+      - 263.4
+      - 269.1
+      - 268.4
+      - 271
+      - 272.5
+      - 283.1
+      - 298
+      - 299
+      - 299.8
+      - 300
+      - 300.5
+      - 338.8
+      - 338.9
+      - 339.3
+      - 340.2
+      - 343.6
+      - 344.9
+      - 345.4
+      - 348.9
+      - 348.9
+      - 349
+      - 350.7
+      - 352.7
+      - 355.1
+      - 355.3
+      - 357.9
+      - 359.2
+      - 361.5
+      - 361.6
+      restart: 1.0
+      well_name: R_P45
+    RFT_R_P6A_OBS:
+      MD:
+      - 2554
+      - 2631
+      - 2648
+      - 2696
+      X:
+      - 454853.82
+      - 454826.28
+      - 454826.66
+      - 454878.39
+      Y:
+      - 6817132.89
+      - 6817244.73
+      - 6817237.38
+      - 6817302.59
+      Z:
+      - 5541.65
+      - 5681.43
+      - 5720.01
+      - 5818.45
+      Zone:
+      - SN10.2
+      - SN10.1
+      - SN9.4
+      - SN9.3
+      data: RFT_R_P6A_DATA
+      date: '2018-10-04'
+      error:
+      - 10
+      - 10
+      - 10
+      - 10
+      observations:
+      - 278.65
+      - 352.7
+      - 346.33
+      - 385.97
+      restart: 1.0
+      well_name: R_P6A
+    RFT_R_P6_OBS:
+      MD:
+      - 2670
+      - 2680
+      - 2735
+      - 2759
+      X:
+      - 452715.57
+      - 452769.96
+      - 452692.48
+      - 452746.68
+      Y:
+      - 6816412.84
+      - 6816495.93
+      - 6816531.82
+      - 6816607.13
+      Z:
+      - 5230.99
+      - 5252.62
+      - 5316.58
+      - 5366.69
+      Zone:
+      - SN11U
+      - SN11U
+      - SN11L
+      - SN11L
+      data: RFT_R_P6_DATA
+      date: '2018-10-04'
+      error:
+      - 10
+      - 10
+      - 10
+      - 10
+      observations:
+      - 325.02
+      - 325.73
+      - 328.29
+      - 319.46
+      restart: 1.0
+      well_name: R_P6A
+    RFT_R_Z3HT2_OBS:
+      MD:
+      - 2410
+      X:
+      - 459839.21
+      Y:
+      - 6818376.58
+      Z:
+      - 2743.83
+      Zone:
+      - SN6L
+      data: RFT_R_Z3HT2_DATA
+      date: '2022-09-28'
+      error:
+      - 10
+      observations:
+      - 292
+      restart: 1.0
+      well_name: R_Z3HT2
+    RFT_R_Z3H_OBS:
+      MD:
+      - 2406.249
+      - 2413
+      - 2417
+      - 2418
+      - 2425
+      - 2430
+      - 2433
+      - 2436.563
+      - 2436
+      - 2443
+      - 2453
+      - 2462
+      - 2450
+      - 2457
+      - 2468
+      - 2485
+      - 2506
+      - 2523
+      X:
+      - 460106.35
+      - 460241.19
+      - 460325.41
+      - 460459.87
+      - 460459.14
+      - 460543.83
+      - 460593.07
+      - 460669.46
+      - 460814.11
+      - 460813.32
+      - 460812.27
+      - 460811.2
+      - 460898.94
+      - 460947.91
+      - 460946.71
+      - 460944.88
+      - 461029.45
+      - 461077.54
+      Y:
+      - 6818418.17
+      - 6818480.45
+      - 6818429.25
+      - 6818464.41
+      - 6818463.87
+      - 6818413.01
+      - 6818498.74
+      - 6818465.1
+      - 6818484.59
+      - 6818484.05
+      - 6818483.34
+      - 6818482.61
+      - 6818433.85
+      - 6818519.59
+      - 6818518.82
+      - 6818517.64
+      - 6818466.79
+      - 6818552.19
+      Z:
+      - 2970.06
+      - 3094.99
+      - 3173.06
+      - 3275
+      - 3319.95
+      - 3415
+      - 3459.96
+      - 3535.96
+      - 3616.91
+      - 3654.97
+      - 3699.98
+      - 3729.92
+      - 3749.87
+      - 3778.02
+      - 3815.07
+      - 3847.91
+      - 3941.6
+      - 3983.65
+      Zone:
+      - SN5
+      - SN5
+      - SN4
+      - SN4
+      - SN4
+      - SN3
+      - SN3
+      - SN3
+      - SN2
+      - SN2
+      - SN2
+      - SN1
+      - SN1
+      - SN1
+      - SN1
+      - SNML4
+      - SNML1_3
+      - SNML1_3
+      data: RFT_R_Z3H_DATA
+      date: '2022-10-24'
+      error:
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      - 10
+      observations:
+      - 296.66
+      - 294.67
+      - 298.82
+      - 295.38
+      - 296.71
+      - 295.55
+      - 295.81
+      - 301.34
+      - 296.8
+      - 296.43
+      - 296.81
+      - 297.29
+      - 297.37
+      - 297.81
+      - 298.54
+      - 302.85
+      - 335.13
+      - 347.28
+      restart: 1.0
+      well_name: R_Z3HT3
+smry:
+- key: WBHP:P-1P
+  observations:
+  - date: '2005-04-01'
+    error: 10.0
+    label: P-1P_BHP_APR05
+    value: 264.0
+  - date: '2007-11-10'
+    error: 10.0
+    label: P-1P_BHP_NOV07
+    value: 290.0
+- key: WBHP:P-45PWG
+  observations:
+  - date: '2012-12-18'
+    error: 10.0
+    label: P-45PWG_LVP_DEC12
+    value: 319.5
+- key: WGPT:A-16HP
+  observations:
+  - date: '2002-01-01'
+    error: 1709670.0
+    label: A-16HP_GPT_JAN02
+    value: 17096656.0
+  - date: '2002-05-01'
+    error: 4698420.0
+    label: A-16HP_GPT_MAY02
+    value: 46984192.0
+  - date: '2002-09-01'
+    error: 7674390.0
+    label: A-16HP_GPT_SEP02
+    value: 76743936.0
+  - date: '2003-01-01'
+    error: 9184590.0
+    label: A-16HP_GPT_JAN03
+    value: 91845912.0
+  - date: '2003-05-01'
+    error: 10804400.0
+    label: A-16HP_GPT_MAY03
+    value: 108043952.0
+  - date: '2003-09-01'
+    error: 12856960.0
+    label: A-16HP_GPT_SEP03
+    value: 128569600.0
+  - date: '2004-01-01'
+    error: 15429290.0
+    label: A-16HP_GPT_JAN04
+    value: 154292928.0
+  - date: '2004-05-01'
+    error: 17786060.0
+    label: A-16HP_GPT_MAY04
+    value: 177860624.0
+  - date: '2004-09-01'
+    error: 19602720.0
+    label: A-16HP_GPT_SEP04
+    value: 196027152.0
+  - date: '2005-01-01'
+    error: 21096030.0
+    label: A-16HP_GPT_JAN05
+    value: 210960288.0
+  - date: '2005-05-01'
+    error: 22626620.0
+    label: A-16HP_GPT_MAY05
+    value: 226266176.0
+  - date: '2005-09-01'
+    error: 23817450.0
+    label: A-16HP_GPT_SEP05
+    value: 238174480.0
+  - date: '2006-01-01'
+    error: 24701080.0
+    label: A-16HP_GPT_JAN06
+    value: 247010752.0
+  - date: '2006-05-01'
+    error: 25454870.0
+    label: A-16HP_GPT_MAY06
+    value: 254548704.0
+  - date: '2006-09-01'
+    error: 25715380.0
+    label: A-16HP_GPT_SEP06
+    value: 257153776.0
+  - date: '2007-01-01'
+    error: 26142200.0
+    label: A-16HP_GPT_JAN07
+    value: 261421952.0
+  - date: '2007-05-01'
+    error: 26744180.0
+    label: A-16HP_GPT_MAY07
+    value: 267441824.0
+  - date: '2007-09-01'
+    error: 27140170.0
+    label: A-16HP_GPT_SEP07
+    value: 271401696.0
+  - date: '2008-01-01'
+    error: 27764820.0
+    label: A-16HP_GPT_JAN08
+    value: 277648192.0
+  - date: '2008-05-01'
+    error: 28491240.0
+    label: A-16HP_GPT_MAY08
+    value: 284912384.0
+  - date: '2008-09-01'
+    error: 29115920.0
+    label: A-16HP_GPT_SEP08
+    value: 291159232.0
+  - date: '2009-09-01'
+    error: 29178290.0
+    label: A-16HP_GPT_SEP09
+    value: 291782912.0
+  - date: '2010-01-01'
+    error: 29317420.0
+    label: A-16HP_GPT_JAN10
+    value: 293174176.0
+  - date: '2010-05-01'
+    error: 29673370.0
+    label: A-16HP_GPT_MAY10
+    value: 296733696.0
+  - date: '2010-09-01'
+    error: 29938520.0
+    label: A-16HP_GPT_SEP10
+    value: 299385216.0
+  - date: '2011-01-01'
+    error: 30288150.0
+    label: A-16HP_GPT_JAN11
+    value: 302881472.0
+  - date: '2011-05-01'
+    error: 30540770.0
+    label: A-16HP_GPT_MAY11
+    value: 305407712.0
+  - date: '2011-09-01'
+    error: 31011640.0
+    label: A-16HP_GPT_SEP11
+    value: 310116352.0
+  - date: '2012-01-01'
+    error: 31379770.0
+    label: A-16HP_GPT_JAN12
+    value: 313797664.0
+  - date: '2012-05-01'
+    error: 31866550.0
+    label: A-16HP_GPT_MAY12
+    value: 318665536.0
+  - date: '2012-09-01'
+    error: 32335240.0
+    label: A-16HP_GPT_SEP12
+    value: 323352352.0
+  - date: '2013-01-01'
+    error: 32760150.0
+    label: A-16HP_GPT_JAN13
+    value: 327601536.0
+  - date: '2013-05-01'
+    error: 32837640.0
+    label: A-16HP_GPT_MAY13
+    value: 328376352.0
+  - date: '2013-09-01'
+    error: 33242880.0
+    label: A-16HP_GPT_SEP13
+    value: 332428768.0
+  - date: '2014-01-01'
+    error: 34309610.0
+    label: A-16HP_GPT_JAN14
+    value: 343096064.0
+  - date: '2014-05-01'
+    error: 34993490.0
+    label: A-16HP_GPT_MAY14
+    value: 349934880.0
+  - date: '2014-09-01'
+    error: 35605480.0
+    label: A-16HP_GPT_SEP14
+    value: 356054752.0
+  - date: '2015-01-01'
+    error: 36480720.0
+    label: A-16HP_GPT_JAN15
+    value: 364807200.0
+  - date: '2015-05-01'
+    error: 37213610.0
+    label: A-16HP_GPT_MAY15
+    value: 372136064.0
+  - date: '2015-09-01'
+    error: 37769080.0
+    label: A-16HP_GPT_SEP15
+    value: 377690816.0
+  - date: '2016-01-01'
+    error: 39166420.0
+    label: A-16HP_GPT_JAN16
+    value: 391664160.0
+  - date: '2016-05-01'
+    error: 40846090.0
+    label: A-16HP_GPT_MAY16
+    value: 408460896.0
+  - date: '2016-09-01'
+    error: 42361710.0
+    label: A-16HP_GPT_SEP16
+    value: 423617056.0
+  - date: '2017-01-01'
+    error: 43480280.0
+    label: A-16HP_GPT_JAN17
+    value: 434802784.0
+  - date: '2017-05-01'
+    error: 45051000.0
+    label: A-16HP_GPT_MAY17
+    value: 450510016.0
+  - date: '2017-09-01'
+    error: 46581960.0
+    label: A-16HP_GPT_SEP17
+    value: 465819584.0
+  - date: '2018-05-01'
+    error: 47716120.0
+    label: A-16HP_GPT_MAY18
+    value: 477161184.0
+  - date: '2018-09-01'
+    error: 48902520.0
+    label: A-16HP_GPT_SEP18
+    value: 489025152.0
+  - date: '2019-01-01'
+    error: 50321840.0
+    label: A-16HP_GPT_JAN19
+    value: 503218400.0
+  - date: '2019-05-01'
+    error: 51483750.0
+    label: A-16HP_GPT_MAY19
+    value: 514837536.0
+  - date: '2019-09-01'
+    error: 51609150.0
+    label: A-16HP_GPT_SEP19
+    value: 516091456.0
+  - date: '2021-09-01'
+    error: 52582390.0
+    label: A-16HP_GPT_SEP21
+    value: 525823872.0
+  - date: '2022-01-01'
+    error: 53214460.0
+    label: A-16HP_GPT_JAN22
+    value: 532144619.0
+  - date: '2022-05-01'
+    error: 54505790.0
+    label: A-16HP_GPT_MAY22
+    value: 545057941.0
+  - date: '2022-09-01'
+    error: 55097310.0
+    label: A-16HP_GPT_SEP22
+    value: 550973056.0
+- key: WGPT:A-17HPW
+  observations:
+  - date: '1997-01-01'
+    error: 471340.0
+    label: A-17HPW_GPT_JAN97
+    value: 4713402.0
+  - date: '1997-05-01'
+    error: 2156010.0
+    label: A-17HPW_GPT_MAY97
+    value: 21560120.0
+  - date: '1997-09-01'
+    error: 3821750.0
+    label: A-17HPW_GPT_SEP97
+    value: 38217472.0
+  - date: '1998-01-01'
+    error: 5019930.0
+    label: A-17HPW_GPT_JAN98
+    value: 50199304.0
+  - date: '1998-05-01'
+    error: 8257430.0
+    label: A-17HPW_GPT_MAY98
+    value: 82574328.0
+  - date: '1998-09-01'
+    error: 11254070.0
+    label: A-17HPW_GPT_SEP98
+    value: 112540744.0
+  - date: '1999-01-01'
+    error: 14423340.0
+    label: A-17HPW_GPT_JAN99
+    value: 144233424.0
+  - date: '1999-05-01'
+    error: 17123060.0
+    label: A-17HPW_GPT_MAY99
+    value: 171230560.0
+  - date: '1999-09-01'
+    error: 19607500.0
+    label: A-17HPW_GPT_SEP99
+    value: 196074992.0
+  - date: '2000-01-01'
+    error: 21220640.0
+    label: A-17HPW_GPT_JAN00
+    value: 212206416.0
+  - date: '2000-05-01'
+    error: 23544270.0
+    label: A-17HPW_GPT_MAY00
+    value: 235442720.0
+  - date: '2000-09-01'
+    error: 25679930.0
+    label: A-17HPW_GPT_SEP00
+    value: 256799280.0
+  - date: '2001-01-01'
+    error: 27012770.0
+    label: A-17HPW_GPT_JAN01
+    value: 270127744.0
+  - date: '2001-05-01'
+    error: 27311580.0
+    label: A-17HPW_GPT_MAY01
+    value: 273115840.0
+  - date: '2001-09-01'
+    error: 27400410.0
+    label: A-17HPW_GPT_SEP01
+    value: 274004064.0
+- key: WGPT:A-1AHP
+  observations:
+  - date: '2001-01-01'
+    error: 216660.0
+    label: A-1AHP_GPT_JAN01
+    value: 2166574.0
+  - date: '2001-05-01'
+    error: 4369570.0
+    label: A-1AHP_GPT_MAY01
+    value: 43695672.0
+  - date: '2001-09-01'
+    error: 8765710.0
+    label: A-1AHP_GPT_SEP01
+    value: 87657080.0
+  - date: '2002-01-01'
+    error: 12821700.0
+    label: A-1AHP_GPT_JAN02
+    value: 128217000.0
+  - date: '2002-05-01'
+    error: 15526440.0
+    label: A-1AHP_GPT_MAY02
+    value: 155264400.0
+  - date: '2002-09-01'
+    error: 18547230.0
+    label: A-1AHP_GPT_SEP02
+    value: 185472256.0
+  - date: '2003-01-01'
+    error: 20594250.0
+    label: A-1AHP_GPT_JAN03
+    value: 205942512.0
+  - date: '2003-05-01'
+    error: 23188750.0
+    label: A-1AHP_GPT_MAY03
+    value: 231887456.0
+  - date: '2003-09-01'
+    error: 25187270.0
+    label: A-1AHP_GPT_SEP03
+    value: 251872656.0
+  - date: '2004-01-01'
+    error: 27985780.0
+    label: A-1AHP_GPT_JAN04
+    value: 279857824.0
+  - date: '2004-05-01'
+    error: 29839160.0
+    label: A-1AHP_GPT_MAY04
+    value: 298391648.0
+  - date: '2004-09-01'
+    error: 31848870.0
+    label: A-1AHP_GPT_SEP04
+    value: 318488704.0
+  - date: '2005-01-01'
+    error: 33579600.0
+    label: A-1AHP_GPT_JAN05
+    value: 335796000.0
+  - date: '2005-05-01'
+    error: 34897640.0
+    label: A-1AHP_GPT_MAY05
+    value: 348976384.0
+  - date: '2005-09-01'
+    error: 36077060.0
+    label: A-1AHP_GPT_SEP05
+    value: 360770592.0
+  - date: '2006-01-01'
+    error: 36830380.0
+    label: A-1AHP_GPT_JAN06
+    value: 368303808.0
+  - date: '2006-05-01'
+    error: 37359430.0
+    label: A-1AHP_GPT_MAY06
+    value: 373594272.0
+  - date: '2006-09-01'
+    error: 38044550.0
+    label: A-1AHP_GPT_SEP06
+    value: 380445472.0
+  - date: '2007-01-01'
+    error: 39011060.0
+    label: A-1AHP_GPT_JAN07
+    value: 390110624.0
+  - date: '2007-05-01'
+    error: 39873320.0
+    label: A-1AHP_GPT_MAY07
+    value: 398733248.0
+  - date: '2007-09-01'
+    error: 40652580.0
+    label: A-1AHP_GPT_SEP07
+    value: 406525760.0
+  - date: '2008-01-01'
+    error: 41552920.0
+    label: A-1AHP_GPT_JAN08
+    value: 415529216.0
+  - date: '2008-05-01'
+    error: 42532390.0
+    label: A-1AHP_GPT_MAY08
+    value: 425323904.0
+  - date: '2008-09-01'
+    error: 43280920.0
+    label: A-1AHP_GPT_SEP08
+    value: 432809216.0
+  - date: '2009-01-01'
+    error: 44360060.0
+    label: A-1AHP_GPT_JAN09
+    value: 443600640.0
+  - date: '2009-05-01'
+    error: 45826900.0
+    label: A-1AHP_GPT_MAY09
+    value: 458268960.0
+  - date: '2009-09-01'
+    error: 47581270.0
+    label: A-1AHP_GPT_SEP09
+    value: 475812672.0
+  - date: '2010-01-01'
+    error: 48723080.0
+    label: A-1AHP_GPT_JAN10
+    value: 487230816.0
+  - date: '2010-05-01'
+    error: 50159240.0
+    label: A-1AHP_GPT_MAY10
+    value: 501592384.0
+  - date: '2010-09-01'
+    error: 51311290.0
+    label: A-1AHP_GPT_SEP10
+    value: 513112928.0
+  - date: '2011-01-01'
+    error: 52344280.0
+    label: A-1AHP_GPT_JAN11
+    value: 523442848.0
+  - date: '2011-05-01'
+    error: 53710960.0
+    label: A-1AHP_GPT_MAY11
+    value: 537109632.0
+  - date: '2011-09-01'
+    error: 55195560.0
+    label: A-1AHP_GPT_SEP11
+    value: 551955648.0
+  - date: '2012-01-01'
+    error: 56252160.0
+    label: A-1AHP_GPT_JAN12
+    value: 562521600.0
+  - date: '2012-05-01'
+    error: 57627960.0
+    label: A-1AHP_GPT_MAY12
+    value: 576279616.0
+  - date: '2012-09-01'
+    error: 58904960.0
+    label: A-1AHP_GPT_SEP12
+    value: 589049600.0
+  - date: '2013-01-01'
+    error: 59734850.0
+    label: A-1AHP_GPT_JAN13
+    value: 597348480.0
+  - date: '2013-05-01'
+    error: 59888790.0
+    label: A-1AHP_GPT_MAY13
+    value: 598887936.0
+  - date: '2013-09-01'
+    error: 60641140.0
+    label: A-1AHP_GPT_SEP13
+    value: 606411392.0
+  - date: '2014-01-01'
+    error: 62398930.0
+    label: A-1AHP_GPT_JAN14
+    value: 623989312.0
+  - date: '2014-05-01'
+    error: 64060580.0
+    label: A-1AHP_GPT_MAY14
+    value: 640605824.0
+  - date: '2014-09-01'
+    error: 65387320.0
+    label: A-1AHP_GPT_SEP14
+    value: 653873152.0
+  - date: '2015-01-01'
+    error: 67230500.0
+    label: A-1AHP_GPT_JAN15
+    value: 672305024.0
+  - date: '2015-05-01'
+    error: 68832380.0
+    label: A-1AHP_GPT_MAY15
+    value: 688323840.0
+  - date: '2015-09-01'
+    error: 70543040.0
+    label: A-1AHP_GPT_SEP15
+    value: 705430400.0
+  - date: '2016-01-01'
+    error: 72419560.0
+    label: A-1AHP_GPT_JAN16
+    value: 724195584.0
+  - date: '2016-05-01'
+    error: 74163730.0
+    label: A-1AHP_GPT_MAY16
+    value: 741637312.0
+  - date: '2016-09-01'
+    error: 76432400.0
+    label: A-1AHP_GPT_SEP16
+    value: 764324032.0
+  - date: '2017-01-01'
+    error: 78887940.0
+    label: A-1AHP_GPT_JAN17
+    value: 788879360.0
+  - date: '2017-05-01'
+    error: 81398140.0
+    label: A-1AHP_GPT_MAY17
+    value: 813981376.0
+  - date: '2017-09-01'
+    error: 82778250.0
+    label: A-1AHP_GPT_SEP17
+    value: 827782528.0
+  - date: '2018-01-01'
+    error: 83951590.0
+    label: A-1AHP_GPT_JAN18
+    value: 839515904.0
+  - date: '2018-05-01'
+    error: 85077070.0
+    label: A-1AHP_GPT_MAY18
+    value: 850770688.0
+  - date: '2018-09-01'
+    error: 86217580.0
+    label: A-1AHP_GPT_SEP18
+    value: 862175808.0
+  - date: '2019-01-01'
+    error: 88507800.0
+    label: A-1AHP_GPT_JAN19
+    value: 885078016.0
+  - date: '2019-05-01'
+    error: 89323810.0
+    label: A-1AHP_GPT_MAY19
+    value: 893238080.0
+  - date: '2019-09-01'
+    error: 89722940.0
+    label: A-1AHP_GPT_SEP19
+    value: 897229440.0
+  - date: '2020-05-01'
+    error: 90141010.0
+    label: A-1AHP_GPT_MAY20
+    value: 901410112.0
+  - date: '2020-09-01'
+    error: 90846460.0
+    label: A-1AHP_GPT_SEP20
+    value: 908464640.0
+  - date: '2021-01-01'
+    error: 91519660.0
+    label: A-1AHP_GPT_JAN21
+    value: 915196608.0
+  - date: '2021-05-01'
+    error: 93670840.0
+    label: A-1AHP_GPT_MAY21
+    value: 936708416.0
+  - date: '2021-09-01'
+    error: 95092930.0
+    label: A-1AHP_GPT_SEP21
+    value: 950929280.0
+  - date: '2022-01-01'
+    error: 95631280.0
+    label: A-1AHP_GPT_JAN22
+    value: 956312832.0
+  - date: '2022-05-01'
+    error: 97116080.0
+    label: A-1AHP_GPT_MAY22
+    value: 971160811.0
+  - date: '2022-09-01'
+    error: 98410460.0
+    label: A-1AHP_GPT_SEP22
+    value: 984104631.0
+- key: WGPT:A-1HP
+  observations:
+  - date: '1993-09-01'
+    error: 1722550.0
+    label: A-1HP_GPT_SEP93
+    value: 17225464.0
+  - date: '1994-01-01'
+    error: 4234620.0
+    label: A-1HP_GPT_JAN94
+    value: 42346236.0
+  - date: '1994-05-01'
+    error: 8345300.0
+    label: A-1HP_GPT_MAY94
+    value: 83453000.0
+  - date: '1994-09-01'
+    error: 10757320.0
+    label: A-1HP_GPT_SEP94
+    value: 107573200.0
+  - date: '1995-01-01'
+    error: 14121970.0
+    label: A-1HP_GPT_JAN95
+    value: 141219744.0
+  - date: '1995-05-01'
+    error: 16557040.0
+    label: A-1HP_GPT_MAY95
+    value: 165570368.0
+  - date: '1995-09-01'
+    error: 19107270.0
+    label: A-1HP_GPT_SEP95
+    value: 191072656.0
+  - date: '1996-01-01'
+    error: 23064060.0
+    label: A-1HP_GPT_JAN96
+    value: 230640560.0
+  - date: '1996-05-01'
+    error: 25516050.0
+    label: A-1HP_GPT_MAY96
+    value: 255160528.0
+  - date: '1996-09-01'
+    error: 27917270.0
+    label: A-1HP_GPT_SEP96
+    value: 279172672.0
+  - date: '1997-01-01'
+    error: 29591120.0
+    label: A-1HP_GPT_JAN97
+    value: 295911168.0
+  - date: '1997-05-01'
+    error: 30920210.0
+    label: A-1HP_GPT_MAY97
+    value: 309202080.0
+  - date: '1997-09-01'
+    error: 32050230.0
+    label: A-1HP_GPT_SEP97
+    value: 320502304.0
+  - date: '1998-01-01'
+    error: 33081960.0
+    label: A-1HP_GPT_JAN98
+    value: 330819616.0
+  - date: '1998-05-01'
+    error: 33630810.0
+    label: A-1HP_GPT_MAY98
+    value: 336308096.0
+  - date: '1998-09-01'
+    error: 34034530.0
+    label: A-1HP_GPT_SEP98
+    value: 340345280.0
+  - date: '1999-01-01'
+    error: 35064950.0
+    label: A-1HP_GPT_JAN99
+    value: 350649472.0
+  - date: '1999-05-01'
+    error: 35968350.0
+    label: A-1HP_GPT_MAY99
+    value: 359683520.0
+  - date: '1999-09-01'
+    error: 37045670.0
+    label: A-1HP_GPT_SEP99
+    value: 370456672.0
+  - date: '2000-01-01'
+    error: 37282290.0
+    label: A-1HP_GPT_JAN00
+    value: 372822880.0
+- key: WGPT:A-2AHPW
+  observations:
+  - date: '1999-09-01'
+    error: 1777320.0
+    label: A-2AHPW_GPT_SEP99
+    value: 17773200.0
+  - date: '2000-01-01'
+    error: 3083950.0
+    label: A-2AHPW_GPT_JAN00
+    value: 30839456.0
+- key: WGPT:A-3AHP
+  observations:
+  - date: '2005-05-01'
+    error: 415210.0
+    label: A-3AHP_GPT_MAY05
+    value: 4152074.0
+  - date: '2005-09-01'
+    error: 2761590.0
+    label: A-3AHP_GPT_SEP05
+    value: 27615926.0
+  - date: '2006-01-01'
+    error: 4425180.0
+    label: A-3AHP_GPT_JAN06
+    value: 44251780.0
+  - date: '2006-05-01'
+    error: 5621880.0
+    label: A-3AHP_GPT_MAY06
+    value: 56218840.0
+  - date: '2006-09-01'
+    error: 7373600.0
+    label: A-3AHP_GPT_SEP06
+    value: 73736000.0
+  - date: '2007-01-01'
+    error: 8621010.0
+    label: A-3AHP_GPT_JAN07
+    value: 86210056.0
+  - date: '2007-05-01'
+    error: 10102410.0
+    label: A-3AHP_GPT_MAY07
+    value: 101024120.0
+  - date: '2007-09-01'
+    error: 11107600.0
+    label: A-3AHP_GPT_SEP07
+    value: 111076024.0
+  - date: '2008-01-01'
+    error: 12459070.0
+    label: A-3AHP_GPT_JAN08
+    value: 124590712.0
+  - date: '2008-05-01'
+    error: 14173660.0
+    label: A-3AHP_GPT_MAY08
+    value: 141736640.0
+  - date: '2008-09-01'
+    error: 15457240.0
+    label: A-3AHP_GPT_SEP08
+    value: 154572368.0
+  - date: '2009-01-01'
+    error: 16322590.0
+    label: A-3AHP_GPT_JAN09
+    value: 163225888.0
+  - date: '2009-05-01'
+    error: 17258890.0
+    label: A-3AHP_GPT_MAY09
+    value: 172588864.0
+  - date: '2009-09-01'
+    error: 18103270.0
+    label: A-3AHP_GPT_SEP09
+    value: 181032688.0
+  - date: '2010-01-01'
+    error: 18878560.0
+    label: A-3AHP_GPT_JAN10
+    value: 188785600.0
+  - date: '2010-05-01'
+    error: 19837760.0
+    label: A-3AHP_GPT_MAY10
+    value: 198377552.0
+  - date: '2010-09-01'
+    error: 20613560.0
+    label: A-3AHP_GPT_SEP10
+    value: 206135600.0
+  - date: '2011-01-01'
+    error: 21460180.0
+    label: A-3AHP_GPT_JAN11
+    value: 214601776.0
+  - date: '2011-05-01'
+    error: 22156820.0
+    label: A-3AHP_GPT_MAY11
+    value: 221568160.0
+  - date: '2011-09-01'
+    error: 22714260.0
+    label: A-3AHP_GPT_SEP11
+    value: 227142576.0
+  - date: '2012-01-01'
+    error: 23328170.0
+    label: A-3AHP_GPT_JAN12
+    value: 233281712.0
+  - date: '2012-05-01'
+    error: 24100670.0
+    label: A-3AHP_GPT_MAY12
+    value: 241006720.0
+  - date: '2012-09-01'
+    error: 24770060.0
+    label: A-3AHP_GPT_SEP12
+    value: 247700624.0
+  - date: '2013-01-01'
+    error: 25151180.0
+    label: A-3AHP_GPT_JAN13
+    value: 251511824.0
+  - date: '2013-09-01'
+    error: 25391350.0
+    label: A-3AHP_GPT_SEP13
+    value: 253913488.0
+  - date: '2014-01-01'
+    error: 26125900.0
+    label: A-3AHP_GPT_JAN14
+    value: 261258976.0
+  - date: '2014-05-01'
+    error: 26901590.0
+    label: A-3AHP_GPT_MAY14
+    value: 269015936.0
+  - date: '2014-09-01'
+    error: 27416360.0
+    label: A-3AHP_GPT_SEP14
+    value: 274163552.0
+  - date: '2015-01-01'
+    error: 28154120.0
+    label: A-3AHP_GPT_JAN15
+    value: 281541216.0
+  - date: '2015-05-01'
+    error: 28794920.0
+    label: A-3AHP_GPT_MAY15
+    value: 287949152.0
+  - date: '2015-09-01'
+    error: 29423700.0
+    label: A-3AHP_GPT_SEP15
+    value: 294236960.0
+  - date: '2016-01-01'
+    error: 30256540.0
+    label: A-3AHP_GPT_JAN16
+    value: 302565376.0
+  - date: '2016-05-01'
+    error: 30940870.0
+    label: A-3AHP_GPT_MAY16
+    value: 309408704.0
+  - date: '2016-09-01'
+    error: 31573120.0
+    label: A-3AHP_GPT_SEP16
+    value: 315731200.0
+  - date: '2017-01-01'
+    error: 32158980.0
+    label: A-3AHP_GPT_JAN17
+    value: 321589792.0
+  - date: '2017-05-01'
+    error: 32417670.0
+    label: A-3AHP_GPT_MAY17
+    value: 324176736.0
+  - date: '2017-09-01'
+    error: 32864050.0
+    label: A-3AHP_GPT_SEP17
+    value: 328640480.0
+  - date: '2018-01-01'
+    error: 33042880.0
+    label: A-3AHP_GPT_JAN18
+    value: 330428768.0
+  - date: '2018-05-01'
+    error: 33282440.0
+    label: A-3AHP_GPT_MAY18
+    value: 332824384.0
+  - date: '2018-09-01'
+    error: 33490660.0
+    label: A-3AHP_GPT_SEP18
+    value: 334906560.0
+  - date: '2019-01-01'
+    error: 33720760.0
+    label: A-3AHP_GPT_JAN19
+    value: 337207552.0
+  - date: '2019-05-01'
+    error: 33954270.0
+    label: A-3AHP_GPT_MAY19
+    value: 339542688.0
+  - date: '2019-09-01'
+    error: 33975530.0
+    label: A-3AHP_GPT_SEP19
+    value: 339755328.0
+  - date: '2020-05-01'
+    error: 34182170.0
+    label: A-3AHP_GPT_MAY20
+    value: 341821664.0
+  - date: '2020-09-01'
+    error: 34238090.0
+    label: A-3AHP_GPT_SEP20
+    value: 342380864.0
+- key: WGPT:A-3HPW
+  observations:
+  - date: '1994-05-01'
+    error: 1065270.0
+    label: A-3HPW_GPT_MAY94
+    value: 10652695.0
+  - date: '1994-09-01'
+    error: 2764080.0
+    label: A-3HPW_GPT_SEP94
+    value: 27640770.0
+  - date: '1995-01-01'
+    error: 4453610.0
+    label: A-3HPW_GPT_JAN95
+    value: 44536108.0
+  - date: '1995-05-01'
+    error: 6470930.0
+    label: A-3HPW_GPT_MAY95
+    value: 64709332.0
+  - date: '1995-09-01'
+    error: 8011840.0
+    label: A-3HPW_GPT_SEP95
+    value: 80118400.0
+  - date: '1996-01-01'
+    error: 10926840.0
+    label: A-3HPW_GPT_JAN96
+    value: 109268408.0
+  - date: '1996-05-01'
+    error: 12579790.0
+    label: A-3HPW_GPT_MAY96
+    value: 125797904.0
+  - date: '1996-09-01'
+    error: 13500230.0
+    label: A-3HPW_GPT_SEP96
+    value: 135002320.0
+  - date: '1997-01-01'
+    error: 14990260.0
+    label: A-3HPW_GPT_JAN97
+    value: 149902608.0
+  - date: '1997-05-01'
+    error: 17126050.0
+    label: A-3HPW_GPT_MAY97
+    value: 171260496.0
+  - date: '1997-09-01'
+    error: 19417630.0
+    label: A-3HPW_GPT_SEP97
+    value: 194176288.0
+  - date: '1998-01-01'
+    error: 21788300.0
+    label: A-3HPW_GPT_JAN98
+    value: 217882976.0
+  - date: '1998-05-01'
+    error: 24195750.0
+    label: A-3HPW_GPT_MAY98
+    value: 241957488.0
+  - date: '1998-09-01'
+    error: 25890500.0
+    label: A-3HPW_GPT_SEP98
+    value: 258904992.0
+  - date: '1999-01-01'
+    error: 27455710.0
+    label: A-3HPW_GPT_JAN99
+    value: 274557088.0
+  - date: '1999-05-01'
+    error: 27961110.0
+    label: A-3HPW_GPT_MAY99
+    value: 279611136.0
+  - date: '1999-09-01'
+    error: 30073080.0
+    label: A-3HPW_GPT_SEP99
+    value: 300730752.0
+  - date: '2000-01-01'
+    error: 32295800.0
+    label: A-3HPW_GPT_JAN00
+    value: 322958016.0
+  - date: '2000-05-01'
+    error: 36106650.0
+    label: A-3HPW_GPT_MAY00
+    value: 361066464.0
+  - date: '2000-09-01'
+    error: 39156630.0
+    label: A-3HPW_GPT_SEP00
+    value: 391566304.0
+  - date: '2001-01-01'
+    error: 41522270.0
+    label: A-3HPW_GPT_JAN01
+    value: 415222720.0
+  - date: '2001-05-01'
+    error: 43646570.0
+    label: A-3HPW_GPT_MAY01
+    value: 436465664.0
+  - date: '2001-09-01'
+    error: 45939870.0
+    label: A-3HPW_GPT_SEP01
+    value: 459398688.0
+  - date: '2002-01-01'
+    error: 47459510.0
+    label: A-3HPW_GPT_JAN02
+    value: 474595104.0
+  - date: '2002-09-01'
+    error: 48061330.0
+    label: A-3HPW_GPT_SEP02
+    value: 480613344.0
+- key: WGPT:A-4AHPW
+  observations:
+  - date: '2003-01-01'
+    error: 1173960.0
+    label: A-4AHPW_GPT_JAN03
+    value: 11739555.0
+  - date: '2003-05-01'
+    error: 2936550.0
+    label: A-4AHPW_GPT_MAY03
+    value: 29365474.0
+  - date: '2003-09-01'
+    error: 4857240.0
+    label: A-4AHPW_GPT_SEP03
+    value: 48572388.0
+  - date: '2004-01-01'
+    error: 7489620.0
+    label: A-4AHPW_GPT_JAN04
+    value: 74896152.0
+  - date: '2004-05-01'
+    error: 9485220.0
+    label: A-4AHPW_GPT_MAY04
+    value: 94852208.0
+  - date: '2004-09-01'
+    error: 11256780.0
+    label: A-4AHPW_GPT_SEP04
+    value: 112567800.0
+  - date: '2005-01-01'
+    error: 12801850.0
+    label: A-4AHPW_GPT_JAN05
+    value: 128018528.0
+  - date: '2005-05-01'
+    error: 13527520.0
+    label: A-4AHPW_GPT_MAY05
+    value: 135275152.0
+  - date: '2005-09-01'
+    error: 14235170.0
+    label: A-4AHPW_GPT_SEP05
+    value: 142351712.0
+  - date: '2006-01-01'
+    error: 14831250.0
+    label: A-4AHPW_GPT_JAN06
+    value: 148312512.0
+  - date: '2006-05-01'
+    error: 15164770.0
+    label: A-4AHPW_GPT_MAY06
+    value: 151647664.0
+  - date: '2006-09-01'
+    error: 15803880.0
+    label: A-4AHPW_GPT_SEP06
+    value: 158038752.0
+  - date: '2007-01-01'
+    error: 16288020.0
+    label: A-4AHPW_GPT_JAN07
+    value: 162880224.0
+  - date: '2007-05-01'
+    error: 16724630.0
+    label: A-4AHPW_GPT_MAY07
+    value: 167246320.0
+  - date: '2007-09-01'
+    error: 16965990.0
+    label: A-4AHPW_GPT_SEP07
+    value: 169659904.0
+  - date: '2008-01-01'
+    error: 17772300.0
+    label: A-4AHPW_GPT_JAN08
+    value: 177722960.0
+  - date: '2008-05-01'
+    error: 18661870.0
+    label: A-4AHPW_GPT_MAY08
+    value: 186618688.0
+  - date: '2008-09-01'
+    error: 19239520.0
+    label: A-4AHPW_GPT_SEP08
+    value: 192395152.0
+  - date: '2009-01-01'
+    error: 19565490.0
+    label: A-4AHPW_GPT_JAN09
+    value: 195654928.0
+  - date: '2009-05-01'
+    error: 19928540.0
+    label: A-4AHPW_GPT_MAY09
+    value: 199285392.0
+  - date: '2009-09-01'
+    error: 20289720.0
+    label: A-4AHPW_GPT_SEP09
+    value: 202897184.0
+  - date: '2010-01-01'
+    error: 20452060.0
+    label: A-4AHPW_GPT_JAN10
+    value: 204520640.0
+  - date: '2010-05-01'
+    error: 20700740.0
+    label: A-4AHPW_GPT_MAY10
+    value: 207007440.0
+  - date: '2010-09-01'
+    error: 20845190.0
+    label: A-4AHPW_GPT_SEP10
+    value: 208451920.0
+  - date: '2011-01-01'
+    error: 21089400.0
+    label: A-4AHPW_GPT_JAN11
+    value: 210893984.0
+  - date: '2011-05-01'
+    error: 21263840.0
+    label: A-4AHPW_GPT_MAY11
+    value: 212638384.0
+  - date: '2011-09-01'
+    error: 21601820.0
+    label: A-4AHPW_GPT_SEP11
+    value: 216018208.0
+  - date: '2012-01-01'
+    error: 21729230.0
+    label: A-4AHPW_GPT_JAN12
+    value: 217292336.0
+  - date: '2013-09-01'
+    error: 21777030.0
+    label: A-4AHPW_GPT_SEP13
+    value: 217770304.0
+  - date: '2014-01-01'
+    error: 21919100.0
+    label: A-4AHPW_GPT_JAN14
+    value: 219191040.0
+  - date: '2014-05-01'
+    error: 21938170.0
+    label: A-4AHPW_GPT_MAY14
+    value: 219381664.0
+  - date: '2014-09-01'
+    error: 21960120.0
+    label: A-4AHPW_GPT_SEP14
+    value: 219601232.0
+  - date: '2015-01-01'
+    error: 22072780.0
+    label: A-4AHPW_GPT_JAN15
+    value: 220727808.0
+  - date: '2015-05-01'
+    error: 22175500.0
+    label: A-4AHPW_GPT_MAY15
+    value: 221754976.0
+- key: WGPT:A-4HP
+  observations:
+  - date: '1993-05-01'
+    error: 695340.0
+    label: A-4HP_GPT_MAY93
+    value: 6953358.0
+  - date: '1993-09-01'
+    error: 1124620.0
+    label: A-4HP_GPT_SEP93
+    value: 11246179.0
+  - date: '1994-01-01'
+    error: 3487640.0
+    label: A-4HP_GPT_JAN94
+    value: 34876440.0
+  - date: '1994-05-01'
+    error: 7295600.0
+    label: A-4HP_GPT_MAY94
+    value: 72955984.0
+  - date: '1994-09-01'
+    error: 9520580.0
+    label: A-4HP_GPT_SEP94
+    value: 95205824.0
+  - date: '1995-01-01'
+    error: 13478890.0
+    label: A-4HP_GPT_JAN95
+    value: 134788896.0
+  - date: '1995-05-01'
+    error: 17015550.0
+    label: A-4HP_GPT_MAY95
+    value: 170155504.0
+  - date: '1995-09-01'
+    error: 19845070.0
+    label: A-4HP_GPT_SEP95
+    value: 198450704.0
+  - date: '1996-01-01'
+    error: 22795490.0
+    label: A-4HP_GPT_JAN96
+    value: 227954896.0
+  - date: '1996-05-01'
+    error: 26180400.0
+    label: A-4HP_GPT_MAY96
+    value: 261804000.0
+  - date: '1996-09-01'
+    error: 30929850.0
+    label: A-4HP_GPT_SEP96
+    value: 309298496.0
+  - date: '1997-01-01'
+    error: 35034250.0
+    label: A-4HP_GPT_JAN97
+    value: 350342464.0
+  - date: '1997-05-01'
+    error: 38725800.0
+    label: A-4HP_GPT_MAY97
+    value: 387258016.0
+  - date: '1997-09-01'
+    error: 42268760.0
+    label: A-4HP_GPT_SEP97
+    value: 422687648.0
+  - date: '1998-01-01'
+    error: 45839770.0
+    label: A-4HP_GPT_JAN98
+    value: 458397664.0
+  - date: '1998-05-01'
+    error: 48267480.0
+    label: A-4HP_GPT_MAY98
+    value: 482674784.0
+  - date: '1998-09-01'
+    error: 50605990.0
+    label: A-4HP_GPT_SEP98
+    value: 506059904.0
+  - date: '1999-01-01'
+    error: 53603780.0
+    label: A-4HP_GPT_JAN99
+    value: 536037824.0
+  - date: '1999-05-01'
+    error: 55631370.0
+    label: A-4HP_GPT_MAY99
+    value: 556313728.0
+  - date: '1999-09-01'
+    error: 56990250.0
+    label: A-4HP_GPT_SEP99
+    value: 569902464.0
+  - date: '2000-01-01'
+    error: 57909640.0
+    label: A-4HP_GPT_JAN00
+    value: 579096448.0
+  - date: '2000-05-01'
+    error: 58380680.0
+    label: A-4HP_GPT_MAY00
+    value: 583806784.0
+  - date: '2000-09-01'
+    error: 58611990.0
+    label: A-4HP_GPT_SEP00
+    value: 586119936.0
+  - date: '2001-05-01'
+    error: 58726050.0
+    label: A-4HP_GPT_MAY01
+    value: 587260544.0
+- key: WOPT:A-16HP
+  observations:
+  - date: '2002-01-01'
+    error: 9960.0
+    label: A-16HP_OPT_JAN02
+    value: 99572.05
+  - date: '2002-05-01'
+    error: 31220.0
+    label: A-16HP_OPT_MAY02
+    value: 312221.09
+  - date: '2002-09-01'
+    error: 53710.0
+    label: A-16HP_OPT_SEP02
+    value: 537148.94
+  - date: '2003-01-01'
+    error: 66270.0
+    label: A-16HP_OPT_JAN03
+    value: 662748.81
+  - date: '2003-05-01'
+    error: 79190.0
+    label: A-16HP_OPT_MAY03
+    value: 791894.81
+  - date: '2003-09-01'
+    error: 94000.0
+    label: A-16HP_OPT_SEP03
+    value: 940026.19
+  - date: '2004-01-01'
+    error: 109480.0
+    label: A-16HP_OPT_JAN04
+    value: 1094841.5
+  - date: '2004-05-01'
+    error: 126200.0
+    label: A-16HP_OPT_MAY04
+    value: 1261977.88
+  - date: '2004-09-01'
+    error: 138360.0
+    label: A-16HP_OPT_SEP04
+    value: 1383629.12
+  - date: '2005-01-01'
+    error: 147950.0
+    label: A-16HP_OPT_JAN05
+    value: 1479543.88
+  - date: '2005-05-01'
+    error: 158740.0
+    label: A-16HP_OPT_MAY05
+    value: 1587448.75
+  - date: '2005-09-01'
+    error: 166870.0
+    label: A-16HP_OPT_SEP05
+    value: 1668686.75
+  - date: '2006-01-01'
+    error: 173140.0
+    label: A-16HP_OPT_JAN06
+    value: 1731426.62
+  - date: '2006-05-01'
+    error: 178960.0
+    label: A-16HP_OPT_MAY06
+    value: 1789637.12
+  - date: '2006-09-01'
+    error: 181170.0
+    label: A-16HP_OPT_SEP06
+    value: 1811665.62
+  - date: '2007-01-01'
+    error: 184540.0
+    label: A-16HP_OPT_JAN07
+    value: 1845374.25
+  - date: '2007-05-01'
+    error: 190120.0
+    label: A-16HP_OPT_MAY07
+    value: 1901164.62
+  - date: '2007-09-01'
+    error: 193980.0
+    label: A-16HP_OPT_SEP07
+    value: 1939849.38
+  - date: '2008-01-01'
+    error: 198540.0
+    label: A-16HP_OPT_JAN08
+    value: 1985401.75
+  - date: '2008-05-01'
+    error: 202650.0
+    label: A-16HP_OPT_MAY08
+    value: 2026528.88
+  - date: '2008-09-01'
+    error: 206120.0
+    label: A-16HP_OPT_SEP08
+    value: 2061172.62
+  - date: '2009-09-01'
+    error: 206520.0
+    label: A-16HP_OPT_SEP09
+    value: 2065157.12
+  - date: '2010-01-01'
+    error: 207420.0
+    label: A-16HP_OPT_JAN10
+    value: 2074166.5
+  - date: '2010-05-01'
+    error: 209670.0
+    label: A-16HP_OPT_MAY10
+    value: 2096683.25
+  - date: '2010-09-01'
+    error: 211460.0
+    label: A-16HP_OPT_SEP10
+    value: 2114562.5
+  - date: '2011-01-01'
+    error: 213530.0
+    label: A-16HP_OPT_JAN11
+    value: 2135307.75
+  - date: '2011-05-01'
+    error: 214960.0
+    label: A-16HP_OPT_MAY11
+    value: 2149627.0
+  - date: '2011-09-01'
+    error: 217930.0
+    label: A-16HP_OPT_SEP11
+    value: 2179306.0
+  - date: '2012-01-01'
+    error: 220190.0
+    label: A-16HP_OPT_JAN12
+    value: 2201939.75
+  - date: '2012-05-01'
+    error: 222930.0
+    label: A-16HP_OPT_MAY12
+    value: 2229293.0
+  - date: '2012-09-01'
+    error: 225250.0
+    label: A-16HP_OPT_SEP12
+    value: 2252531.75
+  - date: '2013-01-01'
+    error: 227580.0
+    label: A-16HP_OPT_JAN13
+    value: 2275781.25
+  - date: '2013-05-01'
+    error: 228050.0
+    label: A-16HP_OPT_MAY13
+    value: 2280463.5
+  - date: '2013-09-01'
+    error: 230200.0
+    label: A-16HP_OPT_SEP13
+    value: 2302040.25
+  - date: '2014-01-01'
+    error: 235500.0
+    label: A-16HP_OPT_JAN14
+    value: 2354982.75
+  - date: '2014-05-01'
+    error: 240110.0
+    label: A-16HP_OPT_MAY14
+    value: 2401109.25
+  - date: '2014-09-01'
+    error: 244430.0
+    label: A-16HP_OPT_SEP14
+    value: 2444296.5
+  - date: '2015-01-01'
+    error: 249780.0
+    label: A-16HP_OPT_JAN15
+    value: 2497842.0
+  - date: '2015-05-01'
+    error: 254300.0
+    label: A-16HP_OPT_MAY15
+    value: 2543044.5
+  - date: '2015-09-01'
+    error: 257400.0
+    label: A-16HP_OPT_SEP15
+    value: 2574010.75
+  - date: '2016-01-01'
+    error: 263760.0
+    label: A-16HP_OPT_JAN16
+    value: 2637624.0
+  - date: '2016-05-01'
+    error: 270910.0
+    label: A-16HP_OPT_MAY16
+    value: 2709148.0
+  - date: '2016-09-01'
+    error: 277230.0
+    label: A-16HP_OPT_SEP16
+    value: 2772312.25
+  - date: '2017-01-01'
+    error: 282270.0
+    label: A-16HP_OPT_JAN17
+    value: 2822725.75
+  - date: '2017-05-01'
+    error: 288060.0
+    label: A-16HP_OPT_MAY17
+    value: 2880602.0
+  - date: '2017-09-01'
+    error: 292650.0
+    label: A-16HP_OPT_SEP17
+    value: 2926534.5
+  - date: '2018-05-01'
+    error: 296030.0
+    label: A-16HP_OPT_MAY18
+    value: 2960267.5
+  - date: '2018-09-01'
+    error: 299810.0
+    label: A-16HP_OPT_SEP18
+    value: 2998076.75
+  - date: '2019-01-01'
+    error: 304230.0
+    label: A-16HP_OPT_JAN19
+    value: 3042279.5
+  - date: '2019-05-01'
+    error: 307940.0
+    label: A-16HP_OPT_MAY19
+    value: 3079412.0
+  - date: '2019-09-01'
+    error: 308450.0
+    label: A-16HP_OPT_SEP19
+    value: 3084484.25
+  - date: '2021-09-01'
+    error: 311460.0
+    label: A-16HP_OPT_SEP21
+    value: 3114590.75
+  - date: '2022-01-01'
+    error: 313320.0
+    label: A-16HP_OPT_JAN22
+    value: 3133211.58
+  - date: '2022-05-01'
+    error: 316900.0
+    label: A-16HP_OPT_MAY22
+    value: 3168994.25
+  - date: '2022-09-01'
+    error: 318550.0
+    label: A-16HP_OPT_SEP22
+    value: 3185521.5
+- key: WOPT:A-17HPW
+  observations:
+  - date: '1997-01-01'
+    error: 3460.0
+    label: A-17HPW_OPT_JAN97
+    value: 34632.36
+  - date: '1997-05-01'
+    error: 15740.0
+    label: A-17HPW_OPT_MAY97
+    value: 157368.72
+  - date: '1997-09-01'
+    error: 27650.0
+    label: A-17HPW_OPT_SEP97
+    value: 276529.31
+  - date: '1998-01-01'
+    error: 36290.0
+    label: A-17HPW_OPT_JAN98
+    value: 362949.94
+  - date: '1998-05-01'
+    error: 58560.0
+    label: A-17HPW_OPT_MAY98
+    value: 585550.75
+  - date: '1998-09-01'
+    error: 79020.0
+    label: A-17HPW_OPT_SEP98
+    value: 790246.75
+  - date: '1999-01-01'
+    error: 99180.0
+    label: A-17HPW_OPT_JAN99
+    value: 991816.19
+  - date: '1999-05-01'
+    error: 115290.0
+    label: A-17HPW_OPT_MAY99
+    value: 1152853.62
+  - date: '1999-09-01'
+    error: 130980.0
+    label: A-17HPW_OPT_SEP99
+    value: 1309836.62
+  - date: '2000-01-01'
+    error: 141010.0
+    label: A-17HPW_OPT_JAN00
+    value: 1410130.12
+  - date: '2000-05-01'
+    error: 154080.0
+    label: A-17HPW_OPT_MAY00
+    value: 1540817.25
+  - date: '2000-09-01'
+    error: 166750.0
+    label: A-17HPW_OPT_SEP00
+    value: 1667461.62
+  - date: '2001-01-01'
+    error: 174280.0
+    label: A-17HPW_OPT_JAN01
+    value: 1742793.5
+  - date: '2001-05-01'
+    error: 176190.0
+    label: A-17HPW_OPT_MAY01
+    value: 1761930.38
+  - date: '2001-09-01'
+    error: 176750.0
+    label: A-17HPW_OPT_SEP01
+    value: 1767471.75
+- key: WOPT:A-1AHP
+  observations:
+  - date: '2001-01-01'
+    error: 1380.0
+    label: A-1AHP_OPT_JAN01
+    value: 13754.73
+  - date: '2001-05-01'
+    error: 30060.0
+    label: A-1AHP_OPT_MAY01
+    value: 300607.44
+  - date: '2001-09-01'
+    error: 58270.0
+    label: A-1AHP_OPT_SEP01
+    value: 582684.12
+  - date: '2002-01-01'
+    error: 83960.0
+    label: A-1AHP_OPT_JAN02
+    value: 839576.31
+  - date: '2002-05-01'
+    error: 103790.0
+    label: A-1AHP_OPT_MAY02
+    value: 1037937.81
+  - date: '2002-09-01'
+    error: 125750.0
+    label: A-1AHP_OPT_SEP02
+    value: 1257517.62
+  - date: '2003-01-01'
+    error: 141770.0
+    label: A-1AHP_OPT_JAN03
+    value: 1417661.12
+  - date: '2003-05-01'
+    error: 162000.0
+    label: A-1AHP_OPT_MAY03
+    value: 1619966.12
+  - date: '2003-09-01'
+    error: 176700.0
+    label: A-1AHP_OPT_SEP03
+    value: 1767007.88
+  - date: '2004-01-01'
+    error: 193320.0
+    label: A-1AHP_OPT_JAN04
+    value: 1933181.38
+  - date: '2004-05-01'
+    error: 205660.0
+    label: A-1AHP_OPT_MAY04
+    value: 2056619.0
+  - date: '2004-09-01'
+    error: 218390.0
+    label: A-1AHP_OPT_SEP04
+    value: 2183875.5
+  - date: '2005-01-01'
+    error: 229030.0
+    label: A-1AHP_OPT_JAN05
+    value: 2290319.0
+  - date: '2005-05-01'
+    error: 238490.0
+    label: A-1AHP_OPT_MAY05
+    value: 2384926.75
+  - date: '2005-09-01'
+    error: 246420.0
+    label: A-1AHP_OPT_SEP05
+    value: 2464188.0
+  - date: '2006-01-01'
+    error: 251770.0
+    label: A-1AHP_OPT_JAN06
+    value: 2517691.75
+  - date: '2006-05-01'
+    error: 255820.0
+    label: A-1AHP_OPT_MAY06
+    value: 2558168.25
+  - date: '2006-09-01'
+    error: 261200.0
+    label: A-1AHP_OPT_SEP06
+    value: 2611958.5
+  - date: '2007-01-01'
+    error: 267220.0
+    label: A-1AHP_OPT_JAN07
+    value: 2672182.5
+  - date: '2007-05-01'
+    error: 272410.0
+    label: A-1AHP_OPT_MAY07
+    value: 2724061.25
+  - date: '2007-09-01'
+    error: 277580.0
+    label: A-1AHP_OPT_SEP07
+    value: 2775819.25
+  - date: '2008-01-01'
+    error: 282630.0
+    label: A-1AHP_OPT_JAN08
+    value: 2826308.0
+  - date: '2008-05-01'
+    error: 288750.0
+    label: A-1AHP_OPT_MAY08
+    value: 2887537.0
+  - date: '2008-09-01'
+    error: 292840.0
+    label: A-1AHP_OPT_SEP08
+    value: 2928449.5
+  - date: '2009-01-01'
+    error: 300490.0
+    label: A-1AHP_OPT_JAN09
+    value: 3004894.75
+  - date: '2009-05-01'
+    error: 310090.0
+    label: A-1AHP_OPT_MAY09
+    value: 3100875.5
+  - date: '2009-09-01'
+    error: 321840.0
+    label: A-1AHP_OPT_SEP09
+    value: 3218445.25
+  - date: '2010-01-01'
+    error: 330600.0
+    label: A-1AHP_OPT_JAN10
+    value: 3306032.0
+  - date: '2010-05-01'
+    error: 340710.0
+    label: A-1AHP_OPT_MAY10
+    value: 3407058.25
+  - date: '2010-09-01'
+    error: 348730.0
+    label: A-1AHP_OPT_SEP10
+    value: 3487290.75
+  - date: '2011-01-01'
+    error: 355440.0
+    label: A-1AHP_OPT_JAN11
+    value: 3554421.5
+  - date: '2011-05-01'
+    error: 364460.0
+    label: A-1AHP_OPT_MAY11
+    value: 3644555.25
+  - date: '2011-09-01'
+    error: 373910.0
+    label: A-1AHP_OPT_SEP11
+    value: 3739123.25
+  - date: '2012-01-01'
+    error: 380280.0
+    label: A-1AHP_OPT_JAN12
+    value: 3802751.5
+  - date: '2012-05-01'
+    error: 388110.0
+    label: A-1AHP_OPT_MAY12
+    value: 3881105.0
+  - date: '2012-09-01'
+    error: 395570.0
+    label: A-1AHP_OPT_SEP12
+    value: 3955746.25
+  - date: '2013-01-01'
+    error: 400760.0
+    label: A-1AHP_OPT_JAN13
+    value: 4007602.25
+  - date: '2013-05-01'
+    error: 401800.0
+    label: A-1AHP_OPT_MAY13
+    value: 4017995.25
+  - date: '2013-09-01'
+    error: 406210.0
+    label: A-1AHP_OPT_SEP13
+    value: 4062103.75
+  - date: '2014-01-01'
+    error: 415400.0
+    label: A-1AHP_OPT_JAN14
+    value: 4154000.5
+  - date: '2014-05-01'
+    error: 425540.0
+    label: A-1AHP_OPT_MAY14
+    value: 4255437.5
+  - date: '2014-09-01'
+    error: 433450.0
+    label: A-1AHP_OPT_SEP14
+    value: 4334534.5
+  - date: '2015-01-01'
+    error: 443520.0
+    label: A-1AHP_OPT_JAN15
+    value: 4435222.5
+  - date: '2015-05-01'
+    error: 452790.0
+    label: A-1AHP_OPT_MAY15
+    value: 4527916.0
+  - date: '2015-09-01'
+    error: 462550.0
+    label: A-1AHP_OPT_SEP15
+    value: 4625540.0
+  - date: '2016-01-01'
+    error: 472270.0
+    label: A-1AHP_OPT_JAN16
+    value: 4722684.0
+  - date: '2016-05-01'
+    error: 481420.0
+    label: A-1AHP_OPT_MAY16
+    value: 4814174.0
+  - date: '2016-09-01'
+    error: 491020.0
+    label: A-1AHP_OPT_SEP16
+    value: 4910203.0
+  - date: '2017-01-01'
+    error: 501740.0
+    label: A-1AHP_OPT_JAN17
+    value: 5017441.5
+  - date: '2017-05-01'
+    error: 511550.0
+    label: A-1AHP_OPT_MAY17
+    value: 5115496.0
+  - date: '2017-09-01'
+    error: 516540.0
+    label: A-1AHP_OPT_SEP17
+    value: 5165427.0
+  - date: '2018-01-01'
+    error: 519940.0
+    label: A-1AHP_OPT_JAN18
+    value: 5199364.0
+  - date: '2018-05-01'
+    error: 525690.0
+    label: A-1AHP_OPT_MAY18
+    value: 5256910.5
+  - date: '2018-09-01'
+    error: 530740.0
+    label: A-1AHP_OPT_SEP18
+    value: 5307403.0
+  - date: '2019-01-01'
+    error: 539990.0
+    label: A-1AHP_OPT_JAN19
+    value: 5399892.0
+  - date: '2019-05-01'
+    error: 544000.0
+    label: A-1AHP_OPT_MAY19
+    value: 5439987.0
+  - date: '2019-09-01'
+    error: 545760.0
+    label: A-1AHP_OPT_SEP19
+    value: 5457562.0
+  - date: '2020-05-01'
+    error: 547550.0
+    label: A-1AHP_OPT_MAY20
+    value: 5475537.0
+  - date: '2020-09-01'
+    error: 550540.0
+    label: A-1AHP_OPT_SEP20
+    value: 5505368.0
+  - date: '2021-01-01'
+    error: 552990.0
+    label: A-1AHP_OPT_JAN21
+    value: 5529860.5
+  - date: '2021-05-01'
+    error: 559750.0
+    label: A-1AHP_OPT_MAY21
+    value: 5597486.5
+  - date: '2021-09-01'
+    error: 565050.0
+    label: A-1AHP_OPT_SEP21
+    value: 5650465.0
+  - date: '2022-01-01'
+    error: 567010.0
+    label: A-1AHP_OPT_JAN22
+    value: 5670135.5
+  - date: '2022-05-01'
+    error: 572760.0
+    label: A-1AHP_OPT_MAY22
+    value: 5727648.67
+  - date: '2022-09-01'
+    error: 578370.0
+    label: A-1AHP_OPT_SEP22
+    value: 5783740.5
+- key: WOPT:A-1HP
+  observations:
+  - date: '1993-09-01'
+    error: 12930.0
+    label: A-1HP_OPT_SEP93
+    value: 129323.29
+  - date: '1994-01-01'
+    error: 32120.0
+    label: A-1HP_OPT_JAN94
+    value: 321245.69
+  - date: '1994-05-01'
+    error: 62150.0
+    label: A-1HP_OPT_MAY94
+    value: 621482.06
+  - date: '1994-09-01'
+    error: 80210.0
+    label: A-1HP_OPT_SEP94
+    value: 802076.38
+  - date: '1995-01-01'
+    error: 103750.0
+    label: A-1HP_OPT_JAN95
+    value: 1037494.06
+  - date: '1995-05-01'
+    error: 120750.0
+    label: A-1HP_OPT_MAY95
+    value: 1207487.38
+  - date: '1995-09-01'
+    error: 139750.0
+    label: A-1HP_OPT_SEP95
+    value: 1397542.75
+  - date: '1996-01-01'
+    error: 168010.0
+    label: A-1HP_OPT_JAN96
+    value: 1680137.0
+  - date: '1996-05-01'
+    error: 185420.0
+    label: A-1HP_OPT_MAY96
+    value: 1854164.25
+  - date: '1996-09-01'
+    error: 201990.0
+    label: A-1HP_OPT_SEP96
+    value: 2019918.25
+  - date: '1997-01-01'
+    error: 214440.0
+    label: A-1HP_OPT_JAN97
+    value: 2144414.5
+  - date: '1997-05-01'
+    error: 224560.0
+    label: A-1HP_OPT_MAY97
+    value: 2245586.0
+  - date: '1997-09-01'
+    error: 233130.0
+    label: A-1HP_OPT_SEP97
+    value: 2331295.0
+  - date: '1998-01-01'
+    error: 240960.0
+    label: A-1HP_OPT_JAN98
+    value: 2409564.25
+  - date: '1998-05-01'
+    error: 244910.0
+    label: A-1HP_OPT_MAY98
+    value: 2449120.75
+  - date: '1998-09-01'
+    error: 247880.0
+    label: A-1HP_OPT_SEP98
+    value: 2478769.0
+  - date: '1999-01-01'
+    error: 254530.0
+    label: A-1HP_OPT_JAN99
+    value: 2545281.0
+  - date: '1999-05-01'
+    error: 259690.0
+    label: A-1HP_OPT_MAY99
+    value: 2596945.25
+  - date: '1999-09-01'
+    error: 266390.0
+    label: A-1HP_OPT_SEP99
+    value: 2663926.25
+  - date: '2000-01-01'
+    error: 267900.0
+    label: A-1HP_OPT_JAN00
+    value: 2679029.25
+- key: WOPT:A-2AHPW
+  observations:
+  - date: '1999-09-01'
+    error: 11490.0
+    label: A-2AHPW_OPT_SEP99
+    value: 114898.97
+  - date: '2000-01-01'
+    error: 19670.0
+    label: A-2AHPW_OPT_JAN00
+    value: 196684.91
+- key: WOPT:A-3AHP
+  observations:
+  - date: '2005-05-01'
+    error: 3000.0
+    label: A-3AHP_OPT_MAY05
+    value: 30044.98
+  - date: '2005-09-01'
+    error: 19350.0
+    label: A-3AHP_OPT_SEP05
+    value: 193546.16
+  - date: '2006-01-01'
+    error: 30740.0
+    label: A-3AHP_OPT_JAN06
+    value: 307386.75
+  - date: '2006-05-01'
+    error: 38910.0
+    label: A-3AHP_OPT_MAY06
+    value: 389114.5
+  - date: '2006-09-01'
+    error: 52440.0
+    label: A-3AHP_OPT_SEP06
+    value: 524401.38
+  - date: '2007-01-01'
+    error: 62510.0
+    label: A-3AHP_OPT_JAN07
+    value: 625132.56
+  - date: '2007-05-01'
+    error: 74730.0
+    label: A-3AHP_OPT_MAY07
+    value: 747270.5
+  - date: '2007-09-01'
+    error: 83520.0
+    label: A-3AHP_OPT_SEP07
+    value: 835223.25
+  - date: '2008-01-01'
+    error: 93970.0
+    label: A-3AHP_OPT_JAN08
+    value: 939745.0
+  - date: '2008-05-01'
+    error: 105310.0
+    label: A-3AHP_OPT_MAY08
+    value: 1053078.75
+  - date: '2008-09-01'
+    error: 113960.0
+    label: A-3AHP_OPT_SEP08
+    value: 1139569.62
+  - date: '2009-01-01'
+    error: 120340.0
+    label: A-3AHP_OPT_JAN09
+    value: 1203435.75
+  - date: '2009-05-01'
+    error: 127020.0
+    label: A-3AHP_OPT_MAY09
+    value: 1270215.75
+  - date: '2009-09-01'
+    error: 132780.0
+    label: A-3AHP_OPT_SEP09
+    value: 1327810.38
+  - date: '2010-01-01'
+    error: 138070.0
+    label: A-3AHP_OPT_JAN10
+    value: 1380694.0
+  - date: '2010-05-01'
+    error: 143810.0
+    label: A-3AHP_OPT_MAY10
+    value: 1438105.0
+  - date: '2010-09-01'
+    error: 148390.0
+    label: A-3AHP_OPT_SEP10
+    value: 1483852.62
+  - date: '2011-01-01'
+    error: 153330.0
+    label: A-3AHP_OPT_JAN11
+    value: 1533250.12
+  - date: '2011-05-01'
+    error: 157480.0
+    label: A-3AHP_OPT_MAY11
+    value: 1574843.38
+  - date: '2011-09-01'
+    error: 161090.0
+    label: A-3AHP_OPT_SEP11
+    value: 1610894.25
+  - date: '2012-01-01'
+    error: 164720.0
+    label: A-3AHP_OPT_JAN12
+    value: 1647177.12
+  - date: '2012-05-01'
+    error: 168730.0
+    label: A-3AHP_OPT_MAY12
+    value: 1687320.25
+  - date: '2012-09-01'
+    error: 172150.0
+    label: A-3AHP_OPT_SEP12
+    value: 1721452.75
+  - date: '2013-01-01'
+    error: 174670.0
+    label: A-3AHP_OPT_JAN13
+    value: 1746677.75
+  - date: '2013-09-01'
+    error: 176010.0
+    label: A-3AHP_OPT_SEP13
+    value: 1760129.62
+  - date: '2014-01-01'
+    error: 179560.0
+    label: A-3AHP_OPT_JAN14
+    value: 1795564.5
+  - date: '2014-05-01'
+    error: 183340.0
+    label: A-3AHP_OPT_MAY14
+    value: 1833377.62
+  - date: '2014-09-01'
+    error: 186440.0
+    label: A-3AHP_OPT_SEP14
+    value: 1864394.38
+  - date: '2015-01-01'
+    error: 190270.0
+    label: A-3AHP_OPT_JAN15
+    value: 1902701.5
+  - date: '2015-05-01'
+    error: 193280.0
+    label: A-3AHP_OPT_MAY15
+    value: 1932756.88
+  - date: '2015-09-01'
+    error: 196180.0
+    label: A-3AHP_OPT_SEP15
+    value: 1961822.0
+  - date: '2016-01-01'
+    error: 200010.0
+    label: A-3AHP_OPT_JAN16
+    value: 2000102.38
+  - date: '2016-05-01'
+    error: 203830.0
+    label: A-3AHP_OPT_MAY16
+    value: 2038315.88
+  - date: '2016-09-01'
+    error: 206590.0
+    label: A-3AHP_OPT_SEP16
+    value: 2065895.0
+  - date: '2017-01-01'
+    error: 209600.0
+    label: A-3AHP_OPT_JAN17
+    value: 2095977.25
+  - date: '2017-05-01'
+    error: 210880.0
+    label: A-3AHP_OPT_MAY17
+    value: 2108808.25
+  - date: '2017-09-01'
+    error: 213140.0
+    label: A-3AHP_OPT_SEP17
+    value: 2131365.5
+  - date: '2018-01-01'
+    error: 213930.0
+    label: A-3AHP_OPT_JAN18
+    value: 2139333.0
+  - date: '2018-05-01'
+    error: 215450.0
+    label: A-3AHP_OPT_MAY18
+    value: 2154505.25
+  - date: '2018-09-01'
+    error: 216700.0
+    label: A-3AHP_OPT_SEP18
+    value: 2166961.5
+  - date: '2019-01-01'
+    error: 217860.0
+    label: A-3AHP_OPT_JAN19
+    value: 2178638.25
+  - date: '2019-05-01'
+    error: 219330.0
+    label: A-3AHP_OPT_MAY19
+    value: 2193346.25
+  - date: '2019-09-01'
+    error: 219500.0
+    label: A-3AHP_OPT_SEP19
+    value: 2194969.25
+  - date: '2020-05-01'
+    error: 220840.0
+    label: A-3AHP_OPT_MAY20
+    value: 2208356.0
+  - date: '2020-09-01'
+    error: 221180.0
+    label: A-3AHP_OPT_SEP20
+    value: 2211750.25
+- key: WOPT:A-3HPW
+  observations:
+  - date: '1994-05-01'
+    error: 8580.0
+    label: A-3HPW_OPT_MAY94
+    value: 85811.11
+  - date: '1994-09-01'
+    error: 22360.0
+    label: A-3HPW_OPT_SEP94
+    value: 223552.81
+  - date: '1995-01-01'
+    error: 34150.0
+    label: A-3HPW_OPT_JAN95
+    value: 341534.91
+  - date: '1995-05-01'
+    error: 48300.0
+    label: A-3HPW_OPT_MAY95
+    value: 482978.22
+  - date: '1995-09-01'
+    error: 59800.0
+    label: A-3HPW_OPT_SEP95
+    value: 598030.69
+  - date: '1996-01-01'
+    error: 80610.0
+    label: A-3HPW_OPT_JAN96
+    value: 806117.5
+  - date: '1996-05-01'
+    error: 92360.0
+    label: A-3HPW_OPT_MAY96
+    value: 923573.19
+  - date: '1996-09-01'
+    error: 98600.0
+    label: A-3HPW_OPT_SEP96
+    value: 985956.0
+  - date: '1997-01-01'
+    error: 109630.0
+    label: A-3HPW_OPT_JAN97
+    value: 1096299.38
+  - date: '1997-05-01'
+    error: 125860.0
+    label: A-3HPW_OPT_MAY97
+    value: 1258648.88
+  - date: '1997-09-01'
+    error: 143210.0
+    label: A-3HPW_OPT_SEP97
+    value: 1432143.25
+  - date: '1998-01-01'
+    error: 161140.0
+    label: A-3HPW_OPT_JAN98
+    value: 1611367.25
+  - date: '1998-05-01'
+    error: 178680.0
+    label: A-3HPW_OPT_MAY98
+    value: 1786789.62
+  - date: '1998-09-01'
+    error: 190850.0
+    label: A-3HPW_OPT_SEP98
+    value: 1908523.75
+  - date: '1999-01-01'
+    error: 201620.0
+    label: A-3HPW_OPT_JAN99
+    value: 2016235.25
+  - date: '1999-05-01'
+    error: 204740.0
+    label: A-3HPW_OPT_MAY99
+    value: 2047434.25
+  - date: '1999-09-01'
+    error: 219400.0
+    label: A-3HPW_OPT_SEP99
+    value: 2193999.0
+  - date: '2000-01-01'
+    error: 235310.0
+    label: A-3HPW_OPT_JAN00
+    value: 2353146.0
+  - date: '2000-05-01'
+    error: 258730.0
+    label: A-3HPW_OPT_MAY00
+    value: 2587260.75
+  - date: '2000-09-01'
+    error: 278120.0
+    label: A-3HPW_OPT_SEP00
+    value: 2781183.0
+  - date: '2001-01-01'
+    error: 293400.0
+    label: A-3HPW_OPT_JAN01
+    value: 2934044.25
+  - date: '2001-05-01'
+    error: 309300.0
+    label: A-3HPW_OPT_MAY01
+    value: 3092993.25
+  - date: '2001-09-01'
+    error: 324420.0
+    label: A-3HPW_OPT_SEP01
+    value: 3244242.25
+  - date: '2002-01-01'
+    error: 334150.0
+    label: A-3HPW_OPT_JAN02
+    value: 3341458.25
+  - date: '2002-09-01'
+    error: 338460.0
+    label: A-3HPW_OPT_SEP02
+    value: 3384573.75
+- key: WOPT:A-4AHPW
+  observations:
+  - date: '2003-01-01'
+    error: 9840.0
+    label: A-4AHPW_OPT_JAN03
+    value: 98447.0
+  - date: '2003-05-01'
+    error: 23880.0
+    label: A-4AHPW_OPT_MAY03
+    value: 238817.5
+  - date: '2003-09-01'
+    error: 37980.0
+    label: A-4AHPW_OPT_SEP03
+    value: 379829.0
+  - date: '2004-01-01'
+    error: 53920.0
+    label: A-4AHPW_OPT_JAN04
+    value: 539230.31
+  - date: '2004-05-01'
+    error: 68270.0
+    label: A-4AHPW_OPT_MAY04
+    value: 682661.62
+  - date: '2004-09-01'
+    error: 79900.0
+    label: A-4AHPW_OPT_SEP04
+    value: 799013.88
+  - date: '2005-01-01'
+    error: 89330.0
+    label: A-4AHPW_OPT_JAN05
+    value: 893327.94
+  - date: '2005-05-01'
+    error: 94810.0
+    label: A-4AHPW_OPT_MAY05
+    value: 948056.25
+  - date: '2005-09-01'
+    error: 99790.0
+    label: A-4AHPW_OPT_SEP05
+    value: 997933.31
+  - date: '2006-01-01'
+    error: 104090.0
+    label: A-4AHPW_OPT_JAN06
+    value: 1040871.94
+  - date: '2006-05-01'
+    error: 106520.0
+    label: A-4AHPW_OPT_MAY06
+    value: 1065222.5
+  - date: '2006-09-01'
+    error: 110790.0
+    label: A-4AHPW_OPT_SEP06
+    value: 1107926.75
+  - date: '2007-01-01'
+    error: 113940.0
+    label: A-4AHPW_OPT_JAN07
+    value: 1139403.0
+  - date: '2007-05-01'
+    error: 116820.0
+    label: A-4AHPW_OPT_MAY07
+    value: 1168166.5
+  - date: '2007-09-01'
+    error: 118460.0
+    label: A-4AHPW_OPT_SEP07
+    value: 1184574.88
+  - date: '2008-01-01'
+    error: 123850.0
+    label: A-4AHPW_OPT_JAN08
+    value: 1238525.12
+  - date: '2008-05-01'
+    error: 128470.0
+    label: A-4AHPW_OPT_MAY08
+    value: 1284674.38
+  - date: '2008-09-01'
+    error: 131200.0
+    label: A-4AHPW_OPT_SEP08
+    value: 1312026.62
+  - date: '2009-01-01'
+    error: 133770.0
+    label: A-4AHPW_OPT_JAN09
+    value: 1337697.88
+  - date: '2009-05-01'
+    error: 136170.0
+    label: A-4AHPW_OPT_MAY09
+    value: 1361700.5
+  - date: '2009-09-01'
+    error: 138760.0
+    label: A-4AHPW_OPT_SEP09
+    value: 1387572.88
+  - date: '2010-01-01'
+    error: 140130.0
+    label: A-4AHPW_OPT_JAN10
+    value: 1401341.0
+  - date: '2010-05-01'
+    error: 141570.0
+    label: A-4AHPW_OPT_MAY10
+    value: 1415681.88
+  - date: '2010-09-01'
+    error: 142830.0
+    label: A-4AHPW_OPT_SEP10
+    value: 1428341.12
+  - date: '2011-01-01'
+    error: 144260.0
+    label: A-4AHPW_OPT_JAN11
+    value: 1442608.88
+  - date: '2011-05-01'
+    error: 145220.0
+    label: A-4AHPW_OPT_MAY11
+    value: 1452235.38
+  - date: '2011-09-01'
+    error: 146910.0
+    label: A-4AHPW_OPT_SEP11
+    value: 1469106.38
+  - date: '2012-01-01'
+    error: 147530.0
+    label: A-4AHPW_OPT_JAN12
+    value: 1475281.38
+  - date: '2013-09-01'
+    error: 147830.0
+    label: A-4AHPW_OPT_SEP13
+    value: 1478261.88
+  - date: '2014-01-01'
+    error: 148690.0
+    label: A-4AHPW_OPT_JAN14
+    value: 1486929.12
+  - date: '2014-05-01'
+    error: 148830.0
+    label: A-4AHPW_OPT_MAY14
+    value: 1488292.75
+  - date: '2014-09-01'
+    error: 148970.0
+    label: A-4AHPW_OPT_SEP14
+    value: 1489713.75
+  - date: '2015-01-01'
+    error: 149640.0
+    label: A-4AHPW_OPT_JAN15
+    value: 1496436.88
+  - date: '2015-05-01'
+    error: 150360.0
+    label: A-4AHPW_OPT_MAY15
+    value: 1503554.62
+- key: WOPT:A-4HP
+  observations:
+  - date: '1993-05-01'
+    error: 5100.0
+    label: A-4HP_OPT_MAY93
+    value: 50992.5
+  - date: '1993-09-01'
+    error: 8140.0
+    label: A-4HP_OPT_SEP93
+    value: 81393.9
+  - date: '1994-01-01'
+    error: 24410.0
+    label: A-4HP_OPT_JAN94
+    value: 244125.59
+  - date: '1994-05-01'
+    error: 51700.0
+    label: A-4HP_OPT_MAY94
+    value: 517041.5
+  - date: '1994-09-01'
+    error: 68160.0
+    label: A-4HP_OPT_SEP94
+    value: 681643.19
+  - date: '1995-01-01'
+    error: 95850.0
+    label: A-4HP_OPT_JAN95
+    value: 958486.81
+  - date: '1995-05-01'
+    error: 120760.0
+    label: A-4HP_OPT_MAY95
+    value: 1207567.5
+  - date: '1995-09-01'
+    error: 141950.0
+    label: A-4HP_OPT_SEP95
+    value: 1419487.25
+  - date: '1996-01-01'
+    error: 163000.0
+    label: A-4HP_OPT_JAN96
+    value: 1630017.62
+  - date: '1996-05-01'
+    error: 187000.0
+    label: A-4HP_OPT_MAY96
+    value: 1869962.38
+  - date: '1996-09-01'
+    error: 219790.0
+    label: A-4HP_OPT_SEP96
+    value: 2197872.0
+  - date: '1997-01-01'
+    error: 250110.0
+    label: A-4HP_OPT_JAN97
+    value: 2501146.75
+  - date: '1997-05-01'
+    error: 277460.0
+    label: A-4HP_OPT_MAY97
+    value: 2774569.5
+  - date: '1997-09-01'
+    error: 303190.0
+    label: A-4HP_OPT_SEP97
+    value: 3031905.75
+  - date: '1998-01-01'
+    error: 329140.0
+    label: A-4HP_OPT_JAN98
+    value: 3291363.5
+  - date: '1998-05-01'
+    error: 345840.0
+    label: A-4HP_OPT_MAY98
+    value: 3458394.0
+  - date: '1998-09-01'
+    error: 363270.0
+    label: A-4HP_OPT_SEP98
+    value: 3632674.75
+  - date: '1999-01-01'
+    error: 385800.0
+    label: A-4HP_OPT_JAN99
+    value: 3857958.75
+  - date: '1999-05-01'
+    error: 399860.0
+    label: A-4HP_OPT_MAY99
+    value: 3998593.25
+  - date: '1999-09-01'
+    error: 409230.0
+    label: A-4HP_OPT_SEP99
+    value: 4092256.25
+  - date: '2000-01-01'
+    error: 415370.0
+    label: A-4HP_OPT_JAN00
+    value: 4153737.5
+  - date: '2000-05-01'
+    error: 418320.0
+    label: A-4HP_OPT_MAY00
+    value: 4183199.25
+  - date: '2000-09-01'
+    error: 419900.0
+    label: A-4HP_OPT_SEP00
+    value: 4199040.5
+  - date: '2001-05-01'
+    error: 420700.0
+    label: A-4HP_OPT_MAY01
+    value: 4207006.5
