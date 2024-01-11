@@ -72,11 +72,11 @@ def ensure_correct_well_info_format(info):
     return info
 
 
-def find_well_file_info(folder_path):
+def find_well_file_info(folder_path: PosixPath):
     """Find file with well information in folder
 
     Args:
-        folder_path (str): the path to search
+        folder_path (PosixPath): the path to search
 
     Returns:
         pd.DataFrame: the digested results
