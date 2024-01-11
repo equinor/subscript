@@ -95,7 +95,8 @@ def find_well_file_path(folder_path: PosixPath) -> PosixPath:
         if well_file_pattern.match(candidate.name):
             found.append(candidate)
     if len(found) > 1:
-        warnings.warn("Oh oh, there are more than one candidate, picking the first")
+        warnings.warn(f"Oh no! More than one candidate {found}, picking the first")
+
     the_one = found[0]
     return the_one
 
