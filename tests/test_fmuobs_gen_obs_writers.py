@@ -4,6 +4,7 @@ from subscript.fmuobs import gen_obs_writers
 import pytest
 
 TEST_DATA = "testdata_fmuobs"
+RFT_FOLDERS = ["drogon/rft/", "somewhere/completely/different/rft_ERT_use_MDadjusted/"]
 
 
 @pytest.mark.parametrize("string", ["5/09/1985", "05-09-1985", "1985-09-5"])
@@ -44,12 +45,26 @@ def test_convert(element, returned_type):
 
 
 @pytest.mark.parametrize(
-    "folder_path, num_entries",
-    [
-        ("drogon/rft/", 5),
-        ("somewhere/completely/different/rft_ERT_use_MDadjusted/", 159),
-    ],
+    "folder_path,expected_file_name",
+    zip(RFT_FOLDERS, ["well_date_rft.txt", "WELLNAME_AND_RFT_TIME.txt"]),
 )
+def test_find_well_file_path(folder_path, expected_file_name):
+    """Test function find_well_file_path
+
+    Args:
+        folder_path (str): path to folder to look
+        file_name (str): expected file name
+    """
+    found_file = gen_obs_writers.find_well_file_path(
+        Path(__file__).parent / TEST_DATA / folder_path
+    )
+    found_name = found_file.name
+    assert (
+        found_name == expected_file_name
+    ), f"File name is {found_name}, should be {expected_file_name}"
+
+
+@pytest.mark.parametrize("folder_path, num_entries", zip(RFT_FOLDERS, [5, 159]))
 def test_find_well_file_info(folder_path, num_entries):
     """Test function find_well_file_info
 
@@ -67,20 +82,16 @@ def test_find_well_file_info(folder_path, num_entries):
     assert len(result["date"]) == num_entries
 
 
-@pytest.mark.parametrize(
-    "folder_path",
-    [
-        "drogon/rft/",
-        "somewhere/completely/different/rft_ERT_use_MDadjusted/",
-    ],
-)
+@pytest.mark.parametrize("folder_path", RFT_FOLDERS)
 def test_extract_wells_and_dates(folder_path):
     """Test function extract_wells_and_dates
 
     Args:
         folder_path (str): path to folder with potential well file
     """
-    found = gen_obs_writers.extract_wells_and_dates(folder_path)
+    found = gen_obs_writers.extract_wells_and_dates(
+        Path(__file__).parent / TEST_DATA / folder_path
+    )
     assert found is not None  # , f"Didn't find anything in {folder_path}"
 
 
