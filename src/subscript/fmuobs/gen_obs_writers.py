@@ -21,7 +21,7 @@ def try_converting_to_date(string):
     for valid_format in valid_formats:
         try:
             string = datetime.strftime(
-                datetime.strptime(string, valid_format), "%Y-%m-%dT%H:%M:%SZ"
+                datetime.strptime(string, valid_format), "%Y-%m-%d"
             )
             break
         except ValueError:
