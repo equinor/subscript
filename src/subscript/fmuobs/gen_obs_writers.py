@@ -10,7 +10,7 @@ from subscript.fmuobs.util import (
     ERT_ISO_DATE_FORMAT,
 )
 
-LOGGER = logging.getLogger("general_readers")
+LOGGER = logging.getLogger("gen_obs_writers")
 
 
 def try_converting_to_date(string):
