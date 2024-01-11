@@ -77,7 +77,7 @@ def ensure_correct_well_info_format(info):
     return info
 
 
-def find_well_file_info(folder_path: PosixPath):
+def find_well_file_path(folder_path: PosixPath) -> PosixPath:
     """Find file with well information in folder
 
     Args:
@@ -88,16 +88,32 @@ def find_well_file_info(folder_path: PosixPath):
     """
     well_file_pattern = re.compile(r"well.*rft.*\.txt", re.IGNORECASE)
     the_one = None
-    well_info = None
     potential_candidates = list(folder_path.glob("*.*"))
+    found = []
     for candidate in potential_candidates:
         # LOGGER.debug(candidate)
         if well_file_pattern.match(candidate.name):
-            the_one = candidate
-    # LOGGER.debug(the_one)
-    if the_one is not None:
+            found.append(candidate)
+    if len(found) > 1:
+        warnings.warn("Oh oh, there are more than one candidate, picking the first")
+    the_one = found[0]
+    return the_one
+
+
+def find_well_file_info(folder_path: PosixPath):
+    """Find file with well information in folder
+
+    Args:
+        folder_path (PosixPath): the path to search
+
+    Returns:
+        pd.DataFrame: the digested results
+    """
+    well_info = None
+    well_file_path = find_well_file_path(folder_path)
+    if well_file_path is not None:
         well_info = dump_content_to_dict(
-            the_one, ["well_name", "date", "restart_number"]
+            well_file_path, ["well_name", "date", "restart_number"]
         )
 
     LOGGER.debug("Returning %s", well_info)
