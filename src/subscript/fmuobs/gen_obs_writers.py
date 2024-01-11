@@ -159,7 +159,9 @@ def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir, obs_folders):
                 print(names_and_dates)
                 for obs_key, obs_dict in dict_to_change[rft_key].items():
                     print(obs_dict["restart"])
-                    well_pattern = re.compile(".*" + obs_key.replace("_OBS", "") + ".*")
+                    well_pattern = re.compile(
+                        ".*" + re.sub(r"(RFT_|_OBS)", "", obs_key) + ".*"
+                    )
                     potential_lines = [
                         i
                         for i in range(len(well_names))
@@ -168,7 +170,13 @@ def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir, obs_folders):
                             and restarts[i] == obs_dict["restart"]
                         )
                     ]
-                    right_index = potential_lines.pop()
+                    try:
+                        right_index = potential_lines.pop()
+                    except IndexError as ind_err:
+                        raise IndexError(
+                            f"After using match pattern {well_pattern.pattern}"
+                            + " no matches where found"
+                        ) from ind_err
                     obs_dict["well_name"] = well_names[right_index]
                     obs_dict["date"] = names_and_dates["date"][right_index]
     print("After modification dict is ", dict_to_change)
