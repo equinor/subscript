@@ -4,6 +4,11 @@ import warnings
 import re
 from datetime import datetime
 from pathlib import Path, PosixPath
+from subscript.fmuobs.util import (
+    ERT_ALT_DATE_FORMAT,
+    ERT_DATE_FORMAT,
+    ERT_ISO_DATE_FORMAT,
+)
 
 LOGGER = logging.getLogger("general_readers")
 
@@ -17,7 +22,7 @@ def try_converting_to_date(string):
     Returns:
         bool: true if it can be converted
     """
-    valid_formats = ["%d-%m-%Y", "%Y-%m-%d"]
+    valid_formats = ["%d-%m-%Y", ERT_ISO_DATE_FORMAT, ERT_DATE_FORMAT, ERT_DATE_FORMAT]
     for valid_format in valid_formats:
         try:
             string = datetime.strftime(

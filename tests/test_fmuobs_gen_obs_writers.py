@@ -6,7 +6,7 @@ import pytest
 TEST_DATA = "testdata_fmuobs"
 
 
-@pytest.mark.parametrize("string", ["16/07/72", "16-07-1972", "1972-07-16"])
+@pytest.mark.parametrize("string", ["5/09/1985", "05-09-1985", "1985-09-5"])
 def test_try_converting_to_date(string):
     """Test function try_converting to date
 
@@ -20,6 +20,10 @@ def test_try_converting_to_date(string):
     assert (
         len(dateparts) == 3
     ), f"Not three date parts, but {len(dateparts)}, results are {dateparts}"
+    year, month, day = dateparts
+    assert year == "1985", f"year is {year}, should be 1985"
+    assert month == "09", f"month is {month}, should be 09"
+    assert day == "05", f"day is {day}, should be 05"
 
 
 @pytest.mark.parametrize(
