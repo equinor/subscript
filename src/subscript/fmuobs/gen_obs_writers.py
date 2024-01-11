@@ -87,7 +87,6 @@ def find_well_file_path(folder_path: PosixPath) -> PosixPath:
         pd.DataFrame: the digested results
     """
     well_file_pattern = re.compile(r"well.*rft.*\.txt", re.IGNORECASE)
-    the_one = None
     potential_candidates = list(folder_path.glob("*.*"))
     found = []
     for candidate in potential_candidates:
@@ -96,8 +95,12 @@ def find_well_file_path(folder_path: PosixPath) -> PosixPath:
             found.append(candidate)
     if len(found) > 1:
         warnings.warn(f"Oh no! More than one candidate {found}, picking the first")
+    try:
+        the_one = found[0]
+    except IndexError:
+        warnings.warn(f"Code looking for well file in {folder_path}, found None")
+        the_one = None
 
-    the_one = found[0]
     return the_one
 
 
