@@ -30,6 +30,17 @@ def _fix_drogon_tracer():
     return pd.read_csv(_find_observation_file("drogon_tracer.csv"))
 
 
+@pytest.fixture(name="ert-doc_df")
+def _fix_ert_obs():
+    """Return path to observation file
+
+    Returns:
+        PosixPath: the path to observation file
+    """
+    all_obs_df = pd.read_csv(_find_observation_file("ert-doc.csv", ""))
+    return all_obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]]
+
+
 @pytest.fixture(name="drogon_seismic_df")
 def _fix_drogon_seismic():
     """Return path to observation file
@@ -78,7 +89,8 @@ def _fix_drogon_full_file():
 
 
 @pytest.mark.parametrize(
-    "fixture_name", ["drogon_tracer_df", "drogon_seismic_df", "drogon_rft_df"]
+    "fixture_name",
+    ["ert-doc_df", "drogon_tracer_df", "drogon_seismic_df", "drogon_rft_df"],
 )
 def test_general_df2obsdict(fixture_name, drogon_full_obs_file, request):
     """Test function general_df2obsdict
@@ -88,12 +100,26 @@ def test_general_df2obsdict(fixture_name, drogon_full_obs_file, request):
         drogon_full_obs_file (PosixPath): path to file where dataframe will be read from
         request (pytest.fixture): fixture that enable use of fixture in parametrization
     """
-    results = general_df2obsdict(
-        request.getfixturevalue(fixture_name), drogon_full_obs_file.parent
-    )
-    _assert_compulsories_are_correct(results)
+    if fixture_name == "ert-doc_df":
+        # special fix for ert-doc
+        parent_dir = drogon_full_obs_file.parent.parent
+        correct_result_file = "ert-doc"
+        where = ""
+    else:
+        parent_dir = drogon_full_obs_file.parent
+        correct_result_file = fixture_name
+        where = "drogon"
+    results = general_df2obsdict(request.getfixturevalue(fixture_name), parent_dir)
+    import yaml
 
-    _compare_to_results_in_file(results, fixture_name)
+    stream = open("res.yml", "w")
+    yaml.dump(results, stream)
+    stream.close()
+    _assert_compulsories_are_correct(results)
+    if fixture_name != "ert-doc_df":
+        # Comparison with file not done for ert-doc, the ert-doc file is for
+        # not just for general_obs
+        _compare_to_results_in_file(results, correct_result_file, where)
 
 
 def test_general_df2obsdict_rft(drogon_full_obs_file, request):
