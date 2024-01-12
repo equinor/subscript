@@ -1,12 +1,13 @@
 """Test functions with drogon data"""
 import pandas as pd
 import pytest
-from subscript.fmuobs.parsers import ertobs2df
+
 from subscript.fmuobs.writers import general_df2obsdict
+
 from ._common_fmuobs import (
-    _find_observation_file,
     _assert_compulsories_are_correct,
     _compare_to_results_in_file,
+    _find_observation_file,
 )
 
 
@@ -81,13 +82,6 @@ def _fix_drogon_full_file():
     return _find_observation_file("drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs")
 
 
-# def test_ertobs2df(drogon_full_obs_file):
-# input_str = drogon_full_obs_file.read_text()
-# print(input_str)
-# full_df = ertobs2df(input_str)
-# print(full_df)
-
-
 @pytest.mark.parametrize(
     "fixture_name",
     ["ert-doc_df", "drogon_tracer_df", "drogon_seismic_df", "drogon_rft_df"],
@@ -117,16 +111,6 @@ def test_general_df2obsdict(fixture_name, drogon_full_obs_file, request):
     stream.close()
     _assert_compulsories_are_correct(results)
     if fixture_name != "ert-doc_df":
-        # Comparison with file not done for ert-doc, the ert-doc file is for
+        # Comparison with file not done for ert-doc, the ert-doc file is
         # not just for general_obs
         _compare_to_results_in_file(results, correct_result_file, where)
-
-
-def test_general_df2obsdict_rft(drogon_full_obs_file, request):
-    fixture_name = "drogon_rft_df"
-    results = general_df2obsdict(
-        request.getfixturevalue(fixture_name), drogon_full_obs_file.parent
-    )
-    # _assert_compulsories_are_correct(results)
-
-    # _compare_to_results_in_file(results, fixture_name)

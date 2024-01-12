@@ -3,21 +3,22 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
-from typing import List
 from pathlib import Path, PosixPath
+from typing import List
+
 import numpy as np
 import pandas as pd
 
 from subscript import getLogger
+from subscript.fmuobs.gen_obs_writers import (
+    add_extra_well_data_if_rft,
+    dump_content_to_dict,
+    tidy_general_obs_keys,
+)
 from subscript.fmuobs.util import (
     CLASS_SHORTNAME,
     ERT_ISO_DATE_FORMAT,
     lowercase_dictkeys,
-)
-from subscript.fmuobs.gen_obs_writers import (
-    dump_content_to_dict,
-    add_extra_well_data_if_rft,
-    tidy_general_obs_keys,
 )
 
 logger = getLogger(__name__)
@@ -280,7 +281,7 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     return smry_obs_list
 
 
-def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[dict]:
+def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> dict:
     """Generate a dictionary structure suitable for yaml
     for general observations in dataframe representation
 
@@ -405,7 +406,7 @@ def block_df2obsdict(block_df: pd.DataFrame) -> List[dict]:
     return block_obs_list
 
 
-def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = Path(".")) -> dict:
+def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = PosixPath(".")) -> dict:
     """Generate a dictionary structure of all observations, this data structure
     is designed to look good in yaml, and is supported by WebViz and
     fmu-ensemble.

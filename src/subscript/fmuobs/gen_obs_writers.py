@@ -1,14 +1,12 @@
 """Read contents from simple text files"""
 import logging
-import warnings
 import re
+import warnings
 from datetime import datetime
-from pathlib import Path, PosixPath
-from subscript.fmuobs.util import (
-    ERT_ALT_DATE_FORMAT,
-    ERT_DATE_FORMAT,
-    ERT_ISO_DATE_FORMAT,
-)
+from pathlib import PosixPath
+from typing import List, Optional, Tuple, Union
+
+from subscript.fmuobs.util import ERT_DATE_FORMAT, ERT_ISO_DATE_FORMAT
 
 LOGGER = logging.getLogger("gen_obs_writers")
 
@@ -77,7 +75,7 @@ def ensure_correct_well_info_format(info):
     return info
 
 
-def find_well_file_path(folder_path: PosixPath) -> PosixPath:
+def find_well_file_path(folder_path: PosixPath) -> Optional[PosixPath]:
     """Find file with well information in folder
 
     Args:
@@ -182,7 +180,7 @@ def add_extra_well_data_if_rft(dict_to_change: dict, parent_dir, obs_folders):
     print("After modification dict is ", dict_to_change)
 
 
-def attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:
+def attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict):
     """Attach data from secondary file if it exists
 
     Args:
@@ -210,7 +208,8 @@ def attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict) -
 
 
 def dump_content_to_dict(
-    file_path: PosixPath, col_names: list = ("observations", "error")
+    file_path: PosixPath,
+    col_names: Union[List, Tuple] = ("observations", "error"),
 ) -> dict:
     """Read contents of file into list
 

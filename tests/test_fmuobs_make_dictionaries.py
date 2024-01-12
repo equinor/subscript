@@ -1,15 +1,9 @@
-import re
-from pathlib import Path
-import yaml
-from subscript.fmuobs.fmuobs import autoparse_file, df2obsdict
-from pandas import DataFrame
 import pytest
+from pandas import DataFrame
 
-from ._common_fmuobs import (
-    _find_observation_file,
-    _assert_compulsories_are_correct,
-    _compare_to_results_in_file,
-)
+from subscript.fmuobs.fmuobs import autoparse_file, df2obsdict
+
+from ._common_fmuobs import _find_observation_file
 
 TEST_DATA = "testdata_fmuobs/"
 

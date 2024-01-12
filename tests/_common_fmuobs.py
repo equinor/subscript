@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import yaml
 
 TEST_DATA = TEST_DATA = "testdata_fmuobs/"
@@ -74,10 +75,16 @@ def assert_equal_length(to_be_tested, correct, key):
     if to_be_tested_len != correct_len:
         if to_be_tested_len > correct_len:
             diff_set = to_be_tested_set.difference(correct_set)
-            mess = f"{key}: Produced keys are {to_be_tested_len - correct_len} more than they should ({diff_set})"
+            mess = (
+                f"{key}: Produced keys are {to_be_tested_len - correct_len} "
+                f"more than they should ({diff_set})"
+            )
         else:
             diff_set = correct_set.difference(to_be_tested_set)
-            mess = f"{key}: Produced keys are {correct_len - to_be_tested_len} less than they should ({diff_set})"
+            mess = (
+                f"{key}: Produced keys are {correct_len - to_be_tested_len} "
+                f"less than they should ({diff_set})"
+            )
         raise AssertionError(mess)
 
 

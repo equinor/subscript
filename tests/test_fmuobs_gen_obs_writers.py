@@ -1,7 +1,9 @@
-import re
+"""Unit tests for gen_obs_writers"""
 from pathlib import Path
-from subscript.fmuobs import gen_obs_writers
+
 import pytest
+
+from subscript.fmuobs import gen_obs_writers
 
 TEST_DATA = "testdata_fmuobs"
 RFT_FOLDERS = ["drogon/rft/", "somewhere/completely/different/rft_ERT_use_MDadjusted/"]
@@ -118,8 +120,3 @@ def test_tidy_general_obs_keys():
         "tracer_jungle",
         "magic_seismic_data",
     }
-
-
-# def test_add_extra_well_data_if_rft(dict_to_change: dict, parent_dir):
-# def test_attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:
-# def test_dump_content_to_dict(

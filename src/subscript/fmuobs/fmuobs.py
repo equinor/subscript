@@ -363,7 +363,7 @@ def fmuobs(
                 "Please verify the output file"
             )
     logger.debug("After all the hard work, what is returned is this %s", dframe)
-    dump_results(dframe, csv, yml, resinsight, ertobs, Path(inputfile).parent)
+    dump_results(dframe, csv, yml, resinsight, ertobs, PosixPath(inputfile).parent)
 
 
 def dump_results(
@@ -372,7 +372,7 @@ def dump_results(
     yamlfile: Optional[str] = None,
     resinsightfile: Optional[str] = None,
     ertfile: Optional[str] = None,
-    parent_dir: Optional[PosixPath] = Path("."),
+    parent_dir: PosixPath = PosixPath("."),
 ) -> None:
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips
