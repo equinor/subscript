@@ -19,6 +19,16 @@ def _find_observation_file(file_path, where="drogon"):
     return obs_file_path
 
 
+def _unsummable(check_list):
+    types = []
+    for i, item in enumerate(check_list):
+        found_type = type(item)
+        if not isinstance(item, (float, int)):
+            types.append((item, found_type, i))
+
+    return types
+
+
 def _assert_compulsories_are_correct(results, key=None):
     """Assert that the compulsory components of general observations are in place
 
@@ -36,10 +46,11 @@ def _assert_compulsories_are_correct(results, key=None):
                 data_key, str
             ), f"key {data_key} in {primary_key} is not string"
             for num in ("observations", "error"):
-                result_sum = sum(obs_dict[num])
-                assert isinstance(
-                    result_sum, (float, int)
-                ), f"Sum of {num} should be numeric but is {type(result_sum)}"
+                _unsummables = _unsummable(obs_dict[num])
+
+                assert (
+                    len(_unsummables) == 0
+                ), f"Cannot sum {num}, found these types {_unsummables}"
             assert isinstance(
                 obs_dict["data"], str
             ), f"data key is of {obs_dict['data']}, but should be str"
