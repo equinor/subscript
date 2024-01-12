@@ -1,6 +1,16 @@
 #!/usr/bin/env python
-"""
-casegen_upcars is script to create conceptual model
+import argparse
+import shutil
+
+from jinja2 import DebugUndefined, Environment, FileSystemLoader, meta
+from yaml import Loader, load
+
+from subscript import getLogger
+from subscript.casegen_upcars.model import Model
+from subscript.casegen_upcars.udf import TERMINALCOLORS, conversion, flatten, listify
+from subscript.casegen_upcars.udf_arg_parser import fill_parser
+
+DESCRIPTION = """casegen_upcars is script to create conceptual model
 based on sugar-cube representation of fracture.
 
 It has capability to:
@@ -10,17 +20,20 @@ It has capability to:
 - multple throws (vertical shifting in any part of the model)
 - vugs distribution: random, near fracture and near streak
 - etc. Check wiki for more details:
-  https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen
-"""
-import argparse
-import shutil
+  https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen"""
 
-from jinja2 import DebugUndefined, Environment, FileSystemLoader, meta
-from yaml import Loader, load
+CATEGORY = "modelling.reservoir"
 
-from subscript.casegen_upcars.model import Model
-from subscript.casegen_upcars.udf import TERMINALCOLORS, conversion, flatten, listify
-from subscript.casegen_upcars.udf_arg_parser import fill_parser
+EXAMPLES = """
+.. code-block:: console
+
+  DEFINE <CASEGEN_CONFIG_FILE>      <RUNPATH>/model.yaml
+  DEFINE <CASEGEN_ECLIPSE_TEMPLATE> <CONFIG_PATH>/../input/config/eclipse.tmpl
+  FORWARD_MODEL CASEGEN_UPCARS(<CONFIG>=<CASEGEN_CONFIG_FILE>, <ECLTMP>=<CASEGEN_ECLIPSE_TEMPLATE>, <ECL>=<ECLIPSE_NAME>-<IENS>)
+
+"""  # noqa
+
+logger = getLogger(__name__)
 
 
 def mask_token(stream_buffer, unique_token="#|{}^", unmask=False):
@@ -397,7 +410,7 @@ def main():
             for var in parser.variables:
                 dictionary[var[0]] = var[1]
 
-    print("Creating model")
+    logger.info("Creating model")
     grid = Model(
         cell_matrix_x,
         cell_matrix_y,
@@ -438,7 +451,7 @@ def main():
     grid.set_throws(throws)
 
     if vug1_fraction_max + vug2_fraction_max + vug3_fraction_max > 0:
-        print("Set vugs")
+        logger.info("Set vugs")
         grid.set_vug(
             [vug1_fraction_min, vug1_fraction_max],
             [vug1_perm_min, vug1_perm_max],
@@ -464,7 +477,7 @@ def main():
             vug3_spread,
         )
 
-    print("Set property")
+    logger.info("Set property")
     grid.set_fracture_anisotropy_property("PERM", fracture_perm_x, fracture_perm_y)
     grid.set_layers_property("PERM", matrix_perm, streak_perm)
     for keyword, var_matrix, var_layer, var_fracture in zip(
@@ -491,7 +504,7 @@ def main():
 
     dictionary["GRDECL_file"] = f"gridinc_{base_name}.GRDECL"
 
-    print("Exporting GRDECL file")
+    logger.info("Exporting GRDECL file")
     grid.export_grdecl(dictionary["GRDECL_file"])
 
     for keyword, var_matrix, var_layer, var_fracture, var_vug in zip(
@@ -505,7 +518,7 @@ def main():
             [vug1_swatinit, vug2_swatinit, vug3_swatinit],
         ],
     ):
-        print("Exporting " + keyword + " include file")
+        logger.info("Exporting " + keyword + " include file")
         include_file = f"{keyword.lower()}_file"
         dictionary[include_file] = f"{keyword.lower()}_{base_name}.INC"
         grid.export_props(
@@ -541,9 +554,9 @@ def main():
                 undefined_var.append(var)
 
     if undefined_var:
-        print(
-            f"\033[91mWarning: Found {len(undefined_var)} undefined variables."
-            f"Please verify your output files.\033[0m\n{undefined_var}"
+        logger.warning(
+            f"Found {len(undefined_var)} undefined variables."
+            f"Please verify your output files.\n{undefined_var}"
         )
 
     with open(base_name + ".DATA", "w", encoding="utf8") as file_handle:
