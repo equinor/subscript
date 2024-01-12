@@ -17,6 +17,7 @@ from subscript.fmuobs.util import (
 from subscript.fmuobs.gen_obs_writers import (
     dump_content_to_dict,
     add_extra_well_data_if_rft,
+    tidy_general_obs_keys,
 )
 
 logger = getLogger(__name__)
@@ -321,8 +322,9 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
     logger.debug("All general observations from file:")
     logger.debug(gen_obs_dict)
     add_extra_well_data_if_rft(gen_obs_dict, parent_dir, gen_obs_files)
-
-    return tidy_general_obs_keys(gen_obs_dict)
+    tidy_general_obs_keys(gen_obs_dict)
+    logger.debug("Tidied general observations, afterwards they are %s", gen_obs_dict)
+    return gen_obs_dict
 
 
 def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:

@@ -260,6 +260,8 @@ def tidy_general_obs_keys(generals):
         warnings.warn(
             f"Some keys not recognized ({rouges}) as standards, but kept as is"
         )
+        LOGGER.debug("Have tidied, results are %s", generals)
     for convertable_key, correct_key in conversions.items():
         generals[correct_key] = generals[convertable_key].copy()
-        del generals[convertable_key]
+        if correct_key != convertable_key:
+            del generals[convertable_key]
