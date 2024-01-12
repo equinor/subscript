@@ -95,6 +95,31 @@ def test_extract_wells_and_dates(folder_path):
     assert found is not None  # , f"Didn't find anything in {folder_path}"
 
 
+def test_tidy_general_obs_keys():
+    """Test function tidy_general_obs_keys"""
+    test = {
+        "banana_rft": {"banana": "nice"},
+        "racoon": {"animal": "stripy"},
+        "tracer_jungle": {"Tracing it": "to the moon"},
+        "woo": {"wooly": "and furry"},
+        "magic_seismic_data": {"big": "cube"},
+    }
+    original_keys = list(test.keys())
+    gen_obs_writers.tidy_general_obs_keys(test)
+
+    for unconvential_name in ["racoon", "woo"]:
+        assert unconvential_name in test.keys()
+
+    for standard_name in ["rft", "seismic", "tracer"]:
+        assert standard_name in test.keys()
+
+    assert set(original_keys).difference(test.keys()) == {
+        "banana_rft",
+        "tracer_jungle",
+        "magic_seismic_data",
+    }
+
+
 # def test_add_extra_well_data_if_rft(dict_to_change: dict, parent_dir):
 # def test_attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict) -> dict:
 # def test_dump_content_to_dict(

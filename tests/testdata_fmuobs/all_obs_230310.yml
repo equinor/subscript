@@ -1,5 +1,5 @@
 general:
-  rft_ERT_use_MDadjusted:
+  rft:
     RFT_R_4_12A_OBS:
       MD:
       - 2452

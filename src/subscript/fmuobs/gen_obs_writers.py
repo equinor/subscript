@@ -239,3 +239,27 @@ def dump_content_to_dict(
     attach_spatial_data_if_exists(file_path, content_dict)
 
     return content_dict
+
+
+def tidy_general_obs_keys(generals):
+    """Convert keys in dict to something like standard names, when possible
+
+    Args:
+        generals (dict): the dict up for modification
+    """
+    white_list = ["rft", "tracer", "seismic"]
+    general_keys = list(generals.keys())
+    conversions = {
+        general_key: correct_key
+        for general_key in general_keys
+        for correct_key in white_list
+        if correct_key in general_key
+    }
+    rouges = set(conversions.keys()).symmetric_difference(general_keys)
+    if len(rouges) > 0:
+        warnings.warn(
+            f"Some keys not recognized ({rouges}) as standards, but kept as is"
+        )
+    for convertable_key, correct_key in conversions.items():
+        generals[correct_key] = generals[convertable_key].copy()
+        del generals[convertable_key]

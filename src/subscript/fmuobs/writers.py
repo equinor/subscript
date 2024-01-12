@@ -321,7 +321,8 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> List[
     logger.debug("All general observations from file:")
     logger.debug(gen_obs_dict)
     add_extra_well_data_if_rft(gen_obs_dict, parent_dir, gen_obs_files)
-    return gen_obs_dict
+
+    return tidy_general_obs_keys(gen_obs_dict)
 
 
 def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
