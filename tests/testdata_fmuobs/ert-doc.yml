@@ -11,8 +11,16 @@ general:
       data: SOME_FIELD
       error:
       - 0.2
+      - 10
+      - 0.5
+      index_list:
+      - 0
+      - 3
+      - 9
       observations:
       - 2
+      - 256
+      - 3
       restart: 20.0
 rft:
 - date: '2006-10-22'

@@ -16,7 +16,7 @@
     DATE  = 21/08/2006;
     KEY   = GOPR:BRENT;
  };
- 
+
  -- Giving the observation time in terms of restart number.
  SUMMARY_OBSERVATION SEP_TEST_RST_2005
  {
@@ -51,7 +51,7 @@
     FIELD = PRESSURE;
     DATE  = 22/10/2007;
     SOURCE = SUMMARY;
- 
+
     OBS P1 { I = 1;  J = 1;  K = 1;   VALUE = 100;  ERROR = 5; };
     OBS P2 { I = 2;  J = 2;  K = 1;   VALUE = 101;  ERROR = 5; };
     OBS P3 { I = 2;  J = 3;  K = 1;   VALUE = 102;  ERROR = 5; };
@@ -67,7 +67,7 @@ GENERAL_OBSERVATION GEN_OBS2{
    DATA       = SOME_FIELD;
    INDEX_LIST = 0,3,9;
    RESTART    = 20;
-   OBS_FILE   = some_file.txt;
+   OBS_FILE   = some_file_using_index.txt;
 };
 
 HISTORY_OBSERVATION WOPR:OP1;
