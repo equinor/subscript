@@ -3,8 +3,8 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
-from pathlib import Path, PosixPath
-from typing import Dict, List
+from pathlib import PosixPath
+from typing import List
 
 import numpy as np
 import pandas as pd
