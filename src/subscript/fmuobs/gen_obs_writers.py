@@ -199,7 +199,7 @@ def attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict):
         if well_file_path.exists():
             LOGGER.debug("Yup")
             spatial_content = dump_content_to_dict(
-                well_file_path, ["X", "Y", "Z", "MD", "Zone"]
+                well_file_path, ["X", "Y", "MD", "Z", "Zone"]
             )
             LOGGER.debug("Extracted %s", spatial_content)
         else:
