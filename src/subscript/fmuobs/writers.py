@@ -4,7 +4,7 @@ format"""
 
 import re
 from pathlib import Path, PosixPath
-from typing import List
+from typing import Dict, List
 
 import numpy as np
 import pandas as pd
@@ -431,7 +431,7 @@ def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = PosixPath(".")) -> 
     if "GENERAL_OBSERVATION" in obs_df["CLASS"].values:
         obsdict[CLASS_SHORTNAME["GENERAL_OBSERVATION"]] = general_df2obsdict(
             obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]], parent_dir
-        )
+        )  # type:ignore
 
     # Process BLOCK_OBSERVATION:
     if "BLOCK_OBSERVATION" in obs_df["CLASS"].values:
