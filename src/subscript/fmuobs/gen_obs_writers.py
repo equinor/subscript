@@ -209,7 +209,7 @@ def attach_spatial_data_if_exists(file_path: PosixPath, primary_content: dict):
 
 def dump_content_to_dict(
     file_path: PosixPath,
-    col_names: Union[List, Tuple] = ("observations", "error"),
+    col_names: Union[List, Tuple] = ("value", "error"),
 ) -> dict:
     """Read contents of file into list
 

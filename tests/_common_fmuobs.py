@@ -46,7 +46,7 @@ def _assert_compulsories_are_correct(results, key=None):
             assert isinstance(
                 data_key, str
             ), f"key {data_key} in {primary_key} is not string"
-            for num in ("observations", "error"):
+            for num in ("value", "error"):
                 _unsummables = _unsummable(obs_dict[num])
 
                 assert (
