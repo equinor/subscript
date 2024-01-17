@@ -27,15 +27,14 @@ def test_from_autoparse_file_to_df2obsdict(obs_file):
     assert isinstance(
         result_dict, dict
     ), f"Results from dfobsdict should be dictionary, but is {type(result_dict)}"
-    assert isinstance(
-        result_dict["general"], dict
-    ), "key general from df2obsdict should be dictionary"
-    for key, item in result_dict.items():
-        if key == "general":
-            continue
+    for primary_key, enclosed_list in result_dict.items():
         assert isinstance(
-            item, list
-        ), f"{key} is expected to be list but is {type(item)}"
+            enclosed_list, list
+        ), f"key {primary_key} from df2obsdict should be list"
+        for item_dict in enclosed_list:
+            assert isinstance(
+                item_dict, dict
+            ), f"{item_dict} is expected to be list but is {type(item_dict)}"
     # _compare_to_results_in_file(
     #     result_dict,
     #     Path(__file__).parent
