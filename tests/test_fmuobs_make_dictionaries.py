@@ -11,10 +11,13 @@ TEST_DATA = "testdata_fmuobs/"
 @pytest.mark.integration
 @pytest.mark.parametrize(
     "obs_file",
-    ["drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs", "snorre/all_obs_230310.txt"],
+    [
+        "drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs",
+        "some_field/all_obs_230310.txt",
+    ],
 )
 def test_from_autoparse_file_to_df2obsdict(obs_file):
-    """Test dictionaries produced for drogon and snorre are as expected
+    """Test dictionaries produced are as expected
 
     Args:
         obs_file (str): ert observation file
