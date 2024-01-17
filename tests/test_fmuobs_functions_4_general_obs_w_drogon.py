@@ -104,11 +104,7 @@ def test_general_df2obsdict(fixture_name, drogon_full_obs_file, request):
         correct_result_file = fixture_name
         where = "drogon"
     results = general_df2obsdict(request.getfixturevalue(fixture_name), parent_dir)
-    import yaml
 
-    stream = open("res.yml", "w")
-    yaml.dump(results, stream)
-    stream.close()
     _assert_compulsories_are_correct(results)
     if fixture_name != "ert-doc_df":
         # Comparison with file not done for ert-doc, the ert-doc file is
