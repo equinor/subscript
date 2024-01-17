@@ -2,7 +2,7 @@ from pathlib import Path
 
 import yaml
 
-TEST_DATA = TEST_DATA = "testdata_fmuobs/"
+TEST_DATA = "testdata_fmuobs/"
 
 
 def _find_observation_file(file_path, where="drogon"):
@@ -31,7 +31,7 @@ def _unsummable(check_list):
 
 
 def _assert_compulsories_are_correct(results, key=None):
-    """Assert that the compulsory components of general observations are in place
+    """Assert that the compulsory components of observations are in place
 
     Args:
         results (dict): results extracted from function general_df2obsdict
@@ -96,6 +96,7 @@ def _compare_number_of_keys_or_check_type(to_be_tested, correct, key):
         correct (dict): the dict to compare to
         key (str): name of part to be tested
     """
+    print(to_be_tested, correct, key, sep="\n")
     correct_data = correct[key]
     try:
         assert_equal_length(to_be_tested, correct_data, key)
@@ -131,4 +132,4 @@ def _compare_to_results_in_file(obs_dict, name_of_dataset, where="drogon"):
                 )
     assert (
         obs_dict == answer
-    ), f"Results of {name_of_dataset} should be {answer}, but are {obs_dict}"
+    ), f"Result of {name_of_dataset} should be {answer}, but is {obs_dict}"
