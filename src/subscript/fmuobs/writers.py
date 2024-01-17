@@ -281,6 +281,23 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     return smry_obs_list
 
 
+def align_format_with_summarydict(general_obs_dict: dict) -> List[dict]:
+    """Restructure general dictionary from general_df2obsdict to align with smry
+
+    Args:
+        general_obs_dict (dict): the dictionary to restructure
+
+    Returns:
+        List[dict]: the dictionary restructured
+    """
+    restructured = []
+    for gen_obs_key, gen_obs_dict in general_obs_dict.items():
+        for obs_key, obs_dict in gen_obs_dict.items():
+            obs_dict["label"] = obs_key
+            restructured.append({"key": gen_obs_key, "observations": obs_dict})
+    return restructured
+
+
 def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> dict:
     """Generate a dictionary structure suitable for yaml
     for general observations in dataframe representation
@@ -429,9 +446,11 @@ def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = PosixPath(".")) -> 
         )
 
     if "GENERAL_OBSERVATION" in obs_df["CLASS"].values:
-        obsdict[CLASS_SHORTNAME["GENERAL_OBSERVATION"]] = general_df2obsdict(
-            obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]], parent_dir
-        )  # type:ignore
+        obsdict[CLASS_SHORTNAME["GENERAL_OBSERVATION"]] = align_format_with_summarydict(
+            general_df2obsdict(
+                obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]], parent_dir
+            )
+        )
 
     # Process BLOCK_OBSERVATION:
     if "BLOCK_OBSERVATION" in obs_df["CLASS"].values:
