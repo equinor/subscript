@@ -10,7 +10,7 @@ tracer:
     - 30
     - 30
     - 30
-    observations:
+    value:
     - 421
     - 904
     - 912

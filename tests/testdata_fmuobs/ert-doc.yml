@@ -1,27 +1,30 @@
 general:
-  testdata_fmuobs:
-    GEN_OBS1:
-      data: SOME_FIELD
-      error:
-      - 0.2
-      observations:
-      - 2
-      restart: 20.0
-    GEN_OBS2:
-      data: SOME_FIELD
-      error:
-      - 0.2
-      - 10
-      - 0.5
-      index_list:
-      - 0
-      - 3
-      - 9
-      observations:
-      - 2
-      - 256
-      - 3
-      restart: 20.0
+- key: testdata_fmuobs
+  observations:
+    data: SOME_FIELD
+    error:
+    - 0.2
+    label: GEN_OBS1
+    restart: 20.0
+    value:
+    - 2
+- key: testdata_fmuobs
+  observations:
+    data: SOME_FIELD
+    error:
+    - 0.2
+    - 10
+    - 0.5
+    index_list:
+    - 0
+    - 3
+    - 9
+    label: GEN_OBS2
+    restart: 20.0
+    value:
+    - 2
+    - 256
+    - 3
 rft:
 - date: '2006-10-22'
   field: PRESSURE
