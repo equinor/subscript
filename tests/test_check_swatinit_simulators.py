@@ -63,27 +63,27 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
         simulator_option = ["--parsing-strictness=low"]
 
     result = subprocess.run(  # pylint: disable=subprocess-run-check
-        [simulator] + simulator_option + ["FOO.DATA"], stdout=subprocess.PIPE
+        [simulator] + simulator_option + ["FOO.DATA"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
     )
 
     if (
         result.returncode != 0
         and "runeclipse" in simulator
-        and result.stdout is not None
-        and result.stderr is not None
         and "LICENSE FAILURE" in result.stdout.decode() + result.stderr.decode()
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
         time.sleep(30)
         result = subprocess.run(  # pylint: disable=subprocess-run-check
-            [simulator] + simulator_option + ["FOO.DATA"], stdout=subprocess.PIPE
+            [simulator] + simulator_option + ["FOO.DATA"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
 
     if result.returncode != 0:
-        if result.stdout:
-            print(result.stdout.decode())
-        if result.stderr:
-            print(result.stderr.decode())
+        print(result.stdout.decode())
+        print(result.stderr.decode())
         raise AssertionError(f"reservoir simulator failed in {os.getcwd()}")
 
     if perform_qc:
