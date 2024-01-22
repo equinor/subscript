@@ -10,6 +10,7 @@ from subscript.pack_sim import pack_sim
 
 ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 ECLCASE = "2_R001_REEK-0.DATA"
+ISO_8859_VFP = Path(__file__).absolute().parent / "data" / "vfp" / "pd2.VFP"
 
 # pylint: disable=protected-access
 
@@ -51,58 +52,6 @@ def test_main_fmu(tmp_path, mocker):
     assert Path("include/edit").exists()
     assert Path("include/grid/reek.grid").exists()
     assert Path("include/props/reek.pvt").exists()
-
-
-def test_helpful_latin1_encoding_exception(tmp_path, mocker):
-    """Test that a more helpful error message is given when a file with an
-    unsupported encoding is given"""
-    tmp_data_file = tmp_path / "TMP.DATA"
-    with open(tmp_data_file, "w", encoding="iso-8859-1") as fout:
-        fout.write("-- død")
-    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file), "."])
-    with pytest.raises(
-        UnicodeDecodeError,
-        match=(f"'ø' found in file: {tmp_data_file.name} on line: 1"),
-    ):
-        pack_sim.main()
-
-    tmp_data_file2 = tmp_path / "TMP2.DATA"
-    with open(tmp_data_file2, "w", encoding="iso-8859-1") as fout:
-        fout.write("-- A\nRUNSPEC\n-- på sjøen")
-    mocker.patch("sys.argv", ["pack_sim", str(tmp_data_file2), "."])
-    with pytest.raises(
-        UnicodeDecodeError,
-        match=(f"'å' found in file: {tmp_data_file2.name} on line: 3"),
-    ):
-        pack_sim.main()
-
-
-def test_bad_and_recursive_includes(tmp_path, mocker):
-    os.chdir(tmp_path)
-    binary_include = "blob.perm"
-    with open(binary_include, "wb") as fout:
-        fout.write(b"\xde\xad\xbe\xef\x7f\x00")
-
-    good_include = "good.inc"
-    with open(good_include, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{binary_include}' /")
-
-    bad_include = "bad.inc"
-    with open(bad_include, "w", encoding="iso-8859-1") as fout:
-        fout.write("-- død")
-
-    tmp_data_file = "TMP.DATA"
-    with open(tmp_data_file, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{good_include}' /")
-    mocker.patch("sys.argv", ["pack_sim", tmp_data_file, "packed/"])
-    pack_sim.main()
-
-    with open(tmp_data_file, "w", encoding="utf-8") as fout:
-        fout.write(f"INCLUDE\n  '{bad_include}' /")
-    with pytest.raises(
-        UnicodeDecodeError, match=(f"'ø' found in file: {bad_include} on line: 1")
-    ):
-        pack_sim.main()
 
 
 def test_repeated_run(tmp_path, mocker):
@@ -309,3 +258,20 @@ Smørbukk Sør
     Path("FOO.DATA").write_text(datafile_str, encoding="utf8")
     pack_sim.pack_simulation(Path("FOO.DATA"), Path("somedir"), True, False)
     assert Path("somedir/FOO.DATA").read_text(encoding="utf8") == datafile_str
+
+
+def test_iso8859(tmp_path):
+    """Test that no errors are triggered when ISO-8859-1 input is provided"""
+    os.chdir(tmp_path)
+    datafile_str = """RUNSPEC
+TITLE
+sm³
+"""
+    Path("FOO.DATA").write_text(datafile_str, encoding="iso-8859-1")
+    iso_str = Path("FOO.DATA").read_text(encoding="iso-8859-1")
+
+    pack_sim.pack_simulation(Path("FOO.DATA"), Path("somedir"), True, False)
+    assert Path("somedir/FOO.DATA").read_text(encoding="utf8") == iso_str
+
+    pack_sim.pack_simulation(ISO_8859_VFP, Path("somedir"), True, False)
+    assert Path("somedir/pd2.VFP").exists()

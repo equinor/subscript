@@ -31,27 +31,14 @@ def _read_lines(filename: Path) -> List[str]:
     try:
         with open(filename, encoding="utf-8") as fin:
             lines = fin.readlines()
-    except UnicodeDecodeError as e:
-        error_words = str(e).split(" ")
-        hex_str = error_words[error_words.index("byte") + 1]
+    except UnicodeDecodeError:
         try:
-            bad_char = chr(int(hex_str, 16))
-        except ValueError:
-            bad_char = f"hex:{hex_str}"
-        with open(filename, "rb") as fin:
-            byte_lines: List[bytes] = fin.readlines()
-
-        for i, byte_line in enumerate(byte_lines):
-            try:
-                byte_line.decode("utf-8")
-            except UnicodeDecodeError:
-                bad_line_num = i + 1
-                e.reason = (
-                    f"Unsupported non-UTF-8 character {bad_char!r} found "
-                    f"in file: {filename.name} on line: {bad_line_num}"
-                )
-                break
-        raise e
+            with open(filename, encoding="iso-8859-1") as fin:
+                lines = fin.readlines()
+        except ValueError as e:
+            raise ValueError(
+                f"Unsupported character encoding in file {filename}"
+            ) from e
     return lines
 
 
@@ -126,7 +113,6 @@ def _md5checksum(
 
     Returns:
         str: MD5 checksum
-
     """
 
     def _md5_on_fhandle(fhandle: TextIO) -> str:
