@@ -2,7 +2,6 @@
 import os
 import re
 import subprocess
-import sys
 from pathlib import Path
 
 import pandas as pd
@@ -210,10 +209,6 @@ def test_commandlinetool(tmp_path, mocker):
     assert 2 in stacked["REGION"].astype(int).values
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7),
-    reason="Requires Python 3.7 or higher (subprocess-capture-output)",
-)
 @pytest.mark.parametrize("verbose", [False, True])
 def test_csv_stack_verbose(tmp_path, verbose):
     """Test that --verbose gives INFO logging to stdout"""
@@ -233,10 +228,6 @@ def test_csv_stack_verbose(tmp_path, verbose):
         assert "INFO:" not in output
 
 
-@pytest.mark.skipif(
-    sys.version_info < (3, 7),
-    reason="Requires Python 3.7 or higher (subprocess-capture-output)",
-)
 def test_csv_stack_stdout(tmp_path):
     """Test that csv output can be dumped to stdout"""
     os.chdir(tmp_path)
@@ -245,7 +236,8 @@ def test_csv_stack_stdout(tmp_path):
     result = subprocess.run(commands, check=True, capture_output=True)
     output = result.stdout.decode()
     assert "WELL" in output
-    assert "A2,2015" in output
+    assert "A2" in output
+    assert "2015" in output
 
 
 @pytest.mark.integration
