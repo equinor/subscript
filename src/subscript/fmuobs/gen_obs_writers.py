@@ -240,12 +240,16 @@ def dump_content_to_dict(
     return content_dict
 
 
-def tidy_general_obs_keys(generals):
+def tidy_general_obs_keys(generals, config=None):
     """Convert keys in dict to something like standard names, when possible
 
     Args:
         generals (dict): the dict up for modification
+        config: (dict): dictionary to rename with
     """
+    if config is None:
+        config = {}
+    config_renamer = config.get("general_observations", {})
     white_list = ["rft", "tracer", "seismic"]
     general_keys = list(generals.keys())
     conversions = {
@@ -254,10 +258,13 @@ def tidy_general_obs_keys(generals):
         for correct_key in white_list
         if correct_key in general_key
     }
+    for key, value in config_renamer.items():
+        conversions[key] = value
     rouges = set(conversions.keys()).symmetric_difference(general_keys)
     if len(rouges) > 0:
         warnings.warn(
-            f"Some keys not recognized ({rouges}) as standards, but kept as is"
+            f"These keys {rouges} are neither standards, nor provided a user"
+            " defined name but kept as is"
         )
         LOGGER.debug("Have tidied, results are %s", generals)
     for convertable_key, correct_key in conversions.items():

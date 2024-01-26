@@ -120,3 +120,20 @@ def test_tidy_general_obs_keys():
         "tracer_jungle",
         "magic_seismic_data",
     }
+
+
+def test_tidy_general_obs_keys_w_config():
+    """Test function tidy_general_obs_keys wwth config"""
+    correct_keys = ["rft", "goc", "seismic"]
+    test = {
+        "bananarama": {"banana": "nice"},
+        "racoon": {"animal": "stripy"},
+        "tracer_jungle": {"Tracing it": "to the moon"},
+    }
+    config = {"general_observation": {"bananarama": "rft", "racoon": "goc"}}
+    gen_obs_writers.tidy_general_obs_keys(test, config)
+    test_keys = test.keys()
+    assert len(test_keys) == 3, f"Not correct set of keys (3) but {len(test_keys)}"
+    assert all(
+        key in correct_keys for key in correct_keys
+    ), f"Correct keys should be {correct_keys}, but are {test_keys}"

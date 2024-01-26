@@ -307,6 +307,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         assert "Parsing observation" not in caplog.text
 
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
+    dframe_from_csv_on_disk.to_csv("dump.csv", index=False)
     reference_dframe_from_disk = pd.read_csv(TESTDATA_DIR / "ert-doc.csv")
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
@@ -340,6 +341,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     ]
     run_result = subprocess.run(arguments, check=True, stdout=subprocess.PIPE)
     dframe_from_stdout = pd.read_csv(io.StringIO(run_result.stdout.decode("utf-8")))
+    dframe_from_stdout.to_csv("dump.csv", index=False)
     # pylint: disable=no-member  # false positive on Pandas object
     pd.testing.assert_frame_equal(
         dframe_from_stdout.sort_index(axis=1),

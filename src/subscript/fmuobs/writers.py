@@ -5,6 +5,7 @@ format"""
 import re
 from pathlib import PosixPath
 from typing import List
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -317,6 +318,15 @@ def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> dict:
     for _, general_row in general_df.iterrows():
         file_to_read = parent_dir / general_row["OBS_FILE"]
         gen_obs_key = file_to_read.parent.name
+        if gen_obs_key == parent_dir.name or gen_obs_key == "":
+            warnings.warn(
+                "You have chosen to put related file for "
+                f"{general_row['LABEL']} into same folder as observation file.\n"
+                "This will have to pass for now, but is strongly discouraged!\n"
+                "Will be found under the 'unspecified' field"
+            )
+            gen_obs_key = "unspecified"
+
         gen_obs_files[gen_obs_key] = file_to_read.parent
         the_obs = dump_content_to_dict(file_to_read)
         the_obs.update({"data": general_row["DATA"], "restart": general_row["RESTART"]})
