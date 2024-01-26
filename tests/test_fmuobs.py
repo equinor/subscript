@@ -307,8 +307,13 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         assert "Parsing observation" not in caplog.text
 
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
-    dframe_from_csv_on_disk.to_csv("dump.csv", index=False)
+
     reference_dframe_from_disk = pd.read_csv(TESTDATA_DIR / "ert-doc.csv")
+    discrepancies = set(dframe_from_csv_on_disk.columns).symmetric_difference(
+        reference_dframe_from_disk.columns
+    )
+    assert len(discrepancies) == 0, f"Difference in columns produces: {discrepancies}"
+    assert dframe_from_csv_on_disk.shape == reference_dframe_from_disk.shape
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
