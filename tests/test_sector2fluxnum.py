@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import pytest
-
 from subscript.sector2fluxnum import sector2fluxnum
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_sector2fluxnum"

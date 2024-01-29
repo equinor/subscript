@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 from subscript.csv_merge import csv_merge
 
 try:
@@ -143,7 +142,7 @@ def test_main_merge(tmp_path, mocker):
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
     assert "FILETYPE" in merged
-    assert set(merged["FILETYPE"].unique()) == set([test_csv_1, test_csv_2])
+    assert set(merged["FILETYPE"].unique()) == {test_csv_1, test_csv_2}
 
 
 @pytest.mark.parametrize(

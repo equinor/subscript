@@ -87,7 +87,7 @@ def menu():
 
         hmax = float(input("Height maximum: "))
 
-        for i in range(0, nplot):
+        for i in range(nplot):
             print("Set no. ", i + 1)
             poro.append(float(input("Poro (frac): ")))
             perm.append(float(input("Perm (mD): ")))

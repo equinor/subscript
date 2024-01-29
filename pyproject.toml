@@ -58,9 +58,6 @@ dependencies = [
 
 [project.optional-dependencies]
 tests = [
-    "black",
-    "flake8",
-    "isort",
     "mypy",
     "pytest",
     "pytest-cov",
@@ -68,6 +65,7 @@ tests = [
     "pytest-xdist",
     "rstcheck",
     "rstcheck-core",
+    "ruff",
     "types-Jinja2",
     "types-PyYAML",
     "types-python-dateutil",
@@ -135,12 +133,6 @@ script-files = [
     "src/subscript/legacy/runeclipse",
 ]
 
-[tool.black]
-line-length = 88
-
-[tool.isort]
-profile = "black"
-
 [tool.mypy]
 ignore_missing_imports = true
 
@@ -167,3 +159,24 @@ markers = [
 
 [tool.rstcheck]
 ignore_directives = ["argparse", "automodule"]
+
+[tool.ruff]
+ignore = [
+    "C901",
+]
+select = [
+    "C",
+    "E",
+    "F",
+    "I",
+    "PIE",
+    "Q",
+    "RET",
+    "RSE",
+    "SIM",
+    "W",
+]
+line-length = 88
+
+[tool.ruff.lint.isort]
+combine-as-imports = true

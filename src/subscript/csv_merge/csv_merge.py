@@ -54,7 +54,6 @@ class CustomFormatter(
     """
 
     # pylint: disable=unnecessary-pass
-    pass
 
 
 class CsvMerge(ErtScript):
@@ -243,7 +242,7 @@ def taglist(strings: List[str], regexp_str: str) -> list:
     list is returned.
     """
     regexp = re.compile(regexp_str)
-    matches = map(lambda x: re.match(regexp, x), strings)
+    matches = (re.match(regexp, x) for x in strings)
     values = [x and x.group(1) for x in matches]
     if any(values):
         return values

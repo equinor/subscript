@@ -9,7 +9,6 @@ from pathlib import Path
 import pandas as pd
 import pytest
 import yaml
-
 from subscript.fmuobs.fmuobs import autoparse_file, main
 from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
@@ -146,10 +145,9 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
         subframe.drop(
             ["COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore", inplace=True
         )
-        if _class == "BLOCK_OBSERVATION":
-            if "WELL" in subframe:
-                # WELL as used in yaml is not preservable in roundtrips
-                del subframe["WELL"]
+        if _class == "BLOCK_OBSERVATION" and "WELL" in subframe:
+            # WELL as used in yaml is not preservable in roundtrips
+            del subframe["WELL"]
         # print(roundtrip_subframe)
         # print(subframe)
 

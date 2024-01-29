@@ -50,8 +50,6 @@ class CustomFormatter(
 
     # pylint: disable=unnecessary-pass
 
-    pass
-
 
 def get_parser() -> argparse.ArgumentParser:
     """A parser for command line argument parsing and for documentation."""

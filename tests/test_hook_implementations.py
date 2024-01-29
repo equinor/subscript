@@ -4,9 +4,8 @@ from pathlib import Path
 
 import pytest
 import rstcheck_core.checker
-from ert.shared.plugins.plugin_manager import ErtPluginManager
-
 import subscript.hook_implementations.jobs
+from ert.shared.plugins.plugin_manager import ErtPluginManager
 
 # pylint: disable=redefined-outer-name
 
@@ -97,7 +96,7 @@ def test_hook_implementations_job_docs():
 
     assert set(docs.keys()) == set(installable_jobs.keys())
 
-    for job_name in installable_jobs.keys():
+    for job_name in installable_jobs:
         desc = docs[job_name]["description"]
         assert desc != ""
         assert not list(rstcheck_core.checker.check_source(desc))

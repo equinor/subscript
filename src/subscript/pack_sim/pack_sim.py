@@ -245,11 +245,7 @@ def inspect_file(
         line_strip_no_comment = _remove_comments(True, line_strip).strip()
         line = _remove_comments(clear_comments, line)
 
-        if (
-            line.upper().startswith("INCLUDE")
-            or line.startswith("GDFILE")
-            or line.startswith("IMPORT")
-        ):
+        if line.upper().startswith(("INCLUDE", "GDFILE", "IMPORT")):
             # Include keyword found!
             logger.info("%s%s", indent, "FOUND INCLUDE FILE ==>")
             new_data_file += line
@@ -268,8 +264,8 @@ def inspect_file(
                 line_strip = _remove_comments(clear_comments, line_strip)
                 include_line = _remove_comments(clear_comments, include_line)
 
-                if not len(include_line.strip()) == 0:
-                    if "--" not in line_strip[0:3] and not len(line_strip) == 0:
+                if len(include_line.strip()) != 0:
+                    if "--" not in line_strip[0:3] and len(line_strip) != 0:
                         # This is the include file!
                         include_full = line_strip.split("--")[0]
                         include_stripped = Path(shlex.split(include_full)[0])
@@ -376,10 +372,7 @@ def inspect_file(
                                     indent,
                                     new_include,
                                 )
-                        if fmu:
-                            fmu_include = "../"
-                        else:
-                            fmu_include = ""
+                        fmu_include = "../" if fmu else ""
 
                         # Change the include path in the current file being inspected
                         if "'" in include_full or '"' in include_full:
@@ -395,8 +388,7 @@ def inspect_file(
 
                         # Ignore comments after the include statement
                         break
-                    else:
-                        new_data_file += include_line
+                    new_data_file += include_line
         elif line_strip_no_comment == "RUNSPEC" and fmu:
             section = "runspec/"
             (packing_path / "include" / section).mkdir(exist_ok=True)

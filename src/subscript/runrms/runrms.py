@@ -358,7 +358,7 @@ class RunRMS:
 
         if not pathlib.Path(setup).is_file():
             xcritical(f"Requested setup <{setup}> does not exist!")
-            raise FileNotFoundError()
+            raise FileNotFoundError
 
         with open(setup, "r", encoding="utf-8") as stream:
             logger.debug("Actual setup file: %s", setup)

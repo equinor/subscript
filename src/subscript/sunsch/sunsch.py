@@ -85,7 +85,7 @@ class SunschConfig(BaseModel):
 
 
 def datetime_from_date(
-    date: Union[str, datetime.datetime, datetime.date]
+    date: Union[str, datetime.datetime, datetime.date],
 ) -> datetime.datetime:
     """Set time to 00:00:00 in a date, keep time info if given a datetime object"""
     if isinstance(date, datetime.datetime):

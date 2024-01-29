@@ -91,8 +91,6 @@ class CustomFormatter(
 
     # pylint: disable=unnecessary-pass
 
-    pass
-
 
 class CsvStack(ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,
@@ -253,10 +251,9 @@ def drop_constants(
         if len(dframe[col].unique()) == 1:
             # col was a constant column
             columnstodelete.append(col)
-        if keepminimal:
-            # Also drop columns not involved in stacking operation
-            if not (stackmatcher.match(col) or col.lower() in keepthese):
-                columnstodelete.append(col)
+        # Also drop columns not involved in stacking operation
+        if keepminimal and (not (stackmatcher.match(col) or col.lower() in keepthese)):
+            columnstodelete.append(col)
     if keepminimal:
         logger.info("Deleting constant and unwanted columns %s", str(columnstodelete))
     else:
@@ -304,7 +301,7 @@ def csv_stack(
             colstostack = colstostack + 1
             dostack = True
         else:
-            tuplecols.append(tuple([col, ""]))
+            tuplecols.append((col, ""))
             nostackcolumnnames.append(col)
 
     logger.info("Found %d out of %d columns to stack", colstostack, len(dframe.columns))

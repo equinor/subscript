@@ -69,9 +69,8 @@ the linting done in CI:
 
  .. code-block:: console
 
-  isort --check-only --profile black src tests
-  black --check *.py src tests
-  flake8 src tests
+  ruff . 
+  ruff format .
   mypy src/subscript
   rstcheck -r docs
 

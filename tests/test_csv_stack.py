@@ -6,7 +6,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 from subscript.csv_stack import csv_stack
 
 try:
@@ -146,7 +145,7 @@ def test_csv_stack_all():
     dframe["WOPR:A2"] = [20, 21, 22, 23, 24, 25, 27]
     all_stacked = csv_stack.csv_stack(dframe, regexp, colon, col_name)
     assert len(all_stacked) == 28
-    assert set(all_stacked["IDENTIFIER"].unique()) == set(["1", "2", "A1", "A2"])
+    assert set(all_stacked["IDENTIFIER"].unique()) == {"1", "2", "A1", "A2"}
 
 
 @pytest.mark.integration

@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import pytest
 from matplotlib import pyplot
-
 from subscript.check_swatinit.check_swatinit import (
     __FINE_EQUIL__,
     __HC_BELOW_FWL__,
@@ -342,7 +341,7 @@ def test_qc_volumes(propslist, expected_dict):
     """Test that we calculate qc volumes correctly from a cell-based qc dataframe"""
     qc_frame = pd.DataFrame(propslist)
     qc_vols = qc_volumes(qc_frame)
-    for key in expected_dict.keys():
+    for key in expected_dict:
         assert np.isclose(qc_vols[key], expected_dict[key])
 
 

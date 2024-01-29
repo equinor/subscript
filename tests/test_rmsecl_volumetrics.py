@@ -6,7 +6,6 @@ import pandas as pd
 import pytest
 import yaml
 from fmu.tools.fipmapper import fipmapper
-
 from subscript.rmsecl_volumetrics.rmsecl_volumetrics import (
     _compare_volumetrics,
     _disjoint_sets_to_dict,

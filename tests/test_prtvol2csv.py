@@ -9,7 +9,6 @@ import pandas as pd
 import pytest
 import yaml
 from fmu.tools.fipmapper.fipmapper import FipMapper
-
 from subscript.prtvol2csv import prtvol2csv
 
 TESTDATADIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
@@ -492,8 +491,7 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
                 "RUNPATH <CONFIG_PATH>",
                 "",
                 (
-                    "FORWARD_MODEL PRTVOL2CSV("
-                    "<DATAFILE>=" + str(prtfile) + ")"  # noqa
+                    "FORWARD_MODEL PRTVOL2CSV(" "<DATAFILE>=" + str(prtfile) + ")"  # noqa
                 ),
             ]
         ),

@@ -60,17 +60,13 @@ jobs:
       - name: List all installed packages
         run: pip freeze
 
-      - name: Lint with isort
+      - name: Format with ruff
         if: ${{ always() }}
-        run: isort --check-only --profile black src tests
+        run: ruff format . --check
 
-      - name: Lint with black
+      - name: Lint with ruff
         if: ${{ always() }}
-        run: black --check src tests
-
-      - name: Lint with flake8
-        if: ${{ always() }}
-        run: flake8 src tests
+        run: ruff check .
 
       - name: Check typing with mypy
         if: ${{ always() }}

@@ -90,7 +90,6 @@ class CustomFormatter(
     """
 
     # pylint: disable=unnecessary-pass
-    pass
 
 
 def get_resinsight_exe() -> Optional[str]:
@@ -164,7 +163,7 @@ def get_rips_version_triplet() -> Tuple[int, int, int]:
 
 
 def find_and_wrap_resinsight_version(
-    version_triplet: Tuple[int, int, int]
+    version_triplet: Tuple[int, int, int],
 ) -> Optional[str]:
     """
     Find a ResInsight executable matching at least the major.minor version

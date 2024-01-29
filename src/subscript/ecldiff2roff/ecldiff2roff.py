@@ -40,7 +40,6 @@ class CustomFormatter(
     and raw description formatter"""
 
     # pylint: disable=unnecessary-pass
-    pass
 
 
 def get_parser() -> argparse.ArgumentParser:

@@ -77,7 +77,6 @@ class CustomFormatter(
     and raw description formatter"""
 
     # pylint: disable=unnecessary-pass
-    pass
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -238,10 +237,11 @@ def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, di
 
     try:
         obsdict = yaml.safe_load(Path(filename).read_text(encoding="utf8"))
-        if isinstance(obsdict, dict):
-            if obsdict.get("smry", None) or obsdict.get("rft", None):
-                logger.info("Parsed %s as a YAML file with observations", filename)
-                return ("yaml", obsdict2df(obsdict))
+        if isinstance(obsdict, dict) and (
+            obsdict.get("smry", None) or obsdict.get("rft", None)
+        ):
+            logger.info("Parsed %s as a YAML file with observations", filename)
+            return ("yaml", obsdict2df(obsdict))
     except yaml.scanner.ScannerError as exception:
         # This occurs if there are tabs in the file, which is not
         # allowed in a YAML file (but it can be present in ERT observation files)
@@ -264,10 +264,13 @@ def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, di
                     filename,
                 )
                 return ("ert", pd.DataFrame())
-        if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
-            if set(dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys())):
-                logger.info("Parsed %s as an ERT observation file", filename)
-                return ("ert", dframe)
+        if (
+            {"CLASS", "LABEL"}.issubset(dframe.columns)
+            and not dframe.empty
+            and set(dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys()))
+        ):
+            logger.info("Parsed %s as an ERT observation file", filename)
+            return ("ert", dframe)
     except ValueError:
         pass
 

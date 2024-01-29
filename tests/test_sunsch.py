@@ -7,7 +7,6 @@ from pathlib import Path
 import pytest  # noqa: F401
 import yaml
 from pydantic import ValidationError
-
 from subscript.sunsch import sunsch
 
 DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"
@@ -173,7 +172,7 @@ def test_templating(tmp_path):
             {
                 "template": "template.tmpl",
                 "days": 10,
-                "substitute": dict(WELLNAME="A-007", ORAT=200.3, GRAT=1.4e6),
+                "substitute": {"WELLNAME": "A-007", "ORAT": 200.3, "GRAT": 1.4e6},
             }
         ],
     }
@@ -190,7 +189,7 @@ def test_templating(tmp_path):
             {
                 "template": "template.tmpl",
                 "days": 10,
-                "substitute": dict(WELLNAME="A-007"),
+                "substitute": {"WELLNAME": "A-007"},
             }
         ],
     }
@@ -203,7 +202,7 @@ def test_templating(tmp_path):
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
         "enddate": datetime.date(2021, 1, 1),
-        "insert": [{"template": "template.tmpl", "substitute": dict(WELLNAME="A-007")}],
+        "insert": [{"template": "template.tmpl", "substitute": {"WELLNAME": "A-007"}}],
     }
     sch = sunsch.process_sch_config(sunschconf)
     # sunsch logs this as an error that there is no date defined for the template.
@@ -228,7 +227,7 @@ def test_templating(tmp_path):
             {
                 "template": "empty.tmpl",
                 "days": 10,
-                "substitute": dict(WELLNAME="A-007", ORAT=200.3, GRAT=1.4e6),
+                "substitute": {"WELLNAM": "A-007", "ORAT": 200.3, "GRAT": 1.4e6},
             }
         ],
     }

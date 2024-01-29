@@ -147,10 +147,7 @@ def _convert_ecl2roff(
         if not props:
             raise SystemExit("STOP. No properties given")
 
-        if ":" in props:
-            props_list = props.split(":")
-        else:
-            props_list = props.split()
+        props_list = props.split(":") if ":" in props else props.split()
 
         fformat = mode
         fformat = fformat.replace("restart", "unrst")
@@ -162,10 +159,7 @@ def _convert_ecl2roff(
 
             if os.path.exists(dates):
                 dates = " ".join(Path(dates).read_text(encoding="utf8").splitlines())
-            if ":" in dates:
-                dates_list = dates.split(":")
-            else:
-                dates_list = dates.split()
+            dates_list = dates.split(":") if ":" in dates else dates.split()
         else:
             dates_list = None
 

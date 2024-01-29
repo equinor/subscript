@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import pytest
 from resdata.summary import Summary
-
 from subscript.welltest_dpds import welltest_dpds
 
 ECLDIR = Path(__file__).parent.absolute() / Path("data/welltest/eclipse/model")

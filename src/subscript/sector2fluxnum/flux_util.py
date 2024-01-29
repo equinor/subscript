@@ -51,15 +51,13 @@ def filter_region(
     ):
         # Intersection
         region.select_all()  # region.select_active()
-        region = region & region_i & region_j & region_k & region_fip
-        return region
+        return region & region_i & region_j & region_k & region_fip
 
     if combine_operator == "union":
         # Union
         region1.select_active()
         region2 = region_i | region_j | region_k | region_fip
-        region = region1 & region2
-        return region
+        return region1 & region2
 
     raise Exception(
         f"ERROR: '{combine_operator}' is not a valid operator to combine regions."
@@ -102,6 +100,4 @@ def unpack_ijk(i_str, j_str, k_str):
     k_start = int(k_str_split[0])
     k_end = int(k_str_split[1])
 
-    ijk_list = [i_start, i_end, j_start, j_end, k_start, k_end]
-
-    return ijk_list
+    return [i_start, i_end, j_start, j_end, k_start, k_end]

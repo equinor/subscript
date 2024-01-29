@@ -4,9 +4,8 @@ import subprocess
 from pathlib import Path
 
 import pytest
-import xtgeo
-
 import subscript.convert_grid_format.convert_grid_format as cgf
+import xtgeo
 from subscript import getLogger
 
 logger = getLogger(__name__)

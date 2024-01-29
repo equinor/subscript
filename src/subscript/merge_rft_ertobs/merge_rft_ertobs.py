@@ -42,7 +42,6 @@ class CustomFormatter(
     and raw description formatter"""
 
     # pylint: disable=unnecessary-pass
-    pass
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -239,9 +238,8 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
 
     if "report_step" in sim_df.columns:
         return pd.merge(sim_df, obs_df, how="left", on=["well", "order", "report_step"])
-    else:
-        # Ensure backward compatibility where gendata_rft doesn't have report_step
-        return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
+    # Ensure backward compatibility where gendata_rft doesn't have report_step
+    return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
 
 
 def main() -> None:

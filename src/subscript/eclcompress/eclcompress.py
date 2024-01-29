@@ -60,9 +60,7 @@ DEFAULT_FILES_TO_COMPRESS = [
 ]
 
 EPILOG = """
-Default list of files to compress is """ + " ".join(
-    DEFAULT_FILES_TO_COMPRESS
-)
+Default list of files to compress is """ + " ".join(DEFAULT_FILES_TO_COMPRESS)
 
 CATEGORY = "modelling.reservoir"
 
@@ -393,7 +391,6 @@ class CustomFormatter(
     """
 
     # pylint: disable=W0107
-    pass
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -459,8 +456,7 @@ def parse_wildcardfile(filename: str) -> List[str]:
     lines = [line.strip() for line in lines]
     lines = [line.split("#")[0] for line in lines]
     lines = [line.split("--")[0] for line in lines]
-    lines = list(filter(len, lines))
-    return lines
+    return list(filter(len, lines))
 
 
 def main():

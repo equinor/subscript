@@ -98,10 +98,7 @@ def mask_curly_braces(string: str, mask_char: str = "X") -> str:
     # in the strings after the loop above, mask these also:
     for match in re.compile(
         # r"(\{[\sA-Za-z=\.,:;0-9\-_/" + mask_char + r";]+\})"
-        r"(\{["
-        + _KEY_VALUE_CHARS
-        + mask_char
-        + r";]+\})"
+        r"(\{[" + _KEY_VALUE_CHARS + mask_char + r";]+\})"
     ).findall(string):
         if match:
             string = string.replace(match, mask_char * len(match))
@@ -356,7 +353,7 @@ def flatten_observation_unit(
 
     # Inject a default segment if segments are in use:
     if any("SEGMENT" in key for key in subunit_keys):
-        obs_subunits.append({**{"SEGMENT": "DEFAULT"}, **keyvalues})
+        obs_subunits.append({"SEGMENT": "DEFAULT", **keyvalues})
 
     for subunit in subunit_keys:
         if len(subunit.split()) < 2:
@@ -364,7 +361,7 @@ def flatten_observation_unit(
             raise ValueError("Wrong observation subunit syntax: " + str(subunit))
         obs_subunits.append(
             {
-                **{subunit.split()[0]: subunit.split()[1]},
+                subunit.split()[0]: subunit.split()[1],
                 **keyvalues,
                 **obsunit[subunit],
             }
