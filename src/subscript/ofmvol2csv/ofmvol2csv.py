@@ -7,8 +7,7 @@ from typing import List, Union
 
 import pandas as pd
 
-from subscript import __version__
-from subscript import getLogger as subscriptlogger
+from subscript import __version__, getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = subscriptlogger(__name__)
@@ -41,8 +40,6 @@ class CustomFormatter(
     """
 
     # pylint: disable=unnecessary-pass
-
-    pass
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -105,8 +102,7 @@ def cleanse_ofm_lines(filelines: List[str]) -> List[str]:
     # Make everything upper case (not pretty, but simplifies parsing)
     filelines = [line.upper() for line in filelines]
     # OFM sometimes uses the tab character, replace by space to robustify parsing
-    filelines = [line.replace("\t", " ") for line in filelines]
-    return filelines
+    return [line.replace("\t", " ") for line in filelines]
 
 
 def unify_dateformat(lines: List[str]) -> List[str]:
@@ -158,8 +154,7 @@ def extract_columnnames(filelines: List[str]) -> List[str]:
         logger.error("Only support files with *DATE occuring once")
         raise ValueError
 
-    columnnames = columnnamelines[0].rstrip().replace("*", "").split()
-    return columnnames
+    return columnnamelines[0].rstrip().replace("*", "").split()
 
 
 def split_list(linelist: List[str], splitidxs: List[int]) -> List[List[str]]:
@@ -206,10 +201,7 @@ def find_wellstart_indices(filelines: List[str]) -> List[int]:
     Returns:
         List of integers
     """
-    wellnamelinenumbers = [
-        i for i in range(0, len(filelines)) if filelines[i].startswith("*NAME")
-    ]
-    return wellnamelinenumbers
+    return [i for i in range(len(filelines)) if filelines[i].startswith("*NAME")]
 
 
 def parse_well(well_lines: List[str], columnnames: List[str]) -> pd.DataFrame:

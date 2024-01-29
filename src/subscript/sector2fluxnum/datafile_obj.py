@@ -437,7 +437,7 @@ class Datafile:
                     print("ERROR: Some errors occured during DUMPFLUX run.\n")
                     print("Please check PRT output...")
                     print(line_elements)
-                    raise Exception()
+                    raise Exception
 
         if not Path(f"{self.DUMPFLUX_name.split('.')[0]}.FLUX").exists():
             raise Exception("FLUX file template not created!")

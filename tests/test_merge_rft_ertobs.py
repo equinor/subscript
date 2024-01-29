@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
-
 from subscript import getLogger
 from subscript.merge_rft_ertobs.merge_rft_ertobs import (
     get_observations,

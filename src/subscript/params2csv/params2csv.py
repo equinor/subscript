@@ -77,8 +77,6 @@ class CustomFormatter(
 
     # pylint: disable=unnecessary-pass
 
-    pass
-
 
 class Params2Csv(ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,

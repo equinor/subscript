@@ -323,21 +323,20 @@ def prepend_root_path_to_relative_files(
     Returns:
         Modified configuration for interp_relperm
     """
-    if "base" in cfg.keys() and isinstance(cfg["base"], list):
+    if "base" in cfg and isinstance(cfg["base"], list):
         for idx in range(len(cfg["base"])):
             if not os.path.isabs(cfg["base"][idx]):
                 cfg["base"][idx] = str(root_path / Path(cfg["base"][idx]))
-    if "high" in cfg.keys() and isinstance(cfg["high"], list):
+    if "high" in cfg and isinstance(cfg["high"], list):
         for idx in range(len(cfg["high"])):
             if not os.path.isabs(cfg["high"][idx]):
                 cfg["high"][idx] = str(root_path / Path(cfg["high"][idx]))
-    if "low" in cfg.keys() and isinstance(cfg["low"], list):
+    if "low" in cfg and isinstance(cfg["low"], list):
         for idx in range(len(cfg["low"])):
             if not os.path.isabs(cfg["low"][idx]):
                 cfg["low"][idx] = str(root_path / Path(cfg["low"][idx]))
-    if "pyscalfile" in cfg.keys():
-        if not os.path.isabs(cfg["pyscalfile"]):
-            cfg["pyscalfile"] = str(root_path / Path(cfg["pyscalfile"]))
+    if "pyscalfile" in cfg and not os.path.isabs(cfg["pyscalfile"]):
+        cfg["pyscalfile"] = str(root_path / Path(cfg["pyscalfile"]))
 
     return cfg
 

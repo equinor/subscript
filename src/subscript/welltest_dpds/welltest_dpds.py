@@ -103,7 +103,6 @@ class CustomFormatter(
     """
 
     # pylint: disable=unnecessary-pass
-    pass
 
 
 def get_parser():
@@ -219,7 +218,7 @@ def get_buildup_indices(rates):
     for idx, rate in enumerate(rates):
         if np.isclose(rate, 0) and last > 0.0:
             buildup_indices.append(idx)
-        if rate > 0 and np.isclose(last, 0) and not idx == 0:
+        if rate > 0 and np.isclose(last, 0) and idx != 0:
             buildup_end_indices.append(idx - 1)
         if idx == len(rates) - 1 and np.isclose(rate, 0):
             buildup_end_indices.append(idx)
@@ -256,7 +255,7 @@ def supertime(time, rate, bu_start_ind, bu_end_ind):
     for bu_time_ind in range(1, bu_end_ind - bu_start_ind + 1):
         # Cannot start from zero. Hence from 1 and not 0 in loop. (Avoid ln(0))
         tot = 0.0
-        for idx in range(0, bu_start_ind):
+        for idx in range(bu_start_ind):
             # End at len-1 because n is not included - only n-1 in formul a
             tot = tot + rdiff[idx] * np.log(
                 time[bu_start_ind + bu_time_ind] - time[idx]
@@ -302,11 +301,9 @@ def weighted_avg_press_time_derivative_lag1(delta_p, dspt):
     dpdspt_backward = np.hstack((0, dpdspt))
     # Make sure that the first dpdspt_backward is set ot zero. I.e. not really defined.
 
-    dpdspt_weighted = (
-        dpdspt_forward * dspt_backward + dpdspt_backward * dspt_forward
-    ) / (dspt_forward + dspt_backward)
-
-    return dpdspt_weighted
+    return (dpdspt_forward * dspt_backward + dpdspt_backward * dspt_forward) / (
+        dspt_forward + dspt_backward
+    )
 
 
 def weighted_avg_press_time_derivative_lag2(
@@ -360,12 +357,10 @@ def weighted_avg_press_time_derivative_lag2(
     dspt_lag2_forward[0] = 0
     dspt_lag2_backward[-1] = 0
 
-    dpdspt_weighted_lag2 = (
+    return (
         dpdspt_lag2_forward * dspt_lag2_backward
         + dpdspt_lag2_backward * dspt_lag2_forward
     ) / (dspt_lag2_backward + dspt_lag2_forward)
-
-    return dpdspt_weighted_lag2
 
 
 def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):

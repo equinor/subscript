@@ -17,7 +17,6 @@ import numpy as np
 import pandas as pd
 import pytest
 import res2df
-
 from subscript.check_swatinit.check_swatinit import (
     __HC_BELOW_FWL__,
     __PC_SCALED__,
@@ -331,7 +330,7 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
         cells=200, apex=1000, owc=[2000], swatinit=[1] * 200, swl=[0.1]
     )
     qc_frame = run_reservoir_simulator(simulator, biggermodel)
-    assert set(qc_frame["QC_FLAG"]) == set([__SWATINIT_1__, __WATER__])
+    assert set(qc_frame["QC_FLAG"]) == {__SWATINIT_1__, __WATER__}
     assert qc_frame[qc_frame["Z"] < 2000]["QC_FLAG"].unique()[0] == __SWATINIT_1__
     assert qc_frame[qc_frame["Z"] > 2000]["QC_FLAG"].unique()[0] == __WATER__
     if "flow" in simulator:
@@ -396,10 +395,7 @@ def test_capillary_entry_pressure(simulator, tmp_path):
     pressure, both swat and swatinit should be less than 1."""
     os.chdir(tmp_path)
 
-    if "flow" in simulator:
-        pc_25m_above_contact = 0.373919
-    else:
-        pc_25m_above_contact = 0.373836
+    pc_25m_above_contact = 0.373919 if "flow" in simulator else 0.373836
 
     model = PillarModel(
         cells=1,
@@ -426,10 +422,7 @@ def test_below_capillary_entry_pressure(simulator, tmp_path):
     """Test what we get below the capillary entry pressure"""
     os.chdir(tmp_path)
 
-    if "flow" in simulator:
-        pc_10m_above_contact = 0.150006
-    else:
-        pc_10m_above_contact = 0.148862
+    pc_10m_above_contact = 0.150006 if "flow" in simulator else 0.148862
 
     model = PillarModel(
         cells=1,
@@ -460,10 +453,7 @@ def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
     """
     os.chdir(tmp_path)
 
-    if "flow" in simulator:
-        p_cap = 0.37392
-    else:
-        p_cap = 0.3738366
+    p_cap = 0.37392 if "flow" in simulator else 0.3738366
 
     model = PillarModel(cells=1, apex=1000, owc=[1030], swatinit=[0.999], swl=[0.1])
     qc_frame = run_reservoir_simulator(simulator, model)

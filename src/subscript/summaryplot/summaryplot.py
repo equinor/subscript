@@ -346,7 +346,7 @@ def summaryplotter(
 
             # Loop over all restart steps
             last_step = range(rstfiles[idx].num_named_kw("SWAT"))[-1]
-            for report_step in range(0, last_step + 1):
+            for report_step in range(last_step + 1):
                 restartvectordates[rstvec][datafile].append(
                     rstfiles[idx].iget_restart_sim_time(report_step)
                 )
@@ -436,7 +436,7 @@ def summaryplotter(
             histvec = toks[0] + "H"
             if len(toks) > 1:
                 histvec = histvec + ":" + toks[1]
-            if histvec in firstsummary.keys():
+            if histvec in firstsummary:
                 values = firstsummary.numpy_vector(histvec)
                 sumlabel = "_nolegend_"
                 if normalize:
@@ -453,7 +453,7 @@ def summaryplotter(
                 fig.autofmt_xdate()
 
         for idx, summaryfile in enumerate(summaryfiles):
-            if vector in summaryfile.keys():
+            if vector in summaryfile:
                 if idx >= maxlabels:  # Truncate legend if too many
                     sumlabel = "_nolegend_"
                 else:
@@ -466,10 +466,7 @@ def summaryplotter(
 
                 if ensemblemode:
                     cycledcolor = colours[vector_idx]
-                    if idx == 0:
-                        sumlabel = vector
-                    else:
-                        sumlabel = "_nolegend_"
+                    sumlabel = vector if idx == 0 else "_nolegend_"
                 elif singleplot:
                     cycledcolor = colours[vector_idx]
                 else:
@@ -536,10 +533,7 @@ def summaryplotter(
 
             if ensemblemode:
                 cycledcolor = colours[len(matchedsummaryvectors) + rstvec_idx]
-                if datafile_idx == 0:
-                    rstlabel = rstvec
-                else:
-                    rstlabel = "_nolegend_"
+                rstlabel = rstvec if datafile_idx == 0 else "_nolegend_"
             else:
                 cycledcolor = colours[datafile_idx]
 
@@ -649,21 +643,21 @@ def main():
 
     plotprocess = Process(
         target=summaryplotter,
-        kwargs=dict(
-            summaryfiles=summaryfiles,
-            datafiles=datafiles,
-            vectors=vectors,
-            colourby=args.colourby,
-            maxlabels=args.maxlabels,
-            logcolourby=args.logcolourby,
-            parameterfiles=parameterfiles,
-            histvectors=args.hist,
-            normalize=args.normalize,
-            singleplot=args.singleplot,
-            nolegend=args.nolegend,
-            dumpimages=args.dumpimages,
-            ensemblemode=args.ensemblemode,
-        ),
+        kwargs={
+            "summaryfiles": summaryfiles,
+            "datafiles": datafiles,
+            "vectors": vectors,
+            "colourby": args.colourby,
+            "maxlabels": args.maxlabels,
+            "logcolourby": args.logcolourby,
+            "parameterfiles": parameterfiles,
+            "histvectors": args.hist,
+            "normalize": args.normalize,
+            "singleplot": args.singleplot,
+            "nolegend": args.nolegend,
+            "dumpimages": args.dumpimages,
+            "ensemblemode": args.ensemblemode,
+        },
     )
     plotprocess.start()
 
@@ -683,21 +677,21 @@ def main():
                     plotprocess.terminate()
                     plotprocess = Process(
                         target=summaryplotter,
-                        kwargs=dict(
-                            summaryfiles=None,  # forces reload
-                            datafiles=datafiles,
-                            vectors=vectors,
-                            colourby=args.colourby,
-                            maxlabels=args.maxlabels,
-                            logcolourby=args.logcolourby,
-                            parameterfiles=parameterfiles,
-                            histvectors=args.hist,
-                            normalize=args.normalize,
-                            singleplot=args.singleplot,
-                            nolegend=args.nolegend,
-                            dumpimages=args.dumpimages,
-                            ensemblemode=args.ensemblemode,
-                        ),
+                        kwargs={
+                            "summaryfiles": None,  # forces reload
+                            "datafiles": datafiles,
+                            "vectors": vectors,
+                            "colourby": args.colourby,
+                            "maxlabels": args.maxlabels,
+                            "logcolourby": args.logcolourby,
+                            "parameterfiles": parameterfiles,
+                            "histvectors": args.hist,
+                            "normalize": args.normalize,
+                            "singleplot": args.singleplot,
+                            "nolegend": args.nolegend,
+                            "dumpimages": args.dumpimages,
+                            "ensemblemode": args.ensemblemode,
+                        },
                     )
                     plotprocess.start()
         except KeyboardInterrupt:

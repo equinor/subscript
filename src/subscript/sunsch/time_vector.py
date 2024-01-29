@@ -55,25 +55,25 @@ def _make_datetime(dates_record):
     date_dt = datetime.datetime(year, ecl_month[month], day)
     if len(dates_record) < 4:
         return date_dt
-    else:
-        time_str = dates_record[3].get_str(0)
-        time_list = time_str.split(":")
-        hour = minute = second = microsecond = 0
-        hour = int(time_list[0])
-        if len(time_list) > 1:
-            minute = int(time_list[1])
-        if len(time_list) > 2:
-            sec_list = time_list[2].split(".")
-            second = int(sec_list[0])
-            if len(sec_list) > 1:
-                ms_str = sec_list[1].strip()
-                npad = 6 - len(ms_str)
-                ms_str += "".join(["0" for i in range(npad)])
-                microsecond = int(ms_str)
 
-        return datetime.datetime(
-            year, ecl_month[month], day, hour, minute, second, microsecond
-        )
+    time_str = dates_record[3].get_str(0)
+    time_list = time_str.split(":")
+    hour = minute = second = microsecond = 0
+    hour = int(time_list[0])
+    if len(time_list) > 1:
+        minute = int(time_list[1])
+    if len(time_list) > 2:
+        sec_list = time_list[2].split(".")
+        second = int(sec_list[0])
+        if len(sec_list) > 1:
+            ms_str = sec_list[1].strip()
+            npad = 6 - len(ms_str)
+            ms_str += "".join(["0" for i in range(npad)])
+            microsecond = int(ms_str)
+
+    return datetime.datetime(
+        year, ecl_month[month], day, hour, minute, second, microsecond
+    )
 
 
 class TimeStep(object):
@@ -106,10 +106,7 @@ class TimeStep(object):
         return len(self.keywords)
 
     def __contains__(self, arg):
-        for kw in self.keywords:
-            if arg == kw.name:
-                return True
-        return False
+        return any(arg == kw.name for kw in self.keywords)
 
     def __str__(self):
         string = StringIO()
@@ -304,13 +301,13 @@ class TimeVector(object):
         """
         if isinstance(index, int):
             return self.time_steps_list[index]
-        else:
-            if not isinstance(index, datetime.datetime) and isinstance(
-                index, datetime.date
-            ):
-                index = datetime.datetime(index.year, index.month, index.day)
 
-            return self.time_steps_dict[index]
+        if not isinstance(index, datetime.datetime) and isinstance(
+            index, datetime.date
+        ):
+            index = datetime.datetime(index.year, index.month, index.day)
+
+        return self.time_steps_dict[index]
 
     def _add_dates_block(self, ts):
         self.time_steps_dict[ts.dt] = ts

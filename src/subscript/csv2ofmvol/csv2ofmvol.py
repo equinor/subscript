@@ -7,8 +7,7 @@ from typing import List, Union
 import pandas as pd
 from dateutil.relativedelta import relativedelta
 
-from subscript import __version__
-from subscript import getLogger as subscriptlogger
+from subscript import __version__, getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = subscriptlogger(__name__)
@@ -71,7 +70,7 @@ SUPPORTED_COLS = SUPPORTED_VOLCOLS + SUPPORTED_DAYCOLS
 
 
 def read_pdm_csv_files(
-    csvfiles: Union[pd.DataFrame, str, List[str], List[pd.DataFrame]]
+    csvfiles: Union[pd.DataFrame, str, List[str], List[pd.DataFrame]],
 ) -> pd.DataFrame:
     """Read a list of CSV files and return a dataframe
 
@@ -249,8 +248,6 @@ class CustomFormatter(
     """
 
     # pylint: disable=unnecessary-pass
-
-    pass
 
 
 def get_parser() -> argparse.ArgumentParser:

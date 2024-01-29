@@ -202,5 +202,4 @@ def vfpfile2df(filename: str) -> pd.DataFrame:
             bhp_values_stacked["TABTYPE"] = tab
 
         bhp_values_stacked["FILENAME"] = filename
-
-        return bhp_values_stacked
+    return bhp_values_stacked

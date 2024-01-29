@@ -9,7 +9,6 @@ from pydantic import ValidationError
 from pyscal import PyscalFactory
 from pyscal.utils.testing import sat_table_str_ok
 from res2df import satfunc
-
 from subscript.interp_relperm import interp_relperm
 from subscript.interp_relperm.interp_relperm import InterpRelpermConfig
 

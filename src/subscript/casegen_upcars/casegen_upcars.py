@@ -549,9 +549,8 @@ def main():
     built_in_functions = ["range"]
 
     for var in sorted(meta.find_undeclared_variables(ast)):
-        if dictionary.get(var) is None:
-            if var not in built_in_functions:
-                undefined_var.append(var)
+        if dictionary.get(var) is None and var not in built_in_functions:
+            undefined_var.append(var)
 
     if undefined_var:
         logger.warning(

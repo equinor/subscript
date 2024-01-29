@@ -4,7 +4,6 @@ import subprocess
 from pathlib import Path
 
 import pytest
-
 from subscript.restartthinner import restartthinner
 
 ECLDIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"

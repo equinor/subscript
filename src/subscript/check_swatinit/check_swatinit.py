@@ -323,10 +323,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
 
     qc_col = pd.Series(index=qc_frame.index, dtype=str)
 
-    if "OWC" in qc_frame:
-        contact = "OWC"
-    else:
-        contact = "GWC"
+    contact = "OWC" if "OWC" in qc_frame else "GWC"
 
     # Eclipse and libecl does not calculate cell centres to the same decimals.
     # Add some tolerance when testing towards fluid contacts.
@@ -553,10 +550,7 @@ def compute_pc(qc_frame: pd.DataFrame, satfunc_df: pd.DataFrame) -> pd.Series:
             swls = satnum_frame["SWL"].values
         else:
             swls = None
-        if "SWU" in satnum_frame:
-            swus = satnum_frame["SWU"].values
-        else:
-            swus = None
+        swus = satnum_frame["SWU"].values if "SWU" in satnum_frame else None
         p_cap[satnum_frame.index] = _evaluate_pc(
             satnum_frame["SWAT"].values,
             satnum_frame["PC_SCALING"].values,
@@ -565,10 +559,7 @@ def compute_pc(qc_frame: pd.DataFrame, satfunc_df: pd.DataFrame) -> pd.Series:
             satfunc_df[satfunc_df["SATNUM"] == satnum],
         )
     # Fix needed for OPM-flow above contact:
-    if "OWC" in qc_frame:
-        contact = "OWC"
-    else:
-        contact = "GWC"
+    contact = "OWC" if "OWC" in qc_frame else "GWC"
 
     # When SWATINIT=SWL=SWAT, PPCW as reported by Eclipse is the
     # same as PCOW_MAX, and we cannot use it to compute PC, remove it:
@@ -618,7 +609,7 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
     # Be compatible with future change in res2df:
     equil_df.rename({"ACCURACY": "OIP_INIT"}, axis="columns", inplace=True)
 
-    contacts = list(set(["OWC", "GOC", "GWC"]).intersection(set(equil_df.columns)))
+    contacts = list({"OWC", "GOC", "GWC"}.intersection(set(equil_df.columns)))
     # Rename and slice the equil dataframe:
     equil_df = equil_df.rename(
         {"Z": "Z_DATUM", "PRESSURE": "PRESSURE_DATUM"}, axis="columns"
@@ -630,8 +621,7 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
     assert (
         not pd.isnull(equil_df).any().any()
     ), f"BUG: NaNs in equil dataframe:\n{equil_df}"
-    grid_df = grid_df.merge(equil_df, on="EQLNUM", how="left")
-    return grid_df
+    return grid_df.merge(equil_df, on="EQLNUM", how="left")
 
 
 def merge_pc_max(

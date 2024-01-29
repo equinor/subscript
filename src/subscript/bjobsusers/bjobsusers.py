@@ -65,9 +65,7 @@ def get_jobs(status: str, bjobs_function: Callable) -> pd.DataFrame:
     data = [
         [
             uname,
-            1
-            if rex.match(hname) is None
-            else int(rex.match(hname).group(1)),  # type: ignore
+            1 if rex.match(hname) is None else int(rex.match(hname).group(1)),  # type: ignore
         ]
         for (uname, hname) in slines
     ]

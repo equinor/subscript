@@ -7,7 +7,6 @@ from pathlib import Path
 
 import pytest
 import yaml
-
 from subscript.runrms import runrms as rr
 
 # the resolve().as_posix() for pytest tmp_path fixture (workaround)

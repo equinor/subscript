@@ -195,25 +195,15 @@ def write_new_fluxfile_from_rst(
                 kw_temp[1] = prev_days_flux + delta_days
                 prev_days_flux += delta_days
 
-            elif flux_fine[j_idx].header[0] == "WELLNAME":
-                kw_temp = flux_fine[j_idx].deep_copy()
-
-            elif flux_fine[j_idx].header[0] == "WELLFLOW":
-                kw_temp = flux_fine[j_idx].deep_copy()
-
-            elif flux_fine[j_idx].header[0] == "PMER":
-                kw_temp = flux_fine[j_idx].deep_copy()
-
-            elif flux_fine[j_idx].header[0] == "PADMAX":
-                kw_temp = flux_fine[j_idx].deep_copy()
-
-            elif flux_fine[j_idx].header[0] == "PMAX":
-                kw_temp = flux_fine[j_idx].deep_copy()
-
-            elif flux_fine[j_idx].header[0] == "PADS":
-                kw_temp = flux_fine[j_idx].deep_copy()
-
-            elif flux_fine[j_idx].header[0] == "":  # OBS!
+            elif flux_fine[j_idx].header[0] in (
+                "WELLNAME",
+                "WELLFLOW",
+                "PMER",
+                "PADMAX",
+                "PMAX",
+                "PADS",
+                "",  # OBS!
+            ):
                 kw_temp = flux_fine[j_idx].deep_copy()
 
             elif flux_fine[j_idx].header[0] == "POIL":

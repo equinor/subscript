@@ -4,7 +4,6 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
-
 from subscript.vfp2csv import vfp2csv
 
 

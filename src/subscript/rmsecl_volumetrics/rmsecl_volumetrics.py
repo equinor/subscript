@@ -92,9 +92,9 @@ def _compare_volumetrics(
         )
 
         # Slicing in multiindex requires a list of unique tuples:
-        regzones = set(
+        regzones = {
             tuple(regzone) for regzone in regzonfip_set[["REGION", "ZONE"]].to_numpy()
-        ).intersection(set(tuple(regzone) for regzone in volumetrics_df.index))
+        }.intersection({tuple(regzone) for regzone in volumetrics_df.index})
         if not regzones:
             # Skip sets for which there are not volumetrics:
             logger.warning(
@@ -129,13 +129,11 @@ def _disjoint_sets_to_dict(
     """From the dataframe of sets, construct a dictionary indexed by set
     index provide lists of members in the set for FIPNUM, ZONE and REGION"""
     regions = disjoint_sets_df.groupby(["SET"])["REGION"].apply(
-        lambda x: sorted(list(set(x)))
+        lambda x: sorted(set(x))
     )
-    zones = disjoint_sets_df.groupby(["SET"])["ZONE"].apply(
-        lambda x: sorted(list(set(x)))
-    )
+    zones = disjoint_sets_df.groupby(["SET"])["ZONE"].apply(lambda x: sorted(set(x)))
     fipnums = disjoint_sets_df.groupby(["SET"])["FIPNUM"].apply(
-        lambda x: sorted(list(set(x)))
+        lambda x: sorted(set(x))
     )
     return pd.concat([regions, zones, fipnums], axis=1).to_dict(orient="index")
 

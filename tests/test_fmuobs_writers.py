@@ -6,7 +6,6 @@ import datetime
 import numpy as np
 import pandas as pd
 import pytest
-
 from subscript.fmuobs.parsers import ertobs2df
 from subscript.fmuobs.writers import (
     block_df2obsdict,

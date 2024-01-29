@@ -73,10 +73,7 @@ def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
     location of the UNRST file, dump temporary files in there, and
     modify the original filename.
     """
-    if quiet:
-        out = " >/dev/null"
-    else:
-        out = ""
+    out = " >/dev/null" if quiet else ""
     # Error early if libecl tools are not available
     try:
         find_resdata_app("rd_unpack")
@@ -137,7 +134,7 @@ def restartthinner(
     rst = ResdataFile(filename)
     restart_indices = get_restart_indices(filename)
     restart_dates = [
-        rst.iget_restart_sim_time(index) for index in range(0, len(restart_indices))
+        rst.iget_restart_sim_time(index) for index in range(len(restart_indices))
     ]
 
     if numberofslices > 1:
@@ -161,10 +158,7 @@ def restartthinner(
         print("Selected restarts:")
         print("-----------------------")
         for idx, rstidx in enumerate(restart_indices):
-            if restart_indices[idx] in slicerstindices:
-                slicepresent = "X"
-            else:
-                slicepresent = ""
+            slicepresent = "X" if restart_indices[idx] in slicerstindices else ""
             print(
                 f"{rstidx:4d}  "
                 f"{datetime.date.strftime(restart_dates[idx], '%Y-%m-%d')}  "

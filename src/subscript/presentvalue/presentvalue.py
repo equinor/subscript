@@ -144,15 +144,16 @@ def main() -> None:
         discountrate=args.discountrate,
     )
 
-    if args.basedatafiles:
-        if len(args.basedatafiles) > 1 and len(args.basedatafiles) != len(
-            args.datafiles
-        ):
-            msg = (
-                "Supply either no base case, a single base case or "
-                "exactly as many base cases as datafiles."
-            )
-            raise ValueError(msg)
+    if (
+        args.basedatafiles
+        and len(args.basedatafiles) > 1
+        and len(args.basedatafiles) != len(args.datafiles)
+    ):
+        msg = (
+            "Supply either no base case, a single base case or "
+            "exactly as many base cases as datafiles."
+        )
+        raise ValueError(msg)
 
     for idx, datafile in enumerate(args.datafiles):
         if args.basedatafiles:
@@ -379,7 +380,7 @@ def calc_presentvalue_df(
     prodecon["deltayears"] = prodecon.index - discountto
 
     prodecon["discountfactors"] = 1.0 / (
-        ((1.0 + prodecon["discountrate"] / 100.0) ** np.array(prodecon["deltayears"]))
+        (1.0 + prodecon["discountrate"] / 100.0) ** np.array(prodecon["deltayears"])
     )
 
     prodecon["presentvalue"] = (
@@ -474,9 +475,8 @@ def prepare_econ_table(
     if filename:
         econ_df = pd.read_csv(filename, index_col=0)
         econ_df.columns = econ_df.columns.map(str.strip)
-        if "discountrate" in econ_df:
-            if len(econ_df["discountrate"]) > 1:
-                raise ValueError("discountrate must be constant")
+        if "discountrate" in econ_df and len(econ_df["discountrate"]) > 1:
+            raise ValueError("discountrate must be constant")
         # assert first column is year.
     else:
         # Make a default dataframe if nothing provided.
@@ -520,7 +520,7 @@ def calc_pv_irr(rate: float, pv_df: pd.DataFrame, cutoffyear: int) -> float:
         Computed presentvalue
     """
     discountfactors_irr = 1.0 / (1.0 + rate / 100.0) ** np.array(
-        list(range(0, len(pv_df)))
+        list(range(len(pv_df)))
     )
     if len(pv_df) < 2:
         raise ValueError("IRR computation meaningless on a single year")

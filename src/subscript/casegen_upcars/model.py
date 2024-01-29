@@ -435,9 +435,7 @@ Initializing model
                 idx : idx + self._fracture_cell_count,
                 start_fracture_idx:end_fracture_idx,
                 start_fracture_k : end_fracture_k + 1,
-            ] = (
-                _i + 1
-            )
+            ] = _i + 1
 
         for _i, idx in enumerate(self._fracture_j):
             fracture_length = max(0.0, min(1.0, self._fracture_length_x[_i])) * self._lx
@@ -608,10 +606,7 @@ Initializing model
         assert len(streak_property) == len(
             self._streak_k
         ), f"Number of input {keyword} is not equal to number of streak"
-        if isinstance(fracture_property, int):
-            data_type = np.int16
-        else:
-            data_type = float
+        data_type = np.int16 if isinstance(fracture_property, int) else float
         props = np.empty(
             (self._total_nx, self._total_ny, self._total_nz), dtype=data_type
         )
@@ -653,10 +648,7 @@ Initializing model
             + keyword
             + " is not equal to number fault in Y- direction"
         )
-        if isinstance(fracture_x_property, int):
-            data_type = np.int16
-        else:
-            data_type = float
+        data_type = np.int16 if isinstance(fracture_x_property, int) else float
         props = np.empty(
             (self._total_nx, self._total_ny, self._total_nz), dtype=data_type
         )
@@ -810,8 +802,8 @@ Initializing model
         print("/", file=buffer_)
 
         print("COORD", file=buffer_)
-        for _i in range(0, self._xv.shape[0]):
-            for _j in range(0, self._xv.shape[1]):
+        for _i in range(self._xv.shape[0]):
+            for _j in range(self._xv.shape[1]):
                 print(
                     # pylint: disable=consider-using-f-string
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}} "
