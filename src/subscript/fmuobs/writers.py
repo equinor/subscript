@@ -3,9 +3,9 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
+import warnings
 from pathlib import PosixPath
 from typing import List
-import warnings
 
 import numpy as np
 import pandas as pd
