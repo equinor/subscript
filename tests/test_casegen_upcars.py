@@ -1,4 +1,5 @@
 """Test that casegen_upcars is installed and launched with given demo cases"""
+
 import os
 import shutil
 import subprocess

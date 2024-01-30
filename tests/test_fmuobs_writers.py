@@ -1,6 +1,7 @@
 """Test the fmuobs writers, these convert from the internal dataframe
 representation to various other formats, csv, ert-observations format,
 resinsight and yaml (webviz)"""
+
 import datetime
 
 import numpy as np

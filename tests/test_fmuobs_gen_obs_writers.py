@@ -1,4 +1,5 @@
 """Unit tests for gen_obs_writers"""
+
 from pathlib import Path
 
 import pytest

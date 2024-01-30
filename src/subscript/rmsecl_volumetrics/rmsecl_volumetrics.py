@@ -1,5 +1,6 @@
 """Script for comparing RMS vs Eclipse volumetrics, provided
 a mapping between Region and Zones in RMS, to FIPNUMs in Eclipse"""
+
 import argparse
 import logging
 from pathlib import Path

@@ -1,4 +1,5 @@
 """SWATINIT qc tool"""
+
 import argparse
 import sys
 from typing import Any, Dict, List
@@ -356,9 +357,9 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
     # Below a nonzero capillary entry pressure but above the contact,
     # SWAT and SWATINIT should be 1.
     if "PPCW" in qc_frame:
-        qc_col[
-            np.isclose(qc_frame["SWAT"], 1) & np.isclose(qc_frame["PPCW"], 0)
-        ] = __PC_SCALED__
+        qc_col[np.isclose(qc_frame["SWAT"], 1) & np.isclose(qc_frame["PPCW"], 0)] = (
+            __PC_SCALED__
+        )
 
     # PC is scaled (including "scaling" using PC_SCALING=1), but
     # SWAT!=SWATINIT, this must be due to EQUIL item 9 being nonzero.

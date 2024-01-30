@@ -9,7 +9,6 @@ from subscript.sector2fluxnum import flux_util
 
 
 class Fluxnum:
-
     """Superclass"""
 
     def __init__(self, grid):

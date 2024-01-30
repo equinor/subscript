@@ -1,5 +1,6 @@
 """Tool to stack/pivot CSV files, exposed as command line client,
 ERT workflow and ERT forward model"""
+
 import argparse
 import logging
 import re

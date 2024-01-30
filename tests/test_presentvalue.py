@@ -285,7 +285,7 @@ def test_main(tmp_path, mocker):
     back results to parameters.txt in the original runpath"""
     shutil.copytree(
         ECLDIR,
-        tmp_path / "model"
+        tmp_path / "model",
         # This is somewhat spacious, 39M, but the test will fail
         # if you try with a symlink (presentvalue.py looks through symlinks)
     )

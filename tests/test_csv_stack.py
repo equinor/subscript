@@ -1,4 +1,5 @@
 """Test module for csv_stack"""
+
 import os
 import re
 import subprocess

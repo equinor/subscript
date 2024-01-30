@@ -1,4 +1,5 @@
 """Read contents from simple text files"""
+
 import logging
 import re
 import warnings

@@ -39,7 +39,7 @@ def fixture_readonly_testdata_dir():
         ("ert-doc.yml", "yaml"),
         ("ert-doc.csv", "csv"),
         ("fmu-ensemble-obs.yml", "yaml"),
-        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs", "ert"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
     ],
 )
 def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
@@ -101,7 +101,7 @@ def test_autoparse_string(string, expected_format, tmp_path):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_ertobs(filename, readonly_testdata_dir):
@@ -170,7 +170,7 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_yaml(filename, readonly_testdata_dir):
@@ -215,7 +215,7 @@ def test_roundtrip_yaml(filename, readonly_testdata_dir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs"),
+        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
     ],
 )
 def test_roundtrip_resinsight(filename, readonly_testdata_dir):
@@ -290,9 +290,9 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         ),
     )
     main()
-    assert Path("output.csv").exists(), "csv file not produced"
-    assert Path("output.yml").exists(), "yml file not produced"
-    assert Path("ri_output.csv").exists(), "resinsight output not produced"
+    assert Path("output.csv").exists()
+    assert Path("output.yml").exists()
+    assert Path("ri_output.csv").exists()
 
     if verbose == "--verbose":
         # This is from the logger "subscript.fmuobs":
@@ -307,17 +307,11 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         assert "Parsing observation" not in caplog.text
 
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
-
     reference_dframe_from_disk = pd.read_csv(TESTDATA_DIR / "ert-doc.csv")
-    discrepancies = set(dframe_from_csv_on_disk.columns).symmetric_difference(
-        reference_dframe_from_disk.columns
-    )
-    assert len(discrepancies) == 0, f"Difference in columns produces: {discrepancies}"
-    assert dframe_from_csv_on_disk.shape == reference_dframe_from_disk.shape
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
-    ), "csv not as expected"  # pylint: disable=expression-not-assigned
+    )
 
     dict_from_yml_on_disk = yaml.safe_load(
         Path("output.yml").read_text(encoding="utf8")
@@ -325,7 +319,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     reference_dict_from_yml = yaml.safe_load(
         (TESTDATA_DIR / "ert-doc.yml").read_text(encoding="utf8")
     )
-    assert dict_from_yml_on_disk == reference_dict_from_yml, "Yml file not as expected"
+    assert dict_from_yml_on_disk == reference_dict_from_yml
 
     ri_from_csv_on_disk = pd.read_csv("ri_output.csv")
     reference_ri_from_disk = pd.read_csv(TESTDATA_DIR / "ri-obs.csv")
@@ -333,7 +327,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
         # Enforce correct column order
         ri_from_csv_on_disk,
         reference_ri_from_disk,
-    ), "Resinsight file not as expected"  # pylint: disable=expression-not-assigned
+    )
 
     # Test CSV to stdout:
     arguments = [
@@ -346,12 +340,11 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     ]
     run_result = subprocess.run(arguments, check=True, stdout=subprocess.PIPE)
     dframe_from_stdout = pd.read_csv(io.StringIO(run_result.stdout.decode("utf-8")))
-    dframe_from_stdout.to_csv("dump.csv", index=False)
     # pylint: disable=no-member  # false positive on Pandas object
     pd.testing.assert_frame_equal(
         dframe_from_stdout.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
-    ), "Output csv to stdout not as expected"  # pylint: disable=expression-not-assigned
+    )
 
 
 @pytest.mark.integration
@@ -403,7 +396,7 @@ def test_ert_workflow_hook(verbose, tmp_path):
     # the fmuobs.py file. Thus, we test on the exact subscript logger format:
     if verbose == "--verbose":
         assert "INFO:subscript.fmuobs.parsers:Injecting include file" in ert_output
-    elif verbose == "--debug":
+    if verbose == "--debug":
         assert (
             "DEBUG:subscript.fmuobs.parsers:"
             "Parsing observation SUMMARY_OBSERVATION SEP_TEST_2005" in ert_output
