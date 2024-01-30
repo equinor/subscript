@@ -1,0 +1,22 @@
+tracer:
+  TRACER_OBS:
+    data: TRACER_SIM
+    error:
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    - 30
+    value:
+    - 421
+    - 904
+    - 912
+    - 912
+    - 912
+    - 912
+    - 773
+    - 912
+    restart: 1

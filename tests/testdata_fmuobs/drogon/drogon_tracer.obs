@@ -1,0 +1,1 @@
+GENERAL_OBSERVATION  TRACER_OBS { DATA = TRACER_SIM  ;  RESTART=1; OBS_FILE=./tracer/drogon_tracer.obs; };

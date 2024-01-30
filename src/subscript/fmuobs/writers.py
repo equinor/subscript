@@ -3,12 +3,19 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
+import warnings
+from pathlib import PosixPath
 from typing import List
 
 import numpy as np
 import pandas as pd
 
 from subscript import getLogger
+from subscript.fmuobs.gen_obs_writers import (
+    add_extra_well_data_if_rft,
+    dump_content_to_dict,
+    tidy_general_obs_keys,
+)
 from subscript.fmuobs.util import (
     CLASS_SHORTNAME,
     ERT_ISO_DATE_FORMAT,
@@ -275,6 +282,80 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     return smry_obs_list
 
 
+def align_format_with_summarydict(general_obs_dict: dict) -> List[dict]:
+    """Restructure general dictionary from general_df2obsdict to align with smry
+
+    Args:
+        general_obs_dict (dict): the dictionary to restructure
+
+    Returns:
+        List[dict]: the dictionary restructured
+    """
+    restructured = []
+    for gen_obs_key, gen_obs_dict in general_obs_dict.items():
+        for obs_key, obs_dict in gen_obs_dict.items():
+            obs_dict["label"] = obs_key
+            restructured.append({"key": gen_obs_key, "observations": obs_dict})
+    return restructured
+
+
+def general_df2obsdict(general_df: pd.DataFrame, parent_dir: PosixPath) -> dict:
+    """Generate a dictionary structure suitable for yaml
+    for general observations in dataframe representation
+
+    Args:
+        general_df (pd.DataFrame): dataframe with general observations
+
+    Returns:
+        dict: dict of dicts with first level key being datatype
+    """
+    parent_dir = parent_dir.resolve()
+    general_df.dropna(axis=1, how="all", inplace=True)
+    assert isinstance(general_df, pd.DataFrame), "You didn't input a dataframe"
+    logger.debug("This is/These are the general observations to include %s", general_df)
+    gen_obs_dict = {}
+    gen_obs_files = {}
+    for _, general_row in general_df.iterrows():
+        file_to_read = parent_dir / general_row["OBS_FILE"]
+        gen_obs_key = file_to_read.parent.name
+        if gen_obs_key == parent_dir.name or gen_obs_key == "":
+            warnings.warn(
+                "You have chosen to put related file for "
+                f"{general_row['LABEL']} into same folder as observation file.\n"
+                "This will have to pass for now, but is strongly discouraged!\n"
+                "Will be found under the 'unspecified' field"
+            )
+            gen_obs_key = "unspecified"
+
+        gen_obs_files[gen_obs_key] = file_to_read.parent
+        the_obs = dump_content_to_dict(file_to_read)
+        the_obs.update({"data": general_row["DATA"], "restart": general_row["RESTART"]})
+
+        try:
+            if not pd.isnull(general_row["INDEX_LIST"]):
+                the_obs["index_list"] = [
+                    int(index) for index in general_row["INDEX_LIST"].split(",")
+                ]
+        except KeyError:
+            logger.debug("No INDEX_LIST entry")
+
+        gen_obs = {
+            general_row["LABEL"]: the_obs,
+        }
+
+        logger.debug(gen_obs)
+        if gen_obs_key not in gen_obs_dict:
+            gen_obs_dict[gen_obs_key] = gen_obs
+        else:
+            gen_obs_dict[gen_obs_key].update(gen_obs)
+    logger.debug("All general observations from file:")
+    logger.debug(gen_obs_dict)
+    add_extra_well_data_if_rft(gen_obs_dict, parent_dir, gen_obs_files)
+    tidy_general_obs_keys(gen_obs_dict)
+    logger.debug("Tidied general observations, afterwards they are %s", gen_obs_dict)
+    return gen_obs_dict
+
+
 def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     """Convert the DATE column in a dataframe to a string.
     Replace "NaT" (Not-a-Time) with np.nan after conversion
@@ -353,13 +434,14 @@ def block_df2obsdict(block_df: pd.DataFrame) -> List[dict]:
     return block_obs_list
 
 
-def df2obsdict(obs_df: pd.DataFrame) -> dict:
+def df2obsdict(obs_df: pd.DataFrame, parent_dir: PosixPath = PosixPath(".")) -> dict:
     """Generate a dictionary structure of all observations, this data structure
     is designed to look good in yaml, and is supported by WebViz and
     fmu-ensemble.
 
     Args:
         obs_df (pd.DataFrame): Dataframe representing ERT observations.
+        parent_dir (str): parent directory to observations file
 
     Returns:
         dict
@@ -372,6 +454,13 @@ def df2obsdict(obs_df: pd.DataFrame) -> dict:
     if "SUMMARY_OBSERVATION" in obs_df["CLASS"].values:
         obsdict[CLASS_SHORTNAME["SUMMARY_OBSERVATION"]] = summary_df2obsdict(
             obs_df.set_index("CLASS").loc[["SUMMARY_OBSERVATION"]]
+        )
+
+    if "GENERAL_OBSERVATION" in obs_df["CLASS"].values:
+        obsdict[CLASS_SHORTNAME["GENERAL_OBSERVATION"]] = align_format_with_summarydict(
+            general_df2obsdict(
+                obs_df.set_index("CLASS").loc[["GENERAL_OBSERVATION"]], parent_dir
+            )
         )
 
     # Process BLOCK_OBSERVATION:
