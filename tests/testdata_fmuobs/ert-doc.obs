@@ -5,7 +5,7 @@
  {
     VALUE = 100.0;
     ERROR =     5;
-    DATE  = 21/08/2005;
+    DATE  = 2005-08-21;
     KEY   = GOPR:BRENT;
  };
  -- Duplicate key, but unique label and date.
@@ -13,7 +13,7 @@
  {
     VALUE = 100.0;
     ERROR =     5;
-    DATE  = 21/08/2006;
+    DATE  = 2006-08-21;
     KEY   = GOPR:BRENT;
  };
 
@@ -36,27 +36,27 @@
     KEY      = GOPR:NESS;
  };
 
--- BLOCK_OBSERVATION deprecated in 2022
--- BLOCK_OBSERVATION RFT_2006
--- {
---    FIELD = PRESSURE;
---    DATE  = 22/10/2006;
---
---   OBS P1 { I = 1;  J = 1;  K = 1;   VALUE = 100;  ERROR = 5; };
---   OBS P2 { I = 2;  J = 2;  K = 1;   VALUE = 101;  ERROR = 5; };
---   OBS P3 { I = 2;  J = 3;  K = 1;   VALUE = 102;  ERROR = 5; };
--- };
---
--- BLOCK_OBSERVATION RFT_2007_SUM
--- {
---    FIELD = PRESSURE;
---    DATE  = 22/10/2007;
---    SOURCE = SUMMARY;
+-- THE BLOCK_OBSERVATION WAS DEPRECATED IN 2022
+--  BLOCK_OBSERVATION RFT_2006
+--  {
+--     FIELD = PRESSURE;
+--     DATE  = 22/10/2006;
 --
 --    OBS P1 { I = 1;  J = 1;  K = 1;   VALUE = 100;  ERROR = 5; };
 --    OBS P2 { I = 2;  J = 2;  K = 1;   VALUE = 101;  ERROR = 5; };
 --    OBS P3 { I = 2;  J = 3;  K = 1;   VALUE = 102;  ERROR = 5; };
--- };
+--  };
+--
+--  BLOCK_OBSERVATION RFT_2007_SUM
+--  {
+--     FIELD = PRESSURE;
+--     DATE  = 22/10/2007;
+--     SOURCE = SUMMARY;
+--
+--     OBS P1 { I = 1;  J = 1;  K = 1;   VALUE = 100;  ERROR = 5; };
+--     OBS P2 { I = 2;  J = 2;  K = 1;   VALUE = 101;  ERROR = 5; };
+--     OBS P3 { I = 2;  J = 3;  K = 1;   VALUE = 102;  ERROR = 5; };
+--  };
 
 GENERAL_OBSERVATION GEN_OBS1{
    DATA     = SOME_FIELD;
@@ -101,7 +101,7 @@ HISTORY_OBSERVATION GWIT:FIELD
 
 HISTORY_OBSERVATION GGIT:FIELD { ERROR = 0.20; ERROR_MODE = RELMIN; ERROR_MIN = 100; };
 
--- include option is deprecated, but still tested for backwards compatability
+-- THE include OPTION IS NO LONGER AVAILABLE in ert, but still tested
 HISTORY_OBSERVATION WOPR:P1 { include "hist_obs_wells.txt"; };
 -- HISTORY_OBSERVATION WOPR:P2 { include "hist_obs_wells.txt"; };
 -- HISTORY_OBSERVATION WOPR:P3 { include "hist_obs_wells.txt"; };

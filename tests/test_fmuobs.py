@@ -39,7 +39,7 @@ def fixture_readonly_testdata_dir():
         ("ert-doc.yml", "yaml"),
         ("ert-doc.csv", "csv"),
         ("fmu-ensemble-obs.yml", "yaml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs", "ert"),
     ],
 )
 def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
@@ -101,7 +101,7 @@ def test_autoparse_string(string, expected_format, tmp_path):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs"),
     ],
 )
 def test_roundtrip_ertobs(filename, readonly_testdata_dir):
@@ -170,7 +170,7 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs"),
     ],
 )
 def test_roundtrip_yaml(filename, readonly_testdata_dir):
@@ -215,7 +215,7 @@ def test_roundtrip_yaml(filename, readonly_testdata_dir):
         ("ert-doc.yml"),
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
-        ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon/drogon_wbhp_rft_wct_gor_tracer_4d_plt.obs"),
     ],
 )
 def test_roundtrip_resinsight(filename, readonly_testdata_dir):
@@ -308,6 +308,11 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
 
     dframe_from_csv_on_disk = pd.read_csv("output.csv")
     reference_dframe_from_disk = pd.read_csv(TESTDATA_DIR / "ert-doc.csv")
+    discrepancies = set(dframe_from_csv_on_disk.columns).symmetric_difference(
+        reference_dframe_from_disk.columns
+    )
+    assert len(discrepancies) == 0, f"Difference in columns produces: {discrepancies}"
+    assert dframe_from_csv_on_disk.shape == reference_dframe_from_disk.shape
     pd.testing.assert_frame_equal(
         dframe_from_csv_on_disk.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
@@ -393,7 +398,7 @@ def test_ert_workflow_hook(verbose, tmp_path):
 
     # This is slightly tricky, as ERT has its own logging handler which is able
     # to pick up the log messages, but whose level cannot be controlled by
-    # the fmuobs.py file. Thus, we test on the exact subscript logger format:
+    # the fmuobs.py file. Thus, we test on the exact subscript logger format
     if verbose == "--verbose":
         assert "INFO:subscript.fmuobs.parsers:Injecting include file" in ert_output
     if verbose == "--debug":
