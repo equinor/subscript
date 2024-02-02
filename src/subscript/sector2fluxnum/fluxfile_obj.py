@@ -83,10 +83,9 @@ def create_map_rst(
     """
 
     mapping = []
-    counter = 0
     print("Creating map...")
 
-    for index in dest_flux.flux[6][0 : dest_flux.number_flux_cells]:
+    for counter, index in enumerate(dest_flux.flux[6][0 : dest_flux.number_flux_cells]):
         # Find global coordinates in the fine grid
         (i_f, j_f, k_f) = dest_flux.grid.get_ijk(global_index=index - 1)
 
@@ -123,10 +122,8 @@ def create_map_rst(
             # Identify map of coarse grid to collect values to fine grid
             mapping.append(min_pos_index)
 
-        counter += 1
-
-        if counter % 100 == 0:
-            print(f"Map progress: {counter:d}")
+        if (counter + 1) % 100 == 0:
+            print(f"Map progress: {counter+1:d}")
 
     return mapping
 

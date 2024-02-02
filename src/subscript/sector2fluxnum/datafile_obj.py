@@ -328,10 +328,8 @@ class Datafile:
         with open(self.USEFLUX_name, "r", encoding="utf8") as fin:
             lines = fin.readlines()
 
-        idx = 0
-        for line in insert_lines:
-            idx += 1
-            lines.insert(idx, line)
+        for idx, line in enumerate(insert_lines):
+            lines.insert(idx + 1, line)
 
         with open(self.USEFLUX_name, "w", encoding="utf8") as fout:
             fout.writelines(lines)

@@ -161,10 +161,10 @@ markers = [
 ignore_directives = ["argparse", "automodule"]
 
 [tool.ruff]
-ignore = [
+lint.ignore = [
     "C901",
 ]
-select = [
+lint.select = [
     "C",
     "E",
     "F",
