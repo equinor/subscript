@@ -11,7 +11,7 @@ import shutil
 from glob import glob
 
 import pandas as pd
-from ert import ErtScript
+from ert.config import ErtScript
 from ert.shared.plugins.plugin_manager import hook_implementation  # type: ignore
 
 from subscript import __version__, getLogger
