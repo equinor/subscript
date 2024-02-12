@@ -128,7 +128,8 @@ def test_runlogger(tmp_path):
         ("Red Hat Enterprise Linux Server release 6.0 (bar)", "x86_64_RH_6"),
         ("Red Hat Enterprise Linux Server release 7.2 (Maipo)", "x86_64_RH_7"),
         ("Red Hat Enterprise Linux Server release 8.2 (foo)", "x86_64_RH_8"),
-        pytest.param("foobar", None, marks=pytest.mark.xfail(raises=IndexError)),
+        ("Red Hat Enterprise Linux release 8.9 (Ootpa)", "x86_64_RH_8"),
+        pytest.param("foobar", None, marks=pytest.mark.xfail(raises=ValueError)),
     ],
 )
 def test_detect_os(os_id, expected, tmp_path, mocker):
