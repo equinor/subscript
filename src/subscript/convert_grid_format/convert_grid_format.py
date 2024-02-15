@@ -1,6 +1,7 @@
 """Conversion between grid corner point formats"""
 
 import argparse
+import logging
 import os
 import sys
 from pathlib import Path
@@ -18,7 +19,9 @@ CONVERSIONS = ["ecl2roff"]
 MODES = ["grid", "init", "restart"]
 
 xtg = XTGeoDialog()
-logger = xtg.functionlogger(__name__)
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -192,8 +195,9 @@ def main(args=None) -> None:
     logger.info(args)
 
     if args.conversion not in set(CONVERSIONS):
-        logger.critical("ERROR")
-        SystemExit("Illegal conversion <{args.conversion}>. Allowed are: {CONVERSIONS}")
+        raise ValueError(
+            f"Illegal conversion <{args.conversion}>. Allowed are: {CONVERSIONS}"
+        )
 
     xtg.say("Running conversion...")
     _convert_ecl2roff(
