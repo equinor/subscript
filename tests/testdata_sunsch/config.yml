@@ -41,7 +41,7 @@ insert:
   -
     template: footemplate.sch
     days:  2
-    substitute: {ORAT: 3000, GRAT: 400000}
+    substitute: {ORAT: 3000, GRAT: 400000, VFP: 1}
     #  -
     # template: footemplate.sch
     #days: 4

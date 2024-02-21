@@ -60,8 +60,8 @@ def test_main(testdata, caplog, mocker):
     # Check for foo1.sch, A-1 should occur twice
     assert sum("A-1" in x for x in schlines) == 2
 
-    # Check for substitutetest:
-    assert any("400000" in x for x in schlines)
+    # Check for substitutetest, the last 1 has to be integer as it is a table index:
+    assert any("'A-90' 'OPEN' 'ORAT' 3000 0 400000 1 /" in x for x in schlines)
 
     # Check for randomid:
     assert any("A-4" in x for x in schlines)
