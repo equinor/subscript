@@ -50,7 +50,7 @@ class InsertStatement(BaseModel):
     template: Optional[FilePath] = None
     days: Optional[float] = None
     string: Optional[str] = None
-    substitute: Optional[Dict[str, Union[str, float, str]]] = None
+    substitute: Optional[Dict[str, Union[int, float, str]]] = None
 
 
 class SunschConfig(BaseModel):
