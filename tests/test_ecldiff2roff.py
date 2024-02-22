@@ -158,17 +158,24 @@ def test_mainfunction(
     datefmt,
     expected_files,
     reek_data,
+    tmp_path,
 ):
     """Test the command line functionality of ecldiff2roff"""
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
     # pylint: disable=too-many-arguments
-    Path("datediff.txt").write_text(diffdates, encoding="utf8")
 
+    if outputfilebase.startswith("/tmp"):
+        outputfilebase = str(tmp_path / outputfilebase[5:])
+
+    modified_expected_files = [
+        str(tmp_path / ef[5:]) if ef.startswith("/tmp") else ef for ef in expected_files
+    ]
+    Path("datediff.txt").write_text(diffdates, encoding="utf8")
     ecldiff2roff.ecldiff2roff_main(
         eclroot, prop, "datediff.txt", outputfilebase, sep, datesep, datefmt
     )
-    for expected_file in expected_files:
+    for expected_file in modified_expected_files:
         assert Path(expected_file).exists()
 
 
