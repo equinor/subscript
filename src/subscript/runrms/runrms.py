@@ -18,7 +18,7 @@ import time
 
 import yaml
 
-from subscript import getLogger
+from subscript import detect_os, getLogger
 
 logger = getLogger(__name__)
 
@@ -288,7 +288,7 @@ class RunRMS:
         self.warn_empty_version = False
         self.aps_toolbox_path = None
 
-        self.detect_os()
+        self.osver = detect_os(RHEL_ID)
 
         self.oldpythonpath = ""
         if "PYTHONPATH" in os.environ:
@@ -303,19 +303,6 @@ class RunRMS:
             "\nRunning <{0}>. Type <{0} -h> for help\n".format(THISSCRIPT),
             _BColors.ENDC,
         )
-
-    def detect_os(self):
-        """Detect operating system string in runtime, just use default if not found."""
-        if RHEL_ID.is_file():
-            with open(RHEL_ID, "r", encoding="utf-8") as buffer:
-                tokens = buffer.read().split()
-                for t in tokens:
-                    if "." in t:
-                        major = t.split(".")[0]
-                        self.osver = f"x86_64_RH_{major}"
-                        logger.debug("RHEL version found in %s", RHEL_ID)
-                        return
-            raise ValueError("Could not detect RHEL version")
 
     def do_parse_args(self, args):
         """Parse command line args."""
