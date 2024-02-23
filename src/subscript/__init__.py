@@ -1,5 +1,6 @@
 import logging
 import sys
+from pathlib import Path
 
 try:
     from importlib import metadata
@@ -7,6 +8,21 @@ try:
     __version__ = metadata.version(__name__)
 except metadata.PackageNotFoundError:
     pass
+
+
+def detect_os(release_file: Path = Path("/etc/redhat-release")) -> str:
+    """Detect operating system string in runtime, just use default if not found."""
+    default_os_version = "x86_64_RH_7"
+
+    if release_file.is_file():
+        with open(release_file, "r", encoding="utf-8") as buffer:
+            tokens = buffer.read().split()
+            for t in tokens:
+                if "." in t:
+                    major = t.split(".")[0]
+                    return f"x86_64_RH_{major}"
+        raise ValueError("Could not detect RHEL version")
+    return default_os_version
 
 
 def getLogger(module_name="subscript"):
