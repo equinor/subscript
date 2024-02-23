@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript &mdash; subscript 1.2.1.dev9+g80ab7f28 documentation</title>
+  <title>subscript &mdash; subscript 1.2.1.dev10+g289e48d7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=a213da60"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=38ba89dc"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.2.1.dev9+g80ab7f28
+                1.2.1.dev10+g289e48d7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -99,6 +99,7 @@
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.detect_os"><code class="docutils literal notranslate"><span class="pre">detect_os()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
@@ -169,6 +170,17 @@
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
 </ul>
 </nav>
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.detect_os">
+<span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">detect_os</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/redhat-release')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.detect_os" title="Permalink to this definition"></a></dt>
+<dd><p>Detect operating system string in runtime, just use default if not found.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.getLogger">
 <span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">getLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'subscript'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.getLogger" title="Permalink to this definition"></a></dt>
@@ -718,7 +730,6 @@ __name__ should be supplied</p>
 <li class="toctree-l3"><a class="reference internal" href="subscript.runrms.runrms.html"><code class="docutils literal notranslate"><span class="pre">subscript.runrms.runrms</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS"><code class="docutils literal notranslate"><span class="pre">RunRMS</span></code></a><ul>
 <li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.check_vconsistency"><code class="docutils literal notranslate"><span class="pre">RunRMS.check_vconsistency()</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.detect_os"><code class="docutils literal notranslate"><span class="pre">RunRMS.detect_os()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.do_parse_args"><code class="docutils literal notranslate"><span class="pre">RunRMS.do_parse_args()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.get_scaledpi"><code class="docutils literal notranslate"><span class="pre">RunRMS.get_scaledpi()</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.runrms.runrms.html#subscript.runrms.runrms.RunRMS.launch_rms"><code class="docutils literal notranslate"><span class="pre">RunRMS.launch_rms()</span></code></a></li>
