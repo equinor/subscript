@@ -9,6 +9,7 @@ which this test code has separate code paths for asserts.
 """
 
 import os
+import pathlib
 import subprocess
 import time
 from pathlib import Path
@@ -17,6 +18,7 @@ import numpy as np
 import pandas as pd
 import pytest
 import res2df
+from subscript import detect_os
 from subscript.check_swatinit.check_swatinit import (
     __HC_BELOW_FWL__,
     __PC_SCALED__,
@@ -31,6 +33,8 @@ from subscript.check_swatinit.check_swatinit import (
 from subscript.check_swatinit.pillarmodel import PillarModel
 
 pd.set_option("display.max_columns", 100)
+
+RHEL_ID = pathlib.Path("/etc/redhat-release")
 
 
 def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
@@ -308,7 +312,7 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     qc_vols = qc_volumes(qc_frame)
 
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         # Flow accepts this swatinit, but this water will flow out
         assert np.isclose(qc_frame["SWAT"][0], 1)
         # PPCW is the input Pc:
@@ -357,7 +361,7 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
     qc_vols = qc_volumes(qc_frame)
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         expected_swat = 0.887824
         actual_pc = 0.37392
     else:
@@ -480,7 +484,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
     assert np.isclose(qc_frame["SWAT"][0], 1)
 
     assert np.isclose(qc_vols[__HC_BELOW_FWL__], (1 - 0.7) * qc_frame["PORV"][0])
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
         assert np.isclose(qc_frame["PC_SCALING"][0], 1.0)
         assert np.isclose(qc_frame["PC"], 0)
@@ -597,7 +601,7 @@ def test_swu_equal_swatinit(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     swat_from_pc_input = model.evaluate_sw(1.443238)
     assert np.isclose(swat_from_pc_input, 0.51513567)
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         assert np.isclose(qc_frame["SWAT"][0], 0.9)
         assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
     else:
@@ -627,7 +631,7 @@ def test_swu_lessthan_swatinit(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     swat_from_pc_input = model.evaluate_sw(1.443238)
     assert np.isclose(swat_from_pc_input, 0.463244)
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         assert np.isclose(qc_frame["SWAT"][0], 0.9)
         assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
         # Flow does not scale the PC:
