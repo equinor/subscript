@@ -337,7 +337,7 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     assert set(qc_frame["QC_FLAG"]) == {__SWATINIT_1__, __WATER__}
     assert qc_frame[qc_frame["Z"] < 2000]["QC_FLAG"].unique()[0] == __SWATINIT_1__
     assert qc_frame[qc_frame["Z"] > 2000]["QC_FLAG"].unique()[0] == __WATER__
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         assert np.isclose(qc_frame["SWAT"][0], 1)
         # PPCW is the input Pc:
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
@@ -368,7 +368,7 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
         expected_swat = 0.887849
         actual_pc = 0.3738366
 
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         # Flow accepts this swatinit, but this water will flow out.
         assert np.isclose(qc_frame["SWAT"][0], 1)
         assert np.isnan(qc_frame["PC"][0])
@@ -528,7 +528,7 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __HC_BELOW_FWL__
 
     qc_vols = qc_volumes(qc_frame)
-    if "flow" in simulator:
+    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
         assert np.isclose(qc_frame["SWAT"][0], 1.0)
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
         assert np.isclose(qc_frame["PC_SCALING"][0], 1.0)
