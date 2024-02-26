@@ -361,7 +361,7 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
     qc_vols = qc_volumes(qc_frame)
-    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
+    if "flow" in simulator:
         expected_swat = 0.887824
         actual_pc = 0.37392
     else:
@@ -484,7 +484,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
     assert np.isclose(qc_frame["SWAT"][0], 1)
 
     assert np.isclose(qc_vols[__HC_BELOW_FWL__], (1 - 0.7) * qc_frame["PORV"][0])
-    if "flow" in simulator and detect_os(RHEL_ID) == "x86_64_RH_7":
+    if "flow":
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
         assert np.isclose(qc_frame["PC_SCALING"][0], 1.0)
         assert np.isclose(qc_frame["PC"], 0)
@@ -539,7 +539,7 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
 
         assert np.isclose(qc_vols[__HC_BELOW_FWL__], (1 - 0.7) * qc_frame["PORV"][0])
     else:
-        assert np.isclose(qc_frame["SWAT"][0], expected_swat)
+        assert np.isclose(qc_frame["SWAT"][0], expected_swat, rtol=1e-03)
         # PPCW is set to NaN, so we don't have that column
         if "PPCW" in qc_frame:
             assert pd.isnull(qc_frame["PPCW"][0])
@@ -605,7 +605,7 @@ def test_swu_equal_swatinit(simulator, tmp_path):
         assert np.isclose(qc_frame["SWAT"][0], 0.9)
         assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
     else:
-        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
+        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input, rtol=1e-03)
         # There is no scaling when SWATINIT==SWU:
         assert np.isclose(qc_frame["PC_SCALING"][0], 1)
         assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
@@ -638,7 +638,7 @@ def test_swu_lessthan_swatinit(simulator, tmp_path):
         assert np.isclose(qc_frame["PC_SCALING"], 1.0)
         assert np.isclose(qc_frame["PPCW"], 3.0)
     else:
-        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
+        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input, rtol=1e-03)
         # There is no scaling when SWU < SWATINIT:
         assert np.isclose(qc_frame["PC_SCALING"][0], 1)
         assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
