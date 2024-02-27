@@ -118,9 +118,6 @@ def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
     assert pd.isnull(qc_frame["PC"][0])
 
 
-@pytest.mark.skip(
-    reason="flowdaily has supported PPCWMAX but not official release of flow",
-)
 def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
     """Test PPCWMAX far above contact. This keyword is only supported by Eclipse100
     and will be ignored by flow.
@@ -760,9 +757,6 @@ def test_pc_scaled_above_gwc(eclipse_simulator, tmp_path):
     assert np.isclose(qc_frame["PC"][0], 9.396621)
 
 
-@pytest.mark.skip(
-    reason="flowdaily has supported PPCWMAX but not official release of flow",
-)
 def test_ppcwmax_gridvector(simulator, tmp_path):
     """Test that ppcwmax_gridvector maps ppcwmax values correctly in the grid"""
     os.chdir(tmp_path)
@@ -779,9 +773,6 @@ def test_ppcwmax_gridvector(simulator, tmp_path):
     assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique(), 0.02)
 
 
-@pytest.mark.skip(
-    reason="flowdaily has supported PPCWMAX but not official release of flow",
-)
 def test_ppcwmax_gridvector_eqlnum(flow_simulator, tmp_path):
     """Test that ppcwmax unrolling also works with EQLNUM (historical bug)"""
     os.chdir(tmp_path)
