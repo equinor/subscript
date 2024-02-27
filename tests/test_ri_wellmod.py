@@ -5,11 +5,9 @@ from pathlib import Path
 import pytest
 from subscript.ri_wellmod import ri_wellmod
 
-pytestmark = pytest.mark.xfail()
-
 SCRIPTNAME = "ri_wellmod"
 DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
-RI_DEV = "/project/res/x86_64_RH_7/share/resinsight/jenkins_dev/ResInsight"
+RI_DEV = "/project/res/bin/resinsightdev"
 
 try:
     # pylint: disable=unused-import
@@ -62,6 +60,14 @@ def file_contains(filename, string_to_find):
     return filetext.find(string_to_find) >= 0
 
 
+def github_online_runner():
+    gh_runner = os.getenv("GITHUB_ACTIONS") == "true"
+
+    # we still want to run tests on github actions local (komodo) runners
+    local_gh_runner = "f_scout_ci" in str(os.getenv("RUNNER_NAME"))
+    return gh_runner and not local_gh_runner
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that endpoint is installed"""
@@ -85,6 +91,9 @@ def test_main_initcase(tmp_path, mocker):
     assert Path(outfile).exists() and file_contains(outfile, "A4")
 
 
+@pytest.mark.skipif(
+    github_online_runner(), reason="Cannot test on github online runner"
+)
 @pytest.mark.skipif(
     not has_resinsight(),
     reason="Could not find a ResInsight executable",
@@ -233,6 +242,9 @@ def test_ert_forward_model(tmp_path):
 
 # REEK TESTS
 @pytest.mark.skipif(
+    github_online_runner(), reason="Cannot test on github online runner"
+)
+@pytest.mark.skipif(
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 def test_main_initcase_reek(tmp_path, mocker):
@@ -248,6 +260,9 @@ def test_main_initcase_reek(tmp_path, mocker):
     assert Path(outfile).exists() and file_contains(outfile, "OP_1")
 
 
+@pytest.mark.skipif(
+    github_online_runner(), reason="Cannot test on github online runner"
+)
 @pytest.mark.skipif(
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
