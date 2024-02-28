@@ -31,6 +31,8 @@ from subscript.check_swatinit.check_swatinit import (
 )
 from subscript.check_swatinit.pillarmodel import PillarModel
 
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+
 pd.set_option("display.max_columns", 100)
 
 
@@ -286,6 +288,7 @@ def test_accepted_swatinit_in_gas(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"], actual_pc)
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swatinit_1_far_above_contact(simulator, tmp_path):
     """If SWATINIT is 1 far above the contact, we are in an unstable
     situation (water should not be mobile e.g)
@@ -309,19 +312,13 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     qc_vols = qc_volumes(qc_frame)
 
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
-    if "flow" in simulator:
-        # Flow accepts this swatinit, but this water will flow out
-        assert np.isclose(qc_frame["SWAT"][0], 1)
-        # PPCW is the input Pc:
-        assert np.isclose(qc_frame["PPCW"][0], 3.0)
 
-        assert np.isclose(qc_vols[__SWATINIT_1__], (1 - 1) * qc_frame["PORV"])
-    else:
-        # E100 ignores SWATINIT and sets the saturation to SWL:
-        assert np.isclose(qc_frame["SWAT"][0], 0.1)
-        assert np.isclose(qc_frame["PPCW"][0], 3.0)
-        # Negative number means water is lost:
-        assert np.isclose(qc_vols[__SWATINIT_1__], -(1 - 0.1) * qc_frame["PORV"])
+    # E100/flow ignores SWATINIT and sets the saturation to SWL:
+    assert np.isclose(qc_frame["SWAT"][0], 0.1)
+    # PPCW is the input Pc:
+    assert np.isclose(qc_frame["PPCW"][0], 3.0)
+    # Negative number means water is lost:
+    assert np.isclose(qc_vols[__SWATINIT_1__], -(1 - 0.1) * qc_frame["PORV"])
     # Not possible to compute PC, it should be Nan:
     assert np.isnan(qc_frame["PC"][0])
 
@@ -334,17 +331,15 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     assert set(qc_frame["QC_FLAG"]) == set([__SWATINIT_1__, __WATER__])
     assert qc_frame[qc_frame["Z"] < 2000]["QC_FLAG"].unique()[0] == __SWATINIT_1__
     assert qc_frame[qc_frame["Z"] > 2000]["QC_FLAG"].unique()[0] == __WATER__
-    if "flow" in simulator:
-        assert np.isclose(qc_frame["SWAT"][0], 1)
-        # PPCW is the input Pc:
-        assert np.isclose(qc_frame["PPCW"][0], 3.0)
-    else:
-        # E100 ignores SWATINIT and sets the saturation to SWL:
-        assert np.isclose(qc_frame["SWAT"][0], 0.1)
-        assert np.isclose(qc_frame["PPCW"][0], 3.0)
+    # E100/flow ignores SWATINIT and sets the saturation to SWL:
+    assert np.isclose(qc_frame["SWAT"][0], 0.1)
+    # PPCW is the input Pc:
+    assert np.isclose(qc_frame["PPCW"][0], 3.0)
+    # Not possible to compute PC, it should be Nan:
     assert np.isnan(qc_frame["PC"][0])
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     """If we are slightly above the contact, item 9 in EQUIL plays
     a small role.
@@ -358,6 +353,7 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
     qc_vols = qc_volumes(qc_frame)
+    # Slightly different results between flow and E100
     if "flow" in simulator:
         expected_swat = 0.887824
         actual_pc = 0.37392
@@ -365,18 +361,9 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
         expected_swat = 0.887849
         actual_pc = 0.3738366
 
-    if "flow" in simulator:
-        # Flow accepts this swatinit, but this water will flow out.
-        assert np.isclose(qc_frame["SWAT"][0], 1)
-        assert np.isnan(qc_frame["PC"][0])
-        assert np.isclose(qc_vols[__SWATINIT_1__], (1 - 1) * qc_frame["PORV"])
-    else:
-        # E100:
-        assert np.isclose(qc_frame["SWAT"][0], expected_swat)
-        assert np.isclose(qc_frame["PC"][0], actual_pc)
-        assert np.isclose(
-            qc_vols[__SWATINIT_1__], (expected_swat - 1) * qc_frame["PORV"]
-        )
+    assert np.isclose(qc_frame["SWAT"][0], expected_swat)
+    assert np.isclose(qc_frame["PC"][0], actual_pc)
+    assert np.isclose(qc_vols[__SWATINIT_1__], (expected_swat - 1) * qc_frame["PORV"])
     assert model.evaluate_pc(0.1) == 3.0
     assert model.evaluate_pc(1) == 0
 
@@ -505,6 +492,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
             assert pd.isnull(qc_frame["PC"][0])
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
     """For an oil-wet system, there can be oil below free water level.
 
@@ -523,11 +511,14 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
         maxpc=[3.0],
         minpc=[-3.0],
     )
-    # Eclipse will pick this SWAT:
-    expected_swat = 0.7915066
+    # Eclipse and flow give slightly different value
+    if "flow" in simulator:
+        expected_swat = 0.7906856
+        actual_pc = -1.604571
+    else:
+        expected_swat = 0.7915066
+        actual_pc = -1.610044
 
-    # This must then be the Pc in the cell:
-    actual_pc = -1.610044
     p_cap = model.evaluate_pc(expected_swat)
     assert np.isclose(p_cap, actual_pc)
     qc_frame = run_reservoir_simulator(simulator, model)
@@ -535,15 +526,17 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
 
     qc_vols = qc_volumes(qc_frame)
     if "flow" in simulator:
-        assert np.isclose(qc_frame["SWAT"][0], 1.0)
+        assert np.isclose(qc_frame["SWAT"][0], expected_swat)
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
         assert np.isclose(qc_frame["PC_SCALING"][0], 1.0)
 
         # Computed Pc is wrong here, but is what corresponds
         # to the saturation picked by OPM-flow:
-        assert np.isclose(qc_frame["PC"][0], -3.0)
+        assert np.isclose(qc_frame["PC"][0], actual_pc)
 
-        assert np.isclose(qc_vols[__HC_BELOW_FWL__], (1 - 0.7) * qc_frame["PORV"][0])
+        assert np.isclose(
+            qc_vols[__HC_BELOW_FWL__], (expected_swat - 0.7) * qc_frame["PORV"][0]
+        )
     else:
         assert np.isclose(qc_frame["SWAT"][0], expected_swat)
         # PPCW is set to NaN, so we don't have that column
@@ -590,6 +583,7 @@ def test_swu(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swu_equal_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
@@ -605,19 +599,24 @@ def test_swu_equal_swatinit(simulator, tmp_path):
         maxpc=[3.0],
     )
     qc_frame = run_reservoir_simulator(simulator, model)
-    swat_from_pc_input = model.evaluate_sw(1.443238)
-    assert np.isclose(swat_from_pc_input, 0.51513567)
+
     if "flow" in simulator:
-        assert np.isclose(qc_frame["SWAT"][0], 0.9)
-        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
+        actual_pc = 1.4427379
+        expected_swat = 0.51526989
     else:
-        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
-        # There is no scaling when SWATINIT==SWU:
-        assert np.isclose(qc_frame["PC_SCALING"][0], 1)
-        assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
+        actual_pc = 1.443238
+        expected_swat = 0.51513567
+
+    swat_from_pc_input = model.evaluate_sw(actual_pc)
+    assert np.isclose(swat_from_pc_input, expected_swat)
+    assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
+    # There is no scaling when SWATINIT==SWU:
+    assert np.isclose(qc_frame["PC_SCALING"][0], 1)
+    assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
     print(qc_frame)
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swu_lessthan_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT
 
@@ -635,19 +634,20 @@ def test_swu_lessthan_swatinit(simulator, tmp_path):
         maxpc=[3.0],
     )
     qc_frame = run_reservoir_simulator(simulator, model)
-    swat_from_pc_input = model.evaluate_sw(1.443238)
-    assert np.isclose(swat_from_pc_input, 0.463244)
+
     if "flow" in simulator:
-        assert np.isclose(qc_frame["SWAT"][0], 0.9)
-        assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
-        # Flow does not scale the PC:
-        assert np.isclose(qc_frame["PC_SCALING"], 1.0)
-        assert np.isclose(qc_frame["PPCW"], 3.0)
+        actual_pc = 1.4427379
+        expected_swat = 0.463361
     else:
-        assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
-        # There is no scaling when SWU < SWATINIT:
-        assert np.isclose(qc_frame["PC_SCALING"][0], 1)
-        assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
+        actual_pc = 1.443238
+        expected_swat = 0.463244
+
+    swat_from_pc_input = model.evaluate_sw(actual_pc)
+    assert np.isclose(swat_from_pc_input, expected_swat)
+    assert np.isclose(qc_frame["SWAT"][0], swat_from_pc_input)
+    # There is no scaling when SWU < SWATINIT:
+    assert np.isclose(qc_frame["PC_SCALING"][0], 1)
+    assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
     print(qc_frame)
 
 
