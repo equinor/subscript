@@ -1,4 +1,5 @@
 """NPV calculation of oil and gas production income"""
+
 import argparse
 import datetime
 import logging

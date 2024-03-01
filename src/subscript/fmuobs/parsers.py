@@ -1,5 +1,6 @@
 """Module for parsing and writing ERT observation files into/from an
 equivalent DataFrame representation"""
+
 import datetime
 import re
 from pathlib import Path

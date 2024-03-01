@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-""" Argument parser for casegen_upcars """
+"""Argument parser for casegen_upcars"""
 
 from subscript import __version__
 

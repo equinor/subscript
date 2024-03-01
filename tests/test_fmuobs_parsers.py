@@ -2,6 +2,7 @@
 
 They all parse and transform the data into the internal dataframe
 representation."""
+
 import datetime
 import os
 from pathlib import Path
