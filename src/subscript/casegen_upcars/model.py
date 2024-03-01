@@ -1,4 +1,4 @@
-""" Engine part of casegen_upcars """
+"""Engine part of casegen_upcars"""
 
 import datetime
 import io
@@ -468,9 +468,9 @@ Initializing model
         if self._a * self._b * self._c == 0.0:
             self.dict_info["ModelDescription"] = f"Slab with tilting angle {self._tilt}"
         else:
-            self.dict_info[
-                "ModelDescription"
-            ] = "Dome structure with radius (x, y, z) : {:.2f}m, {:.2f}m, {:.2f}m"
+            self.dict_info["ModelDescription"] = (
+                "Dome structure with radius (x, y, z) : {:.2f}m, {:.2f}m, {:.2f}m"
+            )
 
         x_mid = self._centroid_x * self._lx
         y_mid = self._centroid_y * self._ly
@@ -492,13 +492,13 @@ Initializing model
         cell_dz = np.empty((self._total_nx, self._total_ny, self._total_nz))
 
         for idx in self._fracture_i:
-            cell_dx[
-                idx : idx + self._fracture_cell_count, :, :
-            ] = self._fracture_thickness
+            cell_dx[idx : idx + self._fracture_cell_count, :, :] = (
+                self._fracture_thickness
+            )
         for idx in self._fracture_j:
-            cell_dy[
-                :, idx : idx + self._fracture_cell_count, :
-            ] = self._fracture_thickness
+            cell_dy[:, idx : idx + self._fracture_cell_count, :] = (
+                self._fracture_thickness
+            )
         for idx in range(self._nz):
             cell_dz[:, :, idx] = self._layer_dz[idx]
         self._cell_volume = cell_dx * cell_dy * cell_dz
@@ -771,9 +771,9 @@ Initializing model
         )
 
         for idx in range(1, self._total_nz):
-            zcorn[
-                n_surface_points * 2 * idx : n_surface_points * (2 * idx + 1)
-            ] = zcorn[n_surface_points * (2 * idx - 1) : n_surface_points * (2 * idx)]
+            zcorn[n_surface_points * 2 * idx : n_surface_points * (2 * idx + 1)] = (
+                zcorn[n_surface_points * (2 * idx - 1) : n_surface_points * (2 * idx)]
+            )
             zcorn[
                 n_surface_points * (2 * idx + 1) : 2 * n_surface_points * (idx + 1)
             ] = (

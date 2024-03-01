@@ -1,4 +1,5 @@
 """Test csv_merge"""
+
 import os
 import subprocess
 from pathlib import Path

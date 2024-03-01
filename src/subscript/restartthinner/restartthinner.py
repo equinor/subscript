@@ -1,4 +1,5 @@
 """Restart file (UNRST) thinner, command line application"""
+
 import argparse
 import datetime
 import glob

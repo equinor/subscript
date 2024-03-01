@@ -8,7 +8,6 @@ import numpy as np
 
 
 class Datafile:
-
     """
     Class containing parsers and write routines for
     DATA files and local executions of DATA files

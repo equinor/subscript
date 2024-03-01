@@ -1,5 +1,6 @@
 """fmuobs is a converter tool for observation files used in assisted
 history matching"""
+
 import argparse
 import logging
 import os

@@ -1,8 +1,9 @@
-""" The fmu_copy_revision script.
+"""The fmu_copy_revision script.
 
 Purpose is fast and secure copy for fmu revisions using rsync as engine,
 with xargs to speed up multithreading.
 """
+
 import argparse
 import getpass
 import shutil

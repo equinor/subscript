@@ -1,4 +1,5 @@
 """Test prtvol2csv, both as library and as command line"""
+
 import os
 import subprocess
 import sys
