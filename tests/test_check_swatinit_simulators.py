@@ -30,7 +30,7 @@ from subscript.check_swatinit.check_swatinit import (
 )
 from subscript.check_swatinit.pillarmodel import PillarModel
 
-IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
+IN_SUBSCRIPT_GITHUB_ACTIONS = os.getenv("GITHUB_REPOSITORY") == "equinor/subscript"
 
 pd.set_option("display.max_columns", 100)
 
@@ -284,7 +284,7 @@ def test_accepted_swatinit_in_gas(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"], actual_pc)
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
+@pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swatinit_1_far_above_contact(simulator, tmp_path):
     """If SWATINIT is 1 far above the contact, we are in an unstable
     situation (water should not be mobile e.g)
@@ -335,7 +335,7 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     assert np.isnan(qc_frame["PC"][0])
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
+@pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     """If we are slightly above the contact, item 9 in EQUIL plays
     a small role.
@@ -479,7 +479,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
             assert pd.isnull(qc_frame["PC"][0])
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
+@pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
     """For an oil-wet system, there can be oil below free water level.
 
@@ -570,7 +570,7 @@ def test_swu(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
+@pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swu_equal_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
@@ -603,7 +603,7 @@ def test_swu_equal_swatinit(simulator, tmp_path):
     print(qc_frame)
 
 
-@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Test require flow dev version")
+@pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
 def test_swu_lessthan_swatinit(simulator, tmp_path):
     """Test SWU equal to SWATINIT
 
