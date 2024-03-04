@@ -15,6 +15,15 @@ except ImportError:
     HAVE_ERT = False
 
 
+ERT_CONFIG_WF = [
+    "QUEUE_SYSTEM LOCAL",
+    "NUM_REALIZATIONS 1",
+    "RUNPATH <CONFIG_PATH>",
+    "",
+    "LOAD_WORKFLOW wf_params2csv",
+]
+
+
 def test_main(tmp_path, mocker):
     """Test invocation from command line"""
     os.chdir(tmp_path)
@@ -165,7 +174,7 @@ def test_ert_workflow(tmp_path):
             f"real\t{i}", encoding="utf8"
         )
 
-    Path("PARAMS2CSV_ITER0").write_text(
+    Path("wf_params2csv").write_text(
         (
             'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
             "<CONFIG_PATH>/realization-*/iter-0/parameters.txt"
@@ -173,20 +182,116 @@ def test_ert_workflow(tmp_path):
     )
 
     ert_config_fname = "test_params2csv.ert"
-    ert_config = [
-        "QUEUE_SYSTEM LOCAL",
-        "NUM_REALIZATIONS 1",
-        "RUNPATH <CONFIG_PATH>",
-        "",
-        "LOAD_WORKFLOW PARAMS2CSV_ITER0",
-    ]
-    Path(ert_config_fname).write_text("\n".join(ert_config), encoding="utf8")
-    subprocess.run(
-        ["ert", "workflow", "PARAMS2CSV_ITER0", ert_config_fname], check=True
-    )
+    Path(ert_config_fname).write_text("\n".join(ERT_CONFIG_WF), encoding="utf8")
+    subprocess.run(["ert", "workflow", "wf_params2csv", ert_config_fname], check=True)
 
     dframe = pd.read_csv("parameters.csv")
     assert not dframe.empty
-    assert "Realization" in dframe
+    assert "REAL" in dframe
     assert "real" in dframe
     assert len(dframe.index) == realizations
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_workflow_multiple_iter(tmp_path):
+    """
+    Test that PARAMS2CSV can be run as an ERT workflow/plugin on
+    multiple iterations.
+    """
+    os.chdir(tmp_path)
+
+    realizations = 3
+    for i in range(realizations):
+        Path(f"realization-{i}/iter-0").mkdir(parents=True)
+        Path(f"realization-{i}/iter-0/parameters.txt").write_text(
+            f"myparam\t{i}", encoding="utf8"
+        )
+        Path(f"realization-{i}/iter-1").mkdir(parents=True)
+        Path(f"realization-{i}/iter-1/parameters.txt").write_text(
+            f"myparam\t{i}", encoding="utf8"
+        )
+
+    Path("wf_params2csv").write_text(
+        (
+            'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
+            "<CONFIG_PATH>/realization-*/iter-*/parameters.txt"
+        )
+    )
+
+    ert_config_fname = "test_params2csv.ert"
+    Path(ert_config_fname).write_text("\n".join(ERT_CONFIG_WF), encoding="utf8")
+    subprocess.run(["ert", "workflow", "wf_params2csv", ert_config_fname], check=True)
+
+    dframe = pd.read_csv("parameters.csv")
+    assert not dframe.empty
+    assert "myparam" in dframe
+    assert set(dframe["REAL"].unique()) == {0, 1, 2}
+    assert set(dframe["ENSEMBLESET"].unique()) == {tmp_path.stem}
+    assert set(dframe["ENSEMBLE"].unique()) == {"iter-0", "iter-1"}
+    assert set(dframe["ITER"].unique()) == {0, 1}
+    assert len(dframe.index) == realizations * 2
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_workflow_pred_params(tmp_path):
+    """Test that PARAMS2CSV can be run on folders not starting with iter"""
+    os.chdir(tmp_path)
+
+    realizations = 3
+    for i in range(realizations):
+        Path(f"realization-{i}/pred").mkdir(parents=True)
+        Path(f"realization-{i}/pred/parameters.txt").write_text(
+            f"myparam\t{i}", encoding="utf8"
+        )
+
+    Path("wf_params2csv").write_text(
+        (
+            'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
+            "<CONFIG_PATH>/realization-*/pred/parameters.txt"
+        )
+    )
+
+    ert_config_fname = "test_params2csv.ert"
+    Path(ert_config_fname).write_text("\n".join(ERT_CONFIG_WF), encoding="utf8")
+    subprocess.run(["ert", "workflow", "wf_params2csv", ert_config_fname], check=True)
+
+    dframe = pd.read_csv("parameters.csv")
+    assert not dframe.empty
+    assert "myparam" in dframe
+    assert set(dframe["REAL"].unique()) == {0, 1, 2}
+    assert set(dframe["ENSEMBLE"].unique()) == {"pred"}
+    assert set(dframe["ITER"].unique()) == {0}
+
+
+@pytest.mark.integration
+@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
+def test_ert_workflow_no_iter_folder(tmp_path):
+    """Test that PARAMS2CSV can be run on cases without iteration folders"""
+    os.chdir(tmp_path)
+
+    realizations = 3
+    for i in range(realizations):
+        Path(f"realization-{i}").mkdir(parents=True)
+        Path(f"realization-{i}/parameters.txt").write_text(
+            f"myparam\t{i}", encoding="utf8"
+        )
+
+    Path("wf_params2csv").write_text(
+        (
+            'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
+            "<CONFIG_PATH>/realization-*/parameters.txt"
+        )
+    )
+
+    ert_config_fname = "test_params2csv.ert"
+    Path(ert_config_fname).write_text("\n".join(ERT_CONFIG_WF), encoding="utf8")
+    subprocess.run(["ert", "workflow", "wf_params2csv", ert_config_fname], check=True)
+
+    dframe = pd.read_csv("parameters.csv")
+    assert not dframe.empty
+    assert "myparam" in dframe
+    assert set(dframe["REAL"].unique()) == {0, 1, 2}
+    assert set(dframe["ENSEMBLE"].unique()) == {"iter-0"}
+    assert set(dframe["ITER"].unique()) == {0}

@@ -4,11 +4,13 @@ data, ensuring labels for each value matches).
 
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
-import re
 import shutil
 from glob import glob
+from pathlib import Path
 
 import pandas as pd
 from ert.config import ErtScript
@@ -27,7 +29,7 @@ parameters.txt is a text file with <key> <value> on each line
 In the CSV file, each individual parameter file will be represented by one data row.
 The order of parameters in each text file is not conserved.
 
-The original filename for each file is written to the column ‘filename’.
+The original filename for each file is written to the column 'filename'.
 Beware if you have that as a <key> in the text files.
 """
 
@@ -55,15 +57,31 @@ The `filename` column can be renamed by adding an argument <FILENAMECOLUMN> to t
 # The following string is used for the ERT workflow documentation, note
 # the very subtle difference in variable name.
 WORKFLOW_EXAMPLE = """
-Add a file named e.g. ``ert/bin/workflows/PARAMS2CSV_ITER0`` with the contents::
+Add a file named e.g. ``ert/bin/workflows/wf_params2csv_iter0`` with the contents::
+
   MAKE_DIRECTORY <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables
   PARAMS2CSV "--verbose" "-o" <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables/parameters_iter-0.csv <SCRATCH>/<USER>/<CASE_DIR>/realization-*/iter-0/parameters.txt
 
 Add to your ERT config to have the workflow loaded upon launching::
 
-  LOAD_WORKFLOW ../bin/workflows/PARAMS2CSV_ITER0
+  LOAD_WORKFLOW ../bin/workflows/wf_params2csv_iter0
 
-It is then possible to run the workflow either through ERT CLI or GUI.
+It is then possible to run the workflow either through ERT CLI or GUI. 
+
+Wildcards can be used to extract parameters from multiple iterations,
+this is done in the example below. Note also the use of ``HOOK_WORKFLOW`` to automatically
+run the workflow when all realizations have finished.
+
+Add a file named e.g. ``ert/bin/workflows/wf_params2csv_hist`` with the contents::
+
+  MAKE_DIRECTORY <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables
+  PARAMS2CSV "--verbose" "-o" <SCRATCH>/<USER>/<CASE_DIR>/share/results/tables/parameters_hist.csv <SCRATCH>/<USER>/<CASE_DIR>/realization-*/iter-*/parameters.txt
+
+Add to your ERT config to have the workflow automatically executed on successful runs::
+
+  LOAD_WORKFLOW ../bin/workflows/wf_params2csv_hist
+  HOOK_WORKFLOW wf_params2csv_hist POST_SIMULATION
+
 """  # noqa
 
 
@@ -153,26 +171,33 @@ def params2csv_main(args: argparse.Namespace) -> None:
     if args.verbose:
         logger.setLevel(logging.INFO)
 
-    # Expand wildcards if not being expanded
-    args.parameterfile = [
-        path for pattern in args.parameterfile for path in sorted(glob(pattern))
+    possible_metadata_columns = [
+        "ENSEMBLESET",
+        "REAL",
+        "ENSEMBLE",
+        "ITER",
+        args.filenamecolumnname,
     ]
 
-    ens = pd.DataFrame()
+    # Expand wildcards if not being expanded
+    paramfile_paths = [
+        Path(path) for pattern in args.parameterfile for path in sorted(glob(pattern))
+    ]
 
-    parsedfiles = 0
-    for _, parameterfilename in enumerate(args.parameterfile, start=0):
-        try:
-            paramtable = pd.read_csv(parameterfilename, header=None, sep=r"\s+")
-            parsedfiles = parsedfiles + 1
-        except IOError:
+    dfs = []
+    for parameterfilename in paramfile_paths:
+        if not parameterfilename.exists():
             logger.warning("%s not found, skipping..", parameterfilename)
             continue
 
-        # Chop to only two colums, set keys, and transpose, and then
-        # merge with the previous tables
-        paramtable = pd.DataFrame(paramtable.iloc[:, 0:2])
-        paramtable.columns = ["key", "value"]
+        paramtable = pd.read_csv(
+            parameterfilename,
+            names=["key", "value"],
+            header=None,
+            usecols=[0, 1],
+            sep=r"\s+",
+        )
+
         paramtable.drop_duplicates(
             "key", keep="last", inplace=True
         )  # if key is repeated, keep the last one.
@@ -185,28 +210,28 @@ def params2csv_main(args: argparse.Namespace) -> None:
                 parameterfilename,
             )
         else:
-            transposed.insert(0, args.filenamecolumnname, parameterfilename)
+            transposed[args.filenamecolumnname] = str(parameterfilename)
 
-        # Look for meta-information in filename
-        realregex = r".*realization-(\d*)/"
-        iterregex = r".*iter-(\d*)/"
-        if (
-            re.match(realregex, parameterfilename)
-            and "Realization" not in transposed.columns
-        ):
-            transposed.insert(
-                0,
-                "Realization",
-                re.match(realregex, parameterfilename).group(1),  # type: ignore
-            )
-        if re.match(iterregex, parameterfilename) and "Iter" not in transposed.columns:
-            transposed.insert(
-                0,
-                "Iter",
-                re.match(iterregex, parameterfilename).group(1),  # type: ignore
-            )
+        path_metadata = get_metadata_from_path(parameterfilename.resolve())
+        if path_metadata is not None:
+            case_folder, iter_folder, iteration, real = path_metadata
+            transposed["ENSEMBLESET"] = case_folder
+            transposed["ENSEMBLE"] = iter_folder
+            transposed["ITER"] = iteration
+            transposed["REAL"] = real
+        dfs.append(transposed)
 
-        ens = pd.concat([ens, transposed], sort=True)
+    if not dfs:
+        raise ValueError("No parameterfiles was found, check the input path provided")
+    ens = pd.concat(dfs)
+
+    metadata_columns = [col for col in possible_metadata_columns if col in ens]
+    parameter_columns = [col for col in ens.columns if col not in metadata_columns]
+
+    # reorder dataframe and sort by ensemble and realization if present
+    ens = ens[metadata_columns + parameter_columns]
+    if "REAL" in metadata_columns:
+        ens = ens.sort_values(["ENSEMBLE", "REAL"])
 
     if args.clean:
         # Users wants the script to write back to parameters.txt a
@@ -214,23 +239,21 @@ def params2csv_main(args: argparse.Namespace) -> None:
         # parameters is equal in an entire ensemble, and so that
         # duplicate keys are removed Parameters only existing in some
         # realizations will be NaN-padded in the others.
-        ensfilenames = ens.reset_index()["filename"]
-        ensidx = ens.reset_index().drop(["index", "filename"], axis=1)
-        for row in list(ensidx.index.values):
-            paramfile = ensfilenames.loc[row]
+        for paramfile, realdf in ens.groupby(args.filenamecolumnname):
             shutil.copyfile(paramfile, paramfile + ".backup")
             logger.info("Writing to %s", paramfile)
-            ensidx.loc[row].to_csv(paramfile, sep=" ", na_rep="NaN", header=False)
+            realdf = realdf[parameter_columns].transpose()
+            realdf.to_csv(paramfile, sep=" ", na_rep="NaN", header=False)
 
     # Drop constant columns:
     if not args.keepconstantcolumns:
-        for col in ens.columns:
+        for col in parameter_columns:
             if len(ens[col].unique()) == 1:
                 del ens[col]
                 logger.warning("Dropping constant column %s", col)
 
     ens.to_csv(args.output, index=False)
-    logger.info("%s parameterfiles written to %s", parsedfiles, args.output)
+    logger.info("%s parameterfiles written to %s", len(dfs), args.output)
 
 
 def main() -> None:
@@ -249,6 +272,34 @@ def legacy_ertscript_workflow(config) -> None:
     workflow.description = DESCRIPTION
     workflow.examples = WORKFLOW_EXAMPLE
     workflow.category = CATEGORY
+
+
+def get_metadata_from_path(paramfile: Path) -> tuple[str, str, int, int] | None:
+    """Get some metadata from the Path object"""
+
+    real_path = get_realization_path(paramfile)
+    if not real_path:
+        return None
+
+    real = get_number_from_folder(real_path.stem)
+    case_folder = real_path.parent.stem
+
+    # if real folder is direct parent to runpath, there is no iter
+    iter_folder = paramfile.parent.stem if real_path != paramfile.parent else "iter-0"
+    iteration = (
+        get_number_from_folder(iter_folder) if iter_folder.startswith("iter-") else 0
+    )
+    return case_folder, iter_folder, iteration, real
+
+
+def get_realization_path(path: Path) -> Path | None:
+    """Retrive the realization path, return None if not found"""
+    return next((p for p in path.parents if p.stem.startswith("realization-")), None)
+
+
+def get_number_from_folder(foldername: str) -> int:
+    """Retrive the integer after the '-' from the folder name"""
+    return int(foldername.split("-")[-1])
 
 
 if __name__ == "__main__":
