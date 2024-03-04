@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.params2csv.params2csv &mdash; subscript 1.2.1.dev14+gf29eae5b documentation</title>
+  <title>subscript.params2csv.params2csv &mdash; subscript 1.3.1.dev1+ga9303b51 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=aa4e5026"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=d2e50530"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.2.1.dev14+gf29eae5b
+                1.3.1.dev1+ga9303b51
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -195,12 +195,40 @@ calling params2csv_main()</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_metadata_from_path">
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_metadata_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paramfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_metadata_from_path" title="Permalink to this definition"></a></dt>
+<dd><p>Get some metadata from the Path object</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_number_from_folder">
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_number_from_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">foldername</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_number_from_folder" title="Permalink to this definition"></a></dt>
+<dd><p>Retrive the integer after the ‘-’ from the folder name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_parser">
 <span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_parser" title="Permalink to this definition"></a></dt>
 <dd><p>Set up parser for command line utility</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_realization_path">
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_realization_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_realization_path" title="Permalink to this definition"></a></dt>
+<dd><p>Retrive the realization path, return None if not found</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">Path | None</span></p>
 </dd>
 </dl>
 </dd></dl>
