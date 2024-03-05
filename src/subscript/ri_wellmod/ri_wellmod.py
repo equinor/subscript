@@ -227,6 +227,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
 
     # Start with trying to find standard install, then search RI_HOME
     resinsight_exe = get_resinsight_exe()
+    logger.debug(resinsight_exe)
     if not resinsight_exe:
         return None
 
@@ -246,6 +247,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
             console=console_mode,
             command_line_parameters=command_line_parameters,
         )
+        logger.debug("Launched")
     except Exception as any_exception:  # pylint: disable=broad-except
         logger.error(str(any_exception))
         logger.debug(
