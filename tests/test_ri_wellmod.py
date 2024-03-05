@@ -108,6 +108,7 @@ def test_main_inputcase(tmp_path, mocker):
             ntg_name,
             "-o",
             outfile,
+            "--debug",
         ],
     )
     ri_wellmod.main()
