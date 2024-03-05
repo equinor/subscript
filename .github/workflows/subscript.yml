@@ -52,10 +52,7 @@ jobs:
 
       - name: Force correct RIPS version
         run: |
-          ResInsight --console --help | grep "ResInsight v. 2021.06" \
-            && pip install rips==2021.6.0.1 || true
-          ResInsight --console --help | grep "ResInsight v. 2020.10" \
-            && pip install rips==2020.10.0.2 || true
+          pip install rips~=`ResInsight --console --help | grep "ResInsight v." | cut -d ' ' -f 3 | sed 's/\b0\+\([1-9]\)/\1/g'`
 
       - name: List all installed packages
         run: pip freeze
