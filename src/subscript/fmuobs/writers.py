@@ -291,10 +291,13 @@ def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     """
     if "DATE" in dframe:
         dframe = dframe.copy()
-        dframe["DATE"] = dframe["DATE"].astype(str)
-        dframe["DATE"].replace("NaT", np.nan, inplace=True)
-        dframe["DATE"].replace("NaN", np.nan, inplace=True)
-        dframe["DATE"].replace("nan", np.nan, inplace=True)
+        dframe["DATE"] = (
+            dframe["DATE"]
+            .astype(str)
+            .replace(["NaT", "NaN", "nan"], np.nan)
+            .infer_objects()
+        )
+
     return dframe
 
 

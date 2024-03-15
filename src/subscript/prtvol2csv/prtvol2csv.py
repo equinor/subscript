@@ -323,7 +323,11 @@ def prtvol2df(
     and add REGION and ZONE parameter.
     """
     # Concatenate dataframes horizontally. Both are/must be indexed by FIPNUM:
-    volumes = pd.concat([simvolumes_df, resvolumes_df], axis=1).fillna(value=0.0)
+    volumes = (
+        pd.concat([simvolumes_df, resvolumes_df], axis=1)
+        .apply(pd.to_numeric)
+        .fillna(value=0.0)
+    )
 
     if fipmapper is not None:
         if fipmapper.has_fip2region:

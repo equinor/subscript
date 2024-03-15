@@ -319,7 +319,7 @@ def csv_stack(
         # the rows that emerged from the stacking. If you use the
         # 'all' pivottype, then you will get some NaN-values in the
         # MultiIndex columns that are intentional.
-        dframe[nostackcolumnnames] = dframe[nostackcolumnnames].fillna(method="ffill")
+        dframe[nostackcolumnnames] = dframe[nostackcolumnnames].ffill()
 
         dframe = dframe.reset_index()
 
