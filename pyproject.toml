@@ -51,7 +51,6 @@ dependencies = [
     "seaborn",
     "segyio",
     "shapely",
-    "urllib3<2",
     "xlrd",
     "xtgeo",
 ]
