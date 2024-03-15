@@ -369,13 +369,13 @@ def calc_presentvalue_df(
     prodecon = pd.concat([summary_df, econ_df], axis=1, sort=True)
     prodecon[["oilprice", "gasprice", "usdtonok", "discountrate"]] = prodecon[
         ["oilprice", "gasprice", "usdtonok", "discountrate"]
-    ].fillna(method="ffill")
+    ].ffill()
     # Avoid ffilling costs...
     # There could be situations where we need to bfill prices as well,
     # if the user provided a econtable
     prodecon[["oilprice", "gasprice", "usdtonok", "discountrate"]] = prodecon[
         ["oilprice", "gasprice", "usdtonok", "discountrate"]
-    ].fillna(method="bfill")
+    ].bfill()
     prodecon.fillna(value=0, inplace=True)  # Zero-pad other data (costs)
 
     prodecon["deltayears"] = prodecon.index - discountto

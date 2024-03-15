@@ -434,10 +434,10 @@ def compute_date_from_days(dframe: pd.DataFrame, starttime: Optional[str] = None
             dframe["DATE"] = np.nan
         start = pd.to_datetime(starttime)
         date_needed_rows = ~dframe["DAYS"].isna() & dframe["DATE"].isna()
+        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
         dframe.loc[date_needed_rows, "DATE"] = start + pd.to_timedelta(
             dframe.loc[date_needed_rows, "DAYS"], "d"
         )
-        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
     return dframe

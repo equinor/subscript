@@ -950,7 +950,7 @@ Initializing model
                         low=near_fracture_vug_fraction_dist[0],
                         high=near_fracture_vug_fraction_dist[1],
                         size=1,
-                    )
+                    )[0]
                     * self._total_matrix_cells
                 )
             )
@@ -1020,7 +1020,7 @@ Initializing model
                         low=near_streak_vug_fraction_dist[0],
                         high=near_streak_vug_fraction_dist[1],
                         size=1,
-                    )
+                    )[0]
                     * self._total_matrix_cells
                 )
             )
@@ -1077,7 +1077,7 @@ Initializing model
                         low=random_vug_fraction_dist[0],
                         high=random_vug_fraction_dist[1],
                         size=1,
-                    )
+                    )[0]
                     * self._total_matrix_cells
                 )
             )
