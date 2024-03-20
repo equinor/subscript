@@ -23,7 +23,18 @@ def test_read_tabular_file(drogon_project, table_file_name):
 
 
 def test_convert_config_to_dict(csv_config):
+    """Test function convert_df_to_dict
+
+    Args:
+        csv_config (pandas.DataFrame): the dataframe to put through function
+    """
+    required_fields = ["name", "content", "input_file"]
     config_dict = conf.convert_df_to_dict(conf.read_tabular_file(csv_config))
     assert isinstance(
         config_dict, list
     ), f"Should be list but is {type(config_dict)} ({config_dict})"
+    for i, element in enumerate(config_dict):
+        for key in required_fields:
+            assert (
+                key in element.keys()
+            ), f"{key} not in required fields {required_fields} for line {i}"
