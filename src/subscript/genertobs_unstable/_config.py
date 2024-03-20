@@ -6,7 +6,7 @@ from pathlib import Path, PosixPath
 import pandas as pd
 
 
-def _ensure_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
+def _ensure_low_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     """Make all column names lower case
 
     Args:
@@ -15,7 +15,7 @@ def _ensure_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: the modified dataframe
     """
-    dataframe.columns = [col.upper() for col in dataframe.columns]
+    dataframe.columns = [col.lower() for col in dataframe.columns]
     return dataframe
 
 
@@ -56,7 +56,7 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
             "File is not parsed correctly, check if there is something wrong!"
         )
 
-    return _ensure_caps_columns(dataframe)
+    return _ensure_low_caps_columns(dataframe)
 
 
 def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
