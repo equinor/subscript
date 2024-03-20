@@ -69,10 +69,8 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
         dict: the dictionary derived from dataframe
     """
     logger = logging.getLogger(__name__ + ".convert_df_to_dict")
-    frame.index = frame.name
-    frame.drop("name")
-    logger.debug("Prepped dataframe prior to conversion %s", frame)
-    frame_as_dict = frame.to_dict("index")
+    logger.debug("dataframe at input %s", frame)
+    frame_as_dict = frame.to_dict("records")
     logger.debug("Frame as dictionary %s", frame_as_dict)
     return frame_as_dict
 
