@@ -4,6 +4,7 @@ import logging
 from typing import Union, List
 from pathlib import Path, PosixPath
 import pandas as pd
+from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 
 def _ensure_low_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -69,6 +70,13 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
         dict: the dictionary derived from dataframe
     """
     logger = logging.getLogger(__name__ + ".convert_df_to_dict")
+    unique_contents = frame.content.unique()
+    for unique_content in unique_contents:
+        if not hasattr(ContentEnum, unique_content):
+            wrong_lines = frame.content == unique_content
+            raise ValueError(
+                f"{unique_content} is not a valid content  (used on {wrong_lines.sum()} lines",
+            )
     logger.debug("dataframe at input %s", frame)
     frame_as_dict = frame.to_dict("records")
     logger.debug("Frame as dictionary %s", frame_as_dict)
