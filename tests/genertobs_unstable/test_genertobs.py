@@ -20,3 +20,10 @@ def test_read_tabular_file(drogon_project, table_file_name):
         drogon_project / "ert/input/observations/" / table_file_name
     )
     assert table.shape[1] > 1, f"{table_file_name} read as only one column"
+
+
+def test_convert_config_to_dict(csv_config):
+    config_dict = conf.convert_df_to_dict(conf.read_tabular_file(csv_config))
+    assert isinstance(
+        config_dict, list
+    ), f"Should be list but is {type(config_dict)} ({config_dict})"
