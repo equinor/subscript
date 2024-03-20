@@ -59,6 +59,24 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
     return _ensure_low_caps_columns(dataframe)
 
 
+def convert_df_to_dict(frame: pd.DataFrame) -> dict:
+    """Converts dataframe to dictionary format
+
+    Args:
+        frame (pd.DataFrame): the input dataframe
+
+    Returns:
+        dict: the dictionary derived from dataframe
+    """
+    logger = logging.getLogger(__name__ + ".convert_df_to_dict")
+    frame.index = frame.name
+    frame.drop("name")
+    logger.debug("Prepped dataframe prior to conversion %s", frame)
+    frame_as_dict = frame.to_dict("index")
+    logger.debug("Frame as dictionary %s", frame_as_dict)
+    return frame_as_dict
+
+
 def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
     """Extract rft from file
 
