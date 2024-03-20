@@ -1,5 +1,5 @@
-from subscript.genertobs_unstable import _config as conf
 import pytest
+from subscript.genertobs_unstable import _config as conf
 
 
 @pytest.mark.parametrize(
