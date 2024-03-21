@@ -149,7 +149,6 @@ def extract_from_row(
         label = Path(input_file).stem.upper()
     else:
         label = row["label"]
-    obs_type = row["observation_type"]
 
     content = row["content"]
 
