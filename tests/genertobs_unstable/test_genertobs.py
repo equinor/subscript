@@ -42,13 +42,27 @@ def test_convert_config_to_dict(csv_config):
 
 
 @pytest.mark.parametrize(
-    "line_input",
+    "line_input, shape_obs, shape_tofmuobs",
     [
-        ["summary observations", "summary", "drogon_summary_input.txt", "no", "10.00%"],
-        ["rft pressure observations", "rft", "drogon_rft_input.ods", "yes", "5"],
+        (
+            [
+                "summary observations",
+                "summary",
+                "drogon_summary_input.txt",
+                "no",
+                "10.00%",
+            ],
+            (20, 8),
+            (20, 8),
+        ),
+        (
+            ["rft pressure observations", "rft", "drogon_rft_input.ods", "yes", "5"],
+            (3, 15),
+            (2, 4),
+        ),
     ],
 )
-def test_extract_from_row(line_input, drogon_project):
+def test_extract_from_row(line_input, shape_obs, shape_tofmuobs, drogon_project):
     """Test function extract_from_row
 
     Args:
@@ -61,8 +75,15 @@ def test_extract_from_row(line_input, drogon_project):
     obs, to_fmuobs = conf.extract_from_row(
         summary_row, drogon_project / "ert/input/observations"
     )
+    if shape_obs == shape_tofmuobs:
+        assert obs.equals(to_fmuobs), "dataframes have same shape but aren't equal"
+    assert obs.shape == shape_obs
+    assert to_fmuobs.shape == shape_tofmuobs
     print("\nObservations: \n", obs)
     print("\nTo fmuobs: \n", to_fmuobs)
+    for df in (to_fmuobs, obs):
+        duplex = df.duplicated()
+        assert duplex.sum() == 0, f"{df.loc[duplex]} are duplicated lines"
 
 
 def test_read_config_file(csv_config):
@@ -72,5 +93,5 @@ def test_read_config_file(csv_config):
         csv_config (PosixPath): path to config file
     """
     to_fmuobs, observation_data = conf.read_config_file(csv_config)
-    print(to_fmuobs)
-    print(observation_data)
+    print("\nObservations: \n", observation_data)
+    print("\nTo fmuobs: \n", to_fmuobs)
