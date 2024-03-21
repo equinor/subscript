@@ -142,16 +142,15 @@ def extract_from_row(
         pd.DataFrame: the extracted results
     """
     logger = logging.getLogger(__name__ + ".extract_from_row")
-
-    input_file = parent_folder / row["INPUT_FILE"]
+    input_file = parent_folder / row["input_file"]
     logger.debug("File reference in row %s", input_file)
-    if row["LABEL"] != "":
+    if row["label"] != "":
         label = Path(input_file).stem.upper()
     else:
-        label = row["LABEL"]
-    obs_type = row["OBSERVATION_TYPE"]
+        label = row["label"]
+    obs_type = row["observation_type"]
 
-    content = row["CONTENT"]
+    content = row["content"]
 
     if ~isinstance(content, str):
         content = "summary"
