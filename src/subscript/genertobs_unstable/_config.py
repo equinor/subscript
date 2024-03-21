@@ -194,7 +194,7 @@ def extract_from_row(
 
 
 def read_obs_frame(input_file: PosixPath, label: str, content: str) -> tuple:
-    """Read observation table and generate summary
+    """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
         input_file (PosixPath): the file where the data is
