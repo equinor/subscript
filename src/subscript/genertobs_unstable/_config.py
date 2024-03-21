@@ -158,40 +158,40 @@ def extract_from_row(
 
     obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
 
-    file_contents = read_obs_frame(input_file, label, content)
-    file_contents["OUTPUT"] = obs_file
+    obs_frame = read_obs_frame(input_file, label, content)
+    obs_frame["output"] = obs_file
     class_name = "GENERAL_OBSERVATION"
     if obs_type == "summary":
-        return_summary = file_contents
-        return_summary["CLASS"] = "SUMMARY_OBSERVATION"
+        to_fmuobs = obs_frame
+        to_fmuobs["CLASS"] = "SUMMARY_OBSERVATION"
         class_name = "SUMMARY_OBSERVATION"
         obs_file = "main file"
 
     elif content == "rft":
 
-        return_summary = pd.DataFrame(
-            (str(input_file.parent) + "/" + file_contents["WELL_NAME"] + ".obs").values,
+        to_fmuobs = pd.DataFrame(
+            (str(input_file.parent) + "/" + obs_frame["WELL_NAME"] + ".obs").values,
             columns=["OBS_FILE"],
         )
-        file_contents["OUTPUT"] = return_summary
+        obs_frame["OUTPUT"] = to_fmuobs
 
-        return_summary["LABEL"] = label + "_" + file_contents["WELL_NAME"]
-        return_summary["CLASS"] = class_name
-        return_summary["DATA"] = label + "_" + file_contents["WELL_NAME"]
+        to_fmuobs["LABEL"] = label + "_" + obs_frame["WELL_NAME"]
+        to_fmuobs["CLASS"] = class_name
+        to_fmuobs["DATA"] = label + "_" + obs_frame["WELL_NAME"]
         logger.debug("RFT")
-        logger.debug("These are the results %s", return_summary)
+        logger.debug("These are the results %s", to_fmuobs)
 
     else:
 
         class_name = "GENERAL_OBSERVATION"
-        return_summary = pd.DataFrame(
+        to_fmuobs = pd.DataFrame(
             [[class_name, label, label, obs_file]],
             columns=["CLASS", "LABEL", "DATA", "OBS_FILE"],
         )
 
-    file_contents["CONTENT"] = content
+    obs_frame["CONTENT"] = content
 
-    return file_contents, return_summary
+    return obs_frame, to_fmuobs
 
 
 def read_obs_frame(input_file: PosixPath, label: str, content: str) -> tuple:
@@ -208,15 +208,15 @@ def read_obs_frame(input_file: PosixPath, label: str, content: str) -> tuple:
 
     if pd.isna(content):
         content = "SUMMARY"
-        file_contents = extract_summary(read_tabular_file(input_file))
+        obs_frame = extract_summary(read_tabular_file(input_file))
     elif content.upper() != "RFT":
         content = "SUMMARY"
-        file_contents = extract_general(read_tabular_file(input_file), label)
+        obs_frame = extract_general(read_tabular_file(input_file), label)
     else:
         content = "RFT"
-        file_contents = extract_rft(read_tabular_file(input_file))
+        obs_frame = extract_rft(read_tabular_file(input_file))
 
-    return file_contents
+    return obs_frame
 
 
 def extract_summary(in_frame: pd.DataFrame, key_identifier="VECTOR") -> dict:
