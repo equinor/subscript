@@ -97,19 +97,19 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
     all_rft_obs = []
     unique_ids = "unique_identifier"
     in_frame[unique_ids] = (
-        in_frame["WELL_NAME"] + "_" + in_frame["DATE"].astype(str).str.replace("-", "_")
+        in_frame["well_name"] + "_" + in_frame["date"].astype(str).str.replace("-", "_")
     )
     restart = 1
     for unique_id in in_frame[unique_ids].unique():
         logger.debug("Making obs frame for %s", unique_id)
         key_frame = in_frame.loc[in_frame[unique_ids] == unique_id]
         report_frame = key_frame.copy()
-        report_frame["RESTART"] = restart
+        report_frame["restart"] = restart
         restart += 1
         all_rft_obs.append(report_frame)
     all_rft_obs = pd.concat(all_rft_obs)
-    all_rft_obs["LABLE"] = (
-        all_rft_obs[unique_ids] + "_" + all_rft_obs["RESTART"].astype(str)
+    all_rft_obs["label"] = (
+        all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
     return all_rft_obs
 
