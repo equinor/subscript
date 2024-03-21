@@ -284,7 +284,7 @@ def read_config_file(
         parent_folder = Path(parent_folder)
 
     obs_data = []
-    obs_sum_frame = []
+    frame_to_fmuobs = []
 
     for rnr, row in config.iterrows():
         if row["active"] != "yes":
@@ -293,14 +293,14 @@ def read_config_file(
 
         row_obs, row_summary = extract_from_row(row, parent_folder)
         obs_data.append(row_obs)
-        obs_sum_frame.append(row_summary)
+        frame_to_fmuobs.append(row_summary)
 
-    logger.debug("Summary to be exported is %s", obs_sum_frame)
-    logger.debug("Observation data to be exported is %s", obs_sum_frame)
-    obs_sum_frame = pd.concat(obs_sum_frame)
-    obs_sum_frame.drop_duplicates(inplace=True)
+    logger.debug("Summary to be exported is %s", frame_to_fmuobs)
+    logger.debug("Observation data to be exported is %s", frame_to_fmuobs)
+    frame_to_fmuobs = pd.concat(frame_to_fmuobs)
+    frame_to_fmuobs.drop_duplicates(inplace=True)
     obs_data = pd.concat(obs_data)
-    return obs_sum_frame, obs_data
+    return frame_to_fmuobs, obs_data
 
 
 def generate_rft_obs_files(rft_obs_data: pd.DataFrame, path):
