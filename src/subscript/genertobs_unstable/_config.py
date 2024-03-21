@@ -164,7 +164,6 @@ def extract_from_row(
         row_type = "timeseries"
         to_fmuobs = obs_frame
         to_fmuobs["CLASS"] = "SUMMARY_OBSERVATION"
-        class_name = "SUMMARY_OBSERVATION"
         obs_file = "main file"
 
     elif content == "rft":
