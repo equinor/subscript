@@ -143,6 +143,7 @@ def extract_from_row(
     """
     logger = logging.getLogger(__name__ + ".extract_from_row")
     input_file = parent_folder / row["input_file"]
+    # to_fmuobs = pd.DataFrame([row.values], columns=row.index)
     logger.debug("File reference in row %s", input_file)
     if row["label"] != "":
         label = Path(input_file).stem.upper()
