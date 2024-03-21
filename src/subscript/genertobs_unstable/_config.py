@@ -169,16 +169,15 @@ def extract_from_row(
     elif content == "rft":
         row_type = "rft"
         to_fmuobs = pd.DataFrame(
-            (str(input_file.parent) + "/" + obs_frame["WELL_NAME"] + ".obs").values,
+            (str(input_file.parent) + "/" + obs_frame["well_name"] + ".obs").values,
             columns=["OBS_FILE"],
         )
         obs_frame["OUTPUT"] = to_fmuobs
 
-        to_fmuobs["LABEL"] = label + "_" + obs_frame["WELL_NAME"]
+        to_fmuobs["LABEL"] = label + "_" + obs_frame["well_name"]
         to_fmuobs["CLASS"] = class_name
-        to_fmuobs["DATA"] = label + "_" + obs_frame["WELL_NAME"]
+        to_fmuobs["DATA"] = label + "_" + obs_frame["well_name"]
         logger.debug("RFT")
-        logger.debug("These are the results %s", to_fmuobs)
 
     else:
         row_type = "general"
