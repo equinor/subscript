@@ -70,6 +70,7 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
         dict: the dictionary derived from dataframe
     """
     logger = logging.getLogger(__name__ + ".convert_df_to_dict")
+    frame.content.replace({"summary": "timeseries"}, inplace=True)
     unique_contents = frame.content.unique()
     for unique_content in unique_contents:
         if not hasattr(ContentEnum, unique_content):
