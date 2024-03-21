@@ -153,8 +153,8 @@ def extract_from_row(
 
     content = row["content"]
 
-    if ~isinstance(content, str):
-        content = "summary"
+    # if ~isinstance(content, str):
+    #     content = "summary"
 
     obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
 
