@@ -160,7 +160,7 @@ def extract_from_row(
     obs_frame = read_obs_frame(input_file, label, content)
     obs_frame["output"] = obs_file
     class_name = "GENERAL_OBSERVATION"
-    if obs_type == "summary":
+    if obs_type in ["summary", "timeseries"]:
         to_fmuobs = obs_frame
         to_fmuobs["CLASS"] = "SUMMARY_OBSERVATION"
         class_name = "SUMMARY_OBSERVATION"
