@@ -1,4 +1,4 @@
 name,content,input_file,label,active,error
-summary observations,summary,drogon_summary.txt,,no,10.00%
+summary observations,summary,drogon_summary_input.txt,,yes,10.00%
 rft pressure observations,rft,drogon_rft_input.ods,,yes,5
 seismic observations,seismic,drogon_seismic_input.csv,AMP_2020_2018_TOP,yes,1
