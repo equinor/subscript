@@ -187,6 +187,7 @@ def extract_from_row(
         )
 
     obs_frame["CONTENT"] = content
+    to_fmuobs.drop_duplicates(inplace=True)
     logger.debug("Row is %s (%s)", row_type, row)
     logger.debug("These are the observation results: %s", obs_frame)
     logger.debug("These are the results to send to fmuobs: %s", to_fmuobs)
@@ -298,7 +299,6 @@ def read_config_file(
     logger.debug("Summary to be exported is %s", frame_to_fmuobs)
     logger.debug("Observation data to be exported is %s", frame_to_fmuobs)
     frame_to_fmuobs = pd.concat(frame_to_fmuobs)
-    frame_to_fmuobs.drop_duplicates(inplace=True)
     obs_data = pd.concat(obs_data)
     return frame_to_fmuobs, obs_data
 
