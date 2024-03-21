@@ -1,4 +1,5 @@
 import pytest
+import pandas as pd
 from subscript.genertobs_unstable import _config as conf
 
 
@@ -38,6 +39,30 @@ def test_convert_config_to_dict(csv_config):
             assert (
                 key in element.keys()
             ), f"{key} not in required fields {required_fields} for line {i}"
+
+
+@pytest.mark.parametrize(
+    "line_input",
+    [
+        ["summary observations", "summary", "drogon_summary_input.txt", "no", "10.00%"],
+        ["rft pressure observations", "rft", "drogon_rft_input.ods", "yes", "5"],
+    ],
+)
+def test_extract_from_row(line_input, drogon_project):
+    """Test function extract_from_row
+
+    Args:
+        line_input (pd.Series): a row to test
+        drogon_project (PosixPath): parent folder for files to be read
+    """
+    summary_row = pd.Series(
+        line_input, index=["name", "content", "input_file", "label", "active" "error"]
+    )
+    obs, to_fmuobs = conf.extract_from_row(
+        summary_row, drogon_project / "ert/input/observations"
+    )
+    print("\nObservations: \n", obs)
+    print("\nTo fmuobs: \n", to_fmuobs)
 
 
 def test_read_config_file(csv_config):

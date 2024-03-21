@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 import pytest
 
-logging.basicConfig(level="DEBUG")
+# logging.basicConfig(level="DEBUG")
 LOGGER = logging.getLogger(__name__)
 
 
