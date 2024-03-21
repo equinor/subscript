@@ -26,7 +26,7 @@ def test_convert_config_to_dict(csv_config):
     """Test function convert_df_to_dict
 
     Args:
-        csv_config (pandas.DataFrame): the dataframe to put through function
+        csv_config (PosixPath): the dataframe to put through function
     """
     required_fields = ["name", "content", "input_file"]
     config_dict = conf.convert_df_to_dict(conf.read_tabular_file(csv_config))
@@ -38,3 +38,14 @@ def test_convert_config_to_dict(csv_config):
             assert (
                 key in element.keys()
             ), f"{key} not in required fields {required_fields} for line {i}"
+
+
+def test_read_config_file(csv_config):
+    """Test reading of config file
+
+    Args:
+        csv_config (PosixPath): path to config file
+    """
+    to_fmuobs, observation_data = conf.read_config_file(csv_config)
+    print(to_fmuobs)
+    print(observation_data)
