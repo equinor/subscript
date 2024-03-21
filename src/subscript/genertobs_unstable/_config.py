@@ -220,13 +220,13 @@ def read_obs_frame(input_file: PosixPath, label: str, content: str) -> tuple:
     return obs_frame
 
 
-def extract_summary(in_frame: pd.DataFrame, key_identifier="VECTOR") -> dict:
+def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> dict:
     """Extract summary to pd.Dataframe format for fmu obs
 
     Args:
         in_frame (pd.DataFrame): the dataframe to extract from
         key_identifier (str, optional): name of column to make lables.
-        Defaults to "VECTOR".
+        Defaults to "vector".
 
     Returns:
         dict: the results as a dictionary
