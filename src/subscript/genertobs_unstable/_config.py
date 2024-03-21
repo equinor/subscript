@@ -160,14 +160,15 @@ def extract_from_row(
     obs_frame = read_obs_frame(input_file, label, content)
     obs_frame["output"] = obs_file
     class_name = "GENERAL_OBSERVATION"
-    if obs_type in ["summary", "timeseries"]:
+    if content in ["summary", "timeseries"]:
+        row_type = "timeseries"
         to_fmuobs = obs_frame
         to_fmuobs["CLASS"] = "SUMMARY_OBSERVATION"
         class_name = "SUMMARY_OBSERVATION"
         obs_file = "main file"
 
     elif content == "rft":
-
+        row_type = "rft"
         to_fmuobs = pd.DataFrame(
             (str(input_file.parent) + "/" + obs_frame["WELL_NAME"] + ".obs").values,
             columns=["OBS_FILE"],
@@ -181,14 +182,16 @@ def extract_from_row(
         logger.debug("These are the results %s", to_fmuobs)
 
     else:
-
-        class_name = "GENERAL_OBSERVATION"
+        row_type = "general"
         to_fmuobs = pd.DataFrame(
             [[class_name, label, label, obs_file]],
             columns=["CLASS", "LABEL", "DATA", "OBS_FILE"],
         )
 
     obs_frame["CONTENT"] = content
+    logger.debug("Row is %s (%s)", row_type, row)
+    logger.debug("These are the observation results: %s", obs_frame)
+    logger.debug("These are the results to send to fmuobs: %s", to_fmuobs)
 
     return obs_frame, to_fmuobs
 
