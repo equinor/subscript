@@ -113,7 +113,8 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
     all_rft_obs["label"] = (
         all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
-    return all_rft_obs
+    all_rft_obs.drop("unique_identifier", axis=1, inplace=True)
+    return all_rft_obs.to_dict("records")
 
 
 def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
