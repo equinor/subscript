@@ -43,6 +43,7 @@ def test_extract_summary(drogon_project):
             drogon_project / "ert/input/observations/drogon_summary_input.txt"
         )
     )
+    assert_list_of_dicts(results)
 
 
 def test_extract_rft(drogon_project):
