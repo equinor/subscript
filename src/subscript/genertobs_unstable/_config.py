@@ -95,6 +95,7 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: modified results from dataframe
     """
     logger = logging.getLogger(__name__ + ".extract_rft")
+    in_frame["date"] = pd.to_datetime(in_frame["date"]).dt.strftime("%Y-%m-%d")
     all_rft_obs = []
     unique_ids = "unique_identifier"
     in_frame[unique_ids] = (
