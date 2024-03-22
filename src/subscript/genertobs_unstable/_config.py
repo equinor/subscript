@@ -5,6 +5,7 @@ from typing import Union, List
 from pathlib import Path, PosixPath
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
+from subscript.fmuobs.writers import summary_df2obsdict
 
 
 def _ensure_low_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -262,7 +263,8 @@ def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> dict:
         + all_summary_obs["label"].astype(str)
     )
     logger.debug("Returning results %s", all_summary_obs)
-    return all_summary_obs
+    all_summary_obs.columns = [name.upper() for name in all_summary_obs.columns]
+    return summary_df2obsdict(all_summary_obs)
 
 
 def read_config_file(
