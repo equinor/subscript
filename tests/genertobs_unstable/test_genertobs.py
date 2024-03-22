@@ -23,6 +23,20 @@ def test_read_tabular_file(drogon_project, table_file_name):
     assert table.shape[1] > 1, f"{table_file_name} read as only one column"
 
 
+def assert_list_of_dicts(results):
+    assert isinstance(results, list), f"Expected list, got {type(results)} ({results})"
+    for i, element in enumerate(results):
+        assert isinstance(
+            element, dict
+        ), f"Expected element to be dict, but is {type(element)} (nr {i})"
+
+
+def assert_dataframe(results):
+    assert isinstance(
+        results, pd.DataFrame
+    ), f"Expected pd.Dataframe, got {type(results) ({results})}"
+
+
 def test_extract_summary(drogon_project):
     results = conf.extract_summary(
         conf.read_tabular_file(
