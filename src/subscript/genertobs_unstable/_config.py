@@ -244,12 +244,12 @@ def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> dict:
         report_frame = key_frame.copy()
         logger.debug("shape of data for %s %s", key, report_frame.shape)
         if key_frame.shape[0] == 1:
-            logger.debug("Just one row")
+            logger.debug("Just one row, using date as part of lable")
             obs_lable = key_frame["date"].values.tolist().pop().replace("-", "_")
             logger.debug(obs_lable)
 
         else:
-            logger.debug("Multiple rows")
+            logger.debug("Multiple rows, lable will be restart number")
             logger.debug(key_frame[key_identifier].shape)
             obs_lable = range(key_frame.shape[0])
             logger.debug(range(key_frame.shape[0]))
