@@ -378,6 +378,36 @@ def read_yaml_config(config_file_name: str) -> dict:
     return config
 
 
+def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
+    """Generate tuple with dict and dataframe from config dict
+
+    Args:
+        config (dict): the configuration dictionary
+        parent (PosixPath): path of parent folder of file containing dict
+
+    Returns:
+        tuple: dictionary with observations to send to sumo,
+               pd.Dataframe to send to fmuobs
+    """
+    logger = logging.getLogger(__name__ + ".generate_data_from_config")
+    data = []
+    summaries = []
+    for config_element in config:
+        data_element = {}
+        data_element["name"] = config_element["name"]
+        data_element["content"] = config_element["type"]
+        data_element["observations"], obs_summary = extract_from_row(
+            config_element, parent
+        )
+        data.append(data_element)
+        summaries.append(obs_summary)
+
+        logger.debug("These are the observations:\n%s", data_element)
+        logger.debug("And this is the summary:\n%s", obs_summary)
+    summaries = pd.concat(summaries)
+    return data, summaries
+
+
 def generate_rft_obs_files(rft_obs_data: pd.DataFrame, path):
     """generate ert observations files for rft from observational data
 
