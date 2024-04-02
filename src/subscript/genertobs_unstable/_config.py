@@ -308,6 +308,39 @@ def read_config_file(
     return frame_to_fmuobs, obs_data
 
 
+def validate_config(config: dict):
+    """Validate that content of dictionary is correct
+
+    Args:
+        config (dict): the dictionary to check
+
+    Raises:
+        KeyError: if key name not in config
+        AssertionError: if incorrect keys are used or incorrect type is used
+    """
+    valids = {"name", "type", "observation"}
+    optionals = {"error", "min_error", "max_error"}
+    for i, element in enumerate(config):
+        try:
+            name = element["name"]
+        except KeyError as keye:
+            raise KeyError(f"Key {'name'} not in obs number {i}") from keye
+        common = valids.intersection(element.keys())
+        el_type = element["type"]
+        assert sorted(common) == sorted(
+            valids
+        ), f"{name}, does not contain all of {sorted(valids)}, only {sorted(common)}"
+
+        assert hasattr(
+            ContentEnum, el_type
+        ), f"{el_type} not in {ContentEnum._member_names_}"
+        valids.update(optionals)
+        non_valid = set(element.keys()).difference(valids)
+        assert (
+            len(non_valid) == 0
+        ), f"{non_valid} are found in config, these are not allowed"
+
+
 def read_yaml_config(config_file_name: str) -> dict:
     """Read configuration from file
 
@@ -329,6 +362,7 @@ def read_yaml_config(config_file_name: str) -> dict:
     except OSError as ose:
         raise RuntimeError(f"Could not read {config_file_name}") from ose
     logger.debug("Returning %s", config)
+    validate_config(config)
     return config
 
 
