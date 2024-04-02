@@ -2,6 +2,7 @@
 
 import logging
 from pathlib import Path
+import yaml
 import pytest
 
 # logging.basicConfig(level="DEBUG")
@@ -22,9 +23,18 @@ def _fix_csv_config(drogon_project):
     return config_path
 
 
-@pytest.fixture(scope="session", name="yaml_config")
-def _fix_yaml_config():
+@pytest.fixture(scope="session", name="yaml_config_file")
+def _fix_yaml_config_file():
     config_path = Path(__file__).parent / "data/expected_results.yml"
     string_config = str(config_path)
     assert config_path.exists(), f"{string_config} does not exist"
     return string_config
+
+
+@pytest.fixture(scope="session", name="yaml_config")
+def _fix_yaml_config(yaml_config_file):
+    config = {}
+    with open(yaml_config_file, "r", encoding="utf-8") as stream:
+        config = yaml.safe_load(stream)
+
+    return config
