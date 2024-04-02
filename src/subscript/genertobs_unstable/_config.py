@@ -319,8 +319,9 @@ def validate_config(config: dict):
         AssertionError: if incorrect keys are used or incorrect type is used
     """
     valids = {"name", "type", "observation"}
-    optionals = {"error", "min_error", "max_error"}
+    optionals = {"error", "min_error", "max_error", "plugin_arguments", "metadata"}
     for i, element in enumerate(config):
+        el_valids = valids.copy()
         try:
             name = element["name"]
         except KeyError as keye:
@@ -334,11 +335,22 @@ def validate_config(config: dict):
         assert hasattr(
             ContentEnum, el_type
         ), f"{el_type} not in {ContentEnum._member_names_}"
-        valids.update(optionals)
-        non_valid = set(element.keys()).difference(valids)
+        el_valids.update(optionals)
+        non_valid = set(element.keys()).difference(el_valids)
         assert (
             len(non_valid) == 0
         ), f"{non_valid} are found in config, these are not allowed"
+
+        try:
+            error = str(element["error"])
+            if "%" not in error:
+                invalids = ["min_error", "max_error"]
+                for invalid in invalids:
+                    assert (
+                        invalid not in element.keys()
+                    ), f"Obs {name}: {invalid} should not be used if absolute error used"
+        except KeyError:
+            logger.debug("No global error added, nothing to check")
 
 
 def read_yaml_config(config_file_name: str) -> dict:
