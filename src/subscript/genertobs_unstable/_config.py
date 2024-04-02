@@ -147,19 +147,12 @@ def extract_from_row(
         pd.DataFrame: the extracted results
     """
     logger = logging.getLogger(__name__ + ".extract_from_row")
-    input_file = parent_folder / row["input_file"]
+    logger.debug("Input row is %s", row)
+    input_file = parent_folder / row["observation"]
     # to_fmuobs = pd.DataFrame([row.values], columns=row.index)
     logger.debug("File reference in row %s", input_file)
-    if row["label"] != "":
-        label = Path(input_file).stem.upper()
-    else:
-        label = row["label"]
-
-    content = row["content"]
-
-    # if ~isinstance(content, str):
-    #     content = "summary"
-
+    label = "unused"
+    content = row["type"]
     obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
 
     obs_frame = read_obs_frame(input_file, label, content)
@@ -173,15 +166,21 @@ def extract_from_row(
 
     elif content == "rft":
         row_type = "rft"
+        logger.debug("Well names are %s", obs_frame["well_name"])
         to_fmuobs = pd.DataFrame(
-            (str(input_file.parent) + "/" + obs_frame["well_name"] + ".obs").values,
+            (
+                str(input_file.parent) + "/" + well_name + ".obs"
+                for well_name in obs_frame["well_name"]
+            ),
             columns=["OBS_FILE"],
         )
         obs_frame["OUTPUT"] = to_fmuobs
 
-        to_fmuobs["LABEL"] = label + "_" + obs_frame["well_name"]
+        to_fmuobs["LABEL"] = [
+            label + "_" + well_name for well_name in obs_frame["well_name"]
+        ]
         to_fmuobs["CLASS"] = class_name
-        to_fmuobs["DATA"] = label + "_" + obs_frame["well_name"]
+        to_fmuobs["DATA"] = to_fmuobs["LABEL"]
         logger.debug("RFT")
 
     else:
