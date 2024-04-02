@@ -2,6 +2,7 @@
 
 import logging
 from typing import Union, List
+import yaml
 from pathlib import Path, PosixPath
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
@@ -305,6 +306,30 @@ def read_config_file(
     frame_to_fmuobs = pd.concat(frame_to_fmuobs)
     obs_data = pd.concat(obs_data)
     return frame_to_fmuobs, obs_data
+
+
+def read_yaml_config(config_file_name: str) -> dict:
+    """Read configuration from file
+
+    Args:
+        config_file_name (str): path to yaml file
+
+    Raises:
+        RuntimeError: If something goes wrong
+
+    Returns:
+        dict: the configuration as dictionary
+    """
+    logger = logging.getLogger(__name__ + ".read_yaml_config")
+
+    config = {}
+    try:
+        with open(config_file_name, "r", encoding="utf-8") as stream:
+            config = yaml.safe_load(stream)
+    except OSError as ose:
+        raise RuntimeError(f"Could not read {config_file_name}") from ose
+    logger.debug("Returning %s", config)
+    return config
 
 
 def generate_rft_obs_files(rft_obs_data: pd.DataFrame, path):
