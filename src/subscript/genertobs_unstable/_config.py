@@ -111,6 +111,7 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
         restart += 1
         all_rft_obs.append(report_frame)
     all_rft_obs = pd.concat(all_rft_obs)
+    logger.debug("concatenated %s", all_rft_obs)
     all_rft_obs["label"] = (
         all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
