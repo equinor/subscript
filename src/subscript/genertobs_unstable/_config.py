@@ -135,7 +135,7 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
 
 
 def extract_from_row(
-    row: pd.Series, parent_folder: Union[str, PosixPath]
+    row: dict, parent_folder: Union[str, PosixPath]
 ) -> List[pd.DataFrame]:
     """Extract results from row in config file
 
