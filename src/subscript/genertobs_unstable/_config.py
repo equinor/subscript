@@ -116,7 +116,7 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
         all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
     all_rft_obs.drop("unique_identifier", axis=1, inplace=True)
-    return all_rft_obs.to_dict("list")
+    return all_rft_obs
 
 
 def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
@@ -199,7 +199,9 @@ def extract_from_row(
     return obs_frame, to_fmuobs
 
 
-def read_obs_frame(input_file: PosixPath, label: str, content: str) -> tuple:
+def read_obs_frame(
+    input_file: PosixPath, content: str, label: str = None
+) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
@@ -224,7 +226,7 @@ def read_obs_frame(input_file: PosixPath, label: str, content: str) -> tuple:
     return obs_frame
 
 
-def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> dict:
+def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> pd.DataFrame:
     """Extract summary to pd.Dataframe format for fmu obs
 
     Args:
@@ -267,7 +269,7 @@ def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> dict:
     )
     logger.debug("Returning results %s", all_summary_obs)
     all_summary_obs.columns = [name.upper() for name in all_summary_obs.columns]
-    return summary_df2obsdict(all_summary_obs)
+    return all_summary_obs
 
 
 def read_config_file(
