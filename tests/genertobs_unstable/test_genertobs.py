@@ -1,5 +1,7 @@
+import os
 import pytest
 import pandas as pd
+import yaml
 from subscript.genertobs_unstable import _config as conf
 
 
@@ -40,10 +42,12 @@ def assert_dataframe(results):
 def test_extract_summary(drogon_project):
     results = conf.extract_summary(
         conf.read_tabular_file(
-            drogon_project / "ert/input/observations/drogon_summary_input.txt"
+            drogon_project / "ert/input/observations/summary_gor.csv"
         )
     )
-    assert_list_of_dicts(results)
+    print(results)
+    assert_dataframe(results)
+    # assert_list_of_dicts(results)
 
 
 def test_extract_rft(drogon_project):
@@ -53,7 +57,7 @@ def test_extract_rft(drogon_project):
         )
     )
     print(results)
-    # assert_list_of_dicts(results)
+    assert_dataframe(results)
 
 
 def test_extract_general(drogon_project):
@@ -64,7 +68,7 @@ def test_extract_general(drogon_project):
         lable_name="tut",
     )
     print(results)
-    # assert_list_of_dicts(results)
+    assert_dataframe(results)
 
 
 def test_convert_config_to_dict(csv_config):
@@ -104,17 +108,22 @@ def test_convert_config_to_dict(csv_config):
         ),
     ],
 )
-def test_extract_from_row(line_input, shape_obs, shape_tofmuobs, drogon_project):
+def test_extract_from_row(
+    line_input, shape_obs, shape_tofmuobs, drogon_project, tmp_path
+):
     """Test function extract_from_row
 
     Args:
         line_input (pd.Series): a row to test
         drogon_project (PosixPath): parent folder for files to be read
     """
+    os.chdir(tmp_path)
     summary_row = pd.Series(line_input, index=["name", "type", "observation"])
     obs, to_fmuobs = conf.extract_from_row(
         summary_row.to_dict(), drogon_project / "ert/input/observations"
     )
+    print("\n\n", obs)
+    print("\n\n", to_fmuobs)
     # if shape_obs == shape_tofmuobs:
     #     assert obs.equals(to_fmuobs), "dataframes have same shape but aren't equal"
     # assert obs.shape == shape_obs
@@ -126,6 +135,7 @@ def test_extract_from_row(line_input, shape_obs, shape_tofmuobs, drogon_project)
     #     assert duplex.sum() == 0, f"{df.loc[duplex]} are duplicated lines"
 
 
+@pytest.mark.skip(reason="Reading from csv config is not developed currently")
 def test_read_config_file(csv_config):
     """Test reading of config file
 

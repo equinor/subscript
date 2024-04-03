@@ -1,6 +1,8 @@
 import os
+import yaml
 import pytest
 from subscript.genertobs_unstable import _config as conf
+from pandas import DataFrame
 
 
 def test_read_yaml_config(yaml_config_file):
@@ -92,9 +94,13 @@ def test_generate_data_from_config(yaml_config, drogon_project):
     data, summary_to_fmuobs = conf.generate_data_from_config(
         yaml_config, ert_path  #  / "../input/observations"
     )
+    assert isinstance(data, list), f"Data should be list, but is {type(data)}"
+    assert isinstance(
+        summary_to_fmuobs, DataFrame
+    ), f"summary should be dataframe but is {type(summary_to_fmuobs)}"
+    print("\n\n", data)
+    # print("\n\n", summary_to_fmuobs)
+    # with open("genertobs_dict.yaml", "w", encoding="utf-8") as stream:
+    #     yaml.safe_dump(data, stream)
 
-    print(data)
-    print(summary_to_fmuobs)
-
-    print(data)
-    print(summary_to_fmuobs)
+    summary_to_fmuobs.to_csv("fmobs.csv", index=False)
