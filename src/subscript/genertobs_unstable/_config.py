@@ -116,6 +116,7 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
         all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
     all_rft_obs.drop("unique_identifier", axis=1, inplace=True)
+    logger.debug("Returning %s", all_rft_obs)
     return all_rft_obs
 
 
@@ -129,8 +130,10 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: modified dataframe
     """
+    logger = logging.getLogger(__name__ + ".extract_general")
     general_observations = in_frame
     general_observations["lable"] = lable_name
+    logger.debug("returning %s", general_observations)
     return general_observations
 
 
@@ -263,8 +266,8 @@ def extract_summary(in_frame: pd.DataFrame, key_identifier="vector") -> pd.DataF
         + "_"
         + all_summary_obs["label"].astype(str)
     )
-    logger.debug("Returning results %s", all_summary_obs)
     all_summary_obs.columns = [name.upper() for name in all_summary_obs.columns]
+    logger.debug("Returning results %s", all_summary_obs)
     return all_summary_obs
 
 
