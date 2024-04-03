@@ -156,13 +156,12 @@ def extract_from_row(
     obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
 
     obs_frame = read_obs_frame(input_file, label, content)
-    obs_frame["output"] = obs_file
+    obs_frame["output"] = str(obs_file.resolve())
     class_name = "GENERAL_OBSERVATION"
     if content in ["summary", "timeseries"]:
         row_type = "timeseries"
         to_fmuobs = obs_frame
         to_fmuobs["CLASS"] = "SUMMARY_OBSERVATION"
-        obs_file = "main file"
 
     elif content == "rft":
         row_type = "rft"
@@ -174,13 +173,10 @@ def extract_from_row(
             ),
             columns=["OBS_FILE"],
         )
-        obs_frame["OUTPUT"] = to_fmuobs
+        # obs_frame["OUTPUT"] = to_fmuobs
 
-        to_fmuobs["LABEL"] = [
-            label + "_" + well_name for well_name in obs_frame["well_name"]
-        ]
         to_fmuobs["CLASS"] = class_name
-        to_fmuobs["DATA"] = to_fmuobs["LABEL"]
+        # to_fmuobs["DATA"] = to_fmuobs["label"]
         logger.debug("RFT")
 
     else:
