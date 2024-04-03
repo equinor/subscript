@@ -158,7 +158,8 @@ def extract_from_row(
     content = row["type"]
     obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
 
-    obs_frame = read_obs_frame(input_file, label, content)
+    obs_frame = read_obs_frame(input_file, content, label)
+    logger.debug("Results after reading observations as dataframe %s", obs_frame)
     obs_frame["output"] = str(obs_file.resolve())
     class_name = "GENERAL_OBSERVATION"
     if content in ["summary", "timeseries"]:
@@ -211,17 +212,18 @@ def read_obs_frame(
     Returns:
         tuple: the actual observation data, the summary of observations for csv output
     """
-
-    if pd.isna(content):
-        content = "SUMMARY"
+    logger = logging.getLogger(__name__ + ".read_obs_frame")
+    if pd.isna(content) or content.lower() == "timeseries":
         obs_frame = extract_summary(read_tabular_file(input_file))
-    elif content.upper() != "RFT":
-        content = "SUMMARY"
+    elif content.lower() != "rft":
+        if label is None:
+            label = input_file.stem
         obs_frame = extract_general(read_tabular_file(input_file), label)
     else:
-        content = "RFT"
         obs_frame = extract_rft(read_tabular_file(input_file))
-
+    obs_frame.rename({"lable": "label"}, axis=1, inplace=True)
+    logger.debug("Returning %s", obs_frame)
+    obs_frame = _ensure_low_caps_columns(obs_frame)
     return obs_frame
 
 
