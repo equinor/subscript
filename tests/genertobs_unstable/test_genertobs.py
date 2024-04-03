@@ -71,6 +71,22 @@ def test_extract_general(drogon_project):
     assert_dataframe(results)
 
 
+@pytest.mark.parametrize(
+    "infile,content,nrlabels",
+    [
+        ("summary_gor.csv", "timeseries", 9),
+        ("drogon_rft_input.ods", "rft", 2),
+        ("drogon_seismic_input.csv", "seismic", 1),
+    ],
+)
+def test_read_obs_frame(drogon_project, infile, content, nrlabels):
+    input_file = drogon_project / "ert/input/observations/" / infile
+    results = conf.read_obs_frame(input_file, content)
+    print(results)
+    len_labels = len(results["label"].unique().tolist())
+    assert len_labels == nrlabels, f"should have {nrlabels}, but has {len_labels}"
+
+
 def test_convert_config_to_dict(csv_config):
     """Test function convert_df_to_dict
 
