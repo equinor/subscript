@@ -77,15 +77,13 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
 
 def convert_df_to_dict(frame: pd.DataFrame) -> dict:
     """Converts dataframe to dictionary format
-
-    Args:
+     Args:
         frame (pd.DataFrame): the input dataframe
-
     Returns:
         dict: the dictionary derived from dataframe
     """
     logger = logging.getLogger(__name__ + ".convert_df_to_dict")
-    frame.content.replace({"summary": "timeseries"}, inplace=True)
+    frame.replace({"summary": "timeseries"}, inplace=True)
     unique_contents = frame.content.unique()
     for unique_content in unique_contents:
         if not hasattr(ContentEnum, unique_content):
@@ -93,10 +91,79 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
             raise ValueError(
                 f"{unique_content} is not a valid content  (used on {wrong_lines.sum()} lines",
             )
-    logger.debug("dataframe at input %s", frame)
     frame_as_dict = frame.to_dict("records")
     logger.debug("Frame as dictionary %s", frame_as_dict)
     return frame_as_dict
+
+
+def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
+    """Converts dataframe with observation to dictionary format
+
+    Args:
+        frame (pd.DataFrame): the input dataframe
+
+    Returns:
+        dict: the dictionary derived from dataframe
+    """
+    logger = logging.getLogger(__name__ + ".convert_obs_df_to_dict")
+
+    frame = _ensure_low_caps_columns(frame)
+    frame.content.replace({"summary": "timeseries"}, inplace=True)
+    logger.debug("Frame to extract from \n%s", frame)
+    obs_list = []
+    content = frame["content"].values[0]
+    if content == "timeseries":
+        unique_id = "content"
+    else:
+        unique_id = "output"
+    logger.debug("Using %s as unique id", unique_id)
+
+    unique_ids = frame[unique_id].unique()
+    logger.debug("%s unique values: (%s)", unique_ids.size, unique_ids)
+
+    for unique_splitter in unique_ids:
+        logger.debug("Working on unique_id %s", unique_splitter)
+        sub_dict = {}
+        unique_section = frame.loc[frame[unique_id] == unique_splitter]
+        one_liners, many_liners = split_one_and_many_columns(unique_section)
+        for one_liner in one_liners:
+            sub_dict[one_liner] = str(unique_section[one_liner].values[0])
+
+        for many_liner in many_liners:
+            try:
+                set_values = unique_section[many_liner].astype(float)
+            except ValueError:
+                set_values = unique_section[many_liner].astype(str)
+            sub_dict[many_liner] = set_values.tolist()
+            obs_list.append(sub_dict)
+        logger.debug("subdict: %s", sub_dict)
+    frame_as_dict = {content: obs_list}
+    logger.debug("dataframe at input %s", frame)
+    logger.debug("Frame as list of dictionaries %s", frame_as_dict)
+    return frame_as_dict
+
+
+def split_one_and_many_columns(frame: pd.DataFrame) -> tuple:
+    """Make lists that distingishes between columns that have only on column and not
+
+    Args:
+        frame (pd.DataFrame): the datframe to interrogate
+
+    Returns:
+        tuple: list with columns that have only one, followed by list of those that have many
+    """
+    logger = logging.getLogger(__name__ + ".split_one_and_many_columns")
+    cols_to_classify = [name for name in frame.columns if name != "content"]
+    one_liners = [
+        col_name
+        for col_name in cols_to_classify
+        if len(frame[col_name].unique().tolist()) == 1
+    ]
+    many_liners = [
+        col_name for col_name in cols_to_classify if col_name not in one_liners
+    ]
+    logger.debug("oneliners:\n%s\nmany liners:\n%s", one_liners, many_liners)
+    return one_liners, many_liners
 
 
 def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
