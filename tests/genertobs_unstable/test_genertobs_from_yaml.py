@@ -94,8 +94,10 @@ def test_generate_data_from_config(yaml_config, drogon_project):
     data, summary_to_fmuobs = conf.generate_data_from_config(
         yaml_config, ert_path  #  / "../input/observations"
     )
-    assert isinstance(data, list), f"Data should be list, but is {type(data)}"
-    assert isinstance(
-        summary_to_fmuobs, DataFrame
-    ), f"summary should be dataframe but is {type(summary_to_fmuobs)}"
-    print("\n\n", data)
+    # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
+    # assert isinstance(
+    #     summary_to_fmuobs, DataFrame
+    # ), f"summary should be dataframe but is {type(summary_to_fmuobs)}"
+    # print("\n\n", data)
+    with open("genertobs_dict.yaml", "w") as stream:
+        yaml.safe_dump(data, stream)

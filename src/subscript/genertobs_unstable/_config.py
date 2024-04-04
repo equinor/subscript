@@ -136,11 +136,11 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
             except ValueError:
                 set_values = unique_section[many_liner].astype(str)
             sub_dict[many_liner] = set_values.tolist()
-            obs_list.append(sub_dict)
-        logger.debug("subdict: %s", sub_dict)
+        obs_list.append(sub_dict)
+        logger.debug("subdict: %s\n", sub_dict)
     frame_as_dict = {content: obs_list}
-    logger.debug("dataframe at input %s", frame)
-    logger.debug("Frame as list of dictionaries %s", frame_as_dict)
+    logger.debug("\ndataframe at input: \n%s", frame)
+    logger.debug("\nFrame as list of dictionaries \n%s\n", frame_as_dict)
     return frame_as_dict
 
 
@@ -198,7 +198,7 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
     )
     all_rft_obs.drop("unique_identifier", axis=1, inplace=True)
     all_rft_obs["output"] = all_rft_obs["well_name"].str.lower() + ".obs"
-    logger.debug("Returning %s", all_rft_obs)
+    logger.debug("Returning \n%s\n", all_rft_obs)
     return all_rft_obs
 
 
@@ -236,13 +236,11 @@ def extract_from_row(
     input_file = parent_folder / row["observation"]
     # to_fmuobs = pd.DataFrame([row.values], columns=row.index)
     logger.debug("File reference in row %s", input_file)
-    label = "unused"
     content = row["type"]
     obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
-
-    obs_frame = read_obs_frame(input_file, content, label)
-    logger.debug("Results after reading observations as dataframe %s", obs_frame)
-    obs_frame["output"] = str(obs_file.resolve())
+    obs_frame = read_obs_frame(input_file, content)
+    logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
+    # obs_frame["output"] = str(obs_file.resolve())
     class_name = "GENERAL_OBSERVATION"
     if content in ["summary", "timeseries"]:
         row_type = "timeseries"
@@ -275,8 +273,8 @@ def extract_from_row(
     obs_frame["CONTENT"] = content
     to_fmuobs.drop_duplicates(inplace=True)
     logger.debug("Row is %s (%s)", row_type, row)
-    logger.debug("These are the observation results: %s", obs_frame)
-    logger.debug("These are the results to send to fmuobs: %s", to_fmuobs)
+    logger.debug("\nThese are the observation results:\n %s", obs_frame)
+    logger.debug("\nThese are the results to send to fmuobs:\n %s", to_fmuobs)
 
     return convert_obs_df_to_dict(obs_frame), to_fmuobs
 
@@ -475,21 +473,34 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
                pd.Dataframe to send to fmuobs
     """
     logger = logging.getLogger(__name__ + ".generate_data_from_config")
+    logger.debug("Here is config to parse %s", config)
+    ids = []
     data = []
     summaries = []
     for config_element in config:
+        logger.info("Parsing element %s", config_element)
+        obs_summary = "tut"
         data_element = {}
         data_element["name"] = config_element["name"]
         data_element["content"] = config_element["type"]
-        data_element["observations"], obs_summary = extract_from_row(
-            config_element, parent
-        )
+        obs, obs_summary = extract_from_row(config_element, parent)
+        data_element["observations"] = deepcopy(obs)
+        # logger.info("\nAppending data element: \n%s", data_element)
+        # el_id = id(data_element)
+        # if el_id in ids:
+        # logger.error(
+        # "Godammit Daniel!!!!\n %s  (%s)\n is already stored",
+        # data_element,
+        # el_id,
+        # )
+        # quit()
+        # ids.append(el_id)
         data.append(data_element)
         summaries.append(obs_summary)
 
-        logger.debug("These are the observations:\n%s", data_element)
+        # logger.debug("These are the observations:\n%s", data_element)
         logger.debug("And this is the summary:\n%s", obs_summary)
-    summaries = pd.concat(summaries)
+    # summaries = pd.concat(summaries)
     return data, summaries
 
 

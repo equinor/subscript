@@ -81,10 +81,33 @@ def test_extract_general(drogon_project):
     assert_dataframe(results)
 
 
+def test_convert_obs_df_to_dict_dummy_data():
+    dummy = pd.DataFrame(
+        {
+            "well_name": ["A", "B"],
+            "value": [1, 2],
+            "not": ["wa", "wa"],
+            "content": "timeseries",
+        }
+    )
+    results = conf.convert_obs_df_to_dict(dummy)
+    # assert_list_of_dicts(results)
+    with open("converted.yaml", "w") as stream:
+        yaml.safe_dump(results, stream)
+    check_string = ""
+    with open("converted.yaml", "r") as stream:
+        check_string = stream.read()
+        assert (
+            "&id001" not in check_string
+        ), f"goodammit, anchor in produced file ({check_string})"
+
+
 def test_convert_obs_df_to_dict(rft_as_frame):
     print(rft_as_frame)
     results = conf.convert_obs_df_to_dict(rft_as_frame)
     # assert_list_of_dicts(results)
+    with open("converted.yaml", "w") as stream:
+        yaml.safe_dump(results, stream)
     for element in results["rft"]:
 
         print(element)
@@ -157,6 +180,8 @@ def test_extract_from_row(
     obs, to_fmuobs = conf.extract_from_row(
         summary_row.to_dict(), drogon_project / "ert/input/observations"
     )
+    with open("row_results.yaml", "w") as stream:
+        yaml.safe_dump(obs, stream)
     print("\n\n", obs)
     print("\n\n", to_fmuobs)
     # if shape_obs == shape_tofmuobs:
