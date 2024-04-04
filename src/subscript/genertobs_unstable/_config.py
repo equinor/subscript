@@ -4,7 +4,6 @@ import logging
 from typing import Union, List
 import yaml
 from pathlib import Path, PosixPath
-from copy import deepcopy
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 from subscript.fmuobs.writers import summary_df2obsdict
@@ -125,7 +124,7 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
     for unique_splitter in unique_ids:
         logger.debug("Working on unique_id %s", unique_splitter)
         sub_dict = {}
-        unique_section = deepcopy(frame.loc[frame[unique_id] == unique_splitter])
+        unique_section = frame.loc[frame[unique_id] == unique_splitter]
         one_liners, many_liners = split_one_and_many_columns(unique_section)
         for one_liner in one_liners:
             sub_dict[one_liner] = str(unique_section[one_liner].values[0])
@@ -479,22 +478,11 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
     summaries = []
     for config_element in config:
         logger.info("Parsing element %s", config_element)
-        obs_summary = "tut"
         data_element = {}
         data_element["name"] = config_element["name"]
         data_element["content"] = config_element["type"]
         obs, obs_summary = extract_from_row(config_element, parent)
-        data_element["observations"] = deepcopy(obs)
-        # logger.info("\nAppending data element: \n%s", data_element)
-        # el_id = id(data_element)
-        # if el_id in ids:
-        # logger.error(
-        # "Godammit Daniel!!!!\n %s  (%s)\n is already stored",
-        # data_element,
-        # el_id,
-        # )
-        # quit()
-        # ids.append(el_id)
+        data_element["observations"] = obs
         data.append(data_element)
         summaries.append(obs_summary)
 
