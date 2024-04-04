@@ -25,6 +25,15 @@ def test_read_tabular_file(drogon_project, table_file_name):
     assert table.shape[1] > 1, f"{table_file_name} read as only one column"
 
 
+def test_caps_converters():
+
+    mytest = pd.DataFrame({"banana": [1, 2], "COBlai": [3, 4], "COPPER": [5, 6]})
+    caps_results = [name.upper() for name in mytest.columns]
+    low_caps_results = [name.lower() for name in mytest.columns]
+    assert conf._ensure_up_caps_columns(mytest).columns.tolist() == caps_results
+    assert conf._ensure_low_caps_columns(mytest).columns.tolist() == low_caps_results
+
+
 def assert_list_of_dicts(results):
     assert isinstance(results, list), f"Expected list, got {type(results)} ({results})"
     for i, element in enumerate(results):
@@ -69,6 +78,15 @@ def test_extract_general(drogon_project):
     )
     print(results)
     assert_dataframe(results)
+
+
+def test_convert_obs_df_to_dict(rft_as_frame):
+    print(rft_as_frame)
+    results = conf.convert_obs_df_to_dict(rft_as_frame)
+    # assert_list_of_dicts(results)
+    for element in results["rft"]:
+
+        print(element)
 
 
 @pytest.mark.parametrize(
