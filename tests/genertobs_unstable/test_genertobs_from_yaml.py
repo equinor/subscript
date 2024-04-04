@@ -99,8 +99,3 @@ def test_generate_data_from_config(yaml_config, drogon_project):
         summary_to_fmuobs, DataFrame
     ), f"summary should be dataframe but is {type(summary_to_fmuobs)}"
     print("\n\n", data)
-    # print("\n\n", summary_to_fmuobs)
-    # with open("genertobs_dict.yaml", "w", encoding="utf-8") as stream:
-    #     yaml.safe_dump(data, stream)
-
-    summary_to_fmuobs.to_csv("fmobs.csv", index=False)
