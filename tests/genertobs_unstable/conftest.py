@@ -3,6 +3,7 @@
 import logging
 from pathlib import Path
 import yaml
+import pandas as pd
 import pytest
 
 # logging.basicConfig(level="DEBUG")
@@ -29,6 +30,12 @@ def _fix_yaml_config_file():
     string_config = str(config_path)
     assert config_path.exists(), f"{string_config} does not exist"
     return string_config
+
+
+@pytest.fixture(scope="session", name="rft_as_frame")
+def _fix_rft_as_frame():
+
+    return pd.read_csv(Path(__file__).parent / "data/rft_as_frame.csv")
 
 
 @pytest.fixture(scope="session", name="yaml_config")
