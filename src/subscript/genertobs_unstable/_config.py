@@ -4,6 +4,7 @@ import logging
 from typing import Union, List
 import yaml
 from pathlib import Path, PosixPath
+from copy import deepcopy
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 from subscript.fmuobs.writers import summary_df2obsdict
@@ -124,7 +125,7 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
     for unique_splitter in unique_ids:
         logger.debug("Working on unique_id %s", unique_splitter)
         sub_dict = {}
-        unique_section = frame.loc[frame[unique_id] == unique_splitter]
+        unique_section = deepcopy(frame.loc[frame[unique_id] == unique_splitter])
         one_liners, many_liners = split_one_and_many_columns(unique_section)
         for one_liner in one_liners:
             sub_dict[one_liner] = str(unique_section[one_liner].values[0])
