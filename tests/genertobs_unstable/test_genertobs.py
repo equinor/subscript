@@ -67,6 +67,7 @@ def test_extract_rft(drogon_project):
     )
     print(results)
     assert_dataframe(results)
+    assert results["output"].unique().size == 2
 
 
 def test_extract_general(drogon_project):

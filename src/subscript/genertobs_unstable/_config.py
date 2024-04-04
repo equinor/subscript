@@ -196,6 +196,7 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
         all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
     all_rft_obs.drop("unique_identifier", axis=1, inplace=True)
+    all_rft_obs["output"] = all_rft_obs["well_name"].str.lower() + ".obs"
     logger.debug("Returning %s", all_rft_obs)
     return all_rft_obs
 
@@ -276,7 +277,7 @@ def extract_from_row(
     logger.debug("These are the observation results: %s", obs_frame)
     logger.debug("These are the results to send to fmuobs: %s", to_fmuobs)
 
-    return obs_frame, to_fmuobs
+    return convert_obs_df_to_dict(obs_frame), to_fmuobs
 
 
 def read_obs_frame(
