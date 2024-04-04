@@ -1,0 +1,4 @@
+well_name,value,error,x,y,md,tvd,zone,date,restart,label,output,CONTENT
+R_A2,299.23,3,460994.9,5933813.29,1697.9,1648.9,Valysar,2018-03-01,1,R_A2_2018_03_01_1,/private/dbs/git/subscript/tests/genertobs_unstable/data/drogon/ert/input/observations/rft/drogon_rft_input.obs,rft
+R_A6,280.85,3,461292.74,5931883.26,1759.9,1710.9,Therys,2018-11-07,2,R_A6_2018_11_07_2,/private/dbs/git/subscript/tests/genertobs_unstable/data/drogon/ert/input/observations/rft/drogon_rft_input.obs,rft
+R_A6,286.41,3,461292.74,5931883.26,1777.4,1728.4,Volon,2018-11-07,2,R_A6_2018_11_07_2,/private/dbs/git/subscript/tests/genertobs_unstable/data/drogon/ert/input/observations/rft/drogon_rft_input.obs,rft
