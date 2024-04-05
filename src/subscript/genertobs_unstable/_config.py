@@ -152,6 +152,8 @@ def add_or_modify_error(frame: pd.DataFrame, error: str):
     """
     logger = logging.getLogger(__name__ + ".add_or_modify_error")
     logger.debug("Frame before error addition/modification \n%s\n", frame)
+    logger.debug("Error to apply %s", error)
+    error = str(error)  # convert to ensure that code is simpler further down
     try:
         error_holes = frame.error.isna()
     except AttributeError:
