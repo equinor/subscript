@@ -1,0 +1,146 @@
+- name: Gas-oil-ratio observations
+  content: timeseries
+  observations:
+    - vector: WGOR:A1
+      value:
+      - 138.32456970214844
+      - 137.20663452148438
+      - 137.1474609375
+      - 134.7957305908203
+      - 133.6744842529297
+      - 150.79522705078125
+      - 181.50244140625
+      - 202.2801971435547
+      - 182.59190368652344
+      error:
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      - 50.0
+      date:
+      - '2018-03-30'
+      - '2018-06-22'
+      - '2018-09-14'
+      - '2018-12-07'
+      - '2019-03-01'
+      - '2019-05-24'
+      - '2019-08-16'
+      - '2019-11-08'
+      - '2020-01-31'
+      label:
+      - WGOR_A1_0
+      - WGOR_A1_1
+      - WGOR_A1_2
+      - WGOR_A1_3
+      - WGOR_A1_4
+      - WGOR_A1_5
+      - WGOR_A1_6
+      - WGOR_A1_7
+      - WGOR_A1_8
+- name: Bottom hole pressure observations
+  content: timeseries
+  observations:
+    - date: '2019-05-05'
+      vector: WBHP:A1
+      label: WBHP_A1_2019_05_05
+      value:
+      - 237.8
+      error:
+      - 20.0
+- name: RFT pressure observations
+  content: rft
+  observations:
+    - well_name: R_A2
+      tvd: '1648.9'
+      zone: Valysar
+      date: '2018-03-01'
+      restart: '1'
+      label: R_A2_2018_03_01_1
+      output: r_a2.obs
+      value:
+      - 299.23
+      error:
+      - 3.0
+      x:
+      - 460994.9
+      y:
+      - 5933813.29
+      md:
+      - 1697.9
+    - well_name: R_A6
+      date: '2018-11-07'
+      restart: '2'
+      label: R_A6_2018_11_07_2
+      output: r_a6.obs
+      value:
+      - 280.85
+      - 286.41
+      error:
+      - 3.0
+      - 3.0
+      x:
+      - 461292.74
+      - 461292.74
+      y:
+      - 5931883.26
+      - 5931883.26
+      md:
+      - 1759.9
+      - 1777.4
+      tvd:
+      - 1710.9
+      - 1728.4
+      zone:
+      - Therys
+      - Volon
+- name: RFT saturation observations
+  content: rft
+  observations:
+    - well_name: R_A2
+      tvd: '1648.9'
+      zone: Valysar
+      date: '2018-03-01'
+      restart: '1'
+      label: R_A2_2018_03_01_1
+      output: r_a2.obs
+      value:
+      - 0.2
+      error:
+      - 10.00%
+      x:
+      - 460994.9
+      y:
+      - 5933813.29
+      md:
+      - 1697.9
+    - well_name: R_A6
+      date: '2018-11-07'
+      restart: '2'
+      label: R_A6_2018_11_07_2
+      output: r_a6.obs
+      value:
+      - 0.5
+      - 1.0
+      error:
+      - 5.0
+      - 5.0
+      x:
+      - 461292.74
+      - 461292.74
+      y:
+      - 5931883.26
+      - 5931883.26
+      md:
+      - 1759.9
+      - 1777.4
+      tvd:
+      - 1710.9
+      - 1728.4
+      zone:
+      - Therys
+      - Volon
