@@ -176,7 +176,7 @@ def add_or_modify_error(frame: pd.DataFrame, error: str):
 
 
 def split_one_and_many_columns(frame: pd.DataFrame) -> tuple:
-    """Make lists that distingishes between columns that have only on column and not
+    """Make lists that distinguishes between columns that should be one column and not
 
     Args:
         frame (pd.DataFrame): the datframe to interrogate
@@ -184,14 +184,16 @@ def split_one_and_many_columns(frame: pd.DataFrame) -> tuple:
     Returns:
         tuple: list with columns that have only one, followed by list of those that have many
     """
-    # TODO: align with expectations, label, vector(aka key), and date can be oneliners
-    # error, x, y, z, md and value should be list
+    # TODO: check if zone should be in must_be_many
+    must_be_many = ["value", "error", "x", "y", "z", "md"]
     logger = logging.getLogger(__name__ + ".split_one_and_many_columns")
     cols_to_classify = [name for name in frame.columns if name != "content"]
     one_liners = [
         col_name
         for col_name in cols_to_classify
-        if len(frame[col_name].unique().tolist()) == 1
+        if (
+            len(frame[col_name].unique().tolist()) == 1 and col_name not in must_be_many
+        )
     ]
     many_liners = [
         col_name for col_name in cols_to_classify if col_name not in one_liners
