@@ -266,6 +266,9 @@ def extract_from_row(
     Returns:
         pd.DataFrame: the extracted results
     """
+    # TODO: vector name for timeseries should not be wrapped into list?
+    # or maybe contained, but add key name or summat as idenfier
+    # Are there exceptions where it should not be list?
     logger = logging.getLogger(__name__ + ".extract_from_row")
     logger.debug("Input row is %s", row)
     input_file = parent_folder / row["observation"]
