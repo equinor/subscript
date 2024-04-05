@@ -144,6 +144,12 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
 
 
 def add_or_modify_error(frame: pd.DataFrame, error: str):
+    """Complete error column in dataframe
+
+    Args:
+        frame (pd.DataFrame): the dataframe to be modified
+        error (str): the error to add when it is undefined or not included
+    """
     logger = logging.getLogger(__name__ + ".add_or_modify_error")
     logger.debug("Frame before error addition/modification \n%s\n", frame)
     try:
