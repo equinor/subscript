@@ -145,15 +145,26 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
 
 def add_or_modify_error(frame: pd.DataFrame, error: str):
     logger = logging.getLogger(__name__ + ".add_or_modify_error")
+    logger.debug("Frame before error addition/modification \n%s\n", frame)
+    try:
+        error_holes = frame.error.isna()
+    except AttributeError:
+        logger.info("No error column provided, error will be added for all entries")
+        error_holes = pd.Series([True] * frame.shape[0])
+        frame["error"] = None
     if error.endswith("%"):
         logger.debug("Error is percent, will be multiplied with value")
 
         frac_error = float(error[:-1]) / 100
         logger.debug("Factor to multiply with %s", frac_error)
+        frame.error[error_holes] = frame.value[error_holes] * frac_error
     else:
         logger.debug("Error is absolute, will be added as constant")
         abs_error = float(error)
         logger.debug("Error to add %s", abs_error)
+        frame.error.loc[error_holes] = abs_error
+    logger.debug("After addition/modification errors are \n%s\n", frame.error)
+    # return frame
 
 
 def split_one_and_many_columns(frame: pd.DataFrame) -> tuple:
