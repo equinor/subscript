@@ -96,7 +96,7 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
     return frame_as_dict
 
 
-def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
+def convert_obs_df_to_list(frame: pd.DataFrame) -> list:
     """Converts dataframe with observation to dictionary format
 
     Args:
@@ -137,10 +137,9 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
             sub_dict[many_liner] = set_values.tolist()
         obs_list.append(sub_dict)
         logger.debug("subdict: %s\n", sub_dict)
-    frame_as_dict = {content: obs_list}
     logger.debug("\ndataframe at input: \n%s", frame)
-    logger.debug("\nFrame as list of dictionaries \n%s\n", frame_as_dict)
-    return frame_as_dict
+    logger.debug("\nFrame as list of dictionaries \n%s\n", obs_list)
+    return obs_list
 
 
 def add_or_modify_error(frame: pd.DataFrame, error: str):
@@ -313,7 +312,7 @@ def extract_from_row(
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
     logger.debug("\nThese are the results to send to fmuobs:\n %s", to_fmuobs)
 
-    return convert_obs_df_to_dict(obs_frame), to_fmuobs
+    return convert_obs_df_to_list(obs_frame), to_fmuobs
 
 
 def read_obs_frame(

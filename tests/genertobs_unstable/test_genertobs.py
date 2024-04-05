@@ -138,7 +138,7 @@ def test_extract_general(drogon_project):
     assert_dataframe(results)
 
 
-def test_convert_obs_df_to_dict_dummy_data():
+def test_convert_obs_df_to_list_dummy_data():
     dummy = pd.DataFrame(
         {
             "well_name": ["A", "B"],
@@ -147,7 +147,7 @@ def test_convert_obs_df_to_dict_dummy_data():
             "content": "timeseries",
         }
     )
-    results = conf.convert_obs_df_to_dict(dummy)
+    results = conf.convert_obs_df_to_list(dummy)
     # assert_list_of_dicts(results)
     with open("converted.yaml", "w") as stream:
         yaml.safe_dump(results, stream)
@@ -159,13 +159,13 @@ def test_convert_obs_df_to_dict_dummy_data():
         ), f"goodammit, anchor in produced file ({check_string})"
 
 
-def test_convert_obs_df_to_dict(rft_as_frame):
+def test_convert_obs_df_to_list(rft_as_frame):
     print(rft_as_frame)
-    results = conf.convert_obs_df_to_dict(rft_as_frame)
+    results = conf.convert_obs_df_to_list(rft_as_frame)
     # assert_list_of_dicts(results)
     with open("converted.yaml", "w") as stream:
         yaml.safe_dump(results, stream)
-    for element in results["rft"]:
+    for element in results:
 
         print(element)
 
