@@ -279,7 +279,7 @@ def extract_from_row(
     if content in ["summary", "timeseries"]:
         row_type = "timeseries"
         to_fmuobs = obs_frame
-        to_fmuobs["CLASS"] = "SUMMARY_OBSERVATION"
+        class_name = "SUMMARY_OBSERVATION"
 
     elif content == "rft":
         row_type = "rft"
@@ -293,7 +293,6 @@ def extract_from_row(
         )
         # obs_frame["OUTPUT"] = to_fmuobs
 
-        to_fmuobs["CLASS"] = class_name
         # to_fmuobs["DATA"] = to_fmuobs["label"]
         logger.debug("RFT")
 
@@ -304,6 +303,7 @@ def extract_from_row(
             columns=["CLASS", "LABEL", "DATA", "OBS_FILE"],
         )
 
+    to_fmuobs["CLASS"] = class_name
     obs_frame["CONTENT"] = content
     add_or_modify_error(obs_frame, row["error"])
 
