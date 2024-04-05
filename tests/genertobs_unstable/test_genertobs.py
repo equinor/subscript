@@ -4,6 +4,35 @@ import pandas as pd
 import yaml
 from subscript.genertobs_unstable import _config as conf
 
+VALID_FORMATS = [
+    "depth",
+    "facies_thickness",
+    "fault_lines",
+    "field_outline",
+    "field_region",
+    "fluid_contact",
+    "inplace_volumes",
+    "khproduct",
+    "lift_curves",
+    "parameters",
+    "pinchout",
+    "property",
+    "pvt",
+    "regions",
+    "relperm",
+    "rft",
+    "seismic",
+    "subcrop",
+    "thickness",
+    "time",
+    "timeseries",
+    "transmissibilities",
+    "velocity",
+    "volumes",
+    "volumetrics",
+    "wellpicks",
+]
+
 
 def assert_list_of_dicts(results):
     assert isinstance(results, list), f"Expected list, got {type(results)} ({results})"
@@ -37,6 +66,26 @@ def test_read_tabular_file(drogon_project, table_file_name):
         drogon_project / "ert/input/observations/" / table_file_name
     )
     assert table.shape[1] > 1, f"{table_file_name} read as only one column"
+
+
+@pytest.mark.parametrize(
+    "frame,error",
+    [
+        (frame, error)
+        for error in ["10", "10%"]
+        for frame in [
+            pd.DataFrame({"value": [100, 200]}),
+            pd.DataFrame({"value": [100, 200], "error": [None, 40]}),
+            pd.DataFrame({"value": [100, 200], "error": [1, 1]}),
+        ]
+    ],
+)
+def test_add_or_modify_error(frame, error):
+    print(frame)
+    print(error)
+    conf.add_or_modify_error(frame, error)
+    print(frame)
+    print("-------------")
 
 
 def test_caps_converters():
@@ -214,36 +263,6 @@ def test_read_yaml_config(yaml_config_file):
     len_config = len(config)
     assert len_config > 0
     print("Length of configuration:", len_config)
-
-
-VALID_FORMATS = [
-    "depth",
-    "facies_thickness",
-    "fault_lines",
-    "field_outline",
-    "field_region",
-    "fluid_contact",
-    "inplace_volumes",
-    "khproduct",
-    "lift_curves",
-    "parameters",
-    "pinchout",
-    "property",
-    "pvt",
-    "regions",
-    "relperm",
-    "rft",
-    "seismic",
-    "subcrop",
-    "thickness",
-    "time",
-    "timeseries",
-    "transmissibilities",
-    "velocity",
-    "volumes",
-    "volumetrics",
-    "wellpicks",
-]
 
 
 @pytest.mark.parametrize(
