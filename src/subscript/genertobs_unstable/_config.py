@@ -5,6 +5,7 @@ from typing import Union, List
 import yaml
 from pathlib import Path, PosixPath
 import pandas as pd
+from fmu.dataio import ExportData
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 from subscript.fmuobs.writers import summary_df2obsdict
 
@@ -530,6 +531,33 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
         logger.debug("And this is the summary:\n%s", obs_summary)
     # summaries = pd.concat(summaries)
     return data, summaries
+
+
+def export_with_dataio(data: list, config: dict, case_path: str):
+    """Export observations from list of input dicts
+
+    Args:
+        data (list): the data stored as dict
+        config (dict): config file needed for dataio
+        case_path (str): path to where to store
+    """
+    logger = logging.getLogger(__name__ + ".export_with_dataio")
+
+    exporter = ExportData(config=config)
+    for data_element in data:
+        logger.debug("Exporting element %s", data_element)
+        if data_element["content"] == "timeseries":
+            name = data_element["observations"]["vector"]
+        else:
+            name = data_element["content"]
+        export_path = exporter.export(
+            data_element,
+            name=name,
+            casepath=case_path,
+            fmu_context="case",
+            content=data_element["content"],
+        )
+        logger.info("Exporting to %s", export_path)
 
 
 def generate_rft_obs_files(rft_obs_data: pd.DataFrame, path):

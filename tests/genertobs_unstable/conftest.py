@@ -5,6 +5,7 @@ from pathlib import Path
 import yaml
 import pandas as pd
 import pytest
+from fmu.config.utilities import yaml_load
 
 # logging.basicConfig(level="DEBUG")
 LOGGER = logging.getLogger(__name__)
@@ -56,3 +57,9 @@ def _fix_yaml_config(yaml_config_file):
 def _fix_results():
     results_path = Path(__file__).parent / "data/expected_yaml_output.yml"
     return read_yaml_file(results_path)
+
+
+@pytest.fixture(scope="session", name="fmuconfig")
+def _fix_fmu_config(drogon_project):
+    config_path = drogon_project / "fmuconfig/output/global_variables.yml"
+    return yaml_load(config_path)

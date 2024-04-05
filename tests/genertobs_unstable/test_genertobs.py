@@ -332,6 +332,12 @@ def test_generate_data_from_config(yaml_config, drogon_project, expected_results
         assert "class" not in data_dict["observations"].keys()
 
     assert data == expected_results
+
+
+def test_export_with_dataio(expected_results, drogon_project, fmuconfig):
+    export_path = drogon_project / "share/results/dictionaries"
+    conf.export_with_dataio(expected_results, fmuconfig, export_path)
+
     # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
     # assert isinstance(
     #     summary_to_fmuobs, pd.DataFrame
