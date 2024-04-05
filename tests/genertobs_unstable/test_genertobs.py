@@ -320,12 +320,17 @@ def test_generate_data_from_config(yaml_config, drogon_project, expected_results
     data, summary_to_fmuobs = conf.generate_data_from_config(
         yaml_config, ert_path  #  / "../input/observations"
     )
+    with open("genertobs_dump.yml", "w") as stream:
+        yaml.safe_dump(data, stream)
+
     assert_list_of_dicts(data)
     assert len(data) == len(
         expected_results
     ), f"extracted has {len(data)}, but should be {len(expected_results)}"
     for i, data_dict in enumerate(data):
         assert data_dict.keys() == expected_results[i].keys()
+        assert "class" not in data_dict["observations"].keys()
+
     assert data == expected_results
     # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
     # assert isinstance(

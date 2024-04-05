@@ -311,7 +311,10 @@ def extract_from_row(
     logger.debug("Row is %s (%s)", row_type, row)
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
     logger.debug("\nThese are the results to send to fmuobs:\n %s", to_fmuobs)
-
+    try:
+        del obs_frame["CLASS"]
+    except KeyError:
+        logger.debug("No class in this element")
     return convert_obs_df_to_list(obs_frame), to_fmuobs
 
 
