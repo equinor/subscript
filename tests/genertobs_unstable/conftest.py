@@ -10,6 +10,13 @@ import pytest
 LOGGER = logging.getLogger(__name__)
 
 
+def read_yaml_file(yaml_file_name):
+    yam_contents = {}
+    with open(yaml_file_name, "r", encoding="utf-8") as stream:
+        yam_contents = yaml.safe_load(stream)
+    return yam_contents
+
+
 @pytest.fixture(scope="session", name="drogon_project")
 def _fix_drogon():
     drogon_path = Path(__file__).parent / "data/drogon"
@@ -40,8 +47,12 @@ def _fix_rft_as_frame():
 
 @pytest.fixture(scope="session", name="yaml_config")
 def _fix_yaml_config(yaml_config_file):
-    config = {}
-    with open(yaml_config_file, "r", encoding="utf-8") as stream:
-        config = yaml.safe_load(stream)
+    config = read_yaml_file(yaml_config_file)
 
     return config
+
+
+@pytest.fixture(scope="session", name="expected_results")
+def _fix_results():
+    results_path = Path(__file__).parent / "data/expected_yaml_output.yml"
+    return read_yaml_file(results_path)
