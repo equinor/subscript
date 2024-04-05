@@ -313,17 +313,22 @@ def test_validate_config_exceptions(invalid_config, exception, error_mess):
     assert extracted_mess == error_mess
 
 
-def test_generate_data_from_config(yaml_config, drogon_project):
+def test_generate_data_from_config(yaml_config, drogon_project, expected_results):
     print(yaml_config)
     ert_path = drogon_project / "ert/model"
     os.chdir(ert_path)
     data, summary_to_fmuobs = conf.generate_data_from_config(
         yaml_config, ert_path  #  / "../input/observations"
     )
+    assert_list_of_dicts(data)
+    assert len(data) == len(
+        expected_results
+    ), f"extracted has {len(data)}, but should be {len(expected_results)}"
+    for i, data_dict in enumerate(data):
+        assert data_dict.keys() == expected_results[i].keys()
+    assert data == expected_results
     # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
     # assert isinstance(
     #     summary_to_fmuobs, pd.DataFrame
     # ), f"summary should be dataframe but is {type(summary_to_fmuobs)}"
     # print("\n\n", data)
-    with open("genertobs_dict.yaml", "w") as stream:
-        yaml.safe_dump(data, stream)
