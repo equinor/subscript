@@ -69,21 +69,26 @@ def test_read_tabular_file(drogon_project, table_file_name):
 
 
 @pytest.mark.parametrize(
-    "frame,error",
-    [
-        (frame, error)
-        for error in ["10", "10%"]
-        for frame in [
-            pd.DataFrame({"value": [100, 200]}),
-            pd.DataFrame({"value": [100, 200], "error": [None, 40]}),
-            pd.DataFrame({"value": [100, 200], "error": [1, 1]}),
-        ]
-    ],
+    "frame_err, expected_result",
+    zip(
+        [
+            [frame, error]
+            for error in ["10", "10%"]
+            for frame in [
+                pd.DataFrame({"value": [100, 200]}),
+                pd.DataFrame({"value": [100, 200], "error": [None, 40]}),
+                pd.DataFrame({"value": [100, 200], "error": [1, 1]}),
+            ]
+        ],
+        [[10, 10], [10, 40], [1, 1], [10, 20], [10, 40], [1, 1]],
+    ),
 )
-def test_add_or_modify_error(frame, error):
+def test_add_or_modify_error(frame_err, expected_result):
+    frame, error = frame_err
     print(frame)
     print(error)
     conf.add_or_modify_error(frame, error)
+    assert frame.error.tolist() == expected_result
     print(frame)
     print("-------------")
 
