@@ -152,6 +152,8 @@ def split_one_and_many_columns(frame: pd.DataFrame) -> tuple:
     Returns:
         tuple: list with columns that have only one, followed by list of those that have many
     """
+    # TODO: align with expectations, label, vector(aka key), and date can be oneliners
+    # error, x, y, z, md and value should be list
     logger = logging.getLogger(__name__ + ".split_one_and_many_columns")
     cols_to_classify = [name for name in frame.columns if name != "content"]
     one_liners = [
