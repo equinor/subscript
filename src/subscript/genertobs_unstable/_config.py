@@ -143,6 +143,19 @@ def convert_obs_df_to_dict(frame: pd.DataFrame) -> dict:
     return frame_as_dict
 
 
+def add_or_modify_error(frame: pd.DataFrame, error: str):
+    logger = logging.getLogger(__name__ + ".add_or_modify_error")
+    if error.endswith("%"):
+        logger.debug("Error is percent, will be multiplied with value")
+
+        frac_error = float(error[:-1]) / 100
+        logger.debug("Factor to multiply with %s", frac_error)
+    else:
+        logger.debug("Error is absolute, will be added as constant")
+        abs_error = float(error)
+        logger.debug("Error to add %s", abs_error)
+
+
 def split_one_and_many_columns(frame: pd.DataFrame) -> tuple:
     """Make lists that distingishes between columns that have only on column and not
 
