@@ -304,6 +304,8 @@ def extract_from_row(
         )
 
     obs_frame["CONTENT"] = content
+    add_or_modify_error(obs_frame, row["error"])
+
     to_fmuobs.drop_duplicates(inplace=True)
     logger.debug("Row is %s (%s)", row_type, row)
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
