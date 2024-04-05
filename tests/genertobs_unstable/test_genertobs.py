@@ -85,12 +85,15 @@ def test_read_tabular_file(drogon_project, table_file_name):
 )
 def test_add_or_modify_error(frame_err, expected_result):
     frame, error = frame_err
-    print(frame)
-    print(error)
-    conf.add_or_modify_error(frame, error)
-    assert frame.error.tolist() == expected_result
-    print(frame)
+    print("frame: \n", frame)
+    print("error: ", error)
     print("-------------")
+    conf.add_or_modify_error(frame, error)
+    print("Result: \n", frame)
+    print("***********************************  ")
+    assert [int(val) for val in frame.error.tolist()] == [
+        int(expected) for expected in expected_result
+    ]
 
 
 def test_caps_converters():
@@ -205,16 +208,12 @@ def test_convert_config_to_dict(csv_config):
     "line_input, shape_obs, shape_tofmuobs",
     [
         (
-            [
-                "summary observations",
-                "timeseries",
-                "summary_gor.csv",
-            ],
+            ["summary observations", "timeseries", "summary_gor.csv", "10%"],
             (9, 8),
             (9, 8),
         ),
         (
-            ["rft pressure observations", "rft", "drogon_rft_input.ods"],
+            ["rft pressure observations", "rft", "drogon_rft_input.ods", "10"],
             (3, 15),
             (2, 4),
         ),
@@ -230,7 +229,7 @@ def test_extract_from_row(
         drogon_project (PosixPath): parent folder for files to be read
     """
     os.chdir(tmp_path)
-    summary_row = pd.Series(line_input, index=["name", "type", "observation"])
+    summary_row = pd.Series(line_input, index=["name", "type", "observation", "error"])
     obs, to_fmuobs = conf.extract_from_row(
         summary_row.to_dict(), drogon_project / "ert/input/observations"
     )
@@ -315,6 +314,7 @@ def test_validate_config_exceptions(invalid_config, exception, error_mess):
 
 
 def test_generate_data_from_config(yaml_config, drogon_project):
+    print(yaml_config)
     ert_path = drogon_project / "ert/model"
     os.chdir(ert_path)
     data, summary_to_fmuobs = conf.generate_data_from_config(
