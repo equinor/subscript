@@ -26,7 +26,7 @@ def _fix_csv_config(drogon_project):
 
 @pytest.fixture(scope="session", name="yaml_config_file")
 def _fix_yaml_config_file():
-    config_path = Path(__file__).parent / "data/expected_results.yml"
+    config_path = Path(__file__).parent / "data/genertobs_config.yml"
     string_config = str(config_path)
     assert config_path.exists(), f"{string_config} does not exist"
     return string_config
