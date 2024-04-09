@@ -45,7 +45,7 @@ def test_do_parse_args(tmp_path):
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed."""
-    assert subprocess.check_output(["runrms", "-h"])
+    assert subprocess.check_output(["runrms_legacy", "-h"])
 
 
 def test_scan_rms(tmp_path):
@@ -189,7 +189,7 @@ def test_parse_setup(tmp_path, mocker):
     setupfile = "foo.yml"
     mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
     runner = rr.RunRMS()
-    runner.do_parse_args(["runrms", "--debug"])
+    runner.do_parse_args(["runrms_legacy", "--debug"])
     with pytest.raises(FileNotFoundError):
         runner.parse_setup()
 
@@ -207,7 +207,7 @@ def test_requested_rms_version(tmp_path, mocker):
     setupfile = "setup.yml"
     mocker.patch("subscript.runrms.runrms.SETUP", setupfile)
     runner = rr.RunRMS()
-    runner.do_parse_args(["runrms", "--debug"])
+    runner.do_parse_args(["runrms_legacy", "--debug"])
 
     with pytest.raises(KeyError, match="rms"):
         Path(setupfile).write_text(yaml.dump({}), encoding="utf8")
