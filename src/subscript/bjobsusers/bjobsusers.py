@@ -123,11 +123,16 @@ def userinfo(username: str, pinky_function: Callable) -> str:
     rex_no_org = re.compile(r".*Login name:\s+(.*)\s+In real life:\s+(.*)")
     if rex_with_org.match(pinky_output):
         matches = rex_with_org.match(pinky_output).groups()  # type: ignore
+        fullname = matches[1].strip()
         org = matches[2].strip()
-    else:
+    elif rex_no_org.match(pinky_output):
         matches = rex_no_org.match(pinky_output).groups()  # type: ignore
+        fullname = matches[1].strip()
         org = ""
-    fullname = matches[1].strip()
+    else:
+        fullname = username
+        org = ""
+
     return f"{fullname} ({org}) ({username})"
 
 
