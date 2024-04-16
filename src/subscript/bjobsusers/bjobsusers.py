@@ -11,7 +11,7 @@ from subscript import __version__
 DESCRIPTION = """
 Print list of users running on cluster, sorted by number of jobs.
 
-This is statistics derived from the system command `bjobs` and `finger`.
+This is statistics derived from the system command `bjobs` and `pinky`.
 """
 
 
@@ -77,53 +77,55 @@ def get_jobs(status: str, bjobs_function: Callable) -> pd.DataFrame:
     )
 
 
-def call_finger(username: str) -> str:
-    """Call the system utility 'finger' on a specific username
+def call_pinky(username: str) -> str:
+    """Call the system utility 'pinky' on a specific username
 
     Returns:
-        Unicode string with the first line of output from 'finger'
+        Unicode string with the first line of output from 'pinky'
         Example return value::
 
-          Login: foobert      Name: Foo Barrer (FOO BAR COM)"
+          Login name: foobert      In real life: Foo Barrer (FOO BAR COM)"
     """
-    cmd = f"finger -m {username} | head -n 1"
-    finger_output = None
+    cmd = f"pinky -l {username} | head -n 1"
+    pinky_output = None
     try:
         with open(os.devnull, "w", encoding="utf8") as devnull:
-            finger_output = (
+            pinky_output = (
                 subprocess.check_output(cmd, shell=True, stderr=devnull)
                 .strip()
                 .decode("utf-8")
             )
     except AttributeError:
         pass
-    if finger_output:
-        return finger_output
-    # When finger fails, return something similar and usable
-    return f"Login: {username}  Name: ?? ()"
+    if pinky_output:
+        return pinky_output
+    # When pinky fails, return something similar and usable
+    return f"Login name: {username}  In real life: ?? ()"
 
 
-def userinfo(username: str, finger_function: Callable) -> str:
+def userinfo(username: str, pinky_function: Callable) -> str:
     """Get information on a user based on the username
 
     Args:
         username: user shortname/loginname
-        finger_function: Function handle that can provide output
-            from the system finger program (/usr/bin/finger).
+        pinky_function: Function handle that can provide output
+            from the system pinky program (/usr/bin/pinky).
             The output must be a Unicode string
 
     Returns:
-        str: String with full user name, organization from finger output and
+        str: String with full user name, organization from pinky output and
         the shortname
     """
-    finger_output = finger_function(username)
-    rex_with_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)\s+\((.*)\).*")
-    rex_no_org = re.compile(r".*Login:\s+(.*)\s+Name:\s+(.*)")
-    if rex_with_org.match(finger_output):
-        matches = rex_with_org.match(finger_output).groups()  # type: ignore
+    pinky_output = pinky_function(username)
+    rex_with_org = re.compile(
+        r".*Login name:\s+(.*)\s+In real life:\s+(.*)\s+\((.*)\).*"
+    )
+    rex_no_org = re.compile(r".*Login name:\s+(.*)\s+In real life:\s+(.*)")
+    if rex_with_org.match(pinky_output):
+        matches = rex_with_org.match(pinky_output).groups()  # type: ignore
         org = matches[2].strip()
     else:
-        matches = rex_no_org.match(finger_output).groups()  # type: ignore
+        matches = rex_no_org.match(pinky_output).groups()  # type: ignore
         org = ""
     fullname = matches[1].strip()
     return f"{fullname} ({org}) ({username})"
@@ -138,7 +140,7 @@ def show_status(status: str = "RUN", title: str = "Running", umax: int = 10) -> 
         print(
             count[0],
             userinfo(  # lgtm [py/clear-text-logging-sensitive-data]
-                str(user), call_finger
+                str(user), call_pinky
             ),
         )
     print("- - - - - - - - - - -")

@@ -19,16 +19,16 @@ def bjobs_errors(status):
     return "LIM not responding"
 
 
-class FakeFinger:
-    """Emulate the Linux finger utility"""
+class FakePinky:
+    """Emulate the Linux pinky utility"""
 
     # pylint:  disable=too-few-public-methods
     def __init__(self, name):
         self._name = name
 
     def __call__(self, username):
-        """Emulate the Linux finger utility"""
-        result = "Login: {}          Name: " + self._name
+        """Emulate the Linux pinky utility"""
+        result = "Login name: {}          In real life: " + self._name
         return subprocess.check_output(("echo", result)).decode("utf-8")
 
 
@@ -72,20 +72,20 @@ def test_userinfo():
         "",
     )
 
-    # assert isinstance(fake_finger(''), unicode)  # only relevant for Python 2
+    # assert isinstance(fake_pinky(''), unicode)  # only relevant for Python 2
     for name in names:
-        usersummary = bjobsusers.userinfo("foobar", FakeFinger(name))
+        usersummary = bjobsusers.userinfo("foobar", FakePinky(name))
         assert isinstance(usersummary, str)
         assert "Login" not in usersummary
         assert name in usersummary
 
 
-def test_systemfinger():
-    """Test the real system finger utility"""
+def test_systempinky():
+    """Test the real system pinky utility"""
     currentuser = getpass.getuser()
     if not currentuser:
         return
-    usersummary = bjobsusers.userinfo(currentuser, bjobsusers.call_finger)
+    usersummary = bjobsusers.userinfo(currentuser, bjobsusers.call_pinky)
     assert isinstance(usersummary, str)
     print("Myself is: " + usersummary)
     assert "Login" not in usersummary
