@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.bjobsusers.bjobsusers &mdash; subscript 1.4.1.dev1+ga1ddb061 documentation</title>
+  <title>subscript.bjobsusers.bjobsusers &mdash; subscript 1.4.1.dev2+g132e3721 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=853ead84"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=4813d213"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.4.1.dev1+ga1ddb061
+                1.4.1.dev2+g132e3721
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -199,17 +199,17 @@ the number of allocated cores to the job.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.bjobsusers.bjobsusers.call_finger">
-<span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">call_finger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_finger" title="Permalink to this definition"></a></dt>
-<dd><p>Call the system utility ‘finger’ on a specific username</p>
+<dt class="sig sig-object py" id="subscript.bjobsusers.bjobsusers.call_pinky">
+<span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">call_pinky</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.call_pinky" title="Permalink to this definition"></a></dt>
+<dd><p>Call the system utility ‘pinky’ on a specific username</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p>Unicode string with the first line of output from ‘finger’
+<dd class="field-even"><p><p>Unicode string with the first line of output from ‘pinky’
 Example return value:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Login</span><span class="p">:</span> <span class="n">foobert</span>      <span class="n">Name</span><span class="p">:</span> <span class="n">Foo</span> <span class="n">Barrer</span> <span class="p">(</span><span class="n">FOO</span> <span class="n">BAR</span> <span class="n">COM</span><span class="p">)</span><span class="s2">&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Login</span> <span class="n">name</span><span class="p">:</span> <span class="n">foobert</span>      <span class="n">In</span> <span class="n">real</span> <span class="n">life</span><span class="p">:</span> <span class="n">Foo</span> <span class="n">Barrer</span> <span class="p">(</span><span class="n">FOO</span> <span class="n">BAR</span> <span class="n">COM</span><span class="p">)</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
 </p>
@@ -275,19 +275,19 @@ Only one row pr username. Sorted descending by ncpu.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.bjobsusers.bjobsusers.userinfo">
-<span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">userinfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finger_function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.userinfo" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.bjobsusers.bjobsusers.</span></span><span class="sig-name descname"><span class="pre">userinfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pinky_function</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.bjobsusers.bjobsusers.userinfo" title="Permalink to this definition"></a></dt>
 <dd><p>Get information on a user based on the username</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>username</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – user shortname/loginname</p></li>
-<li><p><strong>finger_function</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></span>) – Function handle that can provide output
-from the system finger program (/usr/bin/finger).
+<li><p><strong>pinky_function</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-data docutils literal notranslate"><span class="pre">Callable</span></code></span>) – Function handle that can provide output
+from the system pinky program (/usr/bin/pinky).
 The output must be a Unicode string</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>String with full user name, organization from finger output and
+<dd class="field-even"><p>String with full user name, organization from pinky output and
 the shortname</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
