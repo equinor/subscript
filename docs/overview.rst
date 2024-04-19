@@ -29,7 +29,6 @@ prtvol2csv                ✅   ✅                 ⛔️
 restartthinner            ✅   ⛔️                 ⛔️
 ri_wellmod                ✅   ✅                 ⛔️
 rmsecl_volumetrics        ✅   ⛔️                 ⛔️
-runrms                    ✅   ⛔️                 ⛔️
 sector2fluxnum            ✅   ⛔️                 ⛔️
 summaryplot               ✅   ⛔️                 ⛔️
 sw_model_utilities        ✅   ⛔️                 ⛔️
