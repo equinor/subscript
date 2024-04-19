@@ -30,7 +30,7 @@ pip install subscript
 ## Usage
 
 As a collection of utilities subscript has many different invocations and
-usages. It is recommended to visit the
+use cases. A complete overview can be found in the
 [documentation](https://equinor.github.io/subscript)
 for a complete overview.
 
