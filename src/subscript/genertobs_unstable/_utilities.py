@@ -1,7 +1,8 @@
 import logging
+import re
 from typing import Union, List
 import pandas as pd
-from pathlib import PosixPath
+from pathlib import PosixPath, Path
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 
