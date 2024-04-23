@@ -2,7 +2,7 @@ import os
 import pytest
 import pandas as pd
 import yaml
-from subscript.genertobs_unstable import _config as conf
+from subscript.genertobs_unstable import parse_config as conf
 from subscript.genertobs_unstable import _utilities as ut
 
 VALID_FORMATS = [
