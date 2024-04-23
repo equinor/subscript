@@ -56,10 +56,10 @@ def validate_config(config: dict):
             logger.debug("No global error added, nothing to check")
 
 
-def read_config_file(
+def read_tabular_config(
     config_file_name: Union[str, PosixPath], parent_folder: Union[str, PosixPath] = None
 ) -> List[pd.DataFrame]:
-    """Parse config file
+    """Parse config file in csv/excel like format
 
     Args:
         config_file_name (str): path to config file
