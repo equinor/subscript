@@ -254,7 +254,7 @@ def test_read_config_file(csv_config):
     Args:
         csv_config (PosixPath): path to config file
     """
-    to_fmuobs, observation_data = conf.read_config_file(csv_config)
+    to_fmuobs, observation_data = conf.read_tabular_config(csv_config)
     print("\nObservations: \n", observation_data)
     print("\nTo fmuobs: \n", to_fmuobs)
 
