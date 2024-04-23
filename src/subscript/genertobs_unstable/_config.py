@@ -8,7 +8,7 @@ import pandas as pd
 from fmu.dataio import ExportData
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 from subscript.fmuobs.writers import summary_df2obsdict
-from subscript.genertobs_unstable._utilities import extract_from_row
+from subscript.genertobs_unstable._utilities import extract_from_row, read_tabular_file
 
 
 def validate_config(config: dict):
