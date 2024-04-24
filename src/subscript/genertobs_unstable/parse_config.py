@@ -76,22 +76,17 @@ def read_tabular_config(
         parent_folder = Path(parent_folder)
 
     obs_data = []
-    frame_to_fmuobs = []
 
     for rnr, row in config.iterrows():
         if row["active"] != "yes":
             logger.info("row %s is deactivated", rnr)
             continue
 
-        row_obs, row_summary = extract_from_row(row, parent_folder)
+        row_obs = extract_from_row(row, parent_folder)
         obs_data.append(row_obs)
-        frame_to_fmuobs.append(row_summary)
 
-    logger.debug("Summary to be exported is %s", frame_to_fmuobs)
-    logger.debug("Observation data to be exported is %s", frame_to_fmuobs)
-    frame_to_fmuobs = pd.concat(frame_to_fmuobs)
     obs_data = pd.concat(obs_data)
-    return frame_to_fmuobs, obs_data
+    return obs_data
 
 
 def read_yaml_config(config_file_name: str) -> dict:
@@ -127,28 +122,27 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
         parent (PosixPath): path of parent folder of file containing dict
 
     Returns:
-        tuple: dictionary with observations to send to sumo,
-               pd.Dataframe to send to fmuobs
+        dict: dictionary with observations
     """
     logger = logging.getLogger(__name__ + ".generate_data_from_config")
     logger.debug("Here is config to parse %s", config)
-    ids = []
     data = []
-    summaries = []
     for config_element in config:
         logger.info("Parsing element %s", config_element)
         data_element = {}
         data_element["name"] = config_element["name"]
         data_element["content"] = config_element["type"]
-        obs, obs_summary = extract_from_row(config_element, parent)
+        try:
+            data_element["metdata"] = config_element["metadata"]
+        except KeyError:
+            logger.debug("No metadata for %s", data_element["name"])
+        obs = extract_from_row(config_element, parent)
         data_element["observations"] = obs
-        data.append(data_element)
-        summaries.append(obs_summary)
 
-        # logger.debug("These are the observations:\n%s", data_element)
-        logger.debug("And this is the summary:\n%s", obs_summary)
-    # summaries = pd.concat(summaries)
-    return data, summaries
+        logger.debug("These are the observations:\n%s", data_element)
+        data.append(data_element)
+
+    return data
 
 
 def export_with_dataio(data: list, config: dict, case_path: str):
