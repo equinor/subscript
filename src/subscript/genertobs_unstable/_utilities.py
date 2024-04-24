@@ -436,6 +436,18 @@ def create_rft_gendata_str(well_name, restart):
     )
 
 
+def write_genrft_str(parent, well_date_path, layer_zone_table):
+    string = (
+        f"DEFINE RFT_INPUT <CONFIG_PATH>/../input/observations/{parent}/rft\n"
+        + "FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>=gendata_rft)\n"
+        + "FORWARD_MODEL GENDATA_RFT(<PATH_TO_TRAJECTORY_FILES>=<RFT_INPUT>,"
+        + f"<WELL_AND_TIME_FILE>=<RFT_INPUT>/{well_date_path}"
+        + f"<ZONEMAP>=<RFT_INPUT>/{layer_zone_table}"
+        + " <OUTPUTDIRECTORY>=gendata_rft)\n"
+    )
+    return string
+
+
 def write_rft_ertobs(rft_dict, parent_folder=""):
     logger = logging.getLogger(__name__ + ".write_rft_ertobs")
     parent_folder = Path(parent_folder)
