@@ -158,13 +158,11 @@ def export_with_dataio(data: list, config: dict, case_path: str):
     exporter = ExportData(config=config)
     for data_element in data:
         logger.debug("Exporting element %s", data_element)
-        if data_element["content"] == "timeseries":
-            name = data_element["observations"]["vector"]
-        else:
-            name = data_element["content"]
+
         export_path = exporter.export(
             data_element,
-            name=name,
+            name=data_element["export_name"],
+            tagname=data_element["content"],
             casepath=case_path,
             fmu_context="case",
             content=data_element["content"],
