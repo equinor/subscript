@@ -204,9 +204,12 @@ def write_dict_to_ertobs(obs_list, parent=""):
             obs_str += write_timeseries_ertobs(obs)
 
         elif content == "rft":
-            obs_str += write_rft_ertobs(obs, "")
+            obs_str += write_rft_ertobs(obs, parent)
         else:
             logger.warning(
                 "Currently not supporting other formats than timeseries and rft"
             )
+    ertobs_file = parent / "ert_observations.obs"
+    ertobs_file.write_text(obs_str)
+
     return obs_str
