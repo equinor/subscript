@@ -4,6 +4,8 @@ import pandas as pd
 import yaml
 from subscript.genertobs_unstable import parse_config as conf
 from subscript.genertobs_unstable import _utilities as ut
+from subscript.genertobs_unstable import _writers as wt
+from subscript.fmuobs.writers import summary_df2obsdict
 
 VALID_FORMATS = [
     "depth",
@@ -95,15 +97,6 @@ def test_add_or_modify_error(frame_err, expected_result):
     assert [int(val) for val in frame.error.tolist()] == [
         int(expected) for expected in expected_result
     ]
-
-
-def test_caps_converters():
-
-    mytest = pd.DataFrame({"banana": [1, 2], "COBlai": [3, 4], "COPPER": [5, 6]})
-    caps_results = [name.upper() for name in mytest.columns]
-    low_caps_results = [name.lower() for name in mytest.columns]
-    assert ut._ensure_up_caps_columns(mytest).columns.tolist() == caps_results
-    assert ut._ensure_low_caps_columns(mytest).columns.tolist() == low_caps_results
 
 
 def test_extract_summary(drogon_project):
@@ -229,13 +222,12 @@ def test_extract_from_row(
     """
     os.chdir(tmp_path)
     summary_row = pd.Series(line_input, index=["name", "type", "observation", "error"])
-    obs, to_fmuobs = ut.extract_from_row(
+    obs = ut.extract_from_row(
         summary_row.to_dict(), drogon_project / "ert/input/observations"
     )
     with open("row_results.yaml", "w") as stream:
         yaml.safe_dump(obs, stream)
     print("\n\n", obs)
-    print("\n\n", to_fmuobs)
     # if shape_obs == shape_tofmuobs:
     #     assert obs.equals(to_fmuobs), "dataframes have same shape but aren't equal"
     # assert obs.shape == shape_obs
@@ -316,19 +308,30 @@ def test_generate_data_from_config(yaml_config, drogon_project, expected_results
     print(yaml_config)
     ert_path = drogon_project / "ert/model"
     os.chdir(ert_path)
-    data, summary_to_fmuobs = conf.generate_data_from_config(
-        yaml_config, ert_path  #  / "../input/observations"
-    )
-    with open("genertobs_dump.yml", "w") as stream:
-        yaml.safe_dump(data, stream)
-
-    print(summary_to_fmuobs)
+    data = conf.generate_data_from_config(yaml_config, ert_path)
     assert_list_of_dicts(data)
+    print("-------------\n", data)
+    print("-------------\n", expected_results, "-------------\n")
     assert len(data) == len(
         expected_results
     ), f"extracted has {len(data)}, but should be {len(expected_results)}"
 
     assert data == expected_results
+
+
+def test_write_timeseries_ertobs(expected_results):
+    ertobs = wt.write_timeseries_ertobs(expected_results[0])
+    print(ertobs)
+
+
+def test_write_rft_ertobs(expected_results):
+    ertobs = wt.write_rft_ertobs(expected_results[2])
+    print(ertobs)
+
+
+def test_write_dict_to_ertobs(expected_results):
+    ertobs = wt.write_dict_to_ertobs(expected_results)
+    print(ertobs)
 
 
 @pytest.mark.skip(reason="Will fix when we get there")
