@@ -393,6 +393,14 @@ def read_obs_frame(
 
 
 def write_timeseries_ertobs(obs_dict):
+    """Make ertobs string to from dictionary
+
+    Args:
+        obs_dict (dict): the dictionary to extract from
+
+    Returns:
+        str: string to write into ertobs file
+    """
     logger = logging.getLogger(__name__ + ".write_timeseries_ertobs")
     logger.debug("%s observations to write", obs_dict)
     obs_frames = []
@@ -413,10 +421,29 @@ def write_timeseries_ertobs(obs_dict):
 
 
 def select_from_dict(keys, full_dict):
+    """Select some keys from a bigger dictionary
+
+    Args:
+        keys (list): the keys to select
+        full_dict (dict): the dictionary to extract from
+
+    Returns:
+        dict: the subselection of dict
+    """
     return {key: full_dict[key] for key in keys}
 
 
 def create_rft_ertobs_str(well_name, restart, obs_file):
+    """Create the rft ertobs string for specific well
+
+    Args:
+        well_name (str): well name
+        restart (str): restart number
+        obs_file (str): name file with corresponding well observations
+
+    Returns:
+        str: the string
+    """
     return (
         f"GENERAL_OBSERVATION {well_name}_OBS "
         + "{"
@@ -428,8 +455,17 @@ def create_rft_ertobs_str(well_name, restart, obs_file):
 
 
 def create_rft_gendata_str(well_name, restart):
+    """Create the string to write as gendata call
+
+    Args:
+        well_name (str): well name
+        restart (str): restart number
+
+    Returns:
+        str: the string
+    """
     return (
-        f"GENERAL_DATA {well_name}_SIM "
+        f"GEN_DATA {well_name}_SIM "
         + "{"
         + f"RESULT_FILE:RFT_{well_name}_%d"
         + f"REPORT_STEPS:{restart}"
@@ -437,6 +473,16 @@ def create_rft_gendata_str(well_name, restart):
 
 
 def write_genrft_str(parent, well_date_path, layer_zone_table):
+    """write the string to define the GENDATA_RFT call
+
+    Args:
+        parent (str): path where rfts are stored
+        well_date_path (str): path where the well, date, and restart number are written
+        layer_zone_table (str): path to where the zones and corresponding layers are stored
+
+    Returns:
+        str: the string
+    """
     string = (
         f"DEFINE RFT_INPUT <CONFIG_PATH>/../input/observations/{parent}/rft\n"
         + "FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>=gendata_rft)\n"
@@ -449,6 +495,15 @@ def write_genrft_str(parent, well_date_path, layer_zone_table):
 
 
 def write_rft_ertobs(rft_dict, parent_folder=""):
+    """Write all rft files for rft dictionary, pluss info str
+
+    Args:
+        rft_dict (dict): the rft information
+        parent_folder (str, optional): path to parent folder to write to. Defaults to "".
+
+    Returns:
+        str: ertobs strings for rfts
+    """
     logger = logging.getLogger(__name__ + ".write_rft_ertobs")
     parent_folder = Path(parent_folder)
     logger.debug("%s observations to write", rft_dict)
@@ -490,6 +545,16 @@ def write_rft_ertobs(rft_dict, parent_folder=""):
 
 
 def write_well_rft_files(parent_folder, prefix, element):
+    """Write rft files for rft element for one well
+
+    Args:
+        parent_folder (str): parent to write all files to
+        prefix (str): prefix defining if it is pressure or saturation
+        element (dict): the info about the element
+
+    Returns:
+        str: ertobs string for well
+    """
     logger = logging.getLogger(__name__ + ".write_well_rft_files")
     well_name = element["well_name"]
     obs_file = parent_folder / f"{prefix}_{well_name}.obs"
@@ -507,6 +572,15 @@ def write_well_rft_files(parent_folder, prefix, element):
 
 
 def write_dict_to_ertobs(obs_list, parent=""):
+    """Write all observation data for ert
+
+    Args:
+        obs_list (list): the list of all observations
+        parent (str, optional): location to write to. Defaults to "".
+
+    Returns:
+        str: parent folder for all written info
+    """
     logger = logging.getLogger(__name__ + ".write_dict_to_ertobs")
     logger.debug("%s observations to write", len(obs_list))
     obs_str = ""
