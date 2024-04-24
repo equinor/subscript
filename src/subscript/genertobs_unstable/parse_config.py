@@ -170,38 +170,3 @@ def export_with_dataio(data: list, config: dict, case_path: str):
             content=data_element["content"],
         )
         logger.info("Exporting to %s", export_path)
-
-
-def generate_rft_obs_files(rft_obs_data: pd.DataFrame, path):
-    """generate ert observations files for rft from observational data
-
-    Args:
-        rft_obs_data (pd.DataFrame): input dataframe
-        path (str): path to parent folder
-    """
-    logger = logging.getLogger(__name__ + ".generate_rft_obs_files")
-    logger.debug("Extracting from dataframe %s", rft_obs_data.head())
-    out_dir = Path(path)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    logger.debug("Exporting to %s", str(out_dir))
-
-    well_info_name = out_dir / "well_name_time_restart.txt"
-
-    pd.Series(rft_obs_data["unique_identifier"].unique()).to_csv(
-        well_info_name, index=False, header=False
-    )
-
-    for well_name in rft_obs_data.WELL_NAME.unique():
-
-        sub_set = rft_obs_data.loc[rft_obs_data.WELL_NAME == well_name]
-        observations = sub_set[["value", "error"]]
-        spatials = sub_set[["md", "tvd", "x", "y", "zone"]]
-        obs_file_name = sub_set["OUTPUT"].values.tolist()[0]
-        if not obs_file_name.parent.exists():
-            obs_file_name.parent.mkdir(parents=True)
-        observations.to_csv(obs_file_name, sep=" ", index=False, header=False)
-        logger.debug("Exporting observations to %s", str(obs_file_name))
-        # space_file_name = obs_file_name.stem + ".txt"
-        space_file_name = obs_file_name.parent / (obs_file_name.stem + ".txt")
-        logger.debug("Exporting spacial extras to %s", str(space_file_name))
-        spatials.to_csv(space_file_name, sep=" ", index=False, header=False)
