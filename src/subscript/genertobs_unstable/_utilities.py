@@ -1,8 +1,7 @@
 import logging
-import re
 from typing import Union, List
 import pandas as pd
-from pathlib import PosixPath, Path
+from pathlib import PosixPath
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 
@@ -274,7 +273,6 @@ def extract_rft(in_frame: pd.DataFrame) -> pd.DataFrame:
         all_rft_obs[unique_ids] + "_" + all_rft_obs["restart"].astype(str)
     )
     all_rft_obs.drop("unique_identifier", axis=1, inplace=True)
-    all_rft_obs["output"] = all_rft_obs["well_name"].str.lower() + ".obs"
     logger.debug("Returning \n%s\n", all_rft_obs)
     return all_rft_obs
 
@@ -312,56 +310,19 @@ def extract_from_row(
     # or maybe contained, but add key name or summat as idenfier
     # Are there exceptions where it should not be list?
     logger = logging.getLogger(__name__ + ".extract_from_row")
-    logger.debug("Input row is %s", row)
     input_file = parent_folder / row["observation"]
-    # to_fmuobs = pd.DataFrame([row.values], columns=row.index)
     logger.debug("File reference in row %s", input_file)
     content = row["type"]
-    obs_file = input_file.parent / (content + "/" + input_file.stem + ".obs")
     obs_frame = read_obs_frame(input_file, content)
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
-    # obs_frame["output"] = str(obs_file.resolve())
-    class_name = "GENERAL_OBSERVATION"
-    if content in ["summary", "timeseries"]:
-        row_type = "timeseries"
-        to_fmuobs = obs_frame
-        class_name = "SUMMARY_OBSERVATION"
 
-    elif content == "rft":
-        row_type = "rft"
-        logger.debug("Well names are %s", obs_frame["well_name"])
-        to_fmuobs = pd.DataFrame(
-            (
-                str(input_file.parent) + "/" + well_name + ".obs"
-                for well_name in obs_frame["well_name"]
-            ),
-            columns=["OBS_FILE"],
-        )
-        # obs_frame["OUTPUT"] = to_fmuobs
-
-        # to_fmuobs["DATA"] = to_fmuobs["label"]
-        logger.debug("RFT")
-
-    else:
-        row_type = "general"
-        to_fmuobs = pd.DataFrame(
-            [[class_name, label, label, obs_file]],
-            columns=["CLASS", "LABEL", "DATA", "OBS_FILE"],
-        )
-
-    to_fmuobs["CLASS"] = class_name
-    obs_frame["CONTENT"] = content
     add_or_modify_error(obs_frame, row["error"])
-
-    to_fmuobs.drop_duplicates(inplace=True)
-    logger.debug("Row is %s (%s)", row_type, row)
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
-    logger.debug("\nThese are the results to send to fmuobs:\n %s", to_fmuobs)
-    try:
-        del obs_frame["CLASS"]
-    except KeyError:
-        logger.debug("No class in this element")
-    return convert_obs_df_to_list(obs_frame), to_fmuobs
+
+    converted = convert_obs_df_to_list(obs_frame)
+    logger.debug("Converted results %s", converted)
+
+    return converted
 
 
 def read_obs_frame(
