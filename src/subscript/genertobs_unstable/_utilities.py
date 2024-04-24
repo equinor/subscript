@@ -102,16 +102,12 @@ def convert_obs_df_to_list(frame: pd.DataFrame) -> list:
         dict: the dictionary derived from dataframe
     """
     logger = logging.getLogger(__name__ + ".convert_obs_df_to_dict")
-
-    frame = _ensure_low_caps_columns(frame)
-    frame.content.replace({"summary": "timeseries"}, inplace=True)
     logger.debug("Frame to extract from \n%s", frame)
     obs_list = []
-    content = frame["content"].values[0]
-    if content == "timeseries":
-        unique_id = "content"
+    if "vector" in frame.columns:
+        unique_id = "vector"
     else:
-        unique_id = "output"
+        unique_id = "label"
     logger.debug("Using %s as unique id", unique_id)
 
     unique_ids = frame[unique_id].unique()
