@@ -326,7 +326,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
 
     contact = "OWC" if "OWC" in qc_frame else "GWC"
 
-    # Eclipse and libecl does not calculate cell centres to the same decimals.
+    # Eclipse and ResData does not calculate cell centres to the same decimals.
     # Add some tolerance when testing towards fluid contacts.
     contacttolerance = 1e-4
 
@@ -338,7 +338,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
 
     # SWATINIT accepted and PC is scaled.
     qc_col[
-        np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-6)
+        np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-3)
         & (qc_frame["SWATINIT"] < 1)
     ] = __PC_SCALED__
 
@@ -347,7 +347,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
         # matches PCOW_MAX and PC_SCALING is 1. We denote this as __PC_SCALED__
         # because it is "scaled" by 1.
         qc_col[
-            np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-6)
+            np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-3)
             & np.isclose(qc_frame["PC_SCALING"], 1)
         ] = __PC_SCALED__
 
@@ -363,7 +363,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
     if "OIP_INIT" in qc_frame and "PC_SCALING" in qc_frame:
         qc_col[
             (~np.isclose(qc_frame["OIP_INIT"], 0))
-            & (~np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-6))
+            & (~np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-3))
             & (~pd.isnull(qc_frame["PC_SCALING"]))
         ] = __FINE_EQUIL__
 
