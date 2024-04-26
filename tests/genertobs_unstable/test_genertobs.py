@@ -2,6 +2,8 @@ import os
 import pytest
 import pandas as pd
 import yaml
+from pathlib import Path
+from shutil import copytree
 from subscript.genertobs_unstable import parse_config as conf
 from subscript.genertobs_unstable import _utilities as ut
 from subscript.genertobs_unstable import _writers as wt
@@ -116,7 +118,7 @@ def test_extract_rft(drogon_project):
     )
     print(results)
     assert_dataframe(results)
-    assert results["output"].unique().size == 2
+    assert results["label"].unique().size == 2
 
 
 def test_extract_general(drogon_project):
@@ -329,15 +331,26 @@ def test_write_rft_ertobs(expected_results):
     print(ertobs)
 
 
-def test_write_dict_to_ertobs(expected_results):
-    ertobs = wt.write_dict_to_ertobs(expected_results)
-    print(ertobs)
+def test_write_dict_to_ertobs(expected_results, tmp_path, drogon_project):
+    tmp_drog = tmp_path / "drog"
+    copytree(drogon_project, tmp_drog)
+    os.chdir(tmp_drog)
+
+    obs_include = tmp_drog / "ert/input/observations/genertobs"
+    obs_include.mkdir(parents=False)
+    ertobs = wt.write_dict_to_ertobs(expected_results, obs_include)
 
 
-@pytest.mark.skip(reason="Will fix when we get there")
-def test_export_with_dataio(expected_results, drogon_project, fmuconfig):
-    export_path = drogon_project / "share/results/dictionaries"
-    conf.export_with_dataio(expected_results, fmuconfig, export_path)
+def test_export_with_dataio(expected_results, drogon_project, fmuconfig, tmp_path):
+    tmp_drog = tmp_path / "drog"
+    copytree(drogon_project, tmp_drog)
+    os.chdir(tmp_drog)
+    export_path = tmp_drog / "share/results/dictionaries"
+    conf.export_with_dataio(expected_results, fmuconfig, tmp_drog)
+    files = list(export_path.glob("*.json"))
+    assert len(files) == 4
+    metas = list(export_path.glob("*.json.yml"))
+    assert len(metas) == 4
 
     # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
     # assert isinstance(
