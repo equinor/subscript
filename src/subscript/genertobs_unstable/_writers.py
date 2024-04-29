@@ -83,7 +83,7 @@ def create_rft_gendata_str(well_name, restart):
         f"GEN_DATA {well_name}_SIM "
         + "{"
         + f"RESULT_FILE:RFT_{well_name}_%d"
-        + f"REPORT_STEPS:{restart}"
+        + f"REPORT_STEPS:{restart}\n"
     )
 
 
