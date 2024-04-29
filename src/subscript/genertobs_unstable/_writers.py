@@ -1,12 +1,12 @@
 import logging
 import re
 import pandas as pd
-from pathlib import Path
+from pathlib import Path, PosixPath
 from shutil import rmtree
 from fmu.dataio import ExportData
 
 
-def write_timeseries_ertobs(obs_dict):
+def write_timeseries_ertobs(obs_dict: dict):
     """Make ertobs string to from dictionary
 
     Args:
@@ -36,7 +36,7 @@ def write_timeseries_ertobs(obs_dict):
     return obs_str
 
 
-def select_from_dict(keys, full_dict):
+def select_from_dict(keys: list, full_dict: dict):
     """Select some keys from a bigger dictionary
 
     Args:
@@ -49,7 +49,7 @@ def select_from_dict(keys, full_dict):
     return {key: full_dict[key] for key in keys}
 
 
-def create_rft_ertobs_str(well_name, restart, obs_file):
+def create_rft_ertobs_str(well_name: str, restart: int, obs_file: PosixPath) -> str:
     """Create the rft ertobs string for specific well
 
     Args:
@@ -70,7 +70,7 @@ def create_rft_ertobs_str(well_name, restart, obs_file):
     )
 
 
-def create_rft_gendata_str(well_name, restart):
+def create_rft_gendata_str(well_name: str, restart: int) -> str:
     """Create the string to write as gendata call
 
     Args:
@@ -88,7 +88,9 @@ def create_rft_gendata_str(well_name, restart):
     )
 
 
-def write_genrft_str(parent, well_date_path, layer_zone_table):
+def write_genrft_str(
+    parent: PosixPath, well_date_path: str, layer_zone_table: str
+) -> str:
     """write the string to define the GENDATA_RFT call
 
     Args:
@@ -110,7 +112,7 @@ def write_genrft_str(parent, well_date_path, layer_zone_table):
     return string
 
 
-def write_rft_ertobs(rft_dict, parent_folder=""):
+def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
     """Write all rft files for rft dictionary, pluss info str
 
     Args:
@@ -161,10 +163,12 @@ def write_rft_ertobs(rft_dict, parent_folder=""):
     gen_data_file.write_text(gen_data)
     logger.debug("Written %s", str(gen_data_file))
 
-    return rft_ertobs
+    return rft_ertobs_str
 
 
-def write_well_rft_files(parent_folder, prefix, element):
+def write_well_rft_files(
+    parent_folder: PosixPath, prefix: str, element: dict
+) -> PosixPath:
     """Write rft files for rft element for one well
 
     Args:
@@ -191,7 +195,7 @@ def write_well_rft_files(parent_folder, prefix, element):
     return obs_file
 
 
-def write_dict_to_ertobs(obs_list, parent):
+def write_dict_to_ertobs(obs_list: list, parent: PosixPath) -> str:
     """Write all observation data for ert
 
     Args:
