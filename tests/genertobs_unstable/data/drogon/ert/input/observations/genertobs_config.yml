@@ -4,12 +4,12 @@
   min_error: 20 # optional, always absolute
   max_error: 30 # optional, always absolute
   # Columns: vector, date, value, error, min_error, max_error (last three columns optional for each row, overrides global error for the rows where they are presnet)
-  observation: "../input/observations/summary_gor.csv"
+  observation: "summary_gor.csv"
 
 - name: Bottom hole pressure observations
   type: timeseries
   error: 5%
-  observation: "../input/observations/summary_wbhp.csv"
+  observation: "summary_wbhp.csv"
 
 - name: RFT pressure observations
   type: rft # we have a plugin that "knows about rft"
@@ -18,7 +18,7 @@
     trajectories: "../rms/output/trajectories.csv"
   error: 5
   # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
-  observation: "../input/observations/drogon_rft_input.ods"
+  observation: "drogon_rft_input.ods"
   metadata:
     columns:
       measured_depth:
@@ -34,7 +34,7 @@
     trajectories: "../rms/output/trajectories.csv"
   error: 5
   # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
-  observation: "../input/observations/drogon_rft_saturation.csv"
+  observation: "drogon_rft_saturation.csv"
   metadata:
     columns:
       measured_depth:
