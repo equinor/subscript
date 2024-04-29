@@ -65,7 +65,7 @@ def create_rft_ertobs_str(well_name, restart, obs_file):
         + "{"
         + f"DATA={well_name}_SIM ;"
         + f" RESTART = {restart}; "
-        + f"OBS_FILE = {obs_file}"
+        + f"OBS_FILE = {obs_file.name}"
         + ";};\n"
     )
 
