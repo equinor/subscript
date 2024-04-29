@@ -30,7 +30,9 @@ def write_timeseries_ertobs(obs_dict):
         obs_frame["date"] = "DATE=" + obs_frame["date"].astype(str) + ";"
         obs_frames.append(obs_frame)
     obs_frames = pd.concat(obs_frames)
-    return re.sub(r" +", " ", obs_frames.to_string(header=False, index=False)) + "\n"
+    obs_str = re.sub(r" +", " ", obs_frames.to_string(header=False, index=False)) + "\n"
+    logger.info("Returning %s", obs_str)
+    return obs_str
 
 
 def select_from_dict(keys, full_dict):
