@@ -1,7 +1,8 @@
 import logging
 import re
-from pathlib import Path
 import pandas as pd
+from pathlib import Path
+from fmu.dataio import ExportData
 
 
 def write_timeseries_ertobs(obs_dict):
@@ -213,3 +214,28 @@ def write_dict_to_ertobs(obs_list, parent=""):
     ertobs_file.write_text(obs_str)
 
     return obs_str
+
+
+def export_with_dataio(data: list, config: dict, case_path: str):
+    """Export observations from list of input dicts
+
+    Args:
+        data (list): the data stored as dict
+        config (dict): config file needed for dataio
+        case_path (str): path to where to store
+    """
+    logger = logging.getLogger(__name__ + ".export_with_dataio")
+
+    exporter = ExportData(config=config)
+    for data_element in data:
+        logger.debug("Exporting element %s", data_element)
+
+        export_path = exporter.export(
+            data_element,
+            name=data_element["export_name"],
+            tagname=data_element["content"],
+            casepath=case_path,
+            fmu_context="case",
+            content=data_element["content"],
+        )
+        logger.info("Exporting to %s", export_path)
