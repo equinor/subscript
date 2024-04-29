@@ -117,8 +117,9 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
             output.append(
                 {
                     "well_name": well_name,
-                    "date": "date",
-                    restart: restart,
+                    "date": date,
+                    "restart": restart,
+                    "label": f"{well_name}_{date}".replace("-", "_"),
                     "observations": well_date_observations,
                 }
             )
@@ -144,7 +145,12 @@ def convert_summary_to_list(frame: pd.DataFrame) -> list:
     vectors = frame.vector.unique().tolist()
     logger.debug("%s vectors to write (%s)", len(vectors), vectors)
     for vector in vectors:
-        vector_observations = narrowed_down.loc[narrowed_down.vector == vector]
+        vector_observations = narrowed_down.loc[narrowed_down.vector == vector].copy()
+        vector_observations["label"] = (
+            vector_observations["vector"].str.replace(":", "_")
+            + "_"
+            + [str(num) for num in range(vector_observations.shape[0])]
+        )
         output.append({"vector": vector, "observations": vector_observations})
     return output
 
