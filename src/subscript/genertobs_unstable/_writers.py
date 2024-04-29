@@ -2,6 +2,7 @@ import logging
 import re
 import pandas as pd
 from pathlib import Path
+from shutil import rmtree
 from fmu.dataio import ExportData
 
 
@@ -204,7 +205,7 @@ def write_dict_to_ertobs(obs_list, parent):
     logger.debug("%s observations to write", len(obs_list))
     if parent.exists():
         logger.warning("%s exists, deleting and overwriting contents", str(parent))
-        parent.unlink()
+        rmtree(parent)
     parent.mkdir()
     obs_str = ""
     for obs in obs_list:
