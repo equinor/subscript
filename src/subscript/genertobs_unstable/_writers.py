@@ -152,9 +152,13 @@ def write_rft_ertobs(rft_dict, parent_folder=""):
         well_date_list, columns=["well_name", "date", "restart"]
     )
 
-    well_date_frame.to_csv(
-        parent_folder / "well_date_restart.txt", index=False, header=False, sep=" "
-    )
+    well_date_file = parent_folder / "well_date_restart.txt"
+    well_date_frame.to_csv(well_date_file, index=False, header=False, sep=" ")
+    logger.debug("Written %s", str(well_date_file))
+    gen_data_file = parent_folder / "gendata_include.ert"
+
+    gen_data_file.write_text(gen_data)
+    logger.debug("Written %s", str(gen_data_file))
 
     return rft_ertobs
 
@@ -186,7 +190,7 @@ def write_well_rft_files(parent_folder, prefix, element):
     return obs_file
 
 
-def write_dict_to_ertobs(obs_list, parent=""):
+def write_dict_to_ertobs(obs_list, parent):
     """Write all observation data for ert
 
     Args:
@@ -198,6 +202,10 @@ def write_dict_to_ertobs(obs_list, parent=""):
     """
     logger = logging.getLogger(__name__ + ".write_dict_to_ertobs")
     logger.debug("%s observations to write", len(obs_list))
+    if parent.exists():
+        logger.warning("%s exists, deleting and overwriting contents", str(parent))
+        parent.unlink()
+    parent.mkdir()
     obs_str = ""
     for obs in obs_list:
         logger.debug(obs)
