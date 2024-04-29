@@ -18,10 +18,10 @@ def write_timeseries_ertobs(obs_dict: dict):
     logger = logging.getLogger(__name__ + ".write_timeseries_ertobs")
     logger.debug("%s observations to write", obs_dict)
     obs_frames = []
-    for element in obs_dict["observations"]:
+    for element in obs_dict:
         key = element["vector"]
-        del element["vector"]
-        obs_frame = pd.DataFrame(element)
+        logger.debug(key)
+        obs_frame = element["data"]
         obs_frame["class"] = "SUMMARY_OBSERVATION"
         obs_frame["key"] = key + ";};"
         order = ["class", "label", "value", "error", "date", "key"]
@@ -82,8 +82,7 @@ def create_rft_gendata_str(well_name: str, restart: int) -> str:
     """
     return (
         f"GEN_DATA {well_name}_SIM "
-        + "{"
-        + f"RESULT_FILE:RFT_{well_name}_%d"
+        + f"RESULT_FILE:RFT_{well_name}_%d "
         + f"REPORT_STEPS:{restart}\n"
     )
 
@@ -184,12 +183,10 @@ def write_well_rft_files(
     obs_file = parent_folder / f"{prefix}_{well_name}.obs"
     position_file = parent_folder / f"{prefix}_{well_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
-    obs_frame = pd.DataFrame(select_from_dict(["value", "error"], element))
+    obs_frame = element["data"][["value", "error"]]
     logger.debug("observations\n%s", obs_frame)
     obs_frame.to_csv(obs_file, index=False, header=False, sep=" ")
-    position_frame = pd.DataFrame(
-        select_from_dict(["x", "y", "md", "tvd", "zone"], element)
-    )
+    position_frame = element["data"][["x", "y", "md", "tvd", "zone"]]
     logger.debug("positions for\n%s", position_frame)
     position_frame.to_csv(position_file, index=False, header=False, sep=" ")
     return obs_file
@@ -217,7 +214,7 @@ def write_dict_to_ertobs(obs_list: list, parent: PosixPath) -> str:
         content = obs["content"]
         obs_str += f"--\n--{obs['name']}\n"
         if content == "timeseries":
-            obs_str += write_timeseries_ertobs(obs)
+            obs_str += write_timeseries_ertobs(obs["observations"])
 
         elif content == "rft":
             obs_str += write_rft_ertobs(obs, parent)
