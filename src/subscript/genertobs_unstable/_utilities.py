@@ -18,19 +18,6 @@ def _ensure_low_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     return dataframe
 
 
-def _ensure_up_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
-    """Make all column names upper case
-
-    Args:
-        dataframe (pd.DataFrame): the dataframe to modify
-
-    Returns:
-        pd.DataFrame: the modified dataframe
-    """
-    dataframe.columns = [col.upper() for col in dataframe.columns]
-    return dataframe
-
-
 def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
     """Read csv or excel file into pandas dataframe
 
