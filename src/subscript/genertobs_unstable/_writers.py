@@ -124,7 +124,7 @@ def write_rft_ertobs(rft_dict, parent_folder=""):
     parent_folder = Path(parent_folder)
     logger.debug("%s observations to write", rft_dict)
     well_date_list = []
-    rft_ertobs = ""
+    rft_ertobs_str = ""
     gen_data = ""
     try:
         metadata = rft_dict["metadata"]
@@ -147,7 +147,7 @@ def write_rft_ertobs(rft_dict, parent_folder=""):
         restart = element["restart"]
         obs_file = write_well_rft_files(parent_folder, prefix, element)
         well_date_list.append([well_name, date, restart])
-        rft_ertobs += create_rft_ertobs_str(well_name, restart, obs_file)
+        rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
         gen_data += create_rft_gendata_str(well_name, restart)
     well_date_frame = pd.DataFrame(
         well_date_list, columns=["well_name", "date", "restart"]
