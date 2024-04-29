@@ -91,9 +91,7 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
     output = []
     logger = logging.getLogger(__name__ + ".convert_rft_to_list")
     logger.debug("frame to convert %s", frame)
-    relevant_columns = [
-        "well_name",
-        "date",
+    keepers = [
         "value",
         "error",
         "x",
@@ -102,6 +100,11 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
         "md",
         "zone",
     ]
+    additionals = [
+        "well_name",
+        "date",
+    ]
+    relevant_columns = keepers + additionals
     narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]
     well_names = narrowed_down.well_name.unique().tolist()
     logger.debug("%s wells to write (%s)", len(well_names), well_names)
@@ -120,7 +123,7 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
                     "date": date,
                     "restart": restart,
                     "label": f"{well_name}_{date}".replace("-", "_"),
-                    "observations": well_date_observations,
+                    "data": well_date_observations[keepers],
                 }
             )
             restart += 1
@@ -140,7 +143,9 @@ def convert_summary_to_list(frame: pd.DataFrame) -> list:
     output = []
     logger = logging.getLogger(__name__ + ".convert_summary_to_list")
     logger.debug("frame to convert %s", frame)
-    relevant_columns = ["vector", "date", "value", "error"]
+    keepers = ["date", "value", "error"]
+    additional = ["vector"]
+    relevant_columns = keepers + additional
     narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]
     vectors = frame.vector.unique().tolist()
     logger.debug("%s vectors to write (%s)", len(vectors), vectors)
@@ -151,7 +156,12 @@ def convert_summary_to_list(frame: pd.DataFrame) -> list:
             + "_"
             + [str(num) for num in range(vector_observations.shape[0])]
         )
-        output.append({"vector": vector, "observations": vector_observations})
+        output.append(
+            {
+                "vector": vector,
+                "data": vector_observations[keepers + ["label"]],
+            }
+        )
     return output
 
 
