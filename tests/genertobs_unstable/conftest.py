@@ -49,6 +49,18 @@ def _fix_rft_as_frame():
     return pd.read_csv(Path(__file__).parent / "data/rft_as_frame.csv")
 
 
+@pytest.fixture(scope="session", name="summary_as_frame")
+def _fix_sum_as_frame():
+
+    frame = pd.read_csv(
+        Path(__file__).parent
+        / "data/drogon/ert/input/observations/drogon_summary_input.txt",
+        sep="\s+",
+    )
+    frame.columns = [name.lower() for name in frame.columns]
+    return frame
+
+
 @pytest.fixture(scope="session", name="yaml_config")
 def _fix_yaml_config(yaml_config_file):
     config = read_yaml_file(yaml_config_file)
