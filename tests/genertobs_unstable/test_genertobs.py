@@ -307,8 +307,8 @@ def test_write_timeseries_ertobs(expected_results):
     print(ertobs)
 
 
-def test_write_rft_ertobs(expected_results):
-    ertobs = wt.write_rft_ertobs(expected_results[2])
+def test_write_rft_ertobs(expected_results, tmp_path):
+    ertobs = wt.write_rft_ertobs(expected_results[2], tmp_path)
     print(ertobs)
 
 
@@ -344,6 +344,7 @@ def test_main_run(drogon_project, tmp_path):
     tmp_drog = tmp_path / "drog"
     copytree(drogon_project, tmp_drog)
     os.chdir(tmp_drog)
+    print(tmp_drog)
     genert_config_name = "genertobs_config.yml"
     tmp_observations = tmp_drog / "ert/input/observations/genertobs"
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
