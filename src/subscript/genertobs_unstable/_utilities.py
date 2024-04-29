@@ -156,12 +156,12 @@ def add_or_modify_error(frame: pd.DataFrame, error: str):
 
         frac_error = float(error[:-1]) / 100
         logger.debug("Factor to multiply with %s", frac_error)
-        frame.error[error_holes] = frame.value[error_holes] * frac_error
+        frame.loc[error_holes, "error"] = frame.loc[error_holes, "value"] * frac_error
     else:
         logger.debug("Error is absolute, will be added as constant")
         abs_error = float(error)
         logger.debug("Error to add %s", abs_error)
-        frame.error.loc[error_holes] = abs_error
+        frame.loc[error_holes, "error"] = abs_error
     logger.debug("After addition/modification errors are \n%s\n", frame.error)
     # return frame
 
