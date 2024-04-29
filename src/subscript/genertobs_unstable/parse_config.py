@@ -5,10 +5,8 @@ from pathlib import Path, PosixPath
 from typing import Union, List
 import yaml
 import pandas as pd
-from fmu.dataio import ExportData
 from fmu.dataio.datastructure.meta.enums import ContentEnum
-from subscript.fmuobs.writers import summary_df2obsdict
-from subscript.genertobs_unstable._utilities import extract_from_row, read_tabular_file
+from subscript.genertobs_unstable._utilities import extract_from_row
 
 
 def validate_config(config: dict):
@@ -143,28 +141,3 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
         data.append(data_element)
 
     return data
-
-
-def export_with_dataio(data: list, config: dict, case_path: str):
-    """Export observations from list of input dicts
-
-    Args:
-        data (list): the data stored as dict
-        config (dict): config file needed for dataio
-        case_path (str): path to where to store
-    """
-    logger = logging.getLogger(__name__ + ".export_with_dataio")
-
-    exporter = ExportData(config=config)
-    for data_element in data:
-        logger.debug("Exporting element %s", data_element)
-
-        export_path = exporter.export(
-            data_element,
-            name=data_element["export_name"],
-            tagname=data_element["content"],
-            casepath=case_path,
-            fmu_context="case",
-            content=data_element["content"],
-        )
-        logger.info("Exporting to %s", export_path)
