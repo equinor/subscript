@@ -79,7 +79,77 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
     return frame_as_dict
 
 
-def convert_obs_df_to_list(frame: pd.DataFrame) -> list:
+def convert_rft_to_list(frame: pd.DataFrame) -> list:
+    """Convert dataframe to list of dictionaries
+
+    Args:
+        frame (pd.DataFrame): the input dataframe
+
+    Returns:
+        list: the extracted results
+    """
+    output = []
+    logger = logging.getLogger(__name__ + ".convert_rft_to_list")
+    logger.debug("frame to convert %s", frame)
+    relevant_columns = [
+        "well_name",
+        "date",
+        "value",
+        "error",
+        "x",
+        "y",
+        "tvd",
+        "md",
+        "zone",
+    ]
+    narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]
+    well_names = narrowed_down.well_name.unique().tolist()
+    logger.debug("%s wells to write (%s)", len(well_names), well_names)
+    for well_name in well_names:
+        well_observations = narrowed_down.loc[narrowed_down.well_name == well_name]
+        dates = well_observations.date.unique().tolist()
+        logger.debug("Well %s has %s dates", well_name, len(dates))
+        restart = 1
+        for date in dates:
+            well_date_observations = well_observations.loc[
+                well_observations.date == date
+            ]
+            output.append(
+                {
+                    "well_name": well_name,
+                    "date": "date",
+                    restart: restart,
+                    "observations": well_date_observations,
+                }
+            )
+            restart += 1
+
+    return output
+
+
+def convert_summary_to_list(frame: pd.DataFrame) -> list:
+    """Convert dataframe with summary obs to list of dictionaries
+
+    Args:
+        frame (pd.DataFrame): the input dataframe
+
+    Returns:
+        list: the extracted results
+    """
+    output = []
+    logger = logging.getLogger(__name__ + ".convert_summary_to_list")
+    logger.debug("frame to convert %s", frame)
+    relevant_columns = ["vector", "date", "value", "error"]
+    narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]
+    vectors = frame.vector.unique().tolist()
+    logger.debug("%s vectors to write (%s)", len(vectors), vectors)
+    for vector in vectors:
+        vector_observations = narrowed_down.loc[narrowed_down.vector == vector]
+        output.append({"vector": vector, "observations": vector_observations})
+    return output
+
+
+def convert_obs_df_to_list(frame: pd.DataFrame, content: str) -> list:
     """Converts dataframe with observation to dictionary format
 
     Args:
