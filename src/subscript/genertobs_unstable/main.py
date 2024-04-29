@@ -2,7 +2,12 @@
 
 import logging
 import argparse
-from subscript.genertobs_unstable.parse_config import read_yaml_config
+from pathlib import Path
+from subscript.genertobs_unstable.parse_config import (
+    read_yaml_config,
+    generate_data_from_config,
+)
+from subscript.genertobs_unstable._writers import write_dict_to_ertobs
 
 
 def parse_args():
@@ -15,12 +20,21 @@ def parse_args():
     return parser.parse_args()
 
 
+def run(config_path, output_folder):
+    logger = logging.getLogger(__name__ + ".run")
+    config = read_yaml_config(config_path)
+    logger.debug("Read config: %s", config)
+    data = generate_data_from_config(config, Path(config_path).parent)
+    logger.debug("Data generated %s", data)
+    write_dict_to_ertobs(data, Path(output_folder))
+
+
 def main():
     """Run the whole shebang"""
     logger = logging.getLogger(__name__ + ".main")
     args = parse_args()
-    config = read_yaml_config(args.conf_file)
-    logger.debug(config)
+    logger.debug("Read args")
+    run(args.config_file, args.output_folder)
 
 
 if __name__ == "__main__":
