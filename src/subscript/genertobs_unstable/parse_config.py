@@ -131,9 +131,10 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
         data_element["name"] = config_element["name"]
         data_element["content"] = config_element["type"]
         try:
-            data_element["metdata"] = config_element["metadata"]
+            data_element["metadata"] = config_element["metadata"]
         except KeyError:
             logger.debug("No metadata for %s", data_element["name"])
+
         obs = extract_from_row(config_element, parent)
         data_element["observations"] = obs
 

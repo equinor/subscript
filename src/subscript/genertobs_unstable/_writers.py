@@ -141,6 +141,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
     else:
         prefix = "pressure"
 
+    logger.debug("prefix is %s", prefix)
     for element in rft_dict["observations"]:
         well_name = element["well_name"]
         logger.debug(well_name)
@@ -237,17 +238,24 @@ def export_with_dataio(data: list, config: dict, case_path: str):
         case_path (str): path to where to store
     """
     logger = logging.getLogger(__name__ + ".export_with_dataio")
-
+    logger.debug("Will be exporting from %s", data)
     exporter = ExportData(config=config)
     for data_element in data:
         logger.debug("Exporting element %s", data_element)
-
-        export_path = exporter.export(
-            data_element,
-            name=data_element["export_name"],
-            tagname=data_element["content"],
-            casepath=case_path,
-            fmu_context="case",
-            content=data_element["content"],
-        )
+        content = data_element["content"]
+        for observation in data_element["observations"]:
+            try:
+                name = observation["vector"].replace(":", "_")
+            except KeyError:
+                name = observation["well_name"]
+            obs_data = observation["data"]
+            logger.debug("Observations to export %s", obs_data)
+            export_path = exporter.export(
+                obs_data,
+                name=name,
+                tagname=content,
+                casepath=case_path,
+                fmu_context="case",
+                content=content,
+            )
         logger.info("Exporting to %s", export_path)
