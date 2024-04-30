@@ -201,12 +201,9 @@ def add_or_modify_error(
     logger = logging.getLogger(__name__ + ".add_or_modify_error")
     logger.debug("Frame before error addition/modification \n%s\n", frame)
     logger.debug("Error to apply %s", error)
-    if isinstance(frame.value, object):
-        if frame.value.astype(str).str.contains(".").sum() > 0:
-            converter = float
-        else:
-            converter = int
-        frame.value = frame.value.astype(converter)
+
+    ensure_numeric(frame, "value")
+    ensure_numeric(frame, "error")
     error = str(error)  # convert to ensure that code is simpler further down
     try:
         error_holes = frame.error.isna()
@@ -241,7 +238,33 @@ def add_or_modify_error(
         abs_error = float(error)
         logger.debug("Error to add %s", abs_error)
         frame.loc[error_holes, "error"] = abs_error
+
+    dubious_errors = frame.error > frame.value
+    if dubious_errors.sum() > 0:
+        warn(
+            "Some errors are larger than the values"
+            f"({frame.loc[dubious_errors]}), is this intentional?"
+        )
     logger.debug("After addition/modification errors are \n%s\n", frame.error)
+
+
+def ensure_numeric(frame: pd.DataFrame, key: str):
+    """Convert certain column to numeric if it isn't
+
+    Args:
+        frame (pd.DataFrame): the dataframe
+        key (str): the column name for the column
+    """
+    logger = logging.getLogger(__name__ + ".ensure_numeric")
+    try:
+        if frame[key].dtype.kind not in "iuf":
+            if frame[key].astype(str).str.contains(".").sum() > 0:
+                converter = float
+            else:
+                converter = int
+            frame[key] = frame[key].astype(converter)
+    except KeyError:
+        logger.debug("No %s column", key)
 
 
 def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
