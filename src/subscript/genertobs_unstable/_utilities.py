@@ -1,6 +1,7 @@
 import logging
 from typing import Union, List
 import pandas as pd
+from warnings import warn
 from pathlib import PosixPath
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 
@@ -185,7 +186,12 @@ def convert_obs_df_to_list(frame: pd.DataFrame, content: str) -> list:
     return obs_list
 
 
-def add_or_modify_error(frame: pd.DataFrame, error: str):
+def add_or_modify_error(
+    frame: pd.DataFrame,
+    error: str,
+    err_min: Union[float, int] = None,
+    err_max: Union[float, int] = None,
+):
     """Complete error column in dataframe
 
     Args:
@@ -218,8 +224,19 @@ def add_or_modify_error(frame: pd.DataFrame, error: str):
         frac_error = float(error[:-1]) / 100
         logger.debug("Factor to multiply with %s", frac_error)
         frame.loc[error_holes, "error"] = frame.loc[error_holes, "value"] * frac_error
+        if err_min is not None:
+            frame.loc[frame["error"] < err_min, "error"] = err_min
+
+        if err_max is not None:
+            frame.loc[frame["error"] > err_max, "error"] = err_max
 
     else:
+        if err_max is not None or err_min is not None:
+            mess = f"""Truncation of error when error is absolute
+                    has no effect min: {err_min}, max: {err_max}
+            """
+            warn(mess)
+
         logger.debug("Error is absolute, will be added as constant")
         abs_error = float(error)
         logger.debug("Error to add %s", abs_error)
@@ -266,7 +283,9 @@ def extract_from_row(
     obs_frame = read_obs_frame(input_file, content)
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
 
-    add_or_modify_error(obs_frame, row["error"])
+    add_or_modify_error(
+        obs_frame, row["error"], row.get("min_error", None), row.get("max_error", None)
+    )
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
 
     converted = convert_obs_df_to_list(obs_frame, content)
