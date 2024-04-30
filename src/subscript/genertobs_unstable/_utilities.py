@@ -56,7 +56,29 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
             "File is not parsed correctly, check if there is something wrong!"
         )
 
-    return _ensure_low_caps_columns(dataframe)
+    dataframe = _ensure_low_caps_columns(dataframe)
+    inactivate_rows(dataframe)
+    return dataframe
+
+
+def inactivate_rows(dataframe: pd.DataFrame):
+    """Inactivate rows in dataframe
+
+    Args:
+        dataframe (pd.DataFrame): the dataframe to decimate
+    """
+    logger = logging.getLogger(__name__ + ".inactivate_rows")
+    try:
+        inactivated = dataframe.active == "no"
+        nr_rows = inactivated.sum()
+        logger.info(
+            "%s rows inactivated (%s percent)",
+            nr_rows,
+            100 * nr_rows / dataframe.shape[0],
+        )
+        dataframe = dataframe.loc[inactivated]
+    except AttributeError:
+        logger.info("No inactivation done")
 
 
 def convert_df_to_dict(frame: pd.DataFrame) -> dict:
