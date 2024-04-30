@@ -116,6 +116,7 @@ sw_model_utilities = "subscript.sw_model_utilities.sw_model_utilities:main"
 sunsch = "subscript.sunsch.sunsch:main"
 vfp2csv = "subscript.vfp2csv.vfp2csv:main"
 welltest_dpds = "subscript.welltest_dpds.welltest_dpds:main"
+genertobs_unstable = "subscript.genertobs_unstable.main:main"
 
 [project.entry-points.ert]
 subscript_jobs = "subscript.hook_implementations.jobs"
