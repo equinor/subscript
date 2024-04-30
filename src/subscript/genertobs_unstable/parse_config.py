@@ -3,6 +3,7 @@
 import logging
 from pathlib import Path, PosixPath
 from typing import Union, List
+from warnings import warn
 import yaml
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
@@ -128,6 +129,10 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
     for config_element in config:
         logger.info("Parsing element %s", config_element)
         data_element = {}
+        active = config_element.get("active", True)
+        if not active:
+            warn("User has set element %s to inactive", config_element["name"])
+
         data_element["name"] = config_element["name"]
         data_element["content"] = config_element["type"]
         try:
