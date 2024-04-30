@@ -195,6 +195,12 @@ def add_or_modify_error(frame: pd.DataFrame, error: str):
     logger = logging.getLogger(__name__ + ".add_or_modify_error")
     logger.debug("Frame before error addition/modification \n%s\n", frame)
     logger.debug("Error to apply %s", error)
+    if isinstance(frame.value, object):
+        if frame.value.astype(str).str.contains(".").sum() > 0:
+            converter = float
+        else:
+            converter = int
+        frame.value = frame.value.astype(converter)
     error = str(error)  # convert to ensure that code is simpler further down
     try:
         error_holes = frame.error.isna()
@@ -202,19 +208,23 @@ def add_or_modify_error(frame: pd.DataFrame, error: str):
         logger.info("No error column provided, error will be added for all entries")
         error_holes = pd.Series([True] * frame.shape[0])
         frame["error"] = None
+    if error_holes.sum() == 0:
+        logger.info("Error allready set, nothing will be changed")
+        frame.error = frame.error.astype(float)
+
     if error.endswith("%"):
         logger.debug("Error is percent, will be multiplied with value")
 
         frac_error = float(error[:-1]) / 100
         logger.debug("Factor to multiply with %s", frac_error)
         frame.loc[error_holes, "error"] = frame.loc[error_holes, "value"] * frac_error
+
     else:
         logger.debug("Error is absolute, will be added as constant")
         abs_error = float(error)
         logger.debug("Error to add %s", abs_error)
         frame.loc[error_holes, "error"] = abs_error
     logger.debug("After addition/modification errors are \n%s\n", frame.error)
-    return frame
 
 
 def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
