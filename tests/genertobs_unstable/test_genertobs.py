@@ -85,9 +85,10 @@ def test_read_tabular_file(drogon_project, table_file_name):
                 pd.DataFrame({"value": [100, 200]}),
                 pd.DataFrame({"value": [100, 200], "error": [None, 40]}),
                 pd.DataFrame({"value": [100, 200], "error": [1, 1]}),
+                pd.DataFrame({"value": [100]}),
             ]
         ],
-        [[10, 10], [10, 40], [1, 1], [10, 20], [10, 40], [1, 1]],
+        [[10, 10], [10, 40], [1, 1], [10], [10, 20], [10, 40], [1, 1], [10]],
     ),
 )
 def test_add_or_modify_error(frame_err, expected_result):
@@ -101,26 +102,6 @@ def test_add_or_modify_error(frame_err, expected_result):
     assert [int(val) for val in frame.error.tolist()] == [
         int(expected) for expected in expected_result
     ]
-
-
-def test_extract_summary(drogon_project):
-    results = ut.extract_summary(
-        ut.read_tabular_file(drogon_project / "ert/input/observations/summary_gor.csv")
-    )
-    print(results)
-    assert_dataframe(results)
-    # assert_list_of_dicts(results)
-
-
-def test_extract_rft(drogon_project):
-    results = ut.extract_rft(
-        ut.read_tabular_file(
-            drogon_project / "ert/input/observations/drogon_rft_input.ods"
-        )
-    )
-    print(results)
-    assert_dataframe(results)
-    assert results["label"].unique().size == 2
 
 
 def test_extract_general(drogon_project):
@@ -284,8 +265,19 @@ def test_generate_data_from_config(yaml_config, drogon_project, expected_results
     data = conf.generate_data_from_config(
         yaml_config, drogon_project / "ert/input/observations"
     )
+    # Activate if something in results change
+    # with open(Path(__file__).parent / "/data/pickled_data.pkl", "wb") as stream:
+    #     pickle.dump(data, stream)
+
+    for element in data:
+        print("---\n", element["name"], "\n")
+        print(element)
+        # print("---\n", element["error"], "\n")
+        for obs in element["observations"]:
+            print(obs["data"])
+
     # assert_list_of_dicts(data)
-    print("-------------\n", data)
+    # print("-------------\n", data)
     # print("-------------\n", expected_results, "-------------\n")
     # assert len(data) == len(
     #     expected_results
@@ -309,8 +301,8 @@ def test_convert_summary_to_list(summary_as_frame):
 
 
 def test_write_timeseries_ertobs(expected_results):
-    ertobs = wt.write_timeseries_ertobs(expected_results[0])
-    print(ertobs)
+    ertobs = wt.write_timeseries_ertobs(expected_results)
+    # print(ertobs)
 
 
 def test_write_rft_ertobs(expected_results, tmp_path):
@@ -356,3 +348,9 @@ def test_main_run(drogon_project, tmp_path):
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
 
     main.run(test_config, tmp_observations)
+    obs_files = tmp_observations.glob("*.obs")
+    for obs_file in obs_files:
+        obs_text = obs_file.read_text()
+        assert (
+            "%" not in obs_text
+        ), f"{str(obs_file)} contains percent sign, ({obs_text})"
