@@ -4,6 +4,7 @@ import logging
 from pathlib import Path
 import yaml
 import pandas as pd
+import pickle
 import pytest
 from fmu.config.utilities import yaml_load
 
@@ -70,8 +71,10 @@ def _fix_yaml_config(yaml_config_file):
 
 @pytest.fixture(scope="session", name="expected_results")
 def _fix_results():
-    results_path = Path(__file__).parent / "data/expected_yaml_output.yml"
-    return read_yaml_file(results_path)
+    data = None
+    with open(Path(__file__).parent / "data/pickled_data.pkl", "rb") as stream:
+        data = pickle.load(stream)
+    return data
 
 
 @pytest.fixture(scope="session", name="fmuconfig")
