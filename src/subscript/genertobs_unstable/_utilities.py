@@ -58,6 +58,7 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
 
     dataframe = _ensure_low_caps_columns(dataframe)
     inactivate_rows(dataframe)
+    dataframe.rename({"key": "vector"}, inplace=True, axis="columns")
     return dataframe
 
 
