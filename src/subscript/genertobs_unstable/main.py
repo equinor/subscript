@@ -20,7 +20,13 @@ def parse_args():
     return parser.parse_args()
 
 
-def run(config_path, output_folder):
+def run(config_path: str, output_folder: str):
+    """Generate data from config file
+
+    Args:
+        config_path (str): path to genertobs file
+        output_folder (str): path to where all results will be stored
+    """
     logger = logging.getLogger(__name__ + ".run")
     config = read_yaml_config(config_path)
     logger.debug("Read config: %s", config)
