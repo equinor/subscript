@@ -1,8 +1,8 @@
 import logging
 from typing import Union, List
-import pandas as pd
 from warnings import warn
 from pathlib import PosixPath
+import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 
