@@ -36,7 +36,6 @@ Submodules
    subscript.restartthinner
    subscript.ri_wellmod
    subscript.rmsecl_volumetrics
-   subscript.runrms
    subscript.sector2fluxnum
    subscript.summaryplot
    subscript.sunsch
