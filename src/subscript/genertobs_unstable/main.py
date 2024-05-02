@@ -18,7 +18,9 @@ def parse_args():
     info_string = "Generates all neccessary files for using observations in ert"
     parser = argparse.ArgumentParser(description=info_string)
     parser.add_argument("config_file", help="path to config file", type=str)
-    parser.add_argument("output_folder", help="path to all neccessary files", type=str)
+    parser.add_argument(
+        "output_folder", help="path to write all result files", type=str
+    )
     parser.add_argument(
         "master_config_file",
         help="Path to file with master metadata (usually contained in the fmu config file)",
