@@ -88,7 +88,7 @@ def read_tabular_config(
     return obs_data
 
 
-def read_yaml_config(config_file_name: str) -> dict:
+def read_yaml_config(config_file_name: str, validate=False) -> dict:
     """Read configuration from file
 
     Args:
@@ -109,7 +109,8 @@ def read_yaml_config(config_file_name: str) -> dict:
     except OSError as ose:
         raise RuntimeError(f"Could not read {config_file_name}") from ose
     logger.debug("Returning %s", config)
-    validate_config(config)
+    if validate:
+        validate_config(config)
     return config
 
 
