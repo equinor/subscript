@@ -143,7 +143,7 @@ def write_genrft_str(
         + "FORWARD_MODEL GENDATA_RFT(<PATH_TO_TRAJECTORY_FILES>=<RFT_INPUT>,"
         + f"<WELL_AND_TIME_FILE>=<RFT_INPUT>/{well_date_path}"
         + f"<ZONEMAP>=<RFT_INPUT>/{layer_zone_table}"
-        + " <OUTPUTDIRECTORY>=gendata_rft)\n"
+        + " <OUTPUTDIRECTORY>=gendata_rft)\n\n"
     )
     return string
 
@@ -184,6 +184,12 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
     write_csv_with_comment(well_date_file, well_date_frame)
     logger.debug("Written %s", str(well_date_file))
     gen_data_file = parent_folder / "gendata_include.ert"
+    gen_data = (
+        write_genrft_str(
+            parent_folder, str(well_date_file), rft_dict["plugin_arguments"]["zonemap"]
+        )
+        + gen_data
+    )
 
     gen_data_file.write_text(gen_data)
     logger.debug("Written %s", str(gen_data_file))

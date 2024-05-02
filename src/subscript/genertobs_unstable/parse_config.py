@@ -128,23 +128,30 @@ def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
     logger.debug("Here is config to parse %s", config)
     data = []
     for config_element in config:
-        logger.info("Parsing element %s", config_element)
-        data_element = {}
-        active = config_element.get("active", True)
-        if not active:
-            warn("User has set element %s to inactive", config_element["name"])
-
-        data_element["name"] = config_element["name"]
-        data_element["content"] = config_element["type"]
+        logger.info("Parsing element %s", config_element["name"])
+        # TODO: find out: why does not a simple data_element = config_element.copy() suffice
+        data_element = {
+            "name": config_element["name"],
+            "content": config_element["type"],
+        }
         try:
             data_element["metadata"] = config_element["metadata"]
         except KeyError:
             logger.debug("No metadata for %s", data_element["name"])
+        try:
+            data_element["plugin_arguments"] = config_element["plugin_arguments"]
+        except KeyError:
+            logger.debug("No plugin arguments for %s", data_element["name"])
+
+        active = config_element.get("active", True)
+        if not active:
+            warn("User has set element %s to inactive", config_element["name"])
 
         obs = extract_from_row(config_element, parent)
         data_element["observations"] = obs
 
-        logger.debug("These are the observations:\n%s", data_element)
+        logger.debug("These are the observations:\n%s", obs)
+        logger.debug("These are the dict keys %s", data_element.keys())
         data.append(data_element)
 
     return data
