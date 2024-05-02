@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument("config_file", help="path to config file", type=str)
     parser.add_argument("output_folder", help="path to all neccessary files", type=str)
     parser.add_argument(
-        "master_config",
+        "master_config_file",
         help="Path to file with master metadata (usually contained in the fmu config file)",
         type=str,
     )
@@ -28,7 +28,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def run(config_path: str, output_folder: str, global_variables):
+def run(config_path: str, output_folder: str, master_config_file):
     """Generate data from config file
 
     Args:
@@ -41,10 +41,10 @@ def run(config_path: str, output_folder: str, global_variables):
     data = generate_data_from_config(config, Path(config_path).parent)
     logger.debug("Data generated %s", data)
     write_dict_to_ertobs(data, Path(output_folder))
-    global_variables = read_yaml_config(global_variables)
+    master_config = read_yaml_config(master_config_file)
     export_folder = Path(output_folder) / "sumo"
     logger.debug("Exporting observations ready for sumo to %s", str(export_folder))
-    export_with_dataio(data, global_variables, export_folder)
+    export_with_dataio(data, master_config, export_folder)
 
 
 def main():
@@ -52,7 +52,7 @@ def main():
     logger = logging.getLogger(__name__ + ".main")
     args = parse_args()
     logger.debug("Read args")
-    run(args.config_file, args.output_folder, args.global_variables)
+    run(args.config_file, args.output_folder, args.master_config_file)
 
 
 if __name__ == "__main__":
