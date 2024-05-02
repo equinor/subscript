@@ -127,19 +127,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
     well_date_list = []
     rft_ertobs_str = ""
     gen_data = ""
-    try:
-        metadata = rft_dict["metadata"]
-    except KeyError:
-        logger.warning("No metadata for %s", rft_dict["name"])
-        metadata = {}
-    columns = metadata.get("columns", {"value": {"unit": "bar"}})
-    rft_format = columns["value"]["unit"]
-    valid_sat_format = ["fraction", "saturation"]
-    logger.debug("Rft format is : %s", rft_format)
-    if rft_format in valid_sat_format:
-        prefix = "saturation"
-    else:
-        prefix = "pressure"
+    prefix = make_rft_prefix(rft_dict)
 
     logger.debug("prefix is %s", prefix)
     for element in rft_dict["observations"]:
@@ -151,9 +139,9 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         well_date_list.append([well_name, date, restart])
         rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
         gen_data += create_rft_gendata_str(well_name, restart)
-    well_date_frame = pd.DataFrame(
-        well_date_list, columns=["well_name", "date", "restart"]
-    )
+        well_date_frame = pd.DataFrame(
+            well_date_list, columns=["well_name", "date", "restart"]
+        )
 
     well_date_file = parent_folder / "well_date_restart.txt"
     well_date_frame.to_csv(well_date_file, index=False, header=False, sep=" ")
@@ -164,6 +152,32 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
     logger.debug("Written %s", str(gen_data_file))
 
     return rft_ertobs_str
+
+
+def make_rft_prefix(indict: dict) -> str:
+    """Derive prefix for rft data from dict with metadata
+
+    Args:
+        indict (dict): the metadata to use
+
+    Returns:
+        str: the prefix derived
+    """
+    logger = logging.getLogger(__name__ + ".make_rft_prefix")
+    try:
+        metadata = indict["metadata"]
+    except KeyError:
+        logger.warning("No metadata for %s", indict["name"])
+        metadata = {}
+    columns = metadata.get("columns", {"value": {"unit": "bar"}})
+    rft_format = columns["value"]["unit"]
+    valid_sat_format = ["fraction", "saturation"]
+    logger.debug("Rft format is : %s", rft_format)
+    if rft_format in valid_sat_format:
+        prefix = "saturation_"
+    else:
+        prefix = "pressure_"
+    return prefix
 
 
 def write_well_rft_files(
@@ -182,7 +196,7 @@ def write_well_rft_files(
     logger = logging.getLogger(__name__ + ".write_well_rft_files")
     well_name = element["well_name"]
     obs_file = parent_folder / f"{prefix}_{well_name}.obs"
-    position_file = parent_folder / f"{prefix}_{well_name}.txt"
+    position_file = parent_folder / f"{prefix}{well_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
     obs_frame = element["data"][["value", "error"]]
     logger.debug("observations\n%s", obs_frame)
@@ -243,6 +257,10 @@ def export_with_dataio(data: list, config: dict, case_path: str):
     for data_element in data:
         logger.debug("Exporting element %s", data_element)
         content = data_element["content"]
+        if content == "rft":
+            prefix = make_rft_prefix(data_element)
+        else:
+            prefix = ""
         for observation in data_element["observations"]:
             try:
                 name = observation["vector"].replace(":", "_")
@@ -252,7 +270,7 @@ def export_with_dataio(data: list, config: dict, case_path: str):
             logger.debug("Observations to export %s", obs_data)
             export_path = exporter.export(
                 obs_data,
-                name=name,
+                name=prefix + name,
                 tagname=content,
                 casepath=case_path,
                 fmu_context="preprocessed",
