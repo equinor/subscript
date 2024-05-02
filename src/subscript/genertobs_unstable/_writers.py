@@ -255,7 +255,7 @@ def export_with_dataio(data: list, config: dict, case_path: str):
                 name=name,
                 tagname=content,
                 casepath=case_path,
-                fmu_context="case",
+                fmu_context="preprocessed",
                 content=content,
             )
         logger.info("Exporting to %s", export_path)
