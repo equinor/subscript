@@ -239,7 +239,7 @@ def write_well_rft_files(
     """
     logger = logging.getLogger(__name__ + ".write_well_rft_files")
     well_name = element["well_name"]
-    obs_file = parent_folder / f"{prefix}_{well_name}.obs"
+    obs_file = parent_folder / f"{prefix}{well_name}.obs"
     position_file = parent_folder / f"{prefix}{well_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
     obs_frame = element["data"][["value", "error"]]
