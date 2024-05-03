@@ -308,7 +308,7 @@ def test_convert_summary_to_list(summary_as_frame):
 
 
 def test_write_timeseries_ertobs(expected_results):
-    ertobs = wt.write_timeseries_ertobs(expected_results)
+    ertobs = wt.write_timeseries_ertobs(expected_results[0]["observations"])
     # print(ertobs)
 
 
