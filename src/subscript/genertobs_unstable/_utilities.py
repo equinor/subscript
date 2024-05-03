@@ -145,18 +145,24 @@ def check_and_fix_str(string_to_sanitize: str) -> str:
         str: the sanitized string
     """
     logger = logging.getLogger(__name__ + ".check_and_fix_str")
-    unwanted_pattern = re.compile(r"(\s+|\\|-)")
-    unwanted = unwanted_pattern.findall(string_to_sanitize)
-    logger.debug("Unwanted characters %s", unwanted)
-    if len(unwanted) > 0:
+    logger.debug("Initial string before sanitization |%s|", string_to_sanitize)
+    unwanted_characters = re.compile(r"(\s+|/|-)")
+    country_code = re.compile(r"^[a-zA-Z]+\s+")
+    unwanted_chars = unwanted_characters.findall(string_to_sanitize)
+    logger.debug("%s unwanted characters found %s", len(unwanted_chars), unwanted_chars)
+    if len(unwanted_chars) > 0:
         warn(
-            f"Well name: {string_to_sanitize} contains {unwanted} will be replaced\n"
-            "But might be an indication that something is not right"
+            f"String: {string_to_sanitize} contains {unwanted_chars} will be replaced\n"
+            "But might be an indication that something is not right!!"
         )
-        sanitized = unwanted_pattern.sub("_", string_to_sanitize)
+        sanitized = unwanted_characters.sub(
+            "_", country_code.sub("", string_to_sanitize.strip())
+        )
 
+        logger.debug("After sanitization %s", sanitized)
         return sanitized
     else:
+        logger.debug("String was good to go")
         return string_to_sanitize
 
 
