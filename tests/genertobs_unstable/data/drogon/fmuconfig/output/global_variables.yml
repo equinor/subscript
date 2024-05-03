@@ -1,0 +1,30 @@
+model:
+  name: My model
+  revision: tudeloo
+Workflow:
+  reference: my_backyard
+
+masterdata:
+  smda:
+    country:
+      - identifier: Norway
+        uuid: ad214d85-8a1d-19da-e053-c918a4889309
+    discovery:
+      - short_identifier: DROGON
+        uuid: ad214d85-8a1d-19da-e053-c918a4889309
+    field:
+      - identifier: DROGON
+        uuid: 00000000-0000-0000-0000-000000000000
+    coordinate_system:
+      identifier: ST_WGS84_UTM37N_P32637
+      uuid: ad214d85-dac7-19da-e053-c918a4889309
+    stratigraphic_column:
+      identifier: DROGON_HAS_NO_STRATCOLUMN
+      uuid: 00000000-0000-0000-0000-000000000000
+
+access:
+  asset:
+    name: Drogon
+  ssdl:
+    access_level: internal
+    rep_include: true
