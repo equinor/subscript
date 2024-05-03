@@ -1,4 +1,5 @@
 import logging
+import re
 from typing import Union, List
 from warnings import warn
 from pathlib import PosixPath
@@ -6,8 +7,8 @@ import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 
-def _ensure_low_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
-    """Make all column names lower case
+def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
+    """Make column names lower case, strip leading and trailing whitespace
 
     Args:
         dataframe (pd.DataFrame): the dataframe to modify
@@ -15,8 +16,20 @@ def _ensure_low_caps_columns(dataframe: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: the modified dataframe
     """
-    dataframe.columns = [col.lower() for col in dataframe.columns]
+    dataframe.columns = [col.lower().strip() for col in dataframe.columns]
     return dataframe
+
+
+def remove_undefined_values(frame: pd.DataFrame) -> pd.DataFrame:
+    """Remove rows that have undefined values in Dataframe
+
+    Args:
+        frame (pd.DataFrame): the dataframe to sanitize
+
+    """
+    undefined_vals = ["-999.999", "-999.25"]
+    if "value" in frame:
+        frame = frame.loc[~frame.value.isin(undefined_vals) | ~frame.value.isnull()]
 
 
 def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
@@ -56,9 +69,12 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
             "File is not parsed correctly, check if there is something wrong!"
         )
 
-    dataframe = _ensure_low_caps_columns(dataframe)
+    dataframe = _fix_column_names(dataframe)
     inactivate_rows(dataframe)
+    remove_undefined_values(dataframe)
+
     dataframe.rename({"key": "vector"}, inplace=True, axis="columns")
+    logger.debug("Returning dataframe %s", dataframe)
     return dataframe
 
 
@@ -103,6 +119,31 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
     return frame_as_dict
 
 
+def check_and_fix_str(string_to_sanitize: str) -> str:
+    """Replace some unwanted strings in str
+
+    Args:
+        string_to_sanitize (str): the input string
+
+    Returns:
+        str: the sanitized string
+    """
+    logger = logging.getLogger(__name__ + ".check_and_fix_str")
+    unwanted_pattern = re.compile(r"(\s+|\\|-)")
+    unwanted = unwanted_pattern.findall(string_to_sanitize)
+    logger.debug("Unwanted characters %s", unwanted)
+    if len(unwanted) > 0:
+        warn(
+            f"Well name: {string_to_sanitize} contains {unwanted} will be replaced\n"
+            "But might be an indication that something is not right"
+        )
+        sanitized = unwanted_pattern.sub("_", string_to_sanitize)
+
+        return sanitized
+    else:
+        return string_to_sanitize
+
+
 def convert_rft_to_list(frame: pd.DataFrame) -> list:
     """Convert dataframe to list of dictionaries
 
@@ -133,6 +174,7 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
     well_names = narrowed_down.well_name.unique().tolist()
     logger.debug("%s wells to write (%s)", len(well_names), well_names)
     for well_name in well_names:
+        well_name = check_and_fix_str(well_name)
         well_observations = narrowed_down.loc[narrowed_down.well_name == well_name]
         dates = well_observations.date.unique().tolist()
         logger.debug("Well %s has %s dates", well_name, len(dates))
@@ -176,7 +218,7 @@ def convert_summary_to_list(frame: pd.DataFrame) -> list:
     for vector in vectors:
         vector_observations = narrowed_down.loc[narrowed_down.vector == vector].copy()
         vector_observations["label"] = (
-            vector_observations["vector"].str.replace(":", "_")
+            vector_observations["vector"].str.replace(":", "_").replace("-", "_")
             + "_"
             + [str(num) for num in range(vector_observations.shape[0])]
         )
