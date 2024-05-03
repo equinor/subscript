@@ -53,7 +53,9 @@ def main():
     """Run the whole shebang"""
     logger = logging.getLogger(__name__ + ".main")
     args = parse_args()
-    logger.debug("Read args")
+    if args.d:
+        logging.basicConfig(level=logging.DEBUG)
+    logger.debug("Have read args %s", args)
     run(args.config_file, args.output_folder, args.master_config_file)
 
 
