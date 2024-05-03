@@ -29,7 +29,23 @@ def remove_undefined_values(frame: pd.DataFrame) -> pd.DataFrame:
     """
     undefined_vals = ["-999.999", "-999.25", -999.25, -999.9]
     if "value" in frame:
-        frame = frame.loc[~frame.value.isin(undefined_vals) | ~frame.value.isnull()]
+        frame = frame.loc[~frame.value.isin(undefined_vals) & ~frame.value.isnull()]
+
+
+def remove_whitespace(dataframe: pd.DataFrame):
+    """Remove whitespace in str columns for pandas dataframe
+
+    Args:
+        dataframe (pd.DataFrame): the dataframe to modify
+    """
+    logger = logging.getLogger(__name__ + ".remove_whitespace")
+    for col_name in dataframe.columns:
+
+        try:
+
+            dataframe[col_name] = dataframe[col_name].map(str.strip)
+        except TypeError:
+            logger.debug("%s is not str column", col_name)
 
 
 def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
@@ -70,9 +86,9 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
         )
 
     dataframe = _fix_column_names(dataframe)
+    remove_whitespace(dataframe)
     inactivate_rows(dataframe)
     remove_undefined_values(dataframe)
-
     dataframe.rename({"key": "vector"}, inplace=True, axis="columns")
     logger.debug("Returning dataframe %s", dataframe)
     return dataframe
