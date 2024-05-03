@@ -27,7 +27,7 @@ def remove_undefined_values(frame: pd.DataFrame) -> pd.DataFrame:
         frame (pd.DataFrame): the dataframe to sanitize
 
     """
-    undefined_vals = ["-999.999", "-999.25"]
+    undefined_vals = ["-999.999", "-999.25", -999.25, -999.9]
     if "value" in frame:
         frame = frame.loc[~frame.value.isin(undefined_vals) | ~frame.value.isnull()]
 
