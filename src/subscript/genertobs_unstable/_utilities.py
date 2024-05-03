@@ -27,9 +27,17 @@ def remove_undefined_values(frame: pd.DataFrame) -> pd.DataFrame:
         frame (pd.DataFrame): the dataframe to sanitize
 
     """
-    undefined_vals = ["-999.999", "-999.25", -999.25, -999.9]
-    if "value" in frame:
-        frame = frame.loc[~frame.value.isin(undefined_vals) & ~frame.value.isnull()]
+    logger = logging.getLogger(__name__ + ".remove_undefined_values")
+    undefined_vals = ["-999.999", "-999.25", -999.25, -999.9, ""]
+    if "value" in frame.columns:
+        logger.debug("Have a value column, will remove undefined, if there are any")
+        not_undefs = (~frame.value.isin(undefined_vals)) & (~frame.value.isnull())
+        logger.debug("%s row(s) will be removed", frame.shape[0] - not_undefs.sum())
+        return frame.loc[not_undefs]
+
+    else:
+        logger.debug("No value column, cannot remove undefs")
+        return frame
 
 
 def remove_whitespace(dataframe: pd.DataFrame):
@@ -88,7 +96,7 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
     dataframe = _fix_column_names(dataframe)
     remove_whitespace(dataframe)
     inactivate_rows(dataframe)
-    remove_undefined_values(dataframe)
+    dataframe = remove_undefined_values(dataframe)
     dataframe.rename({"key": "vector"}, inplace=True, axis="columns")
     logger.debug("Returning dataframe %s", dataframe)
     return dataframe
