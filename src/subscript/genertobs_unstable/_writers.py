@@ -176,9 +176,10 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         well_date_list.append([well_name, date, restart])
         rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
         gen_data += create_rft_gendata_str(well_name, restart)
-        well_date_frame = pd.DataFrame(
-            well_date_list, columns=["well_name", "date", "restart"]
-        )
+
+    well_date_frame = pd.DataFrame(
+        well_date_list, columns=["well_name", "date", "restart"]
+    )
 
     well_date_file = parent_folder / "well_date_restart.txt"
     write_csv_with_comment(well_date_file, well_date_frame)
