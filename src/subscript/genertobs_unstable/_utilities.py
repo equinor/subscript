@@ -332,7 +332,13 @@ def add_or_modify_error(
         logger.debug("Error is absolute, will be added as constant")
         abs_error = float(error)
         logger.debug("Error to add %s", abs_error)
-        frame.loc[error_holes, "error"] = abs_error
+        logger.debug("Error holes are %s", error_holes)
+        try:
+            frame.loc[error_holes, "error"] = abs_error
+        except TypeError:
+            # TODO: This exception shows that the code is not ideal, but works for now
+            logger.error("Fixing via a backdoor solution.. Code should be improved")
+            frame["error"] = abs_error
 
     dubious_errors = frame.error > frame.value
     if dubious_errors.sum() > 0:
