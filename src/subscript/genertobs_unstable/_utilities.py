@@ -265,6 +265,7 @@ def add_or_modify_error(
     """
     logger = logging.getLogger(__name__ + ".add_or_modify_error")
     logger.debug("Frame before error addition/modification \n%s\n", frame)
+    logger.debug("Frame has columns %s", frame.columns)
     logger.debug("Error to apply %s", error)
 
     ensure_numeric(frame, "value")
