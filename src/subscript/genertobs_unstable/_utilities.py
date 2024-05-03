@@ -196,7 +196,6 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
     well_names = narrowed_down.well_name.unique().tolist()
     logger.debug("%s wells to write (%s)", len(well_names), well_names)
     for well_name in well_names:
-        well_name = check_and_fix_str(well_name)
         well_observations = narrowed_down.loc[narrowed_down.well_name == well_name]
         dates = well_observations.date.unique().tolist()
         logger.debug("Well %s has %s dates", well_name, len(dates))
