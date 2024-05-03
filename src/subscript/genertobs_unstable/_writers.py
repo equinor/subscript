@@ -6,6 +6,7 @@ import pandas as pd
 from pathlib import Path, PosixPath
 from shutil import rmtree
 from fmu.dataio import ExportData
+from subscript.genertobs_unstable._utilities import check_and_fix_str
 
 
 def add_time_stamp(string="", record_type="f"):
@@ -238,9 +239,9 @@ def write_well_rft_files(
         str: ertobs string for well
     """
     logger = logging.getLogger(__name__ + ".write_well_rft_files")
-    well_name = element["well_name"]
-    obs_file = parent_folder / f"{prefix}{well_name}.obs"
-    position_file = parent_folder / f"{prefix}{well_name}.txt"
+    fixed_file_name = check_and_fix_str(element["well_name"])
+    obs_file = parent_folder / f"{prefix}{fixed_file_name}.obs"
+    position_file = parent_folder / f"{prefix}{fixed_file_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
     obs_frame = element["data"][["value", "error"]]
     logger.debug("observations\n%s", obs_frame)
@@ -317,7 +318,7 @@ def export_with_dataio(data: list, config: dict, case_path: str):
             logger.debug("Observations to export %s", obs_data)
             export_path = exporter.export(
                 obs_data,
-                name=prefix + name,
+                name=prefix + check_and_fix_str(name),
                 tagname=content,
                 casepath=case_path,
                 fmu_context="preprocessed",
