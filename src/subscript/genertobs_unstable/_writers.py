@@ -57,6 +57,7 @@ def write_timeseries_ertobs(obs_dict: dict):
     logger.debug("%s observations to write", obs_dict)
     obs_frames = []
     for element in obs_dict:
+        logger.debug("Element to extract from %s", element)
         key = element["vector"]
         logger.debug(key)
         obs_frame = element["data"]
