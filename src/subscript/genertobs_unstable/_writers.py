@@ -192,7 +192,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         + gen_data
     )
 
-    gen_data_file.write_text(gen_data)
+    gen_data_file.write_text(add_time_stamp(gen_data))
     logger.debug("Written %s", str(gen_data_file))
 
     return rft_ertobs_str
