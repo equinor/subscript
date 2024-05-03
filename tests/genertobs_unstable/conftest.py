@@ -45,7 +45,7 @@ def _fix_yaml_config_file():
 
 
 @pytest.fixture(scope="session", name="masterdata_config")
-def _fix_yaml_config_file():
+def _fix_yaml_master():
     config_path = (
         Path(__file__).parent / "data/drogon/fmuconfig/output/global_variables.yml"
     )
