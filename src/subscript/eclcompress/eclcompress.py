@@ -312,7 +312,7 @@ def find_keyword_sets(filelines: List[str]) -> List[Tuple[int, int]]:
         /
 
     we are not able to detect anything but the first record (line) without
-    having a full Eclipse parser (OPM). This means we we only compress the
+    having a full Eclipse parser (OPM). This means we only compress the
     first line. These type of keywords are not important to compress, and we
     could just as well avoid compressing them altogether.
 
@@ -336,7 +336,7 @@ def find_keyword_sets(filelines: List[str]) -> List[Tuple[int, int]]:
             continue
         # Remove embracing quotes if in a multi-keyword
         keyword = line.split(" ")[0].strip("'")
-        if keyword in ALLOWLIST_KEYWORDS:
+        if (keyword in ALLOWLIST_KEYWORDS) or keyword.startswith("FIP"):
             kwstart = lineidx
             if "/" in line:
                 keywordsets.append((kwstart, lineidx))

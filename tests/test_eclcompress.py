@@ -4,11 +4,13 @@ import hashlib
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import numpy as np
 import opm.io
 import pytest
+
 from subscript.eclcompress.eclcompress import (
     compress_multiple_keywordsets,
     eclcompress,
@@ -258,6 +260,29 @@ FIPNUM
     assert compress_multiple_keywordsets(kw_sets, filelines) == expected
 
 
+def test_fipxxxx(tmp_path):
+    """Ensure that FIPxxxxx keywords are compressed"""
+    given = """
+FIPLIC
+  3 3 3 3 /
+FIPPOLY
+  2 4 4 5 5 6
+/
+"""
+    filelines = given.splitlines()
+    kw_sets = find_keyword_sets(filelines)
+    expected = [
+        "",
+        "FIPLIC",
+        "  4*3 /",
+        "FIPPOLY",
+        "  2 2*4 2*5 6",
+        "/",
+    ]
+
+    assert compress_multiple_keywordsets(kw_sets, filelines) == expected
+
+
 def test_whitespace(tmp_path):
     """Ensure excessive whitespace is not added"""
     kw_string = """
@@ -409,9 +434,9 @@ def test_main(tmp_path, mocker):
     assert opm.io.Parser().parse_string(compressedstr, OPMIO_PARSECONTEXT)
 
 
-def test_binary_file(tmp_path):
+@pytest.mark.skipif(sys.version_info < (3, 7), reason="Requires Python 3.7 or higher")
+def test_binary_file():
     """Test that a random binary file is untouched by eclcompress"""
-    os.chdir(tmp_path)
     binfile = "wrong.grdecl"
     Path(binfile).write_bytes(os.urandom(100))
     bytes_before = Path(binfile).read_bytes()
@@ -621,6 +646,45 @@ perm.grdecl""",
         parse_wildcardfile("notthere")
 
 
+def test_eclkw_regexp(tmp_path, mocker):
+    """Test that custom regular expressions can be supplied to compress
+    otherwise unknown (which implies no compression) keywords"""
+    os.chdir(tmp_path)
+
+    uncompressed_str = "G1\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/"
+
+    # Nothing is found by default here.
+    assert not find_keyword_sets(uncompressed_str.split())
+
+    # Only if we specify a regexp catching this odd keyword name:
+
+    kw_sets = find_keyword_sets(uncompressed_str.split(), eclkw_regexp="G1")
+    kwend_idx = len(uncompressed_str.split()) - 1
+    assert kw_sets == [(0, kwend_idx)]
+    assert compress_multiple_keywordsets(kw_sets, uncompressed_str.split()) == [
+        "G1",
+        "  13*0",
+        "/",
+    ]
+
+    Path("g1.grdecl").write_text(uncompressed_str, encoding="utf8")
+
+    # Alternative regexpes that should also work with this G1:
+    kw_sets = find_keyword_sets(
+        uncompressed_str.split(), eclkw_regexp="[A-Z]{1-8}$"
+    ) == [(0, kwend_idx)]
+
+    kw_sets = find_keyword_sets(
+        uncompressed_str.split(), eclkw_regexp="[A-Z0-9]{2-8}$"
+    ) == [(0, kwend_idx)]
+
+    mocker.patch("sys.argv", ["eclcompress", "g1.grdecl", "--eclkw_regexp", "G1"])
+    main()
+    compressed = Path("g1.grdecl").read_text(encoding="utf8")
+    assert "File compressed with eclcompress" in compressed
+    assert "13*0" in compressed
+
+
 def test_binary_example_file(tmp_path, mocker):
     """Test that a particular binary file is not touched by eclcompress
 
@@ -652,9 +716,8 @@ def test_binary_example_file(tmp_path, mocker):
         (bytearray([7] * 1024 + [0]), False),
     ],
 )
-def test_file_is_binary(byte_sequence, expected, tmp_path):
+def test_file_is_binary(byte_sequence, expected):
     """Test binary file detection"""
-    os.chdir(tmp_path)
     if isinstance(byte_sequence, str):
         Path("foo-utf8.txt").write_text(byte_sequence, encoding="utf-8")
         assert file_is_binary("foo-utf8.txt") == expected
