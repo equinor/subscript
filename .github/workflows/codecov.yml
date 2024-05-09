@@ -26,6 +26,7 @@ jobs:
     - name: Install OPM-flow and ResInsight (for testing)
       run: |
         sudo apt-get install software-properties-common
+        sudo apt-add-repository ppa:opm/ppa
         sudo apt-add-repository ppa:opm/testing
         sudo apt-get update
         sudo apt-get install mpi-default-bin
