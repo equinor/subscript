@@ -258,6 +258,29 @@ FIPNUM
     assert compress_multiple_keywordsets(kw_sets, filelines) == expected
 
 
+def test_compress_fipxxx(tmp_path):
+    """Ensure that FIPxxxxx keywords are compressed"""
+    given = """
+FIPLIC
+  3 3 3 3 /
+FIPPOLY
+  2 4 4 5 5 6
+/
+"""
+    filelines = given.splitlines()
+    kw_sets = find_keyword_sets(filelines)
+    expected = [
+        "",
+        "FIPLIC",
+        "  4*3 /",
+        "FIPPOLY",
+        "  2 2*4 2*5 6",
+        "/",
+    ]
+
+    assert compress_multiple_keywordsets(kw_sets, filelines) == expected
+
+
 def test_whitespace(tmp_path):
     """Ensure excessive whitespace is not added"""
     kw_string = """
