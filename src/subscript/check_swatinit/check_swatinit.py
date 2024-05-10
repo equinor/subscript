@@ -326,7 +326,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
 
     contact = "OWC" if "OWC" in qc_frame else "GWC"
 
-    # Eclipse and libecl does not calculate cell centres to the same decimals.
+    # Eclipse and resdata does not calculate cell centres to the same decimals.
     # Add some tolerance when testing towards fluid contacts.
     contacttolerance = 1e-4
 

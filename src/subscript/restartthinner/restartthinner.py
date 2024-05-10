@@ -30,9 +30,9 @@ written to the same filename (keeping the original is optional)
 def find_resdata_app(toolname: str) -> str:
     """Locate path of apps in resdata.
 
-    These have varying suffixes due through the history of libecl Makefiles.
+    These have varying suffixes due through the history of resdata Makefiles.
 
-    Depending on libecl-version, it has the .x or the .c.x suffix
+    Depending on resdata-version, it has the .x or the .c.x suffix
     We prefer .x.
 
     Returns:
@@ -75,7 +75,7 @@ def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
     modify the original filename.
     """
     out = " >/dev/null" if quiet else ""
-    # Error early if libecl tools are not available
+    # Error early if resdata tools are not available
     try:
         find_resdata_app("rd_unpack")
         find_resdata_app("rd_pack")

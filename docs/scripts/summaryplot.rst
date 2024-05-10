@@ -3,7 +3,7 @@ SUMMARYPLOT
 ===========
 
 ``summaryplot`` is a command line utility to generate plots from Eclipse
-simulations, based on `libecl <http://github.com/equinor/libecl>`_
+simulations, based on `resdata <http://github.com/equinor/resdata>`_
 for processing Eclipse output files and
 `matplotlib <http://matplotlib.sourceforge.net>`_ for plotting.
 
