@@ -257,6 +257,7 @@ FIPNUM
 
     assert compress_multiple_keywordsets(kw_sets, filelines) == expected
 
+
 def test_compress_fipxxx(tmp_path):
     """Ensure that FIPxxxxx keywords are compressed"""
     given = """
