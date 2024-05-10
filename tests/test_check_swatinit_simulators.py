@@ -469,7 +469,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
         assert np.isclose(qc_frame["PC_SCALING"][0], 1.0)
         assert np.isclose(qc_frame["PC"], 0)
     else:
-        # E100 will not report a PPCW in this case, libecl gives -1e20,
+        # E100 will not report a PPCW in this case, resdata gives -1e20,
         # which becomes a NaN through res2df and then NaN columns are dropped.
         if "PPCW" in qc_frame:
             assert pd.isnull(qc_frame["PPCW"][0])
