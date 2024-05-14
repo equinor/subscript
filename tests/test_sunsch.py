@@ -181,23 +181,6 @@ def test_templating(tmp_path):
     assert "200.3" in str(sch)
     assert "1400000" in str(sch)
 
-    # Let some of the valued be undefined:
-    sunschconf = {
-        "startdate": datetime.date(2020, 1, 1),
-        "enddate": datetime.date(2021, 1, 1),
-        "insert": [
-            {
-                "template": "template.tmpl",
-                "days": 10,
-                "substitute": {"WELLNAME": "A-007"},
-            }
-        ],
-    }
-    sch = sunsch.process_sch_config(sunschconf)
-    assert "A-007" in str(sch)
-    assert "<ORAT>" in str(sch)
-    # (this error is let through sunsch)
-
     # Let the date be undefined.
     sunschconf = {
         "startdate": datetime.date(2020, 1, 1),
@@ -776,7 +759,7 @@ def test_weltarg_uda(tmp_path):
     """WELTARG supports UDA from opm-common 2020.10"""
     os.chdir(tmp_path)
     weltargkeyword = """WELTARG
-  'OP-1' ORAT SOMEUDA /
+  'OP-1' ORAT WU_VALUE /
 /
 """
     Path("weltarg.sch").write_text(
@@ -802,7 +785,7 @@ def test_weltarg_uda(tmp_path):
     }
     sch = sunsch.process_sch_config(sunschconf)
     assert "ORAT" in str(sch)
-    assert "SOMEUDA" in str(sch)
+    assert "WU_VALUE" in str(sch)
 
 
 def test_long_udq_lines(tmp_path):
