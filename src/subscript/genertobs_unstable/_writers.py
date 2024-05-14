@@ -143,7 +143,7 @@ def write_genrft_str(
     """
     str_parent = str(parent)
     string = (
-        f"DEFINE RFT_INPUT {parent}\n"
+        f"DEFINE <RFT_INPUT> {parent}\n"
         + "FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>=gendata_rft)\n"
         + "FORWARD_MODEL GENDATA_RFT(<PATH_TO_TRAJECTORY_FILES>=<RFT_INPUT>,"
         + f"<WELL_AND_TIME_FILE>=<RFT_INPUT>/{str(well_date_path).replace(str_parent, '')},"
