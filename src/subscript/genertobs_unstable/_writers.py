@@ -62,7 +62,7 @@ def write_timeseries_ertobs(obs_dict: dict):
         logger.debug(key)
         obs_frame = element["data"]
         obs_frame["class"] = "SUMMARY_OBSERVATION"
-        obs_frame["key"] = key + ";};"
+        obs_frame["key"] = f"KEY={key}" + ";};"
         order = ["class", "label", "value", "error", "date", "key"]
         obs_frame = obs_frame[order]
         obs_frame["value"] = "{VALUE=" + obs_frame["value"].astype(str) + ";"
