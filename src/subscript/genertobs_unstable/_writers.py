@@ -106,7 +106,7 @@ def create_rft_ertobs_str(well_name: str, restart: int, obs_file: PosixPath) -> 
         + "{"
         + f"DATA={well_name}_SIM ;"
         + f" RESTART = {restart}; "
-        + f"OBS_FILE = {obs_file.name}"
+        + f"OBS_FILE = {obs_file}"
         + ";};\n"
     )
 
@@ -164,7 +164,8 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         str: ertobs strings for rfts
     """
     logger = logging.getLogger(__name__ + ".write_rft_ertobs")
-    parent_folder = Path(parent_folder)
+    rft_folder = Path(parent_folder) / "rft"
+    rft_folder.mkdir()
     logger.debug("%s observations to write", rft_dict)
     well_date_list = []
     rft_ertobs_str = ""
@@ -177,7 +178,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         logger.debug(well_name)
         date = element["date"]
         restart = element["restart"]
-        obs_file = write_well_rft_files(parent_folder, prefix, element)
+        obs_file = write_well_rft_files(rft_folder, prefix, element)
         well_date_list.append([well_name, date, restart])
         rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
         gen_data += create_rft_gendata_str(well_name, restart)
@@ -186,13 +187,13 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         well_date_list, columns=["well_name", "date", "restart"]
     )
 
-    well_date_file = parent_folder / "well_date_restart.txt"
+    well_date_file = rft_folder / "well_date_restart.txt"
     write_csv_with_comment(well_date_file, well_date_frame)
     logger.debug("Written %s", str(well_date_file))
     gen_data_file = parent_folder / "gendata_include.ert"
     gen_data = (
         write_genrft_str(
-            parent_folder, str(well_date_file), rft_dict["plugin_arguments"]["zonemap"]
+            rft_folder, str(well_date_file), rft_dict["plugin_arguments"]["zonemap"]
         )
         + gen_data
     )
