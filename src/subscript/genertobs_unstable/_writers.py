@@ -7,6 +7,7 @@ from pathlib import Path, PosixPath
 from shutil import rmtree
 from fmu.dataio import ExportData
 from subscript.genertobs_unstable._utilities import check_and_fix_str
+import pyarrow as pa
 
 
 def add_time_stamp(string="", record_type="f", comment_mark="--"):
@@ -319,7 +320,7 @@ def export_with_dataio(data: list, config: dict, case_path: str):
                 name = observation["vector"].replace(":", "_")
             except KeyError:
                 name = observation["well_name"]
-            obs_data = observation["data"]
+            obs_data = pa.Table.from_pandas(observation["data"])
             logger.debug("Observations to export %s", obs_data)
             export_path = exporter.export(
                 obs_data,
