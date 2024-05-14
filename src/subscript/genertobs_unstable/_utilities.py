@@ -344,7 +344,7 @@ def add_or_modify_error(
     if dubious_errors.sum() > 0:
         warn(
             "Some errors are larger than the values"
-            f"({frame.loc[dubious_errors]}), is this intentional?"
+            f"\n{frame.loc[dubious_errors]}\n Is this intentional?"
         )
     logger.debug("After addition/modification errors are \n%s\n", frame.error)
 
