@@ -166,7 +166,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
     """
     logger = logging.getLogger(__name__ + ".write_rft_ertobs")
     rft_folder = Path(parent_folder) / "rft"
-    rft_folder.mkdir()
+    rft_folder.mkdir(exist_ok=True)
     logger.debug("%s observations to write", rft_dict)
     well_date_list = []
     rft_ertobs_str = ""
