@@ -46,10 +46,11 @@ def run(config_path: str, output_folder: str, master_config_file):
     logger.debug("Data generated %s", data)
     write_dict_to_ertobs(data, Path(output_folder))
     master_config = read_yaml_config(master_config_file)
-    export_folder = Path(output_folder) / "sumo"
-    logger.debug("Exporting observations ready for sumo to %s", str(export_folder))
+    export_folder = Path(output_folder)
+    logger.info("Exporting observations ready for sumo to %s", str(export_folder))
     export_path = export_with_dataio(data, master_config, export_folder)
-    generate_preprocessed_hook(Path(export_path).parent, output_folder)
+    logger.info(export_path)
+    generate_preprocessed_hook(export_path, output_folder)
 
 
 def main():
