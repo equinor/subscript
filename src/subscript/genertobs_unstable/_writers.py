@@ -332,3 +332,19 @@ def export_with_dataio(data: list, config: dict, case_path: str):
                 is_observation=True,
             )
         logger.info("Exporting to %s", export_path)
+        return export_path
+
+
+def generate_preprocessed_hook(export_path, output_folder):
+
+    stem = "upload_observations"
+
+    posixpath = Path(output_folder).resolve()
+    workflow_name = posixpath / f"xhook_{stem}"
+    call = f"WF_UPLOAD_SUMO_OBS <SCRATCH>/<USER><CASEDIR> {str(export_path)}"
+    workflow_name.write_text(call)
+
+    workflow_content = f"LOAD_WORKFLOW   {workflow_name}  -- define and load workflow\n"
+    workflow_content += f"HOOK_WORKFLOW {workflow_name.name}  PRE_SIMULATION"
+    include_file = posixpath / f"xhook_{stem}.ert"
+    include_file.write_text(workflow_content)
