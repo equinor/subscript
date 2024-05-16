@@ -308,6 +308,8 @@ def export_with_dataio(data: list, config: dict, case_path: str):
     logger = logging.getLogger(__name__ + ".export_with_dataio")
     logger.debug("Will be exporting from %s", data)
     exporter = ExportData(config=config)
+    Path(case_path).mkdir(exist_ok=True)
+    os.chdir(case_path)
     for data_element in data:
         logger.debug("Exporting element %s", data_element)
         content = data_element["content"]
