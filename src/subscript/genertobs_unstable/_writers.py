@@ -74,7 +74,7 @@ def write_timeseries_ertobs(obs_dict: dict):
         obs_frames.append(obs_frame)
     obs_frames = pd.concat(obs_frames)
     obs_str = re.sub(r" +", " ", obs_frames.to_string(header=False, index=False)) + "\n"
-    logger.info("Returning %s", obs_str)
+    logger.debug("Returning %s", obs_str)
     return obs_str
 
 
@@ -306,18 +306,20 @@ def export_with_dataio(data: list, config: dict, case_path: str):
         case_path (str): path to where to store
     """
     logger = logging.getLogger(__name__ + ".export_with_dataio")
-    logger.debug("Will be exporting from %s", data)
+    logger.info("Will be exporting %i elements from dict %s", len(data), data)
     exporter = ExportData(config=config)
     Path(case_path).mkdir(exist_ok=True)
     os.chdir(case_path)
     for data_element in data:
-        logger.debug("Exporting element %s", data_element)
+        logger.debug("Exporting element %s\n------", data_element["name"])
         content = data_element["content"]
         if content == "rft":
             prefix = make_rft_prefix(data_element)
         else:
             prefix = ""
+        logger.debug("Obs are:\n %s", data_element["observations"])
         for observation in data_element["observations"]:
+            logger.debug("-->Data are \n%s", observation["data"])
             try:
                 name = observation["vector"].replace(":", "_")
             except KeyError:
