@@ -328,16 +328,18 @@ def test_write_dict_to_ertobs(expected_results, tmp_path, drogon_project):
 
 
 def test_export_with_dataio(expected_results, drogon_project, fmuconfig, tmp_path):
+    correct_num = 6
     print(fmuconfig)
     tmp_drog = tmp_path / "drog"
     copytree(drogon_project, tmp_drog)
     os.chdir(tmp_drog)
-    wt.export_with_dataio(expected_results, fmuconfig, tmp_drog)
-    # export_path = tmp_drog / "share/results/dictionaries"
-    # files = list(export_path.glob("*.json"))
-    # assert len(files) == 4
-    # metas = list(export_path.glob("*.json.yml"))
-    # assert len(metas) == 4
+    export_path = wt.export_with_dataio(expected_results, fmuconfig, tmp_drog)
+
+    files = list(export_path.glob("*.arrow"))
+    print(files)
+    assert len(files) == correct_num
+    metas = list(export_path.glob("*.arrow.yml"))
+    assert len(metas) == correct_num
 
     # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
     # assert isinstance(
@@ -356,8 +358,8 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
 
     main.run(test_config, tmp_observations, masterdata_config)
-    obs_files = list(tmp_observations.glob("*.*"))
-    assert len(obs_files) == 12, f"Have not generated 12 files, but {len(obs_files)}"
+    obs_files = list(tmp_observations.glob("*"))
+    assert len(obs_files) == 6, f"Have not generated 12 files, but {len(obs_files)}"
     for obs_file in obs_files:
         print(obs_file)
         obs_text = obs_file.read_text()
@@ -366,8 +368,12 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
         # ), f"{str(obs_file)} contains percent sign, ({obs_text})"
         assert obs_text.startswith("--")
 
-    sumo_table_location = tmp_observations / "sumo/share/preprocessed/tables"
+    sumo_table_location = tmp_drog / "share/preprocessed/tables"
     sumo_tables = list(sumo_table_location.glob("*.csv"))
     assert (
         len(sumo_tables) == 6
     ), f"Have not exported 6 tables for sumo, but {len(sumo_tables)}"
+
+
+def test_sumo_upload():
+    pass
