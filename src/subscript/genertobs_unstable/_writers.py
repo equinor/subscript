@@ -335,8 +335,10 @@ def export_with_dataio(data: list, config: dict, case_path: str):
                 content=content,
                 is_observation=True,
             )
-        logger.info("Exporting to %s", export_path)
-        return export_path
+            logger.info("Exporting to %s", export_path)
+    parent = Path(export_path).parent
+    logger.info("All exported to %s", parent)
+    return parent
 
 
 def generate_preprocessed_hook(export_path, output_folder):
