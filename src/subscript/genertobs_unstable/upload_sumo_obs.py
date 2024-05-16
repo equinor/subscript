@@ -37,12 +37,12 @@ def yaml_load(file_name: Union[str, PosixPath]) -> dict:
 
 
 def generate_metadata(
-    file_path: Union[str, PosixPath], config_path: Union[str, PosixPath], case_path: str
+    obj: Union[str, PosixPath], config_path: Union[str, PosixPath], case_path: str
 ) -> dict:
     """Generate full metadata from preprocessed files
 
     Args:
-        file_path (Union[str, PosixPath]): path to one given file containing object
+        obj (Object): table object
         config_path (Union[str, PosixPath]): path to fmu config file
         case_path (str): path to ert case
 
@@ -52,18 +52,17 @@ def generate_metadata(
     logger = logging.getLogger(__name__ + ".generate_metadata")
     config = yaml_load(config_path)
     logger.debug("Passing this config to ExportData:\n%s", config)
-
-    exd = ExportData(config=config, is_observation=True)
-    metadata = generate_export_metadata(
-        file_path,
-        exd,
-        FmuProvider(get_case_meta(case_path)["fmu"]["model"], fmu_context="case"),
+    exd = ExportData(
+        config=config, casepath=case_path, is_observation=True, fmu_context="case"
     )
+
+    logger.debug("Passing this config to ExportData:\n%s", config)
+    metadata = exd.generate_metadata(obj)
     logger.debug("Generated metadata: %s", metadata)
     return metadata
 
 
-def tablefile_to_bytes(table_file: Union[str, PosixPath]):
+def table_to_bytes(table: Union[str, PosixPath]):
     """Return table as bytestring
 
     Args:
@@ -72,7 +71,6 @@ def tablefile_to_bytes(table_file: Union[str, PosixPath]):
         bytes: table as bytestring
     """
     logger = logging.getLogger(__name__ + ".tablefile_to_bytes")
-    table = pf.read_table(table_file)
     sink = pa.BufferOutputStream()
     logger.debug("Writing %s to sink", table)
     pq.write_table(table, sink)
@@ -81,7 +79,7 @@ def tablefile_to_bytes(table_file: Union[str, PosixPath]):
     return byte_string
 
 
-def table_2_bytestring(table_file: Union[str, PosixPath]) -> bytes:
+def table_2_bytestring(table: Union[str, PosixPath]) -> bytes:
     """Convert pa.table to bytestring
 
     Args:
@@ -90,7 +88,7 @@ def table_2_bytestring(table_file: Union[str, PosixPath]) -> bytes:
     Returns:
         bytest: the bytes string
     """
-    bytestring = tablefile_to_bytes(table_file)
+    bytestring = table_to_bytes(table)
     return bytestring
 
 
@@ -109,9 +107,10 @@ def make_sumo_file(
     """
     logger = logging.getLogger(__name__ + ".make_sumo_file")
     logger.debug("Making sumo file with %s", file_path)
-    metadata = generate_metadata(file_path, config_path, case_path)
+    table = pf.read_table(file_path)
+    metadata = generate_metadata(table, config_path, case_path)
     logger.debug("Metadata generated")
-    bytestring = tablefile_to_bytes(file_path)
+    bytestring = table_to_bytes(table)
     logger.debug("Bytestring created")
 
     sumo_file = FileOnJob(bytestring, metadata)
@@ -135,7 +134,8 @@ def prepare_sumo_files(
     """
     logger = logging.getLogger(__name__ + ".prepare_sumo_files")
     sumo_files = []
-    table_files = Path(preprocessed_folder).glob(r"**/*.arrow")
+    preprocessed_folder = Path(preprocessed_folder)
+    table_files = preprocessed_folder.glob(r"**/*.arrow")
     for table_file in table_files:
         logger.debug("File %s", table_file)
         if table_file.name.startswith("."):
