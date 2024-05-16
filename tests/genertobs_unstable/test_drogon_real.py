@@ -24,9 +24,9 @@ def write_ert_config_and_run(scratch_path, obs_path):
     upload_job.write_text(UPLOAD_JOB.read_text())
     xhook_path = obs_path / "xhook_upload_observations.ert"
 
-    xhook_path.write_text(
-        f"LOAD_WORKFLOW_JOB {str(upload_job)}\n {xhook_path.read_text()}"
-    )
+    xhook_contents = f"LOAD_WORKFLOW_JOB {str(upload_job)}\n {xhook_path.read_text()}"
+    print(xhook_contents)
+    xhook_path.write_text(xhook_contents)
     ert_config += f"\nINCLUDE {str(xhook_path)}"
     tmp_drogon_ert.write_text(ert_config)
     runpath = scratch_path / DROGON_ERT_MODEL.stem / "realization-0/iter-0"
