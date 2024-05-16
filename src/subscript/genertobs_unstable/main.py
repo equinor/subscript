@@ -10,6 +10,7 @@ from subscript.genertobs_unstable.parse_config import (
 from subscript.genertobs_unstable._writers import (
     write_dict_to_ertobs,
     export_with_dataio,
+    generate_preprocessed_hook,
 )
 
 
@@ -38,6 +39,7 @@ def run(config_path: str, output_folder: str, master_config_file):
         output_folder (str): path to where all results will be stored
     """
     logger = logging.getLogger(__name__ + ".run")
+    output_folder = Path(output_folder).resolve()
     config = read_yaml_config(config_path, validate=True)
     logger.debug("Read config: %s", config)
     data = generate_data_from_config(config, Path(config_path).parent)
@@ -46,7 +48,8 @@ def run(config_path: str, output_folder: str, master_config_file):
     master_config = read_yaml_config(master_config_file)
     export_folder = Path(output_folder) / "sumo"
     logger.debug("Exporting observations ready for sumo to %s", str(export_folder))
-    export_with_dataio(data, master_config, export_folder)
+    export_path = export_with_dataio(data, master_config, export_folder)
+    generate_preprocessed_hook(Path(export_path).parent, output_folder)
 
 
 def main():
