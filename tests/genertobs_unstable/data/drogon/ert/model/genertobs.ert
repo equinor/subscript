@@ -1,0 +1,18 @@
+DEFINE <USER>              sudo
+DEFINE <SCRATCH>           /scratch/fmu
+DEFINE <CASE_DIR>          <CONFIG_FILE_BASE>
+DEFINE <ECLIPSE_NAME>      DROGON
+
+-- Load and run hook workflow for creating case metadata and registering case on Sumo
+DEFINE   <SUMO_ENV>   dev
+LOAD_WORKFLOW   ../bin/workflows/xhook_create_case_metadata -- define and load workflow
+HOOK_WORKFLOW   xhook_create_case_metadata  PRE_SIMULATION      -- run workflow
+
+-----------------------------------------------------
+-- Runpath folder
+-----------------------------------------------------
+
+-- Runpath folder from where all realizations are run
+RUNPATH  <SCRATCH>/<CASE_DIR>/realization-<IENS>/iter-<ITER>/
+
+NUM_REALIZATIONS    1            -- Set number of realizations to run
