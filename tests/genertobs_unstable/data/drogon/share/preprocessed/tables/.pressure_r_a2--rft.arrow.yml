@@ -1,0 +1,80 @@
+$schema: https://main-fmu-schemas-prod.radix.equinor.com/schemas/0.8.0/fmu_results.json
+version: 0.8.0
+source: fmu
+class: table
+masterdata:
+  smda:
+    coordinate_system:
+      identifier: ST_WGS84_UTM37N_P32637
+      uuid: ad214d85-dac7-19da-e053-c918a4889309
+    country:
+    - identifier: Norway
+      uuid: ad214d85-8a1d-19da-e053-c918a4889309
+    discovery:
+    - short_identifier: DROGON
+      uuid: ad214d85-8a1d-19da-e053-c918a4889309
+    field:
+    - identifier: DROGON
+      uuid: 00000000-0000-0000-0000-000000000000
+    stratigraphic_column:
+      identifier: DROGON_HAS_NO_STRATCOLUMN
+      uuid: 00000000-0000-0000-0000-000000000000
+access:
+  asset:
+    name: Drogon
+  classification: internal
+  ssdl:
+    access_level: internal
+    rep_include: true
+data:
+  content: rft
+  alias: []
+  format: arrow
+  is_observation: true
+  is_prediction: true
+  layout: table
+  name: pressure_R_A2
+  offset: 0.0
+  spec:
+    columns:
+    - value
+    - error
+    - x
+    - y
+    - tvd
+    - md
+    - zone
+    - __index_level_0__
+    size: 8
+  stratigraphic: false
+  tagname: rft
+  undef_is_zero: false
+  unit: ''
+  vertical_domain: depth
+  table_index: []
+file:
+  absolute_path: /private/dbs/git/subscript/share/preprocessed/tables/pressure_r_a2--rft.arrow
+  relative_path: share/preprocessed/tables/pressure_r_a2--rft.arrow
+  checksum_md5: 90044549024348f65b00e15052f1f563
+display:
+  name: pressure_R_A2
+tracklog:
+- datetime: '2024-05-21T05:57:26.457418Z'
+  event: created
+  user:
+    id: dbs
+  sysinfo:
+    fmu-dataio:
+      version: 2.2.0b3.dev5+g9a08f4e
+    komodo:
+      version: 2024.05.02-py38
+    operating_system:
+      hostname: st-linrgsn193.st.statoil.no
+      operating_system: Linux-3.10.0-1160.114.2.el7.x86_64-x86_64-with-glibc2.2.5
+      release: 3.10.0-1160.114.2.el7.x86_64
+      system: Linux
+      version: '#1 SMP Sun Mar 3 08:18:39 EST 2024'
+_preprocessed:
+  name: pressure_R_A2
+  tagname: rft
+  subfolder: ''
