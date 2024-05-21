@@ -120,6 +120,7 @@ sunsch = "subscript.sunsch.sunsch:main"
 vfp2csv = "subscript.vfp2csv.vfp2csv:main"
 welltest_dpds = "subscript.welltest_dpds.welltest_dpds:main"
 genertobs_unstable = "subscript.genertobs_unstable.main:main"
+upload_obs_2_sumo = "subscript.genertobs_unstable.upload_sumo_obs:main"
 
 [project.entry-points.ert]
 subscript_jobs = "subscript.hook_implementations.jobs"
