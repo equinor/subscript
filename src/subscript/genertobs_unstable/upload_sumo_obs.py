@@ -34,27 +34,21 @@ def yaml_load(file_name: Union[str, PosixPath]) -> dict:
     return config
 
 
-def generate_metadata(
-    obj: Union[str, PosixPath], config_path: Union[str, PosixPath], case_path: str
-) -> dict:
+def generate_metadata(obj: Union[str, PosixPath], case_path: str) -> dict:
     """Generate full metadata from preprocessed files
 
     Args:
         obj (Object): table object
-        config_path (Union[str, PosixPath]): path to fmu config file
         case_path (str): path to ert case
 
     Returns:
         dict: the metadata
     """
     logger = logging.getLogger(__name__ + ".generate_metadata")
-    config = yaml_load(config_path)
-    logger.debug("Passing this config to ExportData:\n%s", config)
-    exd = ExportData(
-        config=config, casepath=case_path, is_observation=True, fmu_context="case"
-    )
-
-    logger.debug("Passing this config to ExportData:\n%s", config)
+    if not obj.is_file():
+        raise TypeError("Expecting file, but what is passed is %s", type(obj))
+    config = {"model": {"name": "ff", "revision": "undefined"}}
+    exd = ExportData(config=config, casepath=case_path, fmu_context="case")
     metadata = exd.generate_metadata(obj)
     logger.debug("Generated metadata: %s", metadata)
     return metadata
@@ -90,9 +84,7 @@ def table_2_bytestring(table: Union[str, PosixPath]) -> bytes:
     return bytestring
 
 
-def make_sumo_file(
-    file_path: Union[str, PosixPath], config_path: Union[str, PosixPath], case_path: str
-) -> SumoFile:
+def make_sumo_file(file_path: Union[str, PosixPath], case_path: str) -> SumoFile:
     """Make SumoFile for given file containing object
 
     Args:
@@ -105,26 +97,24 @@ def make_sumo_file(
     """
     logger = logging.getLogger(__name__ + ".make_sumo_file")
     logger.debug("Making sumo file with %s", file_path)
-    table = pf.read_table(file_path)
-    metadata = generate_metadata(table, config_path, case_path)
+    metadata = generate_metadata(file_path, case_path)
     logger.debug("Metadata generated")
-    bytestring = table_to_bytes(table)
+    bytestring = table_to_bytes(pf.read_table(file_path))
     logger.debug("Bytestring created")
 
     sumo_file = FileOnJob(bytestring, metadata)
+    sumo_file.path = ""
     return sumo_file
 
 
 def prepare_sumo_files(
     preprocessed_folder: Union[str, PosixPath],
-    config_path: Union[str, PosixPath],
     case_path: str,
 ):
     """Prepare all preprocessed files as list of SumoFiles
 
     Args:
         preprocessed_folder (Union[str, PosixPath]): path to folder for preprocessed data
-        config_path (Union[str, PosixPath]): path to fmu config file
         case_path (str): path to given ert case
 
     Returns:
@@ -138,12 +128,12 @@ def prepare_sumo_files(
         logger.debug("File %s", table_file)
         if table_file.name.startswith("."):
             continue
-        sumo_files.append(make_sumo_file(table_file, config_path, case_path))
+        sumo_files.append(make_sumo_file(table_file, case_path))
     logger.debug("Prepared %s files", len(sumo_files))
     return sumo_files
 
 
-def nodisk_upload(files: List[SumoFile], parent_id: str, env: str = "prod"):
+def sumo_upload(files: List[SumoFile], parent_id: str, env: str = "prod"):
     """Upload files to sumo
 
     Args:
@@ -230,10 +220,8 @@ def run(args):
 
     logger = logging.getLogger(__name__ + ".run")
     logger.info("Will upload observations to sumo")
-    nodisk_upload(
-        prepare_sumo_files(
-            args.preprocessed_folder, args.fmuconfig_path, args.case_path
-        ),
+    sumo_upload(
+        prepare_sumo_files(args.preprocessed_folder, args.case_path),
         get_case_uuid(args.case_path),
         args.env,
     )
