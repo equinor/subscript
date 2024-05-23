@@ -46,7 +46,7 @@ def generate_metadata(obj: Union[str, PosixPath], case_path: str) -> dict:
     """
     logger = logging.getLogger(__name__ + ".generate_metadata")
     if not obj.is_file():
-        raise TypeError("Expecting file, but what is passed is %s", type(obj))
+        raise TypeError(f"Expecting file, but what is passed is {type(obj)}")
     config = {"model": {"name": "ff", "revision": "undefined"}}
     exd = ExportData(config=config, casepath=case_path, fmu_context="case")
     metadata = exd.generate_metadata(obj)
