@@ -6,8 +6,6 @@ import argparse
 from typing import Union, List
 import yaml
 from fmu.dataio import ExportData
-from fmu.dataio.providers._fmu import FmuProvider
-from fmu.dataio._metadata import generate_export_metadata
 from fmu.sumo.uploader import SumoConnection
 from fmu.sumo.uploader._sumofile import SumoFile
 from fmu.sumo.uploader._fileonjob import FileOnJob
