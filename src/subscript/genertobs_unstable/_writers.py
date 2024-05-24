@@ -1,13 +1,16 @@
-import os
 import logging
+import os
 import re
 from datetime import datetime
-import pandas as pd
 from pathlib import Path, PosixPath
 from shutil import rmtree
-from fmu.dataio import ExportData
-from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
+
+import pandas as pd
 import pyarrow as pa
+from fmu.dataio import ExportData
+
+from subscript.genertobs_unstable._utilities import (check_and_fix_str,
+                                                     inactivate_rows)
 
 
 def add_time_stamp(string="", record_type="f", comment_mark="--"):
