@@ -215,7 +215,6 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
         else:
             wog.wateroil = None
         if {"SG", "KRG", "KROG", "PCOG"}.issubset(dframe.columns):
-            print(dframe)
             wog.gasoil.add_fromtable(
                 dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
             )
