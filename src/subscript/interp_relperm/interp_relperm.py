@@ -167,7 +167,10 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
             The data must be restricted to only one SATNUM.
     """
     dframe = dframe.copy()  # Copy since we will modify it.
-    wog = pyscal.WaterOilGas(swl=dframe["SW"].min(), h=delta_s)
+    wog = pyscal.WaterOilGas(
+        swl=dframe["SW"].min() if "SW" in dframe.columns else 1.0 - dframe["SG"].max(),
+        h=delta_s,
+    )
     if "PCOW" not in dframe:
         dframe = dframe.assign(PCOW=0)
     if "PCOG" not in dframe:
@@ -191,6 +194,7 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
             .drop_duplicates()
             .reset_index()
         )
+        wog.wateroil.add_fromtable(wo_dframe)
         go_dframe = (
             dframe[["SG", "KRG", "KROG", "PCOG"]]
             .set_index("SG")
@@ -202,23 +206,33 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
             .drop_duplicates()
             .reset_index()
         )
+        wog.gasoil.add_fromtable(go_dframe)
     else:
-        wo_dframe = dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
-        go_dframe = dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
-
-    wog.wateroil.add_fromtable(wo_dframe)
-    wog.gasoil.add_fromtable(go_dframe)
+        if {"SW", "KRW", "KROW", "PCOW"}.issubset(dframe.columns):
+            wog.wateroil.add_fromtable(
+                dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
+            )
+        else:
+            wog.wateroil = None
+        if {"SG", "KRG", "KROG", "PCOG"}.issubset(dframe.columns):
+            wog.gasoil.add_fromtable(
+                dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
+            )
+        else:
+            wog.gasoil = None
 
     # socr can for floating point reasons become estimated to be larger than
     # sorw, which means we are in an oil paleo zone setting. This is not
     # supported by interp_relperm. Reset the property to ensure interpolation
     # is not affected:
-    wog.wateroil.socr = wog.wateroil.sorw
+    if wog.wateroil:
+        wog.wateroil.socr = wog.wateroil.sorw
 
     # If sgro > 0, it is a gas condensate object, which cannot be
     # mixed with non-gas condensate (during interpolation). Avoid pitfalls
     # in the estimated sgro by always setting it to zero:
-    wog.gasoil.sgro = 0.0
+    if wog.gasoil:
+        wog.gasoil.sgro = 0.0
     return wog
 
 
@@ -248,7 +262,9 @@ def make_interpolant(
     high = make_wateroilgas(high_df.loc[satnum], delta_s)
     rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=delta_s)
 
-    return rec.interpolate(interp_param["param_w"], interp_param["param_g"], h=delta_s)
+    return rec.interpolate(
+        interp_param.get("param_w", 0.0), interp_param.get("param_g", 0), h=delta_s
+    )
 
 
 def get_parser() -> argparse.ArgumentParser:

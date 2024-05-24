@@ -39,6 +39,52 @@ TWO_SATNUM_PYSCAL_MOCK = pd.DataFrame(
     ],
 ).set_index("CASE")
 
+OIL_WATER_PYSCAL_MOCK = pd.DataFrame(
+    columns=[
+        "CASE",
+        "SATNUM",
+        "Nw",
+        "Now",
+        "swl",
+        "a",
+        "b",
+        "poro_ref",
+        "perm_ref",
+        "drho",
+    ],
+    data=[
+        ["low", 1, 1.1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ["low", 2, 1.1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ["base", 1, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ["base", 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ["high", 1, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+        ["high", 2, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+    ],
+).set_index("CASE")
+
+OIL_GAS_PYSCAL_MOCK = pd.DataFrame(
+    columns=[
+        "CASE",
+        "SATNUM",
+        "Ng",
+        "Nog",
+        "swl",
+        "a",
+        "b",
+        "poro_ref",
+        "perm_ref",
+        "drho",
+    ],
+    data=[
+        ["low", 1, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ["low", 2, 1, 1, 0.1, 2, -2, 0.25, 100, 150],
+        ["base", 1, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ["base", 2, 2, 2, 0.1, 2, -2, 0.25, 200, 150],
+        ["high", 1, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+        ["high", 2, 3, 3, 0.1, 2, -2, 0.25, 300, 150],
+    ],
+).set_index("CASE")
+
 
 def test_prepend_root_path():
     """Test that we need to prepend with root-path"""
@@ -177,6 +223,76 @@ def test_parse_satfunc_files():
     assert "PCOW" in tables_df.columns
     assert "PCOG" in tables_df.columns
     assert not tables_df.empty
+
+
+def test_two_phase_oil_water(tmp_path):
+    """Test initializing interp_relperm from a pyscal xlsx file"""
+    os.chdir(tmp_path)
+    OIL_WATER_PYSCAL_MOCK.reset_index().to_excel("scal_input_ow.xlsx")
+    config = {
+        "pyscalfile": "scal_input_ow.xlsx",
+        "result_file": "outfile_ow.inc",
+        "interpolations": [{"param_w": -0.5}],
+        "delta_s": 0.1,
+    }
+
+    interp_relperm.process_config(config)
+    outfile_str = Path("outfile_ow.inc").read_text(encoding="utf8")
+    assert "SCAL recommendation interpolation to -0.5" in outfile_str
+
+    """Test that we are able to make an interpolant from inc files"""
+    swoffn = TESTDATA / "swof_base.inc"
+
+    base_df = interp_relperm.parse_satfunc_files([swoffn])
+
+    swoffn = TESTDATA / "swof_pes.inc"
+
+    low_df = interp_relperm.parse_satfunc_files([swoffn])
+
+    swoffn = TESTDATA / "swof_opt.inc"
+
+    high_df = interp_relperm.parse_satfunc_files([swoffn])
+
+    interpolant = interp_relperm.make_interpolant(
+        base_df, low_df, high_df, {"param_w": 0.1}, 1, 0.1
+    )
+
+    assert "SWOF" in interpolant.wateroil.SWOF()
+
+
+def test_two_phase_oil_gas(tmp_path):
+    """Test initializing interp_relperm from a pyscal xlsx file"""
+    os.chdir(tmp_path)
+    OIL_GAS_PYSCAL_MOCK.reset_index().to_excel("scal_input_og.xlsx")
+    config = {
+        "pyscalfile": "scal_input_og.xlsx",
+        "result_file": "outfile_og.inc",
+        "interpolations": [{"param_g": 0.5}],
+        "delta_s": 0.1,
+    }
+
+    interp_relperm.process_config(config)
+    outfile_str = Path("outfile_og.inc").read_text(encoding="utf8")
+    assert "SCAL recommendation interpolation to 0.5" in outfile_str
+
+    """Test that we are able to make an interpolant from inc files"""
+    sgoffn = TESTDATA / "sgof_base.inc"
+
+    base_df = interp_relperm.parse_satfunc_files([sgoffn])
+
+    sgoffn = TESTDATA / "sgof_pes.inc"
+
+    low_df = interp_relperm.parse_satfunc_files([sgoffn])
+
+    sgoffn = TESTDATA / "sgof_opt.inc"
+
+    high_df = interp_relperm.parse_satfunc_files([sgoffn])
+
+    interpolant = interp_relperm.make_interpolant(
+        base_df, low_df, high_df, {"param_g": -0.5}, 1, 0.1
+    )
+
+    assert "SGOF" in interpolant.gasoil.SGOF()
 
 
 def test_make_interpolant():
