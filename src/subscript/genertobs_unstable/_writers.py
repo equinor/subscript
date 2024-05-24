@@ -347,7 +347,7 @@ def generate_preprocessed_hook(export_path, output_folder):
 
     posixpath = Path(output_folder).resolve()
     workflow_name = posixpath / f"xhook_{stem}"
-    call = f"WF_UPLOAD_SUMO_OBS <SCRATCH>/<USER><CASEDIR> {str(export_path)}"
+    call = f"WF_UPLOAD_SUMO_OBS <SCRATCH>/<USER>/<CASE_DIR> {str(export_path)}"
     workflow_name.write_text(call)
 
     workflow_content = f"LOAD_WORKFLOW   {workflow_name}  -- define and load workflow\n"
