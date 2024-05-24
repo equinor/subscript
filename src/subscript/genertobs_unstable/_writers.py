@@ -63,8 +63,7 @@ def write_timeseries_ertobs(obs_dict: dict):
         logger.debug("Element to extract from %s", element)
         key = element["vector"]
         logger.debug(key)
-        obs_frame = element["data"]
-        inactivate_rows(obs_frame)
+        obs_frame = inactivate_rows(element["data"])
         obs_frame["class"] = "SUMMARY_OBSERVATION"
         obs_frame["key"] = f"KEY={key}" + ";};"
         order = ["class", "label", "value", "error", "date", "key"]
@@ -247,8 +246,7 @@ def write_well_rft_files(
         str: ertobs string for well
     """
     logger = logging.getLogger(__name__ + ".write_well_rft_files")
-    well_frame = element["data"]
-    inactivate_rows(well_frame)
+    well_frame = inactivate_rows(element["data"])
     if well_frame.empty:
         return None
     fixed_file_name = check_and_fix_str(element["well_name"])
