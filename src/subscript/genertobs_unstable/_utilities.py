@@ -110,15 +110,18 @@ def inactivate_rows(dataframe: pd.DataFrame):
     logger = logging.getLogger(__name__ + ".inactivate_rows")
     try:
         inactivated = dataframe.active == "no"
+        logger.debug("Filter is %s", inactivated)
         nr_rows = inactivated.sum()
         logger.info(
             "%s rows inactivated (%s percent)",
             nr_rows,
             100 * nr_rows / dataframe.shape[0],
         )
-        dataframe = dataframe.loc[inactivated]
+        dataframe = dataframe.loc[~inactivated]
+        logger.debug("shape after deactivation %s", dataframe.shape)
     except AttributeError:
         logger.info("No inactivation done")
+    return dataframe
 
 
 def convert_df_to_dict(frame: pd.DataFrame) -> dict:

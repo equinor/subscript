@@ -302,6 +302,12 @@ def test_generate_data_from_config(yaml_config, drogon_project, expected_results
     # assert data == expected_results
 
 
+def test_inactivate_rows():
+    frame = pd.DataFrame({"test": [1, 2, 3], "active": [None, "no", None]})
+    frame = ut.inactivate_rows(frame)
+    assert frame.shape == (2, 2)
+
+
 def test_convert_rft_to_list(rft_as_frame):
     print(rft_as_frame)
     results = ut.convert_rft_to_list(rft_as_frame)
