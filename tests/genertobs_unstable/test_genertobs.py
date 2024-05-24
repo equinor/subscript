@@ -368,7 +368,7 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
 
     main.run(test_config, tmp_observations, masterdata_config)
     obs_files = list(tmp_observations.glob("*"))
-    assert len(obs_files) == 6, f"Have not generated 6 files, but {len(obs_files)}"
+    assert len(obs_files) == 7, f"Have not generated 7 elements, but {len(obs_files)}"
     for obs_file in obs_files:
         print(obs_file)
         try:
@@ -380,7 +380,7 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
         except IsADirectoryError:
             print(obs_file)
 
-    sumo_table_location = tmp_drog / "share/preprocessed/tables"
+    sumo_table_location = tmp_observations / "sumo/share/preprocessed/tables"
     sumo_tables = list(sumo_table_location.glob("*.arrow"))
     assert (
         len(sumo_tables) == 6
