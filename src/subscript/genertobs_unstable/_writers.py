@@ -307,9 +307,10 @@ def export_with_dataio(data: list, config: dict, store_path: str):
     """
     logger = logging.getLogger(__name__ + ".export_with_dataio")
     logger.info("Will be exporting %i elements from dict %s", len(data), data)
-    exporter = ExportData(config=config)
     Path(store_path).mkdir(parents=True, exist_ok=True)
+    cwd = Path().cwd()
     os.chdir(store_path)
+    exporter = ExportData(config=config)
     logger.info("Results will be stored in %s", store_path)
     for data_element in data:
         logger.debug("Exporting element %s\n------", data_element["name"])
