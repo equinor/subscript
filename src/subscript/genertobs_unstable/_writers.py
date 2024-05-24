@@ -340,14 +340,19 @@ def export_with_dataio(data: list, config: dict, store_path: str):
             logger.info("Exporting to %s", export_path)
     parent = Path(export_path).parent
     logger.info("All exported to %s", parent)
+    print(f"Exported observation data ready for upload to sumo in folder {parent}")
+    os.chdir(cwd)
     return parent
 
 
 def generate_preprocessed_hook(export_path, output_folder):
 
+    logger = logging.getLogger(__file__ + ".generate_preprocessed_hook")
+    logger.debug("This is the export path %s", str(export_path))
     stem = "upload_observations"
 
     posixpath = Path(output_folder).resolve()
+
     workflow_name = posixpath / f"xhook_{stem}"
     call = f"WF_UPLOAD_SUMO_OBS <SCRATCH>/<USER>/<CASE_DIR> {str(export_path)} '--env' <SUMO_ENV>"
     workflow_name.write_text(add_time_stamp(call))
