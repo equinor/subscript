@@ -297,19 +297,20 @@ def write_dict_to_ertobs(obs_list: list, parent: PosixPath) -> str:
     return obs_str
 
 
-def export_with_dataio(data: list, config: dict, case_path: str):
+def export_with_dataio(data: list, config: dict, store_path: str):
     """Export observations from list of input dicts
 
     Args:
         data (list): the data stored as dict
         config (dict): config file needed for dataio
-        case_path (str): path to where to store
+        store_path (str): path to where to store
     """
     logger = logging.getLogger(__name__ + ".export_with_dataio")
     logger.info("Will be exporting %i elements from dict %s", len(data), data)
     exporter = ExportData(config=config)
-    Path(case_path).mkdir(exist_ok=True)
-    os.chdir(case_path)
+    Path(store_path).mkdir(parents=True, exist_ok=True)
+    os.chdir(store_path)
+    logger.info("Results will be stored in %s", store_path)
     for data_element in data:
         logger.debug("Exporting element %s\n------", data_element["name"])
         content = data_element["content"]
@@ -330,7 +331,7 @@ def export_with_dataio(data: list, config: dict, case_path: str):
                 obs_data,
                 name=prefix + check_and_fix_str(name),
                 tagname=content,
-                casepath=case_path,
+                casepath=store_path,
                 fmu_context="preprocessed",
                 content=content,
                 is_observation=True,
