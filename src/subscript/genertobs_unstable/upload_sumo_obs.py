@@ -1,18 +1,20 @@
 """Upload observations to sumo"""
 
+import argparse
 import logging
 from pathlib import Path, PosixPath
-import argparse
-from typing import Union, List
-import yaml
-from fmu.dataio import ExportData
-from fmu.sumo.uploader import SumoConnection
-from fmu.sumo.uploader._sumofile import SumoFile
-from fmu.sumo.uploader._fileonjob import FileOnJob
-from fmu.sumo.uploader._upload_files import upload_files
+
 import pyarrow as pa
 import pyarrow.feather as pf
 import pyarrow.parquet as pq
+import yaml
+from fmu.dataio import ExportData
+from fmu.sumo.uploader import SumoConnection
+from fmu.sumo.uploader._fileonjob import FileOnJob
+from fmu.sumo.uploader._sumofile import SumoFile
+from fmu.sumo.uploader._upload_files import upload_files
+
+from typing import List, Union
 
 
 def yaml_load(file_name: Union[str, PosixPath]) -> dict:

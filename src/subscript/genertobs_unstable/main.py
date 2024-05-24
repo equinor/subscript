@@ -1,17 +1,14 @@
 """Main function of genertobs"""
 
-import logging
 import argparse
+import logging
 from pathlib import Path
-from subscript.genertobs_unstable.parse_config import (
-    read_yaml_config,
-    generate_data_from_config,
-)
-from subscript.genertobs_unstable._writers import (
-    write_dict_to_ertobs,
-    export_with_dataio,
-    generate_preprocessed_hook,
-)
+
+from subscript.genertobs_unstable._writers import (export_with_dataio,
+                                                   generate_preprocessed_hook,
+                                                   write_dict_to_ertobs)
+from subscript.genertobs_unstable.parse_config import (generate_data_from_config,
+                                                       read_yaml_config)
 
 
 def parse_args():
