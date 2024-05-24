@@ -13,6 +13,6 @@ HOOK_WORKFLOW   xhook_create_case_metadata  PRE_SIMULATION      -- run workflow
 -----------------------------------------------------
 
 -- Runpath folder from where all realizations are run
-RUNPATH  <SCRATCH>/<CASE_DIR>/realization-<IENS>/iter-<ITER>/
+RUNPATH  <SCRATCH>/<USER>/<CASE_DIR>/realization-<IENS>/iter-<ITER>/
 
 NUM_REALIZATIONS    1            -- Set number of realizations to run

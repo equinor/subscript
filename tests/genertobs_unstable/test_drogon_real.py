@@ -29,7 +29,7 @@ def write_ert_config_and_run(scratch_path, obs_path):
     xhook_path.write_text(xhook_contents)
     ert_config += f"\nINCLUDE {str(xhook_path)}"
     tmp_drogon_ert.write_text(ert_config)
-    runpath = scratch_path / DROGON_ERT_MODEL.stem / "realization-0/iter-0"
+    runpath = scratch_path / "sudo" / DROGON_ERT_MODEL.stem / "realization-0/iter-0"
     print(f"{str(runpath)}")
     process = Popen(
         ["ert", "test_run", str(tmp_drogon_ert)],
@@ -46,7 +46,7 @@ def write_ert_config_and_run(scratch_path, obs_path):
     ).is_file(), f"running {tmp_drogon_ert}, ended with errors"
 
 
-def test_integration(tmp_path, masterdata_config):
+def test_integration(tmp_path, masterdata_config, mockert_experiment):
     drogon_path = tmp_path / "drogon"
     copytree(DROGON, drogon_path)
     genert_config_name = "genertobs_config.yml"
