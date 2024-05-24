@@ -55,6 +55,7 @@ def run(config_path: str, output_folder: str, master_config_file):
     export_path = export_with_dataio(data, master_config, sumo_folder)
     logger.info(export_path)
     generate_preprocessed_hook(export_path, export_folder)
+    return export_folder
 
 
 def main():
