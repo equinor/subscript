@@ -49,6 +49,7 @@ def write_ert_config_and_run(scratch_path, obs_path):
 def test_integration(tmp_path, masterdata_config, mockert_experiment):
     drogon_path = tmp_path / "drogon"
     copytree(DROGON, drogon_path)
+    os.chdir(drogon_path)
     genert_config_name = "genertobs_config.yml"
     tmp_observations = drogon_path / "ert/input/observations/genertobs"
     test_config = drogon_path / f"ert/input/observations/{genert_config_name}"
