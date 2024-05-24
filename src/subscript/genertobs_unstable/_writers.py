@@ -6,7 +6,7 @@ import pandas as pd
 from pathlib import Path, PosixPath
 from shutil import rmtree
 from fmu.dataio import ExportData
-from subscript.genertobs_unstable._utilities import check_and_fix_str
+from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
 import pyarrow as pa
 
 
@@ -64,6 +64,7 @@ def write_timeseries_ertobs(obs_dict: dict):
         key = element["vector"]
         logger.debug(key)
         obs_frame = element["data"]
+        inactivate_rows(obs_frame)
         obs_frame["class"] = "SUMMARY_OBSERVATION"
         obs_frame["key"] = f"KEY={key}" + ";};"
         order = ["class", "label", "value", "error", "date", "key"]
@@ -180,9 +181,10 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
         date = element["date"]
         restart = element["restart"]
         obs_file = write_well_rft_files(rft_folder, prefix, element)
-        well_date_list.append([well_name, date, restart])
-        rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
-        gen_data += create_rft_gendata_str(well_name, restart)
+        if obs_file is not None:
+            well_date_list.append([well_name, date, restart])
+            rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
+            gen_data += create_rft_gendata_str(well_name, restart)
 
     well_date_frame = pd.DataFrame(
         well_date_list, columns=["well_name", "date", "restart"]
@@ -245,14 +247,18 @@ def write_well_rft_files(
         str: ertobs string for well
     """
     logger = logging.getLogger(__name__ + ".write_well_rft_files")
+    well_frame = element["data"]
+    inactivate_rows(well_frame)
+    if well_frame.empty:
+        return None
     fixed_file_name = check_and_fix_str(element["well_name"])
     obs_file = parent_folder / f"{prefix}{fixed_file_name}.obs"
     position_file = parent_folder / f"{prefix}{fixed_file_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
-    obs_frame = element["data"][["value", "error"]]
+    obs_frame = well_frame[["value", "error"]]
     logger.debug("observations\n%s", obs_frame)
     write_csv_with_comment(obs_file, obs_frame)
-    position_frame = element["data"][["x", "y", "md", "tvd", "zone"]]
+    position_frame = well_frame[["x", "y", "md", "tvd", "zone"]]
     logger.debug("positions for\n%s", position_frame)
     write_csv_with_comment(position_file, position_frame)
 
