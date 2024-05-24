@@ -103,7 +103,8 @@ def make_sumo_file(file_path: Union[str, PosixPath], case_path: str) -> SumoFile
     logger.debug("Bytestring created")
 
     sumo_file = FileOnJob(bytestring, metadata)
-    sumo_file.path = ""
+    sumo_file.path = metadata["file"]["relative_path"]
+    sumo_file.metadata_path = ""
     return sumo_file
 
 
