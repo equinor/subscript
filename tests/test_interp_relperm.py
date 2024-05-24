@@ -66,8 +66,6 @@ OIL_GAS_PYSCAL_MOCK = pd.DataFrame(
     columns=[
         "CASE",
         "SATNUM",
-        # "Nw",
-        # "Now",
         "Ng",
         "Nog",
         "swl",
