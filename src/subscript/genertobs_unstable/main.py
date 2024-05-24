@@ -39,18 +39,22 @@ def run(config_path: str, output_folder: str, master_config_file):
         output_folder (str): path to where all results will be stored
     """
     logger = logging.getLogger(__name__ + ".run")
-    output_folder = Path(output_folder).resolve()
+    logger.info("Here is config path %s", config_path)
     config = read_yaml_config(config_path, validate=True)
     logger.debug("Read config: %s", config)
+    export_folder = Path(config_path).parent / output_folder
+    sumo_folder = export_folder / "sumo"
+
     data = generate_data_from_config(config, Path(config_path).parent)
     logger.debug("Data generated %s", data)
-    write_dict_to_ertobs(data, Path(output_folder))
+    write_dict_to_ertobs(data, export_folder)
     master_config = read_yaml_config(master_config_file)
-    export_folder = Path(output_folder)
-    logger.info("Exporting observations ready for sumo to %s", str(export_folder))
-    export_path = export_with_dataio(data, master_config, export_folder)
+    print("Exported all ert obs results to folder %s", str(export_folder))
+    logger.info("Exporting observations ready for sumo to %s", str(sumo_folder))
+
+    export_path = export_with_dataio(data, master_config, sumo_folder)
     logger.info(export_path)
-    generate_preprocessed_hook(export_path, output_folder)
+    generate_preprocessed_hook(export_path, export_folder)
 
 
 def main():
@@ -58,7 +62,10 @@ def main():
     logger = logging.getLogger(__name__ + ".main")
     args = parse_args()
     if args.d:
-        logging.basicConfig(level=logging.DEBUG)
+        level = logging.DEBUG
+    else:
+        level = logging.warning
+    logging.basicConfig(level=level)
     logger.debug("Have read args %s", args)
     run(args.config_file, args.output_folder, args.master_config_file)
 
