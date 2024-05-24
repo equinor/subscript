@@ -95,7 +95,6 @@ def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
 
     dataframe = _fix_column_names(dataframe)
     remove_whitespace(dataframe)
-    inactivate_rows(dataframe)
     dataframe = remove_undefined_values(dataframe)
     dataframe.rename({"key": "vector"}, inplace=True, axis="columns")
     logger.debug("Returning dataframe %s", dataframe)
