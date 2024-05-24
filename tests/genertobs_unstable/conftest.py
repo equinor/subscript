@@ -19,6 +19,11 @@ def read_yaml_file(yaml_file_name):
     return yam_contents
 
 
+@pytest.fixture(name="mockert_experiment", scope="function")
+def _fix_ens_id(monkeypatch):
+    monkeypatch.setenv("_ERT_EXPERIMENT_ID", "TUT")
+
+
 @pytest.fixture(scope="session", name="drogon_project")
 def _fix_drogon():
     drogon_path = Path(__file__).parent / "data/drogon"
