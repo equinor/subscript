@@ -22,6 +22,7 @@ def validate_config(config: dict):
         KeyError: if key name not in config
         AssertionError: if incorrect keys are used or incorrect type is used
     """
+    logger = logging.getLogger(__file__ + ".validate_config")
     valids = {"name", "type", "observation"}
     optionals = {"error", "min_error", "max_error", "plugin_arguments", "metadata"}
     for i, element in enumerate(config):
