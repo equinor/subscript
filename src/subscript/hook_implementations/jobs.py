@@ -8,6 +8,11 @@ import ert
 # pylint: disable=no-value-for-parameter
 
 
+def is_forward_model(path):
+
+    return not os.path.basename(path).startswith("WF_")
+
+
 def _get_jobs_from_directory(directory):
     """Do a filesystem lookup in a directory to check
     for available ERT forward models"""
@@ -17,24 +22,31 @@ def _get_jobs_from_directory(directory):
         + directory
     )
 
-    all_files = [
+    return [
         os.path.join(resource_directory, f)
         for f in os.listdir(resource_directory)
         if os.path.isfile(os.path.join(resource_directory, f))
     ]
-    return {os.path.basename(path): path for path in all_files}
 
 
 @ert.plugin(name="subscript")
 def installable_jobs():
     """Get the jobs/forward models exposed by subscript"""
-    return _get_jobs_from_directory("config_jobs")
+    return {
+        os.path.basename(path): path
+        for path in _get_jobs_from_directory("config_jobs")
+        if is_forward_model(path)
+    }
 
 
 @ert.plugin(name="subscript")
 def installable_workflow_jobs():
     """Get the workflow jobs exposed by subscript"""
-    return {}
+    return {
+        os.path.basename(path): path
+        for path in _get_jobs_from_directory("config_jobs")
+        if not is_forward_model(path)
+    }
 
 
 def _get_module_variable_if_exists(
