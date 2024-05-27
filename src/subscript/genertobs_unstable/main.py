@@ -62,7 +62,7 @@ def main():
     if args.d:
         level = logging.DEBUG
     else:
-        level = logging.warning
+        level = logging.WARNING
     logging.basicConfig(level=level)
     logger.debug("Have read args %s", args)
     run(args.config_file, args.output_folder, args.master_config_file)
