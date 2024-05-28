@@ -2,15 +2,14 @@ import logging
 import os
 import re
 from datetime import datetime
-from pathlib import Path, PosixPath
+from pathlib import Path
 from shutil import rmtree
-
+from typing import Optional
 import pandas as pd
 import pyarrow as pa
 from fmu.dataio import ExportData
 
-from subscript.genertobs_unstable._utilities import (check_and_fix_str,
-                                                     inactivate_rows)
+from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
 
 
 def add_time_stamp(string="", record_type="f", comment_mark="--"):
@@ -75,8 +74,8 @@ def write_timeseries_ertobs(obs_dict: dict):
         obs_frame["error"] = "ERROR=" + obs_frame["error"].astype(str) + ";"
         obs_frame["date"] = "DATE=" + obs_frame["date"].astype(str) + ";"
         obs_frames.append(obs_frame)
-    obs_frames = pd.concat(obs_frames)
-    obs_str = re.sub(r" +", " ", obs_frames.to_string(header=False, index=False)) + "\n"
+    obs_frames_str = pd.concat(obs_frames).to_string(header=False, index=False)
+    obs_str = re.sub(r" +", " ", obs_frames_str) + "\n"  # type: ignore
     logger.debug("Returning %s", obs_str)
     return obs_str
 
@@ -94,7 +93,7 @@ def select_from_dict(keys: list, full_dict: dict):
     return {key: full_dict[key] for key in keys}
 
 
-def create_rft_ertobs_str(well_name: str, restart: int, obs_file: PosixPath) -> str:
+def create_rft_ertobs_str(well_name: str, restart: int, obs_file: Path) -> str:
     """Create the rft ertobs string for specific well
 
     Args:
@@ -132,9 +131,7 @@ def create_rft_gendata_str(well_name: str, restart: int) -> str:
     )
 
 
-def write_genrft_str(
-    parent: PosixPath, well_date_path: str, layer_zone_table: str
-) -> str:
+def write_genrft_str(parent: Path, well_date_path: str, layer_zone_table: str) -> str:
     """write the string to define the GENDATA_RFT call
 
     Args:
