@@ -1,12 +1,11 @@
 import logging
 import re
 from pathlib import Path
+from typing import List, Optional, Union
 from warnings import warn
 
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
-
-from typing import List, Optional, Union
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -410,7 +409,7 @@ def extract_from_row(row: dict, parent_folder: Union[str, Path]) -> List[pd.Data
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
 
     add_or_modify_error(
-        obs_frame, row["error"], row.get("min_error", None), row.get("max_error", None)
+        obs_frame, row["error"], row.get("min_error"), row.get("max_error")
     )
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
 

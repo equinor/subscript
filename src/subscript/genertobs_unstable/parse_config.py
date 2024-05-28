@@ -4,12 +4,10 @@ import logging
 from pathlib import Path
 from warnings import warn
 
-import pandas as pd
 import yaml
 from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 from subscript.genertobs_unstable._utilities import extract_from_row
-from typing import List, Union
 
 
 def validate_config(config: dict):

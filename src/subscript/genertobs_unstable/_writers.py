@@ -4,14 +4,13 @@ import re
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
+from typing import Optional
 
 import pandas as pd
 import pyarrow as pa
 from fmu.dataio import ExportData
 
-from subscript.genertobs_unstable._utilities import (check_and_fix_str,
-                                                     inactivate_rows)
-from typing import Optional
+from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
 
 
 def add_time_stamp(string="", record_type="f", comment_mark="--"):
