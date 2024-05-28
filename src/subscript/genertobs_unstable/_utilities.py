@@ -1,12 +1,11 @@
 import logging
 import re
-from pathlib import PosixPath
+from pathlib import Path
 from warnings import warn
 
+from typing import List, Union, Optional
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
-
-from typing import List, Union
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -58,7 +57,7 @@ def remove_whitespace(dataframe: pd.DataFrame):
             logger.debug("%s is not str column", col_name)
 
 
-def read_tabular_file(tabular_file_path: Union[str, PosixPath]) -> pd.DataFrame:
+def read_tabular_file(tabular_file_path: Union[str, Path]) -> pd.DataFrame:
     """Read csv or excel file into pandas dataframe
 
     Args:
@@ -287,8 +286,8 @@ def convert_obs_df_to_list(frame: pd.DataFrame, content: str) -> list:
 def add_or_modify_error(
     frame: pd.DataFrame,
     error: str,
-    err_min: Union[float, int] = None,
-    err_max: Union[float, int] = None,
+    err_min: Optional[Union[float, int]] = None,
+    err_max: Optional[Union[float, int]] = None,
 ):
     """Complete error column in dataframe
 
@@ -366,7 +365,7 @@ def ensure_numeric(frame: pd.DataFrame, key: str):
             if frame[key].astype(str).str.contains(".").sum() > 0:
                 converter = float
             else:
-                converter = int
+                converter = int  # type: ignore
             frame[key] = frame[key].astype(converter)
     except KeyError:
         logger.debug("No %s column", key)
@@ -389,14 +388,12 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
     return general_observations
 
 
-def extract_from_row(
-    row: dict, parent_folder: Union[str, PosixPath]
-) -> List[pd.DataFrame]:
+def extract_from_row(row: dict, parent_folder: Union[str, Path]) -> List[pd.DataFrame]:
     """Extract results from row in config file
 
     Args:
         row (pd.Series): the row to extract from
-        parent_folder (str, PosixPath): the folder to use when reading file
+        parent_folder (str, Path): the folder to use when reading file
 
     Returns:
         pd.DataFrame: the extracted results
@@ -422,11 +419,11 @@ def extract_from_row(
     return converted
 
 
-def read_obs_frame(input_file: PosixPath, content: str) -> pd.DataFrame:
+def read_obs_frame(input_file: Path, content: str) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
-        input_file (PosixPath): the file where the data is
+        input_file (Path): the file where the data is
         label (str): lable to be added for general obs
         content (Str): what content to be read
 
