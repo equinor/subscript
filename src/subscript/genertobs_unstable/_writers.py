@@ -46,7 +46,7 @@ def write_csv_with_comment(file_path, frame):
     """
 
     with open(file_path, "w", encoding="utf-8") as stream:
-        stream.write(add_time_stamp(comment_mark="#"))
+        # stream.write(add_time_stamp(comment_mark="#"))
         frame.to_csv(stream, index=False, header=False, sep=" ")
 
 
