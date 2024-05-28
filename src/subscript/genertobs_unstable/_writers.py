@@ -142,6 +142,11 @@ def write_genrft_str(parent: Path, well_date_path: str, layer_zone_table: str) -
     Returns:
         str: the string
     """
+    logger = logging.getLogger(__name__ + ".write_genrft_str")
+    if not Path(layer_zone_table).exists():
+        raise FileNotFoundError(
+            f"{layer_zone_table} does not exist, this needs to exist!!"
+        )
     str_parent = str(parent)
     string = (
         f"DEFINE <RFT_INPUT> {parent}\n"
