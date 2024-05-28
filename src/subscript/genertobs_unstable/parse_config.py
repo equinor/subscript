@@ -1,7 +1,7 @@
 """Code related to fmobs config stuff"""
 
 import logging
-from pathlib import Path, PosixPath
+from pathlib import Path
 from warnings import warn
 
 import pandas as pd
@@ -58,37 +58,37 @@ def validate_config(config: dict):
             logger.debug("No global error added, nothing to check")
 
 
-def read_tabular_config(
-    config_file_name: Union[str, PosixPath], parent_folder: Union[str, PosixPath] = None
-) -> List[pd.DataFrame]:
-    """Parse config file in csv/excel like format
+# def read_tabular_config(
+#     config_file_name: Union[str, Path], parent_folder: Union[str, PosixPath] = None
+# ) -> List[pd.DataFrame]:
+#     """Parse config file in csv/excel like format
 
-    Args:
-        config_file_name (str): path to config file
+#     Args:
+#         config_file_name (str): path to config file
 
-    Returns:
-        pd.DataFrame: the config file as dataframe
-    """
-    logger = logging.getLogger(__name__ + ".read_config_file")
-    config = read_tabular_file(config_file_name)
-    logger.debug("Shape of config : %s", config.shape)
-    if parent_folder is None:
-        parent_folder = Path(config_file_name).parent
-    else:
-        parent_folder = Path(parent_folder)
+#     Returns:
+#         pd.DataFrame: the config file as dataframe
+#     """
+#     logger = logging.getLogger(__name__ + ".read_config_file")
+#     config = read_tabular_file(config_file_name)
+#     logger.debug("Shape of config : %s", config.shape)
+#     if parent_folder is None:
+#         parent_folder = Path(config_file_name).parent
+#     else:
+#         parent_folder = Path(parent_folder)
 
-    obs_data = []
+#     obs_data = []
 
-    for rnr, row in config.iterrows():
-        if row["active"] != "yes":
-            logger.info("row %s is deactivated", rnr)
-            continue
+#     for rnr, row in config.iterrows():
+#         if row["active"] != "yes":
+#             logger.info("row %s is deactivated", rnr)
+#             continue
 
-        row_obs = extract_from_row(row, parent_folder)
-        obs_data.append(row_obs)
+#         row_obs = extract_from_row(row, parent_folder)
+#         obs_data.append(row_obs)
 
-    obs_data = pd.concat(obs_data)
-    return obs_data
+#     obs_data = pd.concat(obs_data)
+#     return obs_data
 
 
 def read_yaml_config(config_file_name: str, validate=False) -> dict:
@@ -117,7 +117,7 @@ def read_yaml_config(config_file_name: str, validate=False) -> dict:
     return config
 
 
-def generate_data_from_config(config: dict, parent: PosixPath) -> tuple:
+def generate_data_from_config(config: dict, parent: Path) -> list:
     """Generate tuple with dict and dataframe from config dict
 
     Args:

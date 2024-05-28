@@ -28,7 +28,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def run(config_path: str, output_folder: str, master_config_file):
+def run(config_path: str, output_folder: str, master_config_file: str):
     """Generate data from config file
 
     Args:
@@ -39,7 +39,7 @@ def run(config_path: str, output_folder: str, master_config_file):
     logger.info("Here is config path %s", config_path)
     config = read_yaml_config(config_path, validate=True)
     logger.debug("Read config: %s", config)
-    export_folder = Path(config_path).parent / output_folder
+    export_folder = (Path(config_path).parent / output_folder).resolve()
     sumo_folder = export_folder / "sumo"
 
     data = generate_data_from_config(config, Path(config_path).parent)
