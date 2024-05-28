@@ -254,7 +254,7 @@ def write_well_rft_files(
         return None
     fixed_file_name = check_and_fix_str(element["well_name"])
     obs_file = (parent_folder / f"{prefix}{fixed_file_name}.obs").resolve()
-    position_file = parent_folder / f"{prefix}{fixed_file_name}.txt"
+    position_file = parent_folder / f"{fixed_file_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
     obs_frame = well_frame[["value", "error"]]
     logger.debug("observations\n%s", obs_frame)
