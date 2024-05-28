@@ -3,9 +3,10 @@ import re
 from pathlib import Path
 from warnings import warn
 
-from typing import List, Union, Optional
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
+
+from typing import List, Optional, Union
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:

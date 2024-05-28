@@ -2,7 +2,7 @@
 
 import argparse
 import logging
-from pathlib import Path, PosixPath
+from pathlib import Path
 
 import pyarrow as pa
 import pyarrow.feather as pf
@@ -17,7 +17,7 @@ from fmu.sumo.uploader._upload_files import upload_files
 from typing import List, Union
 
 
-def yaml_load(file_name: Union[str, PosixPath]) -> dict:
+def yaml_load(file_name: Union[str, Path]) -> dict:
     """Load yaml config file into dict
 
     Args:
@@ -36,7 +36,7 @@ def yaml_load(file_name: Union[str, PosixPath]) -> dict:
     return config
 
 
-def generate_metadata(obj: Union[str, PosixPath], case_path: str) -> dict:
+def generate_metadata(obj: Path, case_path: str) -> dict:
     """Generate full metadata from preprocessed files
 
     Args:
@@ -56,7 +56,7 @@ def generate_metadata(obj: Union[str, PosixPath], case_path: str) -> dict:
     return metadata
 
 
-def table_to_bytes(table: Union[str, PosixPath]):
+def table_to_bytes(table: Union[str, Path]):
     """Return table as bytestring
 
     Args:
@@ -73,7 +73,7 @@ def table_to_bytes(table: Union[str, PosixPath]):
     return byte_string
 
 
-def table_2_bytestring(table: Union[str, PosixPath]) -> bytes:
+def table_2_bytestring(table: Union[str, Path]) -> bytes:
     """Convert pa.table to bytestring
 
     Args:
@@ -86,12 +86,12 @@ def table_2_bytestring(table: Union[str, PosixPath]) -> bytes:
     return bytestring
 
 
-def make_sumo_file(file_path: Union[str, PosixPath], case_path: str) -> SumoFile:
+def make_sumo_file(file_path: Path, case_path: str) -> SumoFile:
     """Make SumoFile for given file containing object
 
     Args:
-        file_path (Union[str, PosixPath]): path to given file
-        config_path (Union[str, PosixPath]): path to config file
+        file_path (Union[str, Path]): path to given file
+        config_path (Union[str, Path]): path to config file
         case_path (str): path to given ert case
 
     Returns:
@@ -111,13 +111,13 @@ def make_sumo_file(file_path: Union[str, PosixPath], case_path: str) -> SumoFile
 
 
 def prepare_sumo_files(
-    preprocessed_folder: Union[str, PosixPath],
+    preprocessed_folder: str,
     case_path: str,
 ):
     """Prepare all preprocessed files as list of SumoFiles
 
     Args:
-        preprocessed_folder (Union[str, PosixPath]): path to folder for preprocessed data
+        preprocessed_folder (Union[str, Path]): path to folder for preprocessed data
         case_path (str): path to given ert case
 
     Returns:
@@ -125,13 +125,13 @@ def prepare_sumo_files(
     """
     logger = logging.getLogger(__name__ + ".prepare_sumo_files")
     sumo_files = []
-    preprocessed_folder = Path(preprocessed_folder)
-    table_files = preprocessed_folder.glob(r"**/*.arrow")
+    preprocessed_folder_pos = Path(preprocessed_folder)
+    table_files = preprocessed_folder_pos.glob(r"**/*.arrow")
     for table_file in table_files:
         logger.debug("File %s", table_file)
         if table_file.name.startswith("."):
             continue
-        sumo_files.append(make_sumo_file(table_file, case_path))
+        sumo_files.append(make_sumo_file(table_file, case_path))  # type: ignore
     logger.debug("Prepared %s files", len(sumo_files))
     return sumo_files
 
@@ -157,24 +157,25 @@ def sumo_upload(files: List[SumoFile], parent_id: str, env: str = "prod"):
         logger.info("No passed files, nothing to do here")
 
 
-def get_case_meta(case_path: Union[str, PosixPath]) -> dict:
+def get_case_meta(case_path: Path) -> dict:
     """Get case metadata
 
     Args:
-        case_path (Union[str, PosixPath]): path to case
+        case_path (Union[str, Path]): path to case
 
     Returns:
         dict: the case metadata dictionary
     """
     logger = logging.getLogger(__name__ + ".get_case_meta")
-    case_meta_path = Path(case_path) / "share/metadata/fmu_case.yml"
+    case_meta_path = case_path / "share/metadata/fmu_case.yml"
+    assert isinstance(case_meta_path, Path)
     logger.debug("Case meta path: %s", case_meta_path)
     case_meta = yaml_load(case_meta_path)
     logger.info("Case meta: %s", case_meta)
     return case_meta
 
 
-def get_case_uuid(case_path: Union[str, PosixPath]) -> str:
+def get_case_uuid(case_path: Path) -> str:
     """Get case uuid from case metadata file
 
     Args:

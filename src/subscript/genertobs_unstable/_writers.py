@@ -4,12 +4,14 @@ import re
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
-from typing import Optional
+
 import pandas as pd
 import pyarrow as pa
 from fmu.dataio import ExportData
 
-from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
+from subscript.genertobs_unstable._utilities import (check_and_fix_str,
+                                                     inactivate_rows)
+from typing import Optional
 
 
 def add_time_stamp(string="", record_type="f", comment_mark="--"):
@@ -156,10 +158,11 @@ def write_genrft_str(parent: Path, well_date_path: str, layer_zone_table: str) -
         + f"<ZONEMAP>=<RFT_INPUT>/{str(layer_zone_table).replace(str_parent, '')},"
         + " <OUTPUTDIRECTORY>=gendata_rft)\n\n"
     )
+    logger.debug("Returning %s", string)
     return string
 
 
-def write_rft_ertobs(rft_dict: dict, parent_folder: PosixPath) -> str:
+def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     """Write all rft files for rft dictionary, pluss info str
 
     Args:
@@ -238,8 +241,8 @@ def make_rft_prefix(indict: dict) -> str:
 
 
 def write_well_rft_files(
-    parent_folder: PosixPath, prefix: str, element: dict
-) -> PosixPath:
+    parent_folder: Path, prefix: str, element: dict
+) -> Optional[Path]:
     """Write rft files for rft element for one well
 
     Args:
@@ -268,7 +271,7 @@ def write_well_rft_files(
     return obs_file
 
 
-def write_dict_to_ertobs(obs_list: list, parent: PosixPath) -> str:
+def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     """Write all observation data for ert
 
     Args:
@@ -306,7 +309,7 @@ def write_dict_to_ertobs(obs_list: list, parent: PosixPath) -> str:
     return obs_str
 
 
-def export_with_dataio(data: list, config: dict, store_path: str):
+def export_with_dataio(data: list, config: dict, store_path: Path):
     """Export observations from list of input dicts
 
     Args:
