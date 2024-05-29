@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import time
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
@@ -148,10 +149,16 @@ def write_genrft_str(
         str: the string
     """
     logger = logging.getLogger(__name__ + ".write_genrft_str")
-    if not Path(layer_zone_table).exists():
-        raise FileNotFoundError(
-            f"{layer_zone_table} does not exist, this needs to exist!!"
-        )
+    string_warning = (
+        "\n\n!!Remember that the zone layer file: %s will need to have path relative\n"
+        + " to runpath for realization, so please double check that this is the case,\n"
+        + " otherwise you will just stop ert later!!\n\n"
+    )
+    time.sleep(2)
+    logger.warning(
+        string_warning,
+        layer_zone_table,
+    )
     str_parent = str(parent)
     string = (
         f"DEFINE <RFT_INPUT> {parent}\n"
