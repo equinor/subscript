@@ -115,30 +115,34 @@ def create_rft_ertobs_str(well_name: str, restart: int, obs_file: Path) -> str:
     )
 
 
-def create_rft_gendata_str(well_name: str, restart: int) -> str:
+def create_rft_gendata_str(well_name: str, restart: int, outfolder_name: str) -> str:
     """Create the string to write as gendata call
 
     Args:
         well_name (str): well name
         restart (str): restart number
+        outfolder_name (str): path to folder where results are stored
 
     Returns:
         str: the string
     """
     return (
         f"GEN_DATA {well_name}_SIM "
-        + f"RESULT_FILE:RFT_{well_name}_%d "
+        + f"RESULT_FILE:{outfolder_name}/RFT_{well_name}_%d "
         + f"REPORT_STEPS:{restart}\n"
     )
 
 
-def write_genrft_str(parent: Path, well_date_path: str, layer_zone_table: str) -> str:
+def write_genrft_str(
+    parent: Path, well_date_path: str, layer_zone_table: str, outfolder_name: str
+) -> str:
     """write the string to define the GENDATA_RFT call
 
     Args:
         parent (str): path where rfts are stored
         well_date_path (str): path where the well, date, and restart number are written
         layer_zone_table (str): path to where the zones and corresponding layers are stored
+        outfolder_name (str): path to where results will be restored
 
     Returns:
         str: the string
@@ -151,11 +155,11 @@ def write_genrft_str(parent: Path, well_date_path: str, layer_zone_table: str) -
     str_parent = str(parent)
     string = (
         f"DEFINE <RFT_INPUT> {parent}\n"
-        + "FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>=gendata_rft)\n"
+        + f"FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>={outfolder_name})\n"
         + "FORWARD_MODEL GENDATA_RFT(<PATH_TO_TRAJECTORY_FILES>=<RFT_INPUT>,"
         + f"<WELL_AND_TIME_FILE>=<RFT_INPUT>/{str(well_date_path).replace(str_parent, '')},"
-        + f"<ZONEMAP>=<RFT_INPUT>/{str(layer_zone_table).replace(str_parent, '')},"
-        + " <OUTPUTDIRECTORY>=gendata_rft)\n\n"
+        + f"<ZONEMAP>={str(layer_zone_table)},"
+        + f" <OUTPUTDIRECTORY>={outfolder_name})\n\n"
     )
     logger.debug("Returning %s", string)
     return string
@@ -179,7 +183,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     rft_ertobs_str = ""
     gen_data = ""
     prefix = make_rft_prefix(rft_dict)
-
+    outfolder_name = "gendata_rft"
     logger.debug("prefix is %s", prefix)
     for element in rft_dict["observations"]:
         well_name = element["well_name"]
@@ -190,7 +194,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
         if obs_file is not None:
             well_date_list.append([well_name, date, restart])
             rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
-            gen_data += create_rft_gendata_str(well_name, restart)
+            gen_data += create_rft_gendata_str(well_name, restart, outfolder_name)
 
     well_date_frame = pd.DataFrame(
         well_date_list, columns=["well_name", "date", "restart"]
@@ -202,7 +206,10 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     gen_data_file = parent_folder / "gendata_include.ert"
     gen_data = (
         write_genrft_str(
-            rft_folder, str(well_date_file), rft_dict["plugin_arguments"]["zonemap"]
+            rft_folder,
+            str(well_date_file),
+            rft_dict["plugin_arguments"]["zonemap"],
+            outfolder_name,
         )
         + gen_data
     )
