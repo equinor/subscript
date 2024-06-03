@@ -225,7 +225,7 @@ def run(args):
     logger.info("Will upload observations to sumo")
     sumo_upload(
         prepare_sumo_files(args.preprocessed_folder, args.case_path),
-        get_case_uuid(args.case_path),
+        get_case_uuid(Path(args.case_path)),
         args.env,
     )
     logger.info("Done!")
