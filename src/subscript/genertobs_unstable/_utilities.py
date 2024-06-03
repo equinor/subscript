@@ -432,7 +432,38 @@ def extract_from_row(
     return converted
 
 
-def read_obs_frame(input_file: Path, content: str) -> pd.DataFrame:
+def replace_names(name_series: pd.Series, replacer: pd.DataFrame) -> pd.Series:
+    """Replace name in a pandas dataseries with values from dataframe
+
+    Args:
+        name_series (pd.Series): the series to replace in
+        replacer (pd.DataFrame): the dataframe to replace with
+
+    Raises:
+        ValueError: if replacer cannot be converted to dictionary to replace with
+
+    Returns:
+        pd.Series: the dataseries with replaced values
+    """
+    logger = logging.getLogger(__name__ + ".replace_names")
+    if replacer.shape[1] != 2:
+        raise ValueError(
+            "This dataframe cannot be used to replace names, has the wrong shape"
+        )
+
+    else:
+        replace_dict = dict(
+            zip(replacer[replacer.columns[0]], replacer[replacer.columns[1]])
+        )
+        print("Will replace names with dictionary %s", replace_dict)
+        replaced_names = name_series.replace(replace_dict)
+    if replaced_names.equals(name_series):
+        warn("No replacement is done, column is unchanged")
+    print("New column: %s", replaced_names)
+    return replaced_names
+
+
+def read_obs_frame(input_file: Path, content: str, alias_file: str) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
@@ -454,5 +485,15 @@ def read_obs_frame(input_file: Path, content: str) -> pd.DataFrame:
         obs_frame["date"] = pd.to_datetime(obs_frame["date"]).dt.strftime("%Y-%m-%d")
     except KeyError:
         logger.warning("No date column for this dataframe")
+
+    try:
+        obs_frame["well_name"] = obs_frame["well_name"].map(check_and_fix_str)
+        if alias_file:
+            aliases = read_tabular_file(alias_file)
+            logger.debug("Will replace names with aliases %s", aliases)
+            obs_frame["well_name"] = replace_names(obs_frame["well_name"], aliases)
+
+    except KeyError:
+        logger.debug("No well_name column for this dataframe")
     logger.debug("Returning %s", obs_frame)
     return obs_frame
