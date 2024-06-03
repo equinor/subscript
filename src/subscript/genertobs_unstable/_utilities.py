@@ -71,7 +71,7 @@ def read_tabular_file(tabular_file_path: Union[str, Path]) -> pd.DataFrame:
     dataframe = pd.DataFrame()
     try:
         read_info = "csv, with sep ,"
-        dataframe = pd.read_csv(tabular_file_path, sep=",", dtype=str)
+        dataframe = pd.read_csv(tabular_file_path, sep=",", dtype=str, comment="#")
     except UnicodeDecodeError:
         dataframe = pd.read_excel(tabular_file_path, dtype=str)
         read_info = "excel"
@@ -79,9 +79,16 @@ def read_tabular_file(tabular_file_path: Union[str, Path]) -> pd.DataFrame:
     logger.debug("Nr of columns are %s", nr_cols)
     if nr_cols == 1:
         logger.debug("Wrong number of columns, trying with other separators")
-        for separator in [";", " "]:
+        for separator in [";", "\s+"]:
             logger.debug("Trying with |%s| as separator", separator)
-            dataframe = pd.read_csv(tabular_file_path, sep=separator, dtype=str)
+            try:
+                dataframe = pd.read_csv(
+                    tabular_file_path, sep=separator, dtype=str, comment="#"
+                )
+            except pd.errors.ParserError as pepe:
+                raise IOError(
+                    f"Failing to read {tabular_file_path} with separator {separator}"
+                ) from pepe
             read_info = f"csv with sep {separator}"
             if dataframe.shape[1] > 1:
                 break
