@@ -1,0 +1,220 @@
+import argparse
+import logging
+#import os
+#import sys
+from pathlib import Path
+
+from resdata.resfile import ResdataFile
+from resdata.grid import Grid
+from resdata.gravimetry import ResdataGrav, ResdataSubsidence
+
+import xtgeo
+
+from subscript import __version__, getLogger
+
+# Constant for subsidence modelling, not influencing results
+# since subsidence is calculated from porevolume change
+# therefore defaulted
+DUMMY_YOUNGS = 0.5
+
+PREFIX_GRAVSURF = "all--delta_gravity_"
+PREFIX_SUBSSURF = "all--subsidence"
+
+DESCRIPTION = """
+Modelling maps of gravity change and subsidence from flow
+simulation output (EGRID, INIT and UNRST files).
+
+The script reads flow simulation results and a yaml configuration file specifying input
+and calculation parameters. Output is surfaces in irap binary format.
+"""
+
+EPILOGUE = """
+.. code-block:: yaml
+
+  # Example config file for grav_subs_maps
+
+  input:
+
+  xxx
+
+"""
+
+CATEGORY = "modelling.reservoir"
+
+EXAMPLES = """
+.. code-block:: console
+
+ FORWARD_MODEL GRAV_SUBS_MAPS(<DATAFILE>=<ECLBASE>.DATA, <GRAV_CONFIG>=grav_subs_maps.yml, <OUTPUTDIR>=share/results/maps)
+
+
+where ``ECLBASE`` is already defined in your ERT config, pointing to the flowsimulator
+basename relative to ``RUNPATH``, grav_subs_maps.yml is a YAML file defining
+the inputs and modelling parameters and ``OUTPUTDIR`` is the path to the output folder.
+
+The directory to export maps to must exist.
+"""  # noqa
+
+logger = getLogger(__name__)
+
+
+class GravMapsConfig(BaseModel):
+
+
+
+def get_parser() -> argparse.ArgumentParser:
+    """Function to create the argument parser that is going to be served to the user.
+
+    Returns:
+        argparse.ArgumentParser: The argument parser to be served
+
+    """
+    parser = argparse.ArgumentParser(
+        prog="grav_subs_maps.py",
+        description=DESCRIPTION,
+        epilog=EPILOGUE,
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+
+    parser.add_argument(
+        "DATAfile",
+        type=str,
+        help=(
+            "Path to flowsimulator DATA file"
+        ),
+    )
+    parser.add_argument(
+        "-c",
+        "-C",
+        "--configfile",
+        type=str,
+        help="Name of YAML config file",
+        required=True,
+    )
+    parser.add_argument(
+        "-o",
+        "--outputdir",
+        type=str,
+        help="Path to directory for output maps. Directory must exist.",
+        default="./share/results/maps", # FMU standard
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
+    return parser
+
+
+def main() -> None:
+    """Invocated from the command line, parsing command line arguments"""
+    parser = get_parser()
+    args = parser.parse_args()
+
+    logger.setLevel(logging.INFO)
+
+    # parse the config file
+    if not Path(args.configfile).exists():
+        sys.exit("No such file:" + args.configfile)
+    cfg = yaml.safe_load(Path(args.configfile).read_text(encoding="utf8"))
+    main_gravmaps(
+        cfg, Path(args.root_path))
+
+
+def main_gravmaps(rd: Path, cfg: Dict[str, Any]) -> None:
+    """
+    Process a configuration, model gravity and subsidence surfaces and write to disk.
+
+    Args:
+        resdata: Path to flow simulation DATA file
+        cfg: Configuration for modelling
+    """
+
+    config = GravMapsConfig(**cfg)
+
+    if isinstance(res_datafile, str):
+        restart_file = res_datafile[:-5] + ".UNRST"
+        egrid_file = res_datafile[:-5] + ".EGRID"
+        init_file = res_datafile[:-5] + ".INIT"
+        grid = Grid(egrid_file)
+        init = ResdataFile(init_file)
+        rest = ResdataFile(restart_file)
+
+    restart_index = {}
+
+    # From restart datetime format to YYYYMMDD as key
+    for i, restart_date in enumerate(rest.dates):
+        restart_index[restart_date.strftime("%Y%m%d")] = i
+
+    diffdates=[]
+    # Convert dates from datetime format to strings
+    for diffdate in input_diffdates:
+        diff = [diffdate[0].strftime("%Y%m%d"),diffdate[1].strftime("%Y%m%d")]
+        diffdates.append(diff)
+    logger.info(
+        "Modeling for diffdates: ", diffdates
+        )
+
+    grav = ResdataGrav(grid,init)
+    subsidence = ResdataSubsidence(grid, init)
+
+    added_dates=[]
+
+    for diffdate in diffdates:
+        for date in diffdate: # base and monitor
+            rsb = rest.restartView(0)
+            if date not in added_dates:
+                if date in restart_index.keys():
+                    rsb = rest.restartView( restart_index[date])
+                    grav.add_survey_RFIP(date, rsb)
+                    added_dates.append(date)
+                else:
+                    logger.info(
+                        f'Date {date} specified in {configfile} but not'
+                        'found in UNRST file.'
+                    )
+    phase_code = {'oil':1, 'gas':2, 'water':4, 'total':7}
+
+    # Gravity
+    for diffdate in diffdates:
+        for phase in phases:
+            logger.info(f'Calculating delta gravity map from {phase} for {diffdate}')
+            dgsim = seabed.copy()
+            df_dgsim = dgsim.dataframe()
+            dgsim_series = []
+            for index,row in df_dgsim.iterrows():
+                dgsim_series.append(grav.eval(diffdate[1], diffdate[0],
+                                              (row['X_UTME'], row['Y_UTMN'], row['VALUES']),
+                                              phase_mask=phase_code[phase]))
+            dgsim.values = dgsim_series
+            filename = PREFIX_GRAVSURF + phase+"--" + diffdate[0] + "_" + diffdate[1]+".gri"
+            dgsim.to_file(os.path.join(output_folder, filename))
+
+    # Subsidence
+    for diffdate in diffdates:
+        logger.info(f'Calculating subsidence map from {phase} for {diffdate}')
+        dzsim = seabed.copy()
+        df_dzsim = dzsim.dataframe()
+        dzsim_series = []
+        for index,row in df_dzsim.iterrows():
+            dzsim_series.append(
+                subsidence.eval_geertsma_rporv(
+                    diffdate[1], diffdate[0],
+                    (row['X_UTME'], row['Y_UTMN'], row['VALUES']),
+                    DUMMY_YOUNGS, poisson_ratio, row['VALUES']
+                    )
+
+        dzsim.values = [i*100 for i in dzsim_series]  # From m to cms
+
+        filename = PREFIX_SUBSSURF +"--" + diffdate[0] + "_" + diffdate[1]+".gri"
+        dzsim.to_file(os.path.join(output_folder, filename))
+
+
+
+    logger.info(
+        "Done; All gravity and subsidence maps written to folder: %s",
+        str(config.result_file),
+    )
+
+
+if __name__ == "__main__":
+    main()
