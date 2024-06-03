@@ -164,7 +164,7 @@ def check_and_fix_str(string_to_sanitize: str) -> str:
     """
     logger = logging.getLogger(__name__ + ".check_and_fix_str")
     logger.debug("Initial string before sanitization |%s|", string_to_sanitize)
-    unwanted_characters = re.compile(r"(\s+|/|-)")
+    unwanted_characters = re.compile(r"(\s+|/)")
     country_code = re.compile(r"^[a-zA-Z]+\s+")
     unwanted_chars = unwanted_characters.findall(string_to_sanitize)
     logger.debug("%s unwanted characters found %s", len(unwanted_chars), unwanted_chars)
