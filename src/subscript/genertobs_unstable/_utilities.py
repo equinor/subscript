@@ -395,7 +395,9 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
     return general_observations
 
 
-def extract_from_row(row: dict, parent_folder: Union[str, Path]) -> List[pd.DataFrame]:
+def extract_from_row(
+    row: dict, parent_folder: Union[str, Path], active: bool, alias_file: str
+) -> List[pd.DataFrame]:
     """Extract results from row in config file
 
     Args:
@@ -412,7 +414,11 @@ def extract_from_row(row: dict, parent_folder: Union[str, Path]) -> List[pd.Data
     input_file = parent_folder / row["observation"]
     logger.debug("File reference in row %s", input_file)
     content = row["type"]
-    obs_frame = read_obs_frame(input_file, content)
+    obs_frame = read_obs_frame(input_file, content, alias_file)
+
+    if not active:
+        obs_frame["active"] = False
+
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
 
     add_or_modify_error(
