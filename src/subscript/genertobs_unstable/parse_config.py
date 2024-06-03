@@ -22,7 +22,15 @@ def validate_config(config: dict):
     """
     logger = logging.getLogger(__file__ + ".validate_config")
     valids = {"name", "type", "observation"}
-    optionals = {"error", "min_error", "max_error", "plugin_arguments", "metadata"}
+    optionals = {
+        "error",
+        "min_error",
+        "max_error",
+        "plugin_arguments",
+        "metadata",
+        "active",
+        "alias_file",
+    }
     for i, element in enumerate(config):
         el_valids = valids.copy()
         try:
