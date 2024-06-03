@@ -148,7 +148,8 @@ def generate_data_from_config(config: dict, parent: Path) -> list:
         if not active:
             warn("User has set element %s to inactive", config_element["name"])
 
-        obs = extract_from_row(config_element, parent)
+        alias_file = config_element.get("alias_file", False)
+        obs = extract_from_row(config_element, parent, active, alias_file)
         data_element["observations"] = obs
 
         logger.debug("These are the observations:\n%s", obs)
