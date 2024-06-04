@@ -1,0 +1,12 @@
+-- Create ensemble metadata and register on Sumo
+
+--                       ert_caseroot                 ert_configpath    ert_casename   ert_username   sumo_flag   sum_env
+WF_CREATE_CASE_METADATA  <SCRATCH>/<USER>/<CASE_DIR>  <CONFIG_PATH>     <CASE_DIR>     <USER>         "--sumo"  "--sumo_env" <SUMO_ENV>
+
+-- This workflow is intended to be run as a HOOK workflow.
+-- This workflow job is shipped with Komodo 
+-- https://fmu-docs.equinor.com/docs/ert/reference/workflows/added_workflow_jobs.html#WF_CREATE_CASE_METADATA
+
+-- The workflow name is prefixed "xhook" to signal that even if it appears in the ERT
+-- workflow dropdown, it is not supposed to be ran interactively. The "x" in front makes
+-- it go to the bottom of the drop-down.
