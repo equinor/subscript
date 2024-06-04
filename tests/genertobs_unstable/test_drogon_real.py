@@ -3,10 +3,12 @@ from shutil import copytree
 from subprocess import Popen, PIPE
 from pathlib import Path
 from subscript.genertobs_unstable import main
+import pytest
 
 DROGON = Path(__file__).parent / "data/drogon/"
 
 DROGON_ERT_MODEL = DROGON / "ert/model/genertobs.ert"
+IN_GITHUB_ACTIONS = os.getenv("GITHUB_ACTIONS") == "true"
 
 
 def write_ert_config_and_run(scratch_path, obs_path):
@@ -41,6 +43,7 @@ def write_ert_config_and_run(scratch_path, obs_path):
     ).is_file(), f"running {tmp_drogon_ert}, ended with errors"
 
 
+@pytest.mark.skipif(IN_GITHUB_ACTIONS, reason="Not set up to run with github actions")
 def test_integration(tmp_path, masterdata_config, mockert_experiment):
     drogon_path = tmp_path / "drogon"
     copytree(DROGON, drogon_path)
