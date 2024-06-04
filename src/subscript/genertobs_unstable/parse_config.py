@@ -58,8 +58,8 @@ def validate_config(config: dict):
                 invalids = ["min_error", "max_error"]
                 for invalid in invalids:
                     assert (
-                        invalid not in element.keys()
-                    ), f"Obs {name}: {invalid} should not be used if absolute error used"
+                        invalid not in element
+                    ), f"Obs {name}: do not use {invalid} when passing absolute error"
         except KeyError:
             logger.debug("No global error added, nothing to check")
 
@@ -138,7 +138,7 @@ def generate_data_from_config(config: dict, parent: Path) -> list:
     data = []
     for config_element in config:
         logger.info("Parsing element %s", config_element["name"])
-        # TODO: find out: why does not a simple data_element = config_element.copy() suffice
+        # TODO: why does not data_element = config_element.copy() work
         data_element = {
             "name": config_element["name"],
             "content": config_element["type"],

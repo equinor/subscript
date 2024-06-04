@@ -1,12 +1,11 @@
 import logging
 import re
 from pathlib import Path
+from typing import List, Optional, Union
 from warnings import warn
 
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
-
-from typing import List, Optional, Union
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -37,9 +36,8 @@ def remove_undefined_values(frame: pd.DataFrame) -> pd.DataFrame:
         logger.debug("%s row(s) will be removed", frame.shape[0] - not_undefs.sum())
         return frame.loc[not_undefs]
 
-    else:
-        logger.debug("No value column, cannot remove undefs")
-        return frame
+    logger.debug("No value column, cannot remove undefs")
+    return frame
 
 
 def remove_whitespace(dataframe: pd.DataFrame):
@@ -80,7 +78,7 @@ def read_tabular_file(tabular_file_path: Union[str, Path]) -> pd.DataFrame:
     logger.debug("Nr of columns are %s", nr_cols)
     if nr_cols == 1:
         logger.debug("Wrong number of columns, trying with other separators")
-        for separator in [";", "\s+"]:
+        for separator in [";", r"\s+"]:
             logger.debug("Trying with |%s| as separator", separator)
             try:
                 dataframe = pd.read_csv(
@@ -147,7 +145,7 @@ def convert_df_to_dict(frame: pd.DataFrame) -> dict:
         if not hasattr(ContentEnum, unique_content):
             wrong_lines = frame.content == unique_content
             raise ValueError(
-                f"{unique_content} is not a valid content  (used on {wrong_lines.sum()} lines",
+                f"{unique_content} not a valid content ({wrong_lines.sum()} lines",
             )
     frame_as_dict = frame.to_dict("records")
     logger.debug("Frame as dictionary %s", frame_as_dict)
@@ -180,9 +178,9 @@ def check_and_fix_str(string_to_sanitize: str) -> str:
 
         logger.debug("After sanitization %s", sanitized)
         return sanitized
-    else:
-        logger.debug("String was good to go")
-        return string_to_sanitize
+
+    logger.debug("String was good to go")
+    return string_to_sanitize
 
 
 def convert_rft_to_list(frame: pd.DataFrame) -> list:
@@ -461,15 +459,14 @@ def replace_names(name_series: pd.Series, replacer: pd.DataFrame) -> pd.Series:
             "This dataframe cannot be used to replace names, has the wrong shape"
         )
 
-    else:
-        replace_dict = dict(
-            zip(replacer[replacer.columns[0]], replacer[replacer.columns[1]])
-        )
-        print("Will replace names with dictionary %s", replace_dict)
-        replaced_names = name_series.replace(replace_dict)
+    replace_dict = dict(
+        zip(replacer[replacer.columns[0]], replacer[replacer.columns[1]])
+    )
+    logger.info("Will replace names with dictionary %s", replace_dict)
+    replaced_names = name_series.replace(replace_dict)
     if replaced_names.equals(name_series):
         warn("No replacement is done, column is unchanged")
-    print("New column: %s", replaced_names)
+    logger.info("New column: %s", replaced_names)
     return replaced_names
 
 
