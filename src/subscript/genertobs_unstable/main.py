@@ -25,7 +25,7 @@ def parse_args():
     )
     parser.add_argument(
         "master_config_file",
-        help="Path to file with master metadata (usually contained in the fmu config file)",
+        help="Path to file with master metadata (usually in the fmu config file)",
         type=str,
     )
     parser.add_argument("--d", help="debug mode", action="store_true")
@@ -63,10 +63,7 @@ def main():
     """Run the whole shebang"""
     logger = logging.getLogger(__name__ + ".main")
     args = parse_args()
-    if args.d:
-        level = logging.DEBUG
-    else:
-        level = logging.WARNING
+    level = logging.DEBUG if args.d else logging.WARNING
     logging.basicConfig(level=level)
     logger.debug("Have read args %s", args)
     run(args.config_file, args.output_folder, args.master_config_file)

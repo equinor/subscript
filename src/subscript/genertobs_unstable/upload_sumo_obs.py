@@ -3,6 +3,7 @@
 import argparse
 import logging
 from pathlib import Path
+from typing import List, Union
 
 import pyarrow as pa
 import pyarrow.feather as pf
@@ -13,8 +14,6 @@ from fmu.sumo.uploader import SumoConnection
 from fmu.sumo.uploader._fileonjob import FileOnJob
 from fmu.sumo.uploader._sumofile import SumoFile
 from fmu.sumo.uploader._upload_files import upload_files
-
-from typing import List, Union
 
 
 def yaml_load(file_name: Union[str, Path]) -> dict:
@@ -71,19 +70,6 @@ def table_to_bytes(table: Union[str, Path]):
     byte_string = sink.getvalue().to_pybytes()
     logger.debug("Returning bytestring with size %s", len(byte_string))
     return byte_string
-
-
-def table_2_bytestring(table: Union[str, Path]) -> bytes:
-    """Convert pa.table to bytestring
-
-    Args:
-        table_file (str): the file containing table to convert
-
-    Returns:
-        bytest: the bytes string
-    """
-    bytestring = table_to_bytes(table)
-    return bytestring
 
 
 def make_sumo_file(file_path: Path, case_path: str) -> SumoFile:
