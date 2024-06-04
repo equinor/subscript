@@ -1,4 +1,4 @@
-#RMS_well_name          #Eclipse_well_name
+RMS_well_name          Eclipse_well_name
 34_4-C-1_HT2            C-1HP
 34_4-C-2_AH             C-2AHP
 34_4-C-2_HT2            C-2HP
