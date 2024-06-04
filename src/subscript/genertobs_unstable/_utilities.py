@@ -1,11 +1,12 @@
 import logging
 import re
 from pathlib import Path
-from typing import List, Optional, Union
 from warnings import warn
 
 import pandas as pd
 from fmu.dataio.datastructure.meta.enums import ContentEnum
+
+from typing import List, Optional, Union
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
