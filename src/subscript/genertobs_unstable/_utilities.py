@@ -117,7 +117,7 @@ def inactivate_rows(dataframe: pd.DataFrame):
     """
     logger = logging.getLogger(__name__ + ".inactivate_rows")
     try:
-        inactivated = dataframe.active == "no"
+        inactivated = ~dataframe.active
         logger.debug("Filter is %s", inactivated)
         nr_rows = inactivated.sum()
         logger.info(
@@ -396,7 +396,10 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
 
 
 def extract_from_row(
-    row: dict, parent_folder: Union[str, Path], active: bool, alias_file: str
+    row: dict,
+    parent_folder: Union[str, Path],
+    active: bool = True,
+    alias_file: str = "",
 ) -> List[pd.DataFrame]:
     """Extract results from row in config file
 
@@ -417,7 +420,13 @@ def extract_from_row(
     obs_frame = read_obs_frame(input_file, content, alias_file)
 
     if not active:
-        obs_frame["active"] = False
+        obs_frame["active"] = "no"
+
+    else:
+        if "active" not in obs_frame.columns:
+            obs_frame["active"] = "yes"
+
+    obs_frame["active"] = obs_frame["active"] != "no"
 
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
 
@@ -463,7 +472,9 @@ def replace_names(name_series: pd.Series, replacer: pd.DataFrame) -> pd.Series:
     return replaced_names
 
 
-def read_obs_frame(input_file: Path, content: str, alias_file: str) -> pd.DataFrame:
+def read_obs_frame(
+    input_file: Path, content: str, alias_file: str = ""
+) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
