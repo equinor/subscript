@@ -7,7 +7,6 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from resdata.summary import Summary
-from scipy.interpolate import interp1d
 
 from subscript import __version__
 
@@ -419,19 +418,7 @@ def genobs_vec(filen, vec, time):
     dframe = pd.read_csv(filen, sep="\t")
     obs_time = dframe["dTime"][1:None].dropna().to_numpy(dtype=float)
 
-    gen_data = np.zeros(len(obs_time))
-
-    interp = interp1d(time, vec)
-
-    for idx, timepoint in enumerate(obs_time):
-        if timepoint < time[0]:
-            gen_data[idx] = vec[0]
-        elif timepoint > time[-1]:
-            gen_data[idx] = vec[-1]
-        else:
-            gen_data[idx] = interp(timepoint)
-
-    return gen_data
+    return np.interp(obs_time, time, vec)
 
 
 def main():
