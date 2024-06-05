@@ -255,7 +255,7 @@ def main_gravmaps(
                     added_dates.append(singledate)
                 else:
                     logger.error(
-                        f"Date {singledate} specified but not" "found in UNRST file."
+                        f"Date {singledate} specified but not found in UNRST file."
                     )
                     sys.exit(1)
     phase_code = {"oil": 1, "gas": 2, "water": 4, "total": 7}
@@ -265,7 +265,7 @@ def main_gravmaps(
         for phase in phases:
             logger.info(
                 f"Calculating delta gravity map from {phase} "
-                "for {diffdate[0]}_{diffdate[1]}"
+                f"for {diffdate[0]}_{diffdate[1]}"
             )
             dgsim = seabed.copy()
             df_dgsim = dgsim.get_dataframe()
