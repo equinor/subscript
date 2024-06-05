@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSV_MERGE &mdash; subscript 1.5.1.dev6+gcb311d86 documentation</title>
+  <title>GRAV_SUBS_MAPS &mdash; subscript 1.5.1.dev6+gcb311d86 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -31,8 +31,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="CSV_STACK" href="csv_stack.html" />
-    <link rel="prev" title="CSV2OFMVOL" href="csv2ofmvol.html" /> 
+    <link rel="next" title="INTERP_RELPERM" href="interp_relperm.html" />
+    <link rel="prev" title="FMUOBS" href="fmuobs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -70,17 +70,17 @@
 <li class="toctree-l1"><a class="reference internal" href="check_swatinit.html">CHECK_SWATINIT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">CSV_MERGE</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
 <li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
 <li class="toctree-l1"><a class="reference internal" href="eclcompress.html">ECLCOMPRESS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="grav_subs_maps.html">GRAV_SUBS_MAPS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GRAV_SUBS_MAPS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="merge_unrst_files.html">MERGE_UNRST_FILES</a></li>
@@ -119,9 +119,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">CSV_MERGE</li>
+      <li class="breadcrumb-item active">GRAV_SUBS_MAPS</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/scripts/csv_merge.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/scripts/grav_subs_maps.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -129,72 +129,68 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="csv-merge">
-<h1>CSV_MERGE<a class="headerlink" href="#csv-merge" title="Permalink to this heading"></a></h1>
-<p><p>Merge multiple CSV files into one. Each row will be tagged at least with
-the original filename in the FILENAME column.</p>
-<p>Additionally, if realization, iteration and ensemble name can be inferred
-from the paths, it will be added to the REAL, ITER and ENSEMBLE and ENSEMBLESET
-columns.</p>
-<p>The columns in the ensembles need not be the same. Similar column names
-will be merged, differing column names will be padded (with NaN) in the
-resulting dataset where they don’t exist.</p>
-<p>Do not assume anything on the ordering of columns after merging.</p>
+  <section id="grav-subs-maps">
+<h1>GRAV_SUBS_MAPS<a class="headerlink" href="#grav-subs-maps" title="Permalink to this heading"></a></h1>
+<p><p>Modelling maps of gravity change and subsidence from flow
+simulation output (EGRID, INIT and UNRST files).</p>
+<p>The script reads flow simulation results and a yaml configuration file specifying input
+and calculation parameters. Output is surfaces in irap binary format.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">csv_merge</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">memoryconservative</span><span class="p">]</span>
-                 <span class="p">[</span><span class="o">--</span><span class="n">dropconstantcolumns</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">filecolumn</span> <span class="n">FILECOLUMN</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
-                 <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
-                 <span class="n">csvfiles</span> <span class="p">[</span><span class="n">csvfiles</span> <span class="o">...</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">grav_subs_maps</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">ROOT_PATH</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIR</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+                      <span class="n">UNRSTfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments">
 <h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
-<dt><kbd>csvfiles</kbd></dt>
-<dd><p>input csv files</p>
+<dt><kbd>UNRSTfile</kbd></dt>
+<dd><p>Path to flowsimulator UNRST file</p>
 </dd>
 </dl>
 </section>
 <section id="named-arguments">
 <h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
-<dt><kbd>-o, --output</kbd></dt>
-<dd><p>name of output csv file. Use - or stdout to dump output to stdout.</p>
-<p>Default: “merged.csv”</p>
+<dt><kbd>-c, -C, --configfile</kbd></dt>
+<dd><p>Name of YAML config file</p>
 </dd>
-<dt><kbd>--memoryconservative, -m</kbd></dt>
-<dd><p>Conserve memory while merging at the expense of speed. Default is to use up to twice as much memory as the size of the final CSV. Do not use unless normal mode fails.</p>
-<p>Default: False</p>
+<dt><kbd>-r, --root-path</kbd></dt>
+<dd><p>Root path assumed for relative paths in config file.</p>
+<p>Default: “./”</p>
 </dd>
-<dt><kbd>--dropconstantcolumns</kbd></dt>
-<dd><p>Drop (delete) constant columns in the merged dataset</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>--filecolumn</kbd></dt>
-<dd><p>Name of column containing original filename</p>
-<p>Default: “FILENAME”</p>
-</dd>
-<dt><kbd>-v, --verbose</kbd></dt>
-<dd><p>Verbose output</p>
-<p>Default: False</p>
-</dd>
-<dt><kbd>--debug</kbd></dt>
-<dd><p>Debug output, more verbose than –verbose</p>
-<p>Default: False</p>
+<dt><kbd>-o, --outputdir</kbd></dt>
+<dd><p>Path to directory for output maps. Directory must exist.</p>
+<p>Default: “./”</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
 </section>
+<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for grav_subs_maps</span>
+
+<span class="nt">input</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">diffdates</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2020-07-01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2018-01-01</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Difference date to model. Must exist in UNRST file.</span>
+<span class="w">    </span><span class="nt">seabed_map</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">seabed.gri</span><span class="w">  </span><span class="c1"># Path to file with seabed, irap binary format.</span>
+<span class="w">                            </span><span class="c1"># Also used as map template</span>
+
+<span class="w w-Error">  </span><span class="nt">calculations</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">poisson_ratio</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.45</span><span class="w">  </span><span class="c1"># For subsidence calulcations, used in Geertsma model</span>
+<span class="w">    </span><span class="nt">coarsening</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span><span class="w">        </span><span class="c1"># Coarsening factor for maps to speed up calculations</span>
+<span class="w">    </span><span class="nt">phases</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&#39;gas&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;oil&#39;</span><span class="p p-Indicator">,</span><span class="s">&#39;water&#39;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&#39;total&#39;</span><span class="p p-Indicator">]</span><span class="w">  </span><span class="c1"># One map for each phase specified</span>
+</pre></div>
+</div>
+</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="csv2ofmvol.html" class="btn btn-neutral float-left" title="CSV2OFMVOL" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="csv_stack.html" class="btn btn-neutral float-right" title="CSV_STACK" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="fmuobs.html" class="btn btn-neutral float-left" title="FMUOBS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interp_relperm.html" class="btn btn-neutral float-right" title="INTERP_RELPERM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

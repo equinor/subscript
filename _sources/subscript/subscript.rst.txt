@@ -24,6 +24,7 @@ Submodules
    subscript.ecldiff2roff
    subscript.fmu_copy_revision
    subscript.fmuobs
+   subscript.grav_subs_maps
    subscript.hook_implementations
    subscript.interp_relperm
    subscript.merge_rft_ertobs
