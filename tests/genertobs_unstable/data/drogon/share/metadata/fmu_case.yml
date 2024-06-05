@@ -1,0 +1,38 @@
+$schema: https://main-fmu-schemas-dev.radix.equinor.com/schemas/0.8.0/fmu_results.json
+version: 0.8.0
+source: fmu
+class: case
+masterdata:
+  smda:
+    country:
+      - identifier: Norway
+        uuid: ad214d85-8a1d-19da-e053-c918a4889309
+    discovery:
+      - short_identifier: DROGON
+        uuid: ad214d85-8a1d-19da-e053-c918a4889309
+    field:
+      - identifier: DROGON
+        uuid: 00000000-0000-0000-0000-000000000000
+    coordinate_system:
+      identifier: ST_WGS84_UTM37N_P32637
+      uuid: ad214d85-dac7-19da-e053-c918a4889309
+    stratigraphic_column:
+      identifier: DROGON_HAS_NO_STRATCOLUMN
+      uuid: 00000000-0000-0000-0000-000000000000
+access:
+  asset:
+    name: Drogon
+fmu:
+  model:
+    name: My model
+    revision: genertobs_unstable
+  case:
+    name: test-subscript_genertobs
+    uuid: 866add28-1233-40a8-a83b-cba958483cb7
+    user:
+      id: sudo
+tracklog:
+  - datetime: "2023-02-09T12:49:31.018439"
+    user:
+      id: sudo
+    event: created
