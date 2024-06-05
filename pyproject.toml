@@ -55,6 +55,7 @@ dependencies = [
     "xtgeo",
     "fmu-config",
     "fmu-dataio",
+    "fmu-sumo-uploader@git+https://github.com/equinor/fmu-sumo-uploader",
     "odfpy"
 ]
 
