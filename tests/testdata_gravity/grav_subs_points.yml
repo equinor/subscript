@@ -6,9 +6,9 @@ input:
     
 stations:
   grav:
-    '2020_2018': /project/fmu/users/tral/subscript/subscript/tests/testdata_gravity/station_coordinates.csv
+    '2020_2018': ./station_coordinates.csv
   subs:
-    '2020_2018': /project/fmu/users/tral/subscript/subscript/tests/testdata_gravity/station_coordinates.csv
+    '2020_2018': ./station_coordinates.csv
 
 calculations:
   poisson_ratio: 0.45
