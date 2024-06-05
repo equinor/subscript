@@ -1,0 +1,16 @@
+# Configuration file for use with grav_subs_points.py
+
+input:
+  diffdates:
+    - [2020-07-01, 2018-01-01]
+    
+stations:
+  grav:
+    '2020_2018': ./station_coordinates.csv
+  subs:
+    '2020_2018': ./station_coordinates.csv
+
+calculations:
+  poisson_ratio: 0.45
+  phases: ['gas', 'oil','water', 'total']
+

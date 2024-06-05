@@ -1,0 +1,12 @@
+# Configuration file for use with grav_subs_maps.py
+
+input:
+  diffdates:
+    - [2020-07-01, 2018-01-01]
+  seabed_map: seabed.gri # /project/fmu/users/tral/subscript/subscript/tests/testdata_gravity/seabed.gri
+
+calculations:
+  poisson_ratio: 0.45
+  coarsening: 8        
+  phases: ['gas', 'oil','water', 'total']
+

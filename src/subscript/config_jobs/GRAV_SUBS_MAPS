@@ -1,0 +1,9 @@
+EXECUTABLE  grav_subs_maps
+
+DEFAULT  <ROOT_PATH> "./"
+
+ARGLIST  "--configfile" <GRAVMAPS_CONFIG> "--root-path" <ROOT_PATH> "--outputdir" <OUTPUT_DIR> <UNRST_FILE> 
+
+MIN_ARG  2
+MAX_ARG  4
+ARG_TYPE 0 STRING
