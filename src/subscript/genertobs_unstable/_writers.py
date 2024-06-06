@@ -14,6 +14,21 @@ from fmu.dataio import ExportData
 
 from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
 
+GENDATA_RFT_EXPLAINER = """-------------------------
+-- GENDATA_RFT  -- Create files with simulated rft pressure
+-------------------------
+-- ERT doc: https://fmu-docs.equinor.com/docs/ert/reference/forward_models.html#GENDATA_RFT
+
+"""
+
+GENDATA_EXPLAINER = """-------------------------
+-- GEN_DATA  -- Create GEN_DATA of rft for usage in AHM
+-------------------------
+-- ERT doc: https://fmu-docs.equinor.com/docs/ert/reference/configuration/keywords.html#gen-data
+
+--       ert id       Result file name           input format         report step
+"""
+
 
 def add_time_stamp(string="", record_type="f", comment_mark="--"):
     """Add commented line with user and timestamp
@@ -162,7 +177,8 @@ def write_genrft_str(
     )
     str_parent = str(parent)
     string = (
-        f"DEFINE <RFT_INPUT> {parent}\n"
+        GENDATA_RFT_EXPLAINER
+        + f"DEFINE <RFT_INPUT> {parent}\n"
         + f"FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>={outfolder_name})\n"
         + "FORWARD_MODEL GENDATA_RFT(<PATH_TO_TRAJECTORY_FILES>=<RFT_INPUT>,"
         + "<WELL_AND_TIME_FILE>=<RFT_INPUT>/"
@@ -190,7 +206,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     logger.debug("%s observations to write", rft_dict)
     well_date_list = []
     rft_ertobs_str = ""
-    gen_data = ""
+    gen_data = GENDATA_EXPLAINER
     prefix = make_rft_prefix(rft_dict)
     outfolder_name = "gendata_rft"
     logger.debug("prefix is %s", prefix)
@@ -212,7 +228,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     well_date_file = rft_folder / "well_date_restart.txt"
     write_csv_with_comment(well_date_file, well_date_frame)
     logger.debug("Written %s", str(well_date_file))
-    gen_data_file = parent_folder / "gendata_include.ert"
+    gen_data_file = parent_folder / "gen_data_rft_wells.ert"
     gen_data = (
         write_genrft_str(
             rft_folder,
