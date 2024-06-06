@@ -376,7 +376,7 @@ def export_with_dataio(data: list, config: dict, store_path: Path):
             logger.info("Exporting to %s", export_path)
     parent = Path(export_path).parent
     logger.info("All exported to %s", parent)
-    print(f"Exported observation data ready for upload to sumo in folder {parent}")
+    print(f"\nExported observation data ready for upload to sumo in folder {parent}")
     os.chdir(cwd)
     return parent
 
