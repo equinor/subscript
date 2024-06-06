@@ -1,5 +1,6 @@
 import logging
 import os
+import pwd
 import re
 import time
 from datetime import datetime
@@ -25,7 +26,7 @@ def add_time_stamp(string="", record_type="f", comment_mark="--"):
         _type_: _description_
     """
     ctime = datetime.now().strftime("%Y-%m-%d:%H:%M:%S")
-    user = os.getlogin()
+    user = pwd.getpwuid(os.getuid())[0]
     type_str = "file" if record_type == "f" else "folder"
 
     time_stamped = (
