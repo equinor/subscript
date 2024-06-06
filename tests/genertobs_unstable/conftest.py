@@ -1,5 +1,6 @@
 """Fixtures for genertobs"""
 
+import os
 import logging
 from pathlib import Path
 import yaml
@@ -10,6 +11,14 @@ from fmu.config.utilities import yaml_load
 
 # logging.basicConfig(level="DEBUG")
 LOGGER = logging.getLogger(__name__)
+
+
+@pytest.fixture(scope="function", name="no_github_run")
+def _fix_run_github_action():
+
+    in_github_action = os.getenv("GITHUB_ACTIONS") == "true"
+    if in_github_action:
+        pytest.skip("Not set up for github action")
 
 
 def read_yaml_file(yaml_file_name):

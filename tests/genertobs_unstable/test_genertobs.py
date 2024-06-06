@@ -429,7 +429,7 @@ def test_prepare_sumo_files(drogon_project, tmp_path, mockert_experiment):
     # print("\n", uuid)
 
 
-def test_sumo_upload(drogon_project, tmp_path, mockert_experiment):
+def test_sumo_upload(drogon_project, tmp_path, mockert_experiment, no_github_run):
     tmp_drog = tmp_path / "drog"
     copytree(drogon_project, tmp_drog)
     prep_folder = tmp_drog / "share/preprocessed"
