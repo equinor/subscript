@@ -5,8 +5,6 @@ import logging
 from pathlib import Path
 
 from subscript.genertobs_unstable._writers import (
-    export_with_dataio,
-    generate_preprocessed_hook,
     write_dict_to_ertobs,
 )
 from subscript.genertobs_unstable.parse_config import (
@@ -53,9 +51,6 @@ def run(config_path: str, output_folder: str, master_config_file: str):
     print("Exported all ert obs results to folder %s", str(export_folder))
     logger.info("Exporting observations ready for sumo to %s", str(sumo_folder))
 
-    export_path = export_with_dataio(data, master_config, sumo_folder)
-    logger.info(export_path)
-    generate_preprocessed_hook(export_path, export_folder)
     return export_folder
 
 

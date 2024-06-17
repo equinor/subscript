@@ -9,8 +9,6 @@ from shutil import rmtree
 from typing import Optional
 
 import pandas as pd
-import pyarrow as pa
-from fmu.dataio import ExportData
 
 from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
 
@@ -334,75 +332,3 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     ertobs_file.write_text(obs_str)
 
     return obs_str
-
-
-def export_with_dataio(data: list, config: dict, store_path: Path):
-    """Export observations from list of input dicts
-
-    Args:
-        data (list): the data stored as dict
-        config (dict): config file needed for dataio
-        store_path (str): path to where to store
-    """
-    logger = logging.getLogger(__name__ + ".export_with_dataio")
-    logger.info("Will be exporting %i elements from dict %s", len(data), data)
-    Path(store_path).mkdir(parents=True, exist_ok=True)
-    cwd = Path().cwd()
-    os.chdir(store_path)
-    exporter = ExportData(config=config)
-    logger.info("Results will be stored in %s", store_path)
-    for data_element in data:
-        logger.debug("Exporting element %s\n------", data_element["name"])
-        content = data_element["content"]
-        prefix = make_rft_prefix(data_element) if content == "rft" else ""
-        logger.debug("Obs are:\n %s", data_element["observations"])
-        for observation in data_element["observations"]:
-            logger.debug("-->Data are \n%s", observation["data"])
-            try:
-                name = observation["vector"].replace(":", "_")
-            except KeyError:
-                name = observation["well_name"]
-            obs_data = pa.Table.from_pandas(observation["data"])
-            logger.debug("Observations to export %s", obs_data)
-            export_path = exporter.export(
-                obs_data,
-                name=prefix + check_and_fix_str(name),
-                tagname=content,
-                casepath=store_path,
-                fmu_context="preprocessed",
-                content=content,
-                is_observation=True,
-            )
-            logger.info("Exporting to %s", export_path)
-    parent = Path(export_path).parent
-    logger.info("All exported to %s", parent)
-    print(f"\nExported observation data ready for upload to sumo in folder {parent}")
-    os.chdir(cwd)
-    return parent
-
-
-def generate_preprocessed_hook(export_path: Path, output_folder: str):
-    """Write include file for upload of preprocessed
-
-    Args:
-        export_path (Path): path to where files are located
-        output_folder (str): path to folder to write include file
-    """
-
-    logger = logging.getLogger(__file__ + ".generate_preprocessed_hook")
-    logger.debug("This is the export path %s", str(export_path))
-    stem = "upload_observations"
-
-    posixpath = Path(output_folder).resolve()
-
-    workflow_name = posixpath / f"xhook_{stem}"
-    call = (
-        f"WF_UPLOAD_SUMO_OBS <SCRATCH>/<USER>/<CASE_DIR> {str(export_path)}"
-        " '--env' <SUMO_ENV>"
-    )
-    workflow_name.write_text(add_time_stamp(call))
-
-    workflow_content = f"LOAD_WORKFLOW   {workflow_name}  -- define and load workflow\n"
-    workflow_content += f"HOOK_WORKFLOW {workflow_name.name}  PRE_SIMULATION"
-    include_file = posixpath / f"xhook_{stem}.ert"
-    include_file.write_text(add_time_stamp(workflow_content))

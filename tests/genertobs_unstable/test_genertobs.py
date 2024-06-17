@@ -3,21 +3,14 @@ import sys
 import pytest
 import pandas as pd
 import pickle
-import yaml
 from pathlib import Path
-import uuid
 from datetime import datetime
-from fmu.sumo.uploader import CaseOnDisk, SumoConnection
 from shutil import copytree
 from subscript.genertobs_unstable import parse_config as conf
 from subscript.genertobs_unstable import _utilities as ut
 from subscript.genertobs_unstable import _writers as wt
 from subscript.genertobs_unstable import main
-from subscript.genertobs_unstable.upload_sumo_obs import (
-    get_case_meta,
-    prepare_sumo_files,
-    sumo_upload,
-)
+
 from subscript.fmuobs.writers import summary_df2obsdict
 
 VALID_FORMATS = [
@@ -342,28 +335,8 @@ def test_write_dict_to_ertobs(expected_results, tmp_path, drogon_project):
     ertobs = wt.write_dict_to_ertobs(expected_results, obs_include)
 
 
-def test_export_with_dataio(expected_results, drogon_project, fmuconfig, tmp_path):
-    correct_num = 6
-    print(fmuconfig)
-    tmp_drog = tmp_path / "drog"
-    copytree(drogon_project, tmp_drog)
-    os.chdir(tmp_drog)
-    export_path = wt.export_with_dataio(expected_results, fmuconfig, tmp_drog)
-
-    files = list(export_path.glob("*.arrow"))
-    print(files)
-    assert len(files) == correct_num
-    metas = list(export_path.glob("*.arrow.yml"))
-    assert len(metas) == correct_num
-
-    # assert isinstance(data, list), f"Data should be list, but is {type(data)}"
-    # assert isinstance(
-    #     summary_to_fmuobs, pd.DataFrame
-    # ), f"summary should be dataframe but is {type(summary_to_fmuobs)}"
-    # print("\n\n", data)
-
-
 def test_main_run(drogon_project, tmp_path, masterdata_config):
+    correct_nr = 4
     tmp_drog = tmp_path / "drog"
     copytree(drogon_project, tmp_drog)
     os.chdir(tmp_drog)
@@ -374,7 +347,9 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
 
     main.run(test_config, tmp_observations, masterdata_config)
     obs_files = list(tmp_observations.glob("*"))
-    assert len(obs_files) == 7, f"Have not generated 7 elements, but {len(obs_files)}"
+    assert (
+        len(obs_files) == 4
+    ), f"Have not generated {correct_nr} elements, but {len(obs_files)}"
     for obs_file in obs_files:
         print(obs_file)
         try:
@@ -385,53 +360,3 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
             assert obs_text.startswith("--")
         except IsADirectoryError:
             print(obs_file)
-
-    sumo_table_location = tmp_observations / "sumo/share/preprocessed/tables"
-    sumo_tables = list(sumo_table_location.glob("*.arrow"))
-    assert (
-        len(sumo_tables) == 6
-    ), f"Have not exported 6 tables for sumo, but {len(sumo_tables)}"
-
-
-def register_case(case_path):
-
-    case_metadata = get_case_meta(case_path)
-    case_metadata["fmu"]["case"]["uuid"] = str(uuid.uuid4())
-    case_metadata["tracklog"][0] = {
-        "datetime": datetime.now().isoformat(),
-        "user": {
-            "id": "dbs",
-        },
-        "event": "created",
-    }
-    case_metadata_path = case_path / "share/metadata/fmu_case.yml"
-    print(case_metadata)
-    with open(case_metadata_path, "w", encoding="utf-8") as stream:
-        yaml.safe_dump(case_metadata, stream)
-    sumo_conn = SumoConnection(env="dev")
-    case = CaseOnDisk(
-        case_metadata_path=case_metadata_path,
-        sumo_connection=sumo_conn,
-        verbosity="DEBUG",
-    )
-    # Register the case in Sumo
-    sumo_uuid = case.register()
-    return sumo_uuid
-
-
-def test_prepare_sumo_files(drogon_project, tmp_path, mockert_experiment):
-    tmp_drog = tmp_path / "drog"
-    copytree(drogon_project, tmp_drog)
-    prep_folder = tmp_drog / "share/preprocessed"
-    sumofiles = prepare_sumo_files(prep_folder, tmp_drog)
-    print(len(sumofiles))
-    # uuid = register_case(tmp_drog)
-    # print("\n", uuid)
-
-
-def test_sumo_upload(drogon_project, tmp_path, mockert_experiment, no_github_run):
-    tmp_drog = tmp_path / "drog"
-    copytree(drogon_project, tmp_drog)
-    prep_folder = tmp_drog / "share/preprocessed"
-    uuid = register_case(tmp_drog)
-    sumo_upload(prepare_sumo_files(prep_folder, tmp_drog), uuid, "dev")
