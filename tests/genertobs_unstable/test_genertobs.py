@@ -188,7 +188,9 @@ def test_extract_from_row(
         drogon_project (PosixPath): parent folder for files to be read
     """
     os.chdir(tmp_path)
-    summary_row = pd.Series(line_input, index=["name", "type", "observation", "error"])
+    summary_row = pd.Series(
+        line_input, index=["name", "type", "observation", "default_error"]
+    )
     obs = ut.extract_from_row(
         summary_row.to_dict(), drogon_project / "ert/input/observations"
     )

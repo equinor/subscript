@@ -23,7 +23,7 @@ def validate_config(config: dict):
     logger = logging.getLogger(__file__ + ".validate_config")
     valids = {"name", "type", "observation"}
     optionals = {
-        "error",
+        "default_error",
         "min_error",
         "max_error",
         "plugin_arguments",
@@ -53,7 +53,7 @@ def validate_config(config: dict):
         ), f"{non_valid} are found in config, these are not allowed"
 
         try:
-            error = str(element["error"])
+            error = str(element["default_error"])
             if "%" not in error:
                 invalids = ["min_error", "max_error"]
                 for invalid in invalids:
