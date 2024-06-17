@@ -344,10 +344,10 @@ def test_main_run(drogon_project, tmp_path):
     os.chdir(tmp_drog)
     print(tmp_drog)
     genert_config_name = "genertobs_config.yml"
-    tmp_observations = tmp_drog / "ert/input/observations/genertobs"
+    tmp_observations = tmp_drog / "ert/input/observations/genertobs_config"
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
 
-    main.run(test_config, tmp_observations)
+    main.run(test_config)
     obs_files = list(tmp_observations.glob("*"))
     assert (
         len(obs_files) == 4
