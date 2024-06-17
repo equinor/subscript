@@ -21,16 +21,11 @@ def parse_args():
     parser.add_argument(
         "output_folder", help="path to write all result files", type=str
     )
-    parser.add_argument(
-        "master_config_file",
-        help="Path to file with master metadata (usually in the fmu config file)",
-        type=str,
-    )
     parser.add_argument("--d", help="debug mode", action="store_true")
     return parser.parse_args()
 
 
-def run(config_path: str, output_folder: str, master_config_file: str):
+def run(config_path: str, output_folder: str):
     """Generate data from config file
 
     Args:
@@ -42,14 +37,11 @@ def run(config_path: str, output_folder: str, master_config_file: str):
     config = read_yaml_config(config_path, validate=True)
     logger.debug("Read config: %s", config)
     export_folder = (Path(config_path).parent / output_folder).resolve()
-    sumo_folder = export_folder / "sumo"
 
     data = generate_data_from_config(config, Path(config_path).parent)
     logger.debug("Data generated %s", data)
     write_dict_to_ertobs(data, export_folder)
-    master_config = read_yaml_config(master_config_file)
     print("Exported all ert obs results to folder %s", str(export_folder))
-    logger.info("Exporting observations ready for sumo to %s", str(sumo_folder))
 
     return export_folder
 
@@ -61,7 +53,7 @@ def main():
     level = logging.DEBUG if args.d else logging.WARNING
     logging.basicConfig(level=level)
     logger.debug("Have read args %s", args)
-    run(args.config_file, args.output_folder, args.master_config_file)
+    run(args.config_file, args.output_folder)
 
 
 if __name__ == "__main__":

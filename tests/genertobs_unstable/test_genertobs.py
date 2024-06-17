@@ -337,7 +337,7 @@ def test_write_dict_to_ertobs(expected_results, tmp_path, drogon_project):
     ertobs = wt.write_dict_to_ertobs(expected_results, obs_include)
 
 
-def test_main_run(drogon_project, tmp_path, masterdata_config):
+def test_main_run(drogon_project, tmp_path):
     correct_nr = 4
     tmp_drog = tmp_path / "drog"
     copytree(drogon_project, tmp_drog)
@@ -347,7 +347,7 @@ def test_main_run(drogon_project, tmp_path, masterdata_config):
     tmp_observations = tmp_drog / "ert/input/observations/genertobs"
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
 
-    main.run(test_config, tmp_observations, masterdata_config)
+    main.run(test_config, tmp_observations)
     obs_files = list(tmp_observations.glob("*"))
     assert (
         len(obs_files) == 4
