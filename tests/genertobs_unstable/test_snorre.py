@@ -25,11 +25,11 @@ def run_command(arguments):
 def test_command_line(tmp_path):
     sn_tmp = tmp_path / "snorre"
     copytree(SNORRE_FOLDER, sn_tmp)
-    obs_name = "observations"
+    obs_name = "snorre_observations"
     os.chdir(sn_tmp)
     genert_config = sn_tmp / "snorre_observations.yml"
 
-    arguments = ["genertobs_unstable", genert_config, obs_name]
+    arguments = ["genertobs_unstable", genert_config]
     run_command(arguments)
     obs_out = sn_tmp / obs_name
     assert obs_out.exists()
