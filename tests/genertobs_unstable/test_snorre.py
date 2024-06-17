@@ -28,9 +28,8 @@ def test_command_line(tmp_path):
     obs_name = "observations"
     os.chdir(sn_tmp)
     genert_config = sn_tmp / "snorre_observations.yml"
-    fmu_config = sn_tmp / "masterdata_config.yml"
 
-    arguments = ["genertobs_unstable", genert_config, obs_name, fmu_config]
+    arguments = ["genertobs_unstable", genert_config, obs_name]
     run_command(arguments)
     obs_out = sn_tmp / obs_name
     assert obs_out.exists()
