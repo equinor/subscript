@@ -1,6 +1,6 @@
 - name: Gas-oil-ratio observations
   type: timeseries
-  error: 10% # optional (% indicates relative, otherwise absolute)
+  default_error: 10% # optional (% indicates relative, otherwise absolute)
   min_error: 20 # optional, always absolute
   max_error: 30 # optional, always absolute
   # Columns: vector, date, value, error, min_error, max_error (last three columns optional for each row, overrides global error for the rows where they are presnet)
@@ -8,7 +8,7 @@
 
 - name: Bottom hole pressure observations
   type: timeseries
-  error: 5%
+  default_error: 5%
   observation: "summary_wbhp.csv"
 
 - name: RFT pressure observations
@@ -16,7 +16,7 @@
   plugin_arguments:
     zonemap: "../rms/output/zone/layer_zone_table.txt"
     trajectories: "../rms/output/trajectories.csv"
-  error: 5
+  default_error: 5
   # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
   observation: "drogon_rft_input.ods"
   metadata:
@@ -32,7 +32,7 @@
   plugin_arguments:
     zonemap: "../rms/output/zone/layer_zone_table.txt"
     trajectories: "../rms/output/trajectories.csv"
-  error: 5
+  default_error: 5
   # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
   observation: "drogon_rft_saturation.csv"
   metadata:

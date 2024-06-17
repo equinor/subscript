@@ -1,11 +1,11 @@
 - name: summary observations
   type: timeseries
-  error: 10%
+  default_error: 10%
   observation: snorre_smry_observations.csv
 
 - name: rft observations
   type: rft
-  error: 5
+  default_error: 5
   alias_file: well_aliases.txt
   observation: RFT_dump_221220_ZoneAdjusted.ods
   plugin_arguments:

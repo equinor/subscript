@@ -430,7 +430,7 @@ def extract_from_row(
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
 
     add_or_modify_error(
-        obs_frame, row["error"], row.get("min_error"), row.get("max_error")
+        obs_frame, row["default_error"], row.get("min_error"), row.get("max_error")
     )
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
 
