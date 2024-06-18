@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List
+from typing import List, Union
 from pydantic import (
     BaseModel,
     Field,
@@ -27,6 +27,20 @@ class ConfigElement(BaseModel):
     type: ObservationType = Field(description="Type of observation")
     observation: str = Field(
         description="path to file containing observations",
+    )
+    default_error: Union[str, float, int] = Field(
+        default=None,
+        description="Error to be used\n. Used only when"
+        + "no error column present or where error column is empty",
+    )
+
+    min_error: Union[int, float] = Field(
+        default=None,
+        description="minimum error, only allowed when default_error is in percent",
+    )
+    max_error: Union[int, float] = Field(
+        default=None,
+        description="maximum error, only allowed when default_error is in percent",
     )
 
 

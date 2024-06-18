@@ -39,6 +39,9 @@ def test_configroot_success():
             "name": "This is something other",
             "type": "rft",
             "observation": str(OBSERVATIONS_INPUT / "summary_gor.csv"),
+            "default_error": 5,
+            "min_error": 3,
+            "max_error": 6,
         },
     ]
 
