@@ -34,13 +34,15 @@ The script will read numbers from the line with ``CURRENTLY IN PLACE`` in Eclips
   ====================================================================================================================================
 
 
-Additionally, if the Eclipse DATA file includes::
+Additionally, if the Eclipse DATA file includes
+
+.. code-block:: none
 
   RPTSOL
     FIP=2 'FIPRESV' /
 
-the PRT-file will also contain a table with pore volumes pr. phase and pr.
-FIPNUM, which will be added to the exported table.
+the PRT-file will also contain a table with pore volumes pr. phase and pr. FIPNUM, 
+which will be added to the exported table. FIPRESV will include reservoir volumes (RM3).
 
 .. code-block:: none
 
@@ -56,6 +58,11 @@ FIPNUM, which will be added to the exported table.
   :       2 :      79481140.:             0.:      79481140.:             0.:             0.:
   ===========================================================================================
 
+If `FIP=3` in RPTSOL, the PRT file will also contain report of in-place volumes for any additional 
+FIP-vectors. Default is to export volumes per FIPNUM, but any FIP-vector can be specified
+using the ``fipname`` option. However, the column name will always be FIPNUM in the csv-file, 
+as required by ``webviz-subsurface`` plugin "VolumetricAnalysis". An additional column with 
+the actual FIPNAME is included for information.
 
 
 Region and zone support
