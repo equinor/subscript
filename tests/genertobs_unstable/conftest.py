@@ -13,6 +13,11 @@ from fmu.config.utilities import yaml_load
 LOGGER = logging.getLogger(__name__)
 
 
+@pytest.fixture(scope="session", name="observations_input")
+def _fix_obs_input():
+    return Path(__file__).parent / "data/drogon/ert/input/observations/"
+
+
 @pytest.fixture(scope="function", name="no_github_run")
 def _fix_run_github_action():
 
@@ -26,6 +31,18 @@ def read_yaml_file(yaml_file_name):
     with open(yaml_file_name, "r", encoding="utf-8") as stream:
         yam_contents = yaml.safe_load(stream)
     return yam_contents
+
+
+@pytest.fixture(scope="function", name="config_element")
+def _fix_config_element(observations_input):
+    return {
+        "name": "This is something other",
+        "type": "rft",
+        "observation": str(observations_input / "summary_gor.csv"),
+        "default_error": 5,
+        "min_error": 3,
+        "max_error": 6,
+    }
 
 
 @pytest.fixture(name="mockert_experiment", scope="function")

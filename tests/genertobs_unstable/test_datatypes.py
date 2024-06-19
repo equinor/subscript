@@ -5,9 +5,6 @@ import subscript.genertobs_unstable._datatypes as dt
 from pydantic_core._pydantic_core import ValidationError
 
 
-OBSERVATIONS_INPUT = Path(__file__).parent / "data/drogon/ert/input/observations/"
-
-
 @pytest.mark.parametrize(
     "input_element,nrerr,class_type",
     [
@@ -28,22 +25,15 @@ def test_configroot_failure(input_element, nrerr, class_type):
     assert errors[0] == class_type
 
 
-def test_configroot_success():
-    second_element = {
-        "name": "This is something other",
-        "type": "rft",
-        "observation": str(OBSERVATIONS_INPUT / "summary_gor.csv"),
-        "default_error": 5,
-        "min_error": 3,
-        "max_error": 6,
-    }
+def test_configroot_success(config_element, observations_input):
+
     config = [
         {
             "name": "this is something",
             "type": "summary",
-            "observation": str(OBSERVATIONS_INPUT / "drogon_summary_input.txt"),
+            "observation": str(observations_input / "drogon_summary_input.txt"),
         },
-        second_element,
+        config_element,
     ]
     valid_config = dt.ObservationsConfig.model_validate(config)
 
@@ -51,3 +41,12 @@ def test_configroot_success():
         assert observation.name == config[i]["name"]
 
     print(valid_config[1])
+
+
+def test_validate_observation_path(config_element):
+    config_element["observation"] = "nopath"
+    with pytest.raises(OSError) as excinfo:
+        dt.ConfigElement.model_validate(config_element)
+    except_mess = str(excinfo.value)
+    print(except_mess)
+    assert except_mess == "Input observation file nopath, does not exist"

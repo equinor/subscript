@@ -1,10 +1,12 @@
 from enum import Enum
+from pathlib import Path
 from typing import List, Union
 from pydantic import (
     BaseModel,
     Field,
     RootModel,
     ConfigDict,
+    field_validator,
 )
 
 
@@ -46,6 +48,20 @@ class ConfigElement(BaseModel):
         description="Optional argument. Maximum error, only allowed "
         "when default_error is in percent",
     )
+
+    @field_validator("observation")
+    @classmethod
+    def validate_path_exists(cls, observation_path: str):
+        """Check that observation file exists
+
+        Args:
+            observation_path (str): the path to check
+
+        Raises:
+            OSError: if observation_path does not exist
+        """
+        if not Path(observation_path).exists():
+            raise OSError(f"Input observation file {observation_path}, does not exist")
 
 
 class ObservationsConfig(RootModel):
