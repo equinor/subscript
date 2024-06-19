@@ -29,22 +29,25 @@ def test_configroot_failure(input_element, nrerr, class_type):
 
 
 def test_configroot_success():
+    second_element = {
+        "name": "This is something other",
+        "type": "rft",
+        "observation": str(OBSERVATIONS_INPUT / "summary_gor.csv"),
+        "default_error": 5,
+        "min_error": 3,
+        "max_error": 6,
+    }
     config = [
         {
             "name": "this is something",
             "type": "summary",
             "observation": str(OBSERVATIONS_INPUT / "drogon_summary_input.txt"),
         },
-        {
-            "name": "This is something other",
-            "type": "rft",
-            "observation": str(OBSERVATIONS_INPUT / "summary_gor.csv"),
-            "default_error": 5,
-            "min_error": 3,
-            "max_error": 6,
-        },
+        second_element,
     ]
+    valid_config = dt.ObservationsConfig.model_validate(config)
 
-    for observation in dt.ObservationsConfig(config).model_dump():
-        print(observation["name"])
-        print(observation["type"].value)
+    for i, observation in enumerate(valid_config):
+        assert observation.name == config[i]["name"]
+
+    print(valid_config[1])
