@@ -54,7 +54,12 @@ def test_validate_observation_path(config_element):
 
 @pytest.mark.parametrize(
     "default_error,exception",
-    [("2050%", ValidationError), ("2.34", ValueError), ("banana", ValidationError)],
+    [
+        ("2050%", ValidationError),
+        ("2.34", ValueError),
+        ("banana", ValidationError),
+        (-1, ValueError),
+    ],
 )
 def test_validate_default_error(config_element, default_error, exception):
     config_element["default_error"] = default_error
