@@ -40,8 +40,8 @@ def _fix_config_element(observations_input):
         "type": "rft",
         "observation": str(observations_input / "summary_gor.csv"),
         "default_error": 5,
-        "min_error": 3,
-        "max_error": 6,
+        "min_error": None,
+        "max_error": None,
     }
 
 

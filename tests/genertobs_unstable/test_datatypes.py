@@ -69,4 +69,8 @@ def test_validate_default_error(config_element, default_error, exception):
 
 
 def test_check_error_limits():
-    dt.check_error_limits(5, 1, 6)
+    mess = "default_error specified as an absolute number, doesn't make sense to set a lower limit (1)"
+    with pytest.raises(ValueError) as excinfo:
+        dt.check_error_limits(5, 1, 6)
+    except_mess = str(excinfo.value)
+    assert except_mess == mess
