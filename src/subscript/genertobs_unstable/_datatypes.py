@@ -64,6 +64,7 @@ def is_string_convertible_2_percent(error):
         ValueError: if the number ends with %, but is not between 0 and 100
     """
     logger = logging.getLogger(__file__ + ".is_string_convertible_2_percent")
+    logger.debug("Checking this string %s", error)
     try:
         if not is_number(error[:-1]):
             raise TypeError(f"This: {error} is not convertible to a number")
@@ -186,7 +187,7 @@ class ConfigElement(BaseModel):
             if error < 0:
                 raise ValueError(
                     f"default error cannot be negative {error}"
-                )  # pylint: ignore
+                )  #  pylint: disable=raise-missing-from
         return error
 
     @model_validator(mode="after")
