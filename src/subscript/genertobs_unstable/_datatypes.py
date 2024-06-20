@@ -161,6 +161,7 @@ class ConfigElement(BaseModel):
         """
         if not Path(observation_path).exists():
             raise OSError(f"Input observation file {observation_path}, does not exist")
+        return observation_path
 
     @field_validator("default_error")
     @classmethod
@@ -177,6 +178,7 @@ class ConfigElement(BaseModel):
             is_string_convertible_2_percent(error)
         except AttributeError:
             pass
+        return error
 
     @model_validator(mode="after")
     def check_when_default_is_number(self):
