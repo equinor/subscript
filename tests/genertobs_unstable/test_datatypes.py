@@ -35,7 +35,17 @@ def test_configroot_success(config_element, observations_input):
         },
         config_element,
     ]
+    dumped_element = {
+        "name": "This is something other",
+        "type": dt.ObservationType.RFT,
+        "observation": str(observations_input / "summary_gor.csv"),
+        "default_error": 5,
+        "min_error": None,
+        "max_error": None,
+    }
     valid_config = dt.ObservationsConfig.model_validate(config)
+
+    assert valid_config.model_dump()[1] == dumped_element
 
     for i, observation in enumerate(valid_config):
         assert observation.name == config[i]["name"]
