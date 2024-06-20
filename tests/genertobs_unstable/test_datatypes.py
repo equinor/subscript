@@ -66,3 +66,7 @@ def test_validate_default_error(config_element, default_error, exception):
 
 
 # # assert except_mess == message
+
+
+def test_check_error_limits():
+    dt.check_error_limits(5, 1, 6)

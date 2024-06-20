@@ -1,11 +1,13 @@
 from enum import Enum
 from pathlib import Path
+import logging
 from typing import List, Union
 from pydantic import (
     BaseModel,
     Field,
     RootModel,
     ConfigDict,
+    model_validator,
     field_validator,
 )
 
@@ -35,6 +37,8 @@ def is_percent_range(string):
     Returns:
         bool: True if number is in the range
     """
+    logger = logging.getLogger(__file__ + ".is_percent_range")
+    logger.debug("Input is %s", string)
     number = float(string.replace("%", ""))
     if (number > 0) and (number < 100):
         return True
@@ -53,8 +57,12 @@ def is_string_convertible_2_percent(error):
         TypeError: if string cannot be converted to a number
         ValueError: if the number ends with %, but is not between 0 and 100
     """
-    if not is_number(error[:-1]):
-        raise TypeError(f"This: {error} is not convertible to a number")
+    logger = logging.getLogger(__file__ + ".is_string_convertible_2_percent")
+    try:
+        if not is_number(error[:-1]):
+            raise TypeError(f"This: {error} is not convertible to a number")
+    except TypeError:
+        pass
 
     if not error.endswith("%"):
         raise ValueError(
@@ -63,6 +71,42 @@ def is_string_convertible_2_percent(error):
 
     if not is_percent_range(error):
         raise ValueError(f"The number {error} is not in the valid range 0-100")
+
+
+def check_error_limits(error, err_min, err_max):
+    """Check error limits
+
+    Args:
+        error (Union[str,int,float]): the error to check against
+        err_min (Union[int,float,None]): the lower limit
+        err_max (Union[int,float,None]): the higher limit
+
+
+    Raises:
+        ValueError: if err_min is not None when error is not in percent
+        ValueError: if err_max is not None when error is not in percent
+        ValueError: if err_min >= max
+    """
+    logger = logging.getLogger(__file__ + ".check_error_limits")
+    logger.debug("Checking with error: %s, and limits %s-%s", error, err_min, err_max)
+    if isinstance(error, (float, int)):
+        if err_min is not None:
+            raise ValueError(
+                "default_error specified as an absolute number,"
+                f" doesn't make sense to set a lower limit ({err_min})"
+            )
+        if err_max is not None:
+            raise ValueError(
+                "default_error specified as an absolute number,"
+                f" doesn't make sense to set a higher limit ({err_max})"
+            )
+    else:
+        if err_min is not None and err_max is not None:
+            if err_min >= err_max:
+                raise ValueError(
+                    f"When using limits, the minimum must be lower than the maximum\n"
+                    f"{err_min}-{err_max}"
+                )
 
 
 class ObservationType(Enum):
@@ -133,6 +177,16 @@ class ConfigElement(BaseModel):
             is_string_convertible_2_percent(error)
         except AttributeError:
             pass
+
+    @model_validator(mode="after")
+    def check_when_default_is_number(self):
+        """Check
+
+        Returns:
+            Self: self
+        """
+        check_error_limits(self.default_error, self.min_error, self.max_error)
+        return self
 
 
 class ObservationsConfig(RootModel):
