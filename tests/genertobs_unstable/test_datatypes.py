@@ -50,3 +50,19 @@ def test_validate_observation_path(config_element):
     except_mess = str(excinfo.value)
     print(except_mess)
     assert except_mess == "Input observation file nopath, does not exist"
+
+
+@pytest.mark.parametrize(
+    "default_error,exception",
+    [("2050%", ValidationError), ("2.34", ValueError), ("banana", ValidationError)],
+)
+def test_validate_default_error(config_element, default_error, exception):
+    config_element["default_error"] = default_error
+    with pytest.raises(exception) as excinfo:
+        dt.ConfigElement.model_validate(config_element)
+
+    except_mess = str(excinfo.value)
+    print(except_mess)
+
+
+# # assert except_mess == message
