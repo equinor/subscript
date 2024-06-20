@@ -10,6 +10,7 @@ from pydantic import (
     model_validator,
     field_validator,
 )
+import warnings
 
 
 def is_number(tocheck):
@@ -40,10 +41,15 @@ def is_percent_range(string):
     logger = logging.getLogger(__file__ + ".is_percent_range")
     logger.debug("Input is %s", string)
     number = float(string.replace("%", ""))
-    if (number > 0) and (number < 100):
+    if 0 < number < 100:
         return True
-    else:
-        return False
+
+    if number > 50:
+        warnings.warn(
+            "It seems weird to have an error of more than 50%"
+            f" ({number}, is this correct?)"
+        )
+    return False
 
 
 def is_string_convertible_2_percent(error):
