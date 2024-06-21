@@ -35,7 +35,7 @@ def run(config_path: str):
     """
     logger = logging.getLogger(__name__ + ".run")
     logger.info("Here is config path %s", config_path)
-    config = read_yaml_config(config_path, validate=True)
+    config = read_yaml_config(config_path)
     logger.debug("Read config: %s", config)
     config_path = Path(config_path)
     export_folder = (config_path.parent / config_path.stem).resolve()

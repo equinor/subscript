@@ -10,60 +10,6 @@ from fmu.dataio.datastructure.meta.enums import ContentEnum
 from subscript.genertobs_unstable._utilities import extract_from_row
 
 
-def validate_config(config: dict):
-    """Validate that content of dictionary is correct
-
-    Args:
-        config (dict): the dictionary to check
-
-    Raises:
-        KeyError: if key name not in config
-        AssertionError: if incorrect keys are used or incorrect type is used
-    """
-    logger = logging.getLogger(__file__ + ".validate_config")
-    valids = {"name", "type", "observation"}
-    optionals = {
-        "default_error",
-        "min_error",
-        "max_error",
-        "plugin_arguments",
-        "metadata",
-        "active",
-        "alias_file",
-    }
-    for i, element in enumerate(config):
-        el_valids = valids.copy()
-        try:
-            name = element["name"]
-        except KeyError as keye:
-            raise KeyError(f"Key {'name'} not in obs number {i}") from keye
-        common = valids.intersection(element.keys())
-        el_type = element["type"]
-        assert sorted(common) == sorted(
-            valids
-        ), f"{name}, does not contain all of {sorted(valids)}, only {sorted(common)}"
-
-        assert hasattr(
-            ContentEnum, el_type
-        ), f"{el_type} not in {ContentEnum._member_names_}"
-        el_valids.update(optionals)
-        non_valid = set(element.keys()).difference(el_valids)
-        assert (
-            len(non_valid) == 0
-        ), f"{non_valid} are found in config, these are not allowed"
-
-        try:
-            error = str(element["default_error"])
-            if "%" not in error:
-                invalids = ["min_error", "max_error"]
-                for invalid in invalids:
-                    assert (
-                        invalid not in element
-                    ), f"Obs {name}: do not use {invalid} when passing absolute error"
-        except KeyError:
-            logger.debug("No global error added, nothing to check")
-
-
 # def read_tabular_config(
 #     config_file_name: Union[str, Path], parent_folder: Union[str, PosixPath] = None
 # ) -> List[pd.DataFrame]:
@@ -97,7 +43,7 @@ def validate_config(config: dict):
 #     return obs_data
 
 
-def read_yaml_config(config_file_name: str, validate=False) -> dict:
+def read_yaml_config(config_file_name: str) -> dict:
     """Read configuration from file
 
     Args:
@@ -118,8 +64,6 @@ def read_yaml_config(config_file_name: str, validate=False) -> dict:
     except OSError as ose:
         raise RuntimeError(f"Could not read {config_file_name}") from ose
     logger.debug("Returning %s", config)
-    if validate:
-        validate_config(config)
     return config
 
 
