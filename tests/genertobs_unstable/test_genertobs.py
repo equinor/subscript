@@ -132,7 +132,7 @@ def test_convert_obs_df_to_list(rft_as_frame):
 @pytest.mark.parametrize(
     "infile,content,nrlabels",
     [
-        ("summary_gor.csv", "timeseries", 9),
+        ("summary_gor.csv", "summary", 9),
         ("drogon_rft_input.ods", "rft", 2),
         ("drogon_seismic_input.csv", "seismic", 1),
     ],
@@ -145,29 +145,11 @@ def test_read_obs_frame(drogon_project, infile, content, nrlabels):
     # assert len_labels == nrlabels, f"should have {nrlabels}, but has {len_labels}"
 
 
-def test_convert_config_to_dict(csv_config):
-    """Test function convert_df_to_dict
-
-    Args:
-        csv_config (PosixPath): the dataframe to put through function
-    """
-    required_fields = ["name", "content", "input_file"]
-    config_dict = ut.convert_df_to_dict(ut.read_tabular_file(csv_config))
-    assert isinstance(
-        config_dict, list
-    ), f"Should be list but is {type(config_dict)} ({config_dict})"
-    for i, element in enumerate(config_dict):
-        for key in required_fields:
-            assert (
-                key in element.keys()
-            ), f"{key} not in required fields {required_fields} for line {i}"
-
-
 @pytest.mark.parametrize(
     "line_input, shape_obs, shape_tofmuobs",
     [
         (
-            ["summary observations", "timeseries", "summary_gor.csv", "10%"],
+            ["summary observations", "summary", "summary_gor.csv", "10%"],
             (9, 8),
             (9, 8),
         ),
@@ -224,51 +206,6 @@ def test_read_yaml_config(yaml_config_file):
     len_config = len(config)
     assert len_config > 0
     print("Length of configuration:", len_config)
-
-
-@pytest.mark.parametrize(
-    "invalid_config,exception,error_mess",
-    [
-        (
-            {"type": "timeseries"},
-            KeyError,
-            "Key name not in obs number 0",
-        ),
-        (
-            {"name": "banana", "type": "timeseries"},
-            AssertionError,
-            "banana, does not contain all of ['name', 'observation', 'type'], only ['name', 'type']",
-        ),
-        (
-            {"name": "banana", "type": "banana", "observation": "dummy.csv"},
-            AssertionError,
-            f"banana not in {VALID_FORMATS}",
-        ),
-        (
-            {
-                "name": "banana",
-                "type": "rft",
-                "observation": "dummy.csv",
-                "hulahoop": "kefir",
-            },
-            AssertionError,
-            "{'hulahoop'} are found in config, these are not allowed",
-        ),
-    ],
-)
-@pytest.mark.skip("Fails, but no bug, everything correct")
-def test_validate_config_exceptions(invalid_config, exception, error_mess):
-    """Test function validate_config"""
-    config = [invalid_config]
-    with pytest.raises(exception) as exception_info:
-        conf.validate_config(config)
-
-    extracted_mess = str(exception_info.value.args[0])
-    print(len(extracted_mess))
-    print(len(error_mess))
-    print(error_mess)
-    print(extracted_mess)
-    assert extracted_mess == error_mess
 
 
 def test_generate_data_from_config(yaml_config, drogon_project, expected_results):

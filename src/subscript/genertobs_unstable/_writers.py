@@ -319,7 +319,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
         logger.debug(obs)
         content = obs["content"]
         obs_str += f"--\n--{obs['name']}\n"
-        if content == "timeseries":
+        if content == "summary":
             obs_str += write_timeseries_ertobs(obs["observations"])
 
         elif content == "rft":
