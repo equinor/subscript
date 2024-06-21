@@ -1,5 +1,5 @@
 - name: Gas-oil-ratio observations
-  type: timeseries
+  type: summary
   default_error: 10% # optional (% indicates relative, otherwise absolute)
   min_error: 20 # optional, always absolute
   max_error: 30 # optional, always absolute
@@ -7,7 +7,7 @@
   observation: "summary_gor.csv"
 
 - name: Bottom hole pressure observations
-  type: timeseries
+  type: summary
   default_error: 5%
   observation: "summary_wbhp.csv"
 

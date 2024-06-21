@@ -10,8 +10,8 @@ from subscript.genertobs_unstable import parse_config as conf
 from subscript.genertobs_unstable import _utilities as ut
 from subscript.genertobs_unstable import _writers as wt
 from subscript.genertobs_unstable import main
+from subscript.genertobs_unstable._datatypes import ObservationsConfig
 
-from subscript.fmuobs.writers import summary_df2obsdict
 
 VALID_FORMATS = [
     "depth",
@@ -199,10 +199,12 @@ def test_read_config_file(csv_config):
     print("\nTo fmuobs: \n", to_fmuobs)
 
 
-def test_read_yaml_config(yaml_config_file):
+def test_read_yaml_config(yaml_config_file, drogon_project, monkeypatch):
     """Test function read_yaml_config"""
+    ert_obs = drogon_project / "ert/input/observations"
+    monkeypatch.chdir(ert_obs)
     config = conf.read_yaml_config(yaml_config_file)
-    assert isinstance(config, list)
+    assert isinstance(config, ObservationsConfig)
     len_config = len(config)
     assert len_config > 0
     print("Length of configuration:", len_config)

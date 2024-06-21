@@ -5,9 +5,9 @@ from pathlib import Path
 from warnings import warn
 
 import yaml
-from fmu.dataio.datastructure.meta.enums import ContentEnum
 
 from subscript.genertobs_unstable._utilities import extract_from_row
+from subscript.genertobs_unstable._datatypes import ObservationsConfig
 
 
 # def read_tabular_config(
@@ -64,14 +64,14 @@ def read_yaml_config(config_file_name: str) -> dict:
     except OSError as ose:
         raise RuntimeError(f"Could not read {config_file_name}") from ose
     logger.debug("Returning %s", config)
-    return config
+    return ObservationsConfig.model_validate(config)
 
 
-def generate_data_from_config(config: dict, parent: Path) -> list:
+def generate_data_from_config(config: ObservationsConfig, parent: Path) -> list:
     """Generate tuple with dict and dataframe from config dict
 
     Args:
-        config (dict): the configuration dictionary
+        config (ObservationConfig): the configuration pydantic model
         parent (PosixPath): path of parent folder of file containing dict
 
     Returns:
