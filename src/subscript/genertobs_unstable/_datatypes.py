@@ -1,7 +1,9 @@
+"""Pydantic models for genertobs"""
+
 from enum import Enum
 from pathlib import Path
 import logging
-from typing import List, Union
+from typing import List, Union, Dict
 from pydantic import (
     BaseModel,
     Field,
@@ -127,6 +129,56 @@ class ObservationType(Enum):
     RFT = "rft"
 
 
+class RftType(Enum):
+    """Valid Rft types
+
+    Args:
+        Enum (Enum): Enumerator
+    """
+
+    PRESSURE = "pressure"
+    SW = "saturation_water"
+    SO = "saturation_oil"
+    SG = "saturation_gas"
+
+
+class ElementMetaData(BaseModel):
+    """Pattern for Metadata element for observations
+
+    Args:
+        BaseModel (BaseModel): pydantic BaseModel
+    """
+
+    columns: Dict[str, Dict[str, str]]
+
+
+class PluginArguments(RootModel):
+    """Plugin arguments for config element"""
+
+    root: Dict[str, str]
+
+    def __getitem__(self, item):
+        return self.root[item]
+
+    def keys(self):
+        """Fake .keys method
+
+        Returns:
+            dict.keys: the root dict.keys()
+        """
+        # TODO: check if this is the only way
+        return self.root.keys()
+
+    def items(self):
+        """Fake .items method
+
+        Returns:
+            dict.items: the root dict.items()
+        """
+        # TODO: check if this is the only way
+        return self.root.items()
+
+
 class ConfigElement(BaseModel):
     """Element in a config file"""
 
@@ -136,6 +188,11 @@ class ConfigElement(BaseModel):
     observation: str = Field(
         description="path to file containing observations, this can be any csv"
         " like file,\n i.e textfile or spreadsheet",
+    )
+    active: bool = Field(
+        default=True,
+        description="If the observation element shall be used in\n "
+        "generation of ert observations",
     )
     default_error: Union[str, float, int] = Field(
         default=None,
@@ -201,6 +258,37 @@ class ConfigElement(BaseModel):
         return self
 
 
+class RftConfigElement(ConfigElement):
+    """Config element with extras for rft
+
+    Args:
+        ConfigElement (pydantic model): observation config element
+    """
+
+    plugin_arguments: PluginArguments = Field(default=None)
+    metadata: ElementMetaData = Field(
+        default={"pressure": {"unit:bar"}}, description="Metadata describing the type"
+    )
+
+    # @field_validator("type")
+    # @classmethod
+    # def validate_of_rft_type(cls, observation_type: ObservationType):
+    #     """validate that type is rft
+
+    #     Args:
+    #         observation_type (ObservationType): the type of observation
+
+    #     Raises:
+    #         TypeError: if type is not RFT
+
+    #     Returns:
+    #         ObservationType: type of observations
+    #     """
+    #     if observation_type != ObservationType.RFT:
+    #         raise TypeError(f"This is not rft type, but {observation_type}")
+    #     return observation_type
+
+
 class ObservationsConfig(RootModel):
     """Root model for config file
 
@@ -208,10 +296,15 @@ class ObservationsConfig(RootModel):
         RootModel (Rootmodel): pydantic root model
     """
 
-    root: List[ConfigElement]
+    root: List[Union[RftConfigElement, RftConfigElement]] = Field(
+        description="What type of observation",
+    )
 
     def __iter__(self):
         return iter(self.root)
 
     def __getitem__(self, item):
         return self.root[item]
+
+    def __len__(self):
+        return len(self.root)

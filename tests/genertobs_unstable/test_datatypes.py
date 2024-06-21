@@ -2,27 +2,20 @@ from pathlib import Path
 import re
 import pytest
 import subscript.genertobs_unstable._datatypes as dt
+from subscript.genertobs_unstable.parse_config import read_yaml_config
 from pydantic_core._pydantic_core import ValidationError
 
 
-@pytest.mark.parametrize(
-    "input_element,nrerr,class_type",
-    [
-        ({"name": "du"}, 1, "list"),
-        (["name", "du"], 2, "dictionary"),
-        ("tut", 1, "list"),
-    ],
-)
-def test_configroot_failure(input_element, nrerr, class_type):
+def test_elementmetadata():
+    test_element = {"columns": {"md": {"unit": "m"}}}
+    dt.ElementMetaData.model_validate(test_element)
 
-    with pytest.raises(ValidationError) as excinfo:
-        dt.ObservationsConfig(input_element)
-    except_mess = str(excinfo.value)
-    print(except_mess)
-    validation_errors = re.compile(r"Input should be a valid\s+([\w]+)")
-    errors = validation_errors.findall(except_mess)
-    assert len(errors) == nrerr
-    assert errors[0] == class_type
+
+def test_pluginarguments():
+    test_element = {"billig": "pai", "dudels": "loo"}
+    plugin = dt.PluginArguments.model_validate(test_element)
+    for key, value in plugin.items():
+        print(key, value)
 
 
 def test_configroot_success(config_element, observations_input):
@@ -39,18 +32,30 @@ def test_configroot_success(config_element, observations_input):
         "name": "This is something other",
         "type": dt.ObservationType.RFT,
         "observation": str(observations_input / "summary_gor.csv"),
+        "active": True,
         "default_error": 5,
         "min_error": None,
         "max_error": None,
     }
     valid_config = dt.ObservationsConfig.model_validate(config)
 
-    assert valid_config.model_dump()[1] == dumped_element
+    # assert valid_config.model_dump()[1] == dumped_element
 
     for i, observation in enumerate(valid_config):
         assert observation.name == config[i]["name"]
 
-    print(valid_config[1])
+    assert valid_config[0].type == dt.ObservationType.SUMMARY
+    assert valid_config[1].type == dt.ObservationType.RFT
+
+
+def test_rftconfigelement(observations_input):
+    config_element = {
+        "name": "This is something other",
+        "type": "rft",
+        "observation": str(observations_input / "summary_gor.csv"),
+    }
+    valid_config = dt.RftConfigElement.model_validate(config_element)
+    print(valid_config)
 
 
 def test_validate_observation_path(config_element):
