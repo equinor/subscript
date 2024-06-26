@@ -149,6 +149,7 @@ class ElementMetaData(BaseModel):
         BaseModel (BaseModel): pydantic BaseModel
     """
 
+    subtype: RftType
     columns: Dict[str, Dict[str, str]]
 
 
@@ -269,6 +270,8 @@ class RftConfigElement(ConfigElement):
     metadata: ElementMetaData = Field(
         default={"pressure": {"unit:bar"}}, description="Metadata describing the type"
     )
+
+    alias_file: str = Field(default=None, description="Name of file with aliases")
 
     # @field_validator("type")
     # @classmethod
