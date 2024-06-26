@@ -99,10 +99,10 @@ def _fix_sum_as_frame():
     return frame
 
 
-@pytest.fixture(scope="session", name="yaml_config")
-def _fix_yaml_config(yaml_config_file):
-    config = read_yaml_file(yaml_config_file)
-
+@pytest.fixture(scope="session", name="observation_config")
+def _fix_config():
+    with open(Path(__file__).parent / "data/config.pkl", "rb") as stream:
+        config = pickle.load(stream)
     return config
 
 

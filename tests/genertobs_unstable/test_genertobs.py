@@ -10,7 +10,12 @@ from subscript.genertobs_unstable import parse_config as conf
 from subscript.genertobs_unstable import _utilities as ut
 from subscript.genertobs_unstable import _writers as wt
 from subscript.genertobs_unstable import main
-from subscript.genertobs_unstable._datatypes import ObservationsConfig
+from subscript.genertobs_unstable._datatypes import (
+    ConfigElement,
+    ObservationsConfig,
+    ObservationType,
+    RftConfigElement,
+)
 
 
 VALID_FORMATS = [
@@ -139,43 +144,30 @@ def test_convert_obs_df_to_list(rft_as_frame):
 )
 def test_read_obs_frame(drogon_project, infile, content, nrlabels):
     input_file = drogon_project / "ert/input/observations/" / infile
-    results = ut.read_obs_frame(input_file, content)
+    print(input_file)
+    alias_file = None
+    results = ut.read_obs_frame(input_file, content, alias_file)
     print(results)
     # len_labels = len(results["label"].unique().tolist())
     # assert len_labels == nrlabels, f"should have {nrlabels}, but has {len_labels}"
 
 
 @pytest.mark.parametrize(
-    "line_input, shape_obs, shape_tofmuobs",
-    [
-        (
-            ["summary observations", "summary", "summary_gor.csv", "10%"],
-            (9, 8),
-            (9, 8),
-        ),
-        (
-            ["rft pressure observations", "rft", "drogon_rft_input.ods", "10"],
-            (3, 15),
-            (2, 4),
-        ),
-    ],
+    "element_nr",
+    range(3),
 )
-def test_extract_from_row(
-    line_input, shape_obs, shape_tofmuobs, drogon_project, tmp_path
-):
+def test_extract_from_row(observation_config, drogon_project, element_nr):
     """Test function extract_from_row
 
     Args:
         line_input (pd.Series): a row to test
         drogon_project (PosixPath): parent folder for files to be read
     """
-    os.chdir(tmp_path)
-    summary_row = pd.Series(
-        line_input, index=["name", "type", "observation", "default_error"]
-    )
-    obs = ut.extract_from_row(
-        summary_row.to_dict(), drogon_project / "ert/input/observations"
-    )
+    # os.chdir(tmp_path)
+    element_row = observation_config[element_nr]
+
+    obs = ut.extract_from_row(element_row, drogon_project / "ert/input/observations")
+    print(obs)
     # if shape_obs == shape_tofmuobs:
     #     assert obs.equals(to_fmuobs), "dataframes have same shape but aren't equal"
     # assert obs.shape == shape_obs
@@ -204,20 +196,31 @@ def test_read_yaml_config(yaml_config_file, drogon_project, monkeypatch):
     ert_obs = drogon_project / "ert/input/observations"
     monkeypatch.chdir(ert_obs)
     config = conf.read_yaml_config(yaml_config_file)
+    configelements = [ConfigElement, ConfigElement, RftConfigElement, RftConfigElement]
     assert isinstance(config, ObservationsConfig)
+    for i, element in enumerate(config):
+        cnfgelement = configelements[i]
+        assert isinstance(
+            element, cnfgelement
+        ), f"Element {i} should be {cnfgelement}, but is {type(element)}"
     len_config = len(config)
-    assert len_config > 0
+    assert len_config == 4, f"Should be 4 elements, but is {len_config}"
     print("Length of configuration:", len_config)
+    # print(config)
+    # with open(Path(__file__).parent / "data/config.pkl", "wb") as stream:
+    #     pickle.dump(config, stream)
 
 
-def test_generate_data_from_config(yaml_config, drogon_project, expected_results):
-    print(yaml_config)
+def test_generate_data_from_config(
+    observation_config, drogon_project, expected_results
+):
+    print(observation_config)
     data = conf.generate_data_from_config(
-        yaml_config, drogon_project / "ert/input/observations"
+        observation_config, drogon_project / "ert/input/observations"
     )
     # Activate if something in results change
-    # with open(Path(__file__).parent / "data/pickled_data.pkl", "wb") as stream:
-    #     pickle.dump(data, stream)
+    with open(Path(__file__).parent / "data/pickled_data.pkl", "wb") as stream:
+        pickle.dump(data, stream)
 
     for element in data:
         print("---\n", element["name"], "\n")
@@ -276,14 +279,15 @@ def test_write_dict_to_ertobs(expected_results, tmp_path, drogon_project):
     ertobs = wt.write_dict_to_ertobs(expected_results, obs_include)
 
 
-def test_main_run(drogon_project, tmp_path):
+def test_main_run(drogon_project, tmp_path, monkeypatch):
     correct_nr = 4
     tmp_drog = tmp_path / "drog"
     copytree(drogon_project, tmp_drog)
-    os.chdir(tmp_drog)
+    tmp_obs_dir = tmp_drog / "ert/input/observations"
+    monkeypatch.chdir(tmp_obs_dir)
     print(tmp_drog)
     genert_config_name = "genertobs_config.yml"
-    tmp_observations = tmp_drog / "ert/input/observations/genertobs_config"
+    tmp_observations = tmp_obs_dir / "genertobs_config"
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
 
     main.run(test_config)

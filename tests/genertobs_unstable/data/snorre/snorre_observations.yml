@@ -1,5 +1,5 @@
 - name: summary observations
-  type: timeseries
+  type: summary
   default_error: 10%
   observation: snorre_smry_observations.csv
 

@@ -131,7 +131,9 @@ def create_rft_ertobs_str(well_name: str, restart: int, obs_file: Path) -> str:
     )
 
 
-def create_rft_gendata_str(well_name: str, restart: int, outfolder_name: str) -> str:
+def create_rft_gendata_str(
+    well_name: str, restart: int, prefix, outfolder_name: str
+) -> str:
     """Create the string to write as gendata call
 
     Args:
@@ -142,9 +144,13 @@ def create_rft_gendata_str(well_name: str, restart: int, outfolder_name: str) ->
     Returns:
         str: the string
     """
+    if prefix != "pressure":
+        separator_string = f"_{prefix}_"
+    else:
+        separator_string = "_"
     return (
-        f"GEN_DATA {well_name}_SIM "
-        + f"RESULT_FILE:{outfolder_name}/RFT_{well_name}_%d "
+        f"GEN_DATA {well_name}_{prefix}_SIM "
+        + f"RESULT_FILE:{outfolder_name}/RFT{separator_string}{well_name}_%d "
         + f"REPORT_STEPS:{restart}\n"
     )
 
@@ -206,7 +212,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     well_date_list = []
     rft_ertobs_str = ""
     gen_data = GENDATA_EXPLAINER
-    prefix = make_rft_prefix(rft_dict)
+    prefix = make_rft_prefix(rft_dict["metadata"].subtype)
     outfolder_name = "gendata_rft"
     logger.debug("prefix is %s", prefix)
     for element in rft_dict["observations"]:
@@ -218,7 +224,9 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
         if obs_file is not None:
             well_date_list.append([well_name, date, restart])
             rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
-            gen_data += create_rft_gendata_str(well_name, restart, outfolder_name)
+            gen_data += create_rft_gendata_str(
+                well_name, restart, prefix, outfolder_name
+            )
 
     well_date_frame = pd.DataFrame(
         well_date_list, columns=["well_name", "date", "restart"]
@@ -244,7 +252,7 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     return rft_ertobs_str
 
 
-def make_rft_prefix(indict: dict) -> str:
+def make_rft_prefix(rft_type) -> str:
     """Derive prefix for rft data from dict with metadata
 
     Args:
@@ -254,16 +262,7 @@ def make_rft_prefix(indict: dict) -> str:
         str: the prefix derived
     """
     logger = logging.getLogger(__name__ + ".make_rft_prefix")
-    try:
-        metadata = indict["metadata"]
-    except KeyError:
-        logger.warning("No metadata for %s", indict["name"])
-        metadata = {}
-    columns = metadata.get("columns", {"value": {"unit": "bar"}})
-    rft_format = columns["value"]["unit"]
-    valid_sat_format = ["fraction", "saturation"]
-    logger.debug("Rft format is : %s", rft_format)
-    return "saturation_" if rft_format in valid_sat_format else "pressure_"
+    return rft_type.name.lower()
 
 
 def write_well_rft_files(
@@ -309,6 +308,8 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     """
     logger = logging.getLogger(__name__ + ".write_dict_to_ertobs")
     logger.debug("%s observations to write", len(obs_list))
+    logger.debug(obs_list)
+
     if parent.exists():
         logger.warning("%s exists, deleting and overwriting contents", str(parent))
         rmtree(parent)
@@ -320,10 +321,10 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
         logger.debug(obs)
         content = obs["content"]
         obs_str += f"--\n--{obs['name']}\n"
-        if content == "summary":
+        if content == ObservationType.SUMMARY:
             obs_str += write_timeseries_ertobs(obs["observations"])
 
-        elif content == "rft":
+        elif content == ObservationType.RFT:
             obs_str += write_rft_ertobs(obs, parent)
         else:
             logger.warning(
