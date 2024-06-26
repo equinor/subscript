@@ -11,6 +11,7 @@ from typing import Optional
 import pandas as pd
 
 from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
+from subscript.genertobs_unstable._datatypes import ObservationType
 
 GENDATA_RFT_EXPLAINER = """-------------------------
 -- GENDATA_RFT  -- Create files with simulated rft pressure
