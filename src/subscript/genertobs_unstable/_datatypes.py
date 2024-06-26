@@ -268,7 +268,8 @@ class RftConfigElement(ConfigElement):
 
     plugin_arguments: PluginArguments = Field(default=None)
     metadata: ElementMetaData = Field(
-        default={"pressure": {"unit:bar"}}, description="Metadata describing the type"
+        default={"subtype": RftType.PRESSURE, "columns": {"pressure": {"unit:bar"}}},
+        description="Metadata describing the type",
     )
 
     alias_file: str = Field(default=None, description="Name of file with aliases")
