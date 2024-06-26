@@ -392,9 +392,9 @@ def extract_from_row(
     # or maybe contained, but add key name or summat as idenfier
     # Are there exceptions where it should not be list?
     logger = logging.getLogger(__name__ + ".extract_from_row")
-    input_file = parent_folder / row["observation"]
+    input_file = parent_folder / row.observation
     logger.debug("File reference in row %s", input_file)
-    content = row["type"]
+    content = row.type
     obs_frame = read_obs_frame(input_file, content, alias_file)
 
     if not active:
@@ -408,9 +408,7 @@ def extract_from_row(
 
     logger.info("Results after reading observations as dataframe:\n%s\n", obs_frame)
 
-    add_or_modify_error(
-        obs_frame, row["default_error"], row.get("min_error"), row.get("max_error")
-    )
+    add_or_modify_error(obs_frame, row.default_error, row.min_error, row.max_error)
     logger.debug("\nThese are the observation results:\n %s", obs_frame)
 
     converted = convert_obs_df_to_list(obs_frame, content)

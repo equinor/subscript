@@ -81,26 +81,26 @@ def generate_data_from_config(config: ObservationsConfig, parent: Path) -> list:
     logger.debug("Here is config to parse %s", config)
     data = []
     for config_element in config:
-        logger.info("Parsing element %s", config_element["name"])
+        logger.info("Parsing element %s", config_element.name)
         # TODO: why does not data_element = config_element.copy() work
         data_element = {
-            "name": config_element["name"],
-            "content": config_element["type"],
+            "name": config_element.name,
+            "content": config_element.type,
         }
         try:
-            data_element["metadata"] = config_element["metadata"]
+            data_element["metadata"] = config_element.metadata
         except KeyError:
             logger.debug("No metadata for %s", data_element["name"])
         try:
-            data_element["plugin_arguments"] = config_element["plugin_arguments"]
+            data_element["plugin_arguments"] = config_element.plugin_arguments
         except KeyError:
             logger.debug("No plugin arguments for %s", data_element["name"])
 
-        active = config_element.get("active", True)
+        active = config_element.active
         if not active:
             warn("User has set element %s to inactive", config_element["name"])
 
-        alias_file = config_element.get("alias_file", False)
+        alias_file = config_element.alias_file
         obs = extract_from_row(config_element, parent, active, alias_file)
         data_element["observations"] = obs
 
