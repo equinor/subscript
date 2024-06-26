@@ -20,6 +20,7 @@
   # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
   observation: "drogon_rft_input.ods"
   metadata:
+    subtype: pressure
     columns:
       measured_depth:
         unit: m
@@ -36,6 +37,7 @@
   # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
   observation: "drogon_rft_saturation.csv"
   metadata:
+    subtype: saturation_oil
     columns:
       measured_depth:
         unit: m

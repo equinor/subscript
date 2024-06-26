@@ -10,16 +10,16 @@ SNORRE_FOLDER = Path(__file__).parent / "data/snorre"
 
 def run_command(arguments):
     encoding = "utf-8"
-    process = Popen(
+    with Popen(
         arguments,
         stdout=PIPE,
         stderr=PIPE,
-    )
-    stdout, stderr = process.communicate()
+    ) as process:
+        stdout, stderr = process.communicate()
     if stdout:
-        print(stdout.decode(encoding))
+        print("stdout:", stdout.decode(encoding), sep="\n")
     if stderr:
-        print(stderr.decode(encoding))
+        print("stderr:", stderr.decode(encoding), sep="\n")
 
 
 def test_command_line(tmp_path):
@@ -32,7 +32,7 @@ def test_command_line(tmp_path):
     arguments = ["genertobs_unstable", genert_config]
     run_command(arguments)
     obs_out = sn_tmp / obs_name
-    assert obs_out.exists()
+    assert obs_out.exists(), f"{obs_out} does not exist"
     ert_obs_file = obs_out / "ert_observations.obs"
     obs_str = ert_obs_file.read_text()
     val_error_smry = re.findall(r".*VALUE=([^;]+).*ERROR=([^;]+).*;", obs_str)
@@ -47,14 +47,17 @@ def test_command_line(tmp_path):
 
     for name in (key_name, data_name):
 
-        assert not name.startswith("NO ")
+        assert not name.startswith("NO "), f"NO should've been removed in {name}"
 
-        assert " " not in name
+        assert " " not in name, f"Still spaces remaining in name |{name}|"
 
         name_parts = name.split("_")
 
-        assert len(name_parts) > 1
+        assert len(name_parts) > 1, f"No _ in name {name}"
 
-        assert name_parts[-1] in ["OBS", "SIM"]
+        assert name_parts[-1] in ["OBS", "SIM"], f"No OBS or SIM part in {name}"
 
-        assert len("_".join(name_parts[:-1])) <= 8
+        joined_parts = "_".join(name_parts[:-1])
+        assert (
+            len() <= 8
+        ), f"{joined_parts} should be less than 8 characters, but is {len(joined_parts)}"

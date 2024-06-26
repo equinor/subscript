@@ -6,8 +6,17 @@ from subscript.genertobs_unstable.parse_config import read_yaml_config
 from pydantic_core._pydantic_core import ValidationError
 
 
+def test_rft_type():
+
+    rft_type = dt.RftType
+    for rft_type_element in rft_type:
+
+        print(rft_type_element.name)
+        print(rft_type_element.value)
+
+
 def test_elementmetadata():
-    test_element = {"columns": {"md": {"unit": "m"}}}
+    test_element = {"subtype": "pressure", "columns": {"md": {"unit": "m"}}}
     dt.ElementMetaData.model_validate(test_element)
 
 

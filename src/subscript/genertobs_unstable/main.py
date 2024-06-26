@@ -43,7 +43,7 @@ def run(config_path: str):
     data = generate_data_from_config(config, config_path.parent)
     logger.debug("Data generated %s", data)
     write_dict_to_ertobs(data, export_folder)
-    print("Exported all ert obs results to folder %s", str(export_folder))
+    logger.info("Exported all ert obs results to folder %s", str(export_folder))
 
     return export_folder
 

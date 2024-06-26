@@ -89,19 +89,17 @@ def generate_data_from_config(config: ObservationsConfig, parent: Path) -> list:
         }
         try:
             data_element["metadata"] = config_element.metadata
-        except KeyError:
+        except AttributeError:
             logger.debug("No metadata for %s", data_element["name"])
         try:
             data_element["plugin_arguments"] = config_element.plugin_arguments
-        except KeyError:
+        except AttributeError:
             logger.debug("No plugin arguments for %s", data_element["name"])
 
-        active = config_element.active
-        if not active:
-            warn("User has set element %s to inactive", config_element["name"])
+        if not config_element.active:
+            warn("User has set element |%s| to inactive", config_element["name"])
 
-        alias_file = config_element.alias_file
-        obs = extract_from_row(config_element, parent, active, alias_file)
+        obs = extract_from_row(config_element, parent)
         data_element["observations"] = obs
 
         logger.debug("These are the observations:\n%s", obs)

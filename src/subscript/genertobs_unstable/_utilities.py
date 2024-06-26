@@ -5,7 +5,11 @@ from typing import List, Optional, Union
 from warnings import warn
 
 import pandas as pd
-from fmu.dataio.datastructure.meta.enums import ContentEnum
+from subscript.genertobs_unstable._datatypes import (
+    ObservationType,
+    RftConfigElement,
+    ConfigElement,
+)
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -74,6 +78,8 @@ def read_tabular_file(tabular_file_path: Union[str, Path]) -> pd.DataFrame:
     except UnicodeDecodeError:
         dataframe = pd.read_excel(tabular_file_path, dtype=str)
         read_info = "excel"
+    except FileNotFoundError as fnerr:
+        raise FileNotFoundError(f"|{tabular_file_path}| could not be found") from fnerr
     nr_cols = dataframe.shape[1]
     logger.debug("Nr of columns are %s", nr_cols)
     if nr_cols == 1:
@@ -248,7 +254,7 @@ def convert_summary_to_list(frame: pd.DataFrame) -> list:
     return output
 
 
-def convert_obs_df_to_list(frame: pd.DataFrame, content: str) -> list:
+def convert_obs_df_to_list(frame: pd.DataFrame, content: ObservationType) -> list:
     """Converts dataframe with observation to dictionary format
 
     Args:
@@ -260,9 +266,9 @@ def convert_obs_df_to_list(frame: pd.DataFrame, content: str) -> list:
     logger = logging.getLogger(__name__ + ".convert_obs_df_to_dict")
     logger.debug("Frame to extract from \n%s", frame)
     obs_list = []
-    if content == "summary":
+    if content == ObservationType.SUMMARY:
         obs_list = convert_summary_to_list(frame)
-    elif content == "rft":
+    elif content == ObservationType.RFT:
         obs_list = convert_rft_to_list(frame)
     logger.debug("\nFrame as list of dictionaries \n%s\n", obs_list)
     return obs_list
@@ -374,10 +380,8 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
 
 
 def extract_from_row(
-    row: dict,
+    row: Union[RftConfigElement, ConfigElement],
     parent_folder: Union[str, Path],
-    active: bool = True,
-    alias_file: str = "",
 ) -> List[pd.DataFrame]:
     """Extract results from row in config file
 
@@ -392,12 +396,13 @@ def extract_from_row(
     # or maybe contained, but add key name or summat as idenfier
     # Are there exceptions where it should not be list?
     logger = logging.getLogger(__name__ + ".extract_from_row")
+    logging.debug("Extracting from this element %s", row)
     input_file = parent_folder / row.observation
     logger.debug("File reference in row %s", input_file)
     content = row.type
-    obs_frame = read_obs_frame(input_file, content, alias_file)
+    obs_frame = read_obs_frame(input_file, content, row.alias_file)
 
-    if not active:
+    if not row.active:
         obs_frame["active"] = "no"
 
     else:
@@ -447,9 +452,7 @@ def replace_names(name_series: pd.Series, replacer: pd.DataFrame) -> pd.Series:
     return replaced_names
 
 
-def read_obs_frame(
-    input_file: Path, content: str, alias_file: str = ""
-) -> pd.DataFrame:
+def read_obs_frame(input_file: Path, content: str, alias_file) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
@@ -461,7 +464,8 @@ def read_obs_frame(
         tuple: the actual observation data, the summary of observations for csv output
     """
     logger = logging.getLogger(__name__ + ".read_obs_frame")
-    if content not in ["summary", "rft"]:
+    logger.debug("Trying to read from %s", input_file)
+    if content not in [ObservationType.SUMMARY, ObservationType.RFT]:
         label = input_file.stem
         obs_frame = extract_general(read_tabular_file(input_file), label)
     else:
@@ -474,7 +478,8 @@ def read_obs_frame(
 
     try:
         obs_frame["well_name"] = obs_frame["well_name"].map(check_and_fix_str)
-        if alias_file:
+        if alias_file is not None:
+            logger.debug("Reading alias file |%s|", alias_file)
             aliases = read_tabular_file(alias_file)
             logger.debug("Will replace names with aliases %s", aliases)
             obs_frame["well_name"] = replace_names(obs_frame["well_name"], aliases)
