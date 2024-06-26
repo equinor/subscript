@@ -137,9 +137,9 @@ class RftType(Enum):
     """
 
     PRESSURE = "pressure"
-    SW = "saturation_water"
-    SO = "saturation_oil"
-    SG = "saturation_gas"
+    SWAT = "saturation_water"
+    SOIL = "saturation_oil"
+    SGAS = "saturation_gas"
 
 
 class ElementMetaData(BaseModel):
