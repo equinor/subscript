@@ -211,8 +211,8 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     logger.debug("%s observations to write", rft_dict)
     well_date_list = []
     rft_ertobs_str = ""
-    gen_data = GENDATA_EXPLAINER
-    prefix = make_rft_prefix(rft_dict["metadata"].subtype)
+    gen_data = ""
+    prefix = rft_dict["metadata"].subtype.name
     outfolder_name = "gendata_rft"
     logger.debug("prefix is %s", prefix)
     for element in rft_dict["observations"]:
@@ -227,6 +227,9 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
             gen_data += create_rft_gendata_str(
                 well_name, restart, prefix, outfolder_name
             )
+            logger.debug(
+                "\n---------------Before \n%s--------------------\n\n", gen_data
+            )
 
     well_date_frame = pd.DataFrame(
         well_date_list, columns=["well_name", "date", "restart"]
@@ -235,7 +238,6 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
     well_date_file = rft_folder / "well_date_restart.txt"
     write_csv_with_comment(well_date_file, well_date_frame)
     logger.debug("Written %s", str(well_date_file))
-    gen_data_file = parent_folder / "gen_data_rft_wells.ert"
     gen_data = (
         write_genrft_str(
             rft_folder,
@@ -245,24 +247,9 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
         )
         + gen_data
     )
+    logger.debug("\n---------------After \n%s--------------------\n\n", gen_data)
 
-    gen_data_file.write_text(add_time_stamp(gen_data))
-    logger.debug("Written %s", str(gen_data_file))
-
-    return rft_ertobs_str
-
-
-def make_rft_prefix(rft_type) -> str:
-    """Derive prefix for rft data from dict with metadata
-
-    Args:
-        indict (dict): the metadata to use
-
-    Returns:
-        str: the prefix derived
-    """
-    logger = logging.getLogger(__name__ + ".make_rft_prefix")
-    return rft_type.name.lower()
+    return rft_ertobs_str, gen_data
 
 
 def write_well_rft_files(
@@ -283,7 +270,7 @@ def write_well_rft_files(
     if well_frame.empty:
         return None
     fixed_file_name = check_and_fix_str(element["well_name"])
-    obs_file = (parent_folder / f"{prefix}{fixed_file_name}.obs").resolve()
+    obs_file = (parent_folder / f"{prefix.lower()}_{fixed_file_name}.obs").resolve()
     position_file = parent_folder / f"{fixed_file_name}.txt"
     logger.debug("Writing %s and %s", obs_file, position_file)
     obs_frame = well_frame[["value", "error"]]
@@ -315,6 +302,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
         rmtree(parent)
     parent.mkdir()
     obs_str = add_time_stamp()
+    gen_data = GENDATA_EXPLAINER
     readme_file = parent / "readme.txt"
     readme_file.write_text(add_time_stamp(record_type="d"))
     for obs in obs_list:
@@ -325,12 +313,19 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
             obs_str += write_timeseries_ertobs(obs["observations"])
 
         elif content == ObservationType.RFT:
-            obs_str += write_rft_ertobs(obs, parent)
+            gen_data_element, rft_str_element = write_rft_ertobs(obs, parent)
+            obs_str += rft_str_element
+            gen_data += gen_data_element
+            logger.debug("No gen_data is %s characters (%s)", len(gen_data), gen_data)
         else:
             logger.warning(
                 "Currently not supporting other formats than timeseries and rft"
             )
     ertobs_file = parent / "ert_observations.obs"
     ertobs_file.write_text(obs_str)
+    if gen_data:
+        gen_data_file = parent / "gen_data_rft_wells.ert"
+        gen_data_file.write_text(add_time_stamp(gen_data))
+        logger.debug("Written %s", str(gen_data_file))
 
     return obs_str
