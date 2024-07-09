@@ -48,7 +48,7 @@ EPILOGUE = """
   input:
         - [2020-07-01, 2018-01-01] # Difference date to model. Must exist in UNRST file.
 
-  stations: # Path to files with station coordinates to model for each difference vintage
+  stations: # Path to files with station coordinates to model for each difference years
     grav:
       "2020_2018": ./station_coordinates.csv
     subs:
@@ -254,9 +254,7 @@ def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
 
 def export_grav_points_ert(act_stations, diff_date, out_folder) -> None:
     """Export for ert for each diffdate, only total, not per phase"""
-    logger.info(
-        f"Exporting simulated gravity values to {out_folder} for use by ert"
-    )
+    logger.info(f"Exporting simulated gravity values to {out_folder} for use by ert")
     part = act_stations["dgsim_total_" + diff_date[0] + "_" + diff_date[1]]
     outfile = (
         PREFIX_GENDATA
@@ -273,9 +271,7 @@ def export_grav_points_ert(act_stations, diff_date, out_folder) -> None:
 
 def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
     """Write points in xyz format, roxar.FileFormat.RMS_POINTS"""
-    logger.info(
-        f"Exporting simulated subsidence values to {out_folder} as xyz points"
-    )
+    logger.info(f"Exporting simulated subsidence values to {out_folder} as xyz points")
     outfile = (
         PREFIX_POINTS
         + "--"
@@ -297,9 +293,7 @@ def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
 
 def export_subs_points_ert(act_stations, diff_date, out_folder) -> None:
     """Export for ert for each diffdate"""
-    logger.info(
-        f"Exporting simulated subsidence values to {out_folder} for use by ert"
-    )
+    logger.info(f"Exporting simulated subsidence values to {out_folder} for use by ert")
     part = act_stations["subsidence_" + diff_date[0] + "_" + diff_date[1]]
     outfile = (
         PREFIX_GENDATA
