@@ -106,12 +106,8 @@ def fixture_res_data(tmp_path):
         (
             {
                 "stations": {
-                    "grav": {
-                        "2020_2018": "./station_coordinates.csv"
-                    },
-                    "subs": {
-                        "2020_2018": "./station_coordinates.csv"
-                    },
+                    "grav": {"2020_2018": "./station_coordinates.csv"},
+                    "subs": {"2020_2018": "./station_coordinates.csv"},
                 }
             },
             None,
@@ -119,12 +115,8 @@ def fixture_res_data(tmp_path):
         (
             {
                 "stations": {
-                    "grav": {
-                        "2020_2018": "./station_coordinates.csv"
-                    },
-                    "subs": {
-                        "2020_2018": "./wrong_file.csv"
-                    },
+                    "grav": {"2020_2018": "./station_coordinates.csv"},
+                    "subs": {"2020_2018": "./wrong_file.csv"},
                 }
             },
             "Path does not point to a file",
@@ -138,20 +130,16 @@ def test_config_errors(dictupdates, expected_error):
     cfg = {
         "input": {
             "diffdates": [["2020-07-01", "2018-01-01"]],
-            },
+        },
         "stations": {
-            "grav": {
-                "2020_2018": "./station_coordinates.csv"
-                },
-            "subs": {
-                "2020_2018": "./station_coordinates.csv"
-                },
-            },
+            "grav": {"2020_2018": "./station_coordinates.csv"},
+            "subs": {"2020_2018": "./station_coordinates.csv"},
+        },
         "calculations": {
             "poisson_ratio": 0.45,
             "phases": ["gas", "oil", "water", "total"],
-            }
-        }
+        },
+    }
 
     cfg.update(dictupdates)
 

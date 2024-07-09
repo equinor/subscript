@@ -24,9 +24,9 @@ logger = subscript.getLogger(__name__)
 DUMMY_YOUNGS = 10
 
 PREFIX_POINTS = "all"  # calculation is cumulative over all zones
-EXTENSION_POINTS = ".txt" # extension for points in roxar points format
+EXTENSION_POINTS = ".txt"  # extension for points in roxar points format
 PREFIX_GENDATA = ""
-EXTENSION_GENDATA = "_1.txt" # extension for points to Ert GENDATA
+EXTENSION_GENDATA = "_1.txt"  # extension for points to Ert GENDATA
 
 DESCRIPTION = """
 Modelling gravity change and subsidence based on flow simulation
@@ -48,7 +48,7 @@ EPILOGUE = """
   input:
         - [2020-07-01, 2018-01-01] # Difference date to model. Must exist in UNRST file.
 
-  stations: # Path to files with station coordinates to model
+  stations: # Path to files with station coordinates to model for each difference vintage
     grav:
       "2020_2018": ./station_coordinates.csv
     subs:
@@ -101,12 +101,15 @@ relative paths in the yml config.
 The directory to export point files to must exist.
 """  # noqa
 
+
 class GravPointsInput(BaseModel):
     diffdates: List[Tuple[date, date]]
+
 
 class GravPointsStations(BaseModel):
     grav: Dict[str, FilePath]
     subs: Dict[str, FilePath]
+
 
 class GravPointsCalc(BaseModel):
     poisson_ratio: Annotated[float, Field(strict=True, ge=0, le=0.5)]
@@ -119,6 +122,7 @@ class GravPointsCalc(BaseModel):
         for item in phases:
             assert item in allowed_phases, f"allowed phases are {str(allowed_phases)}"
         return phases
+
 
 class GravPointsConfig(BaseModel):
     input: GravPointsInput
@@ -215,13 +219,8 @@ def prepend_root_path_to_relative_files(
         return cfg
 
     for key in ["grav", "subs"]:
-        if (
-            key in stations
-            and isinstance(stations[key], dict)
-        ):
+        if key in stations and isinstance(stations[key], dict):
             for item in stations[key]:
-                #diffyear = next(iter(item))
-                print(stations[key][item])
                 if os.path.isabs(stations[key][item]):
                     continue
 
@@ -229,43 +228,39 @@ def prepend_root_path_to_relative_files(
 
     return cfg
 
-def export_grav_points_xyz(act_stations, phase, diff_date, out_folder
-) -> None:
+
+def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
     """Write points in xyz format, roxar.FileFormat.RMS_POINTS"""
-    logger.info(
-        f"Exporting simulated gravity values to "
-        f"{out_folder} as xyz points"
-    )
+    logger.info(f"Exporting simulated gravity values to {out_folder} as xyz points")
     outfile = (
         PREFIX_POINTS
-        +"--"
-        +"delta_gravity_"
+        + "--"
+        + "delta_gravity_"
         + phase
-        +"--"
-        +diff_date[0]
-        +"_"
-        +diff_date[1]
-        +EXTENSION_POINTS
+        + "--"
+        + diff_date[0]
+        + "_"
+        + diff_date[1]
+        + EXTENSION_POINTS
     )
 
-    with open(os.path.join(out_folder, outfile),"w") as file:
-        for index,row in act_stations.iterrows():
+    with open(os.path.join(out_folder, outfile), "w") as file:
+        for index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "
                 f"{row['dgsim_'+phase+'_'+diff_date[0]+'_'+diff_date[1]]:.3f} \n"
             )
 
-def export_grav_points_ert(act_stations, diff_date, out_folder
-) -> None:
+
+def export_grav_points_ert(act_stations, diff_date, out_folder) -> None:
     """Export for ert for each diffdate, only total, not per phase"""
     logger.info(
-        f"Exporting simulated gravity values to "
-        f"{out_folder} for use by ert"
+        f"Exporting simulated gravity values to {out_folder} for use by ert"
     )
-    part=act_stations["dgsim_total_"+diff_date[0]+"_"+diff_date[1]]
+    part = act_stations["dgsim_total_" + diff_date[0] + "_" + diff_date[1]]
     outfile = (
         PREFIX_GENDATA
-        +"gravity_"
+        + "gravity_"
         + diff_date[0]
         + "_"
         + diff_date[1]
@@ -275,42 +270,40 @@ def export_grav_points_ert(act_stations, diff_date, out_folder
     output_path = Path(out_folder) / outfile
     part.to_csv(output_path, header=None, index=None)
 
-def export_subs_points_xyz(act_stations, diff_date, out_folder
-) -> None:
+
+def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
     """Write points in xyz format, roxar.FileFormat.RMS_POINTS"""
     logger.info(
-        f"Exporting simulated subsidence values to "
-        f"{out_folder} as xyz points"
+        f"Exporting simulated subsidence values to {out_folder} as xyz points"
     )
     outfile = (
         PREFIX_POINTS
-        +"--"
-        +"subsidence"
-        +"--"
-        +diff_date[0]
-        +"_"
-        +diff_date[1]
-        +EXTENSION_POINTS
+        + "--"
+        + "subsidence"
+        + "--"
+        + diff_date[0]
+        + "_"
+        + diff_date[1]
+        + EXTENSION_POINTS
     )
 
-    with open(os.path.join(out_folder, outfile),"w") as file:
-        for index,row in act_stations.iterrows():
+    with open(os.path.join(out_folder, outfile), "w") as file:
+        for index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "
                 f"{row['subsidence_'+diff_date[0]+'_'+diff_date[1]]:.3f}\n"
             )
 
-def export_subs_points_ert(act_stations, diff_date, out_folder
-) -> None:
+
+def export_subs_points_ert(act_stations, diff_date, out_folder) -> None:
     """Export for ert for each diffdate"""
     logger.info(
-        f"Exporting simulated subsidence values to "
-        f"{out_folder} for use by ert"
+        f"Exporting simulated subsidence values to {out_folder} for use by ert"
     )
-    part=act_stations["subsidence_"+diff_date[0]+"_"+diff_date[1]]
+    part = act_stations["subsidence_" + diff_date[0] + "_" + diff_date[1]]
     outfile = (
         PREFIX_GENDATA
-        +"subsidence_"
+        + "subsidence_"
         + diff_date[0]
         + "_"
         + diff_date[1]
@@ -319,7 +312,6 @@ def export_subs_points_ert(act_stations, diff_date, out_folder
 
     output_path = Path(out_folder) / outfile
     part.to_csv(output_path, header=None, index=None)
-
 
 
 def main_gravpoints(
@@ -346,7 +338,6 @@ def main_gravpoints(
     station_files = cfg["stations"]
     phases = cfg["calculations"]["phases"]
     poisson_ratio = cfg["calculations"]["poisson_ratio"]
-
 
     if isinstance(unrst_file, str):
         restart_file = unrst_file[:-6] + ".UNRST"
@@ -394,7 +385,7 @@ def main_gravpoints(
 
     # Gravity
     for diffdate in diffdates:
-        diff_year = str(diffdate[0][0:4])+"_"+str(diffdate[1][0:4])
+        diff_year = str(diffdate[0][0:4]) + "_" + str(diffdate[1][0:4])
         active_stations = pd.read_csv(station_files["grav"][diff_year], sep=";")
 
         for phase in phases:
@@ -404,16 +395,17 @@ def main_gravpoints(
             )
 
             gravity_values = [
-                grav.eval(diffdate[1], diffdate[0], (x, y, z),
-                          phase_mask=phase_code[phase])
+                grav.eval(
+                    diffdate[1], diffdate[0], (x, y, z), phase_mask=phase_code[phase]
+                )
                 for x, y, z in zip(
                     active_stations["utmx"],
                     active_stations["utmy"],
-                    active_stations["depth"]
-                    )
-                ]
+                    active_stations["depth"],
+                )
+            ]
             active_stations[
-                "dgsim_"+phase +"_"+diffdate[0]+"_"+diffdate[1]
+                "dgsim_" + phase + "_" + diffdate[0] + "_" + diffdate[1]
             ] = gravity_values
 
             # Export for each diffdate, all phases specified in config
@@ -422,30 +414,30 @@ def main_gravpoints(
         # Export to ert for each diffdate, only total, not per phase
         export_grav_points_ert(active_stations, diffdate, output_folder)
 
-
     # Subsidence
 
     for diffdate in diffdates:
-        diff_year = str(diffdate[0][0:4])+"_"+str(diffdate[1][0:4])
+        diff_year = str(diffdate[0][0:4]) + "_" + str(diffdate[1][0:4])
         active_stations = pd.read_csv(station_files["subs"][diff_year], sep=";")
 
         subs_values = [
             subsidence.eval_geertsma_rporv(
-                diffdate[1], diffdate[0],
-                (x, y, z), DUMMY_YOUNGS,
-                poisson_ratio, z)
-            for x, y, z in zip(active_stations["utmx"], active_stations["utmy"],
-                               active_stations["depth"])
-           ]
+                diffdate[1], diffdate[0], (x, y, z), DUMMY_YOUNGS, poisson_ratio, z
+            )
+            for x, y, z in zip(
+                active_stations["utmx"],
+                active_stations["utmy"],
+                active_stations["depth"],
+            )
+        ]
 
-        active_stations["subsidence"+"_"+diffdate[0]+"_"+diffdate[1]] = [
-            i*100 for i in subs_values] #from m to cm
+        active_stations["subsidence" + "_" + diffdate[0] + "_" + diffdate[1]] = [
+            i * 100 for i in subs_values
+        ]  # from m to cm
 
         export_subs_points_xyz(active_stations, diffdate, output_folder)
 
         export_subs_points_ert(active_stations, diffdate, output_folder)
-
-
 
     logger.info(
         f"Done; All gravity and subsidence points written to folder: "
