@@ -8,14 +8,25 @@ use Cwd;
 use IO::File;
 
 # ------------------------------------------------------
+my $hostname           = `hostname`;
+my $_balance     = `date +%s`;
 
+$_balance = $_balance % 2;
+my $lisens = "7321\@eclipse1-lic-no.statoil.no:7321\@eclipse2-lic-no.statoil.no";
+if ($_balance == 1) {
+    $lisens = "7321\@eclipse2-lic-no.statoil.no:7321\@eclipse1-lic-no.statoil.no";
+}
+
+if (index($hostname, "stjohn-") == 0) {
+    $lisens = "7321\@stjohn-grid01.stjohn.statoil.no:$lisens";
+} elsif (index($hostname, "rio-") == 0) {
+    $lisens = "7321\@rio-grid01.rio.statoil.no:$lisens";
+}
 
 my $ecldir       = "/prog/res/ecl/grid";
 my $eclolddir    = "/prog/ecl/grid";
 my $ecltestdir   = "/prog/res/ecl/testgrid";
 my $mpiintelroot = "/prog/res/ecl/grid/tools/linux_x86_64/intel/mpi/2018.1.163";
-
-my $lisens = "7321\@eclipse-lic-no.statoil.no";
 
 my $extconfig   = "macros/CONFIG.ECL";
 my $extmpirun64 = "tools/linux_x86_64/mpich_x86_64/bin/mpirun";
@@ -73,7 +84,7 @@ my $workdir = cwd;
 my $scriptname = "runeclipse";
 
 my $usage =
-  "usage $scriptname  [-p program] [-q que_name] [-v version] [-x]  [-i] root";
+    "usage $scriptname  [-p program] [-q que_name] [-v version] [-x]  [-i] root";
 
 #
 # Get command line options:
@@ -400,7 +411,7 @@ sub build_batch {
     if ($testversion) {
         print BATCHFIL "echo \"*** RUNNING TEST VERSION $version ****\"\n";
     }
-    print BATCHFIL "export LM_LICENSE_FILE=$lisens\n";
+    print BATCHFIL "export SLBSLS_LICENSE_FILE=$lisens\n";
     print BATCHFIL "export F_UFMTENDIAN=big\n";
     print BATCHFIL "export ARCH=\`uname -m\`\n";
     print BATCHFIL "cd $workdir\n";
@@ -437,7 +448,7 @@ sub build_parallel_batch {
       or die "$scriptname: Cannot create batch file $batchfilename\n";
 
     print BATCHFIL "#!/bin/sh \n";
-    print BATCHFIL "export LM_LICENSE_FILE=$lisens\n";
+    print BATCHFIL "export SLBSLS_LICENSE_FILE=$lisens\n";
 
     #    print BATCHFIL
     #        "export FLEXLM_NO_CKOUT_INSTALL_LIC=1\n" ;
