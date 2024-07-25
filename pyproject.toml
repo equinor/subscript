@@ -38,7 +38,7 @@ dynamic = ["version"]
 dependencies = [
     "resdata",
     "res2df",
-    "ert>=2.38.0b7",
+    "ert",
     "fmu-tools",
     "matplotlib",
     "numpy<2",
