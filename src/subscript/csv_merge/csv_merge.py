@@ -7,9 +7,9 @@ import re
 import sys
 from typing import Dict, List, Optional
 
+import ert
 import pandas as pd
 from ert.config import ErtScript
-from ert.shared.plugins.plugin_manager import hook_implementation  # type: ignore
 
 from subscript import __version__, getLogger
 from subscript.eclcompress.eclcompress import glob_patterns
@@ -317,7 +317,7 @@ def csv_merge_main(
     logger.info(" - Finished writing to %s", output)
 
 
-@hook_implementation
+@ert.plugin(name="subscript")
 def legacy_ertscript_workflow(config):
     """Hook the CsvMerge class into ERT with the name CSV_MERGE,
     and inject documentation"""

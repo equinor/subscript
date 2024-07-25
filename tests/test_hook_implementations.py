@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 import rstcheck_core.checker
 import subscript.hook_implementations.jobs
-from ert.shared.plugins.plugin_manager import ErtPluginManager
+from ert.plugins.plugin_manager import ErtPluginManager
 
 # pylint: disable=redefined-outer-name
 

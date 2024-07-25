@@ -3,8 +3,7 @@ import os
 import pkgutil
 from typing import Any, Optional
 
-from ert.shared.plugins.plugin_manager import hook_implementation
-from ert.shared.plugins.plugin_response import plugin_response
+import ert
 
 # pylint: disable=no-value-for-parameter
 
@@ -26,15 +25,13 @@ def _get_jobs_from_directory(directory):
     return {os.path.basename(path): path for path in all_files}
 
 
-@hook_implementation
-@plugin_response(plugin_name="subscript")
+@ert.plugin(name="subscript")
 def installable_jobs():
     """Get the jobs/forward models exposed by subscript"""
     return _get_jobs_from_directory("config_jobs")
 
 
-@hook_implementation
-@plugin_response(plugin_name="subscript")
+@ert.plugin(name="subscript")
 def installable_workflow_jobs():
     """Get the workflow jobs exposed by subscript"""
     return {}
@@ -52,8 +49,7 @@ def _get_module_variable_if_exists(
     return getattr(script_module, variable_name, default)
 
 
-@hook_implementation
-@plugin_response(plugin_name="subscript")
+@ert.plugin(name="subscript")
 def job_documentation(job_name: str) -> Optional[dict]:
     """Build documentation for a specific job.
 

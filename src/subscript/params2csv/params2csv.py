@@ -12,9 +12,9 @@ import shutil
 from glob import glob
 from pathlib import Path
 
+import ert
 import pandas as pd
 from ert.config import ErtScript
-from ert.shared.plugins.plugin_manager import hook_implementation  # type: ignore
 
 from subscript import __version__, getLogger
 
@@ -39,19 +39,19 @@ EXAMPLES = """
 .. code-block:: console
 
   FORWARD_MODEL PARAMS2CSV(<PARAMETERFILES>=parameters.txt, <OUTPUT>=parameters.csv)
- 
-This forward model will convert all keys in `parameters.txt` to columns in 
-`parameters.csv`. 
 
-In addition, it will add a column `filename` which list the source parameters.txt file. 
+This forward model will convert all keys in `parameters.txt` to columns in
+`parameters.csv`.
+
+In addition, it will add a column `filename` which list the source parameters.txt file.
 This column will be useful when <PARAMETERFILES> contains wildcards.
 
 The `filename` column can be renamed by adding an argument <FILENAMECOLUMN> to the FORWARD_MODEL.
-    
+
 .. code-block:: console
 
   FORWARD_MODEL PARAMS2CSV(<PARAMETERFILES>=parameters.txt, <OUTPUT>=parameters.csv,<FILENAMECOLUMN>=source_file)
-  
+
 """  # noqa
 
 # The following string is used for the ERT workflow documentation, note
@@ -66,7 +66,7 @@ Add to your ERT config to have the workflow loaded upon launching::
 
   LOAD_WORKFLOW ../bin/workflows/wf_params2csv_iter0
 
-It is then possible to run the workflow either through ERT CLI or GUI. 
+It is then possible to run the workflow either through ERT CLI or GUI.
 
 Wildcards can be used to extract parameters from multiple iterations,
 this is done in the example below. Note also the use of ``HOOK_WORKFLOW`` to automatically
@@ -263,7 +263,7 @@ def main() -> None:
     params2csv_main(args)
 
 
-@hook_implementation
+@ert.plugin(name="subscript")
 def legacy_ertscript_workflow(config) -> None:
     """Hook the CsvStack class into ERT with the name PARAMS2CSV,
     and inject documentation"""
