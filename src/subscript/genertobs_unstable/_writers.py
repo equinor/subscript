@@ -301,6 +301,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
         logger.warning("%s exists, deleting and overwriting contents", str(parent))
         rmtree(parent)
     parent.mkdir()
+
     obs_str = add_time_stamp()
     gen_data = GENDATA_EXPLAINER
     readme_file = parent / "readme.txt"
@@ -313,7 +314,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
             obs_str += write_timeseries_ertobs(obs["observations"])
 
         elif content == ObservationType.RFT:
-            gen_data_element, rft_str_element = write_rft_ertobs(obs, parent)
+            rft_str_element, gen_data_element = write_rft_ertobs(obs, parent)
             obs_str += rft_str_element
             gen_data += gen_data_element
             logger.debug("No gen_data is %s characters (%s)", len(gen_data), gen_data)
