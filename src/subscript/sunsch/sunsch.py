@@ -15,8 +15,8 @@ from pathlib import Path
 from typing import Dict, List, Literal, Optional, Union
 
 import dateutil.parser
-from opm.tools.time_vector import TimeVector
 import yaml
+from opm.tools.time_vector import TimeVector
 from pydantic import BaseModel, FilePath
 
 from subscript import __version__, getLogger
