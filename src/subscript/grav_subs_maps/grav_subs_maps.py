@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import date
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import xtgeo
 import yaml
@@ -32,6 +32,8 @@ simulation output (EGRID, INIT and UNRST files).
 
 The script reads flow simulation results and a yaml configuration file specifying input
 and calculation parameters. Output is surfaces in irap binary format.
+For configuration of the yaml config file, see:
+https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_maps.html
 """
 
 EPILOGUE = """
@@ -70,12 +72,12 @@ The directory to export maps to must exist.
 """  # noqa
 
 
-class GravInput(BaseModel):
-    diffdates: List[List[date]]
+class GravMapsInput(BaseModel):
+    diffdates: List[Tuple[date, date]]
     seabed_map: FilePath
 
 
-class GravCalc(BaseModel):
+class GravMapsCalc(BaseModel):
     poisson_ratio: Annotated[float, Field(strict=True, ge=0, le=0.5)]
     coarsening: Optional[Annotated[int, Field(strict=True, ge=1)]] = None
     phases: List[str]
@@ -90,8 +92,8 @@ class GravCalc(BaseModel):
 
 
 class GravMapsConfig(BaseModel):
-    input: GravInput
-    calculations: GravCalc
+    input: GravMapsInput
+    calculations: GravMapsCalc
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -151,8 +153,6 @@ def main() -> None:
         sys.exit("No such file:" + args.configfile)
     config = yaml.safe_load(Path(args.configfile).read_text(encoding="utf8"))
 
-    # cfg = GravMapsConfig.model_validate(config).model_dump()
-
     if not Path(args.outputdir).exists():
         sys.exit("Output folder does not exist:" + args.outputdir)
     if not Path(args.UNRSTfile).exists():
@@ -173,10 +173,10 @@ def prepend_root_path_to_relative_files(
 
     Args:
         cfg: grav_subs_maps configuration dictionary
-        root_path: An relative or absolute path to be prepended
+        root_path: A relative or absolute path to be prepended
 
     Returns:
-        Modified configuration for interp_relperm
+        Modified configuration for grav_subs_maps
     """
     if (
         "input" in cfg
