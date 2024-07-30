@@ -230,6 +230,8 @@ class ConfigElement(BaseModel):
         "when default_error is in percent",
     )
 
+    alias_file: str = Field(default=None, description="Name of file with aliases")
+
     @field_validator("observation")
     @classmethod
     def validate_path_exists(cls, observation_path: str):
@@ -285,11 +287,9 @@ class RftConfigElement(ConfigElement):
 
     plugin_arguments: PluginArguments = Field(default=None)
     metadata: ElementMetaData = Field(
-        default={"subtype": RftType.PRESSURE, "columns": {"pressure": {"unit:bar"}}},
+        default=ElementMetaData(),
         description="Metadata describing the type",
     )
-
-    alias_file: str = Field(default=None, description="Name of file with aliases")
 
     # @field_validator("type")
     # @classmethod
@@ -317,7 +317,7 @@ class ObservationsConfig(RootModel):
         RootModel (Rootmodel): pydantic root model
     """
 
-    root: List[Union[RftConfigElement, RftConfigElement]] = Field(
+    root: List[Union[ConfigElement, RftConfigElement]] = Field(
         description="What type of observation",
     )
 

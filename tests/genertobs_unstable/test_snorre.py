@@ -4,6 +4,10 @@ from shutil import copytree
 
 from pathlib import Path
 from subprocess import Popen, PIPE
+from subscript.genertobs_unstable.parse_config import (
+    generate_data_from_config,
+    read_yaml_config,
+)
 
 SNORRE_FOLDER = Path(__file__).parent / "data/snorre"
 
@@ -22,11 +26,25 @@ def run_command(arguments):
         print("stderr:", stderr.decode(encoding), sep="\n")
 
 
-def test_command_line(tmp_path):
+def test_generate_data(tmp_path, monkeypatch):
     sn_tmp = tmp_path / "snorre"
     copytree(SNORRE_FOLDER, sn_tmp)
     obs_name = "snorre_observations"
-    os.chdir(sn_tmp)
+    monkeypatch.chdir(sn_tmp)
+
+    genert_config = sn_tmp / "snorre_observations.yml"
+
+    config = read_yaml_config(genert_config)
+    print("\n", config)
+    data = generate_data_from_config(config, sn_tmp)
+    print(data)
+
+
+def test_command_line(tmp_path, monkeypatch):
+    sn_tmp = tmp_path / "snorre"
+    copytree(SNORRE_FOLDER, sn_tmp)
+    obs_name = "snorre_observations"
+    monkeypatch.chdir(sn_tmp)
     genert_config = sn_tmp / "snorre_observations.yml"
 
     arguments = ["genertobs_unstable", genert_config]
@@ -59,5 +77,5 @@ def test_command_line(tmp_path):
 
         joined_parts = "_".join(name_parts[:-1])
         assert (
-            len() <= 8
+            len(joined_parts) <= 8
         ), f"{joined_parts} should be less than 8 characters, but is {len(joined_parts)}"
