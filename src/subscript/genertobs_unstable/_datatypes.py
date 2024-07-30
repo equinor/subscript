@@ -11,6 +11,7 @@ from pydantic import (
     ConfigDict,
     model_validator,
     field_validator,
+    computed_field,
 )
 import warnings
 
@@ -149,8 +150,24 @@ class ElementMetaData(BaseModel):
         BaseModel (BaseModel): pydantic BaseModel
     """
 
-    subtype: RftType
-    columns: Dict[str, Dict[str, str]]
+    subtype: RftType = Field(
+        default=RftType.PRESSURE,
+        description=f"Type of rft observation, can be any of {RftType.__members__}",
+    )
+
+    @computed_field
+    @property
+    def columns(self) -> Dict[str, Dict[str, str]]:
+        """Define columns to expect
+
+        Returns:
+            Dict[str, Dict[str, str]]: the expected column with units
+        """
+        if self.subtype == RftType.PRESSURE:
+            out_dict = {self.subtype: {"unit:bar"}}
+        else:
+            out_dict = {self.subtype: {"unit:fraction"}}
+        return out_dict
 
 
 class PluginArguments(RootModel):
