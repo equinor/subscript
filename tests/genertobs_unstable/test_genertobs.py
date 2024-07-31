@@ -265,7 +265,9 @@ def test_write_timeseries_ertobs(expected_results):
 
 
 def test_write_rft_ertobs(expected_results, tmp_path):
-    ertobs = wt.write_rft_ertobs(expected_results[2], tmp_path)
+    ertobs = wt.write_rft_ertobs(
+        expected_results[2], tmp_path / "rft/well_date_restart.txt", tmp_path
+    )
     print(ertobs)
 
 
