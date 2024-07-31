@@ -146,7 +146,7 @@ def create_rft_gendata_str(
     Returns:
         str: the string
     """
-    if prefix != "pressure":
+    if prefix != "PRESSURE":
         separator_string = f"_{prefix}_"
     else:
         separator_string = "_"
