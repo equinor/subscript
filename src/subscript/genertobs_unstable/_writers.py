@@ -197,7 +197,7 @@ def write_genrft_str(
     return string
 
 
-def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
+def write_rft_ertobs(rft_dict: dict, well_date_file, parent_folder: Path) -> str:
     """Write all rft files for rft dictionary, pluss info str
 
     Args:
@@ -235,18 +235,8 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
         well_date_list, columns=["well_name", "date", "restart"]
     )
 
-    well_date_file = rft_folder / "well_date_restart.txt"
     write_csv_with_comment(well_date_file, well_date_frame)
     logger.debug("Written %s", str(well_date_file))
-    gen_data = (
-        write_genrft_str(
-            rft_folder,
-            str(well_date_file),
-            rft_dict["plugin_arguments"]["zonemap"],
-            outfolder_name,
-        )
-        + gen_data
-    )
     logger.debug("\n---------------After \n%s--------------------\n\n", gen_data)
 
     return rft_ertobs_str, gen_data
@@ -301,7 +291,9 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
         logger.warning("%s exists, deleting and overwriting contents", str(parent))
         rmtree(parent)
     parent.mkdir()
-
+    well_date_file_name = parent / "rft/well_date_restart.txt"
+    gendata_rft_folder_name = "gendata_rft"
+    gendata_rft_str = ""
     obs_str = add_time_stamp()
     gen_data = GENDATA_EXPLAINER
     readme_file = parent / "readme.txt"
@@ -314,7 +306,16 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
             obs_str += write_timeseries_ertobs(obs["observations"])
 
         elif content == ObservationType.RFT:
-            rft_str_element, gen_data_element = write_rft_ertobs(obs, parent)
+            if gendata_rft_str == "":
+                gendata_rft_str = write_genrft_str(
+                    parent / "rft",
+                    well_date_file_name,
+                    obs["plugin_arguments"]["zonemap"],
+                    gendata_rft_folder_name,
+                )
+            rft_str_element, gen_data_element = write_rft_ertobs(
+                obs, well_date_file_name, parent
+            )
             obs_str += rft_str_element
             gen_data += gen_data_element
             logger.debug("No gen_data is %s characters (%s)", len(gen_data), gen_data)
@@ -325,6 +326,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     ertobs_file = parent / "ert_observations.obs"
     ertobs_file.write_text(obs_str)
     if gen_data:
+        gen_data = gendata_rft_str + gen_data
         gen_data_file = parent / "gen_data_rft_wells.ert"
         gen_data_file.write_text(add_time_stamp(gen_data))
         logger.debug("Written %s", str(gen_data_file))
