@@ -11,7 +11,7 @@ from typing import Optional
 import pandas as pd
 
 from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
-from subscript.genertobs_unstable._datatypes import ObservationType
+from subscript.genertobs_unstable._datatypes import ObservationType, RftConfigElement
 
 GENDATA_RFT_EXPLAINER = """-------------------------
 -- GENDATA_RFT  -- Create files with simulated rft pressure
@@ -110,35 +110,37 @@ def select_from_dict(keys: list, full_dict: dict):
     return {key: full_dict[key] for key in keys}
 
 
-def create_rft_ertobs_str(well_name: str, restart: int, obs_file: Path) -> str:
+def create_rft_ertobs_str(
+    element: RftConfigElement, prefix: str, obs_file: Path
+) -> str:
     """Create the rft ertobs string for specific well
 
     Args:
-        well_name (str): well name
-        restart (str): restart number
+        element (RftConfigElement): element with data
+        prefix (str): prefix to be included
         obs_file (str): name file with corresponding well observations
 
     Returns:
         str: the string
     """
     return (
-        f"GENERAL_OBSERVATION {well_name}_OBS "
+        f"GENERAL_OBSERVATION {element['well_name']}_{prefix}_OBS "
         + "{"
-        + f"DATA={well_name}_SIM ;"
-        + f" RESTART = {restart}; "
+        + f"DATA={element['well_name']}_{prefix}_SIM;"
+        + f" RESTART = {element['restart']}; "
         + f"OBS_FILE = {obs_file}"
         + ";};\n"
     )
 
 
 def create_rft_gendata_str(
-    well_name: str, restart: int, prefix, outfolder_name: str
+    element: RftConfigElement, prefix, outfolder_name: str
 ) -> str:
     """Create the string to write as gendata call
 
     Args:
-        well_name (str): well name
-        restart (str): restart number
+        element (RftConfigElement): element with data
+        prefix (str): prefix to be included
         outfolder_name (str): path to folder where results are stored
 
     Returns:
@@ -149,9 +151,9 @@ def create_rft_gendata_str(
     else:
         separator_string = "_"
     return (
-        f"GEN_DATA {well_name}_{prefix}_SIM "
-        + f"RESULT_FILE:{outfolder_name}/RFT{separator_string}{well_name}_%d "
-        + f"REPORT_STEPS:{restart}\n"
+        f"GEN_DATA {element['well_name']}_{prefix}_SIM "
+        + f"RESULT_FILE:{outfolder_name}/RFT{separator_string}{element['well_name']}_%d "
+        + f"REPORT_STEPS:{element['restart']}\n"
     )
 
 
@@ -222,11 +224,9 @@ def write_rft_ertobs(rft_dict: dict, parent_folder: Path) -> str:
         restart = element["restart"]
         obs_file = write_well_rft_files(rft_folder, prefix, element)
         if obs_file is not None:
-            well_date_list.append([well_name, date, restart])
-            rft_ertobs_str += create_rft_ertobs_str(well_name, restart, obs_file)
-            gen_data += create_rft_gendata_str(
-                well_name, restart, prefix, outfolder_name
-            )
+            well_date_list.append([element["well_name"], date, restart])
+            rft_ertobs_str += create_rft_ertobs_str(element, prefix, obs_file)
+            gen_data += create_rft_gendata_str(element, prefix, outfolder_name)
             logger.debug(
                 "\n---------------Before \n%s--------------------\n\n", gen_data
             )
