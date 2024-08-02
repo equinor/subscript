@@ -170,31 +170,17 @@ class ElementMetaData(BaseModel):
         return out_dict
 
 
-class PluginArguments(RootModel):
+class PluginArguments(BaseModel):
     """Plugin arguments for config element"""
 
-    root: Dict[str, str]
-
-    def __getitem__(self, item):
-        return self.root[item]
-
-    def keys(self):
-        """Fake .keys method
-
-        Returns:
-            dict.keys: the root dict.keys()
-        """
-        # TODO: check if this is the only way
-        return self.root.keys()
-
-    def items(self):
-        """Fake .items method
-
-        Returns:
-            dict.items: the root dict.items()
-        """
-        # TODO: check if this is the only way
-        return self.root.items()
+    # model_config = ConfigDict(extra="forbid")
+    zonemap: str = Field(
+        default="",
+        description="path to file with mapping between zone names and grid layers",
+    )
+    trajectories: str = Field(
+        default="", description="path to folder with trajectory files"
+    )
 
 
 class ConfigElement(BaseModel):
@@ -295,7 +281,7 @@ class RftConfigElement(ConfigElement):
         ConfigElement (pydantic model): base observation config element
     """
 
-    plugin_arguments: PluginArguments = Field(default=None)
+    plugin_arguments: PluginArguments  # = Field(default=None)
     metadata: ElementMetaData = Field(
         default=ElementMetaData(),
         description="Metadata describing the type",

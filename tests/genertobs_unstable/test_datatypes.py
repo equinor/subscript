@@ -24,9 +24,9 @@ def test_elementmetadata():
 
 
 def test_pluginarguments():
-    test_element = {"billig": "pai", "dudels": "loo"}
+    test_element = {"zonemap": "pai", "trajectories": "loo"}
     plugin = dt.PluginArguments.model_validate(test_element)
-    for key, value in plugin.items():
+    for key, value in plugin:
         print(key, value)
 
 
