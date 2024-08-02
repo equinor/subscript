@@ -278,14 +278,21 @@ class ConfigElement(BaseModel):
 
 
 class SummaryConfigElement(ConfigElement):
+    """ConfigElement for Summary data
+
+    Args:
+        ConfigElement (ConfigElement): base observation config element
+    """
+
     model_config = ConfigDict(extra="forbid")
 
 
 class RftConfigElement(ConfigElement):
-    """Config element with extras for rft
+    """Config element for Rft
+        contains some additional fields
 
     Args:
-        ConfigElement (pydantic model): observation config element
+        ConfigElement (pydantic model): base observation config element
     """
 
     plugin_arguments: PluginArguments = Field(default=None)
