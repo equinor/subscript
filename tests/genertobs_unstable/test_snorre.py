@@ -58,7 +58,7 @@ def test_command_line(tmp_path, monkeypatch):
     assert round(float(error), 2) == round(float(value) / 10, 2)
 
     rft_well_info = re.findall(
-        r"GENERAL_OBSERVATION\s+([^{]+)\s+{DATA=([^;]+)\s+;.*", obs_str
+        r"GENERAL_OBSERVATION\s+([^{]+)\s+{DATA=([^;]+).*", obs_str
     )
     print(rft_well_info)
     key_name, data_name = rft_well_info[0]
@@ -75,7 +75,7 @@ def test_command_line(tmp_path, monkeypatch):
 
         assert name_parts[-1] in ["OBS", "SIM"], f"No OBS or SIM part in {name}"
 
-        joined_parts = "_".join(name_parts[:-1])
+        joined_parts = "_".join(name_parts[:-2])
         assert (
             len(joined_parts) <= 8
         ), f"{joined_parts} should be less than 8 characters, but is {len(joined_parts)}"
