@@ -6,6 +6,9 @@ from subscript.genertobs_unstable.parse_config import read_yaml_config
 from pydantic_core._pydantic_core import ValidationError
 
 
+TEST_INPUT_DATA = Path(__file__).parent / "data/drogon/ert/input/observations"
+
+
 def test_rft_type():
 
     rft_type = dt.RftType

@@ -278,6 +278,10 @@ class ConfigElement(BaseModel):
         return self
 
 
+class SummaryConfigElement(ConfigElement):
+    model_config = ConfigDict(extra="forbid")
+
+
 class RftConfigElement(ConfigElement):
     """Config element with extras for rft
 
@@ -317,7 +321,7 @@ class ObservationsConfig(RootModel):
         RootModel (Rootmodel): pydantic root model
     """
 
-    root: List[Union[ConfigElement, RftConfigElement]] = Field(
+    root: List[Union[SummaryConfigElement, RftConfigElement]] = Field(
         description="What type of observation",
     )
 
