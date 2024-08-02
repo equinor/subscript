@@ -82,28 +82,10 @@ def generate_data_from_config(config: ObservationsConfig, parent: Path) -> list:
     data = []
     for config_element in config:
         logger.info("Parsing element %s", config_element.name)
-        # TODO: why does not data_element = config_element.copy() work
         data_element = {
-            "name": config_element.name,
-            "content": config_element.type,
+            "config": config_element,
+            "data": extract_from_row(config_element, parent),
         }
-        try:
-            data_element["metadata"] = config_element.metadata
-        except AttributeError:
-            logger.debug("No metadata for %s", data_element["name"])
-        try:
-            data_element["plugin_arguments"] = config_element.plugin_arguments
-        except AttributeError:
-            logger.debug("No plugin arguments for %s", data_element["name"])
-
-        if not config_element.active:
-            warn("User has set element |%s| to inactive", config_element["name"])
-
-        obs = extract_from_row(config_element, parent)
-        data_element["observations"] = obs
-
-        logger.debug("These are the observations:\n%s", obs)
-        logger.debug("These are the dict keys %s", data_element.keys())
         data.append(data_element)
 
     return data

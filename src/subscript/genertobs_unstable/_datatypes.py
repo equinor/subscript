@@ -200,7 +200,6 @@ class PluginArguments(RootModel):
 class ConfigElement(BaseModel):
     """Element in a config file"""
 
-    model_config = ConfigDict(extra="forbid")
     name: str = Field(min_length=5, description="Name of observation")
     type: ObservationType = Field(description="Type of observation")
     observation: str = Field(

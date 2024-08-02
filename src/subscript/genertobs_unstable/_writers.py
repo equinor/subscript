@@ -214,17 +214,16 @@ def write_rft_ertobs(rft_dict: dict, well_date_file, parent_folder: Path) -> str
     well_date_list = []
     rft_ertobs_str = ""
     gen_data = ""
-    prefix = rft_dict["metadata"].subtype.name
+    prefix = rft_dict["config"].metadata.subtype.name
     outfolder_name = "gendata_rft"
     logger.debug("prefix is %s", prefix)
-    for element in rft_dict["observations"]:
-        well_name = element["well_name"]
-        logger.debug(well_name)
-        date = element["date"]
-        restart = element["restart"]
+    for element in rft_dict["data"]:
+        logger.debug(element["well_name"])
         obs_file = write_well_rft_files(rft_folder, prefix, element)
         if obs_file is not None:
-            well_date_list.append([element["well_name"], date, restart])
+            well_date_list.append(
+                [element["well_name"], element["date"], element["restart"]]
+            )
             rft_ertobs_str += create_rft_ertobs_str(element, prefix, obs_file)
             gen_data += create_rft_gendata_str(element, prefix, outfolder_name)
             logger.debug(
@@ -300,17 +299,16 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     readme_file.write_text(add_time_stamp(record_type="d"))
     for obs in obs_list:
         logger.debug(obs)
-        content = obs["content"]
-        obs_str += f"--\n--{obs['name']}\n"
-        if content == ObservationType.SUMMARY:
-            obs_str += write_timeseries_ertobs(obs["observations"])
+        obs_str += f"--\n--{obs['config'].name}\n"
+        if obs["config"].type == ObservationType.SUMMARY:
+            obs_str += write_timeseries_ertobs(obs["data"])
 
-        elif content == ObservationType.RFT:
+        elif obs["config"].type == ObservationType.RFT:
             if gendata_rft_str == "":
                 gendata_rft_str = write_genrft_str(
                     parent / "rft",
                     well_date_file_name,
-                    obs["plugin_arguments"]["zonemap"],
+                    obs["config"].plugin_arguments["zonemap"],
                     gendata_rft_folder_name,
                 )
             rft_str_element, gen_data_element = write_rft_ertobs(

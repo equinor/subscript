@@ -223,11 +223,11 @@ def test_generate_data_from_config(
         pickle.dump(data, stream)
 
     for element in data:
-        print("---\n", element["name"], "\n")
+        print("---\n", element["config"].name, "\n")
         print(element)
-        # print("---\n", element["error"], "\n")
-        for obs in element["observations"]:
-            print(obs["data"])
+        # # print("---\n", element["error"], "\n")
+        # for obs in element["observations"]:
+        #     print(obs["data"])
 
     # assert_list_of_dicts(data)
     # print("-------------\n", data)
@@ -260,7 +260,7 @@ def test_convert_summary_to_list(summary_as_frame):
 
 
 def test_write_timeseries_ertobs(expected_results):
-    ertobs = wt.write_timeseries_ertobs(expected_results[0]["observations"])
+    ertobs = wt.write_timeseries_ertobs(expected_results[0]["data"])
     # print(ertobs)
 
 
