@@ -8,8 +8,8 @@ import pandas as pd
 import pickle
 import pytest
 from fmu.config.utilities import yaml_load
+from subscript.genertobs_unstable.parse_config import read_yaml_config
 
-# logging.basicConfig(level="DEBUG")
 LOGGER = logging.getLogger(__name__)
 
 
@@ -70,7 +70,7 @@ def _fix_yaml_config_file():
     )
     string_config = str(config_path)
     assert config_path.exists(), f"{string_config} does not exist"
-    return string_config
+    return config_path
 
 
 @pytest.fixture(scope="session", name="masterdata_config")
@@ -100,9 +100,11 @@ def _fix_sum_as_frame():
 
 
 @pytest.fixture(scope="session", name="observation_config")
-def _fix_config():
-    with open(Path(__file__).parent / "data/config.pkl", "rb") as stream:
-        config = pickle.load(stream)
+def _fix_config(yaml_config_file):
+    cwd = Path().cwd()
+    os.chdir(yaml_config_file.parent)
+    config = read_yaml_config(yaml_config_file)
+    os.chdir(cwd)
     return config
 
 

@@ -65,6 +65,7 @@ def test_rftconfigelement(observations_input):
         "name": "This is something other",
         "type": "rft",
         "observation": str(observations_input / "summary_gor.csv"),
+        "plugin_arguments": {},
     }
     valid_config = dt.RftConfigElement.model_validate(config_element)
     print(valid_config)

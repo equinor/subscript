@@ -156,17 +156,19 @@ def test_read_obs_frame(drogon_project, infile, content, nrlabels):
     "element_nr",
     range(3),
 )
-def test_extract_from_row(observation_config, drogon_project, element_nr):
+def test_extract_from_row(observation_config, drogon_project, element_nr, monkeypatch):
     """Test function extract_from_row
 
     Args:
         line_input (pd.Series): a row to test
         drogon_project (PosixPath): parent folder for files to be read
     """
-    # os.chdir(tmp_path)
+    parent_folder = drogon_project / "ert/input/observations"
+    monkeypatch.chdir(parent_folder)
+
     element_row = observation_config[element_nr]
 
-    obs = ut.extract_from_row(element_row, drogon_project / "ert/input/observations")
+    obs = ut.extract_from_row(element_row, parent_folder)
     print(obs)
     # if shape_obs == shape_tofmuobs:
     #     assert obs.equals(to_fmuobs), "dataframes have same shape but aren't equal"
@@ -218,9 +220,9 @@ def test_generate_data_from_config(
     data = conf.generate_data_from_config(
         observation_config, drogon_project / "ert/input/observations"
     )
-    # Activate if something in results change
-    with open(Path(__file__).parent / "data/pickled_data.pkl", "wb") as stream:
-        pickle.dump(data, stream)
+    # # # Activate if something in results change
+    # with open(Path(__file__).parent / "data/pickled_data.pkl", "wb") as stream:
+    #     pickle.dump(data, stream)
 
     for element in data:
         print("---\n", element["config"].name, "\n")
