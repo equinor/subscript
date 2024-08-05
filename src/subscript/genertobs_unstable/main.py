@@ -26,7 +26,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def run(config_path: str):
+def run(config_path: Path):
     """Generate data from config file
 
     Args:
