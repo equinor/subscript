@@ -5,11 +5,10 @@ from typing import List, Optional, Union
 from warnings import warn
 
 import pandas as pd
-from subscript.genertobs_unstable._datatypes import (
-    ObservationType,
-    RftConfigElement,
-    ConfigElement,
-)
+
+from subscript.genertobs_unstable._datatypes import (ConfigElement,
+                                                     ObservationType,
+                                                     RftConfigElement)
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:

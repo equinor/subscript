@@ -1,19 +1,13 @@
 """Pydantic models for genertobs"""
 
+import logging
+import warnings
 from enum import Enum
 from pathlib import Path
-import logging
-from typing import List, Union, Dict
-from pydantic import (
-    BaseModel,
-    Field,
-    RootModel,
-    ConfigDict,
-    model_validator,
-    field_validator,
-    computed_field,
-)
-import warnings
+from typing import Dict, List, Union
+
+from pydantic import (BaseModel, ConfigDict, Field, RootModel, computed_field,
+                      field_validator, model_validator)
 
 
 def is_number(tocheck):
