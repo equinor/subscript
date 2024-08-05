@@ -173,7 +173,7 @@ class ElementMetaData(BaseModel):
 class PluginArguments(BaseModel):
     """Plugin arguments for config element"""
 
-    # model_config = ConfigDict(extra="forbid")
+    model_config = ConfigDict(extra="forbid")
     zonemap: str = Field(
         default="",
         description="path to file with mapping between zone names and grid layers",
