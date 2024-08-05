@@ -6,9 +6,8 @@ from warnings import warn
 
 import yaml
 
-from subscript.genertobs_unstable._utilities import extract_from_row
 from subscript.genertobs_unstable._datatypes import ObservationsConfig
-
+from subscript.genertobs_unstable._utilities import extract_from_row
 
 # def read_tabular_config(
 #     config_file_name: Union[str, Path], parent_folder: Union[str, PosixPath] = None
