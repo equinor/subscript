@@ -43,7 +43,7 @@ dependencies = [
     "fmu-tools",
     "matplotlib",
     "numpy<2",
-    "opm>=2021.10",
+    "opm>=2023.04",
     "pandas",
     "pyscal",
     "pyyaml",

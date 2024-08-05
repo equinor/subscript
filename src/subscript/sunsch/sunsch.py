@@ -16,10 +16,10 @@ from typing import Dict, List, Literal, Optional, Union
 
 import dateutil.parser
 import yaml
+from opm.tools.time_vector import TimeVector
 from pydantic import BaseModel, FilePath
 
 from subscript import __version__, getLogger
-from subscript.sunsch.time_vector import TimeVector  # type: ignore
 
 logger = getLogger(__name__)
 
