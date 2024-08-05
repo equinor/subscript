@@ -6,7 +6,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from shutil import rmtree
-from typing import Optional
+from typing import Tuple, Optional
 
 import pandas as pd
 
@@ -111,7 +111,7 @@ def select_from_dict(keys: list, full_dict: dict):
 
 
 def create_rft_ertobs_str(
-    element: RftConfigElement, prefix: str, obs_file: Path
+    element: pd.Series, prefix: str, obs_file: Path
 ) -> str:
     """Create the rft ertobs string for specific well
 
@@ -134,12 +134,12 @@ def create_rft_ertobs_str(
 
 
 def create_rft_gendata_str(
-    element: RftConfigElement, prefix, outfolder_name: str
+    element: pd.Series, prefix, outfolder_name: str
 ) -> str:
     """Create the string to write as gendata call
 
     Args:
-        element (RftConfigElement): element with data
+        element (pd.Series): data row
         prefix (str): prefix to be included
         outfolder_name (str): path to folder where results are stored
 
@@ -158,7 +158,7 @@ def create_rft_gendata_str(
 
 
 def write_genrft_str(
-    parent: Path, well_date_path: str, layer_zone_table: str, outfolder_name: str
+    parent: Path, well_date_path: Path, layer_zone_table: Path, outfolder_name: str
 ) -> str:
     """write the string to define the GENDATA_RFT call
 
@@ -197,7 +197,7 @@ def write_genrft_str(
     return string
 
 
-def write_rft_ertobs(rft_dict: dict, well_date_file, parent_folder: Path) -> str:
+def write_rft_ertobs(rft_dict: dict, well_date_file: Path, parent_folder: Path) -> Tuple[str, str]:
     """Write all rft files for rft dictionary, pluss info str
 
     Args:
@@ -224,7 +224,7 @@ def write_rft_ertobs(rft_dict: dict, well_date_file, parent_folder: Path) -> str
             well_date_list.append(
                 [element["well_name"], element["date"], element["restart"]]
             )
-            rft_ertobs_str += create_rft_ertobs_str(element, prefix, obs_file)
+            rft_ertobs_str += create_rft_ertobs_str(element , prefix, obs_file)
             gen_data += create_rft_gendata_str(element, prefix, outfolder_name)
             logger.debug(
                 "\n---------------Before \n%s--------------------\n\n", gen_data

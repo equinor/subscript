@@ -155,19 +155,19 @@ class ElementMetaData(BaseModel):
         description=f"Type of rft observation, can be any of {RftType.__members__}",
     )
 
-    @computed_field
     @property
-    def columns(self) -> Dict[str, Dict[str, str]]:
+    @computed_field
+    def columns(self) -> Dict[RftType, Dict[str, str]]:
         """Define columns to expect
 
         Returns:
-            Dict[str, Dict[str, str]]: the expected column with units
+            Dict[RftType, Dict[str, str]]: the expected column with units
         """
         if self.subtype == RftType.PRESSURE:
-            out_dict = {self.subtype: {"unit:bar"}}
+            units = {"unit": "bar"}
         else:
-            out_dict = {self.subtype: {"unit:fraction"}}
-        return out_dict
+            units = {"unit": "fraction"}
+        return {self.subtype: units} 
 
 
 class PluginArguments(BaseModel):
@@ -246,7 +246,7 @@ class ConfigElement(BaseModel):
         try:
             is_string_convertible_2_percent(error)
         except AttributeError:
-            if error < 0:
+            if error < 0: # type: ignore
                 raise ValueError(
                     f"default error cannot be negative {error}"
                 )  #  pylint: disable=raise-missing-from

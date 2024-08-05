@@ -276,7 +276,7 @@ def convert_obs_df_to_list(frame: pd.DataFrame, content: ObservationType) -> lis
 
 def add_or_modify_error(
     frame: pd.DataFrame,
-    error: str,
+    error: Union[str, float, int],
     err_min: Optional[Union[float, int]] = None,
     err_max: Optional[Union[float, int]] = None,
 ):
@@ -381,7 +381,7 @@ def extract_general(in_frame: pd.DataFrame, lable_name: str) -> pd.DataFrame:
 
 def extract_from_row(
     row: Union[RftConfigElement, ConfigElement],
-    parent_folder: Union[str, Path],
+    parent_folder: Path,
 ) -> List[pd.DataFrame]:
     """Extract results from row in config file
 
@@ -452,7 +452,7 @@ def replace_names(name_series: pd.Series, replacer: pd.DataFrame) -> pd.Series:
     return replaced_names
 
 
-def read_obs_frame(input_file: Path, content: str, alias_file) -> pd.DataFrame:
+def read_obs_frame(input_file: Path, content: ObservationType, alias_file) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:

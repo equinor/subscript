@@ -43,7 +43,7 @@ from subscript.genertobs_unstable._datatypes import ObservationsConfig
 #     return obs_data
 
 
-def read_yaml_config(config_file_name: str) -> dict:
+def read_yaml_config(config_file_name: Path) -> ObservationsConfig:
     """Read configuration from file
 
     Args:
