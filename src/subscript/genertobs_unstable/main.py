@@ -6,7 +6,9 @@ from pathlib import Path
 
 from subscript.genertobs_unstable._writers import write_dict_to_ertobs
 from subscript.genertobs_unstable.parse_config import (
-    generate_data_from_config, read_yaml_config)
+    generate_data_from_config,
+    read_yaml_config,
+)
 
 
 def parse_args():

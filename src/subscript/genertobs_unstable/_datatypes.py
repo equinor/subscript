@@ -6,8 +6,15 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, List, Union
 
-from pydantic import (BaseModel, ConfigDict, Field, RootModel, computed_field,
-                      field_validator, model_validator)
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    RootModel,
+    computed_field,
+    field_validator,
+    model_validator,
+)
 
 
 def is_number(tocheck):
@@ -105,12 +112,11 @@ def check_error_limits(error, err_min, err_max):
                 f" doesn't make sense to set a higher limit ({err_max})"
             )
     else:
-        if err_min is not None and err_max is not None:
-            if err_min >= err_max:
-                raise ValueError(
-                    f"When using limits, the minimum must be lower than the maximum\n"
-                    f"{err_min}-{err_max}"
-                )
+        if err_min is not None and err_max is not None and err_min >= err_max:
+            raise ValueError(
+                f"When using limits, the minimum must be lower than the maximum\n"
+                f"{err_min}-{err_max}"
+            )
 
 
 class ObservationType(Enum):
@@ -161,7 +167,7 @@ class ElementMetaData(BaseModel):
             units = {"unit": "bar"}
         else:
             units = {"unit": "fraction"}
-        return {self.subtype: units} 
+        return {self.subtype: units}
 
 
 class PluginArguments(BaseModel):
@@ -240,7 +246,7 @@ class ConfigElement(BaseModel):
         try:
             is_string_convertible_2_percent(error)
         except AttributeError:
-            if error < 0: # type: ignore
+            if error < 0:  # type: ignore
                 raise ValueError(
                     f"default error cannot be negative {error}"
                 )  #  pylint: disable=raise-missing-from

@@ -10,10 +10,8 @@ from typing import Optional, Tuple
 
 import pandas as pd
 
-from subscript.genertobs_unstable._datatypes import (ObservationType,
-                                                     RftConfigElement)
-from subscript.genertobs_unstable._utilities import (check_and_fix_str,
-                                                     inactivate_rows)
+from subscript.genertobs_unstable._datatypes import ObservationType
+from subscript.genertobs_unstable._utilities import check_and_fix_str, inactivate_rows
 
 GENDATA_RFT_EXPLAINER = """-------------------------
 -- GENDATA_RFT  -- Create files with simulated rft pressure
@@ -112,9 +110,7 @@ def select_from_dict(keys: list, full_dict: dict):
     return {key: full_dict[key] for key in keys}
 
 
-def create_rft_ertobs_str(
-    element: pd.Series, prefix: str, obs_file: Path
-) -> str:
+def create_rft_ertobs_str(element: pd.Series, prefix: str, obs_file: Path) -> str:
     """Create the rft ertobs string for specific well
 
     Args:
@@ -135,9 +131,7 @@ def create_rft_ertobs_str(
     )
 
 
-def create_rft_gendata_str(
-    element: pd.Series, prefix, outfolder_name: str
-) -> str:
+def create_rft_gendata_str(element: pd.Series, prefix, outfolder_name: str) -> str:
     """Create the string to write as gendata call
 
     Args:
@@ -148,10 +142,7 @@ def create_rft_gendata_str(
     Returns:
         str: the string
     """
-    if prefix != "PRESSURE":
-        separator_string = f"_{prefix}_"
-    else:
-        separator_string = "_"
+    separator_string = "_" if prefix == "PRESSURE" else f"_{prefix}_"
     return (
         f"GEN_DATA {element['well_name']}_{prefix}_SIM "
         + f"RESULT_FILE:{outfolder_name}/RFT{separator_string}{element['well_name']}_%d "
@@ -199,7 +190,9 @@ def write_genrft_str(
     return string
 
 
-def write_rft_ertobs(rft_dict: dict, well_date_file: Path, parent_folder: Path) -> Tuple[str, str]:
+def write_rft_ertobs(
+    rft_dict: dict, well_date_file: Path, parent_folder: Path
+) -> Tuple[str, str]:
     """Write all rft files for rft dictionary, pluss info str
 
     Args:
@@ -226,7 +219,7 @@ def write_rft_ertobs(rft_dict: dict, well_date_file: Path, parent_folder: Path) 
             well_date_list.append(
                 [element["well_name"], element["date"], element["restart"]]
             )
-            rft_ertobs_str += create_rft_ertobs_str(element , prefix, obs_file)
+            rft_ertobs_str += create_rft_ertobs_str(element, prefix, obs_file)
             gen_data += create_rft_gendata_str(element, prefix, outfolder_name)
             logger.debug(
                 "\n---------------Before \n%s--------------------\n\n", gen_data

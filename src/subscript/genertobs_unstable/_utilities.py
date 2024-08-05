@@ -6,9 +6,11 @@ from warnings import warn
 
 import pandas as pd
 
-from subscript.genertobs_unstable._datatypes import (ConfigElement,
-                                                     ObservationType,
-                                                     RftConfigElement)
+from subscript.genertobs_unstable._datatypes import (
+    ConfigElement,
+    ObservationType,
+    RftConfigElement,
+)
 
 
 def _fix_column_names(dataframe: pd.DataFrame) -> pd.DataFrame:
@@ -451,7 +453,9 @@ def replace_names(name_series: pd.Series, replacer: pd.DataFrame) -> pd.Series:
     return replaced_names
 
 
-def read_obs_frame(input_file: Path, content: ObservationType, alias_file) -> pd.DataFrame:
+def read_obs_frame(
+    input_file: Path, content: ObservationType, alias_file
+) -> pd.DataFrame:
     """Read obs table, generate summary to be converted to ert esotheric format
 
     Args:
