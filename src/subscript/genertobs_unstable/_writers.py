@@ -308,7 +308,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
                 gendata_rft_str = write_genrft_str(
                     parent / "rft",
                     well_date_file_name,
-                    obs["config"].plugin_arguments["zonemap"],
+                    obs["config"].plugin_arguments.zonemap,
                     gendata_rft_folder_name,
                 )
             rft_str_element, gen_data_element = write_rft_ertobs(
