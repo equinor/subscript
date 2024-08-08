@@ -21,11 +21,8 @@ except ImportError:
 def drogon_runpath():
     """Return path to large test dataset"""
     drogon_on_prem_runpath = Path("/project/res/share/subscript/tests/data/drogon")
-    drogon_alternative_path = Path(__file__).parent / "data" / "drogon"
     if drogon_on_prem_runpath.exists():
         return drogon_on_prem_runpath
-    if drogon_alternative_path.exists():
-        return drogon_alternative_path
     return None
 
 

@@ -1,6 +1,7 @@
 """Test prtvol2csv, both as library and as command line"""
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -12,7 +13,44 @@ import yaml
 from fmu.tools.fipmapper.fipmapper import FipMapper
 from subscript.prtvol2csv import prtvol2csv
 
+from .utils import run_simulator
+
 TESTDATADIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
+
+DROGON_TEST_DATA_DIR = Path(__file__).absolute().parent / "data/drogon/eclipse"
+
+
+def test_valid_flow_output(simulator, tmp_path, mocker):
+    """Test that latest simulation output from flow can be processed"""
+
+    shutil.copytree(DROGON_TEST_DATA_DIR, tmp_path / "eclipse")
+    os.chdir(tmp_path / "eclipse/model")
+
+    Path(tmp_path / "eclipse/include/schedule/drogon_hist.sch").write_text(
+        """
+    TSTEP
+     0.0001 /
+    /
+    
+    END
+    """,  # noqa
+        encoding="utf8",
+    )
+    run_simulator(simulator, Path(tmp_path / "eclipse/model/DROGON-0.DATA"))
+
+    with pytest.warns(FutureWarning, match="Output directories"):
+        mocker.patch(
+            "sys.argv",
+            [
+                "prtvol2csv",
+                "--debug",
+                str(Path(tmp_path / "eclipse/model/DROGON-0.PRT")),
+            ],
+        )
+        prtvol2csv.main()
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
+
+    assert dframe.shape == (21, 13)
 
 
 def test_currently_in_place_from_prt(tmp_path):
