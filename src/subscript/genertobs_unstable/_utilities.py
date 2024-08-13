@@ -195,7 +195,9 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
         "date",
     ]
     relevant_columns = keepers + additionals
-    narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]
+    logger.debug("Hoping for these columns %s, available are %s", 
+                 relevant_columns, frame.columns.to_list())
+    narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]      
     well_names = narrowed_down.well_name.unique().tolist()
     logger.debug("%s wells to write (%s)", len(well_names), well_names)
     for well_name in well_names:
