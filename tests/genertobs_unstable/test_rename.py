@@ -9,7 +9,7 @@ from subscript.genertobs_unstable.parse_config import (
     read_yaml_config,
 )
 
-SNORRE_FOLDER = Path(__file__).parent / "data/snorre"
+AFIELD = Path(__file__).parent / "data/afield"
 
 
 def run_command(arguments):
@@ -27,29 +27,29 @@ def run_command(arguments):
 
 
 def test_generate_data(tmp_path, monkeypatch):
-    sn_tmp = tmp_path / "snorre"
-    copytree(SNORRE_FOLDER, sn_tmp)
-    obs_name = "snorre_observations"
-    monkeypatch.chdir(sn_tmp)
+    af_tmp = tmp_path / "afield"
+    copytree(AFIELD, af_tmp)
+    obs_name = "afield_observations"
+    monkeypatch.chdir(af_tmp)
 
-    genert_config = sn_tmp / "snorre_observations.yml"
+    genert_config = af_tmp / "afield_observations.yml"
 
     config = read_yaml_config(genert_config)
     print("\n", config)
-    data = generate_data_from_config(config, sn_tmp)
+    data = generate_data_from_config(config, af_tmp)
     print(data)
 
 
 def test_command_line(tmp_path, monkeypatch):
-    sn_tmp = tmp_path / "snorre"
-    copytree(SNORRE_FOLDER, sn_tmp)
-    obs_name = "snorre_observations"
-    monkeypatch.chdir(sn_tmp)
-    genert_config = sn_tmp / "snorre_observations.yml"
+    af_tmp = tmp_path / "afield"
+    copytree(AFIELD, af_tmp)
+    obs_name = "afield_observations"
+    monkeypatch.chdir(af_tmp)
+    genert_config = af_tmp / "afield_observations.yml"
 
     arguments = ["genertobs_unstable", genert_config]
     run_command(arguments)
-    obs_out = sn_tmp / obs_name
+    obs_out = af_tmp / obs_name
     assert obs_out.exists(), f"{obs_out} does not exist"
     ert_obs_file = obs_out / "ert_observations.obs"
     obs_str = ert_obs_file.read_text()

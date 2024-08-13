@@ -1,7 +1,7 @@
 - name: summary observations
   type: summary
   default_error: 10%
-  observation: snorre_smry_observations.csv
+  observation: afield_smry_observations.csv
 
 - name: rft observations
   type: rft

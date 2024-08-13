@@ -4,20 +4,20 @@ masterdata:
       - identifier: Norway
         uuid: ad214d85-8a1d-19da-e053-c918a4889309
     discovery:
-      - short_identifier: SNORRE
+      - short_identifier: AFIELD
         uuid: ad214d89-af9b-19da-e053-c918a4889309
     field:
-      - identifier: SNORRE
+      - identifier: AFIELD
         uuid: ad214d87-901d-19da-e053-c918a4889309
     coordinate_system:
       identifier: ST_ED50_UTM31N_P23031_T1311
       uuid: ad214d85-da74-19da-e053-c918a4889309
     stratigraphic_column:
-      identifier: Snorre Seq Strat 2004
+      identifier: Afield  2004
       uuid: ad215071-c52b-2e4b-e053-c918a4881b5c
 access:
   asset:
-    name: Snorre
+    name: Afield
 model:
   name: ff
   revision: 2024
