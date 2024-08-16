@@ -36,7 +36,7 @@ def run(config_path: Path):
     config = read_yaml_config(config_path)
     logger.debug("Read config: %s", config)
     config_path = Path(config_path)
-    export_folder = (config_path.parent / config_path.stem).resolve()
+    export_folder = (config_path.parent / f"{config_path.stem}_do_not_edit").resolve()
 
     data = generate_data_from_config(config, config_path.parent)
     logger.debug("Data generated %s", data)

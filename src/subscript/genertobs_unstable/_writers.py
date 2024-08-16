@@ -324,4 +324,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
         gen_data_file.write_text(add_time_stamp(gen_data))
         logger.debug("Written %s", str(gen_data_file))
 
+    # Set to read only for others, user needs all rights for tests
+    # group is able to delete
+    parent.chmod(0o774)
     return obs_str

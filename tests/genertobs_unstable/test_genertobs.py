@@ -291,7 +291,7 @@ def test_main_run(drogon_project, tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_obs_dir)
     print(tmp_drog)
     genert_config_name = "genertobs_config.yml"
-    tmp_observations = tmp_obs_dir / "genertobs_config"
+    tmp_observations = tmp_obs_dir / "genertobs_config_do_not_edit"
     test_config = tmp_drog / f"ert/input/observations/{genert_config_name}"
 
     main.run(test_config)

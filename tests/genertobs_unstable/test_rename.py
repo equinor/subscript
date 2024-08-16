@@ -43,7 +43,7 @@ def test_generate_data(tmp_path, monkeypatch):
 def test_command_line(tmp_path, monkeypatch):
     af_tmp = tmp_path / "afield"
     copytree(AFIELD, af_tmp)
-    obs_name = "afield_observations"
+    obs_name = "afield_observations_do_not_edit"
     monkeypatch.chdir(af_tmp)
     genert_config = af_tmp / "afield_observations.yml"
 
