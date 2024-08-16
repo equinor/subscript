@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 import pytest
 import yaml
+
 from subscript.fmuobs.fmuobs import autoparse_file, main
 from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df

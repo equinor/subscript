@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+
 from subscript.pack_sim import pack_sim
 
 ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"

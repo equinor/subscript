@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from subscript.fmuobs.parsers import (
     INCLUDE_RE,
     OBS_ARGS_RE,

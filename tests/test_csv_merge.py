@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from subscript.csv_merge import csv_merge
 
 try:

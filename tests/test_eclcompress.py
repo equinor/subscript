@@ -9,6 +9,7 @@ from pathlib import Path
 import numpy as np
 import opm.io
 import pytest
+
 from subscript.eclcompress.eclcompress import (
     compress_multiple_keywordsets,
     eclcompress,

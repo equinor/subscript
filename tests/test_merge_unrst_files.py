@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 import resfo
+
 from subscript.merge_unrst_files import merge_unrst_files
 
 UNRST_HIST = (
