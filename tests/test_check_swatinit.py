@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 from matplotlib import pyplot
+
 from subscript.check_swatinit.check_swatinit import (
     __FINE_EQUIL__,
     __HC_BELOW_FWL__,

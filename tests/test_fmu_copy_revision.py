@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 import pytest
+
 import subscript.fmu_copy_revision.fmu_copy_revision as fcr
 
 SCRIPTNAME = "fmu_copy_revision"

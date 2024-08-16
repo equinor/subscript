@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 import pytest
+
 from subscript.csv_stack import csv_stack
 
 try:

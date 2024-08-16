@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 from resdata.summary import Summary
+
 from subscript.summaryplot import summaryplot
 
 DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"

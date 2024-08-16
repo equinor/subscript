@@ -8,6 +8,7 @@ from pathlib import Path
 import opm.io
 import pandas as pd
 import pytest
+
 from subscript.casegen_upcars import casegen_upcars
 
 TESTDATA = "testdata_casegen_upcars"
