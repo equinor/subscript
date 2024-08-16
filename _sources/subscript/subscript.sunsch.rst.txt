@@ -14,5 +14,6 @@ Submodules
 .. toctree::
 
    subscript.sunsch.sunsch
+   subscript.sunsch.time_vector
 
 .. currentmodule:: subscript.sunsch
