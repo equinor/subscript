@@ -25,6 +25,7 @@ def expected_jobs(path_to_subscript):
         "ECLINIT2ROFF",
         "ECLRST2ROFF",
         "GRAV_SUBS_MAPS",
+        "GRAV_SUBS_POINTS",
         "INTERP_RELPERM",
         "MERGE_RFT_ERTOBS",
         "MERGE_UNRST_FILES",
