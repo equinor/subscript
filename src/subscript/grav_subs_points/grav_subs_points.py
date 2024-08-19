@@ -50,9 +50,9 @@ EPILOGUE = """
 
   stations: # Path to files with station coordinates to model for each difference years
     grav:
-      "2020_2018": ./station_coordinates.csv
+      "2020_2018": station_coordinates.csv
     subs:
-      "2020_2018": ./station_coordinates.csv
+      "2020_2018": station_coordinates.csv
 
   calculations:
     poisson_ratio: 0.45 # For subsidence calulcations, used in Geertsma model
