@@ -6,11 +6,11 @@ input:
     
 stations:
   grav:
-    '2020_2018': ./station_coordinates.csv
+    "2020_2018": ./station_coordinates.csv
   subs:
-    '2020_2018': ./station_coordinates.csv
+    "2020_2018": ./station_coordinates.csv
 
 calculations:
   poisson_ratio: 0.45
-  phases: ['gas', 'oil','water', 'total']
+  phases: ["gas", "oil","water", "total"]
 
