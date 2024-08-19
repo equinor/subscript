@@ -2,8 +2,7 @@ EXECUTABLE  grav_subs_points
 
 DEFAULT  <ROOT_PATH> "./"
 
-ARGLIST  "--configfile" <GRAVPOINTS_CONFIG> "--root-path" <ROOT_PATH> "--outputd
-ir" <OUTPUT_DIR> <UNRST_FILE> 
+ARGLIST  "--configfile" <GRAVPOINTS_CONFIG> "--root-path" <ROOT_PATH> "--outputdir" <OUTPUT_DIR> <UNRST_FILE> 
 
 MIN_ARG  2
 MAX_ARG  4
