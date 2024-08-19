@@ -8,9 +8,9 @@ import sys
 import warnings
 from typing import Pattern
 
+import ert
 import pandas as pd
 from ert.config import ErtScript
-from ert.shared.plugins.plugin_manager import hook_implementation  # type: ignore
 
 from subscript import __version__, getLogger
 
@@ -334,7 +334,7 @@ def csv_stack(
     return dframe.reset_index(drop=True)
 
 
-@hook_implementation
+@ert.plugin(name="subscript")
 def legacy_ertscript_workflow(config) -> None:
     """Hook the CsvStack class into ERT with the name CSV_STACK,
     and inject documentation"""

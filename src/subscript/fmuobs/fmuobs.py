@@ -9,10 +9,10 @@ import sys
 from pathlib import Path
 from typing import Optional, Tuple, Union
 
+import ert
 import pandas as pd
 import yaml
 from ert.config import ErtScript
-from ert.shared.plugins.plugin_manager import hook_implementation  # type: ignore
 
 from subscript import __version__, getLogger
 from subscript.fmuobs.parsers import (
@@ -456,7 +456,7 @@ class FmuObs(ErtScript):
         fmuobs(**vars(parsed_args))
 
 
-@hook_implementation
+@ert.plugin(name="subscript")
 def legacy_ertscript_workflow(config):
     """A hook for usage of this script in an ERT workflow,
     using the legacy hook format."""

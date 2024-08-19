@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest  # noqa: F401
 import yaml
 from pydantic import ValidationError
+
 from subscript.sunsch import sunsch
 
 DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"

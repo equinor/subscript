@@ -17,6 +17,7 @@ import numpy as np
 import pandas as pd
 import pytest
 import res2df
+
 from subscript.check_swatinit.check_swatinit import (
     __HC_BELOW_FWL__,
     __PC_SCALED__,

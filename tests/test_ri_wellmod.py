@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+
 from subscript.ri_wellmod import ri_wellmod
 
 SCRIPTNAME = "ri_wellmod"

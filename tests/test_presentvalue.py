@@ -8,6 +8,7 @@ import pandas as pd
 import pytest
 import res2df
 from resdata.summary import Summary
+
 from subscript.presentvalue import presentvalue
 
 ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"

@@ -10,6 +10,7 @@ import pandas as pd
 import pytest
 import yaml
 from fmu.tools.fipmapper.fipmapper import FipMapper
+
 from subscript.prtvol2csv import prtvol2csv
 
 TESTDATADIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
