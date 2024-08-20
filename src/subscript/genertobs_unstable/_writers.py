@@ -289,7 +289,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     gendata_rft_folder_name = "gendata_rft"
     gendata_rft_str = ""
     obs_str = add_time_stamp()
-    gen_data = GENDATA_EXPLAINER
+    gen_data = ""
     readme_file = parent / "readme.txt"
     readme_file.write_text(add_time_stamp(record_type="d"))
     for obs in obs_list:
@@ -319,7 +319,7 @@ def write_dict_to_ertobs(obs_list: list, parent: Path) -> str:
     ertobs_file = parent / "ert_observations.obs"
     ertobs_file.write_text(obs_str)
     if gen_data:
-        gen_data = gendata_rft_str + gen_data
+        gen_data = gendata_rft_str + GENDATA_EXPLAINER + gen_data
         gen_data_file = parent / "gen_data_rft_wells.ert"
         gen_data_file.write_text(add_time_stamp(gen_data))
         logger.debug("Written %s", str(gen_data_file))
