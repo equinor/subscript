@@ -1,0 +1,10 @@
+===============================================
+``subscript.grav_subs_points.grav_subs_points``
+===============================================
+
+.. automodule:: subscript.grav_subs_points.grav_subs_points
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.grav_subs_points.grav_subs_points

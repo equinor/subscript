@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.grav_subs_maps.grav_subs_maps &mdash; subscript 1.6.2 documentation</title>
+  <title>subscript.grav_subs_maps.grav_subs_maps &mdash; subscript 1.6.3.dev1+gf4cfd5e5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=c3225494"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6213b7d3"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -31,7 +31,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="subscript.hook_implementations" href="subscript.hook_implementations.html" />
+    <link rel="next" title="subscript.grav_subs_points" href="subscript.grav_subs_points.html" />
     <link rel="prev" title="subscript.grav_subs_maps" href="subscript.grav_subs_maps.html" /> 
 </head>
 
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.6.2
+                1.6.3.dev1+gf4cfd5e5
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -77,6 +77,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../scripts/fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/fmuobs.html">FMUOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/grav_subs_maps.html">GRAV_SUBS_MAPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/grav_subs_points.html">GRAV_SUBS_POINTS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/interp_relperm.html">INTERP_RELPERM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../scripts/merge_unrst_files.html">MERGE_UNRST_FILES</a></li>
@@ -117,6 +118,7 @@
 <li class="toctree-l4 current"><a class="reference internal" href="subscript.grav_subs_maps.html#submodules">Submodules</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.grav_subs_points.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.merge_rft_ertobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_rft_ertobs</span></code></a></li>
@@ -171,48 +173,23 @@
   <section id="module-subscript.grav_subs_maps.grav_subs_maps">
 <span id="subscript-grav-subs-maps-grav-subs-maps"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_maps.grav_subs_maps</span></code><a class="headerlink" href="#module-subscript.grav_subs_maps.grav_subs_maps" title="Permalink to this heading"></a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravCalc">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_maps.grav_subs_maps.</span></span><span class="sig-name descname"><span class="pre">GravCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravCalc" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_maps.grav_subs_maps.</span></span><span class="sig-name descname"><span class="pre">GravMapsCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc" title="Permalink to this definition"></a></dt>
 <dd><dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravCalc.model_computed_fields">
-<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravCalc.model_computed_fields" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_computed_fields" title="Permalink to this definition"></a></dt>
 <dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravCalc.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravCalc.model_config" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_config" title="Permalink to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
 </dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravCalc.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'coarsening':</span> <span class="pre">FieldInfo(annotation=Union[Annotated[int,</span> <span class="pre">FieldInfo(annotation=NoneType,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[Strict(strict=True),</span> <span class="pre">Ge(ge=1)])],</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default=None),</span> <span class="pre">'phases':</span> <span class="pre">FieldInfo(annotation=List[str],</span> <span class="pre">required=True),</span> <span class="pre">'poisson_ratio':</span> <span class="pre">FieldInfo(annotation=float,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[Strict(strict=True),</span> <span class="pre">Ge(ge=0),</span> <span class="pre">Le(le=0.5)])}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravCalc.model_fields" title="Permalink to this definition"></a></dt>
-<dd><p>Metadata about the fields defined on the model,
-mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
-<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravInput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_maps.grav_subs_maps.</span></span><span class="sig-name descname"><span class="pre">GravInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravInput" title="Permalink to this definition"></a></dt>
-<dd><dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravInput.model_computed_fields">
-<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravInput.model_computed_fields" title="Permalink to this definition"></a></dt>
-<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravInput.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravInput.model_config" title="Permalink to this definition"></a></dt>
-<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravInput.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'diffdates':</span> <span class="pre">FieldInfo(annotation=List[List[datetime.date]],</span> <span class="pre">required=True),</span> <span class="pre">'seabed_map':</span> <span class="pre">FieldInfo(annotation=Path,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[PathType(path_type='file')])}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravInput.model_fields" title="Permalink to this definition"></a></dt>
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'coarsening':</span> <span class="pre">FieldInfo(annotation=Union[Annotated[int,</span> <span class="pre">FieldInfo(annotation=NoneType,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[Strict(strict=True),</span> <span class="pre">Ge(ge=1)])],</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default=None),</span> <span class="pre">'phases':</span> <span class="pre">FieldInfo(annotation=List[str],</span> <span class="pre">required=True),</span> <span class="pre">'poisson_ratio':</span> <span class="pre">FieldInfo(annotation=float,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[Strict(strict=True),</span> <span class="pre">Ge(ge=0),</span> <span class="pre">Le(le=0.5)])}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_fields" title="Permalink to this definition"></a></dt>
 <dd><p>Metadata about the fields defined on the model,
 mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
 <p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
@@ -237,7 +214,32 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'calculations':</span> <span class="pre">FieldInfo(annotation=GravCalc,</span> <span class="pre">required=True),</span> <span class="pre">'input':</span> <span class="pre">FieldInfo(annotation=GravInput,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig.model_fields" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'calculations':</span> <span class="pre">FieldInfo(annotation=GravMapsCalc,</span> <span class="pre">required=True),</span> <span class="pre">'input':</span> <span class="pre">FieldInfo(annotation=GravMapsInput,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsInput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_maps.grav_subs_maps.</span></span><span class="sig-name descname"><span class="pre">GravMapsInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_computed_fields" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'diffdates':</span> <span class="pre">FieldInfo(annotation=List[Tuple[datetime.date,</span> <span class="pre">datetime.date]],</span> <span class="pre">required=True),</span> <span class="pre">'seabed_map':</span> <span class="pre">FieldInfo(annotation=Path,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[PathType(path_type='file')])}</span></em><a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_fields" title="Permalink to this definition"></a></dt>
 <dd><p>Metadata about the fields defined on the model,
 mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
 <p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
@@ -298,14 +300,14 @@ dictionary.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>cfg</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – grav_subs_maps configuration dictionary</p></li>
-<li><p><strong>root_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – An relative or absolute path to be prepended</p></li>
+<li><p><strong>root_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – A relative or absolute path to be prepended</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Modified configuration for interp_relperm</p>
+<dd class="field-odd"><p>Modified configuration for grav_subs_maps</p>
 </dd>
 </dl>
 </dd></dl>
@@ -317,7 +319,7 @@ dictionary.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="subscript.grav_subs_maps.html" class="btn btn-neutral float-left" title="subscript.grav_subs_maps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="subscript.hook_implementations.html" class="btn btn-neutral float-right" title="subscript.hook_implementations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="subscript.grav_subs_points.html" class="btn btn-neutral float-right" title="subscript.grav_subs_points" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

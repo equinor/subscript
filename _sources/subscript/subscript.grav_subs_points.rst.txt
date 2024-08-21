@@ -1,0 +1,18 @@
+==============================
+``subscript.grav_subs_points``
+==============================
+
+.. automodule:: subscript.grav_subs_points
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.grav_subs_points.grav_subs_points
+
+.. currentmodule:: subscript.grav_subs_points

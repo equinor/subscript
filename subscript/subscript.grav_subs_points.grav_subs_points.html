@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>subscript.grav_subs_points.grav_subs_points &mdash; subscript 1.6.3.dev1+gf4cfd5e5 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=6213b7d3"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="subscript.hook_implementations" href="subscript.hook_implementations.html" />
+    <link rel="prev" title="subscript.grav_subs_points" href="subscript.grav_subs_points.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.6.3.dev1+gf4cfd5e5
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/check_swatinit.html">CHECK_SWATINIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/grav_subs_maps.html">GRAV_SUBS_MAPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/grav_subs_points.html">GRAV_SUBS_POINTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/merge_unrst_files.html">MERGE_UNRST_FILES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/ri_wellmod.html">RI_WELLMOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/rmsecl_volumetrics.html">RMSECL_VOLUMETRICS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/vfp2csv.html">VFP2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/welltest_dpds.html">WELLTEST_DPDS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.detect_os"><code class="docutils literal notranslate"><span class="pre">detect_os()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="subscript.html#subscript.getLogger"><code class="docutils literal notranslate"><span class="pre">getLogger()</span></code></a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="subscript.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.casegen_upcars.html"><code class="docutils literal notranslate"><span class="pre">subscript.casegen_upcars</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.check_swatinit.html"><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.convert_grid_format.html"><code class="docutils literal notranslate"><span class="pre">subscript.convert_grid_format</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv2ofmvol.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv2ofmvol</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv_merge.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_merge</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.eclcompress.html"><code class="docutils literal notranslate"><span class="pre">subscript.eclcompress</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ecldiff2roff.html"><code class="docutils literal notranslate"><span class="pre">subscript.ecldiff2roff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmu_copy_revision.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmu_copy_revision</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.grav_subs_maps.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_maps</span></code></a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="subscript.grav_subs_points.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points</span></code></a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="subscript.grav_subs_points.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.merge_rft_ertobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_rft_ertobs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.merge_unrst_files.html"><code class="docutils literal notranslate"><span class="pre">subscript.merge_unrst_files</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ofmvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.ofmvol2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.pack_sim.html"><code class="docutils literal notranslate"><span class="pre">subscript.pack_sim</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.params2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.params2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.presentvalue.html"><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.prtvol2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.prtvol2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.restartthinner.html"><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.ri_wellmod.html"><code class="docutils literal notranslate"><span class="pre">subscript.ri_wellmod</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.rmsecl_volumetrics.html"><code class="docutils literal notranslate"><span class="pre">subscript.rmsecl_volumetrics</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sector2fluxnum.html"><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.summaryplot.html"><code class="docutils literal notranslate"><span class="pre">subscript.summaryplot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.sw_model_utilities.html"><code class="docutils literal notranslate"><span class="pre">subscript.sw_model_utilities</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.version.html"><code class="docutils literal notranslate"><span class="pre">subscript.version</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.vfp2csv.html"><code class="docutils literal notranslate"><span class="pre">subscript.vfp2csv</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.welltest_dpds.html"><code class="docutils literal notranslate"><span class="pre">subscript.welltest_dpds</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+          <li class="breadcrumb-item"><a href="subscript.grav_subs_points.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points.grav_subs_points</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/subscript/subscript.grav_subs_points.grav_subs_points.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-subscript.grav_subs_points.grav_subs_points">
+<span id="subscript-grav-subs-points-grav-subs-points"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points.grav_subs_points</span></code><a class="headerlink" href="#module-subscript.grav_subs_points.grav_subs_points" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_computed_fields" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'phases':</span> <span class="pre">FieldInfo(annotation=List[str],</span> <span class="pre">required=True),</span> <span class="pre">'poisson_ratio':</span> <span class="pre">FieldInfo(annotation=float,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[Strict(strict=True),</span> <span class="pre">Ge(ge=0),</span> <span class="pre">Le(le=0.5)])}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_computed_fields" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'calculations':</span> <span class="pre">FieldInfo(annotation=GravPointsCalc,</span> <span class="pre">required=True),</span> <span class="pre">'input':</span> <span class="pre">FieldInfo(annotation=GravPointsInput,</span> <span class="pre">required=True),</span> <span class="pre">'stations':</span> <span class="pre">FieldInfo(annotation=GravPointsStations,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_computed_fields" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'diffdates':</span> <span class="pre">FieldInfo(annotation=List[Tuple[datetime.date,</span> <span class="pre">datetime.date]],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsStations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations" title="Permalink to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_computed_fields" title="Permalink to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_config" title="Permalink to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'grav':</span> <span class="pre">FieldInfo(annotation=Dict[str,</span> <span class="pre">Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')]],</span> <span class="pre">required=True),</span> <span class="pre">'subs':</span> <span class="pre">FieldInfo(annotation=Dict[str,</span> <span class="pre">Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')]],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_fields" title="Permalink to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo].</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_grav_points_ert">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_ert" title="Permalink to this definition"></a></dt>
+<dd><p>Export for ert for each diffdate, only total, not per phase</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_grav_points_xyz">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_xyz" title="Permalink to this definition"></a></dt>
+<dd><p>Write points in xyz format, roxar.FileFormat.RMS_POINTS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_subs_points_ert">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_ert" title="Permalink to this definition"></a></dt>
+<dd><p>Export for ert for each diffdate</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_subs_points_xyz">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_xyz" title="Permalink to this definition"></a></dt>
+<dd><p>Write points in xyz format, roxar.FileFormat.RMS_POINTS</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.get_parser">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.get_parser" title="Permalink to this definition"></a></dt>
+<dd><p>Function to create the argument parser that is going to be served to the user.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The argument parser to be served</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>argparse.ArgumentParser</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.main">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main" title="Permalink to this definition"></a></dt>
+<dd><p>Invocated from the command line, parsing command line arguments</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.main_gravpoints">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main_gravpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unrst_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main_gravpoints" title="Permalink to this definition"></a></dt>
+<dd><p>Process a configuration, model gravity and subsidence points and write to disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>resdata</strong> – Path to flow simulation UNRST file</p></li>
+<li><p><strong>config</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – Configuration for modelling</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.prepend_root_path_to_relative_files">
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">prepend_root_path_to_relative_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.prepend_root_path_to_relative_files" title="Permalink to this definition"></a></dt>
+<dd><p>Prepend root_path to relative files found paths in a configuration
+dictionary.</p>
+<p>Note: This function is before prior to validation of the configuration!</p>
+<p>Will look for filename in the keys “grav” and “subs”</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cfg</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span>) – grav_subs_points configuration dictionary</p></li>
+<li><p><strong>root_path</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code></span>) – A relative or absolute path to be prepended</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Modified configuration for grav_subs_points</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="subscript.grav_subs_points.html" class="btn btn-neutral float-left" title="subscript.grav_subs_points" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="subscript.hook_implementations.html" class="btn btn-neutral float-right" title="subscript.hook_implementations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>

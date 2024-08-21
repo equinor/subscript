@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VFP2CSV &mdash; subscript 1.6.3.dev1+gf4cfd5e5 documentation</title>
+  <title>GRAV_SUBS_POINTS &mdash; subscript 1.6.3.dev1+gf4cfd5e5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -31,8 +31,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="WELLTEST_DPDS" href="welltest_dpds.html" />
-    <link rel="prev" title="SW_MODEL_UTILITIES" href="sw_model_utilities.html" /> 
+    <link rel="next" title="INTERP_RELPERM" href="interp_relperm.html" />
+    <link rel="prev" title="GRAV_SUBS_MAPS" href="grav_subs_maps.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -77,7 +77,11 @@
 <li class="toctree-l1"><a class="reference internal" href="fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="grav_subs_maps.html">GRAV_SUBS_MAPS</a></li>
-<li class="toctree-l1"><a class="reference internal" href="grav_subs_points.html">GRAV_SUBS_POINTS</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GRAV_SUBS_POINTS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
 <li class="toctree-l1"><a class="reference internal" href="merge_unrst_files.html">MERGE_UNRST_FILES</a></li>
@@ -94,11 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
 <li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">VFP2CSV</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Python API</span></p>
@@ -120,9 +120,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">VFP2CSV</li>
+      <li class="breadcrumb-item active">GRAV_SUBS_POINTS</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/scripts/vfp2csv.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/scripts/grav_subs_points.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -130,49 +130,95 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="vfp2csv">
-<h1>VFP2CSV<a class="headerlink" href="#vfp2csv" title="Permalink to this heading"></a></h1>
-<p><p>Process a VFP file (typically outputted from Prosper or similar)
-and relayout the data into a tabular format, exported to CSV.</p>
-<p>The table will always contain the columns FILENAME, VFPTYPE,
-TABLENUMBER and DATUM. Depending on the VFPTYPE (possible values:
-VFPINJ or VFPPROD) you will get different columns with data:
-BHP, THP, ALQ, WGR, OGR, WCT, GOR, LIQ</p>
-<p>Do not depend on column order. TABLENUMBER is not enforced unique, it
-is taken from whatever the data indicates, which can conflict.
-FILENAME is absolute or relative, depending on the input.</p>
+  <section id="grav-subs-points">
+<h1>GRAV_SUBS_POINTS<a class="headerlink" href="#grav-subs-points" title="Permalink to this heading"></a></h1>
+<p><p>Modelling gravity change and subsidence based on flow simulation
+output (EGRID, INIT and UNRST files) for a list of locations (
+bencmark stations) at seabed.</p>
+<p>The script reads flow simulation results and a yaml configuration file
+specifying input and calculation parameters.
+For configuration of the yaml config file, see:
+<a class="reference external" href="https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_points.html">https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_points.html</a></p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">vfp2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="n">vfpfiles</span> <span class="p">[</span><span class="n">vfpfiles</span> <span class="o">...</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">grav_subs_points</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">ROOT_PATH</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIR</span><span class="p">]</span>
+                        <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+                        <span class="n">UNRSTfile</span>
 </pre></div>
 </div>
 <section id="positional-arguments">
 <h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
-<dt><kbd>vfpfiles</kbd></dt>
-<dd><p>Text files containing VFPPROD/VFPINJE</p>
+<dt><kbd>UNRSTfile</kbd></dt>
+<dd><p>Path to flowsimulator UNRST file</p>
 </dd>
 </dl>
 </section>
 <section id="named-arguments">
 <h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
-<dt><kbd>-o, --output</kbd></dt>
-<dd><p>Name of output CSV file</p>
-<p>Default: “vfptables.csv”</p>
+<dt><kbd>-c, -C, --configfile</kbd></dt>
+<dd><p>Name of YAML config file</p>
+</dd>
+<dt><kbd>-r, --root-path</kbd></dt>
+<dd><p>Root path assumed for relative paths in config file.</p>
+<p>Default: “./”</p>
+</dd>
+<dt><kbd>-o, --outputdir</kbd></dt>
+<dd><p>Path to directory for output maps. Directory must exist.</p>
+<p>Default: “./”</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
 </section>
+<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for grav_subs_points</span>
+
+<span class="nt">input</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2020-07-01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2018-01-01</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Difference date to model. Must exist in UNRST file.</span>
+
+<span class="nt">stations</span><span class="p">:</span><span class="w"> </span><span class="c1"># Path to files with station coordinates to model for each difference years</span>
+<span class="w">  </span><span class="nt">grav</span><span class="p">:</span>
+<span class="w">    </span><span class="s">&quot;2020_2018&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">station_coordinates.csv</span>
+<span class="w">  </span><span class="nt">subs</span><span class="p">:</span>
+<span class="w">    </span><span class="s">&quot;2020_2018&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">station_coordinates.csv</span>
+
+<span class="nt">calculations</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">poisson_ratio</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.45</span><span class="w"> </span><span class="c1"># For subsidence calulcations, used in Geertsma model</span>
+<span class="w">  </span><span class="nt">phases</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;gas&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;oil&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;water&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;total&quot;</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># One pointset for each phase specified</span>
+</pre></div>
+</div>
+<div class="highlight-plaintext notranslate"><div class="highlight"><pre><span></span>The file with station coordinates should be on .csv format and contain headers
+as specified in this example:
+
+bm_id;utmx;utmy;depth;area
+1;462632.692871;5930050.419434;200.000000;WL
+2;464438.063965;5932652.277710;200.000000;CH
+3;462924.737793;5933448.764526;200.000000;CH
+4;459977.734863;5935121.387695;200.000000;NH
+5;462247.045000;5934298.281000;200.000000;CH
+6;461517.610352;5933448.764526;200.000000;CN
+7;463933.621582;5931643.393677;200.000000;CS
+8a;463429.180176;5935068.288086;200.000000;EL
+9b;460561.825684;5936608.163086;200.000000;CH
+10;460482.177246;5931723.042358;200.000000;WL
+
+bm_id: Name of the bencmark location.
+utmx: UTM X for the bencmark location [m]
+utmy: UTM Y for the bencmark location [m]
+depth: Seabed depth for benchmark location [m TVD MSL]
+area: An area identifier that can be used for grouping in visualisations
+</pre></div>
+</div>
+</p>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="sw_model_utilities.html" class="btn btn-neutral float-left" title="SW_MODEL_UTILITIES" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="welltest_dpds.html" class="btn btn-neutral float-right" title="WELLTEST_DPDS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="grav_subs_maps.html" class="btn btn-neutral float-left" title="GRAV_SUBS_MAPS" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="interp_relperm.html" class="btn btn-neutral float-right" title="INTERP_RELPERM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
