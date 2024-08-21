@@ -59,14 +59,17 @@ CATEGORY = "modelling.reservoir"
 EXAMPLES = """
 .. code-block:: console
 
- FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAV_CONFIG>=grav_subs_maps.yml, <ROOT_PATH>=<CONFIG_PATH>, <OUTPUTDIR>=share/results/maps)
+ FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml)
+ FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=share/results/maps)
+ FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <ROOT_PATH>=<CONFIG_PATH>/../../gravity/input/, <OUTPUT_DIR>=share/results/maps)
 
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the flowsimulator
 basename relative to ``RUNPATH``, grav_subs_maps.yml is a YAML file defining
-the inputs and modelling parameters and ``OUTPUTDIR`` is the path to the output folder.
-``ROOT_PATH`` is optinal and defaulted to "./". This is the rooth path assumed for
-relative paths in the yml config.
+the inputs and modelling parameters and ``OUTPUT_DIR`` is the path to the output folder.
+If not specified OUTPUT_DIR will be defaulted to "./".
+``ROOT_PATH`` is the root path assumed for any relative paths in the yaml config file.
+This is optional and defaulted to "./".
 
 The directory to export maps to must exist.
 """  # noqa
