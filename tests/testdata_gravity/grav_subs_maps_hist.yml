@@ -3,10 +3,10 @@
 input:
   diffdates:
     - [2020-07-01, 2018-01-01]
-  seabed_map: seabed.gri # /project/fmu/users/tral/subscript/subscript/tests/testdata_gravity/seabed.gri
+  seabed_map: seabed.gri 
 
 calculations:
   poisson_ratio: 0.45
   coarsening: 8        
-  phases: ['gas', 'oil','water', 'total']
+  phases: ["gas", "oil","water", "total"]
 
