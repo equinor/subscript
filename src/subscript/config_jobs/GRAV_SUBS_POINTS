@@ -1,5 +1,6 @@
 EXECUTABLE  grav_subs_points
 
+DEFAULT  <OUTPUT_DIR> "./"
 DEFAULT  <ROOT_PATH> "./"
 
 ARGLIST  "--configfile" <GRAVPOINTS_CONFIG> "--root-path" <ROOT_PATH> "--outputdir" <OUTPUT_DIR> <UNRST_FILE> 
