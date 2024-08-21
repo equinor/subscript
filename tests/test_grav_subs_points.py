@@ -226,3 +226,24 @@ def test_main(res_data, mocker):
     assert Path("all--subsidence--20200701_20180101.txt").exists()
     assert Path("gravity_20200701_20180101_1.txt").exists()
     assert Path("subsidence_20200701_20180101_1.txt").exists()
+
+
+@pytest.mark.integration
+def test_ert_integration(res_data):
+    """Test that the ERT forward model configuration is correct"""
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE HIST",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALISATIONS 1",
+                "RUNPATH <CONFIG_PATH>",
+                "",
+                f"FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <OUTPUT_DIR>=./, ROOT_PATH=./)",
+            ]
+        ),
+        encoding="utf8",
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("subsidence_20200701_20180101_1.txt").is_file()
