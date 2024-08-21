@@ -90,11 +90,11 @@ CATEGORY = "modelling.reservoir"
 EXAMPLES = """
 .. code-block:: console
 
-  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAV_CONFIG>=grav_subs_points.yml, <ROOT_PATH>=<CONFIG_PATH>, <OUTPUTDIR>=share/results/points)
+  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <ROOT_PATH>=<CONFIG_PATH>, <OUTPUT_DIR>=share/results/points)
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the flowsimulator
 basename relative to ``RUNPATH``, grav_subs_points.yml is a YAML file defining
-the inputs and modelling parameters and ``OUTPUTDIR`` is the path to the output folder.
+the inputs and modelling parameters and ``OUTPUT_DIR`` is the path to the output folder.
 ``ROOT_PATH`` is optinal and defaulted to "./". This is the rooth path assumed for
 relative paths in the yml config.
 
