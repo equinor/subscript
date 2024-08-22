@@ -197,7 +197,9 @@ def test_ert_integration(res_data):
                 "NUM_REALISATIONS 1",
                 "RUNPATH <CONFIG_PATH>",
                 "",
-                f"FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=./, ROOT_PATH=./)",
+                "FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, \
+                <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=./, \
+                <ROOT_PATH>=./)",
             ]
         ),
         encoding="utf8",

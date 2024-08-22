@@ -240,7 +240,9 @@ def test_ert_integration(res_data):
                 "NUM_REALISATIONS 1",
                 "RUNPATH <CONFIG_PATH>",
                 "",
-                f"FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <OUTPUT_DIR>=./, ROOT_PATH=./)",
+                "FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE>=<ECLBASE>.UNRST, \
+                <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <OUTPUT_DIR>=./, \
+                <ROOT_PATH>=./)",
             ]
         ),
         encoding="utf8",
