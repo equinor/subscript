@@ -15,7 +15,7 @@ TESTDATA = Path(__file__).absolute().parent / "testdata_gravity"
 
 def test_prepend_root_path():
     """Test that we need to prepend with root-path"""
-    cfg_file = TESTDATA / "grav_subs_maps_hist.yml"
+    cfg_file = TESTDATA / "grav_subs_maps.yml"
 
     cfg = yaml.safe_load(cfg_file.read_text(encoding="utf8"))
 
@@ -169,7 +169,7 @@ def test_main(res_data, mocker):
 
     assert subprocess.check_output(["grav_subs_maps", "-h"])
 
-    test_cfg = "grav_subs_maps_hist.yml"
+    test_cfg = "grav_subs_maps.yml"
     test_resfile = "HIST.UNRST"
 
     mocker.patch(
@@ -183,3 +183,26 @@ def test_main(res_data, mocker):
     assert Path("all--delta_gravity_oil--20200701_20180101.gri").exists()
     assert Path("all--delta_gravity_water--20200701_20180101.gri").exists()
     assert Path("all--subsidence--20200701_20180101.gri").exists()
+
+
+@pytest.mark.integration
+def test_ert_integration(res_data):
+    """Test that the ERT forward model configuration is correct"""
+
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE HIST",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALISATIONS 1",
+                "RUNPATH <CONFIG_PATH>",
+                "",
+                "FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, \
+                <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=./, \
+                <ROOT_PATH>=./)",
+            ]
+        ),
+        encoding="utf8",
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("all--subsidence--20200701_20180101.gri").is_file()
