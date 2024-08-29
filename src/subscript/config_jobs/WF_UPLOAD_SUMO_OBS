@@ -1,5 +1,0 @@
--- This workflow job uploads observation data generated with genertobs_unstable
--- to sumo. It is called from an ERT workflow
-
-EXECUTABLE upload_obs_2_sumo
-
