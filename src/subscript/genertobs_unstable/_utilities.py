@@ -53,9 +53,7 @@ def remove_whitespace(dataframe: pd.DataFrame):
     """
     logger = logging.getLogger(__name__ + ".remove_whitespace")
     for col_name in dataframe.columns:
-
         try:
-
             dataframe[col_name] = dataframe[col_name].map(str.strip)
         except TypeError:
             logger.debug("%s is not str column", col_name)
@@ -195,9 +193,12 @@ def convert_rft_to_list(frame: pd.DataFrame) -> list:
         "date",
     ]
     relevant_columns = keepers + additionals
-    logger.debug("Hoping for these columns %s, available are %s", 
-                 relevant_columns, frame.columns.to_list())
-    narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]      
+    logger.debug(
+        "Hoping for these columns %s, available are %s",
+        relevant_columns,
+        frame.columns.to_list(),
+    )
+    narrowed_down = frame.loc[:, frame.columns.isin(relevant_columns)]
     well_names = narrowed_down.well_name.unique().tolist()
     logger.debug("%s wells to write (%s)", len(well_names), well_names)
     for well_name in well_names:

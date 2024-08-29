@@ -146,8 +146,8 @@ def create_rft_gendata_str(element: pd.Series, prefix, outfolder_name: str) -> s
     separator_string = "_" if prefix == "PRESSURE" else f"_{prefix}_"
     return (
         f"GEN_DATA {element['well_name']}_{prefix}_SIM "
-        + f"RESULT_FILE:{outfolder_name}/RFT{separator_string}{element['well_name']}_%d "
-        + f"REPORT_STEPS:{element['restart']}\n"
+        + f"RESULT_FILE:{outfolder_name}/RFT{separator_string}{element['well_name']}_%d"
+        + f" REPORT_STEPS:{element['restart']}\n"
     )
 
 

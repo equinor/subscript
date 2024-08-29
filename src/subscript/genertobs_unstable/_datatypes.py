@@ -247,9 +247,7 @@ class ConfigElement(BaseModel):
             is_string_convertible_2_percent(error)
         except AttributeError:
             if error < 0:  # type: ignore
-                raise ValueError(
-                    f"default error cannot be negative {error}"
-                )  #  pylint: disable=raise-missing-from
+                raise ValueError(f"default error cannot be negative {error}")  #  pylint: disable=raise-missing-from
         return error
 
     @model_validator(mode="after")

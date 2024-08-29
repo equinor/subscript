@@ -2,7 +2,6 @@
 
 import logging
 from pathlib import Path
-from warnings import warn
 
 import yaml
 
