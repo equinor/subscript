@@ -46,9 +46,10 @@ EPILOGUE = """
   # Example config file for grav_subs_points
 
   input:
-        - [2020-07-01, 2018-01-01] # Difference date to model. Must exist in UNRST file.
+    diffdates: # List of difference dates to model. Dates must exist in UNRST file.
+      - [2020-07-01, 2018-01-01]
 
-  stations: # Path to files with station coordinates to model for each difference years
+  stations: # Path to files with station coordinates to model for each diffdate (years)
     grav:
       "2020_2018": station_coordinates.csv
     subs:
