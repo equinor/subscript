@@ -9,8 +9,6 @@ which this test code has separate code paths for asserts.
 """
 
 import os
-import subprocess
-import time
 from pathlib import Path
 
 import numpy as np
@@ -30,6 +28,8 @@ from subscript.check_swatinit.check_swatinit import (
     qc_volumes,
 )
 from subscript.check_swatinit.pillarmodel import PillarModel
+
+from .utils import run_simulator
 
 IN_SUBSCRIPT_GITHUB_ACTIONS = os.getenv("GITHUB_REPOSITORY") == "equinor/subscript"
 
@@ -58,35 +58,8 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
         pd.DataFrame if perform_qc is True, else None
     """
     Path("FOO.DATA").write_text(str(resmodel), encoding="utf8")
-    simulator_option = []
-    if "runeclipse" in simulator:
-        simulator_option = ["-i"]
-    if "flow" in simulator:
-        simulator_option = ["--parsing-strictness=low"]
 
-    result = subprocess.run(  # pylint: disable=subprocess-run-check
-        [simulator] + simulator_option + ["FOO.DATA"],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-
-    if (
-        result.returncode != 0
-        and "runeclipse" in simulator
-        and "LICENSE FAILURE" in result.stdout.decode() + result.stderr.decode()
-    ):
-        print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
-        time.sleep(30)
-        result = subprocess.run(  # pylint: disable=subprocess-run-check
-            [simulator] + simulator_option + ["FOO.DATA"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-
-    if result.returncode != 0:
-        print(result.stdout.decode())
-        print(result.stderr.decode())
-        raise AssertionError(f"reservoir simulator failed in {os.getcwd()}")
+    run_simulator(simulator, "FOO.DATA")
 
     if perform_qc:
         return make_qc_gridframe(res2df.ResdataFiles("FOO.DATA"))
