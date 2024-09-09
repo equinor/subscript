@@ -42,15 +42,14 @@ EPILOGUE = """
   # Example config file for grav_subs_maps
 
   input:
-      diffdates:
-        - [2020-07-01, 2018-01-01] # Difference date to model. Must exist in UNRST file.
-      seabed_map: seabed.gri  # Path to file with seabed, irap binary format.
-                              # Also used as map template
+    diffdates:
+      - [2020-07-01, 2018-01-01] # Difference date to model. Must exist in UNRST file.
+    seabed_map: seabed.gri  # Path to file with seabed, irap binary format.
 
-    calculations:
-      poisson_ratio: 0.45  # For subsidence calulcations, used in Geertsma model
-      coarsening: 8        # Coarsening factor for maps to speed up calculations
-      phases: ['gas', 'oil','water', 'total']  # One map for each phase specified
+  calculations:
+    poisson_ratio: 0.45  # For subsidence calulcations, used in Geertsma model
+    coarsening: 8        # Coarsening factor for maps to speed up calculations
+    phases: ["gas", "oil", "water", "total"]  # One map for each phase specified
 
 """
 
