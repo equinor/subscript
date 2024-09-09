@@ -74,7 +74,7 @@ docs = [
     "autoapi",
     "sphinx",
     "sphinx-argparse",
-    "sphinx-autodoc-typehints",
+    "sphinx-autodoc-typehints<2.4",
     "sphinx-copybutton",
     "sphinx-togglebutton",
     "sphinx_rtd_theme",
