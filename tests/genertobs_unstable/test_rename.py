@@ -1,9 +1,8 @@
 import re
-import os
-from shutil import copytree
-
 from pathlib import Path
-from subprocess import Popen, PIPE
+from shutil import copytree
+from subprocess import PIPE, Popen
+
 from subscript.genertobs_unstable.parse_config import (
     generate_data_from_config,
     read_yaml_config,
@@ -29,7 +28,6 @@ def run_command(arguments):
 def test_generate_data(tmp_path, monkeypatch):
     af_tmp = tmp_path / "afield"
     copytree(AFIELD, af_tmp)
-    obs_name = "afield_observations"
     monkeypatch.chdir(af_tmp)
 
     genert_config = af_tmp / "afield_observations.yml"
@@ -64,7 +62,6 @@ def test_command_line(tmp_path, monkeypatch):
     key_name, data_name = rft_well_info[0]
 
     for name in (key_name, data_name):
-
         assert not name.startswith("NO "), f"NO should've been removed in {name}"
 
         assert " " not in name, f"Still spaces remaining in name |{name}|"
@@ -78,4 +75,4 @@ def test_command_line(tmp_path, monkeypatch):
         joined_parts = "_".join(name_parts[:-2])
         assert (
             len(joined_parts) <= 8
-        ), f"{joined_parts} should be less than 8 characters, but is {len(joined_parts)}"
+        ), f"{joined_parts} should be less than 8 chars, but is {len(joined_parts)}"

@@ -1,13 +1,15 @@
 """Fixtures for genertobs"""
 
-import os
 import logging
-from pathlib import Path
-import yaml
-import pandas as pd
+import os
 import pickle
+from pathlib import Path
+
+import pandas as pd
 import pytest
+import yaml
 from fmu.config.utilities import yaml_load
+
 from subscript.genertobs_unstable.parse_config import read_yaml_config
 
 LOGGER = logging.getLogger(__name__)
@@ -20,17 +22,14 @@ def _fix_obs_input():
 
 @pytest.fixture(scope="function", name="no_github_run")
 def _fix_run_github_action():
-
     in_github_action = os.getenv("GITHUB_ACTIONS") == "true"
     if in_github_action:
         pytest.skip("Not set up for github action")
 
 
 def read_yaml_file(yaml_file_name):
-    yam_contents = {}
     with open(yaml_file_name, "r", encoding="utf-8") as stream:
-        yam_contents = yaml.safe_load(stream)
-    return yam_contents
+        return yaml.safe_load(stream)
 
 
 @pytest.fixture(scope="function", name="config_element")
@@ -75,25 +74,22 @@ def _fix_yaml_config_file():
 
 @pytest.fixture(scope="session", name="masterdata_config")
 def _fix_yaml_master():
-    config_path = (
+    return (
         Path(__file__).parent / "data/drogon/fmuconfig/output/global_variables.yml"
     )
-    return config_path
 
 
 @pytest.fixture(scope="session", name="rft_as_frame")
 def _fix_rft_as_frame():
-
     return pd.read_csv(Path(__file__).parent / "data/rft_as_frame.csv")
 
 
 @pytest.fixture(scope="session", name="summary_as_frame")
 def _fix_sum_as_frame():
-
     frame = pd.read_csv(
         Path(__file__).parent
         / "data/drogon/ert/input/observations/drogon_summary_input.txt",
-        sep="\s+",
+        sep=r"\s+",
     )
     frame.columns = [name.lower() for name in frame.columns]
     return frame
@@ -110,10 +106,8 @@ def _fix_config(yaml_config_file):
 
 @pytest.fixture(scope="session", name="expected_results")
 def _fix_results():
-    data = None
     with open(Path(__file__).parent / "data/pickled_data.pkl", "rb") as stream:
-        data = pickle.load(stream)
-    return data
+        return pickle.load(stream)
 
 
 @pytest.fixture(scope="session", name="fmuconfig")

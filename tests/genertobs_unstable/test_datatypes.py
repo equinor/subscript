@@ -1,19 +1,16 @@
 from pathlib import Path
-import re
+
 import pytest
-import subscript.genertobs_unstable._datatypes as dt
-from subscript.genertobs_unstable.parse_config import read_yaml_config
 from pydantic_core._pydantic_core import ValidationError
 
+import subscript.genertobs_unstable._datatypes as dt
 
 TEST_INPUT_DATA = Path(__file__).parent / "data/drogon/ert/input/observations"
 
 
 def test_rft_type():
-
     rft_type = dt.RftType
     for rft_type_element in rft_type:
-
         print(rft_type_element.name)
         print(rft_type_element.value)
 
@@ -31,7 +28,6 @@ def test_pluginarguments():
 
 
 def test_configroot_success(config_element, observations_input):
-
     config = [
         {
             "name": "this is something",
@@ -40,7 +36,7 @@ def test_configroot_success(config_element, observations_input):
         },
         config_element,
     ]
-    dumped_element = {
+    {
         "name": "This is something other",
         "type": dt.ObservationType.RFT,
         "observation": str(observations_input / "summary_gor.csv"),
@@ -102,7 +98,10 @@ def test_validate_default_error(config_element, default_error, exception):
 
 
 def test_check_error_limits():
-    mess = "default_error specified as an absolute number, doesn't make sense to set a lower limit (1)"
+    mess = (
+        "default_error specified as an absolute number, "
+        "doesn't make sense to set a lower limit (1)"
+    )
     with pytest.raises(ValueError) as excinfo:
         dt.check_error_limits(5, 1, 6)
     except_mess = str(excinfo.value)

@@ -1,22 +1,20 @@
 import os
-import sys
-import pytest
-import pandas as pd
-import pickle
-from pathlib import Path
-from datetime import datetime
 from shutil import copytree
-from subscript.genertobs_unstable import parse_config as conf
-from subscript.genertobs_unstable import _utilities as ut
-from subscript.genertobs_unstable import _writers as wt
-from subscript.genertobs_unstable import main
+
+import pandas as pd
+import pytest
+
+from subscript.genertobs_unstable import (
+    _utilities as ut,
+    _writers as wt,
+    main,
+    parse_config as conf,
+)
 from subscript.genertobs_unstable._datatypes import (
     ConfigElement,
     ObservationsConfig,
-    ObservationType,
     RftConfigElement,
 )
-
 
 VALID_FORMATS = [
     "depth",
@@ -130,7 +128,7 @@ def test_extract_general(drogon_project):
 
 def test_convert_obs_df_to_list(rft_as_frame):
     print(rft_as_frame)
-    results = ut.convert_obs_df_to_list(rft_as_frame, "rft")
+    ut.convert_obs_df_to_list(rft_as_frame, "rft")
     # assert_list_of_dicts(results)
 
 
@@ -262,7 +260,7 @@ def test_convert_summary_to_list(summary_as_frame):
 
 
 def test_write_timeseries_ertobs(expected_results):
-    ertobs = wt.write_timeseries_ertobs(expected_results[0]["data"])
+    wt.write_timeseries_ertobs(expected_results[0]["data"])
     # print(ertobs)
 
 
@@ -280,7 +278,7 @@ def test_write_dict_to_ertobs(expected_results, tmp_path, drogon_project):
 
     obs_include = tmp_drog / "ert/input/observations/genertobs"
     obs_include.mkdir(parents=False)
-    ertobs = wt.write_dict_to_ertobs(expected_results, obs_include)
+    wt.write_dict_to_ertobs(expected_results, obs_include)
 
 
 def test_main_run(drogon_project, tmp_path, monkeypatch):
