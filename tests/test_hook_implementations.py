@@ -1,13 +1,10 @@
-import re
 import shutil
 from os import path
 from pathlib import Path
 
 import pytest
 import rstcheck_core.checker
-import subscript
-from subscript.hook_implementations import jobs
-from ert.shared.plugins.plugin_manager import ErtPluginManager
+from ert.plugins.plugin_manager import ErtPluginManager
 
 import subscript.hook_implementations.jobs
 
@@ -17,11 +14,30 @@ import subscript.hook_implementations.jobs
 @pytest.fixture
 def expected_jobs(path_to_subscript):
     """dictionary of installed jobs with location to config"""
-    config_jobs_folder = Path(path_to_subscript) / "config_jobs"
-    expected_job_names = list(config_jobs_folder.glob("*"))
-
+    expected_job_names = [
+        "CHECK_SWATINIT",
+        "CASEGEN_UPCARS",
+        "CSV2OFMVOL",
+        "CSV_STACK",
+        "ECLCOMPRESS",
+        "ECLDIFF2ROFF",
+        "ECLGRID2ROFF",
+        "ECLINIT2ROFF",
+        "ECLRST2ROFF",
+        "GRAV_SUBS_MAPS",
+        "GRAV_SUBS_POINTS",
+        "INTERP_RELPERM",
+        "MERGE_RFT_ERTOBS",
+        "MERGE_UNRST_FILES",
+        "OFMVOL2CSV",
+        "PARAMS2CSV",
+        "RI_WELLMOD",
+        "PRTVOL2CSV",
+        "SUNSCH",
+        "WELLTEST_DPDS",
+    ]
     return {
-        str(name.name): path.join(path_to_subscript, "config_jobs", name)
+        name: path.join(path_to_subscript, "config_jobs", name)
         for name in expected_job_names
     }
 
@@ -33,30 +49,21 @@ ACCEPTED_JOB_CATEGORIES = ["modelling", "utility"]
 def test_hook_implementations(expected_jobs):
     """Test that we have the correct set of jobs installed,
     nothing more, nothing less"""
-    print(expected_jobs)
-    plugin_m = ErtPluginManager(plugins=[jobs])
+    plugin_m = ErtPluginManager(plugins=[subscript.hook_implementations.jobs])
 
     installable_jobs = plugin_m.get_installable_jobs()
+    for wf_name, wf_location in expected_jobs.items():
+        assert wf_name in installable_jobs
+        assert installable_jobs[wf_name].endswith(wf_location)
+        assert path.isfile(installable_jobs[wf_name])
 
-    expected_forward_jobs = {
-        key: value for key, value in expected_jobs.items() if jobs.is_forward_model(key)
-    }
-    for job_name, job_location in expected_forward_jobs.items():
-        assert job_name in installable_jobs
-        assert installable_jobs[job_name].endswith(job_location)
-        assert path.isfile(installable_jobs[job_name])
+    assert set(installable_jobs.keys()) == set(expected_jobs.keys())
 
-    assert set(installable_jobs.keys()) == set(expected_forward_jobs.keys())
-
-    expected_workflow_jobs = {
-        key: value
-        for key, value in expected_jobs.items()
-        if not jobs.is_forward_model(key)
-    }
+    expected_workflow_jobs = {}
     installable_workflow_jobs = plugin_m.get_installable_workflow_jobs()
-    for job_name, job_location in expected_workflow_jobs.items():
-        assert job_name in installable_workflow_jobs
-        assert installable_workflow_jobs[job_name].endswith(job_location)
+    for wf_name, wf_location in expected_workflow_jobs.items():
+        assert wf_name in installable_workflow_jobs
+        assert installable_workflow_jobs[wf_name].endswith(wf_location)
 
     assert set(installable_workflow_jobs.keys()) == set(expected_workflow_jobs.keys())
 
@@ -74,12 +81,9 @@ def test_job_config_syntax(expected_jobs):
 def test_executables(expected_jobs):
     """Test executables listed in job configurations exist in $PATH"""
     for _, job_config in expected_jobs.items():
-
-        executable_line = re.compile(r"^EXECUTABLE\s+([a-zA-Z_]+)")
-        executable = executable_line.search(
-            Path(job_config).read_text(encoding="utf8")
-        ).group(1)
-        print(job_config, ":", executable)
+        executable = (
+            Path(job_config).read_text(encoding="utf8").splitlines()[0].split()[1]
+        )
         assert shutil.which(executable)
 
 
