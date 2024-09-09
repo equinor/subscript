@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GRAV_SUBS_POINTS &mdash; subscript 1.7.1.dev1+g81270446 documentation</title>
+  <title>GRAV_SUBS_POINTS &mdash; subscript 1.7.1.dev2+g5313af40 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=60e755c9"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=63809a7d"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.7.1.dev1+g81270446
+                1.7.1.dev2+g5313af40
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -80,6 +80,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GRAV_SUBS_POINTS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#station-coordinates">Station coordinates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-output-files">The output files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
@@ -175,9 +177,10 @@ For configuration of the yaml config file, see:
 <p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for grav_subs_points</span>
 
 <span class="nt">input</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2020-07-01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2018-01-01</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Difference date to model. Must exist in UNRST file.</span>
+<span class="w">  </span><span class="nt">diffdates</span><span class="p">:</span><span class="w"> </span><span class="c1"># List of difference dates to model. Dates must exist in UNRST file.</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2020-07-01</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2018-01-01</span><span class="p p-Indicator">]</span>
 
-<span class="nt">stations</span><span class="p">:</span><span class="w"> </span><span class="c1"># Path to files with station coordinates to model for each difference years</span>
+<span class="nt">stations</span><span class="p">:</span><span class="w"> </span><span class="c1"># Path to files with station coordinates to model for each diffdate (years)</span>
 <span class="w">  </span><span class="nt">grav</span><span class="p">:</span>
 <span class="w">    </span><span class="s">&quot;2020_2018&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">station_coordinates.csv</span>
 <span class="w">  </span><span class="nt">subs</span><span class="p">:</span>
@@ -188,10 +191,12 @@ For configuration of the yaml config file, see:
 <span class="w">  </span><span class="nt">phases</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;gas&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;oil&quot;</span><span class="p p-Indicator">,</span><span class="s">&quot;water&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;total&quot;</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># One pointset for each phase specified</span>
 </pre></div>
 </div>
-<div class="highlight-plaintext notranslate"><div class="highlight"><pre><span></span>The file with station coordinates should be on .csv format and contain headers
-as specified in this example:
-
-bm_id;utmx;utmy;depth;area
+</p>
+<section id="station-coordinates">
+<h2>Station coordinates<a class="headerlink" href="#station-coordinates" title="Permalink to this heading"></a></h2>
+<p>The file with station coordinates should be on .csv format and contain headers
+as specified in this example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bm_id;utmx;utmy;depth;area
 1;462632.692871;5930050.419434;200.000000;WL
 2;464438.063965;5932652.277710;200.000000;CH
 3;462924.737793;5933448.764526;200.000000;CH
@@ -202,15 +207,25 @@ bm_id;utmx;utmy;depth;area
 8a;463429.180176;5935068.288086;200.000000;EL
 9b;460561.825684;5936608.163086;200.000000;CH
 10;460482.177246;5931723.042358;200.000000;WL
-
-bm_id: Name of the bencmark location.
-utmx: UTM X for the bencmark location [m]
-utmy: UTM Y for the bencmark location [m]
-depth: Seabed depth for benchmark location [m TVD MSL]
-area: An area identifier that can be used for grouping in visualisations
 </pre></div>
 </div>
-</p>
+<div class="line-block">
+<div class="line"><strong>bm_id</strong>:      Name of the bencmark location.</div>
+<div class="line"><strong>utmx</strong>:       UTM X for the bencmark location [m]</div>
+<div class="line"><strong>utmy</strong>:       UTM Y for the bencmark location [m]</div>
+<div class="line"><strong>depth</strong>:      Seabed depth for benchmark location [m TVD MSL]</div>
+<div class="line"><strong>area</strong>:       An area identifier that can be used for grouping or labeling in visualisations</div>
+</div>
+</section>
+<section id="the-output-files">
+<h2>The output files<a class="headerlink" href="#the-output-files" title="Permalink to this heading"></a></h2>
+<p>There will be two types of output file from grav_subs_points.</p>
+<ul class="simple">
+<li><p>one column text files of modelled gravity change/subsidence that can be used with GEN_DATA observations</p></li>
+<li><p>x,y,z text file that can be used for visualisation.</p></li>
+</ul>
+<p>The ordering of points in these two files will be the same as given in the station coordinates file used as input.</p>
+</section>
 </section>
 
 

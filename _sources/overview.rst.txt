@@ -18,6 +18,8 @@ eclcompress               ✅   ✅                 ⛔️
 ecldiff2roff              ✅   ✅                 ⛔️
 fmu_copy_revision         ✅   ⛔️                 ⛔️
 fmuobs                    ✅   ⛔️                 ✅
+grav_subs_maps            ✅   ✅                 ⛔️
+grav_subs_points          ✅   ✅                 ⛔️
 interp_relperm            ✅   ✅                 ⛔️
 merge_rft_ertobs          ✅   ✅                 ⛔️
 merge_unrst_files         ✅   ✅                 ⛔️
