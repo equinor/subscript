@@ -59,7 +59,6 @@ EPILOGUE = """
     poisson_ratio: 0.45 # For subsidence calulcations, used in Geertsma model
     phases: ["gas", "oil","water", "total"] # One pointset for each phase specified
 
-
 """
 
 
