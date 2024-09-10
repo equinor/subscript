@@ -25,8 +25,6 @@ DUMMY_YOUNGS = 10
 
 PREFIX_POINTS = "all"  # calculation is cumulative over all zones
 EXTENSION_POINTS = ".txt"  # extension for points in roxar points format
-PREFIX_GENDATA = ""
-EXTENSION_GENDATA = "_1.txt"  # extension for points to Ert GENDATA
 
 DESCRIPTION = """
 Modelling gravity change and subsidence based on flow simulation
@@ -71,11 +69,17 @@ EXAMPLES = """
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml)
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=<CONFIG_PATH>/../input/config/grav_subs_points.yml, <OUTPUT_DIR>=share/results/points)
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <ROOT_PATH>=<CONFIG_PATH>/../../gravity/input, <OUTPUT_DIR>=share/results/points)
+  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <EXTENSION_GENDATA>="_10.txt")
+  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <PREFIX_GENDATA>="fieldA_")
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the flowsimulator
 basename relative to ``RUNPATH``, grav_subs_points.yml is a YAML file defining
 the inputs and modelling parameters and ``OUTPUT_DIR`` is the path to the output folder.
 If not specified OUTPUT_DIR will be defaulted to "./".
+``PREFIX_GENDATA`` and ``EXTENSION_GENDATA`` is the file prefix and extension used for
+the output files of type GEN_DATA. The prefix can be used to separate datasets for
+different structures/fields within the dataset and is defaulted to an empty string,
+i.e. no prefix. The extension should include the report step number, and is defaulted to "_1.txt"
 ``ROOT_PATH`` is the root path assumed for any relative paths in the yaml config file.
 This is optional and defaulted to "./".
 
@@ -145,8 +149,23 @@ def get_parser() -> argparse.ArgumentParser:
         "-o",
         "--outputdir",
         type=str,
-        help="Path to directory for output maps. Directory must exist.",
+        help="Path to directory for output files. Directory must exist.",
         default="./",
+    )
+    parser.add_argument(
+        "--prefix_gendata",
+        type=str,
+        help="File prefix used for output files for GEN_DATA,",
+        default="",
+    )
+    parser.add_argument(
+        "--extension_gendata",
+        type=str,
+        help=(
+            "File extension used for output files for GEN_DATA,"
+            "including report step number"
+        ),
+        default="_1.txt",
     )
     parser.add_argument(
         "--version",
@@ -173,7 +192,14 @@ def main() -> None:
     if not Path(args.UNRSTfile).exists():
         sys.exit("UNRST file does not exist:" + args.UNRSTfile)
 
-    main_gravpoints(args.UNRSTfile, config, Path(args.root_path), Path(args.outputdir))
+    main_gravpoints(
+        args.UNRSTfile,
+        config,
+        Path(args.root_path),
+        Path(args.outputdir),
+        args.prefix_gendata,
+        args.extension_gendata,
+    )
 
 
 def prepend_root_path_to_relative_files(
@@ -233,17 +259,14 @@ def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
             )
 
 
-def export_grav_points_ert(act_stations, diff_date, out_folder) -> None:
+def export_grav_points_ert(
+    act_stations, diff_date, out_folder, pref_gendata, ext_gendata
+) -> None:
     """Export for ert for each diffdate, only total, not per phase"""
     logger.info(f"Exporting simulated gravity values to {out_folder} for use by ert")
     part = act_stations["dgsim_total_" + diff_date[0] + "_" + diff_date[1]]
     outfile = (
-        PREFIX_GENDATA
-        + "gravity_"
-        + diff_date[0]
-        + "_"
-        + diff_date[1]
-        + EXTENSION_GENDATA
+        pref_gendata + "gravity_" + diff_date[0] + "_" + diff_date[1] + ext_gendata
     )
 
     output_path = Path(out_folder) / outfile
@@ -272,17 +295,14 @@ def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
             )
 
 
-def export_subs_points_ert(act_stations, diff_date, out_folder) -> None:
+def export_subs_points_ert(
+    act_stations, diff_date, out_folder, pref_gendata, ext_gendata
+) -> None:
     """Export for ert for each diffdate"""
     logger.info(f"Exporting simulated subsidence values to {out_folder} for use by ert")
     part = act_stations["subsidence_" + diff_date[0] + "_" + diff_date[1]]
     outfile = (
-        PREFIX_GENDATA
-        + "subsidence_"
-        + diff_date[0]
-        + "_"
-        + diff_date[1]
-        + EXTENSION_GENDATA
+        pref_gendata + "subsidence_" + diff_date[0] + "_" + diff_date[1] + ext_gendata
     )
 
     output_path = Path(out_folder) / outfile
@@ -293,7 +313,9 @@ def main_gravpoints(
     unrst_file: str,
     config: Dict[str, Any],
     root_path: Optional[Path],
-    output_folder: Path,
+    output_folder: Optional[Path],
+    pref_gendata: Optional[str],
+    ext_gendata: Optional[str],
 ) -> None:
     """
     Process a configuration, model gravity and subsidence points and write to disk.
@@ -387,7 +409,9 @@ def main_gravpoints(
             export_grav_points_xyz(active_stations, phase, diffdate, output_folder)
 
         # Export to ert for each diffdate, only total, not per phase
-        export_grav_points_ert(active_stations, diffdate, output_folder)
+        export_grav_points_ert(
+            active_stations, diffdate, output_folder, pref_gendata, ext_gendata
+        )
 
     # Subsidence
 
@@ -412,7 +436,9 @@ def main_gravpoints(
 
         export_subs_points_xyz(active_stations, diffdate, output_folder)
 
-        export_subs_points_ert(active_stations, diffdate, output_folder)
+        export_subs_points_ert(
+            active_stations, diffdate, output_folder, pref_gendata, ext_gendata
+        )
 
     logger.info(
         f"Done; All gravity and subsidence points written to folder: "
