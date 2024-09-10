@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.grav_subs_points.grav_subs_points &mdash; subscript 1.7.1.dev2+g5313af40 documentation</title>
+  <title>subscript.grav_subs_points.grav_subs_points &mdash; subscript 1.7.1.dev3+g0bd547cf documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=63809a7d"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=10029f50"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.7.1.dev2+g5313af40
+                1.7.1.dev3+g0bd547cf
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -274,7 +274,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_grav_points_ert">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_ert" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_ert" title="Permalink to this definition"></a></dt>
 <dd><p>Export for ert for each diffdate, only total, not per phase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -296,7 +296,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_subs_points_ert">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_ert" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_ert" title="Permalink to this definition"></a></dt>
 <dd><p>Export for ert for each diffdate</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -343,7 +343,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.main_gravpoints">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main_gravpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unrst_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main_gravpoints" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main_gravpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unrst_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main_gravpoints" title="Permalink to this definition"></a></dt>
 <dd><p>Process a configuration, model gravity and subsidence points and write to disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
