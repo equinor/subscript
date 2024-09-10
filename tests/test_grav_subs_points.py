@@ -194,6 +194,8 @@ def test_unrst_error(dictupdates, expected_error):
                 config=cfg,
                 root_path="./",
                 output_folder="./",
+                pref_gendata="",
+                ext_gendata="_1.txt",
             )
         assert expected_error in str(system_error.value.code)
 
@@ -232,6 +234,7 @@ def test_main(res_data, mocker):
 def test_ert_integration(res_data):
     """Test that the ERT forward model configuration is correct"""
 
+    # With default arguments
     Path("test.ert").write_text(
         "\n".join(
             [
@@ -241,11 +244,30 @@ def test_ert_integration(res_data):
                 "RUNPATH <CONFIG_PATH>",
                 "",
                 "FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE>=<ECLBASE>.UNRST, \
-                <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <OUTPUT_DIR>=./, \
-                <ROOT_PATH>=./)",
+                <GRAVPOINTS_CONFIG>=grav_subs_points.yml)",
             ]
         ),
         encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
     assert Path("subsidence_20200701_20180101_1.txt").is_file()
+
+    # Test also with non default arguments for filename and directory
+    Path("test.ert").write_text(
+        "\n".join(
+            [
+                "ECLBASE HIST",
+                "QUEUE_SYSTEM LOCAL",
+                "NUM_REALISATIONS 1",
+                "RUNPATH <CONFIG_PATH>",
+                "",
+                "FORWARD_MODEL MAKE_DIRECTORY(<DIRECTORY>=./results)",
+                "FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE>=<ECLBASE>.UNRST, \
+                <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <OUTPUT_DIR>=./results, \
+                <ROOT_PATH>=./, <PREFIX_GENDATA>=fieldA_, <EXTENSION_GENDATA>=_10.txt)",
+            ]
+        ),
+        encoding="utf8",
+    )
+    subprocess.run(["ert", "test_run", "test.ert"], check=True)
+    assert Path("./results/fieldA_subsidence_20200701_20180101_10.txt").is_file()
