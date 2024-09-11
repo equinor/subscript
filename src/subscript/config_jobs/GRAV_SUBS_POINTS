@@ -1,6 +1,7 @@
 EXECUTABLE  grav_subs_points
 
 DEFAULT  <OUTPUT_DIR> "./"
+
 DEFAULT  <PREFIX_GENDATA> ""
 DEFAULT  <EXTENSION_GENDATA> "_1.txt"
 
@@ -8,4 +9,5 @@ ARGLIST  "--configfile" <GRAVPOINTS_CONFIG> "--outputdir" <OUTPUT_DIR> "--prefix
 
 MIN_ARG  2
 MAX_ARG  5
+
 ARG_TYPE 0 STRING
