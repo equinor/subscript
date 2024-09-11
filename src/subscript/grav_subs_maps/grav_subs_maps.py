@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import xtgeo
 import yaml
+from grid3d_maps.avghc._loader import FMUYamlSafeLoader
 from pydantic import BaseModel, Field, FilePath, field_validator
 from resdata.gravimetry import ResdataGrav, ResdataSubsidence
 from resdata.grid import Grid
@@ -60,15 +61,12 @@ EXAMPLES = """
 
  FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml)
  FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=share/results/maps)
- FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <ROOT_PATH>=<CONFIG_PATH>/../../gravity/input/, <OUTPUT_DIR>=share/results/maps)
 
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the flowsimulator
 basename relative to ``RUNPATH``, grav_subs_maps.yml is a YAML file defining
 the inputs and modelling parameters and ``OUTPUT_DIR`` is the path to the output folder.
 If not specified OUTPUT_DIR will be defaulted to "./".
-``ROOT_PATH`` is the root path assumed for any relative paths in the yaml config file.
-This is optional and defaulted to "./".
 
 The directory to export maps to must exist.
 """  # noqa
@@ -122,13 +120,6 @@ def get_parser() -> argparse.ArgumentParser:
         required=True,
     )
     parser.add_argument(
-        "-r",
-        "--root-path",
-        type=str,
-        default="./",
-        help=("Root path assumed for relative paths" " in config file."),
-    )
-    parser.add_argument(
         "-o",
         "--outputdir",
         type=str,
@@ -153,46 +144,21 @@ def main() -> None:
     # parse the config file
     if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
-    config = yaml.safe_load(Path(args.configfile).read_text(encoding="utf8"))
+
+    with open(Path(args.configfile), "r", encoding="utf8") as stream:
+        config = yaml.load(stream, Loader=FMUYamlSafeLoader)
 
     if not Path(args.outputdir).exists():
         sys.exit("Output folder does not exist:" + args.outputdir)
     if not Path(args.UNRSTfile).exists():
         sys.exit("UNRST file does not exist:" + args.UNRSTfile)
 
-    main_gravmaps(args.UNRSTfile, config, Path(args.root_path), Path(args.outputdir))
-
-
-def prepend_root_path_to_relative_files(
-    cfg: Dict[str, Any], root_path: Path
-) -> Dict[str, Any]:
-    """Prepend root_path to relative files found paths in a configuration
-    dictionary.
-
-    Note: This function is before prior to validation of the configuration!
-
-    Will look for filename in the key "input["seabed_map"]"
-
-    Args:
-        cfg: grav_subs_maps configuration dictionary
-        root_path: A relative or absolute path to be prepended
-
-    Returns:
-        Modified configuration for grav_subs_maps
-    """
-    if (
-        "input" in cfg
-        and "seabed_map" in cfg["input"]
-        and not os.path.isabs(cfg["input"]["seabed_map"])
-    ):
-        cfg["input"]["seabed_map"] = str(root_path / Path(cfg["input"]["seabed_map"]))
-    return cfg
+    main_gravmaps(args.UNRSTfile, config, Path(args.outputdir))
 
 
 def main_gravmaps(
     unrst_file: str,
     config: Dict[str, Any],
-    root_path: Optional[Path],
     output_folder: Path,
 ) -> None:
     """
@@ -202,9 +168,6 @@ def main_gravmaps(
         resdata: Path to flow simulation UNRST file
         config: Configuration for modelling
     """
-
-    if root_path is not None:
-        config = prepend_root_path_to_relative_files(config, root_path)
 
     cfg = GravMapsConfig.model_validate(config).model_dump()
 

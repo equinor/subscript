@@ -1,8 +1,7 @@
 # Configuration file for use with grav_subs_maps.py
 
 input:
-  diffdates:
-    - [2020-07-01, 2018-01-01]
+  diffdates: !include_from global_variables.yml::global.dates.GRAVITY_DIFFDATES
   seabed_map: seabed.gri 
 
 calculations:
