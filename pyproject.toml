@@ -41,6 +41,7 @@ dependencies = [
     "ert",
     "ert>=10.2.0b13",
     "fmu-tools",
+    "grid3d_maps",
     "matplotlib",
     "numpy<2",
     "opm>=2023.04",
