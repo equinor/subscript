@@ -4,35 +4,12 @@ import subprocess
 from pathlib import Path
 
 import pytest
-import yaml
 from pydantic import ValidationError
 
 from subscript.grav_subs_maps import grav_subs_maps
 from subscript.grav_subs_maps.grav_subs_maps import GravMapsConfig
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_gravity"
-
-
-def test_prepend_root_path():
-    """Test that we need to prepend with root-path"""
-    cfg_file = TESTDATA / "grav_subs_maps.yml"
-
-    cfg = yaml.safe_load(cfg_file.read_text(encoding="utf8"))
-
-    with pytest.raises(ValidationError):
-        GravMapsConfig(**cfg)
-
-    cfg_with_rootpath = grav_subs_maps.prepend_root_path_to_relative_files(
-        cfg, TESTDATA
-    )
-    GravMapsConfig(**cfg_with_rootpath)
-
-    # When root-path is prepended (with an absolute part) it should not
-    # matter if we reapply:
-    cfg_with_double_rootpath = grav_subs_maps.prepend_root_path_to_relative_files(
-        cfg_with_rootpath, TESTDATA
-    )
-    GravMapsConfig(**cfg_with_double_rootpath)
 
 
 @pytest.fixture(name="res_data")
@@ -198,8 +175,7 @@ def test_ert_integration(res_data):
                 "RUNPATH <CONFIG_PATH>",
                 "",
                 "FORWARD_MODEL GRAV_SUBS_MAPS(<UNRST_FILE>=<ECLBASE>.UNRST, \
-                <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=./, \
-                <ROOT_PATH>=./)",
+                <GRAVMAPS_CONFIG>=grav_subs_maps.yml, <OUTPUT_DIR>=./)",
             ]
         ),
         encoding="utf8",
