@@ -1,12 +1,11 @@
 EXECUTABLE  grav_subs_points
 
 DEFAULT  <OUTPUT_DIR> "./"
-DEFAULT  <ROOT_PATH> "./"
 DEFAULT  <PREFIX_GENDATA> ""
 DEFAULT  <EXTENSION_GENDATA> "_1.txt"
 
-ARGLIST  "--configfile" <GRAVPOINTS_CONFIG> "--root-path" <ROOT_PATH> "--outputdir" <OUTPUT_DIR> "--prefix_gendata" <PREFIX_GENDATA> "--extension_gendata" <EXTENSION_GENDATA> <UNRST_FILE> 
+ARGLIST  "--configfile" <GRAVPOINTS_CONFIG> "--outputdir" <OUTPUT_DIR> "--prefix_gendata" <PREFIX_GENDATA> "--extension_gendata" <EXTENSION_GENDATA> <UNRST_FILE> 
 
 MIN_ARG  2
-MAX_ARG  6
+MAX_ARG  5
 ARG_TYPE 0 STRING

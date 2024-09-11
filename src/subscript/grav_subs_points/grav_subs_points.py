@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import pandas as pd
 import yaml
+from grid3d_maps.avghc._loader import FMUYamlSafeLoader
 from pydantic import BaseModel, Field, FilePath, field_validator
 from resdata.gravimetry import ResdataGrav, ResdataSubsidence
 from resdata.grid import Grid
@@ -68,7 +69,6 @@ EXAMPLES = """
 
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml)
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=<CONFIG_PATH>/../input/config/grav_subs_points.yml, <OUTPUT_DIR>=share/results/points)
-  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <ROOT_PATH>=<CONFIG_PATH>/../../gravity/input, <OUTPUT_DIR>=share/results/points)
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <EXTENSION_GENDATA>="_10.txt")
   FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <PREFIX_GENDATA>="fieldA_")
 
@@ -80,8 +80,6 @@ If not specified OUTPUT_DIR will be defaulted to "./".
 the output files of type GEN_DATA. The prefix can be used to separate datasets for
 different structures/fields within the dataset and is defaulted to an empty string,
 i.e. no prefix. The extension should include the report step number, and is defaulted to "_1.txt"
-``ROOT_PATH`` is the root path assumed for any relative paths in the yaml config file.
-This is optional and defaulted to "./".
 
 The directory to export point files to must exist.
 """  # noqa
@@ -139,13 +137,6 @@ def get_parser() -> argparse.ArgumentParser:
         required=True,
     )
     parser.add_argument(
-        "-r",
-        "--root-path",
-        type=str,
-        default="./",
-        help=("Root path assumed for relative paths" " in config file."),
-    )
-    parser.add_argument(
         "-o",
         "--outputdir",
         type=str,
@@ -185,7 +176,9 @@ def main() -> None:
     # parse the config file
     if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
-    config = yaml.safe_load(Path(args.configfile).read_text(encoding="utf8"))
+
+    with open(Path(args.configfile), "r", encoding="utf8") as stream:
+        config = yaml.load(stream, Loader=FMUYamlSafeLoader)
 
     if not Path(args.outputdir).exists():
         sys.exit("Output folder does not exist:" + args.outputdir)
@@ -195,45 +188,10 @@ def main() -> None:
     main_gravpoints(
         args.UNRSTfile,
         config,
-        Path(args.root_path),
         Path(args.outputdir),
         args.prefix_gendata,
         args.extension_gendata,
     )
-
-
-def prepend_root_path_to_relative_files(
-    cfg: Dict[str, Any], root_path: Path
-) -> Dict[str, Any]:
-    """Prepend root_path to relative files found paths in a configuration
-    dictionary.
-
-    Note: This function is before prior to validation of the configuration!
-
-    Will look for filename in the keys "grav" and "subs"
-
-    Args:
-        cfg: grav_subs_points configuration dictionary
-        root_path: A relative or absolute path to be prepended
-
-    Returns:
-        Modified configuration for grav_subs_points
-    """
-
-    stations = cfg.get("stations")
-
-    if stations is None:
-        return cfg
-
-    for key in ["grav", "subs"]:
-        if key in stations and isinstance(stations[key], dict):
-            for item in stations[key]:
-                if os.path.isabs(stations[key][item]):
-                    continue
-
-                stations[key][item] = str(root_path / Path(stations[key][item]))
-
-    return cfg
 
 
 def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
@@ -312,7 +270,6 @@ def export_subs_points_ert(
 def main_gravpoints(
     unrst_file: str,
     config: Dict[str, Any],
-    root_path: Optional[Path],
     output_folder: Optional[Path],
     pref_gendata: Optional[str],
     ext_gendata: Optional[str],
@@ -324,9 +281,6 @@ def main_gravpoints(
         resdata: Path to flow simulation UNRST file
         config: Configuration for modelling
     """
-
-    if root_path is not None:
-        config = prepend_root_path_to_relative_files(config, root_path)
 
     cfg = GravPointsConfig.model_validate(config).model_dump()
 
