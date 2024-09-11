@@ -74,9 +74,7 @@ def _fix_yaml_config_file():
 
 @pytest.fixture(scope="session", name="masterdata_config")
 def _fix_yaml_master():
-    return (
-        Path(__file__).parent / "data/drogon/fmuconfig/output/global_variables.yml"
-    )
+    return Path(__file__).parent / "data/drogon/fmuconfig/output/global_variables.yml"
 
 
 @pytest.fixture(scope="session", name="rft_as_frame")
