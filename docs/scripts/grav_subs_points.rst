@@ -6,6 +6,30 @@ GRAV_SUBS_POINTS
    :func: get_parser
    :prog: grav_subs_points
 
+	  
+Include dates
+-------------
+
+Instead of specifying the modelling dates directly in the yaml config file
+it is possible to include them from another yaml file:
+
+.. code-block:: text
+
+  input:
+    diffdates: !include_from global_variables.yml::global.dates.GRAVITY_DIFFDATES
+
+This is an advantage if the dates in the global config is used also for other jobs. In this case the included file looks like this:
+
+.. code-block:: yaml
+
+  # example global config file with dates
+  global:
+    dates:
+      GRAVITY_DIFFDATES:
+      - - 2020-07-01
+        - 2018-01-01
+
+
 Station coordinates
 -------------------
 
@@ -39,11 +63,13 @@ The output files
 
 There will be two types of output file from grav_subs_points.
 
-- one column text files of modelled gravity change/subsidence that can be used with GEN_DATA observations
+- one column text files of modelled gravity change/subsidence GEN_DATA files that can be used with ert GEN_OBS observations
   
 - x,y,z text file that can be used for visualisation.
 
-The ordering of points in these two files will be the same as given in the station coordinates file used as input.
+The ordering of points in these two files will be the same as given in the station coordinates file used as input. It can therefore be a good idea to order the benchmark stations in the station coordinates file in the order you would like to see them in e.g. line plots, for instance sorted by area.
+
+In some cases where the reservoir model covers several structures or fields it can be beneficial to split the modelling for different structures into several files. E.g. for testing in assisted history matching what effect it has if only observations for one of the structures is used as observations compared to both. To facilitate this usage the option to add a prefix to the GEN_DATA file to separate them, using the prefix_gendata option. There is also a possibility to use a different report step and extension than the default "_1.txt" by using the extension_gendata option.
   
 
   
