@@ -18,7 +18,7 @@ it is possible to include them from another yaml file:
   input:
     diffdates: !include_from global_variables.yml::global.dates.GRAVITY_DIFFDATES
 
-This is an advantage if the dates in the global config is used also for other jobs. In this case the included file looks like this:
+This is an advantage if the dates in the global config is used also for other jobs. In this example the included file looks like this:
 
 .. code-block:: yaml
 
@@ -63,7 +63,7 @@ The output files
 
 There will be two types of output file from grav_subs_points.
 
-- one column text files of modelled gravity change/subsidence GEN_DATA files that can be used with ert GEN_OBS observations
+- one column text files of modelled gravity change/subsidence GEN_DATA files that can be used with ert GENERAL_OBSERVATION
   
 - x,y,z text file that can be used for visualisation.
 

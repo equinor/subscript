@@ -18,7 +18,7 @@ it is possible to include them from another yaml file:
   input:
     diffdates: !include_from global_variables.yml::global.dates.GRAVITY_DIFFDATES
 
-This is an advantage if the dates in the global config is used also for other jobs. In this case the included file looks like this:
+This is an advantage if the dates in the global config is used also for other jobs. In this example the included file looks like this:
 
 .. code-block:: yaml
 
@@ -32,7 +32,7 @@ This is an advantage if the dates in the global config is used also for other jo
 The output files
 ----------------
 
-The output from this job are maps in irap binary format. For each difference data there will be one subsidence map and one or more gravity change maps (depending on which phases are specified to model).
+The output from this job are maps in irap binary format. For each difference date there will be one subsidence map and one or more gravity change maps (depending on which phases are specified to model).
 
 The naming of the output files have been standardised to:
 
