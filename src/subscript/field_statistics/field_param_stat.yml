@@ -1,0 +1,59 @@
+# Configuration file for script wf_field_param_statistics.py
+field_stat: 
+    # Number of realizations for specified ensemble
+    # Required.
+    nreal: 100
+
+    # Iteration numbers from ES-MDA in ERT (iteration = 0 is initial ensemble,
+    # usually iteration=3 is final updated ensemble)
+    # Required.
+    iterations: [0, 3]
+
+    # Selected set of zone names to use in calculations of statistics.
+    # Must be one or more of the defined zones.
+    # Require at least one zone to be selected.
+    use_zones: ["Valysar", "Therys", "Volon"]
+
+    # Zone numbers with zone name dictionary
+    zone_code_names: 
+        1: "Valysar"
+        2: "Therys"
+        3: "Volon"
+
+    # For each zone specify either Proportional, Top_conform or Base_conform
+    # as grid conformity.
+    # Conformity can be checked by opening the RMS job that has created
+    # the geogrid and check the grid settings for grid layers.
+    # Proportional means that number of layers is specified.
+    # Top or base conform means that grid cell thickness is specified.
+    # Required (but only for zones you want to use)
+    zone_conformity:
+        "Valysar": "Proportional"
+        "Therys": "Top_conform"
+        "Volon": "Proportional"
+
+    # For each zone specify which discrete parameter to use to calculate
+    # facies probability estimates.
+    # Possible names are those found in the
+    # share/results/grids/geogrid--<name>.roff
+    # files that are of discrete type.
+    # This key can be omitted or some of the lines specifying parameters
+    # for a zone if you don't want to use it.
+    discrete_property_param_per_zone: 
+        "Valysar": ["facies"]
+        "Therys": ["facies"]
+        "Volon": ["facies"]
+
+    # For each zone specify which continuous parameter to use to
+    # calculate estimate of mean and stdev over ensemble.
+    # Possible names are those found in the
+    #  share/results/grids/geogrid--<name>.roff
+    # files that are of continuous type
+    # This key can be omitted or some of the lines specifying
+    # parameters for a zone if you don't want to use it.
+    continuous_property_param_per_zone:
+        "Valysar": ["phit"]
+        "Therys": ["phit"]
+        
+    # Size of ertbox grid for (nx, ny, nz)
+    ertbox_size: [92, 146, 66]

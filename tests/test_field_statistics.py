@@ -58,11 +58,9 @@ CONFIG_DICT = {
     "use_population_stdev": False,
 }
 
-
 def make_box_grid(dimensions, grid_name, result_path):
     filename = result_path / Path(grid_name + ".roff")
     filename_egrid = result_path / Path(grid_name.upper() + ".EGRID")
-
     grid = xtgeo.create_box_grid(dimensions)
     grid.name = grid_name
     print(f"Grid name:  {grid.name}")
@@ -232,6 +230,7 @@ def make_ensemble_test_data(
                         xtgeo_geogrid.set_actnum(xtgeo_active)
                         set_subgrid_names(xtgeo_geogrid, new_subgrids=subgrid_dict)
                         xtgeo_geogrid.to_file(filename_grid, fformat="roff")
+
             if print_info:
                 print(
                     "Testdata for ensemble for zone "
@@ -431,7 +430,6 @@ def compare_with_referencedata(ens_path, result_path, print_check=False):
         if words[0] in ["mean", "stdev", "prob"]:
             fullfilename = result_path / Path("ertbox--" + name)
             reference_filename = result_path / Path("referencedata") / Path(name)
-
             grid_property = xtgeo.gridproperty_from_file(fullfilename, fformat="roff")
             grid_property_reference = xtgeo.gridproperty_from_file(
                 reference_filename, fformat="roff"

@@ -23,7 +23,9 @@ import fmu.config.utilities as utils
 import numpy as np
 import xtgeo
 import yaml
+
 from ert.config import ErtScript
+
 
 import subscript
 
@@ -53,6 +55,7 @@ standard deviation and facies probabilities.
 
 The assumption behind this method (using ERTBOX grid as a fixed common grid for
 all realizations) is:
+
     * The lateral extension of the geogrid is close to a regular grid with same
       orientation and grid resolution as the ERTBOX grid.
     * The ERTBOX grid should be the same as used in ERT when field parameters
@@ -166,6 +169,7 @@ LOAD_WORKFLOW_JOB  ../../bin/jobs/WF_FIELD_PARAM_STATISTICS
 LOAD_WORKFLOW           ../../bin/workflows/wf_field_param_statistics
 
 -- The workflow file to be located under ert/bin/workflows:
+
 FIELD_STATISTICS -c <FIELD_STAT_CONFIG_FILE>
                  -p <CONFIG_PATH>
                  -e <SCRATCH>/<USER>/<CASE_DIR>
@@ -389,7 +393,6 @@ def get_values_in_ertbox(
         ertbox_prop_values[:, :, start_layer_ertbox:] = prop_values[
             :, :, start_layer:end_layer
         ]
-
     return ertbox_prop_values
 
 
