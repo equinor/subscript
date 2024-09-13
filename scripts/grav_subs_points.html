@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GRAV_SUBS_POINTS &mdash; subscript 1.7.1.dev3+g0bd547cf documentation</title>
+  <title>GRAV_SUBS_POINTS &mdash; subscript 1.7.1.dev4+gd07ca3f9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=10029f50"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=aaffebf4"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.7.1.dev3+g0bd547cf
+                1.7.1.dev4+gd07ca3f9
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -80,6 +80,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GRAV_SUBS_POINTS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#include-dates">Include dates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#station-coordinates">Station coordinates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-output-files">The output files</a></li>
 </ul>
@@ -142,7 +143,7 @@ specifying input and calculation parameters.
 For configuration of the yaml config file, see:
 <a class="reference external" href="https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_points.html">https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_points.html</a></p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">grav_subs_points</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">ROOT_PATH</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIR</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">grav_subs_points</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIR</span><span class="p">]</span>
                         <span class="p">[</span><span class="o">--</span><span class="n">prefix_gendata</span> <span class="n">PREFIX_GENDATA</span><span class="p">]</span>
                         <span class="p">[</span><span class="o">--</span><span class="n">extension_gendata</span> <span class="n">EXTENSION_GENDATA</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                         <span class="n">UNRSTfile</span>
@@ -161,10 +162,6 @@ For configuration of the yaml config file, see:
 <dl class="option-list">
 <dt><kbd>-c, -C, --configfile</kbd></dt>
 <dd><p>Name of YAML config file</p>
-</dd>
-<dt><kbd>-r, --root-path</kbd></dt>
-<dd><p>Root path assumed for relative paths in config file.</p>
-<p>Default: “./”</p>
 </dd>
 <dt><kbd>-o, --outputdir</kbd></dt>
 <dd><p>Path to directory for output files. Directory must exist.</p>
@@ -201,6 +198,24 @@ For configuration of the yaml config file, see:
 </pre></div>
 </div>
 </p>
+<section id="include-dates">
+<h2>Include dates<a class="headerlink" href="#include-dates" title="Permalink to this heading"></a></h2>
+<p>Instead of specifying the modelling dates directly in the yaml config file
+it is possible to include them from another yaml file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>input:
+  diffdates: !include_from global_variables.yml::global.dates.GRAVITY_DIFFDATES
+</pre></div>
+</div>
+<p>This is an advantage if the dates in the global config is used also for other jobs. In this example the included file looks like this:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># example global config file with dates</span>
+<span class="nt">global</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dates</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">GRAVITY_DIFFDATES</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2020-07-01</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2018-01-01</span>
+</pre></div>
+</div>
+</section>
 <section id="station-coordinates">
 <h2>Station coordinates<a class="headerlink" href="#station-coordinates" title="Permalink to this heading"></a></h2>
 <p>The file with station coordinates should be on .csv format and contain headers
@@ -230,10 +245,11 @@ as specified in this example:</p>
 <h2>The output files<a class="headerlink" href="#the-output-files" title="Permalink to this heading"></a></h2>
 <p>There will be two types of output file from grav_subs_points.</p>
 <ul class="simple">
-<li><p>one column text files of modelled gravity change/subsidence that can be used with GEN_DATA observations</p></li>
+<li><p>one column text files of modelled gravity change/subsidence GEN_DATA files that can be used with ert GENERAL_OBSERVATION</p></li>
 <li><p>x,y,z text file that can be used for visualisation.</p></li>
 </ul>
-<p>The ordering of points in these two files will be the same as given in the station coordinates file used as input.</p>
+<p>The ordering of points in these two files will be the same as given in the station coordinates file used as input. It can therefore be a good idea to order the benchmark stations in the station coordinates file in the order you would like to see them in e.g. line plots, for instance sorted by area.</p>
+<p>In some cases where the reservoir model covers several structures or fields it can be beneficial to split the modelling for different structures into several files. E.g. for testing in assisted history matching what effect it has if only observations for one of the structures is used as observations compared to both. To facilitate this usage the option to add a prefix to the GEN_DATA file to separate them, using the prefix_gendata option. There is also a possibility to use a different report step and extension than the default “_1.txt” by using the extension_gendata option.</p>
 </section>
 </section>
 
