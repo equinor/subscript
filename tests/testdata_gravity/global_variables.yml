@@ -1,0 +1,6 @@
+# example configuration file with dates
+global:
+  dates:
+    GRAVITY_DIFFDATES:
+    - - 2020-07-01
+      - 2018-01-01

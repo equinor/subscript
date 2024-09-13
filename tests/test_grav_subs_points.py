@@ -4,32 +4,12 @@ import subprocess
 from pathlib import Path
 
 import pytest
-import yaml
 from pydantic import ValidationError
 
 from subscript.grav_subs_points import grav_subs_points
 from subscript.grav_subs_points.grav_subs_points import GravPointsConfig
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_gravity"
-
-
-def test_prepend_root_path():
-    """Test that we need to prepend with root-path"""
-    cfg_file = TESTDATA / "grav_subs_points.yml"
-
-    cfg = yaml.safe_load(cfg_file.read_text(encoding="utf8"))
-
-    cfg_with_rootpath = grav_subs_points.prepend_root_path_to_relative_files(
-        cfg, TESTDATA
-    )
-    GravPointsConfig(**cfg_with_rootpath)
-
-    # When root-path is prepended (with an absolute part) it should not
-    # matter if we reapply:
-    cfg_with_double_rootpath = grav_subs_points.prepend_root_path_to_relative_files(
-        cfg_with_rootpath, TESTDATA
-    )
-    GravPointsConfig(**cfg_with_double_rootpath)
 
 
 @pytest.fixture(name="res_data")
@@ -192,7 +172,6 @@ def test_unrst_error(dictupdates, expected_error):
             grav_subs_points.main_gravpoints(
                 unrst_file=test_resfile,
                 config=cfg,
-                root_path="./",
                 output_folder="./",
                 pref_gendata="",
                 ext_gendata="_1.txt",
