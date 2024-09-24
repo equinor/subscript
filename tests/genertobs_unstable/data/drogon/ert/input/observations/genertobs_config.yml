@@ -1,0 +1,56 @@
+- name: Gas-oil-ratio observations
+  type: summary
+  default_error: 10% # optional (% indicates relative, otherwise absolute)
+  min_error: 20 # optional, always absolute
+  max_error: 30 # optional, always absolute
+  # Columns: vector, date, value, error, min_error, max_error (last three columns optional for each row, overrides global error for the rows where they are presnet)
+  observation: "summary_gor.csv"
+
+- name: Bottom hole pressure observations
+  type: summary
+  default_error: 5%
+  observation: "summary_wbhp.csv"
+
+- name: RFT pressure observations
+  type: rft # we have a plugin that "knows about rft"
+  plugin_arguments:
+    zonemap: "../rms/output/zone/layer_zone_table.txt"
+    trajectories: "../rms/output/trajectories.csv"
+  default_error: 5
+  # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
+  observation: "drogon_rft_input.ods"
+  metadata:
+    subtype: pressure
+    columns:
+      measured_depth:
+        unit: m
+        reference: msl
+      value:
+        unit: bar
+
+- name: RFT saturation observations
+  type: rft # we have a plugin that "knows about rft"
+  plugin_arguments:
+    zonemap: "../rms/output/zone/layer_zone_table.txt"
+    trajectories: "../rms/output/trajectories.csv"
+  default_error: 5
+  # Columns: well, date, measured_depth, zone, value, error, min_error, max_error (last three columns optional)
+  observation: "drogon_rft_saturation.csv"
+  metadata:
+    subtype: saturation_oil
+    columns:
+      measured_depth:
+        unit: m
+        reference: msl
+      value:
+        unit: fraction
+# - # name: 4D gravity
+# type: gravity
+# observation: "./"
+# observations:
+#   # gravity plugin makes the N^2 combinations
+#   - value: 100
+#     error: 5
+#     coordinate:
+#       station_name: xxx
+#       date: 2003-01-01

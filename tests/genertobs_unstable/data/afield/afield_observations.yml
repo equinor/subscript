@@ -1,0 +1,12 @@
+- name: summary observations
+  type: summary
+  default_error: 10%
+  observation: afield_smry_observations.csv
+
+- name: rft observations
+  type: rft
+  default_error: 5
+  alias_file: well_aliases.txt
+  observation: RFT_dump_221220_ZoneAdjusted.ods
+  plugin_arguments:
+    zonemap: drogon/rms/output/zone/layer_zone_table.csv
