@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GRAV_SUBS_POINTS &mdash; subscript 1.7.1.dev4+gd07ca3f9 documentation</title>
+  <title>GRAV_SUBS_POINTS &mdash; subscript 1.7.1.dev5+g42095909 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=aaffebf4"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=3493a639"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.7.1.dev4+gd07ca3f9
+                1.7.1.dev5+g42095909
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -173,7 +173,7 @@ For configuration of the yaml config file, see:
 </dd>
 <dt><kbd>--extension_gendata</kbd></dt>
 <dd><p>File extension used for output files for GEN_DATA,including report step number</p>
-<p>Default: “_1.txt”</p>
+<p>Default: “.txt”</p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -249,7 +249,7 @@ as specified in this example:</p>
 <li><p>x,y,z text file that can be used for visualisation.</p></li>
 </ul>
 <p>The ordering of points in these two files will be the same as given in the station coordinates file used as input. It can therefore be a good idea to order the benchmark stations in the station coordinates file in the order you would like to see them in e.g. line plots, for instance sorted by area.</p>
-<p>In some cases where the reservoir model covers several structures or fields it can be beneficial to split the modelling for different structures into several files. E.g. for testing in assisted history matching what effect it has if only observations for one of the structures is used as observations compared to both. To facilitate this usage the option to add a prefix to the GEN_DATA file to separate them, using the prefix_gendata option. There is also a possibility to use a different report step and extension than the default “_1.txt” by using the extension_gendata option.</p>
+<p>In some cases where the reservoir model covers several structures or fields it can be beneficial to split the modelling for different structures into several files. E.g. for testing in assisted history matching what effect it has if only observations for one of the structures is used as observations compared to both. To facilitate this usage the option to add a prefix to the GEN_DATA file to separate them, using the prefix_gendata option. There is also a possibility to use a different report step and extension than the default “.txt” by using the extension_gendata option. The default is now without any report step, since this is now longer needed in ert. But if defining a report step is needed, an extension like e.g. “_10.txt” could be given.</p>
 </section>
 </section>
 
