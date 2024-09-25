@@ -25,7 +25,7 @@ logger = subscript.getLogger(__name__)
 DUMMY_YOUNGS = 10
 
 PREFIX_POINTS = "all"  # calculation is cumulative over all zones
-EXTENSION_POINTS = ".txt"  # extension for points in roxar points format
+EXTENSION_POINTS = ".poi"  # extension for points in roxar points format
 
 DESCRIPTION = """
 Modelling gravity change and subsidence based on flow simulation
@@ -80,7 +80,8 @@ If not specified OUTPUT_DIR will be defaulted to "./".
 ``PREFIX_GENDATA`` and ``EXTENSION_GENDATA`` is the file prefix and extension used for
 the output files of type GEN_DATA. The prefix can be used to separate datasets for
 different structures/fields within the dataset and is defaulted to an empty string,
-i.e. no prefix. The extension should include the report step number, and is defaulted to "_1.txt"
+i.e. no prefix. The extension could include the report step number by defining e.g. "_10.txt",
+but is defaulted without it a report step number, to only ".txt"
 
 The directory to export point files to must exist.
 """  # noqa
@@ -157,7 +158,7 @@ def get_parser() -> argparse.ArgumentParser:
             "File extension used for output files for GEN_DATA,"
             "including report step number"
         ),
-        default="_1.txt",
+        default=".txt",
     )
     parser.add_argument(
         "--version",

@@ -69,7 +69,7 @@ There will be two types of output file from grav_subs_points.
 
 The ordering of points in these two files will be the same as given in the station coordinates file used as input. It can therefore be a good idea to order the benchmark stations in the station coordinates file in the order you would like to see them in e.g. line plots, for instance sorted by area.
 
-In some cases where the reservoir model covers several structures or fields it can be beneficial to split the modelling for different structures into several files. E.g. for testing in assisted history matching what effect it has if only observations for one of the structures is used as observations compared to both. To facilitate this usage the option to add a prefix to the GEN_DATA file to separate them, using the prefix_gendata option. There is also a possibility to use a different report step and extension than the default "_1.txt" by using the extension_gendata option.
+In some cases where the reservoir model covers several structures or fields it can be beneficial to split the modelling for different structures into several files. E.g. for testing in assisted history matching what effect it has if only observations for one of the structures is used as observations compared to both. To facilitate this usage the option to add a prefix to the GEN_DATA file to separate them, using the prefix_gendata option. There is also a possibility to use a different report step and extension than the default ".txt" by using the extension_gendata option. The default is now without any report step, since this is now longer needed in ert. But if defining a report step is needed, an extension like e.g. "_10.txt" could be given. 
   
 
   
