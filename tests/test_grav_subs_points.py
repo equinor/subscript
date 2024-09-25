@@ -174,7 +174,7 @@ def test_unrst_error(dictupdates, expected_error):
                 config=cfg,
                 output_folder="./",
                 pref_gendata="",
-                ext_gendata="_1.txt",
+                ext_gendata=".txt",
             )
         assert expected_error in str(system_error.value.code)
 
@@ -200,13 +200,13 @@ def test_main(res_data, mocker):
     )
     grav_subs_points.main()
 
-    assert Path("all--delta_gravity_total--20200701_20180101.txt").exists()
-    assert Path("all--delta_gravity_gas--20200701_20180101.txt").exists()
-    assert Path("all--delta_gravity_oil--20200701_20180101.txt").exists()
-    assert Path("all--delta_gravity_water--20200701_20180101.txt").exists()
-    assert Path("all--subsidence--20200701_20180101.txt").exists()
-    assert Path("gravity_20200701_20180101_1.txt").exists()
-    assert Path("subsidence_20200701_20180101_1.txt").exists()
+    assert Path("all--delta_gravity_total--20200701_20180101.poi").exists()
+    assert Path("all--delta_gravity_gas--20200701_20180101.poi").exists()
+    assert Path("all--delta_gravity_oil--20200701_20180101.poi").exists()
+    assert Path("all--delta_gravity_water--20200701_20180101.poi").exists()
+    assert Path("all--subsidence--20200701_20180101.poi").exists()
+    assert Path("gravity_20200701_20180101.txt").exists()
+    assert Path("subsidence_20200701_20180101.txt").exists()
 
 
 @pytest.mark.integration
@@ -229,7 +229,7 @@ def test_ert_integration(res_data):
         encoding="utf8",
     )
     subprocess.run(["ert", "test_run", "test.ert"], check=True)
-    assert Path("subsidence_20200701_20180101_1.txt").is_file()
+    assert Path("subsidence_20200701_20180101.txt").is_file()
 
     # Test also with non default arguments for filename and directory
     Path("test.ert").write_text(
