@@ -126,6 +126,7 @@ CsvMerge = "subscript.csv_merge.csv_merge"
 CsvStack = "subscript.csv_stack.csv_stack"
 FmuObs = "subscript.fmuobs.fmuobs"
 Params2Csv = "subscript.params2csv.params2csv"
+FieldStatistics = "subscript.field_statistics.field_statistics"
 
 [tool.setuptools]
 script-files = [
