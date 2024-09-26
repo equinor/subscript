@@ -58,9 +58,11 @@ CONFIG_DICT = {
     "use_population_stdev": False,
 }
 
+
 def make_box_grid(dimensions, grid_name, result_path):
     filename = result_path / Path(grid_name + ".roff")
     filename_egrid = result_path / Path(grid_name.upper() + ".EGRID")
+
     grid = xtgeo.create_box_grid(dimensions)
     grid.name = grid_name
     print(f"Grid name:  {grid.name}")

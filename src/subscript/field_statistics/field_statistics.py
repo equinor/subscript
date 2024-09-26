@@ -23,6 +23,7 @@ import fmu.config.utilities as utils
 import numpy as np
 import xtgeo
 import yaml
+from ert.config import ErtScript
 
 from ert.config import ErtScript
 
@@ -169,7 +170,6 @@ LOAD_WORKFLOW_JOB  ../../bin/jobs/WF_FIELD_PARAM_STATISTICS
 LOAD_WORKFLOW           ../../bin/workflows/wf_field_param_statistics
 
 -- The workflow file to be located under ert/bin/workflows:
-
 FIELD_STATISTICS -c <FIELD_STAT_CONFIG_FILE>
                  -p <CONFIG_PATH>
                  -e <SCRATCH>/<USER>/<CASE_DIR>
