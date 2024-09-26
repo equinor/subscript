@@ -18,10 +18,12 @@ import logging
 import sys
 from pathlib import Path
 
+import ert
 import fmu.config.utilities as utils
 import numpy as np
 import xtgeo
 import yaml
+from ert.config import ErtScript
 
 import subscript
 
@@ -51,15 +53,15 @@ standard deviation and facies probabilities.
 
 The assumption behind this method (using ERTBOX grid as a fixed common grid for
 all realizations) is:
-1. The lateral extension of the geogrid is close to a regular grid with same
-orientation and grid resolution as the ERTBOX grid.
-2. The ERTBOX grid should be the same as used in ERT when field parameters
-are updated using the ERT keyword FIELD in the ERT configuration file.
-3. Any lateral variability from realization to realization or curved shaped
-lateral grid is ignored. Only the cell indices are used to identify
-grid cell field parameters from each realization. This means that
-mean, standard deviation and estimated facies probabilities are estimated
-for each cell labeled with index (I,J,K) and not physical position (x,y,z).
+    * The lateral extension of the geogrid is close to a regular grid with same
+      orientation and grid resolution as the ERTBOX grid.
+    * The ERTBOX grid should be the same as used in ERT when field parameters
+      are updated using the ERT keyword FIELD in the ERT configuration file.
+    * Any lateral variability from realization to realization or curved shaped
+      lateral grid is ignored. Only the cell indices are used to identify
+      grid cell field parameters from each realization. This means that
+      mean, standard deviation and estimated facies probabilities are estimated
+      for each cell labeled with index (I,J,K) and not physical position (x,y,z).
 
 The output statistical properties (mean, stdev, prob) is saved in a user
 specified folder, but default if not specified is share/grid_statistics
@@ -80,7 +82,7 @@ EPILOGUE = """
 
   # Example config file for wf_field_param_statistics
 
-field_stat:
+  field_stat:
     # Number of realizations for specified ensemble
     # Required.
     nreal: 100
@@ -139,7 +141,8 @@ field_stat:
         "Volon":   ["phit"]
 
     # Size of ertbox grid for (nx, ny, nz)
-    # Required.
+    # Required if the ERTBOX grid is not found as a file
+    # under rms/output/aps/ERTBOX.EGRID
     ertbox_size: [92, 146, 66]
 
     # Standard deviation estimator.
@@ -163,16 +166,21 @@ LOAD_WORKFLOW_JOB  ../../bin/jobs/WF_FIELD_PARAM_STATISTICS
 LOAD_WORKFLOW           ../../bin/workflows/wf_field_param_statistics
 
 -- The workflow file to be located under ert/bin/workflows:
-WF_FIELD_PARAM_STATISTICS <FIELD_STAT_CONFIG_FILE>  <CONFIG_PATH>  <SCRATCH>/<USER>/<CASE_DIR>
-
--- The workflow job file to be located under ert/bin/jobs:
--- Workflow job for ERT to calculate
--- - mean and stdev of ensemble of continuous 3D parameters with name <name> saved for geogrid 
---   under <ensemble_path>/realization-*/iter-*/share/results/grids/geogrid--<name>.roff
--- - estimate facies probabilities of discrete 3D parameters with name <name> saved for geogrid
---   under <ensemble_path>/realization-*/iter-*/share/results/grids/geogrid--<name>.roff
+FIELD_STATISTICS -c <FIELD_STAT_CONFIG_FILE>
+                 -p <CONFIG_PATH>
+                 -e <SCRATCH>/<USER>/<CASE_DIR>
+                 -r <RESULT_PATH>
+-- Workflow job for ERT to calculate:
+--   Mean and standard deviatons of specified continuous 3D parameters.
+--   Estimate of facies probabilities from discrete 3D parameter for facies.
+-- The input realizations are found under:
+--   <ensemble_path>/realization-*/iter-*/share/results/grids/geogrid--<name>.roff
+-- The output mean and standard deviations and facies probability estimates are saved
+-- under a directory specified by the user.
+-- The first three command line arguments are required, the last one (<RESULT_PATH>)
+-- has default 'share/grid_statistics' under <ensemble_path>.
 INTERNAL   False
-EXECUTABLE  ../scripts/wf_field_param_statistics.py
+EXECUTABLE  ../scripts/field_statistics.py
 
 MIN_ARG   6
 ARG_TYPE    0   STRING
@@ -187,15 +195,20 @@ ARG_TYPE    8   STRING
 
 
 """  # noqa
+DEFAULT_RELATIVE_RESULT_PATH = "share/grid_statistics"
+GLOBAL_VARIABLES_FILE = "../../fmuconfig/output/global_variables.yml"
+ERTBOX_GRID_PATH = "../../rms/output/aps/ERTBOX.EGRID"
 
 
 def main():
     """Invocated from the command line, parsing command line arguments"""
     parser = get_parser()
     args = parser.parse_args()
-
     logger.setLevel(logging.INFO)
+    field_stat(args)
 
+
+def field_stat(args):
     # parse the config file for this script
     if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
@@ -207,23 +220,20 @@ def main():
     # Path to FMU project models ert/model directory (ordinary CONFIG PATH in ERT)
     if not Path(args.ertconfigpath).exists():
         sys.exit("No such file:" + args.ertconfigpath)
-    ert_config_path = args.ertconfigpath
+    ert_config_path = Path(args.ertconfigpath)
 
     # Path to ensemble on SCRATCH disk
     if not Path(args.ensemblepath).exists():
         sys.exit("No such file:" + args.ensemblepath)
-    ens_path = args.ensemblepath
+    ens_path = Path(args.ensemblepath)
 
-    # Relative path for result of ensemble statistics calculations
-    # relative to ensemble path on scratch disk
+    # Path for result of ensemble statistics calculations
     # Default path is defined.
-    result_path = "share/grid_statistics"
-    if Path(args.resultpath).exists():
-        result_path = args.resultpath
-
-    glob_var_config_path = (
-        ert_config_path + "/../../fmuconfig/output/global_variables.yml"
-    )
+    relative_result_path = DEFAULT_RELATIVE_RESULT_PATH
+    if args.resultpath:
+        relative_result_path = Path(args.resultpath)
+    result_path = ens_path / relative_result_path
+    glob_var_config_path = ert_config_path / Path(GLOBAL_VARIABLES_FILE)
     cfg_global = utils.yaml_load(glob_var_config_path)["global"]
     keyword = "FACIES_ZONE"
     if keyword in cfg_global:
@@ -232,11 +242,11 @@ def main():
         raise KeyError(f"Missing keyword: {keyword} in {glob_var_config_path}")
 
     # The ERTBOX grid file location in FMU
-    ertbox_path = ert_config_path + "/../../rms/output/aps/ERTBOX.EGRID"
+    ertbox_path = ert_config_path / ERTBOX_GRID_PATH
     ertbox_size = get_ertbox_size(ertbox_path)
     logger.info(f"Config path to FMU project: {ert_config_path}")
     logger.info(f"Ensemble path on scratch disk: {ens_path}")
-    logger.info(f"Result relative path on scratch disk: {result_path}")
+    logger.info(f"Result path on scratch disk: {result_path}")
     logger.info(f"ERTBOX size:  {ertbox_size}")
 
     calc_stats(
@@ -374,13 +384,11 @@ def get_values_in_ertbox(
         )
     if conformity.upper() in ["PROPORTIONAL", "TOP_CONFORM"]:
         ertbox_prop_values[:, :, :nz_zone] = prop_values[:, :, start_layer:end_layer]
-    #        print(f"Top conform or proportional zone: {zone_name}")
     elif conformity.upper() == "BASE_CONFORM":
         start_layer_ertbox = ertbox_size[2] - nz_zone
         ertbox_prop_values[:, :, start_layer_ertbox:] = prop_values[
             :, :, start_layer:end_layer
         ]
-    #        print(f"Base conform zone: {zone_name}")
 
     return ertbox_prop_values
 
@@ -405,7 +413,6 @@ def set_subgrid_names(grid, zone_code_names=None, new_subgrids=None):
 
 
 def write_mean_stdev_nactive(
-    ensemble_path,
     iter_number,
     zone_name,
     param_name,
@@ -414,7 +421,7 @@ def write_mean_stdev_nactive(
     ncount_active_values,
     result_path,
 ):
-    output_path = ensemble_path / Path(result_path)
+    output_path = result_path
     if not output_path.exists():
         # Create the directory
         output_path.mkdir()
@@ -466,7 +473,7 @@ def write_fraction_nactive(
     result_path,
     ncount_active_values=None,
 ):
-    output_path = ensemble_path / Path(result_path)
+    output_path = result_path
     if not output_path.exists():
         # Create the directory
         output_path.mkdir()
@@ -753,7 +760,6 @@ def calc_stats(
                     # Write mean, stdev
                     if calc_mean and calc_stdev:
                         write_mean_stdev_nactive(
-                            ensemble_path,
                             iter_number,
                             zone_name,
                             param_name,
@@ -879,6 +885,38 @@ def calc_stats(
                             f" for ensemble iteration {iter_number}"
                         )
                         logger.info(txt)
+
+
+class FieldStatistics(ErtScript):
+    """This class defines the ERT workflow hook.
+
+    It is constructed to work identical to the command line except
+
+      * field_statistics is upper-cased to FIELD_STATISTICS
+      * All option names with double-dash must be enclosed in "" to avoid
+        interference with the ERT comment characters "--".
+    """
+
+    # pylint: disable=too-few-public-methods
+    def run(self, *args):
+        # pylint: disable=no-self-use
+        """Pass the ERT workflow arguments on to the same parser as the command
+        line."""
+        parser = get_parser()
+        parsed_args = parser.parse_args(args)
+        field_stat(parsed_args)
+
+
+@ert.plugin(name="subscript")
+def legacy_ertscript_workflow(config):
+    """A hook for usage of this script in an ERT workflow,
+    using the legacy hook format."""
+
+    workflow = config.add_workflow(FieldStatistics, "FIELD_STATISTICS")
+    workflow.parser = get_parser
+    workflow.description = DESCRIPTION
+    workflow.examples = EXAMPLES
+    workflow.category = CATEGORY
 
 
 if __name__ == "__main__":

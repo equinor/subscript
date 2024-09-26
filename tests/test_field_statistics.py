@@ -1,4 +1,5 @@
 # import logging
+import shutil
 from pathlib import Path
 
 import fmu.config.utilities as utils
@@ -21,12 +22,13 @@ from subscript.field_statistics.field_statistics import (
 # logger = subscript.getLogger(__name__)
 # logger.setLevel(logging.INFO)
 
-TESTDATA = Path(__file__).absolute().parent / "testdata_field_statistics"
-ENS_PATH = Path(__file__).absolute().parent / "testdata_field_statistics" / "ensemble"
-ERT_CONFIG_PATH = (
-    Path(__file__).absolute().parent / "testdata_field_statistics" / "ert" / "model"
-)
+TESTDATA = Path("testdata_field_statistics")
+ENSEMBLE = Path("ensemble")
 RESULT_PATH = Path("share/grid_statistics")
+ERT_CONFIG_PATH = Path("ert/model")
+DATADIR = Path(__file__).absolute().parent / TESTDATA
+GLOBAL_VARIABLES_FILE = Path("../../fmuconfig/output/global_variables.yml")
+
 
 CONFIG_DICT = {
     "nreal": 10,
@@ -55,22 +57,12 @@ CONFIG_DICT = {
     "ertbox_size": [5, 6, 5],
     "use_population_stdev": False,
 }
-GLOB_VAR_CFG_PATH = ERT_CONFIG_PATH / Path(
-    "../../fmuconfig/output/global_variables.yml"
-)
-CFG_GLOBAL = utils.yaml_load(GLOB_VAR_CFG_PATH)["global"]
-KEYWORD = "FACIES_ZONE"
-if KEYWORD in CFG_GLOBAL:
-    FACIES_PER_ZONE = CFG_GLOBAL[KEYWORD]
-else:
-    raise KeyError(f"Missing keyword: {KEYWORD} in {GLOB_VAR_CFG_PATH}")
 
 
-def make_box_grid(dimensions, grid_name, ens_path):
-    filename = ens_path / Path("share/grid_statistics") / Path(grid_name + ".roff")
-    filename_egrid = (
-        ens_path / Path("share/grid_statistics") / Path(grid_name.upper() + ".EGRID")
-    )
+def make_box_grid(dimensions, grid_name, result_path):
+    filename = result_path / Path(grid_name + ".roff")
+    filename_egrid = result_path / Path(grid_name.upper() + ".EGRID")
+
     grid = xtgeo.create_box_grid(dimensions)
     grid.name = grid_name
     print(f"Grid name:  {grid.name}")
@@ -116,7 +108,6 @@ def make_ensemble_test_data(
 
     iteration_list = [0, 3]
     zone_code_names = config_dict["zone_code_names"]
-    facies_per_zone = facies_per_zone
     discrete_param_name_per_zone = config_dict["discrete_property_param_per_zone"]
     param_name_per_zone = config_dict["continuous_property_param_per_zone"]
     nreal = 10
@@ -241,11 +232,12 @@ def make_ensemble_test_data(
                         xtgeo_geogrid.set_actnum(xtgeo_active)
                         set_subgrid_names(xtgeo_geogrid, new_subgrids=subgrid_dict)
                         xtgeo_geogrid.to_file(filename_grid, fformat="roff")
-
-    print(
-        "Finished make test data for ensemble for zone "
-        f"{zone_name} for iteration {iter_number}"
-    )
+            if print_info:
+                print(
+                    "Testdata for ensemble for zone "
+                    f"{zone_name} for iteration {iter_number} completed."
+                )
+    print("Finished making testdata ensemble")
 
 
 def assign_values_continuous_param(
@@ -389,9 +381,43 @@ def assign_values_discrete_param(
     return values, all_code_names
 
 
+def make_test_case(tmp_path, config_dict):
+    """Makes a test data set based on the input config_dict"""
+    tmp_testdata_path = tmp_path / TESTDATA
+    shutil.copytree(DATADIR, tmp_testdata_path)
+
+    ens_path = tmp_testdata_path / ENSEMBLE
+    ert_config_path = tmp_testdata_path / ERT_CONFIG_PATH
+    result_path = ens_path / RESULT_PATH
+
+    glob_cfg_path = ert_config_path / GLOBAL_VARIABLES_FILE
+    cfg_global = utils.yaml_load(glob_cfg_path)["global"]
+    keyword = "FACIES_ZONE"
+    if keyword in cfg_global:
+        facies_per_zone = cfg_global[keyword]
+    else:
+        raise KeyError(f"Missing keyword: {keyword} in {glob_cfg_path}")
+
+    (nx, ny, nz) = config_dict["ertbox_size"]
+
+    # Write file with ERTBOX grid for the purpose to import to visualize
+    # the test data in e.g. RMS. Saved in share directory at
+    # top of ensemble directory
+    make_box_grid((nx, ny, nz), "ERTBOX", result_path)
+
+    # Write file with geogrid for the purpose to import to visualize
+    # the test data in e.g. RMS". Geogrid for the test data has 3 zones,
+    # each with 5 layers. Saved in share directory at top of ensemble directory
+    make_box_grid((nx, ny, nz * 3), "Geogrid", result_path)
+
+    # Make ensemble of test data
+    make_ensemble_test_data(config_dict, facies_per_zone, nx, ny, nz, ens_path)
+    return facies_per_zone, ens_path, result_path, ert_config_path, (nx, ny, nz)
+
+
 def compare_with_referencedata(ens_path, result_path, print_check=False):
     lines = []
-    file_list = Path(ens_path) / Path(result_path) / Path("referencedata/files.txt")
+    file_list = result_path / Path("referencedata/files.txt")
     with open(file_list, "r") as file:
         lines = file.readlines()
     is_ok = []
@@ -403,10 +429,8 @@ def compare_with_referencedata(ens_path, result_path, print_check=False):
         name = nameinput.strip()
         words = name.split("_")
         if words[0] in ["mean", "stdev", "prob"]:
-            fullfilename = Path(ens_path) / Path(result_path) / Path("ertbox--" + name)
-            reference_filename = (
-                Path(ens_path) / Path(result_path) / Path("referencedata") / Path(name)
-            )
+            fullfilename = result_path / Path("ertbox--" + name)
+            reference_filename = result_path / Path("referencedata") / Path(name)
 
             grid_property = xtgeo.gridproperty_from_file(fullfilename, fformat="roff")
             grid_property_reference = xtgeo.gridproperty_from_file(
@@ -434,33 +458,18 @@ def compare_with_referencedata(ens_path, result_path, print_check=False):
 
 
 @pytest.mark.parametrize(
-    "config_dict, ens_path, ert_config_path, facies_per_zone, result_path",
-    [(CONFIG_DICT, ENS_PATH, ERT_CONFIG_PATH, FACIES_PER_ZONE, RESULT_PATH)],
+    "config_dict",
+    [CONFIG_DICT],
 )
 def test_calc_statistics(
+    tmp_path,
     config_dict,
-    ens_path,
-    ert_config_path,
-    facies_per_zone,
-    result_path,
     ertbox_size=None,
 ):
-    """Main test script"""
-
-    (nx, ny, nz) = config_dict["ertbox_size"]
-
-    # Write file with ERTBOX grid for the purpose to import to visualize
-    # the test data in e.g. RMS. Saved in share directory at
-    # top of ensemble directory
-    make_box_grid((nx, ny, nz), "ERTBOX", ens_path)
-
-    # Write file with geogrid for the purpose to import to visualize
-    # the test data in e.g. RMS". Geogrid for the test data has 3 zones,
-    # each with 5 layers. Saved in share directory at top of ensemble directory
-    make_box_grid((nx, ny, nz * 3), "Geogrid", ens_path)
-
-    # Make ensemble of test data
-    make_ensemble_test_data(config_dict, facies_per_zone, nx, ny, nz, ens_path)
+    # Create testdata for an ensemble to be used
+    facies_per_zone, ens_path, result_path, ert_config_path, ertbox_size = (
+        make_test_case(tmp_path, config_dict)
+    )
 
     # Run the calculations of mean, stdev, prob
     print("Calculate statistics")
@@ -867,41 +876,43 @@ def test_get_specification(
 
 
 @pytest.mark.parametrize(
-    "config_path, ens_path",
-    [
-        (
-            Path(__file__).absolute().parent
-            / "testdata_field_statistics"
-            / "config_example.yml",
-            ENS_PATH,
-        )
-    ],
+    "config_file, config_dict",
+    [(Path("config_example.yml"), CONFIG_DICT)],
 )
-def test_main(config_path, ens_path, print_info=True):
-    # Requires that the test data is already generated by
+def test_main(tmp_path, config_file, config_dict, print_info=True):
     import subprocess
     import sys
 
-    config_file = config_path.as_posix()
+    # First make an ensemble to be used as testdata. This is based on the config_dict
+    _, ens_path, result_path, ert_config_path, _ = make_test_case(tmp_path, config_dict)
+    tmp_testdata_path = tmp_path / TESTDATA
+    config_path = tmp_testdata_path / Path(config_file)
+    ert_config_path = tmp_testdata_path / ERT_CONFIG_PATH
+    ens_path = tmp_testdata_path / ENSEMBLE
+    result_path = ens_path / RESULT_PATH
+
+    # Run the main script as a subprocess
     script_name = Path(__file__).absolute().parent.parent / Path(
         "src/subscript/field_statistics/field_statistics.py"
     )
     if print_info:
         print(f"\nRun script:  {script_name}")
-    remove_file_path = ens_path / Path("share/grid_statistics/ertbox--*.roff")
-    print(f"Remove path:  {remove_file_path.as_posix()}")
+    remove_file_path = result_path / Path("ertbox--*.roff")
     subprocess.run(["rm", "-f", remove_file_path])
     subprocess.run(
         [
             sys.executable,
-            script_name,
+            script_name.as_posix(),
             "-c",
-            config_file,
+            config_path.as_posix(),
             "-p",
-            ERT_CONFIG_PATH,
+            ert_config_path.as_posix(),
             "-e",
-            ENS_PATH,
+            ens_path.as_posix(),
+            "-r",
+            result_path.as_posix(),
         ]
     )
-
-    assert compare_with_referencedata(ENS_PATH, RESULT_PATH, print_check=True)
+    # For this test not to fail, the CONFIG_DICT and the specified
+    # config file in yaml format must define the same setup
+    assert compare_with_referencedata(ens_path, result_path, print_check=True)
