@@ -215,7 +215,16 @@ def main_gravmaps(
             if singledate not in added_dates:
                 if singledate in restart_index:
                     rsb = rest.restartView(restart_index[singledate])
-                    grav.add_survey_RFIP(singledate, rsb)
+                    if rest.has_kw("RFIPGAS"):
+                        grav.add_survey_RFIP(singledate, rsb)
+                    else:
+                        logger.info(
+                            "RFIPGAS missing in restart file.  "
+                            "Cannot use RFIP in gravity calculations.  "
+                            "Will try to use RPORV method instead"
+                        )
+                        grav.add_survey_RPORV(singledate, rsb)
+
                     subsidence.add_survey_PRESSURE(singledate, rsb)
                     added_dates.append(singledate)
                 else:
