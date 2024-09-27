@@ -28,7 +28,7 @@ RESULT_PATH = Path("share/grid_statistics")
 ERT_CONFIG_PATH = Path("ert/model")
 DATADIR = Path(__file__).absolute().parent / TESTDATA
 GLOBAL_VARIABLES_FILE = Path("../../fmuconfig/output/global_variables.yml")
-
+RMS_LOAD_SCRIPT_NAME = "tmp_import_field_stat_results.py"
 
 CONFIG_DICT = {
     "nreal": 10,
@@ -64,7 +64,7 @@ def make_box_grid(dimensions, grid_name, result_path):
     filename_egrid = result_path / Path(grid_name.upper() + ".EGRID")
 
     grid = xtgeo.create_box_grid(dimensions)
-    grid.name = grid_name
+    grid.name = grid_name.lower()
     print(f"Grid name:  {grid.name}")
     print(f"Grid dimensions: {grid.dimensions}")
     print(f"Write grid to file:  {filename}")
@@ -891,6 +891,7 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
     ens_path = tmp_testdata_path / ENSEMBLE
     result_path = ens_path / RESULT_PATH
 
+    rms_load_script = result_path / RMS_LOAD_SCRIPT_NAME
     # Run the main script as a subprocess
     script_name = Path(__file__).absolute().parent.parent / Path(
         "src/subscript/field_statistics/field_statistics.py"
@@ -911,6 +912,8 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
             ens_path.as_posix(),
             "-r",
             result_path.as_posix(),
+            "-z",
+            rms_load_script.as_posix(),
         ]
     )
     # For this test not to fail, the CONFIG_DICT and the specified
