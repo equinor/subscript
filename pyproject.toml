@@ -117,6 +117,8 @@ sw_model_utilities = "subscript.sw_model_utilities.sw_model_utilities:main"
 sunsch = "subscript.sunsch.sunsch:main"
 vfp2csv = "subscript.vfp2csv.vfp2csv:main"
 welltest_dpds = "subscript.welltest_dpds.welltest_dpds:main"
+field_statistics = "subscript.field_statistics.field_statistics:main"
+
 
 [project.entry-points.ert]
 subscript_jobs = "subscript.hook_implementations.jobs"
@@ -124,6 +126,7 @@ CsvMerge = "subscript.csv_merge.csv_merge"
 CsvStack = "subscript.csv_stack.csv_stack"
 FmuObs = "subscript.fmuobs.fmuobs"
 Params2Csv = "subscript.params2csv.params2csv"
+FieldStatistics = "subscript.field_statistics.field_statistics"
 
 [tool.setuptools]
 script-files = [
