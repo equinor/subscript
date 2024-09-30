@@ -1,0 +1,18 @@
+==============================
+``subscript.field_statistics``
+==============================
+
+.. automodule:: subscript.field_statistics
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.field_statistics.field_statistics
+
+.. currentmodule:: subscript.field_statistics

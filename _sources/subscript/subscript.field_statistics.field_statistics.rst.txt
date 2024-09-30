@@ -1,0 +1,10 @@
+===============================================
+``subscript.field_statistics.field_statistics``
+===============================================
+
+.. automodule:: subscript.field_statistics.field_statistics
+
+   .. contents::
+      :local:
+
+.. currentmodule:: subscript.field_statistics.field_statistics

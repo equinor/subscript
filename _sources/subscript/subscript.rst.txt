@@ -22,6 +22,7 @@ Submodules
    subscript.csv_stack
    subscript.eclcompress
    subscript.ecldiff2roff
+   subscript.field_statistics
    subscript.fmu_copy_revision
    subscript.fmuobs
    subscript.grav_subs_maps

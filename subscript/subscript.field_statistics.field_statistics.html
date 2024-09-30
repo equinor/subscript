@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.fmuobs.util &mdash; subscript 1.7.1.dev7+g9e052e7d documentation</title>
+  <title>subscript.field_statistics.field_statistics &mdash; subscript 1.7.1.dev7+g9e052e7d documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -31,8 +31,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="subscript.fmuobs.writers" href="subscript.fmuobs.writers.html" />
-    <link rel="prev" title="subscript.fmuobs.parsers" href="subscript.fmuobs.parsers.html" /> 
+    <link rel="next" title="subscript.fmu_copy_revision" href="subscript.fmu_copy_revision.html" />
+    <link rel="prev" title="subscript.field_statistics" href="subscript.field_statistics.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -113,12 +113,12 @@
 <li class="toctree-l3"><a class="reference internal" href="subscript.csv_stack.html"><code class="docutils literal notranslate"><span class="pre">subscript.csv_stack</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.eclcompress.html"><code class="docutils literal notranslate"><span class="pre">subscript.eclcompress</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.ecldiff2roff.html"><code class="docutils literal notranslate"><span class="pre">subscript.ecldiff2roff</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.field_statistics.html"><code class="docutils literal notranslate"><span class="pre">subscript.field_statistics</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="subscript.fmu_copy_revision.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmu_copy_revision</span></code></a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="subscript.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs</span></code></a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="subscript.fmuobs.html#submodules">Submodules</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="subscript.field_statistics.html"><code class="docutils literal notranslate"><span class="pre">subscript.field_statistics</span></code></a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="subscript.field_statistics.html#submodules">Submodules</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmu_copy_revision.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmu_copy_revision</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="subscript.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.grav_subs_maps.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_maps</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.grav_subs_points.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="subscript.hook_implementations.html"><code class="docutils literal notranslate"><span class="pre">subscript.hook_implementations</span></code></a></li>
@@ -161,10 +161,10 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
-          <li class="breadcrumb-item"><a href="subscript.fmuobs.html"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs</span></code></a></li>
-      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.util</span></code></li>
+          <li class="breadcrumb-item"><a href="subscript.field_statistics.html"><code class="docutils literal notranslate"><span class="pre">subscript.field_statistics</span></code></a></li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">subscript.field_statistics.field_statistics</span></code></li>
       <li class="wy-breadcrumbs-aside">
-            <a href="../_sources/subscript/subscript.fmuobs.util.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/subscript/subscript.field_statistics.field_statistics.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -172,19 +172,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-subscript.fmuobs.util">
-<span id="subscript-fmuobs-util"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.fmuobs.util</span></code><a class="headerlink" href="#module-subscript.fmuobs.util" title="Permalink to this heading"></a></h1>
-<p>Small utility functions used by fmuobs, parsers and/or writers</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="subscript.fmuobs.util.lowercase_dictkeys">
-<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.util.</span></span><span class="sig-name descname"><span class="pre">lowercase_dictkeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">some_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.util.lowercase_dictkeys" title="Permalink to this definition"></a></dt>
-<dd><p>Convert all keys in a dictionary to lower-case</p>
+  <section id="module-subscript.field_statistics.field_statistics">
+<span id="subscript-field-statistics-field-statistics"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.field_statistics.field_statistics</span></code><a class="headerlink" href="#module-subscript.field_statistics.field_statistics" title="Permalink to this heading"></a></h1>
+<dl class="simple">
+<dt>Purpose:</dt><dd><p>Calculate mean and stdev of continuous field parameters
+Estimate volume fraction of facies (facies probabilities)
+Works for non-shared grids where nx, ny is fixed,
+but nz per zone may vary from realization to realization.</p>
+</dd>
+<dt>Result:</dt><dd><p>Output mean and stdev for continuous field parameter
+Output estimate of facies probabilities for facies parameters</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.FieldStatistics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">FieldStatistics</span></span><a class="headerlink" href="#subscript.field_statistics.field_statistics.FieldStatistics" title="Permalink to this definition"></a></dt>
+<dd><p>This class defines the ERT workflow hook.</p>
+<p>It is constructed to work identical to the command line except</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>field_statistics is upper-cased to FIELD_STATISTICS</p></li>
+<li><p>All option names with double-dash must be enclosed in “” to avoid
+interference with the ERT comment characters “–“.</p></li>
+</ul>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.FieldStatistics.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.FieldStatistics.run" title="Permalink to this definition"></a></dt>
+<dd><p>Pass the ERT workflow arguments on to the same parser as the command
+line.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="subscript.fmuobs.util.uppercase_dictkeys">
-<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.util.</span></span><span class="sig-name descname"><span class="pre">uppercase_dictkeys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">some_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.util.uppercase_dictkeys" title="Permalink to this definition"></a></dt>
-<dd><p>Convert all keys in a dictionary to upper-case</p>
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.get_parser">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.get_parser" title="Permalink to this definition"></a></dt>
+<dd><p>Define the argparse parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.legacy_ertscript_workflow">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.legacy_ertscript_workflow" title="Permalink to this definition"></a></dt>
+<dd><p>A hook for usage of this script in an ERT workflow,
+using the legacy hook format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.main">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.main" title="Permalink to this definition"></a></dt>
+<dd><p>Invocated from the command line, parsing command line arguments</p>
 </dd></dl>
 
 </section>
@@ -193,8 +235,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="subscript.fmuobs.parsers.html" class="btn btn-neutral float-left" title="subscript.fmuobs.parsers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="subscript.fmuobs.writers.html" class="btn btn-neutral float-right" title="subscript.fmuobs.writers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="subscript.field_statistics.html" class="btn btn-neutral float-left" title="subscript.field_statistics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="subscript.fmu_copy_revision.html" class="btn btn-neutral float-right" title="subscript.fmu_copy_revision" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIELD_STATISTICS &mdash; subscript 1.7.1.dev7+g9e052e7d documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=e61d0f87"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
+        <script>let toggleHintShow = 'Click to show';</script>
+        <script>let toggleHintHide = 'Click to hide';</script>
+        <script>let toggleOpenOnPrint = 'true';</script>
+        <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+        <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="FMU_COPY_REVISION" href="fmu_copy_revision.html" />
+    <link rel="prev" title="ECLDIFF2ROFF" href="ecldiff2roff.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            subscript
+              <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                1.7.1.dev7+g9e052e7d
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">History</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Scripts</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="casegen_upcars.html">CASEGEN_UPCARS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="check_swatinit.html">CHECK_SWATINIT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="convert_grid_format.html">CONVERT_GRID_FORMAT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eclcompress.html">ECLCOMPRESS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ecldiff2roff.html">ECLDIFF2ROFF</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">FIELD_STATISTICS</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grav_subs_maps.html">GRAV_SUBS_MAPS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grav_subs_points.html">GRAV_SUBS_POINTS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="interp_relperm.html">INTERP_RELPERM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_rft_ertobs.html">MERGE_RFT_ERTOBS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="merge_unrst_files.html">MERGE_UNRST_FILES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ofmvol2csv.html">OFMVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="presentvalue.html">PRESENTVALUE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prtvol2csv.html">PRTVOL2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="restartthinner.html">RESTARTTHINNER</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ri_wellmod.html">RI_WELLMOD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rmsecl_volumetrics.html">RMSECL_VOLUMETRICS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runeclipse.html">RUNECLIPSE</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sunsch.html">SUNSCH</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
+<li class="toctree-l1"><a class="reference internal" href="welltest_dpds.html">WELLTEST_DPDS</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subscript/subscript.html"><code class="docutils literal notranslate"><span class="pre">subscript</span></code></a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">subscript</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">FIELD_STATISTICS</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/scripts/field_statistics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="field-statistics">
+<h1>FIELD_STATISTICS<a class="headerlink" href="#field-statistics" title="Permalink to this heading"></a></h1>
+<p><p>Calculate mean, stdev and estimated facies probabilities
+from field parameters using ERTBOX grid.</p>
+<p>The script reads ensembles of realizations from scratch disk  from
+share/results/grids/geogrid–&lt;propertyname&gt;.roff.</p>
+<p>Since the realizations may have a grid geometry that is realization dependent
+and may have multiple zones, the values are first copied over to a static grid
+called ERTBOX grid. Depending on the grid conformity of the geogrid zones,
+the values are filled up from top or bottom of the ERTBOX grid. This is to
+ensure that zones with varying number of layers for each realization can
+be handled when calculating mean, standard deviation or estimated facies
+probabilities.</p>
+<p>The grid cell indices in the ERTBOX grid is a label of the parameter value,
+and mean, standard deviation and facies fractions are calculated for
+each specified property for each individual grid cell (I,J,K) in the ERTBOX grid.
+Number of realizations of property values may vary from grid cell to grid cell
+due to varying number of layers per realization and due to stair case faults.
+Therefore also a parameter counting the number of realizations present for each
+individual grid cell is also calculated and used in the estimates of mean,
+standard deviation and facies probabilities.</p>
+<p>The assumption behind this method (using ERTBOX grid as a fixed common grid for
+all realizations) is:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The lateral extension of the geogrid is close to a regular grid with same
+orientation and grid resolution as the ERTBOX grid.</p></li>
+<li><p>The ERTBOX grid should be the same as used in ERT when field parameters
+are updated using the ERT keyword FIELD in the ERT configuration file.</p></li>
+<li><p>Any lateral variability from realization to realization or curved shaped
+lateral grid is ignored. Only the cell indices are used to identify
+grid cell field parameters from each realization. This means that
+mean, standard deviation and estimated facies probabilities are estimated
+for each cell labeled with index (I,J,K) and not physical position (x,y,z).</p></li>
+</ul>
+</div></blockquote>
+<p>The output statistical properties (mean, stdev, prob) is saved in a user
+specified folder, but default if not specified is share/grid_statistics
+folder under the top level of the scratch directory for the ERT case.
+The default estimate of standard deviation is the sample standard deviation
+(variance = sum( (x(i)-x_mean)^2 )/(N-1) )
+and number of realizations must be at least 2. Optionally, the population
+standard deviation
+(variance = sum( (x(i)-x_mean)^2 )/N )
+can be specified.</p>
+<p>For grid cells where number of realizations are less than 2,
+the standard deviation parameter calculated will be set to 0.</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">field_statistics</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">ERTCONFIGPATH</span><span class="p">]</span> <span class="o">-</span><span class="n">e</span> <span class="n">ENSEMBLEPATH</span>
+                        <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">RESULTPATH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+</pre></div>
+</div>
+<section id="named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<dl class="option-list">
+<dt><kbd>-c, -C, --configfile</kbd></dt>
+<dd><p>Name of YAML config file</p>
+</dd>
+<dt><kbd>-p, --ertconfigpath</kbd></dt>
+<dd><p>Root path assumed for relative paths in config file, except for the output file.</p>
+<p>Default: “./”</p>
+</dd>
+<dt><kbd>-e, --ensemblepath</kbd></dt>
+<dd><p>File path to ensemble directory on scratch disk</p>
+</dd>
+<dt><kbd>-r, --resultpath</kbd></dt>
+<dd><p>Relative file path to result files relative to ensemble directory on scratch disk</p>
+<p>Default: “share/grid_statistics”</p>
+</dd>
+<dt><kbd>--version</kbd></dt>
+<dd><p>show program’s version number and exit</p>
+</dd>
+</dl>
+</section>
+<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for wf_field_param_statistics</span>
+
+<span class="nt">field_stat</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Number of realizations for specified ensemble</span>
+<span class="w">  </span><span class="c1"># Required.</span>
+<span class="w">  </span><span class="nt">nreal</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+
+<span class="w">  </span><span class="c1"># Iteration numbers from ES-MDA in ERT (iteration = 0 is initial ensemble,</span>
+<span class="w">  </span><span class="c1"># usually iteration=3 is final updated ensemble)</span>
+<span class="w">  </span><span class="c1"># Required.</span>
+<span class="w">  </span><span class="nt">iterations</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="c1"># Selected set of zone names to use in calculations of statistics.</span>
+<span class="w">  </span><span class="c1"># Must be one or more of the defined zones.</span>
+<span class="w">  </span><span class="c1"># Require at least one zone to be selected.</span>
+<span class="w">  </span><span class="nt">use_zones</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="c1"># Zone numbers with zone name dictionary ordered in increasing order of zone code</span>
+<span class="w">  </span><span class="c1"># Required for multi-zone grids.</span>
+<span class="w">  </span><span class="nt">zone_code_names</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
+<span class="w">      </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
+<span class="w">      </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
+
+<span class="w">  </span><span class="c1"># For each zone specify either Proportional, Top_conform or Base_conform</span>
+<span class="w">  </span><span class="c1"># as grid conformity.</span>
+<span class="w">  </span><span class="c1"># Conformity can be checked by opening the RMS job that has created</span>
+<span class="w">  </span><span class="c1"># the geogrid and check the grid settings for grid layers.</span>
+<span class="w">  </span><span class="c1"># Proportional means that number of layers is specified.</span>
+<span class="w">  </span><span class="c1"># Top or base conform means that grid cell thickness is specified.</span>
+<span class="w">  </span><span class="c1"># Required (but only for zones you want to use)</span>
+<span class="w">  </span><span class="nt">zone_conformity</span><span class="p">:</span>
+<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
+<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Top_conform&quot;</span>
+<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
+
+<span class="w">  </span><span class="c1"># For each zone specify which discrete parameter to use to calculate</span>
+<span class="w">  </span><span class="c1"># facies probability estimates.</span>
+<span class="w">  </span><span class="c1"># Possible names are those found in the</span>
+<span class="w">  </span><span class="c1"># share/results/grids/geogrid--&lt;name&gt;.roff</span>
+<span class="w">  </span><span class="c1"># files that are of discrete type.</span>
+<span class="w">  </span><span class="c1"># This key can be omitted or some of the lines specifying parameters</span>
+<span class="w">  </span><span class="c1"># for a zone if you don&#39;t want to use it.</span>
+<span class="w">  </span><span class="nt">discrete_property_param_per_zone</span><span class="p">:</span>
+<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="c1"># For each zone specify which continuous parameter to use to</span>
+<span class="w">  </span><span class="c1"># calculate estimate of mean and stdev over ensemble.</span>
+<span class="w">  </span><span class="c1"># Possible names are those found in the</span>
+<span class="w">  </span><span class="c1">#  share/results/grids/geogrid--&lt;name&gt;.roff</span>
+<span class="w">  </span><span class="c1"># files that are of continuous type</span>
+<span class="w">  </span><span class="c1"># This key can be omitted or some of the lines specifying</span>
+<span class="w">  </span><span class="c1"># parameters for a zone if you don&#39;t want to use it.</span>
+<span class="w">  </span><span class="nt">continuous_property_param_per_zone</span><span class="p">:</span>
+<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="c1"># Size of ertbox grid for (nx, ny, nz)</span>
+<span class="w">  </span><span class="c1"># Required if the ERTBOX grid is not found as a file</span>
+<span class="w">  </span><span class="c1"># under rms/output/aps/ERTBOX.EGRID</span>
+<span class="w">  </span><span class="nt">ertbox_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">92</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">146</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">66</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="c1"># Standard deviation estimator.</span>
+<span class="w">  </span><span class="c1"># Optional. Default is False which means that</span>
+<span class="w">  </span><span class="c1"># sample standard deviation ( normalize by (N-1)) is used</span>
+<span class="w">  </span><span class="c1"># where N is number of realizations.</span>
+<span class="w">  </span><span class="c1"># The alternative is True which means that</span>
+<span class="w">  </span><span class="c1"># population standard deviation ( normalize by N) is used.</span>
+<span class="w">  </span><span class="nt">use_population_stdev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+</pre></div>
+</div>
+</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ecldiff2roff.html" class="btn btn-neutral float-left" title="ECLDIFF2ROFF" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="fmu_copy_revision.html" class="btn btn-neutral float-right" title="FMU_COPY_REVISION" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Equinor.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>  
+
+  <style>
+    /* Sidebar header (and topbar for mobile) */
+    .wy-side-nav-search, .wy-nav-top {
+      background: #ff1243;
+    }
+    /* Sidebar */
+    .wy-nav-side {
+      background: #474747;
+    }
+    .wy-side-nav-search > div.version {
+      color: white;
+    }
+  </style>
+
+
+</body>
+</html>
