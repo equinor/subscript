@@ -1004,11 +1004,11 @@ def main():
                             prop_param = xtgeo.gridproperty_from_file(
                                 filename,
                                 fformat="roff")
-                            prop_param.to_roxar(PRJ, GRIDNAME, name)
                             new_name = name
                             if label:
                                 new_name = name + "_" + label
                             prop_param.name = new_name
+                            prop_param.to_roxar(PRJ, GRIDNAME, new_name)
                         name = "ertbox--nactive_" + zone + "_" + str(iteration)
                         print(f"Read: {{name}} into {{GRIDNAME}}")
                         filename =  Path(result_path) / Path(name + ".roff")
@@ -1039,7 +1039,10 @@ def main():
                     print(f"Read: {{name}} into {{GRIDNAME}}")
                     filename =  Path(result_path) / Path(name + ".roff")
                     prop_param = xtgeo.gridproperty_from_file(filename, fformat="roff")
-                    prop_param.to_roxar(PRJ, GRIDNAME, name)
+                    new_name = name
+                    if label:
+                        new_name = name + "_" + label
+                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
 
 if __name__ == "__main__":
     main()
