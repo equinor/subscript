@@ -952,11 +952,11 @@ GRIDNAME = "ERTBOX"
 ERT_CONFIG_PATH = "{ert_config_path}"
 
 GLOBAL_VARIABLES_FILE  = \
-    ERT_CONFIG_PATH / Path("../../fmuconfig/output/global_variables.yml")
+    Path(ERT_CONFIG_PATH) / Path("../../fmuconfig/output/global_variables.yml")
 
-FIELD_STAT_CONFIG_FILE = "{field_stat_config_file}"
+FIELD_STAT_CONFIG_FILE = Path(ERT_CONFIG_PATH) / Path("{field_stat_config_file}")
 
-RESULT_PATH = "{result_path}"
+RESULT_PATH = Path("{result_path}")
 
 
 LABEL = "drogon"
