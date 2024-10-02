@@ -892,11 +892,7 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
 
     rms_load_script = result_path / RMS_LOAD_SCRIPT_NAME
 
-    # Run the main script as a subprocess,but first clean up
-    # result directory to be sure this test does not re-use
-    # previous results from previous tests
-    remove_file_path = result_path / Path("ertbox--*.roff")
-    subprocess.run(["rm", "-f", remove_file_path])
+    # Run the main script as a subprocess
     subprocess.run(
         [
             "field_statistics",
