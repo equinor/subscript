@@ -981,7 +981,10 @@ def main():
     zone_code_names = field_stat["zone_code_names"]
     facies_per_zone = get_facies_per_zone(GLOBAL_VARIABLES_FILE)
     result_path = RESULT_PATH
-    zone_list= list(zone_code_names.values())
+    if "use_zones" in field_stat:
+        zone_list= field_stat["use_zones"]
+    else:
+        zone_list= list(zone_code_names.values())
     stat_list= ["mean", "stdev"]
     iter_list = field_stat["iterations"]
 
