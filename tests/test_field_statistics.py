@@ -881,7 +881,6 @@ def test_get_specification(
 )
 def test_main(tmp_path, config_file, config_dict, print_info=True):
     import subprocess
-    import sys
 
     # First make an ensemble to be used as testdata. This is based on the config_dict
     _, ens_path, result_path, ert_config_path, _ = make_test_case(tmp_path, config_dict)
@@ -892,18 +891,11 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
     result_path = ens_path / RESULT_PATH
 
     rms_load_script = result_path / RMS_LOAD_SCRIPT_NAME
+
     # Run the main script as a subprocess
-    script_name = Path(__file__).absolute().parent.parent / Path(
-        "src/subscript/field_statistics/field_statistics.py"
-    )
-    if print_info:
-        print(f"\nRun script:  {script_name}")
-    remove_file_path = result_path / Path("ertbox--*.roff")
-    subprocess.run(["rm", "-f", remove_file_path])
     subprocess.run(
         [
-            sys.executable,
-            script_name.as_posix(),
+            "field_statistics",
             "-c",
             config_path.as_posix(),
             "-p",

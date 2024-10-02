@@ -952,11 +952,11 @@ GRIDNAME = "ERTBOX"
 ERT_CONFIG_PATH = "{ert_config_path}"
 
 GLOBAL_VARIABLES_FILE  = \
-    ERT_CONFIG_PATH / Path("../../fmuconfig/output/global_variables.yml")
+    Path(ERT_CONFIG_PATH) / Path("../../fmuconfig/output/global_variables.yml")
 
-FIELD_STAT_CONFIG_FILE = "{field_stat_config_file}"
+FIELD_STAT_CONFIG_FILE = Path(ERT_CONFIG_PATH) / Path("{field_stat_config_file}")
 
-RESULT_PATH = "{result_path}"
+RESULT_PATH = Path("{result_path}")
 
 
 LABEL = "drogon"
@@ -981,7 +981,10 @@ def main():
     zone_code_names = field_stat["zone_code_names"]
     facies_per_zone = get_facies_per_zone(GLOBAL_VARIABLES_FILE)
     result_path = RESULT_PATH
-    zone_list= list(zone_code_names.values())
+    if "use_zones" in field_stat:
+        zone_list= field_stat["use_zones"]
+    else:
+        zone_list= list(zone_code_names.values())
     stat_list= ["mean", "stdev"]
     iter_list = field_stat["iterations"]
 
