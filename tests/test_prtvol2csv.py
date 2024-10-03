@@ -183,13 +183,37 @@ def test_prtvol2csv(tmp_path, mocker):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
+def test_rename_fip_column(tmp_path, mocker):
+    """Test renaming of the region column to FIPNUM"""
+    prtfile = TEST_PRT_DATADIR / "DROGON_FIPZON.PRT"
+
+    os.chdir(tmp_path)
+
+    with pytest.warns(FutureWarning, match="Output directories"):
+        mocker.patch(
+            "sys.argv",
+            [
+                "prtvol2csv",
+                "--fipname",
+                "FIPZON",
+                "--rename4webviz",
+                "--debug",
+                str(prtfile),
+            ],
+        )
+        prtvol2csv.main()
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
+
+    assert "FIPNUM" in dframe.columns
+
+
 def test_fipxxx(tmp_path, mocker):
     """Test invocation from command line"""
     prtfile = TEST_PRT_DATADIR / "DROGON_FIPZON.PRT"
 
     os.chdir(tmp_path)
 
-    # Test for FIPZON:
+    # Test for FIPZON, without the rename4webviz option:
     with pytest.warns(FutureWarning, match="Output directories"):
         mocker.patch(
             "sys.argv", ["prtvol2csv", "--fipname", "FIPZON", "--debug", str(prtfile)]
@@ -199,7 +223,7 @@ def test_fipxxx(tmp_path, mocker):
 
     expected = pd.DataFrame.from_dict(
         {
-            "FIPNUM": {0: 1, 1: 2, 2: 3},
+            "FIPZON": {0: 1, 1: 2, 2: 3},
             "STOIIP_OIL": {0: 19549844.0, 1: 11560982.0, 2: 13683668.0},
             "ASSOCIATEDOIL_GAS": {0: 102008.0, 1: 65583.0, 2: 6790.0},
             "STOIIP_TOTAL": {0: 19651853.0, 1: 11626565.0, 2: 13690458.0},

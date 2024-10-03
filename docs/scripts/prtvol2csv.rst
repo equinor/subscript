@@ -60,9 +60,9 @@ which will be added to the exported table. FIPRESV will include reservoir volume
 
 If `FIP=3` in RPTSOL, the PRT file will also contain report of in-place volumes for any additional 
 FIP-vectors. Default is to export volumes per FIPNUM, but any FIP-vector can be specified
-using the ``fipname`` option. However, the column name will always be FIPNUM in the csv-file, 
-as required by ``webviz-subsurface`` plugin "VolumetricAnalysis". An additional column with 
-the actual FIPNAME is included for information.
+using the ``fipname`` option. By using the ``rename4webviz`` option, the column name would be set to FIPNUM 
+in the csv-file for any FIP-vector, as required by ``webviz-subsurface`` plugin ``VolumetricAnalysis``. 
+This renaming is not needed for ``Webviz-Sumo``. An additional column with the actual FIPNAME is included for information.
 
 
 Region and zone support
