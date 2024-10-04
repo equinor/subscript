@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PRTVOL2CSV &mdash; subscript 1.8.1.dev2+ge9d6566a documentation</title>
+  <title>PRTVOL2CSV &mdash; subscript 1.8.1.dev3+g107d6d1e documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=34c38d7e"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=bb617130"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.8.1.dev2+ge9d6566a
+                1.8.1.dev3+g107d6d1e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -137,13 +137,16 @@
              
   <section id="prtvol2csv">
 <h1>PRTVOL2CSV<a class="headerlink" href="#prtvol2csv" title="Permalink to this heading"></a></h1>
-<p><p>Extract reservoir volumes pr FIPNUM from Eclipse PRT files and dump to CSV.</p>
+<p><p>Extract in-place volumes per FIPNUM, or any FIP vector specified, from an
+Eclipse PRT file and dump to CSV file.</p>
 <p>If a yaml file is specified through options, it is possible to add columns
 with region and zone information to each FIPNUM. The YAML file must contain
-the keys “region2fipnum” and/or “zone2fipnum”.</p>
+the keys “region2fipnum” and/or “zone2fipnum”. A YAML file can only be used together
+with FIPNUM, - not with any additional FIP vector.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">prtvol2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">outputfilename</span> <span class="n">OUTPUTFILENAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">yaml</span> <span class="n">YAML</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
-                  <span class="p">[</span><span class="o">--</span><span class="nb">dir</span> <span class="n">DIR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">prtvol2csv</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">outputfilename</span> <span class="n">OUTPUTFILENAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">fipname</span> <span class="n">FIPNAME</span><span class="p">]</span>
+                  <span class="p">[</span><span class="o">--</span><span class="n">rename2fipnum</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">yaml</span> <span class="n">YAML</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="nb">dir</span> <span class="n">DIR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span><span class="p">]</span>
+                  <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                   <span class="n">DATAfile</span>
 </pre></div>
 </div>
@@ -151,7 +154,7 @@ the keys “region2fipnum” and/or “zone2fipnum”.</p>
 <h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>DATAfile</kbd></dt>
-<dd><p>Name of Eclipse DATA file</p>
+<dd><p>Name of Eclipse or OPM Flow DATA file, PRT file or fileroot</p>
 </dd>
 </dl>
 </section>
@@ -161,6 +164,14 @@ the keys “region2fipnum” and/or “zone2fipnum”.</p>
 <dt><kbd>--outputfilename</kbd></dt>
 <dd><p>CSV filename to write, including path. Directory must exist.</p>
 <p>Default: “simulator_volume_fipnum.csv”</p>
+</dd>
+<dt><kbd>--fipname</kbd></dt>
+<dd><p>Specify FIP-name, for an additional FIP vector.</p>
+<p>Default: “FIPNUM”</p>
+</dd>
+<dt><kbd>--rename2fipnum</kbd></dt>
+<dd><p>Rename the additional FIP vector to FIPNUM.</p>
+<p>Default: False</p>
 </dd>
 <dt><kbd>--yaml, --regions</kbd></dt>
 <dd><p>YAML file containing a fipnum2region and/or fipnum2zone dictionary (or the reverse maps region2fipnum/zone2fipnum).</p>
@@ -202,13 +213,13 @@ the keys “region2fipnum” and/or “zone2fipnum”.</p>
 ====================================================================================================================================
 </pre></div>
 </div>
-<p>Additionally, if the Eclipse DATA file includes:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">RPTSOL</span>
-  <span class="n">FIP</span><span class="o">=</span><span class="mi">2</span> <span class="s1">&#39;FIPRESV&#39;</span> <span class="o">/</span>
+<p>Additionally, if the Eclipse DATA file includes</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>RPTSOL
+  FIP=2 &#39;FIPRESV&#39; /
 </pre></div>
 </div>
-<p>the PRT-file will also contain a table with pore volumes pr. phase and pr.
-FIPNUM, which will be added to the exported table.</p>
+<p>the PRT-file will also contain a table with pore volumes per phase and per FIPNUM,
+which will be added to the exported table. FIPRESV will include reservoir volumes (RM3).</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>                                                    ===================================
                                                     :  RESERVOIR VOLUMES      RM3     :
 :---------:---------------:---------------:---------------:---------------:---------------:
@@ -222,6 +233,11 @@ FIPNUM, which will be added to the exported table.</p>
 ===========================================================================================
 </pre></div>
 </div>
+<p>If <cite>FIP=3</cite> in RPTSOL, the PRT file will also contain report of in-place volumes for any additional
+FIP-vectors. Default is to export volumes per FIPNUM, but any FIP-vector can be specified
+using the <code class="docutils literal notranslate"><span class="pre">fipname</span></code> option. By using the <code class="docutils literal notranslate"><span class="pre">rename2fipnum</span></code> option, the column name would be set to FIPNUM
+in the csv-file for any FIP-vector, as required by <code class="docutils literal notranslate"><span class="pre">webviz-subsurface</span></code> plugin <code class="docutils literal notranslate"><span class="pre">VolumetricAnalysis</span></code>.
+This renaming is not needed for <code class="docutils literal notranslate"><span class="pre">Webviz-Sumo</span></code>. An additional column with the actual FIPNAME is included for information.</p>
 </section>
 <section id="region-and-zone-support">
 <h2>Region and zone support<a class="headerlink" href="#region-and-zone-support" title="Permalink to this heading"></a></h2>

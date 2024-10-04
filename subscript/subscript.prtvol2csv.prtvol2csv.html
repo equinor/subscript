@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.prtvol2csv.prtvol2csv &mdash; subscript 1.8.1.dev2+ge9d6566a documentation</title>
+  <title>subscript.prtvol2csv.prtvol2csv &mdash; subscript 1.8.1.dev3+g107d6d1e documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -18,7 +18,7 @@
   
         <script src="../_static/jquery.js?v=5d32c60e"></script>
         <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=34c38d7e"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=bb617130"></script>
         <script src="../_static/doctools.js?v=888ff710"></script>
         <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
         <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -48,7 +48,7 @@
               <img src="../_static/equinor-logo2.jpg" class="logo" alt="Logo"/>
           </a>
               <div class="version">
-                1.8.1.dev2+ge9d6566a
+                1.8.1.dev3+g107d6d1e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -280,9 +280,9 @@ explicitly. If directories are not in place, a FutureWarning is emitted.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.prtvol2csv.prtvol2csv.prtvol2df">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">prtvol2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simvolumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resvolumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipmapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prtvol2df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">prtvol2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">simvolumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resvolumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipmapper</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename2fipnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.prtvol2df" title="Permalink to this definition"></a></dt>
 <dd><p>Concatenate two dataframes (with common index) horizontally,
-and add REGION and ZONE parameter.</p>
+and if fipname=”FIPNUM”, add REGION and ZONE parameter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
@@ -292,7 +292,7 @@ and add REGION and ZONE parameter.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">reservoir_volumes_from_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">reservoir_volumes_from_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Permalink to this definition"></a></dt>
 <dd><p>Extracts numbers from the table “RESERVOIR VOLUMES” in an Eclipse PRT
 file, example table is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                    <span class="o">===================================</span>
