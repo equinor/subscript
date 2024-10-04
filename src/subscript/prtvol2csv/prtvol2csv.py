@@ -15,23 +15,36 @@ from fmu.tools.fipmapper.fipmapper import FipMapper
 from subscript import __version__, getLogger
 
 DESCRIPTION = """
-Extract reservoir volumes pr FIPNUM from Eclipse PRT files and dump to CSV.
+Extract in-place volumes per FIPNUM, or any FIP vector specified, from an
+Eclipse PRT file and dump to CSV file.
 
 If a yaml file is specified through options, it is possible to add columns
 with region and zone information to each FIPNUM. The YAML file must contain
-the keys "region2fipnum" and/or "zone2fipnum".
+the keys "region2fipnum" and/or "zone2fipnum". A YAML file can only be used together
+with FIPNUM, - not with any additional FIP vector.
 """
 
 CATEGORY = "utility.eclipse"
 
+
 EXAMPLES = """
 .. code-block:: console
 
-  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>, <REGIONS>=regions.yml, <DIR>=., <OUTPUTFILENAME>=simulator_volume_fipnum.csv)
+  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>, <REGIONS>=regions.yml, <FIPNAME>=FIPNUM, <DIR>=., <OUTPUTFILENAME>=simulator_volume_fipnum.csv)
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
 basename relative to ``RUNPATH`` and ``regions.yml`` is a YAML file defining
-the map from regions and/or zones to FIPNUM.
+the map from regions and/or zones to FIPNUM. The YAML file could be omitted in the
+FORWARD_MODEL and specified directly in the Webviz config file, if the REGIONS argument
+is not given a default value in the forward model job configuration.
+
+The ``FIPNAME`` argument is by default set to ``FIPNUM``, but any FIP-vector can be used. 
+Ensure the PRT file has volume reports for the additional FIP-vector. 
+
+By using the ``rename2fipnum`` option, the column name would be set to FIPNUM in 
+the csv-file for any FIP-vector, as required by ``webviz-subsurface`` plugin ``VolumetricAnalysis``. 
+This renaming is not needed for ``Webviz-Sumo``. An additional column with the actual 
+FIPNAME is included for information.
 
 Using anything else than "." in the ``DIR`` argument is deprecated. To write to a CSV
 file in a specific directory, add the path in the ``OUTPUTFILENAME`` argument.
@@ -57,12 +70,28 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         formatter_class=CustomFormatter, description=DESCRIPTION
     )
-    parser.add_argument("DATAfile", type=str, help="Name of Eclipse DATA file")
+    parser.add_argument(
+        "DATAfile",
+        type=str,
+        help="Name of Eclipse or OPM Flow DATA file, PRT file or fileroot",
+    )
     parser.add_argument(
         "--outputfilename",
         type=str,
         help="CSV filename to write, including path. Directory must exist.",
         default="simulator_volume_fipnum.csv",  # FMU standard
+    )
+    parser.add_argument(
+        "--fipname",
+        type=str,
+        help="Specify FIP-name, for an additional FIP vector.",
+        default="FIPNUM",
+    )
+    parser.add_argument(
+        "--rename2fipnum",
+        action="store_true",
+        help="Rename the additional FIP vector to FIPNUM.",
+        required=False,
     )
     parser.add_argument(
         "--yaml",
@@ -175,6 +204,10 @@ def currently_in_place_from_prt(
     """
     inplace_df = res2df.fipreports.df(prt_file, fipname=fipname)
 
+    if inplace_df.empty:
+        logger.warning("The PRT file %s has no volume report for %s", prt_file, fipname)
+        return inplace_df
+
     available_dates = inplace_df.sort_values("DATE")["DATE"].unique()
     if date is None or date == "first":
         date_str = available_dates[0]
@@ -194,13 +227,13 @@ def currently_in_place_from_prt(
         ["DATATYPE", "TO_REGION", "FIPNAME", "DATE"], axis="columns", inplace=True
     )
     inplace_df.set_index("REGION", inplace=True)
-    inplace_df.index.name = "FIPNUM"
+    inplace_df.index.name = fipname  # Use "FIPNUM" if not handled by Webviz
 
     logger.info("Extracted CURRENTLY IN PLACE from %s at date %s", prt_file, date_str)
     return inplace_df
 
 
-def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
+def reservoir_volumes_from_prt(prt_file: str, fipname: str = "FIPNUM") -> pd.DataFrame:
     """Extracts numbers from the table "RESERVOIR VOLUMES" in an Eclipse PRT
     file, example table is::
 
@@ -233,9 +266,16 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
     table_found = (
         False  # State determining if current line is in our interesting table or not.
     )
+    # The Reservoir Volume table is not tagged with the "FIPNAME", but will appear
+    # after the in-place volume table (see the "BALANCE" report) in the PRT file.
+    fipname_found = fipname == "FIPNUM"  # found the corrent fipname, FIPNUM OK
+
     with Path(prt_file).open(encoding="utf8") as f_handle:
         for line in f_handle:
-            if start_matcher.search(line) is not None:
+            if line.startswith("  " + "BAL" + fipname[3:6]):
+                fipname_found = True
+                continue
+            if fipname_found and start_matcher.search(line) is not None:
                 table_found = True
                 continue
             if table_found and line.strip().startswith("======================="):
@@ -253,7 +293,7 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
                     continue
                 records.append(
                     {
-                        "FIPNUM": int(line_split[0]),
+                        fipname: int(line_split[0]),
                         "PORV_TOTAL": float(line_split[1]),
                         "HCPV_OIL": float(line_split[2]),
                         "WATPV_TOTAL": float(line_split[3]),
@@ -264,10 +304,12 @@ def reservoir_volumes_from_prt(prt_file: str) -> pd.DataFrame:
 
     if not records:
         logger.warning("No RESERVOIR VOLUMES table found in PRT file %s", prt_file)
-        logger.warning("Include RPTSOL <newline> FIP=2 'FIPRESV' in Eclipse DATA file")
+        logger.warning(
+            "Include RPTSOL with FIP=2 (or 3) and 'FIPRESV' in Eclipse DATA file"
+        )
         return pd.DataFrame()
 
-    return pd.DataFrame(records).set_index("FIPNUM")
+    return pd.DataFrame(records).set_index(fipname)
 
 
 def main() -> None:
@@ -292,22 +334,31 @@ def main() -> None:
         logger.error("PRT-file %s does not exist", prt_file)
         return
 
-    simvolumes_df = currently_in_place_from_prt(prt_file, "FIPNUM")
+    simvolumes_df = currently_in_place_from_prt(prt_file, args.fipname)
     simvolumes_df.to_csv(Path(tablesdir) / args.outputfilename)
     logger.info(
         "Written CURRENTLY_IN_PLACE data to %s",
         str(Path(tablesdir) / args.outputfilename),
     )
 
-    resvolumes_df = reservoir_volumes_from_prt(prt_file)
+    resvolumes_df = reservoir_volumes_from_prt(prt_file, args.fipname)
 
     fipmapper: Optional[FipMapper]
     if args.yaml:
         fipmapper = FipMapper(yamlfile=args.yaml, skipstring="Totals")
+        if args.fipname != "FIPNUM":
+            logger.error("Cannot use yaml file if fipname is different from FIPNUM")
+            return
     else:
         fipmapper = None
 
-    volumes = prtvol2df(simvolumes_df, resvolumes_df, fipmapper=fipmapper)
+    volumes = prtvol2df(
+        simvolumes_df,
+        resvolumes_df,
+        rename2fipnum=args.rename2fipnum,
+        fipmapper=fipmapper,
+        fipname=args.fipname,
+    )
 
     volumes.to_csv(Path(tablesdir) / args.outputfilename)
     logger.info("Written CSV file %s", str(Path(tablesdir) / args.outputfilename))
@@ -317,17 +368,31 @@ def prtvol2df(
     simvolumes_df: pd.DataFrame,
     resvolumes_df: pd.DataFrame,
     fipmapper: Optional[FipMapper] = None,
+    fipname: str = "FIPNUM",
+    rename2fipnum: bool = False,
 ) -> pd.DataFrame:
     """
     Concatenate two dataframes (with common index) horizontally,
-    and add REGION and ZONE parameter.
+    and if fipname="FIPNUM", add REGION and ZONE parameter.
     """
-    # Concatenate dataframes horizontally. Both are/must be indexed by FIPNUM:
+
+    # Remove extra empty 'regions' (from the reservoir volume table in .PRT)
+    # Concatenate dataframes horizontally. Both are/must be indexed by value
+    # of fipname (FIPNUM):
     volumes = (
-        pd.concat([simvolumes_df, resvolumes_df], axis=1)
+        pd.concat([simvolumes_df, resvolumes_df[: len(simvolumes_df)]], axis=1)
         .apply(pd.to_numeric)
         .fillna(value=0.0)
     )
+
+    # Rename the index to "FIPNUM", as required by webviz-subsurface, if requested
+    if rename2fipnum:
+        volumes.index = volumes.index.rename("FIPNUM")
+    else:
+        volumes.index = volumes.index.rename(fipname)
+
+    # Add new column with the actual FIPNAME, for info and traceability
+    volumes["FIPNAME"] = fipname
 
     if fipmapper is not None:
         if fipmapper.has_fip2region:
@@ -341,7 +406,7 @@ def prtvol2df(
                 for fipnum in volumes.index
             ]
     if any(volumes.index < 1):
-        logger.warning("FIPNUM values should be 1 or larger")
+        logger.warning("%s values should be 1 or larger", fipname)
     return volumes
 
 

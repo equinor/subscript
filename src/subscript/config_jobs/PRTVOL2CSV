@@ -1,18 +1,18 @@
 EXECUTABLE prtvol2csv
 
-
 DEFAULT <DIR> share/results/volumes
 DEFAULT <OUTPUTFILENAME> simulator_volume_fipnum.csv
-
 DEFAULT <REGIONS> ""
+DEFAULT <FIPNAME> "FIPNUM"
 
 ARG_TYPE 0 STRING
 ARG_TYPE 1 STRING
 ARG_TYPE 2 STRING
 ARG_TYPE 3 STRING
 ARG_TYPE 4 STRING
+ARG_TYPE 5 STRING
 
-ARGLIST "--verbose" "--dir" <DIR> "--outputfilename" <OUTPUTFILENAME> "--yaml" <REGIONS> <DATAFILE>
+ARGLIST "--verbose" "--dir" <DIR> "--outputfilename" <OUTPUTFILENAME> "--yaml" <REGIONS> "--rename2fipnum" "--fipname" <FIPNAME>  <DATAFILE>
 
 MIN_ARG 1
-MAX_ARG 5
+MAX_ARG 6
