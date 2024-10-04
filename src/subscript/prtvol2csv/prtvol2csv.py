@@ -15,8 +15,8 @@ from fmu.tools.fipmapper.fipmapper import FipMapper
 from subscript import __version__, getLogger
 
 DESCRIPTION = """
-Extract in-place volumes per FIPNUM, or any FIP vector specified, from
-Eclipse PRT files and dump to CSV.
+Extract in-place volumes per FIPNUM, or any FIP vector specified, from an
+Eclipse PRT file and dump to CSV file.
 
 If a yaml file is specified through options, it is possible to add columns
 with region and zone information to each FIPNUM. The YAML file must contain
@@ -41,8 +41,10 @@ is not given a default value in the forward model job configuration.
 The ``FIPNAME`` argument is by default set to ``FIPNUM``, but any FIP-vector can be used. 
 Ensure the PRT file has volume reports for the additional FIP-vector. 
 
-The column name for any additional FIP-vector specified will be renamed to FIPNUM, as a temporary solution 
-to ensure the csv file will work with ``webviz-subsurface`` plugin ``VolumetricAnalysis``.
+By using the ``rename2fipnum`` option, the column name would be set to FIPNUM in 
+the csv-file for any FIP-vector, as required by ``webviz-subsurface`` plugin ``VolumetricAnalysis``. 
+This renaming is not needed for ``Webviz-Sumo``. An additional column with the actual 
+FIPNAME is included for information.
 
 Using anything else than "." in the ``DIR`` argument is deprecated. To write to a CSV
 file in a specific directory, add the path in the ``OUTPUTFILENAME`` argument.
@@ -86,7 +88,7 @@ def get_parser() -> argparse.ArgumentParser:
         default="FIPNUM",
     )
     parser.add_argument(
-        "--rename4webviz",
+        "--rename2fipnum",
         action="store_true",
         help="Rename the additional FIP vector to FIPNUM.",
         required=False,
@@ -353,7 +355,7 @@ def main() -> None:
     volumes = prtvol2df(
         simvolumes_df,
         resvolumes_df,
-        rename4webviz=args.rename4webviz,
+        rename2fipnum=args.rename2fipnum,
         fipmapper=fipmapper,
         fipname=args.fipname,
     )
@@ -367,7 +369,7 @@ def prtvol2df(
     resvolumes_df: pd.DataFrame,
     fipmapper: Optional[FipMapper] = None,
     fipname: str = "FIPNUM",
-    rename4webviz: bool = False,
+    rename2fipnum: bool = False,
 ) -> pd.DataFrame:
     """
     Concatenate two dataframes (with common index) horizontally,
@@ -384,7 +386,7 @@ def prtvol2df(
     )
 
     # Rename the index to "FIPNUM", as required by webviz-subsurface, if requested
-    if rename4webviz:
+    if rename2fipnum:
         volumes.index = volumes.index.rename("FIPNUM")
     else:
         volumes.index = volumes.index.rename(fipname)

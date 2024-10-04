@@ -196,7 +196,7 @@ def test_rename_fip_column(tmp_path, mocker):
                 "prtvol2csv",
                 "--fipname",
                 "FIPZON",
-                "--rename4webviz",
+                "--rename2fipnum",
                 "--debug",
                 str(prtfile),
             ],
@@ -213,7 +213,7 @@ def test_fipxxx(tmp_path, mocker):
 
     os.chdir(tmp_path)
 
-    # Test for FIPZON, without the rename4webviz option:
+    # Test for FIPZON, without the rename2fipnum option:
     with pytest.warns(FutureWarning, match="Output directories"):
         mocker.patch(
             "sys.argv", ["prtvol2csv", "--fipname", "FIPZON", "--debug", str(prtfile)]
