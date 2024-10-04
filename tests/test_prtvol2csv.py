@@ -52,7 +52,7 @@ def test_valid_flow_output(simulator, tmp_path, mocker):
         prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
 
-    assert dframe.shape == (21, 13)
+    assert dframe.shape == (21, 14)
 
 
 def test_reservoir_volumes_from_prt(tmp_path):
