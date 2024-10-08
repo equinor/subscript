@@ -86,7 +86,7 @@ view the documentation like so:
 
  .. code-block:: console
 
-  sphinx-build -b html docs build/docs/html
+  sphinx-build -b html docs build/docs/html --fresh-env
   firefox build/docs/html/index.html
 
 
