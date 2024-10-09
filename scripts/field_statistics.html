@@ -6,9 +6,9 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD_STATISTICS &mdash; subscript 1.8.1.dev4+gafef91f2 documentation</title>
+  <title>FIELD_STATISTICS &mdash; subscript 1.8.1.dev5+g86af7ec2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=f3ae4515"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=1f61218b"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -26,6 +26,7 @@
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -162,20 +163,68 @@ for each cell labeled with index (I,J,K) and not physical position (x,y,z).</p><
 </ul>
 </div></blockquote>
 <p>The output statistical properties (mean, stdev, prob) is saved in a user
-specified folder, but default if not specified is share/grid_statistics
-folder under the top level of the scratch directory for the ERT case.
-The default estimate of standard deviation is the sample standard deviation
-(variance = sum( (x(i)-x_mean)^2 )/(N-1) )
-and number of realizations must be at least 2. Optionally, the population
-standard deviation
-(variance = sum( (x(i)-x_mean)^2 )/N )
-can be specified.</p>
+specified folder for the ERTBOX grid, but default if not specified
+is ‘share/grid_statistics’ folder under the top level of the scratch
+directory for the ERT case. The default estimate of standard deviation
+is the sample standard deviation</p>
+<div class="math notranslate nohighlight">
+\[\text{variance} = \frac{\sum (x_i - \bar{x})^2}{N-1}\]</div>
+<p>and number of realizations must be at least 2. Optionally, the population
+standard deviation</p>
+<div class="math notranslate nohighlight">
+\[\text{variance} = \frac{\sum (x_i - \bar{x})^2}{N}\]</div>
+<p>can be specified.</p>
 <p>For grid cells where number of realizations are less than 2,
 the standard deviation parameter calculated will be set to 0.</p>
+<p>The script will read info about ERTBOX grid size from the FMU project
+specified (The &lt;CONFIG_PATH&gt;) from the location:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>rms/output/aps/ERTBOX.roff</p></li>
+</ul>
+</div></blockquote>
+<p>The script assumes that the keyword FACIES_ZONE keyword is defined
+in the global_variables.yml file specified in the FMU project
+(The &lt;CONFIG_PATH&gt;) from the location:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>fmuconfig/output/global_variables.yml</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of format for FACIES_ZONE keyword in global_variables.yml file</span>
+<span class="c1"># from the Drogon case:</span>
+
+<span class="nt">FACIES_ZONE</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Valysar</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Floodplain</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Channel</span>
+<span class="w">    </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Crevasse</span>
+<span class="w">    </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coal</span>
+<span class="w">  </span><span class="nt">Therys</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Calcite</span>
+<span class="w">    </span><span class="nt">10</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Offshore</span>
+<span class="w">    </span><span class="nt">11</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lowershoreface</span>
+<span class="w">    </span><span class="nt">12</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Uppershoreface</span>
+<span class="w">  </span><span class="nt">Volon</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Floodplain</span>
+<span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Channel</span>
+<span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Calcite</span>
+</pre></div>
+</div>
+<p>If this does not exist, it must be added.</p>
+<p>There is an option to copy the resulting statistical estimates into the geogrid
+for a single realization of the grid. This makes it possible to visualize
+the results together with well paths. But be aware that the statistical
+estimates  does not in general match 100% a single realization of the grid.
+So comparing estimated facies probability with a facies log for a particular
+realization of the grid will only give you an approximate impression
+of the well conditioning since the blocked wells grid cells may vary
+from realization to realization due to the variability of the grid which is
+due to structural uncertainty.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">field_statistics</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">ERTCONFIGPATH</span><span class="p">]</span> <span class="o">-</span><span class="n">e</span> <span class="n">ENSEMBLEPATH</span>
                         <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">RESULTPATH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
-                        <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">GENERATE_RMS_LOAD_SCRIPT</span><span class="p">]</span>
+                        <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">GENERATE_RMS_LOAD_SCRIPT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">g</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="named-arguments">
@@ -201,6 +250,10 @@ the standard deviation parameter calculated will be set to 0.</p>
 <dt><kbd>-z, --generate_rms_load_script</kbd></dt>
 <dd><p>Name of script for loading results into RMS for visualization.</p>
 <p>Default: “tmp_import_ensemble_field_statistics.py”</p>
+</dd>
+<dt><kbd>-g, --copy_result_to_geogrid</kbd></dt>
+<dd><p>Option to copy results into realization-0 for the geogrid under realization-0/iter-&lt;iter&gt;/share/results/grids/</p>
+<p>Default: False</p>
 </dd>
 </dl>
 </section>
@@ -266,7 +319,7 @@ the standard deviation parameter calculated will be set to 0.</p>
 
 <span class="w">  </span><span class="c1"># Size of ertbox grid for (nx, ny, nz)</span>
 <span class="w">  </span><span class="c1"># Required if the ERTBOX grid is not found as a file</span>
-<span class="w">  </span><span class="c1"># under rms/output/aps/ERTBOX.EGRID</span>
+<span class="w">  </span><span class="c1"># under rms/output/aps/ERTBOX.EGRID in ERT &lt;CONFIG_PATH&gt;</span>
 <span class="w">  </span><span class="nt">ertbox_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">92</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">146</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">66</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Standard deviation estimator.</span>
