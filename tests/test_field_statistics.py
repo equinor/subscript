@@ -906,6 +906,7 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
             result_path.as_posix(),
             "-z",
             rms_load_script.as_posix(),
+            "-g",
         ]
     )
     # For this test not to fail, the CONFIG_DICT and the specified
