@@ -21,18 +21,20 @@ logger = subscript.getLogger(__name__)
 
 DESCRIPTION = """This is a simple interactive script for copying a FMU revision folder
 with features:
+
     1. Selective copy, i.e. avoid data that can be regenerated
     2. Speed up copying by multithreading
     3. Retain correct file dates and user permissions
 
 Usage:
+
     fmu_copy_revision  (for menu based input)
 
-     * or *
+    or
 
     fmu_copy_revision --source 21.0.0 --target some --profile 3 --threads 6 --cleanup
 
-     * or *
+    or
 
     fmu_copy_revision --source 21.0.0  (...other options are defaulted)
 """
