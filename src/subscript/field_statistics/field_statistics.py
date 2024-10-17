@@ -28,11 +28,16 @@ from ert.config import ErtScript
 import subscript
 
 logger = subscript.getLogger(__name__)
+DESCRIPTION_FOR_ERT = """Calculate mean, stdev and estimated facies probabilities
+from field parameters using ERTBOX grid.
+"""
+
 DESCRIPTION = """Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.
 
-The script reads ensembles of realizations from scratch disk  from
-share/results/grids/geogrid--<propertyname>.roff.
+The script reads ensembles of realizations from scratch disk  from::
+
+  share/results/grids/geogrid--<propertyname>.roff.
 
 Since the realizations may have a grid geometry that is realization dependent
 and may have multiple zones, the values are first copied over to a static grid
@@ -54,11 +59,11 @@ standard deviation and facies probabilities.
 The assumption behind this method (using ERTBOX grid as a fixed common grid for
 all realizations) is:
 
-    * The lateral extension of the geogrid is close to a regular grid with same
+    - The lateral extension of the geogrid is close to a regular grid with same
       orientation and grid resolution as the ERTBOX grid.
-    * The ERTBOX grid should be the same as used in ERT when field parameters
+    - The ERTBOX grid should be the same as used in ERT when field parameters
       are updated using the ERT keyword FIELD in the ERT configuration file.
-    * Any lateral variability from realization to realization or curved shaped
+    - Any lateral variability from realization to realization or curved shaped
       lateral grid is ignored. Only the cell indices are used to identify
       grid cell field parameters from each realization. This means that
       mean, standard deviation and estimated facies probabilities are estimated
@@ -72,14 +77,14 @@ is the sample standard deviation
 
 .. math::
 
-   \\text{variance} = \\frac{\\sum (x_i - \\bar{x})^2}{N-1}
+  \\text{variance} = \\frac{\\sum (x_i - \\bar{x})^2}{N-1}
 
 and number of realizations must be at least 2. Optionally, the population
 standard deviation
 
 .. math::
 
-   \\text{variance} = \\frac{\\sum (x_i - \\bar{x})^2}{N}
+  \\text{variance} = \\frac{\\sum (x_i - \\bar{x})^2}{N}
 
 can be specified.
 
@@ -87,20 +92,20 @@ For grid cells where number of realizations are less than 2,
 the standard deviation parameter calculated will be set to 0.
 
 The script will read info about ERTBOX grid size from the FMU project
-specified (The <CONFIG_PATH>) from the location:
+specified (The <CONFIG_PATH>) from the location::
 
-    * rms/output/aps/ERTBOX.roff
+  rms/output/aps/ERTBOX.roff
 
 The script assumes that the keyword FACIES_ZONE keyword is defined
 in the global_variables.yml file specified in the FMU project
-(The <CONFIG_PATH>) from the location:
+(The <CONFIG_PATH>) from the location::
 
-    * fmuconfig/output/global_variables.yml
+  fmuconfig/output/global_variables.yml
+
+Example of format for FACIES_ZONE keyword in global_variables.yml file
+from the Drogon case:
 
 .. code-block:: yaml
-
-  # Example of format for FACIES_ZONE keyword in global_variables.yml file
-  # from the Drogon case:
 
   FACIES_ZONE:
     Valysar:
@@ -124,8 +129,8 @@ There is an option to copy the resulting statistical estimates into the geogrid
 for a single realization of the grid. This makes it possible to visualize
 the results together with well paths. But be aware that the statistical
 estimates  does not in general match 100% a single realization of the grid.
-So comparing estimated facies probability with a facies log for a particular
-realization of the grid will only give you an approximate impression
+So, comparing estimated facies probability with a facies log for a particular
+realization of the grid, will only give you an approximate impression
 of the well conditioning since the blocked wells grid cells may vary
 from realization to realization due to the variability of the grid which is
 due to structural uncertainty.
@@ -211,58 +216,50 @@ EPILOGUE = """
 
 """
 
-CATEGORY = "modelling.reservoir"
+CATEGORY = "analysis"
 
-EXAMPLES = """
-Add a file named e.g. ``ert/bin/workflows/wf_field_statistics`` with the contents::
+EXAMPLES = """Add a file named e.g. ``ert/bin/workflows/wf_field_statistics`` with the contents::
 
-    DEFINE <FIELD_STAT_CONFIG_FILE>  ../input/config/field_param_stat.yml
-    DEFINE <RESULT_PATH>             <SCRATCH>/<USER>/<CASE_DIR>/share/grid_statistics
-    DEFINE <LOAD_RESULT_SCRIPT>      <RESULT_PATH>/tmp_import_field_stat.py
-    DEFINE <ENSEMBLE_PATH>           <SCRATCH>/<USER>/<CASE_DIR>
-    FIELD_STATISTICS  -c <FIELD_STAT_CONFIG_FILE>  -p <CONFIG_PATH>  -e  <ENSEMBLE_PATH> -r <RESULT_PATH> -z <LOAD_RESULT_SCRIPT>  -g
+  DEFINE <FIELD_STAT_CONFIG_FILE>  ../input/config/field_param_stat.yml
+  DEFINE <RELATIVE_RESULT_PATH>    share/grid_statistics
+  DEFINE <ENSEMBLE_PATH>           <SCRATCH>/<USER>/<CASE_DIR>
+  DEFINE <LOAD_RESULT_SCRIPT>      <SCRATCH>/<USER>/<CASE_DIR>/<RELATIVE_RESULT_PATH>/tmp_import_field_stat.py
+  FIELD_STATISTICS  -c <FIELD_STAT_CONFIG_FILE>
+                    -e <ENSEMBLE_PATH>
+                    -p <CONFIG_PATH>
+                    -r <RELATIVE_RESULT_PATH>
+                    -z <LOAD_RESULT_SCRIPT>
+                    -g
 
-where the config fifle for FIELD_STATISTICS in this example is located under ert/input/config/field_param_stat.yml
+where the config file for FIELD_STATISTICS in this example is located under::
+
+  ert/input/config/field_param_stat.yml
+
 and <SCRATCH>, <CONFIG_PATH>, <CASE_DIR>, <USER> are defined in the ERT config file.
-The specification of options ``-c  -p  -e`` are required. The options ``-r`` is optional with default path equal to
-the path ``share/grid_statistics`` under the ensemble path. The option ``-g`` is optional and when specified,
+The specification of options ``-c  -e`` are required. The options ``-p`` is optional and
+specifies configuration path for ERT model (<CONFIG_PATH>) and option ``-r`` is optional
+with default relative path relative to <ENSEMBLE_PATH> and equal to::
+
+  share/grid_statistics
+
+The option ``-g`` is optional and when specified,
 the result is also copied to parameters for the geomodel grid under the directories::
 
-    realization-0/iter-0/share/results/grids
-    realization-0/iter-3/share/results/grids
+  realization-0/iter-0/share/results/grids
+  realization-0/iter-3/share/results/grids
 
 for the initial and final ensemble results if iteration 3 is the final update.
 
+The option ``-z`` is optional and used to specify name of a script to be generated
+by this workflow job and is meant to be used as a RMS python job to load the results
+into RMS for visualization.
 
-Add to your ERT config to have the workflow executed after all
-forward models and all updates are completed::
+Add the installation of the ERT workflow to your ERT config to have the
+workflow executed after all forward models and all updates are completed::
 
-    -- Installation of the ERT workflow:
-    LOAD_WORKFLOW   ../../bin/workflows/wf_field_statistics
-    HOOK_WORKFLOW  wf_field_statistics POST_SIMULATION
-
-
-Workflow job for ERT to calculate field statistics FIELD_STATISTICS 
-is automatically generated by ERT from the subscript repository,
-but when setting it up manually, it look like this::
-
-    INTERNAL   False
-    EXECUTABLE  ../scripts/field_statistics.py
-
-    MIN_ARG   6
-    ARG_TYPE    0   STRING
-    ARG_TYPE    1   STRING
-    ARG_TYPE    2   STRING
-    ARG_TYPE    3   STRING
-    ARG_TYPE    4   STRING
-    ARG_TYPE    5   STRING
-    ARG_TYPE    6   STRING
-    ARG_TYPE    7   STRING
-    ARG_TYPE    8   STRING
-    ARG_TYPE    9   STRING
-    ARG_TYPE    10  STRING
-    ARG_TYPE    11  STRING
-
+  -- Installation of the ERT workflow:
+  LOAD_WORKFLOW   ../../bin/workflows/wf_field_statistics
+  HOOK_WORKFLOW  wf_field_statistics POST_SIMULATION
 
 """  # noqa
 DEFAULT_RELATIVE_RESULT_PATH = "share/grid_statistics"
@@ -356,10 +353,8 @@ def get_parser() -> argparse.ArgumentParser:
         epilog=EPILOGUE,
         formatter_class=argparse.RawTextHelpFormatter,
     )
-
     parser.add_argument(
         "-c",
-        "-C",
         "--configfile",
         type=str,
         help="Name of YAML config file",
@@ -370,10 +365,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--ertconfigpath",
         type=str,
         default="./",
-        help=(
-            "Root path assumed for relative paths"
-            " in config file, except for the output file."
-        ),
+        help="Path to the configuration of ERT (<CONFIG_PATH>).",
     )
     parser.add_argument(
         "-e",
@@ -393,19 +385,15 @@ def get_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
-        "--version",
-        action="version",
-        version="%(prog)s (subscript version " + subscript.__version__ + ")",
-    )
-
-    parser.add_argument(
         "-z",
         "--generate_rms_load_script",
         type=str,
         default="tmp_import_ensemble_field_statistics.py",
-        help=("Name of script for loading results into RMS for visualization. "),
+        help=(
+            "Output script to be used in RMS to load results"
+            " into RMS for visualization. "
+        ),
     )
-
     parser.add_argument(
         "-g",
         "--copy_result_to_geogrid",
@@ -414,6 +402,77 @@ def get_parser() -> argparse.ArgumentParser:
             "Option to copy results into realization-0 for the geogrid "
             "under realization-0/iter-<iter>/share/results/grids/"
         ),
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+    )
+    return parser
+
+
+def get_parser_ert() -> argparse.ArgumentParser:
+    """
+    Define the argparse parser
+    """
+    parser = argparse.ArgumentParser(
+        description=DESCRIPTION_FOR_ERT,
+        formatter_class=argparse.RawTextHelpFormatter,
+    )
+    parser.add_argument(
+        "-c",
+        "--configfile",
+        type=str,
+        help="Name of YAML config file",
+        required=True,
+    )
+    parser.add_argument(
+        "-p",
+        "--ertconfigpath",
+        type=str,
+        default="./",
+        help="Path to the configuration of ERT (<CONFIG_PATH>).",
+    )
+    parser.add_argument(
+        "-e",
+        "--ensemblepath",
+        type=str,
+        help="File path to ensemble directory on scratch disk",
+        required=True,
+    )
+    parser.add_argument(
+        "-r",
+        "--resultpath",
+        type=str,
+        default="share/grid_statistics",
+        help=(
+            "Relative file path to result files relative to "
+            "ensemble directory on scratch disk"
+        ),
+    )
+    parser.add_argument(
+        "-z",
+        "--generate_rms_load_script",
+        type=str,
+        default="tmp_import_ensemble_field_statistics.py",
+        help=(
+            "Output script to be used in RMS to load results"
+            " into RMS for visualization. "
+        ),
+    )
+    parser.add_argument(
+        "-g",
+        "--copy_result_to_geogrid",
+        action="store_true",
+        help=(
+            "Option to copy results into realization-0 for the geogrid "
+            "under realization-0/iter-<iter>/share/results/grids/"
+        ),
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version="%(prog)s (subscript version " + subscript.__version__ + ")",
     )
     return parser
 
@@ -1415,7 +1474,7 @@ class FieldStatistics(ErtScript):
         # pylint: disable=no-self-use
         """Pass the ERT workflow arguments on to the same parser as the command
         line."""
-        parser = get_parser()
+        parser = get_parser_ert()
         parsed_args = parser.parse_args(args)
         field_stat(parsed_args)
 
@@ -1426,8 +1485,8 @@ def legacy_ertscript_workflow(config):
     using the legacy hook format."""
 
     workflow = config.add_workflow(FieldStatistics, "FIELD_STATISTICS")
-    workflow.parser = get_parser
-    workflow.description = DESCRIPTION
+    workflow.parser = get_parser_ert
+    workflow.description = DESCRIPTION_FOR_ERT
     workflow.examples = EXAMPLES
     workflow.category = CATEGORY
 
