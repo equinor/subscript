@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD_STATISTICS &mdash; subscript 1.8.1.dev8+g0f348bec documentation</title>
+  <title>FIELD_STATISTICS &mdash; subscript 1.8.1.dev9+g71ee4938 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=d51437d7"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=38ec8b91"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -130,8 +130,10 @@
 <h1>FIELD_STATISTICS<a class="headerlink" href="#field-statistics" title="Permalink to this heading"></a></h1>
 <p><p>Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.</p>
-<p>The script reads ensembles of realizations from scratch disk  from
-share/results/grids/geogrid–&lt;propertyname&gt;.roff.</p>
+<p>The script reads ensembles of realizations from scratch disk  from:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">share</span><span class="o">/</span><span class="n">results</span><span class="o">/</span><span class="n">grids</span><span class="o">/</span><span class="n">geogrid</span><span class="o">--&lt;</span><span class="n">propertyname</span><span class="o">&gt;.</span><span class="n">roff</span><span class="o">.</span>
+</pre></div>
+</div>
 <p>Since the realizations may have a grid geometry that is realization dependent
 and may have multiple zones, the values are first copied over to a static grid
 called ERTBOX grid. Depending on the grid conformity of the geogrid zones,
@@ -178,23 +180,18 @@ standard deviation</p>
 the standard deviation parameter calculated will be set to 0.</p>
 <p>The script will read info about ERTBOX grid size from the FMU project
 specified (The &lt;CONFIG_PATH&gt;) from the location:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>rms/output/aps/ERTBOX.roff</p></li>
-</ul>
-</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rms</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">aps</span><span class="o">/</span><span class="n">ERTBOX</span><span class="o">.</span><span class="n">roff</span>
+</pre></div>
+</div>
 <p>The script assumes that the keyword FACIES_ZONE keyword is defined
 in the global_variables.yml file specified in the FMU project
 (The &lt;CONFIG_PATH&gt;) from the location:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>fmuconfig/output/global_variables.yml</p></li>
-</ul>
-</div></blockquote>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example of format for FACIES_ZONE keyword in global_variables.yml file</span>
-<span class="c1"># from the Drogon case:</span>
-
-<span class="nt">FACIES_ZONE</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fmuconfig</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">global_variables</span><span class="o">.</span><span class="n">yml</span>
+</pre></div>
+</div>
+<p>Example of format for FACIES_ZONE keyword in global_variables.yml file
+from the Drogon case:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FACIES_ZONE</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">Valysar</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Floodplain</span>
 <span class="w">    </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Channel</span>
@@ -216,25 +213,25 @@ in the global_variables.yml file specified in the FMU project
 for a single realization of the grid. This makes it possible to visualize
 the results together with well paths. But be aware that the statistical
 estimates  does not in general match 100% a single realization of the grid.
-So comparing estimated facies probability with a facies log for a particular
-realization of the grid will only give you an approximate impression
+So, comparing estimated facies probability with a facies log for a particular
+realization of the grid, will only give you an approximate impression
 of the well conditioning since the blocked wells grid cells may vary
 from realization to realization due to the variability of the grid which is
 due to structural uncertainty.</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">field_statistics</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">ERTCONFIGPATH</span><span class="p">]</span> <span class="o">-</span><span class="n">e</span> <span class="n">ENSEMBLEPATH</span>
-                        <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">RESULTPATH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
-                        <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">GENERATE_RMS_LOAD_SCRIPT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">g</span><span class="p">]</span>
+                        <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">RESULTPATH</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">GENERATE_RMS_LOAD_SCRIPT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">g</span><span class="p">]</span>
+                        <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
 </pre></div>
 </div>
 <section id="named-arguments">
 <h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
 <dl class="option-list">
-<dt><kbd>-c, -C, --configfile</kbd></dt>
+<dt><kbd>-c, --configfile</kbd></dt>
 <dd><p>Name of YAML config file</p>
 </dd>
 <dt><kbd>-p, --ertconfigpath</kbd></dt>
-<dd><p>Root path assumed for relative paths in config file, except for the output file.</p>
+<dd><p>Path to the configuration of ERT (&lt;CONFIG_PATH&gt;).</p>
 <p>Default: “./”</p>
 </dd>
 <dt><kbd>-e, --ensemblepath</kbd></dt>
@@ -244,16 +241,16 @@ due to structural uncertainty.</p>
 <dd><p>Relative file path to result files relative to ensemble directory on scratch disk</p>
 <p>Default: “share/grid_statistics”</p>
 </dd>
-<dt><kbd>--version</kbd></dt>
-<dd><p>show program’s version number and exit</p>
-</dd>
 <dt><kbd>-z, --generate_rms_load_script</kbd></dt>
-<dd><p>Name of script for loading results into RMS for visualization.</p>
+<dd><p>Output script to be used in RMS to load results into RMS for visualization.</p>
 <p>Default: “tmp_import_ensemble_field_statistics.py”</p>
 </dd>
 <dt><kbd>-g, --copy_result_to_geogrid</kbd></dt>
 <dd><p>Option to copy results into realization-0 for the geogrid under realization-0/iter-&lt;iter&gt;/share/results/grids/</p>
 <p>Default: False</p>
+</dd>
+<dt><kbd>--version</kbd></dt>
+<dd><p>show program’s version number and exit</p>
 </dd>
 </dl>
 </section>
