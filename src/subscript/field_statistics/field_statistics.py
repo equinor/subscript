@@ -135,6 +135,10 @@ of the well conditioning since the blocked wells grid cells may vary
 from realization to realization due to the variability of the grid which is
 due to structural uncertainty.
 
+If this ERT workflow is run before the realizations are generated
+for all specified iterations, the script will not start calculating statistics,
+but return without doing anything.
+
 """
 
 
@@ -261,6 +265,10 @@ workflow executed after all forward models and all updates are completed::
   LOAD_WORKFLOW   ../../bin/workflows/wf_field_statistics
   HOOK_WORKFLOW  wf_field_statistics POST_SIMULATION
 
+Note that the HOOK_WORKFLOW using POST_SIMULATION will run the workflow after each
+iteration in ERT when using ES-MDA. The FIELD_STATISTICS workflow job will check
+if the final iteration exists in the ensemble directory before calculating field statistics.
+
 """  # noqa
 DEFAULT_RELATIVE_RESULT_PATH = "share/grid_statistics"
 GLOBAL_VARIABLES_FILE = "../../fmuconfig/output/global_variables.yml"
@@ -293,6 +301,12 @@ def field_stat(args):
     if not Path(args.ensemblepath).exists():
         sys.exit("No such file:" + args.ensemblepath)
     ens_path = Path(args.ensemblepath)
+    if not check_if_iterations_exist(ens_path, field_stat):
+        # The ensemble realization does not exist for all specified iterations
+        # Probably this workflow is called before the ensemble is completed for
+        # all iterations specified.
+        # Do nothing
+        return
 
     # Path for result of ensemble statistics calculations
     # Default path is defined.
@@ -475,6 +489,44 @@ def get_parser_ert() -> argparse.ArgumentParser:
         version="%(prog)s (subscript version " + subscript.__version__ + ")",
     )
     return parser
+
+
+def check_if_iterations_exist(ens_path, input_dict):
+    """
+    Get specified interations from specifications
+    and check that the iteration exist in the ensemble.
+    """
+    key = "nreal"
+    if key in input_dict:
+        nreal = input_dict["nreal"]
+    else:
+        raise KeyError(
+            f"Missing keyword:  {key} specifying number of realizations "
+            " for ensembles from ERT ES-MDA"
+        )
+    key = "iterations"
+    if key in input_dict:
+        iter_list = input_dict[key]
+    else:
+        raise KeyError(
+            f"Missing keyword:  {key} specifying a list of iteration numbers "
+            " for ensembles from ERT ES-MDA"
+        )
+
+    found_for_iter = [False for i in range(iter_list[-1] + 1)]
+    for iter_number in iter_list:
+        for real_number in range(nreal):
+            real_path = Path(f"realization-{real_number}/iter-{iter_number}")
+            full_path_for_iter = ens_path / real_path
+            if full_path_for_iter.exists():
+                found_for_iter[iter_number] = True
+                continue
+
+    complete = True
+    for iter_number in iter_list:
+        if not found_for_iter[iter_number]:
+            complete = False
+    return complete
 
 
 def read_field_stat_config(config_file_name):
