@@ -35,9 +35,16 @@ from field parameters using ERTBOX grid.
 DESCRIPTION = """Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.
 
-The script reads ensembles of realizations from scratch disk  from::
+The script reads ensembles of realizations from scratch disk  from
+<RUN_PATH> directory::
 
   share/results/grids/geogrid--<propertyname>.roff.
+
+Optionally also temporary field parameters coming from APS or petrophysical
+field parameters can be used to calculate mean and standard deviations.
+The ensemble of realizations are usually located under <RUN_PATH> directory::
+
+  rms/output/aps
 
 Since the realizations may have a grid geometry that is realization dependent
 and may have multiple zones, the values are first copied over to a static grid
@@ -145,8 +152,7 @@ but return without doing anything.
 EPILOGUE = """
 .. code-block:: yaml
 
-  # Example config file for wf_field_param_statistics
-
+  # Configuration file for script wf_field_param_statistics.py
   field_stat:
     # Number of realizations for specified ensemble
     # Required.
@@ -157,59 +163,6 @@ EPILOGUE = """
     # Required.
     iterations: [0, 3]
 
-    # Selected set of zone names to use in calculations of statistics.
-    # Must be one or more of the defined zones.
-    # Require at least one zone to be selected.
-    use_zones: ["Valysar", "Therys", "Volon"]
-
-    # Zone numbers with zone name dictionary ordered in increasing order of zone code
-    # Required for multi-zone grids.
-    zone_code_names:
-        1: "Valysar"
-        2: "Therys"
-        3: "Volon"
-
-    # For each zone specify either Proportional, Top_conform or Base_conform
-    # as grid conformity.
-    # Conformity can be checked by opening the RMS job that has created
-    # the geogrid and check the grid settings for grid layers.
-    # Proportional means that number of layers is specified.
-    # Top or base conform means that grid cell thickness is specified.
-    # Required (but only for zones you want to use)
-    zone_conformity:
-        "Valysar": "Proportional"
-        "Therys": "Top_conform"
-        "Volon": "Proportional"
-
-    # For each zone specify which discrete parameter to use to calculate
-    # facies probability estimates.
-    # Possible names are those found in the
-    # share/results/grids/geogrid--<name>.roff
-    # files that are of discrete type.
-    # This key can be omitted or some of the lines specifying parameters
-    # for a zone if you don't want to use it.
-    discrete_property_param_per_zone:
-        "Valysar": ["facies"]
-        "Therys": ["facies"]
-        "Volon": ["facies"]
-
-    # For each zone specify which continuous parameter to use to
-    # calculate estimate of mean and stdev over ensemble.
-    # Possible names are those found in the
-    #  share/results/grids/geogrid--<name>.roff
-    # files that are of continuous type
-    # This key can be omitted or some of the lines specifying
-    # parameters for a zone if you don't want to use it.
-    continuous_property_param_per_zone:
-        "Valysar": ["phit"]
-        "Therys":  ["phit"]
-        "Volon":   ["phit"]
-
-    # Size of ertbox grid for (nx, ny, nz)
-    # Required if the ERTBOX grid is not found as a file
-    # under rms/output/aps/ERTBOX.EGRID in ERT <CONFIG_PATH>
-    ertbox_size: [92, 146, 66]
-
     # Standard deviation estimator.
     # Optional. Default is False which means that
     # sample standard deviation ( normalize by (N-1)) is used
@@ -218,6 +171,98 @@ EPILOGUE = """
     # population standard deviation ( normalize by N) is used.
     use_population_stdev: False
 
+    # Specify which geogrid fields to use
+    # Geogrid fields are typically found in:
+    # <RUN_PATH>/share/results/grids/geogrid--<property-name>.roff
+    # Optional keyword
+    geogrid_fields:
+        # Selected set of zone names to use in calculations of statistics.
+        # Must be one or more of the defined zones.
+        # Require at least one zone to be selected.
+        use_zones: ["Valysar", "Therys", "Volon"]
+
+        # Zone numbers with zone name dictionary
+        zone_code_names:
+            1: "Valysar"
+            2: "Therys"
+            3: "Volon"
+
+        # For each zone specify either Proportional, Top_conform or Base_conform
+        # as grid conformity.
+        # Conformity can be checked by opening the RMS job that has created
+        # the geogrid and check the grid settings for grid layers.
+        # Proportional means that number of layers is specified.
+        # Top or base conform means that grid cell thickness is specified.
+        # Required (but only for zones you want to use)
+        zone_conformity:
+            "Valysar": "Proportional"
+            "Therys": "Top_conform"
+            "Volon": "Proportional"
+
+        # For each zone specify which discrete parameter to use to calculate
+        # facies probability estimates.
+        # Possible names are those found in the
+        # share/results/grids/geogrid--<name>.roff
+        # files that are of discrete type.
+        # This key can be omitted or some of the lines specifying parameters
+        # for a zone if you don't want to use it.
+        discrete_property_param_per_zone:
+            "Valysar": ["facies"]
+            "Therys": ["facies"]
+            "Volon": ["facies"]
+
+        # For each zone specify which continuous parameter to use to
+        # calculate estimate of mean and stdev over ensemble.
+        # Possible names are those found in the
+        #  share/results/grids/geogrid--<name>.roff
+        # files that are of continuous type
+        # This key can be omitted or some of the lines specifying
+        # parameters for a zone if you don't want to use it.
+        continuous_property_param_per_zone:
+            "Valysar": ["phit", "klogh"]
+            "Therys":  ["phit", "klogh"]
+            "Volon":   ["phit", "klogh"]
+
+        # Size of ertbox grid for (nx, ny, nz)
+        # Optional, but required if the ERTBOX.EGRID is not found under
+        # ERT model under <CONFIG_PATH>/../../rms/output/aps
+        ertbox_size: [92, 146, 66]
+
+    # Specify which temporary field parameters (in ertbox) to use
+    # to calculate mean and stdev
+    # Optional keyword
+    temporary_ertbox_fields:
+        # Relative path relative to ERT <RUN_PATH> for localisation of
+        # initial ensemble of field parameters
+        initial_relative_path: "rms/output/aps"
+
+        # Field parameter names as specified in ERT FIELD keywords
+        parameter_names: [
+            Volon_Channel_KLOGH,
+            Volon_Channel_PHIT,
+            Therys_Uppershoreface_KLOGH,
+            Therys_Lowershoreface_KLOGH,
+            Therys_Offshore_KLOGH,
+            Therys_Uppershoreface_PHIT,
+            Therys_Lowershoreface_PHIT,
+            Therys_Offshore_PHIT,
+            Valysar_Crevasse_KLOGH,
+            Valysar_Channel_KLOGH,
+            Valysar_Floodplain_KLOGH,
+            Valysar_Crevasse_PHIT,
+            Valysar_Channel_PHIT,
+            Valysar_Floodplain_PHIT,
+            aps_Volon_GRF3,
+            aps_Volon_GRF2,
+            aps_Volon_GRF1,
+            aps_Therys_GRF3,
+            aps_Therys_GRF2,
+            aps_Therys_GRF1,
+            aps_Valysar_GRF3,
+            aps_Valysar_GRF2,
+            aps_Valysar_GRF1,
+        ]
+
 """
 
 CATEGORY = "analysis"
@@ -225,14 +270,14 @@ CATEGORY = "analysis"
 EXAMPLES = """Add a file named e.g. ``ert/bin/workflows/wf_field_statistics`` with the contents::
 
   DEFINE <FIELD_STAT_CONFIG_FILE>  ../input/config/field_param_stat.yml
-  DEFINE <RELATIVE_RESULT_PATH>    share/grid_statistics
   DEFINE <ENSEMBLE_PATH>           <SCRATCH>/<USER>/<CASE_DIR>
-  DEFINE <LOAD_RESULT_SCRIPT>      <SCRATCH>/<USER>/<CASE_DIR>/<RELATIVE_RESULT_PATH>/tmp_import_field_stat.py
-  FIELD_STATISTICS  -c <FIELD_STAT_CONFIG_FILE>
-                    -e <ENSEMBLE_PATH>
-                    -p <CONFIG_PATH>
-                    -r <RELATIVE_RESULT_PATH>
-                    -z <LOAD_RESULT_SCRIPT>
+  DEFINE <RESULT_FIELD_STAT_PATH>  <ENSEMBLE_PATH>/share/grid_statistics
+  DEFINE <LOAD_TO_RMS_SCRIPT>      <RESULT_FIELD_STAT_PATH>/tmp_import_field_stat_into_rms.py
+  MAKE_DIRECTORY                   <RESULT_FIELD_STAT_PATH>
+  FIELD_STATISTICS  -c  <FIELD_STAT_CONFIG_FILE>
+                    -p  <CONFIG_PATH>
+                    -e  <ENSEMBLE_PATH> 
+                    -z  <LOAD_TO_RMS_SCRIPT>
                     -g
 
 where the config file for FIELD_STATISTICS in this example is located under::
@@ -314,6 +359,8 @@ def field_stat(args):
     if args.resultpath:
         relative_result_path = Path(args.resultpath)
     result_path = ens_path / relative_result_path
+    if not result_path.exists():
+        raise IOError(f"Result directory:  {result_path} does not exist.")
 
     rms_load_script = None
     if args.generate_rms_load_script:
@@ -346,6 +393,15 @@ def field_stat(args):
         ertbox_size,
         copy_to_geogrid_realization=copy_to_geogrid_realization,
     )
+
+    calc_temporary_field_stats(
+        field_stat,
+        ens_path,
+        result_path,
+        ert_config_path,
+        ertbox_size,
+    )
+
     ertbox_path = ert_config_path / ERTBOX_GRID_PATH
     copy_ertbox_grid_to_result_path(ertbox_path, result_path)
 
@@ -790,13 +846,13 @@ def write_mean_stdev_nactive(
             param_name=param_name,
         )
 
-    logger.info(f"Write parameter: {name_mean}")
+    logger.info(f"  Write parameter: {name_mean}")
     xtgeo_ertbox_mean.to_file(result_mean_file_path, fformat="roff")
 
-    logger.info(f"Write parameter: {name_stdev}")
+    logger.info(f"  Write parameter: {name_stdev}")
     xtgeo_ertbox_stdev.to_file(result_stdev_file_path, fformat="roff")
 
-    logger.info(f"Write parameter: {name_nactive}")
+    logger.info(f"  Write parameter: {name_nactive}")
     xtgeo_ertbox_ncount_active.to_file(result_nactive_file_path, fformat="roff")
 
 
@@ -833,7 +889,7 @@ def ertbox_to_geogrid_statistics(
             geogrid_stat_file_name, fformat="roff"
         )
     else:
-        logger.info(f"Create geogrid parameter: {geogrid_stat_name}")
+        logger.info(f"  Create geogrid parameter: {geogrid_stat_name}")
         (nx, ny, nz) = geogrid_dimensions
         xtgeo_prop_geogrid_stat = xtgeo.GridProperty(
             ncol=nx,
@@ -852,7 +908,7 @@ def ertbox_to_geogrid_statistics(
         zone_conformity,
         initialize_geogrid_property_param_values=init_geogrid_param,
     )
-    logger.info(f"Update geogrid parameter: {xtgeo_prop_geogrid_stat.name}")
+    logger.info(f"  Update geogrid parameter: {xtgeo_prop_geogrid_stat.name}")
     xtgeo_prop_geogrid_stat.to_file(geogrid_stat_file_name, fformat="roff")
 
 
@@ -892,7 +948,7 @@ def write_fraction_nactive(
         values=ertbox_fraction,
     )
 
-    logger.info(f"Write parameter: {name_fraction}")
+    logger.info(f"  Write parameter: {name_fraction}")
     xtgeo_ertbox_fraction.to_file(ertbox_result_fraction_file_path, fformat="roff")
 
     if ncount_active_values is not None:
@@ -904,7 +960,7 @@ def write_fraction_nactive(
             values=ncount_active_values,
         )
 
-        logger.info(f"Write parameter: {name_nactive}")
+        logger.info(f"  Write parameter: {name_nactive}")
         xtgeo_ertbox_ncount_active.to_file(
             ertbox_result_nactive_file_path, fformat="roff"
         )
@@ -931,28 +987,7 @@ def write_fraction_nactive(
 
 
 def get_specifications(input_dict, ertbox_size, ert_config_path):
-    key = "zone_code_names"
-    if key in input_dict:
-        zone_code_names = input_dict[key]
-    else:
-        raise KeyError(
-            f"Missing keyword:  {key} specifying " "zone name for each zone number."
-        )
-
-    if not ertbox_size:
-        # ertbox size does not exist, read it from this scripts config file instead
-        print("ERTBOX size is not defined, need to get it from the config file")
-        key = "ertbox_size"
-        if key in input_dict:
-            ertbox_size = input_dict[key]
-        else:
-            raise KeyError(
-                "Missing keyword 'ertbox_size'."
-                "Is required if the ERTBOX.EGRID is not found in the "
-                "configuration directory of the FMU project under: "
-                f" {ert_config_path + '/../../rms/output/aps/ERTBOX.EGRID'}"
-            )
-
+    # Required keywords
     key = "nreal"
     if key in input_dict:
         nreal = input_dict[key]
@@ -967,50 +1002,118 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
             f"Missing keyword:  {key} specifying a list of iteration numbers "
             " for ensembles from ERT ES-MDA"
         )
-    key = "use_zones"
-    zone_names_used = copy.copy(list(zone_code_names.values()))
-    if key in input_dict:
-        zone_names_input = input_dict[key]
-        if zone_names_input is not None and len(zone_names_input) > 0:
-            zone_names_used = zone_names_input
-    check_use_zones(zone_code_names, zone_names_used)
 
-    key = "zone_conformity"
-    if key in input_dict:
-        zone_conformity = input_dict[key]
-    else:
-        raise KeyError(f"Missing keyword:  {key} specifying conformity per zone.")
-    check_zone_conformity(zone_code_names, zone_names_used, zone_conformity)
+    if not ertbox_size:
+        # ertbox size does not exist, read it from this scripts config file instead
+        logger.info("ERTBOX size is not defined, need to get it from the config file.")
+        key = "ertbox_size"
+        if key in input_dict["geogrid_fields"]:
+            ertbox_size = input_dict["geogrid_fields"][key]
+        else:
+            raise KeyError(
+                f"Missing keyword '{key}'."
+                "Is required if the ERTBOX.EGRID is not found in the "
+                "configuration directory of the FMU project under: "
+                f" {ert_config_path / Path('../../rms/output/aps/ERTBOX.EGRID')}"
+            )
 
+    # Optional keywords
     key = "use_population_stdev"
     use_population_stdev = False
     if key in input_dict:
         use_population_stdev = input_dict[key]
 
+    use_geogrid_fields = False
+    zone_names_used = None
+    zone_conformity = None
+    zone_code_names = None
     param_name_dict = None
-    key = "continuous_property_param_per_zone"
-    if key in input_dict:
-        param_name_dict = input_dict[key]
-    check_param_name_dict(zone_code_names, param_name_dict)
-
     disc_param_name_dict = None
-    key = "discrete_property_param_per_zone"
-    if key in input_dict:
-        disc_param_name_dict = input_dict[key]
-    check_disc_param_name_dict(zone_code_names, disc_param_name_dict)
+    if "geogrid_fields" in input_dict:
+        use_geogrid_fields = True
+        geogrid_fields_dict = input_dict["geogrid_fields"]
 
-    check_used_params(zone_names_used, param_name_dict, disc_param_name_dict)
+        key = "zone_code_names"
+        if key in geogrid_fields_dict:
+            zone_code_names = geogrid_fields_dict[key]
+        else:
+            raise KeyError(
+                f"Missing keyword:  {key} specifying " "zone name for each zone number."
+            )
+
+        key = "use_zones"
+        zone_names_used = copy.copy(list(zone_code_names.values()))
+        if key in geogrid_fields_dict:
+            zone_names_input = geogrid_fields_dict[key]
+            if zone_names_input is not None and len(zone_names_input) > 0:
+                zone_names_used = zone_names_input
+        check_use_zones(zone_code_names, zone_names_used)
+
+        key = "zone_conformity"
+        if key in geogrid_fields_dict:
+            zone_conformity = geogrid_fields_dict[key]
+        else:
+            raise KeyError(f"Missing keyword:  {key} specifying conformity per zone.")
+        check_zone_conformity(zone_code_names, zone_names_used, zone_conformity)
+
+        key = "continuous_property_param_per_zone"
+        if key in geogrid_fields_dict:
+            param_name_dict = geogrid_fields_dict[key]
+        check_param_name_dict(zone_code_names, param_name_dict)
+
+        key = "discrete_property_param_per_zone"
+        if key in geogrid_fields_dict:
+            disc_param_name_dict = geogrid_fields_dict[key]
+        check_disc_param_name_dict(zone_code_names, disc_param_name_dict)
+
+        check_used_params(zone_names_used, param_name_dict, disc_param_name_dict)
+
+    use_temporary_fields = False
+    temporary_ertbox_field = None
+    init_path = None
+    param_list = None
+    if "temporary_ertbox_fields" in input_dict:
+        use_temporary_fields = True
+        temporary_ertbox_field = input_dict["temporary_ertbox_fields"]
+
+        key = "initial_relative_path"
+        if key in temporary_ertbox_field:
+            init_path = temporary_ertbox_field[key]
+        else:
+            raise KeyError(
+                f"Missing keyword:  {key} "
+                "specifying relative path for initial temporary fields."
+            )
+        key = "parameter_names"
+        if key in temporary_ertbox_field:
+            param_list = temporary_ertbox_field[key]
+        else:
+            raise KeyError(
+                f"Missing keyword:  {key} "
+                "specifying list of temporary field parameter names."
+            )
+
+    if not use_geogrid_fields and not use_temporary_fields:
+        raise ValueError(
+            "No fields are specified as input to calculation "
+            "of field parameter statistics.  Check configuration "
+            "file for FIELD_STATISTICS workflow job."
+        )
 
     return (
+        use_geogrid_fields,
+        use_temporary_fields,
         ertbox_size,
         nreal,
         iter_list,
+        use_population_stdev,
         zone_names_used,
         zone_conformity,
         zone_code_names,
-        use_population_stdev,
         param_name_dict,
         disc_param_name_dict,
+        init_path,
+        param_list,
     )
 
 
@@ -1133,16 +1236,24 @@ def calc_stats(
     copy_to_geogrid_realization=False,
 ):
     (
+        use_geogrid_fields,
+        use_temporary_fields,
         ertbox_size,
         nreal,
         iter_list,
+        use_population_stdev,
         zone_names,
         zone_conformity,
         zone_code_names,
-        use_population_stdev,
         param_name_dict,
         disc_param_name_dict,
+        _,
+        _,
     ) = get_specifications(input_dict, ertbox_size, ert_config_path)
+
+    # Check if any need to continue to calculation
+    if not use_geogrid_fields:
+        return
 
     ensemble_path = ens_path
 
@@ -1156,7 +1267,7 @@ def calc_stats(
                 if zone_name not in param_name_dict:
                     continue
                 for param_name in param_name_dict[zone_name]:
-                    logger.info(f"Property: {param_name}")
+                    logger.info(f" Property: {param_name}")
                     all_values = np.ma.masked_all(
                         (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                         dtype=np.float32,
@@ -1235,7 +1346,7 @@ def calc_stats(
                 if zone_name not in disc_param_name_dict:
                     continue
                 for param_name in disc_param_name_dict[zone_name]:
-                    logger.info(f"Property: {param_name}")
+                    logger.info(f" Property: {param_name}")
                     all_values = np.ma.masked_all(
                         (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                         dtype=np.int32,
@@ -1291,20 +1402,17 @@ def calc_stats(
                             sum_total_active = np.ma.sum(sum_active) / nreal
                             sum_total_code = np.ma.sum(number_of_cells) / nreal
                             fraction = sum_total_code / sum_total_active
-                            txt1 = f"Average number of active cells: {sum_total_active}"
-                            logger.info(txt1)
-
-                            txt2 = (
-                                f"Average number of cells with facies "
+                            logger.info(
+                                f"  Average number of active cells: {sum_total_active}"
+                            )
+                            logger.info(
+                                f"  Average number of cells with facies "
                                 f"{facies_name} is {sum_total_code}"
                             )
-                            logger.info(txt2)
-
-                            txt3 = (
-                                "Average estimated facies probability for facies "
+                            logger.info(
+                                "  Average estimated facies probability for facies "
                                 f"{facies_name}: {fraction}"
                             )
-                            logger.info(txt3)
 
                             sum_fraction += fraction
 
@@ -1338,7 +1446,7 @@ def calc_stats(
                                     zone_code_names,
                                     copy_to_geogrid_realization=copy_to_geogrid_realization,
                                 )
-                        txt4 = f"Sum facies volume fraction: {sum_fraction}"
+                        txt4 = f"  Sum facies volume fraction: {sum_fraction}"
                         logger.info(txt4)
                     else:
                         txt = (
@@ -1349,16 +1457,129 @@ def calc_stats(
                         logger.info(txt)
 
 
+def calc_temporary_field_stats(
+    input_dict,
+    ens_path,
+    result_path,
+    ert_config_path,
+    ertbox_size,
+):
+    (
+        use_geogrid_fields,
+        use_temporary_fields,
+        ertbox_size,
+        nreal,
+        iter_list,
+        use_population_stdev,
+        _,
+        _,
+        _,
+        _,
+        _,
+        init_path,
+        param_list,
+    ) = get_specifications(input_dict, ertbox_size, ert_config_path)
+
+    # Check if any need to continue to calculation
+    if not use_temporary_fields:
+        return
+
+    # Import realizations of temporary field parameters
+    for param_name in param_list:
+        for iteration in iter_list:
+            param_filename = param_name + ".roff"
+            if iteration == 0:
+                full_param_filename = init_path + "/" + param_filename
+            elif iteration == iter_list[-1]:
+                full_param_filename = param_filename
+            logger.info(f"Property: {param_name}")
+            all_values = np.ma.masked_all(
+                (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
+                dtype=np.float32,
+            )
+
+            number_of_skipped = 0
+            for real_number in range(nreal):
+                filepath = (
+                    ens_path
+                    / Path(
+                        "realization-" + str(real_number) + "/iter-" + str(iteration)
+                    )
+                    / Path(full_param_filename)
+                )
+                if not filepath.exists():
+                    txt = f" Skip non-existing realization: {real_number}"
+                    logger.info(txt)
+                    number_of_skipped += 1
+                    continue
+                property = xtgeo.gridproperty_from_file(filepath, fformat="roff")
+                values = property.values
+                all_values[:, :, :, real_number] = values
+
+            # Calculate statistics
+            calc_mean = False
+            calc_stdev = False
+            mean_values_masked = None
+            stdev_values_masked = None
+            if number_of_skipped < nreal:
+                # Mean value
+                mean_values_masked = all_values.mean(axis=3)
+                calc_mean = True
+                if number_of_skipped < (nreal - 1):
+                    # Std deviation
+                    if use_population_stdev:
+                        stdev_values_masked = all_values.std(axis=3, ddof=0)
+                    else:
+                        stdev_values_masked = all_values.std(axis=3, ddof=1)
+                    calc_stdev = True
+
+            # Write results to result directory
+            # Fill masked values with 0
+            if calc_mean:
+                ertbox_mean_values = mean_values_masked.filled(fill_value=0.0)
+                name_mean = "mean_" + param_name + "_" + str(iteration)
+                result_mean_file_path = result_path / Path(name_mean + ".roff")
+                xtgeo_ertbox_mean = xtgeo.GridProperty(
+                    ncol=ertbox_size[0],
+                    nrow=ertbox_size[1],
+                    nlay=ertbox_size[2],
+                    name=name_mean,
+                    values=ertbox_mean_values,
+                )
+                logger.info(f"  Write parameter: {name_mean}")
+                xtgeo_ertbox_mean.to_file(result_mean_file_path, fformat="roff")
+
+            if calc_stdev:
+                ertbox_stdev_values = stdev_values_masked.filled(fill_value=0.0)
+                name_stdev = "stdev_" + param_name + "_" + str(iteration)
+                result_stdev_file_path = result_path / Path(name_stdev + ".roff")
+                xtgeo_ertbox_stdev = xtgeo.GridProperty(
+                    ncol=ertbox_size[0],
+                    nrow=ertbox_size[1],
+                    nlay=ertbox_size[2],
+                    name=name_stdev,
+                    values=ertbox_stdev_values,
+                )
+                logger.info(f"  Write parameter: {name_stdev}")
+                xtgeo_ertbox_stdev.to_file(result_stdev_file_path, fformat="roff")
+
+
 def generate_script(
     rms_load_script, ert_config_path, result_path, field_stat_config_file
 ):
     template_string = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from  pathlib import Path
+from pathlib import Path
+
+import fmu.config.utilities as utils
 import xtgeo
 import yaml
-import fmu.config.utilities as utils
+
+# Edit this label to fit your case
+LABEL = "drogon"
+
+# --------   Usually no need to edit the code below to fit your case ----------
 
 PRJ = project
 
@@ -1366,20 +1587,21 @@ GRIDNAME = "ERTBOX"
 
 ERT_CONFIG_PATH = "{ert_config_path}"
 
-GLOBAL_VARIABLES_FILE  = \
-    Path(ERT_CONFIG_PATH) / Path("../../fmuconfig/output/global_variables.yml")
+GLOBAL_VARIABLES_FILE = Path(ERT_CONFIG_PATH) / Path(
+    "../../fmuconfig/output/global_variables.yml"
+)
 
 FIELD_STAT_CONFIG_FILE = Path(ERT_CONFIG_PATH) / Path("{field_stat_config_file}")
 
+
 RESULT_PATH = Path("{result_path}")
 
-
-LABEL = "drogon"
 
 def read_field_stat_config(config_file_name):
     print(f"Read file: {{config_file_name}}")
     with open(config_file_name, encoding="utf-8") as yml_file:
         return yaml.safe_load(yml_file)
+
 
 def get_facies_per_zone(glob_var_file):
     cfg_global = utils.yaml_load(glob_var_file)["global"]
@@ -1390,39 +1612,60 @@ def get_facies_per_zone(glob_var_file):
         raise KeyError(f"Missing keyword: {{keyword}} in {{GLOBAL_VARIABLES_FILE}}")
     return facies_per_zone
 
+
 def main():
     config_dict = read_field_stat_config(FIELD_STAT_CONFIG_FILE)
     field_stat = config_dict["field_stat"]
-    zone_code_names = field_stat["zone_code_names"]
-    facies_per_zone = get_facies_per_zone(GLOBAL_VARIABLES_FILE)
-    result_path = RESULT_PATH
-    stat_list= ["mean", "stdev"]
-    iter_list = field_stat["iterations"]
-    if "use_zones" in field_stat:
-        zone_list= field_stat["use_zones"]
-    else:
-        zone_list= list(zone_code_names.values())
-    cont_prop_dict = field_stat["continuous_property_param_per_zone"]
+    key = "geogrid_fields"
+    geogrid_fields_dict = None
+    if key in field_stat:
+        geogrid_fields_dict = field_stat[key]
+        zone_code_names = geogrid_fields_dict["zone_code_names"]
+        facies_per_zone = get_facies_per_zone(GLOBAL_VARIABLES_FILE)
 
-    discrete_prop_dict = field_stat["discrete_property_param_per_zone"]
+        key = "use_zones"
+        if key in geogrid_fields_dict:
+            zone_list = geogrid_fields_dict["use_zones"]
+        else:
+            zone_list = list(zone_code_names.values())
+
+        key = "continuous_property_param_per_zone"
+        if key in geogrid_fields_dict:
+            cont_prop_dict = geogrid_fields_dict[key]
+
+        key = "discrete_property_param_per_zone"
+        if key in geogrid_fields_dict:
+            discrete_prop_dict = geogrid_fields_dict[key]
+
+    result_path = RESULT_PATH
+    stat_list = ["mean", "stdev"]
+    iter_list = field_stat["iterations"]
 
     label = LABEL
-    for zone in zone_list:
-        if cont_prop_dict:
-            if zone in cont_prop_dict:
+    if geogrid_fields_dict:
+        for zone in zone_list:
+            if cont_prop_dict and zone in cont_prop_dict:
                 for stat in stat_list:
                     for prop_name in cont_prop_dict[zone]:
                         for iteration in iter_list:
-                            name =  \
-                            "ertbox--" + stat + "_" + zone \
-                            + "_" + prop_name  + "_" + str(iteration)
-                            difference_name = \
+                            name = (
+                                "ertbox--"
+                                + stat
+                                + "_"
+                                + zone
+                                + "_"
+                                + prop_name
+                                + "_"
+                                + str(iteration)
+                            )
+                            difference_name = (
                                 "diff_ertbox--" + stat + "_" + zone + "_" + prop_name
+                            )
                             print(f"Read: {{name}} into {{GRIDNAME}}")
                             filename = Path(result_path) / Path(name + ".roff")
                             prop_param = xtgeo.gridproperty_from_file(
-                                filename,
-                                fformat="roff")
+                                filename, fformat="roff"
+                            )
                             new_name = name
                             new_difference_name = difference_name
                             if label:
@@ -1435,40 +1678,41 @@ def main():
                                 prop_param_init = prop_param
                             elif iteration == iter_list[-1]:
                                 prop_param_upd = prop_param
-                                prop_param_diff = \
-                                    prop_param_upd.copy(new_difference_name)
-                                # Calculate the difference
-                                prop_param_diff.values = \
-                                    prop_param_diff.values - prop_param_init.values
-                                prop_param_diff.to_roxar(
-                                    PRJ, GRIDNAME, new_difference_name
+                                prop_param_diff = prop_param_upd.copy(
+                                    new_difference_name
                                 )
+                                # Calculate the difference
+                                prop_param_diff.values = (
+                                    prop_param_diff.values - prop_param_init.values
+                                )
+                                prop_param_diff.to_roxar(
+                                    PRJ, GRIDNAME, new_difference_name)
                     for iteration in iter_list:
                         name = "ertbox--nactive_" + zone + "_" + str(iteration)
                         print(f"Read: {{name}} into {{GRIDNAME}}")
-                        filename =  Path(result_path) / Path(name + ".roff")
+                        filename = Path(result_path) / Path(name + ".roff")
                         prop_param = xtgeo.gridproperty_from_file(
                             filename,
-                            fformat="roff"
-                        )
+                            fformat="roff")
                         new_name = name
                         if label:
                             new_name = name + "_" + label
                         prop_param.name = new_name
                         prop_param.to_roxar(PRJ, GRIDNAME, new_name)
 
-        if discrete_prop_dict:
-            if zone in discrete_prop_dict:
+            if discrete_prop_dict and zone in discrete_prop_dict:
                 code_names_per_zone = facies_per_zone[zone]
                 for _, fname in code_names_per_zone.items():
                     for iteration in iter_list:
-                        name =  \
+                        name = (
                             "ertbox--prob_" + zone + "_" + fname + "_" + str(iteration)
+                        )
                         difference_name = "diff_ertbox--prob_" + zone + "_" + fname
                         print(f"Read: {{name}} into {{GRIDNAME}}")
                         filename = Path(result_path) / Path(name + ".roff")
-                        prop_param =  \
-                            xtgeo.gridproperty_from_file(filename, fformat="roff")
+                        prop_param = xtgeo.gridproperty_from_file(
+                            filename,
+                            fformat="roff")
                         new_name = name
                         new_difference_name = difference_name
                         if label:
@@ -1483,21 +1727,57 @@ def main():
                             prop_param_upd = prop_param
                             prop_param_diff = prop_param_upd.copy(new_difference_name)
                             # Calculate the difference
-                            prop_param_diff.values = \
+                            prop_param_diff.values = (
                                 prop_param_diff.values - prop_param_init.values
+                            )
                             prop_param_diff.to_roxar(PRJ, GRIDNAME, new_difference_name)
                 for iteration in iter_list:
                     name = "ertbox--nactive_" + zone + "_" + str(iteration)
                     print(f"Read: {{name}} into {{GRIDNAME}}")
-                    filename =  Path(result_path) / Path(name + ".roff")
+                    filename = Path(result_path) / Path(name + ".roff")
                     prop_param = xtgeo.gridproperty_from_file(filename, fformat="roff")
                     new_name = name
                     if label:
                         new_name = name + "_" + label
                     prop_param.to_roxar(PRJ, GRIDNAME, new_name)
 
+    key = "temporary_ertbox_fields"
+    if key in field_stat:
+        init_path = None
+        param_names = None
+        temporary_ertbox_fields = field_stat[key]
+        key = "initial_relative_path"
+        if key in temporary_ertbox_fields:
+            init_path = temporary_ertbox_fields[key]
+        key = "parameter_names"
+        if key in temporary_ertbox_fields:
+            param_names = temporary_ertbox_fields[key]
+        if init_path and param_names:
+            for param_name in param_names:
+                for iteration in iter_list:
+                    new_name = "mean_" + param_name + "_" + str(iteration)
+                    param_file_name = Path(result_path) / Path(new_name + ".roff")
+                    prop_param = xtgeo.gridproperty_from_file(
+                        param_file_name, fformat="roff"
+                    )
+                    print(f"Read: {{new_name}} into {{GRIDNAME}}")
+                    if label:
+                        new_name = new_name + "_" + label
+                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+
+                    new_name = "stdev_" + param_name + "_" + str(iteration)
+                    param_file_name = Path(result_path) / Path(new_name + ".roff")
+                    prop_param = xtgeo.gridproperty_from_file(
+                        param_file_name, fformat="roff"
+                    )
+                    print(f"Read: {{new_name}} into {{GRIDNAME}}")
+                    if label:
+                        new_name = new_name + "_" + label
+                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+
 if __name__ == "__main__":
     main()
+
 """
     print(f"Write file: {rms_load_script}")
     with open(rms_load_script, "w") as file:
