@@ -863,6 +863,8 @@ def test_get_specification(
         use_population_stdev,
         param_name_dict,
         disc_param_name_dict,
+        _,
+        _,
     ) = get_specifications(input_dict, ertbox_size, ert_config_path)
     assert ertbox_size == reference_dict["ertbox_size"]
     assert zone_names == reference_dict["use_zones"]

@@ -352,6 +352,14 @@ def field_stat(args):
     if rms_load_script:
         generate_script(rms_load_script, ert_config_path, result_path, config_file)
 
+    calc_temporary_field_stats(
+        field_stat,
+        ens_path,
+        result_path,
+        ert_config_path,
+        ertbox_size,
+    )
+
     logger.info(
         "Finished running workflow to calculate statistics "
         "for ensemble of field parameters"
@@ -790,13 +798,13 @@ def write_mean_stdev_nactive(
             param_name=param_name,
         )
 
-    logger.info(f"Write parameter: {name_mean}")
+    logger.info(f"  Write parameter: {name_mean}")
     xtgeo_ertbox_mean.to_file(result_mean_file_path, fformat="roff")
 
-    logger.info(f"Write parameter: {name_stdev}")
+    logger.info(f"  Write parameter: {name_stdev}")
     xtgeo_ertbox_stdev.to_file(result_stdev_file_path, fformat="roff")
 
-    logger.info(f"Write parameter: {name_nactive}")
+    logger.info(f"  Write parameter: {name_nactive}")
     xtgeo_ertbox_ncount_active.to_file(result_nactive_file_path, fformat="roff")
 
 
@@ -852,7 +860,7 @@ def ertbox_to_geogrid_statistics(
         zone_conformity,
         initialize_geogrid_property_param_values=init_geogrid_param,
     )
-    logger.info(f"Update geogrid parameter: {xtgeo_prop_geogrid_stat.name}")
+    logger.info(f"  Update geogrid parameter: {xtgeo_prop_geogrid_stat.name}")
     xtgeo_prop_geogrid_stat.to_file(geogrid_stat_file_name, fformat="roff")
 
 
@@ -892,7 +900,7 @@ def write_fraction_nactive(
         values=ertbox_fraction,
     )
 
-    logger.info(f"Write parameter: {name_fraction}")
+    logger.info(f"  Write parameter: {name_fraction}")
     xtgeo_ertbox_fraction.to_file(ertbox_result_fraction_file_path, fformat="roff")
 
     if ncount_active_values is not None:
@@ -904,7 +912,7 @@ def write_fraction_nactive(
             values=ncount_active_values,
         )
 
-        logger.info(f"Write parameter: {name_nactive}")
+        logger.info(f"  Write parameter: {name_nactive}")
         xtgeo_ertbox_ncount_active.to_file(
             ertbox_result_nactive_file_path, fformat="roff"
         )
@@ -1001,6 +1009,30 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
 
     check_used_params(zone_names_used, param_name_dict, disc_param_name_dict)
 
+    temporary_ertbox_field = None
+    init_path = None
+    param_list = None
+    key = "temporary_ertbox_fields"
+    if key in input_dict:
+        temporary_ertbox_field = input_dict[key]
+
+        key = "initial_relative_path"
+        if key in temporary_ertbox_field:
+            init_path = temporary_ertbox_field[key]
+        else:
+            raise KeyError(
+                f"Missing keyword:  {key} "
+                "specifying relative path for initial temporary fields."
+            )
+        key = "parameter_names"
+        if key in temporary_ertbox_field:
+            param_list = temporary_ertbox_field[key]
+        else:
+            raise KeyError(
+                f"Missing keyword:  {key} "
+                "specifying list of temporary field parameter names."
+            )
+
     return (
         ertbox_size,
         nreal,
@@ -1011,6 +1043,8 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
         use_population_stdev,
         param_name_dict,
         disc_param_name_dict,
+        init_path,
+        param_list,
     )
 
 
@@ -1142,6 +1176,8 @@ def calc_stats(
         use_population_stdev,
         param_name_dict,
         disc_param_name_dict,
+        _,
+        _,
     ) = get_specifications(input_dict, ertbox_size, ert_config_path)
 
     ensemble_path = ens_path
@@ -1156,7 +1192,7 @@ def calc_stats(
                 if zone_name not in param_name_dict:
                     continue
                 for param_name in param_name_dict[zone_name]:
-                    logger.info(f"Property: {param_name}")
+                    logger.info(f" Property: {param_name}")
                     all_values = np.ma.masked_all(
                         (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                         dtype=np.float32,
@@ -1235,7 +1271,7 @@ def calc_stats(
                 if zone_name not in disc_param_name_dict:
                     continue
                 for param_name in disc_param_name_dict[zone_name]:
-                    logger.info(f"Property: {param_name}")
+                    logger.info(f" Property: {param_name}")
                     all_values = np.ma.masked_all(
                         (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                         dtype=np.int32,
@@ -1291,17 +1327,19 @@ def calc_stats(
                             sum_total_active = np.ma.sum(sum_active) / nreal
                             sum_total_code = np.ma.sum(number_of_cells) / nreal
                             fraction = sum_total_code / sum_total_active
-                            txt1 = f"Average number of active cells: {sum_total_active}"
+                            txt1 = (
+                                f"  Average number of active cells: {sum_total_active}"
+                            )
                             logger.info(txt1)
 
                             txt2 = (
-                                f"Average number of cells with facies "
+                                f"  Average number of cells with facies "
                                 f"{facies_name} is {sum_total_code}"
                             )
                             logger.info(txt2)
 
                             txt3 = (
-                                "Average estimated facies probability for facies "
+                                "  Average estimated facies probability for facies "
                                 f"{facies_name}: {fraction}"
                             )
                             logger.info(txt3)
@@ -1338,7 +1376,7 @@ def calc_stats(
                                     zone_code_names,
                                     copy_to_geogrid_realization=copy_to_geogrid_realization,
                                 )
-                        txt4 = f"Sum facies volume fraction: {sum_fraction}"
+                        txt4 = f"  Sum facies volume fraction: {sum_fraction}"
                         logger.info(txt4)
                     else:
                         txt = (
@@ -1349,16 +1387,127 @@ def calc_stats(
                         logger.info(txt)
 
 
+def calc_temporary_field_stats(
+    input_dict,
+    ens_path,
+    result_path,
+    ert_config_path,
+    ertbox_size,
+):
+    (
+        ertbox_size,
+        nreal,
+        iter_list,
+        _,
+        _,
+        _,
+        use_population_stdev,
+        _,
+        _,
+        init_path,
+        param_list,
+    ) = get_specifications(input_dict, ertbox_size, ert_config_path)
+
+    # Check if any need to continue to calculation
+    if not init_path or not param_list:
+        return
+
+    # Import realizations of temporary field parameters
+    for param_name in param_list:
+        for iteration in iter_list:
+            param_filename = param_name + ".roff"
+            if iteration == 0:
+                full_param_filename = init_path + "/" + param_filename
+            elif iteration == iter_list[-1]:
+                full_param_filename = param_filename
+            logger.info(f"Property: {param_name}")
+            all_values = np.ma.masked_all(
+                (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
+                dtype=np.float32,
+            )
+
+            number_of_skipped = 0
+            for real_number in range(nreal):
+                filepath = (
+                    ens_path
+                    / Path(
+                        "realization-" + str(real_number) + "/iter-" + str(iteration)
+                    )
+                    / Path(full_param_filename)
+                )
+                if not filepath.exists():
+                    txt = f" Skip non-existing realization: {real_number}"
+                    logger.info(txt)
+                    number_of_skipped += 1
+                    continue
+                property = xtgeo.gridproperty_from_file(filepath, fformat="roff")
+                values = property.values
+                all_values[:, :, :, real_number] = values
+
+            # Calculate statistics
+            calc_mean = False
+            calc_stdev = False
+            mean_values_masked = None
+            stdev_values_masked = None
+            if number_of_skipped < nreal:
+                # Mean value
+                mean_values_masked = all_values.mean(axis=3)
+                calc_mean = True
+                if number_of_skipped < (nreal - 1):
+                    # Std deviation
+                    if use_population_stdev:
+                        stdev_values_masked = all_values.std(axis=3, ddof=0)
+                    else:
+                        stdev_values_masked = all_values.std(axis=3, ddof=1)
+                    calc_stdev = True
+
+            # Write results to result directory
+            # Fill masked values with 0
+            if calc_mean:
+                ertbox_mean_values = mean_values_masked.filled(fill_value=0.0)
+                name_mean = "mean_" + param_name + "_" + str(iteration)
+                result_mean_file_path = result_path / Path(name_mean + ".roff")
+                xtgeo_ertbox_mean = xtgeo.GridProperty(
+                    ncol=ertbox_size[0],
+                    nrow=ertbox_size[1],
+                    nlay=ertbox_size[2],
+                    name=name_mean,
+                    values=ertbox_mean_values,
+                )
+                logger.info(f"  Write parameter: {name_mean}")
+                xtgeo_ertbox_mean.to_file(result_mean_file_path, fformat="roff")
+
+            if calc_stdev:
+                ertbox_stdev_values = stdev_values_masked.filled(fill_value=0.0)
+                name_stdev = "stdev_" + param_name + "_" + str(iteration)
+                result_stdev_file_path = result_path / Path(name_stdev + ".roff")
+                xtgeo_ertbox_stdev = xtgeo.GridProperty(
+                    ncol=ertbox_size[0],
+                    nrow=ertbox_size[1],
+                    nlay=ertbox_size[2],
+                    name=name_stdev,
+                    values=ertbox_stdev_values,
+                )
+                logger.info(f"  Write parameter: {name_stdev}")
+                xtgeo_ertbox_stdev.to_file(result_stdev_file_path, fformat="roff")
+
+
 def generate_script(
     rms_load_script, ert_config_path, result_path, field_stat_config_file
 ):
     template_string = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from  pathlib import Path
+from pathlib import Path
+
+import fmu.config.utilities as utils
 import xtgeo
 import yaml
-import fmu.config.utilities as utils
+
+# Edit this label to fit your case
+LABEL = "drogon"
+
+# --------   Usually no need to edit the code below to fit your case ----------
 
 PRJ = project
 
@@ -1366,20 +1515,21 @@ GRIDNAME = "ERTBOX"
 
 ERT_CONFIG_PATH = "{ert_config_path}"
 
-GLOBAL_VARIABLES_FILE  = \
-    Path(ERT_CONFIG_PATH) / Path("../../fmuconfig/output/global_variables.yml")
+GLOBAL_VARIABLES_FILE = Path(ERT_CONFIG_PATH) / Path(
+    "../../fmuconfig/output/global_variables.yml"
+)
 
 FIELD_STAT_CONFIG_FILE = Path(ERT_CONFIG_PATH) / Path("{field_stat_config_file}")
 
+
 RESULT_PATH = Path("{result_path}")
 
-
-LABEL = "drogon"
 
 def read_field_stat_config(config_file_name):
     print(f"Read file: {{config_file_name}}")
     with open(config_file_name, encoding="utf-8") as yml_file:
         return yaml.safe_load(yml_file)
+
 
 def get_facies_per_zone(glob_var_file):
     cfg_global = utils.yaml_load(glob_var_file)["global"]
@@ -1390,85 +1540,50 @@ def get_facies_per_zone(glob_var_file):
         raise KeyError(f"Missing keyword: {{keyword}} in {{GLOBAL_VARIABLES_FILE}}")
     return facies_per_zone
 
+
 def main():
     config_dict = read_field_stat_config(FIELD_STAT_CONFIG_FILE)
     field_stat = config_dict["field_stat"]
     zone_code_names = field_stat["zone_code_names"]
     facies_per_zone = get_facies_per_zone(GLOBAL_VARIABLES_FILE)
     result_path = RESULT_PATH
-    stat_list= ["mean", "stdev"]
+    stat_list = ["mean", "stdev"]
     iter_list = field_stat["iterations"]
     if "use_zones" in field_stat:
-        zone_list= field_stat["use_zones"]
+        zone_list = field_stat["use_zones"]
     else:
-        zone_list= list(zone_code_names.values())
-    cont_prop_dict = field_stat["continuous_property_param_per_zone"]
-
-    discrete_prop_dict = field_stat["discrete_property_param_per_zone"]
+        zone_list = list(zone_code_names.values())
+    key = "continuous_property_param_per_zone"
+    if key in field_stat:
+        cont_prop_dict = field_stat[key]
+    key = "discrete_property_param_per_zone"
+    if key in field_stat:
+        discrete_prop_dict = field_stat["discrete_property_param_per_zone"]
 
     label = LABEL
     for zone in zone_list:
-        if cont_prop_dict:
-            if zone in cont_prop_dict:
-                for stat in stat_list:
-                    for prop_name in cont_prop_dict[zone]:
-                        for iteration in iter_list:
-                            name =  \
-                            "ertbox--" + stat + "_" + zone \
-                            + "_" + prop_name  + "_" + str(iteration)
-                            difference_name = \
-                                "diff_ertbox--" + stat + "_" + zone + "_" + prop_name
-                            print(f"Read: {{name}} into {{GRIDNAME}}")
-                            filename = Path(result_path) / Path(name + ".roff")
-                            prop_param = xtgeo.gridproperty_from_file(
-                                filename,
-                                fformat="roff")
-                            new_name = name
-                            new_difference_name = difference_name
-                            if label:
-                                new_name = name + "_" + label
-                                new_difference_name = difference_name + "_" + label
-                            prop_param.name = new_name
-                            prop_param.to_roxar(PRJ, GRIDNAME, new_name)
-                            if iteration == iter_list[0]:
-                                # Init
-                                prop_param_init = prop_param
-                            elif iteration == iter_list[-1]:
-                                prop_param_upd = prop_param
-                                prop_param_diff = \
-                                    prop_param_upd.copy(new_difference_name)
-                                # Calculate the difference
-                                prop_param_diff.values = \
-                                    prop_param_diff.values - prop_param_init.values
-                                prop_param_diff.to_roxar(
-                                    PRJ, GRIDNAME, new_difference_name
-                                )
+        if cont_prop_dict and zone in cont_prop_dict:
+            for stat in stat_list:
+                for prop_name in cont_prop_dict[zone]:
                     for iteration in iter_list:
-                        name = "ertbox--nactive_" + zone + "_" + str(iteration)
-                        print(f"Read: {{name}} into {{GRIDNAME}}")
-                        filename =  Path(result_path) / Path(name + ".roff")
-                        prop_param = xtgeo.gridproperty_from_file(
-                            filename,
-                            fformat="roff"
+                        name = (
+                            "ertbox--"
+                            + stat
+                            + "_"
+                            + zone
+                            + "_"
+                            + prop_name
+                            + "_"
+                            + str(iteration)
                         )
-                        new_name = name
-                        if label:
-                            new_name = name + "_" + label
-                        prop_param.name = new_name
-                        prop_param.to_roxar(PRJ, GRIDNAME, new_name)
-
-        if discrete_prop_dict:
-            if zone in discrete_prop_dict:
-                code_names_per_zone = facies_per_zone[zone]
-                for _, fname in code_names_per_zone.items():
-                    for iteration in iter_list:
-                        name =  \
-                            "ertbox--prob_" + zone + "_" + fname + "_" + str(iteration)
-                        difference_name = "diff_ertbox--prob_" + zone + "_" + fname
+                        difference_name = (
+                            "diff_ertbox--" + stat + "_" + zone + "_" + prop_name
+                        )
                         print(f"Read: {{name}} into {{GRIDNAME}}")
                         filename = Path(result_path) / Path(name + ".roff")
-                        prop_param =  \
-                            xtgeo.gridproperty_from_file(filename, fformat="roff")
+                        prop_param = xtgeo.gridproperty_from_file(
+                            filename, fformat="roff"
+                        )
                         new_name = name
                         new_difference_name = difference_name
                         if label:
@@ -1483,21 +1598,95 @@ def main():
                             prop_param_upd = prop_param
                             prop_param_diff = prop_param_upd.copy(new_difference_name)
                             # Calculate the difference
-                            prop_param_diff.values = \
+                            prop_param_diff.values = (
                                 prop_param_diff.values - prop_param_init.values
+                            )
                             prop_param_diff.to_roxar(PRJ, GRIDNAME, new_difference_name)
                 for iteration in iter_list:
                     name = "ertbox--nactive_" + zone + "_" + str(iteration)
                     print(f"Read: {{name}} into {{GRIDNAME}}")
-                    filename =  Path(result_path) / Path(name + ".roff")
+                    filename = Path(result_path) / Path(name + ".roff")
                     prop_param = xtgeo.gridproperty_from_file(filename, fformat="roff")
                     new_name = name
                     if label:
                         new_name = name + "_" + label
+                    prop_param.name = new_name
+                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+
+        if discrete_prop_dict and zone in discrete_prop_dict:
+            code_names_per_zone = facies_per_zone[zone]
+            for _, fname in code_names_per_zone.items():
+                for iteration in iter_list:
+                    name = "ertbox--prob_" + zone + "_" + fname + "_" + str(iteration)
+                    difference_name = "diff_ertbox--prob_" + zone + "_" + fname
+                    print(f"Read: {{name}} into {{GRIDNAME}}")
+                    filename = Path(result_path) / Path(name + ".roff")
+                    prop_param = xtgeo.gridproperty_from_file(filename, fformat="roff")
+                    new_name = name
+                    new_difference_name = difference_name
+                    if label:
+                        new_name = name + "_" + label
+                        new_difference_name = difference_name + "_" + label
+                    prop_param.name = new_name
+                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+                    if iteration == iter_list[0]:
+                        # Init
+                        prop_param_init = prop_param
+                    elif iteration == iter_list[-1]:
+                        prop_param_upd = prop_param
+                        prop_param_diff = prop_param_upd.copy(new_difference_name)
+                        # Calculate the difference
+                        prop_param_diff.values = (
+                            prop_param_diff.values - prop_param_init.values
+                        )
+                        prop_param_diff.to_roxar(PRJ, GRIDNAME, new_difference_name)
+            for iteration in iter_list:
+                name = "ertbox--nactive_" + zone + "_" + str(iteration)
+                print(f"Read: {{name}} into {{GRIDNAME}}")
+                filename = Path(result_path) / Path(name + ".roff")
+                prop_param = xtgeo.gridproperty_from_file(filename, fformat="roff")
+                new_name = name
+                if label:
+                    new_name = name + "_" + label
+                prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+
+    key = "temporary_ertbox_fields"
+    if key in field_stat:
+        init_path = None
+        param_names = None
+        temporary_ertbox_fields = field_stat[key]
+        key = "initial_relative_path"
+        if key in temporary_ertbox_fields:
+            init_path = temporary_ertbox_fields[key]
+        key = "parameter_names"
+        if key in temporary_ertbox_fields:
+            param_names = temporary_ertbox_fields[key]
+        if init_path and param_names:
+            for param_name in param_names:
+                for iteration in iter_list:
+                    new_name = "mean_" + param_name + "_" + str(iteration)
+                    param_file_name = Path(result_path) / Path(new_name + ".roff")
+                    prop_param = xtgeo.gridproperty_from_file(
+                        param_file_name, fformat="roff"
+                    )
+                    print(f"Read: {{new_name}} into {{GRIDNAME}}")
+                    if label:
+                        new_name = new_name + "_" + label
+                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+
+                    new_name = "stdev_" + param_name + "_" + str(iteration)
+                    param_file_name = Path(result_path) / Path(new_name + ".roff")
+                    prop_param = xtgeo.gridproperty_from_file(
+                        param_file_name, fformat="roff"
+                    )
+                    print(f"Read: {{new_name}} into {{GRIDNAME}}")
+                    if label:
+                        new_name = new_name + "_" + label
                     prop_param.to_roxar(PRJ, GRIDNAME, new_name)
 
 if __name__ == "__main__":
     main()
+
 """
     print(f"Write file: {rms_load_script}")
     with open(rms_load_script, "w") as file:
