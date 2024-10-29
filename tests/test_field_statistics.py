@@ -33,29 +33,31 @@ RMS_LOAD_SCRIPT_NAME = "tmp_import_field_stat_results.py"
 CONFIG_DICT = {
     "nreal": 10,
     "iterations": [0, 3],
-    "use_zones": ["A", "B", "C"],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
-        3: "C",
-    },
-    "zone_conformity": {
-        "A": "Top_conform",
-        "B": "Proportional",
-        "C": "Base_conform",
-    },
-    "discrete_property_param_per_zone": {
-        "A": ["facies"],
-        "B": ["facies"],
-        "C": ["facies"],
-    },
-    "continuous_property_param_per_zone": {
-        "A": ["P1", "P2"],
-        "B": ["P1"],
-        "C": ["P2"],
-    },
-    "ertbox_size": [5, 6, 5],
     "use_population_stdev": False,
+    "geogrid_fields": {
+        "use_zones": ["A", "B", "C"],
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+            3: "C",
+        },
+        "zone_conformity": {
+            "A": "Top_conform",
+            "B": "Proportional",
+            "C": "Base_conform",
+        },
+        "discrete_property_param_per_zone": {
+            "A": ["facies"],
+            "B": ["facies"],
+            "C": ["facies"],
+        },
+        "continuous_property_param_per_zone": {
+            "A": ["P1", "P2"],
+            "B": ["P1"],
+            "C": ["P2"],
+        },
+        "ertbox_size": [5, 6, 5],
+    },
 }
 
 
@@ -107,9 +109,13 @@ def make_ensemble_test_data(
         print("Start make test data")
 
     iteration_list = [0, 3]
-    zone_code_names = config_dict["zone_code_names"]
-    discrete_param_name_per_zone = config_dict["discrete_property_param_per_zone"]
-    param_name_per_zone = config_dict["continuous_property_param_per_zone"]
+    zone_code_names = config_dict["geogrid_fields"]["zone_code_names"]
+    discrete_param_name_per_zone = config_dict["geogrid_fields"][
+        "discrete_property_param_per_zone"
+    ]
+    param_name_per_zone = config_dict["geogrid_fields"][
+        "continuous_property_param_per_zone"
+    ]
     nreal = 10
     vparam = 1.0
     for iter_number in iteration_list:
@@ -399,7 +405,7 @@ def make_test_case(tmp_path, config_dict):
     else:
         raise KeyError(f"Missing keyword: {keyword} in {glob_cfg_path}")
 
-    (nx, ny, nz) = config_dict["ertbox_size"]
+    (nx, ny, nz) = config_dict["geogrid_fields"]["ertbox_size"]
 
     # Write file with ERTBOX grid for the purpose to import to visualize
     # the test data in e.g. RMS. Saved in share directory at
@@ -412,7 +418,9 @@ def make_test_case(tmp_path, config_dict):
     make_box_grid((nx, ny, nz * 3), "Geogrid", result_path)
 
     # Make ensemble of test data
-    make_ensemble_test_data(config_dict, facies_per_zone, nx, ny, nz, ens_path)
+    make_ensemble_test_data(
+        config_dict, facies_per_zone, nx, ny, nz, ens_path, print_info=True
+    )
     return facies_per_zone, ens_path, result_path, ert_config_path, (nx, ny, nz)
 
 
@@ -674,170 +682,183 @@ def test_check_use_zones_errors(zone_code_names, zone_names, expected_error):
 CONFIG_DICT_REF = {
     "nreal": 10,
     "iterations": [0, 3],
-    "use_zones": ["A", "B", "C"],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
-        3: "C",
+    "geogrid_fields": {
+        "use_zones": ["A", "B", "C"],
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+            3: "C",
+        },
+        "zone_conformity": {
+            "A": "Top_conform",
+            "B": "Proportional",
+            "C": "Base_conform",
+        },
+        "discrete_property_param_per_zone": {
+            "A": ["facies"],
+            "B": ["facies"],
+            "C": ["facies"],
+        },
+        "continuous_property_param_per_zone": {
+            "A": ["P1", "P2"],
+            "B": ["P1"],
+            "C": ["P2"],
+        },
+        "ertbox_size": [5, 6, 5],
     },
-    "zone_conformity": {
-        "A": "Top_conform",
-        "B": "Proportional",
-        "C": "Base_conform",
-    },
-    "discrete_property_param_per_zone": {
-        "A": ["facies"],
-        "B": ["facies"],
-        "C": ["facies"],
-    },
-    "continuous_property_param_per_zone": {
-        "A": ["P1", "P2"],
-        "B": ["P1"],
-        "C": ["P2"],
-    },
-    "ertbox_size": [5, 6, 5],
     "use_population_stdev": False,
 }
 
 CONFIG_A = {
     "nreal": 10,
     "iterations": [0],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
+    "geogrid_fields": {
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+        },
+        "zone_conformity": {
+            "A": "Base_conform",
+            "B": "Top_conform",
+        },
+        "discrete_property_param_per_zone": {
+            "A": ["facies"],
+        },
+        "continuous_property_param_per_zone": {
+            "A": ["P1", "P2"],
+            "B": ["P1"],
+        },
+        "ertbox_size": [50, 60, 50],
     },
-    "zone_conformity": {
-        "A": "Base_conform",
-        "B": "Top_conform",
-    },
-    "discrete_property_param_per_zone": {
-        "A": ["facies"],
-    },
-    "continuous_property_param_per_zone": {
-        "A": ["P1", "P2"],
-        "B": ["P1"],
-    },
-    "ertbox_size": [50, 60, 50],
 }
 
 CONFIG_A_REF = {
     "nreal": 10,
     "iterations": [0],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
+    "geogrid_fields": {
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+        },
+        "zone_conformity": {
+            "A": "Base_conform",
+            "B": "Top_conform",
+        },
+        "discrete_property_param_per_zone": {
+            "A": ["facies"],
+        },
+        "continuous_property_param_per_zone": {
+            "A": ["P1", "P2"],
+            "B": ["P1"],
+        },
+        "ertbox_size": [50, 60, 50],
+        "use_zones": ["A", "B"],
     },
-    "zone_conformity": {
-        "A": "Base_conform",
-        "B": "Top_conform",
-    },
-    "discrete_property_param_per_zone": {
-        "A": ["facies"],
-    },
-    "continuous_property_param_per_zone": {
-        "A": ["P1", "P2"],
-        "B": ["P1"],
-    },
-    "ertbox_size": [50, 60, 50],
-    "zone_names": ["A", "B"],
     "use_population_stdev": False,
-    "use_zones": ["A", "B"],
 }
 
 CONFIG_B = {
     "nreal": 10,
     "iterations": [0],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
-        3: "C",
-        4: "D",
+    "geogrid_fields": {
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+            3: "C",
+            4: "D",
+        },
+        "use_zones": ["B", "D"],
+        "zone_conformity": {
+            "B": "Top_conform",
+            "D": "Proportional",
+        },
+        "continuous_property_param_per_zone": {
+            "D": ["P1", "P2"],
+            "B": ["P1"],
+        },
+        "ertbox_size": [10, 6, 15],
     },
-    "use_zones": ["B", "D"],
-    "zone_conformity": {
-        "B": "Top_conform",
-        "D": "Proportional",
-    },
-    "continuous_property_param_per_zone": {
-        "D": ["P1", "P2"],
-        "B": ["P1"],
-    },
-    "ertbox_size": [10, 6, 15],
     "use_population_stdev": True,
 }
 
 CONFIG_B_REF = {
     "nreal": 10,
     "iterations": [0],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
-        3: "C",
-        4: "D",
+    "geogrid_fields": {
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+            3: "C",
+            4: "D",
+        },
+        "zone_conformity": {
+            "B": "Top_conform",
+            "D": "Proportional",
+        },
+        "continuous_property_param_per_zone": {
+            "D": ["P1", "P2"],
+            "B": ["P1"],
+        },
+        "discrete_property_param_per_zone": None,
+        "ertbox_size": [10, 6, 15],
+        "use_zones": ["B", "D"],
     },
-    "zone_conformity": {
-        "B": "Top_conform",
-        "D": "Proportional",
-    },
-    "continuous_property_param_per_zone": {
-        "D": ["P1", "P2"],
-        "B": ["P1"],
-    },
-    "discrete_property_param_per_zone": None,
-    "ertbox_size": [10, 6, 15],
-    "use_zones": ["B", "D"],
     "use_population_stdev": True,
 }
 
 CONFIG_C = {
     "nreal": 10,
     "iterations": [0],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
-        3: "C",
-        4: "D",
+    "geogrid_fields": {
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+            3: "C",
+            4: "D",
+        },
+        "zone_conformity": {
+            "A": "Base_conform",
+            "B": "Top_conform",
+            "C": "Top_conform",
+            "D": "Proportional",
+        },
+        "discrete_property_param_per_zone": {
+            "A": ["facies1", "facies2"],
+            "D": ["facies1", "facies2"],
+            "B": ["facies3"],
+            "C": ["facies1", "facies2"],
+        },
+        "ertbox_size": [10, 6, 15],
     },
-    "zone_conformity": {
-        "A": "Base_conform",
-        "B": "Top_conform",
-        "C": "Top_conform",
-        "D": "Proportional",
-    },
-    "discrete_property_param_per_zone": {
-        "A": ["facies1", "facies2"],
-        "D": ["facies1", "facies2"],
-        "B": ["facies3"],
-        "C": ["facies1", "facies2"],
-    },
-    "ertbox_size": [10, 6, 15],
     "use_population_stdev": True,
 }
 
 CONFIG_C_REF = {
     "nreal": 10,
     "iterations": [0],
-    "zone_code_names": {
-        1: "A",
-        2: "B",
-        3: "C",
-        4: "D",
+    "geogrid_fields": {
+        "zone_code_names": {
+            1: "A",
+            2: "B",
+            3: "C",
+            4: "D",
+        },
+        "zone_conformity": {
+            "A": "Base_conform",
+            "B": "Top_conform",
+            "C": "Top_conform",
+            "D": "Proportional",
+        },
+        "discrete_property_param_per_zone": {
+            "A": ["facies1", "facies2"],
+            "D": ["facies1", "facies2"],
+            "C": ["facies1", "facies2"],
+            "B": ["facies3"],
+        },
+        "property_param_per_zone": None,
+        "ertbox_size": [10, 6, 15],
+        "use_zones": ["A", "B", "C", "D"],
     },
-    "zone_conformity": {
-        "A": "Base_conform",
-        "B": "Top_conform",
-        "C": "Top_conform",
-        "D": "Proportional",
-    },
-    "discrete_property_param_per_zone": {
-        "A": ["facies1", "facies2"],
-        "D": ["facies1", "facies2"],
-        "C": ["facies1", "facies2"],
-        "B": ["facies3"],
-    },
-    "property_param_per_zone": None,
-    "ertbox_size": [10, 6, 15],
-    "use_zones": ["A", "B", "C", "D"],
     "use_population_stdev": True,
 }
 
@@ -854,25 +875,35 @@ def test_get_specification(
     input_dict, reference_dict, ert_config_path, ertbox_size=None
 ):
     (
+        use_geogrid_fields,
+        use_temporary_fields,
         ertbox_size,
         nreal,
         iter_list,
+        use_population_stdev,
         zone_names,
         zone_conformity,
         zone_code_names,
-        use_population_stdev,
         param_name_dict,
         disc_param_name_dict,
+        _,
+        _,
     ) = get_specifications(input_dict, ertbox_size, ert_config_path)
-    assert ertbox_size == reference_dict["ertbox_size"]
-    assert zone_names == reference_dict["use_zones"]
+    assert ertbox_size == reference_dict["geogrid_fields"]["ertbox_size"]
+    assert zone_names == reference_dict["geogrid_fields"]["use_zones"]
     assert nreal == reference_dict["nreal"]
     assert iter_list == reference_dict["iterations"]
-    assert zone_conformity == reference_dict["zone_conformity"]
-    assert zone_code_names == reference_dict["zone_code_names"]
+    assert zone_conformity == reference_dict["geogrid_fields"]["zone_conformity"]
+    assert zone_code_names == reference_dict["geogrid_fields"]["zone_code_names"]
     assert use_population_stdev == reference_dict["use_population_stdev"]
-    assert param_name_dict == reference_dict["continuous_property_param_per_zone"]
-    assert disc_param_name_dict == reference_dict["discrete_property_param_per_zone"]
+    assert (
+        param_name_dict
+        == reference_dict["geogrid_fields"]["continuous_property_param_per_zone"]
+    )
+    assert (
+        disc_param_name_dict
+        == reference_dict["geogrid_fields"]["discrete_property_param_per_zone"]
+    )
 
 
 @pytest.mark.parametrize(

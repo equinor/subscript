@@ -1,27 +1,28 @@
 field_stat:
     nreal: 10
     iterations: [0, 3]
-    use_zones: ["A", "B", "C"]
-    zone_code_names: 
-        1: "A"
-        2: "B"
-        3: "C"
+    geogrid_fields:
+        use_zones: ["A", "B", "C"]
+        zone_code_names:
+            1: "A"
+            2: "B"
+            3: "C"
     
-    zone_conformity:
-        "A": Top_conform
-        "B": Proportional
-        "C": Base_conform
+        zone_conformity:
+            "A": Top_conform
+            "B": Proportional
+            "C": Base_conform
 
-    discrete_property_param_per_zone:
-        "A": ["facies"]
-        "B": ["facies"]
-        "C": ["facies"]
+        discrete_property_param_per_zone:
+            "A": ["facies"]
+            "B": ["facies"]
+            "C": ["facies"]
     
-    continuous_property_param_per_zone:
-        "A": ["P1", "P2"]
-        "B": ["P1"]
-        "C": ["P2"]
+        continuous_property_param_per_zone:
+            "A": ["P1", "P2"]
+            "B": ["P1"]
+            "C": ["P2"]
+        #ertbox_size: [5, 6, 5]
 
-    #ertbox_size: [5, 6, 5]
     use_population_stdev: False
 
