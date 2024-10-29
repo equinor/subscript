@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD_STATISTICS &mdash; subscript 1.8.1.dev10+gc6cef12c documentation</title>
+  <title>FIELD_STATISTICS &mdash; subscript 1.8.1.dev11+g16807f3b documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=a17d83c5"></script>
+      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=df86cfd9"></script>
       <script src="../_static/doctools.js?v=888ff710"></script>
       <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -130,8 +130,15 @@
 <h1>FIELD_STATISTICS<a class="headerlink" href="#field-statistics" title="Permalink to this heading"></a></h1>
 <p><p>Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.</p>
-<p>The script reads ensembles of realizations from scratch disk  from:</p>
+<p>The script reads ensembles of realizations from scratch disk  from
+&lt;RUN_PATH&gt; directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">share</span><span class="o">/</span><span class="n">results</span><span class="o">/</span><span class="n">grids</span><span class="o">/</span><span class="n">geogrid</span><span class="o">--&lt;</span><span class="n">propertyname</span><span class="o">&gt;.</span><span class="n">roff</span><span class="o">.</span>
+</pre></div>
+</div>
+<p>Optionally also temporary field parameters coming from APS or petrophysical
+field parameters can be used to calculate mean and standard deviations.
+The ensemble of realizations are usually located under &lt;RUN_PATH&gt; directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rms</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">aps</span>
 </pre></div>
 </div>
 <p>Since the realizations may have a grid geometry that is realization dependent
@@ -257,8 +264,7 @@ but return without doing anything.</p>
 </dd>
 </dl>
 </section>
-<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example config file for wf_field_param_statistics</span>
-
+<p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># Configuration file for script wf_field_param_statistics.py</span>
 <span class="nt">field_stat</span><span class="p">:</span>
 <span class="w">  </span><span class="c1"># Number of realizations for specified ensemble</span>
 <span class="w">  </span><span class="c1"># Required.</span>
@@ -269,59 +275,6 @@ but return without doing anything.</p>
 <span class="w">  </span><span class="c1"># Required.</span>
 <span class="w">  </span><span class="nt">iterations</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span>
 
-<span class="w">  </span><span class="c1"># Selected set of zone names to use in calculations of statistics.</span>
-<span class="w">  </span><span class="c1"># Must be one or more of the defined zones.</span>
-<span class="w">  </span><span class="c1"># Require at least one zone to be selected.</span>
-<span class="w">  </span><span class="nt">use_zones</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">  </span><span class="c1"># Zone numbers with zone name dictionary ordered in increasing order of zone code</span>
-<span class="w">  </span><span class="c1"># Required for multi-zone grids.</span>
-<span class="w">  </span><span class="nt">zone_code_names</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
-<span class="w">      </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
-<span class="w">      </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
-
-<span class="w">  </span><span class="c1"># For each zone specify either Proportional, Top_conform or Base_conform</span>
-<span class="w">  </span><span class="c1"># as grid conformity.</span>
-<span class="w">  </span><span class="c1"># Conformity can be checked by opening the RMS job that has created</span>
-<span class="w">  </span><span class="c1"># the geogrid and check the grid settings for grid layers.</span>
-<span class="w">  </span><span class="c1"># Proportional means that number of layers is specified.</span>
-<span class="w">  </span><span class="c1"># Top or base conform means that grid cell thickness is specified.</span>
-<span class="w">  </span><span class="c1"># Required (but only for zones you want to use)</span>
-<span class="w">  </span><span class="nt">zone_conformity</span><span class="p">:</span>
-<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
-<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Top_conform&quot;</span>
-<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
-
-<span class="w">  </span><span class="c1"># For each zone specify which discrete parameter to use to calculate</span>
-<span class="w">  </span><span class="c1"># facies probability estimates.</span>
-<span class="w">  </span><span class="c1"># Possible names are those found in the</span>
-<span class="w">  </span><span class="c1"># share/results/grids/geogrid--&lt;name&gt;.roff</span>
-<span class="w">  </span><span class="c1"># files that are of discrete type.</span>
-<span class="w">  </span><span class="c1"># This key can be omitted or some of the lines specifying parameters</span>
-<span class="w">  </span><span class="c1"># for a zone if you don&#39;t want to use it.</span>
-<span class="w">  </span><span class="nt">discrete_property_param_per_zone</span><span class="p">:</span>
-<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">  </span><span class="c1"># For each zone specify which continuous parameter to use to</span>
-<span class="w">  </span><span class="c1"># calculate estimate of mean and stdev over ensemble.</span>
-<span class="w">  </span><span class="c1"># Possible names are those found in the</span>
-<span class="w">  </span><span class="c1">#  share/results/grids/geogrid--&lt;name&gt;.roff</span>
-<span class="w">  </span><span class="c1"># files that are of continuous type</span>
-<span class="w">  </span><span class="c1"># This key can be omitted or some of the lines specifying</span>
-<span class="w">  </span><span class="c1"># parameters for a zone if you don&#39;t want to use it.</span>
-<span class="w">  </span><span class="nt">continuous_property_param_per_zone</span><span class="p">:</span>
-<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">]</span>
-
-<span class="w">  </span><span class="c1"># Size of ertbox grid for (nx, ny, nz)</span>
-<span class="w">  </span><span class="c1"># Required if the ERTBOX grid is not found as a file</span>
-<span class="w">  </span><span class="c1"># under rms/output/aps/ERTBOX.EGRID in ERT &lt;CONFIG_PATH&gt;</span>
-<span class="w">  </span><span class="nt">ertbox_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">92</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">146</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">66</span><span class="p p-Indicator">]</span>
-
 <span class="w">  </span><span class="c1"># Standard deviation estimator.</span>
 <span class="w">  </span><span class="c1"># Optional. Default is False which means that</span>
 <span class="w">  </span><span class="c1"># sample standard deviation ( normalize by (N-1)) is used</span>
@@ -329,6 +282,98 @@ but return without doing anything.</p>
 <span class="w">  </span><span class="c1"># The alternative is True which means that</span>
 <span class="w">  </span><span class="c1"># population standard deviation ( normalize by N) is used.</span>
 <span class="w">  </span><span class="nt">use_population_stdev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
+
+<span class="w">  </span><span class="c1"># Specify which geogrid fields to use</span>
+<span class="w">  </span><span class="c1"># Geogrid fields are typically found in:</span>
+<span class="w">  </span><span class="c1"># &lt;RUN_PATH&gt;/share/results/grids/geogrid--&lt;property-name&gt;.roff</span>
+<span class="w">  </span><span class="c1"># Optional keyword</span>
+<span class="w">  </span><span class="nt">geogrid_fields</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Selected set of zone names to use in calculations of statistics.</span>
+<span class="w">      </span><span class="c1"># Must be one or more of the defined zones.</span>
+<span class="w">      </span><span class="c1"># Require at least one zone to be selected.</span>
+<span class="w">      </span><span class="nt">use_zones</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="c1"># Zone numbers with zone name dictionary</span>
+<span class="w">      </span><span class="nt">zone_code_names</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
+<span class="w">          </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
+<span class="w">          </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
+
+<span class="w">      </span><span class="c1"># For each zone specify either Proportional, Top_conform or Base_conform</span>
+<span class="w">      </span><span class="c1"># as grid conformity.</span>
+<span class="w">      </span><span class="c1"># Conformity can be checked by opening the RMS job that has created</span>
+<span class="w">      </span><span class="c1"># the geogrid and check the grid settings for grid layers.</span>
+<span class="w">      </span><span class="c1"># Proportional means that number of layers is specified.</span>
+<span class="w">      </span><span class="c1"># Top or base conform means that grid cell thickness is specified.</span>
+<span class="w">      </span><span class="c1"># Required (but only for zones you want to use)</span>
+<span class="w">      </span><span class="nt">zone_conformity</span><span class="p">:</span>
+<span class="w">          </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
+<span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Top_conform&quot;</span>
+<span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
+
+<span class="w">      </span><span class="c1"># For each zone specify which discrete parameter to use to calculate</span>
+<span class="w">      </span><span class="c1"># facies probability estimates.</span>
+<span class="w">      </span><span class="c1"># Possible names are those found in the</span>
+<span class="w">      </span><span class="c1"># share/results/grids/geogrid--&lt;name&gt;.roff</span>
+<span class="w">      </span><span class="c1"># files that are of discrete type.</span>
+<span class="w">      </span><span class="c1"># This key can be omitted or some of the lines specifying parameters</span>
+<span class="w">      </span><span class="c1"># for a zone if you don&#39;t want to use it.</span>
+<span class="w">      </span><span class="nt">discrete_property_param_per_zone</span><span class="p">:</span>
+<span class="w">          </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="c1"># For each zone specify which continuous parameter to use to</span>
+<span class="w">      </span><span class="c1"># calculate estimate of mean and stdev over ensemble.</span>
+<span class="w">      </span><span class="c1"># Possible names are those found in the</span>
+<span class="w">      </span><span class="c1">#  share/results/grids/geogrid--&lt;name&gt;.roff</span>
+<span class="w">      </span><span class="c1"># files that are of continuous type</span>
+<span class="w">      </span><span class="c1"># This key can be omitted or some of the lines specifying</span>
+<span class="w">      </span><span class="c1"># parameters for a zone if you don&#39;t want to use it.</span>
+<span class="w">      </span><span class="nt">continuous_property_param_per_zone</span><span class="p">:</span>
+<span class="w">          </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
+
+<span class="w">      </span><span class="c1"># Size of ertbox grid for (nx, ny, nz)</span>
+<span class="w">      </span><span class="c1"># Optional, but required if the ERTBOX.EGRID is not found under</span>
+<span class="w">      </span><span class="c1"># ERT model under &lt;CONFIG_PATH&gt;/../../rms/output/aps</span>
+<span class="w">      </span><span class="nt">ertbox_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">92</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">146</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">66</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="c1"># Specify which temporary field parameters (in ertbox) to use</span>
+<span class="w">  </span><span class="c1"># to calculate mean and stdev</span>
+<span class="w">  </span><span class="c1"># Optional keyword</span>
+<span class="w">  </span><span class="nt">temporary_ertbox_fields</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Relative path relative to ERT &lt;RUN_PATH&gt; for localisation of</span>
+<span class="w">      </span><span class="c1"># initial ensemble of field parameters</span>
+<span class="w">      </span><span class="nt">initial_relative_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rms/output/aps&quot;</span>
+
+<span class="w">      </span><span class="c1"># Field parameter names as specified in ERT FIELD keywords</span>
+<span class="w">      </span><span class="nt">parameter_names</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
+<span class="w">          </span><span class="nv">Volon_Channel_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Volon_Channel_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Therys_Uppershoreface_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Therys_Lowershoreface_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Therys_Offshore_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Therys_Uppershoreface_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Therys_Lowershoreface_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Therys_Offshore_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Valysar_Crevasse_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Valysar_Channel_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Valysar_Floodplain_KLOGH</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Valysar_Crevasse_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Valysar_Channel_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">Valysar_Floodplain_PHIT</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Volon_GRF3</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Volon_GRF2</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Volon_GRF1</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Therys_GRF3</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Therys_GRF2</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Therys_GRF1</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Valysar_GRF3</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Valysar_GRF2</span><span class="p p-Indicator">,</span>
+<span class="w">          </span><span class="nv">aps_Valysar_GRF1</span><span class="p p-Indicator">,</span>
+<span class="w">      </span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </p>
