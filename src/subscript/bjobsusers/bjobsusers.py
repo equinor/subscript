@@ -143,7 +143,7 @@ def show_status(status: str = "RUN", title: str = "Running", umax: int = 10) -> 
     print("--------------")
     for user, count in dframe.iterrows():
         print(
-            count[0],
+            count.iloc[0],
             userinfo(  # lgtm [py/clear-text-logging-sensitive-data]
                 str(user), call_pinky
             ),
