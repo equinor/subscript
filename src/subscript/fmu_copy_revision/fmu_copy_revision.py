@@ -117,6 +117,8 @@ FILTER3_ADD = """
 - ert/output/**
 - ert/storage/**
 - ert/output/storage/**
+- ert/model/logs/**
+- ert/output/log/**
 - input/seismic/**
 - rms/model/*.log
 - rms/output/**
@@ -138,6 +140,7 @@ DIRFILTER3 = """
 - ert/output/
 - ert/storage/
 - ert/**/storage/
+- ert/model/logs/
 - rms/input/seismic/
 - share/results/
 - share/templates/

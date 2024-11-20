@@ -34,6 +34,9 @@ FILESTRUCTURE = [
     "somefolder/any.backup",
     "somefolder/anybackup99.txt",
     "somefolder/attic/any.txt",
+    "ert/model/test.ert",
+    "ert/model/logs/log.txt",
+    "ert/output/log/another_log.txt",
 ]
 
 
@@ -148,6 +151,9 @@ def test_rsync_profile3(datatree):
     assert not (datatree / target / "rms" / "input" / "faults" / "x.dat").exists()
     assert not (datatree / target / "backup").is_dir()
 
+    assert not (datatree / target / "ert" / "model" / "logs").is_dir()
+    assert not (datatree / target / "ert" / "output" / "log").is_dir()
+
 
 def test_rsync_profile4(datatree):
     """Testing vs filter profile 4."""
@@ -175,6 +181,8 @@ def test_rsync_profile4(datatree):
 
     assert not (datatree / target / "rms" / "input" / "faults" / "x.dat").exists()
     assert not (datatree / target / "backup").is_dir()
+
+    assert datatree / target / "ert" / "model" / ""
 
 
 @pytest.mark.parametrize(
