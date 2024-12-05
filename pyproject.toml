@@ -40,6 +40,8 @@ dependencies = [
     "res2df",
     "ert",
     "ert>=10.2.0b13",
+    "fmu-config",
+    "odfpy",
     "fmu-tools",
     "grid3d_maps",
     "matplotlib",
@@ -55,6 +57,8 @@ dependencies = [
     "shapely",
     "xlrd",
     "xtgeo",
+    "fmu-config",
+    "odfpy"
 ]
 
 [project.optional-dependencies]
@@ -96,8 +100,10 @@ csv_merge = "subscript.csv_merge.csv_merge:main"
 csv_stack = "subscript.csv_stack.csv_stack:main"
 eclcompress = "subscript.eclcompress.eclcompress:main"
 ecldiff2roff = "subscript.ecldiff2roff.ecldiff2roff:main"
+field_statistics = "subscript.field_statistics.field_statistics:main"
 fmu_copy_revision = "subscript.fmu_copy_revision.fmu_copy_revision:main"
 fmuobs = "subscript.fmuobs.fmuobs:main"
+genertobs_unstable = "subscript.genertobs_unstable.main:main"
 grav_subs_maps = "subscript.grav_subs_maps.grav_subs_maps:main"
 grav_subs_points = "subscript.grav_subs_points.grav_subs_points:main"
 interp_relperm = "subscript.interp_relperm.interp_relperm:main"
@@ -117,8 +123,6 @@ sw_model_utilities = "subscript.sw_model_utilities.sw_model_utilities:main"
 sunsch = "subscript.sunsch.sunsch:main"
 vfp2csv = "subscript.vfp2csv.vfp2csv:main"
 welltest_dpds = "subscript.welltest_dpds.welltest_dpds:main"
-field_statistics = "subscript.field_statistics.field_statistics:main"
-
 
 [project.entry-points.ert]
 subscript_jobs = "subscript.hook_implementations.jobs"
