@@ -38,7 +38,6 @@ dynamic = ["version"]
 dependencies = [
     "resdata",
     "res2df",
-    "ert",
     "ert>=10.2.0b13",
     "fmu-tools",
     "grid3d_maps",
@@ -64,6 +63,7 @@ tests = [
     "pytest-cov",
     "pytest-mock",
     "pytest-xdist",
+    "PyQt5-sip<12.16.0; python_version == '3.8'",
     "rstcheck",
     "rstcheck-core",
     "ruff",
