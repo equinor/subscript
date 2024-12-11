@@ -68,7 +68,9 @@ class CsvMerge(ErtScript):
         args = parser.parse_args(args)
         logger.setLevel(logging.INFO)
         globbedfiles = glob_patterns(args.csvfiles)
-        csv_merge_main(csvfiles=globbedfiles, output=args.output)
+        csv_merge_main(
+            csvfiles=globbedfiles, output=args.output, memoryconservative=True
+        )
 
 
 def get_parser() -> argparse.ArgumentParser:
