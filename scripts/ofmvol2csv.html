@@ -7,7 +7,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OFMVOL2CSV &mdash; subscript 1.10.1.dev2+g42daa841 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
@@ -171,7 +171,7 @@ dd.mm.yyyy and YYYY-MM-DD (recommended) are supported.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="n">Do</span> <span class="n">QC</span> <span class="ow">and</span> <span class="n">analysis</span> <span class="n">on</span> <span class="n">your</span> <span class="n">historical</span> <span class="n">production</span> <span class="ow">in</span> <span class="n">Spotfire</span>
 <span class="o">*</span> <span class="n">Be</span> <span class="n">able</span> <span class="n">to</span> <span class="n">utilize</span> <span class="n">Pandas</span> <span class="k">for</span> <span class="n">production</span> <span class="n">data</span> <span class="n">transformation</span>
   <span class="p">(</span><span class="n">scaling</span> <span class="n">f</span><span class="o">.</span><span class="n">ex</span><span class="p">)</span> <span class="n">ina</span> <span class="n">history</span> <span class="n">match</span> <span class="n">setting</span>
-<span class="o">*</span> <span class="n">Use</span> <span class="n">Python</span> <span class="ow">and</span> <span class="n">Pandas</span> <span class="n">to</span> <span class="n">later</span> <span class="n">generate</span> <span class="n">RMS</span> <span class="n">events</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">data</span><span class="p">,</span>
+<span class="o">*</span> <span class="n">Use</span> <span class="n">Python</span> <span class="ow">and</span> <span class="n">Pandas</span> <span class="n">to</span> <span class="n">later</span> <span class="n">generate</span> <span class="n">RMS</span> <span class="n">events</span> <span class="kn">from</span><span class="w"> </span><span class="nn">the</span> <span class="n">data</span><span class="p">,</span>
   <span class="n">after</span> <span class="n">fixing</span> <span class="n">whatever</span> <span class="n">you</span> <span class="n">need</span> <span class="n">to</span> <span class="n">fix</span>
 </pre></div>
 </div>
@@ -216,7 +216,7 @@ dd.mm.yyyy and YYYY-MM-DD (recommended) are supported.</p>
 to utilize Pandas or other tools that reads CSV to for example
 modify production data.</p>
 <p>Examples:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">proddata</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;proddata.csv&quot;</span><span class="p">)</span>
 <span class="c1"># Scale up all water production by 5 percent:</span>
