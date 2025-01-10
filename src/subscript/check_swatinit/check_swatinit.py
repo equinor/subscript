@@ -163,30 +163,30 @@ def human_report_qc_vols(qc_vols: Dict[str, float]) -> str:
     swatinit_hcvol = qc_vols["PORV"] - qc_vols["SWATINIT_WVOL"]
     swat_hcvol = qc_vols["PORV"] - qc_vols["SWAT_WVOL"]
     for key in ["VOLUME", "PORV"]:
-        string += f"{key:25s} {qc_vols[key]/1e6:>10.4f} Mrm3\n"
+        string += f"{key:25s} {qc_vols[key] / 1e6:>10.4f} Mrm3\n"
     for key in ["SWATINIT_WVOL"]:
-        string += f"{key:25s} {qc_vols[key]/1e6:>10.4f} Mrm3"
+        string += f"{key:25s} {qc_vols[key] / 1e6:>10.4f} Mrm3"
         string += 11 * " "
-        string += f"HC: {swatinit_hcvol/1e6:>8.3f} Mrm3\n"
+        string += f"HC: {swatinit_hcvol / 1e6:>8.3f} Mrm3\n"
     for key in QC_FLAGS:
         if key in skip_if_zero and np.isclose(qc_vols[key], 0, atol=1):
             # Tolerance is 1 rm3, which is small in relevant contexts.
             continue
 
-        string += f"+ {key:23s} {qc_vols[key]/1e6:>10.4f} Mrm3  "
-        string += f" {qc_vols[key]/qc_vols['SWATINIT_WVOL']*100:>3.2f} %"
+        string += f"+ {key:23s} {qc_vols[key] / 1e6:>10.4f} Mrm3  "
+        string += f" {qc_vols[key] / qc_vols['SWATINIT_WVOL'] * 100:>3.2f} %"
         if swatinit_hcvol > 0.0:
-            string += f"         {-qc_vols[key]/swatinit_hcvol*100:>3.2f} %"
+            string += f"         {-qc_vols[key] / swatinit_hcvol * 100:>3.2f} %"
         string += "\n"
     for key in ["SWAT_WVOL"]:
-        string += f"= {key:23s} {qc_vols[key]/1e6:>10.4f} Mrm3  "
+        string += f"= {key:23s} {qc_vols[key] / 1e6:>10.4f} Mrm3  "
         change = (qc_vols["SWAT_WVOL"] - qc_vols["SWATINIT_WVOL"]) / qc_vols[
             "SWATINIT_WVOL"
         ]
-        string += f" {change*100:>3.2f} %"
+        string += f" {change * 100:>3.2f} %"
         if swatinit_hcvol > 0.0:
             hc_change = (swat_hcvol - swatinit_hcvol) / swatinit_hcvol
-            string += f"         {hc_change*100:>3.2f} %"
+            string += f"         {hc_change * 100:>3.2f} %"
     return string
 
 
@@ -619,9 +619,9 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
         equil_df = equil_df[equil_df["KEYWORD"] == "EQUIL"]
     equil_df = equil_df[["Z_DATUM", "PRESSURE_DATUM", "EQLNUM", "OIP_INIT"] + contacts]
     equil_df["EQLNUM"] = equil_df["EQLNUM"].astype(int)
-    assert (
-        not pd.isnull(equil_df).any().any()
-    ), f"BUG: NaNs in equil dataframe:\n{equil_df}"
+    assert not pd.isnull(equil_df).any().any(), (
+        f"BUG: NaNs in equil dataframe:\n{equil_df}"
+    )
     return grid_df.merge(equil_df, on="EQLNUM", how="left")
 
 

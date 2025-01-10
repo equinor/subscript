@@ -123,7 +123,7 @@ def create_map_rst(
             mapping.append(min_pos_index)
 
         if (counter + 1) % 100 == 0:
-            print(f"Map progress: {counter+1:d}")
+            print(f"Map progress: {counter + 1:d}")
 
     return mapping
 

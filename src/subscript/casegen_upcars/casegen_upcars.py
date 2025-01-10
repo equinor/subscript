@@ -242,9 +242,9 @@ def main():
                 streak_box = streaks["BoundingBox"]
             else:
                 streak_box = flatten(parser.streak_box)
-                assert (
-                    len(streak_box) % 4 == 0
-                ), "Number of input for streak box must be 4 or multiplication of 4"
+                assert len(streak_box) % 4 == 0, (
+                    "Number of input for streak box must be 4 or multiplication of 4"
+                )
                 streak_box = [
                     streak_box[i : i + 4] for i in range(0, len(streak_box), 4)
                 ]

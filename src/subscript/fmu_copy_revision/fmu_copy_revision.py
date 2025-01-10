@@ -458,9 +458,9 @@ class CopyFMU:
         """Checking diskspace."""
         print("Checking disk space at current partition...")
         total, used, free = shutil.disk_usage(".")
-        print(f"  Total: {total // (2 ** 30):d} G")
-        print(f"  Used:  {used // (2 ** 30):d} G")
-        print(f"  Free:  {free // (2 ** 30):d} G")
+        print(f"  Total: {total // (2**30):d} G")
+        print(f"  Used:  {used // (2**30):d} G")
+        print(f"  Free:  {free // (2**30):d} G")
 
         if self.args.skipestimate:
             print("  Skip estimation of current revision size!")
@@ -652,8 +652,7 @@ class CopyFMU:
         timing = float(stdout[-1])
         timing = time.strftime("%H hours %M minutes %S seconds", time.gmtime(timing))
         print(
-            f"\n ** The rsync process took {timing}, using "
-            f"{self.nthreads} threads **\n"
+            f"\n ** The rsync process took {timing}, using {self.nthreads} threads **\n"
         )
 
 

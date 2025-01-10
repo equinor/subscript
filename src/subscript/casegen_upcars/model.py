@@ -84,20 +84,20 @@ class Model:
         self._eclipse_output_per_line = 6
 
         streak_dz = listify(streak_dz, len(streak_k), float)
-        assert len(streak_dz) == len(
-            streak_k
-        ), "Number of streak k-index is differs from number of streak dz"
+        assert len(streak_dz) == len(streak_k), (
+            "Number of streak k-index is differs from number of streak dz"
+        )
 
         streak_nz = listify(streak_nz, len(streak_k), int)
-        assert len(streak_nz) == len(
-            streak_k
-        ), "Number of streak k-index is differs from number of streak cell count (nz)"
+        assert len(streak_nz) == len(streak_k), (
+            "Number of streak k-index is differs from number of streak cell count (nz)"
+        )
 
         if isinstance(streak_rect, list) and len(streak_rect) > 0:
             if isinstance(streak_rect[0], list) and len(streak_rect) > 1:
-                assert len(streak_rect) == len(
-                    streak_k
-                ), "Number of streak k-index is differs from number of streak box"
+                assert len(streak_rect) == len(streak_k), (
+                    "Number of streak k-index is differs from number of streak box"
+                )
             elif isinstance(streak_rect[0], list):
                 streak_rect = [streak_rect[0]] * len(streak_k)
             else:
@@ -603,9 +603,9 @@ Initializing model
     ):
         # pylint: disable=too-many-arguments
         streak_property = listify(streak_property, len(self._streak_k))
-        assert len(streak_property) == len(
-            self._streak_k
-        ), f"Number of input {keyword} is not equal to number of streak"
+        assert len(streak_property) == len(self._streak_k), (
+            f"Number of input {keyword} is not equal to number of streak"
+        )
         data_type = np.int16 if isinstance(fracture_property, int) else float
         props = np.empty(
             (self._total_nx, self._total_ny, self._total_nz), dtype=data_type
@@ -666,9 +666,9 @@ Initializing model
     def set_layers_property(self, keyword, matrix_property, streak_property):
         """Store matrix and streak property"""
         streak_property = listify(streak_property, len(self._streak_k))
-        assert len(streak_property) == len(
-            self._streak_k
-        ), f"Number of input {keyword} is not equal to number of streaks"
+        assert len(streak_property) == len(self._streak_k), (
+            f"Number of input {keyword} is not equal to number of streaks"
+        )
         keyword = keyword.upper()
         self._streak_props[keyword] = streak_property
         self._matrix_props[keyword] = matrix_property
