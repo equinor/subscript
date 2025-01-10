@@ -109,9 +109,9 @@ class Interpolator(BaseModel):
 
     @model_validator(mode="after")
     def check_param_w_or_param_g(self) -> Interpolator:
-        assert (
-            self.param_w is not None or self.param_g is not None
-        ), "Provide either param_w or param_g"
+        assert self.param_w is not None or self.param_g is not None, (
+            "Provide either param_w or param_g"
+        )
         return self
 
 

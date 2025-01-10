@@ -910,7 +910,7 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
                 "RUNPATH <CONFIG_PATH>",
                 "",
                 (
-                    "FORWARD_MODEL PRTVOL2CSV(" "<DATAFILE>=" + str(prtfile) + ")"  # noqa
+                    "FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=" + str(prtfile) + ")"  # noqa
                 ),
             ]
         ),

@@ -47,9 +47,9 @@ def plot_qc_panels(
     if eqlnum is not None:
         qc_frame = qc_frame[qc_frame["EQLNUM"] == eqlnum]
 
-    assert (
-        len(qc_frame["EQLNUM"].unique()) == 1
-    ), "Can only plot for one EQLNUM at a time"
+    assert len(qc_frame["EQLNUM"].unique()) == 1, (
+        "Can only plot for one EQLNUM at a time"
+    )
     pyplot.style.use("seaborn-v0_8-darkgrid")
     seaborn.color_palette("tab10")
 
@@ -73,9 +73,9 @@ def plot_qc_panels(
 def visual_depth(qc_frame: pd.DataFrame) -> float:
     """Suggest a deep depth limit for what to plot, in order to avoid
     showing too much of a less interesting water zone"""
-    assert (
-        len(qc_frame["EQLNUM"].unique()) == 1
-    ), "Can only plot for one EQLNUM at a time"
+    assert len(qc_frame["EQLNUM"].unique()) == 1, (
+        "Can only plot for one EQLNUM at a time"
+    )
     lowest_hc = qc_frame[qc_frame["SWATINIT"] < 1]["Z"].max()
     hc_height = lowest_hc - qc_frame["Z"].min()
 
@@ -212,7 +212,7 @@ def wvol_waterfall(qc_vols: Dict[str, float]) -> None:
     for number, qc_flag in enumerate(index[1:]):
         change = qc_vols[qc_flag] / qc_vols["SWATINIT_WVOL"]
         pyplot.gca().annotate(
-            f"{change*100:3.2f}%",
+            f"{change * 100:3.2f}%",
             (
                 number + 1,
                 blanktrans[number] + max(0, qc_vols[qc_flag]) + span / 20,
@@ -222,7 +222,7 @@ def wvol_waterfall(qc_vols: Dict[str, float]) -> None:
         )
         hc_change = -qc_vols[qc_flag] / swatinit_hcvol
         pyplot.gca().annotate(
-            f"{hc_change*100:3.2f}%",
+            f"{hc_change * 100:3.2f}%",
             (number + 1, blanktrans[number] + max(0, qc_vols[qc_flag]) + 4 * span / 20),
             horizontalalignment="center",
             color="C2",
@@ -231,14 +231,14 @@ def wvol_waterfall(qc_vols: Dict[str, float]) -> None:
         "SWATINIT_WVOL"
     ]
     pyplot.gca().annotate(
-        f"{final_change*100:>3.2f}%",
+        f"{final_change * 100:>3.2f}%",
         (6, total + span / 20),
         horizontalalignment="center",
         color="C0",
     )
     final_hc_change = (swat_hcvol - swatinit_hcvol) / swatinit_hcvol
     pyplot.gca().annotate(
-        f"{final_hc_change*100:>3.2f}%",
+        f"{final_hc_change * 100:>3.2f}%",
         (6, total + 4 * span / 20),
         horizontalalignment="center",
         color="C2",

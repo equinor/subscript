@@ -109,8 +109,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--dir",
         type=str,
         help=(
-            'This option is deprecated and MUST be set to "." for future '
-            "compatibility."
+            'This option is deprecated and MUST be set to "." for future compatibility.'
         ),
         default=None,
     )

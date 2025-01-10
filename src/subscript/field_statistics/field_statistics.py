@@ -1038,7 +1038,7 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
             zone_code_names = geogrid_fields_dict[key]
         else:
             raise KeyError(
-                f"Missing keyword:  {key} specifying " "zone name for each zone number."
+                f"Missing keyword:  {key} specifying zone name for each zone number."
             )
 
         key = "use_zones"

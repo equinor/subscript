@@ -67,8 +67,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--oilvector",
         type=str,
         help=(
-            "Eclipse vector to read cumulative oil production from. "
-            "Use None to ignore."
+            "Eclipse vector to read cumulative oil production from. Use None to ignore."
         ),
         default="FOPT",
     )
@@ -76,8 +75,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--gasvector",
         type=str,
         help=(
-            "Eclipse vector to read cumulative gas production from. "
-            "Use None to ignore."
+            "Eclipse vector to read cumulative gas production from. Use None to ignore."
         ),
         default="FGPT",
     )
@@ -85,8 +83,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--gasinjvector",
         type=str,
         help=(
-            "Eclipse vector to read cumulative gas injection from. "
-            "Use None to ignore."
+            "Eclipse vector to read cumulative gas injection from. Use None to ignore."
         ),
         default="FGIT",
     )

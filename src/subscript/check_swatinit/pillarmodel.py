@@ -297,7 +297,7 @@ class PillarModel:
                     string += "SGOF\n"
                 string += "-- SG KRG KROG PC\n"
                 string += "  0 0 1 0 \n"
-                string += f"  {1-self.swl[satnum]:g} 1.0 0.0 0\n/\n"
+                string += f"  {1 - self.swl[satnum]:g} 1.0 0.0 0\n/\n"
 
         if "GAS" in self.phases and "OIL" not in self.phases:
             for satnum_idx, satnum in enumerate(range(len(self.swl))):

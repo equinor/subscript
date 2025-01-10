@@ -49,7 +49,7 @@ def get_parser() -> argparse.ArgumentParser:
         "-v",
         "--version",
         action="version",
-        version=f"%(prog)s (subscript version {__version__ })",
+        version=f"%(prog)s (subscript version {__version__})",
     )
     return parser
 
