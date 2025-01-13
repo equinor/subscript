@@ -1630,10 +1630,12 @@ def main():
             zone_list = list(zone_code_names.values())
 
         key = "continuous_property_param_per_zone"
+        cont_prop_dict = None
         if key in geogrid_fields_dict:
             cont_prop_dict = geogrid_fields_dict[key]
 
         key = "discrete_property_param_per_zone"
+        discrete_prop_dict = None
         if key in geogrid_fields_dict:
             discrete_prop_dict = geogrid_fields_dict[key]
 
