@@ -379,10 +379,16 @@ def prtvol2df(
     # Remove extra empty 'regions' (from the reservoir volume table in .PRT)
     # Concatenate dataframes horizontally. Both are/must be indexed by value
     # of fipname (FIPNUM):
+
+    # Get maximum FIPNUM
+    sim_max_fipnum = simvolumes_df.index.max()
+    res_max_fipnum = resvolumes_df.loc[(resvolumes_df != 0).any(axis=1)].index.max()
+    max_fipnum = max(sim_max_fipnum, res_max_fipnum)
     volumes = (
-        pd.concat([simvolumes_df, resvolumes_df[: len(simvolumes_df)]], axis=1)
+        pd.concat([simvolumes_df, resvolumes_df[:max_fipnum]], axis=1)
         .apply(pd.to_numeric)
         .fillna(value=0.0)
+        .sort_index()
     )
 
     # Rename the index to "FIPNUM", as required by webviz-subsurface, if requested
