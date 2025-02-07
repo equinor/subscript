@@ -554,9 +554,10 @@ def test_fipxxx(tmp_path, mocker):
     expected["FIPNAME"] = "FIPNUM"
     pd.testing.assert_frame_equal(dframe, expected)
 
+
 def test_inactive_fipnum(tmp_path, mocker):
     """Test the case with non-contiguous active FIPNUM"""
-    
+
     prtfile = TEST_PRT_DATADIR / "DROGON_INACTIVE_FIPNUM.PRT"
 
     os.chdir(tmp_path)
