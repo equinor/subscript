@@ -555,6 +555,20 @@ def test_fipxxx(tmp_path, mocker):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
+def test_inactive_fipnum(tmp_path, mocker):
+    """Test the case with non-contiguous active FIPNUM"""
+
+    prtfile = TEST_PRT_DATADIR / "DROGON_INACTIVE_FIPNUM.PRT"
+
+    os.chdir(tmp_path)
+    with pytest.warns(FutureWarning, match="Output directories"):
+        mocker.patch("sys.argv", ["prtvol2csv", "--debug", str(prtfile)])
+        prtvol2csv.main()
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
+
+    assert dframe.loc[dframe["FIPNUM"].idxmax(), "HCPV_TOTAL"] != 0
+
+
 def test_find_prtfile(tmp_path):
     """Test location service for PRT files"""
     os.chdir(tmp_path)

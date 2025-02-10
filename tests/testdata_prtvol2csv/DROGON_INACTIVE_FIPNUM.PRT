@@ -1,0 +1,1789 @@
+
+
+
+ $$$$$         $     $                             $    $$$    $$$ 
+ $             $                                  $$   $   $  $   $
+ $       $$$   $     $   $$$$    $$$     $$$       $   $   $  $   $
+ $$$$   $   $  $     $   $   $  $       $   $      $   $   $  $   $
+ $      $      $     $   $   $   $$$    $$$$       $   $   $  $   $
+ $      $   $  $     $   $   $      $   $          $   $   $  $   $
+ $$$$$   $$$    $$   $   $$$$    $$$     $$$      $$$   $$$    $$$ 
+                         $                                         
+                         $                                         
+
+
+
+                       $$$$$         $     $                             $    $$$    $$$ 
+                       $             $                                  $$   $   $  $   $
+                       $       $$$   $     $   $$$$    $$$     $$$       $   $   $  $   $
+                       $$$$   $   $  $     $   $   $  $       $   $      $   $   $  $   $
+                       $      $      $     $   $   $   $$$    $$$$       $   $   $  $   $
+                       $      $   $  $     $   $   $      $   $          $   $   $  $   $
+                       $$$$$   $$$    $$   $   $$$$    $$$     $$$      $$$   $$$    $$$ 
+                                               $                                         
+                                               $                                         
+
+
+
+                                             $$$$$         $     $                             $    $$$    $$$ 
+                                             $             $                                  $$   $   $  $   $
+                                             $       $$$   $     $   $$$$    $$$     $$$       $   $   $  $   $
+                                             $$$$   $   $  $     $   $   $  $       $   $      $   $   $  $   $
+                                             $      $      $     $   $   $   $$$    $$$$       $   $   $  $   $
+                                             $      $   $  $     $   $   $      $   $          $   $   $  $   $
+                                             $$$$$   $$$    $$   $   $$$$    $$$     $$$      $$$   $$$    $$$ 
+                                                                     $                                         
+                                                                     $                                         
+
+
+
+                                                                   $$$$$         $     $                             $    $$$    $$$ 
+                                                                   $             $                                  $$   $   $  $   $
+                                                                   $       $$$   $     $   $$$$    $$$     $$$       $   $   $  $   $
+                                                                   $$$$   $   $  $     $   $   $  $       $   $      $   $   $  $   $
+                                                                   $      $      $     $   $   $   $$$    $$$$       $   $   $  $   $
+                                                                   $      $   $  $     $   $   $      $   $          $   $   $  $   $
+                                                                   $$$$$   $$$    $$   $   $$$$    $$$     $$$      $$$   $$$    $$$ 
+                                                                                           $                                         
+                                                                                           $                                         
+
+Proprietary Notice
+This application contains the confidential and proprietary trade secrets of SLB and may not be copied or stored in an
+information retrieval system, transferred, used, distributed, translated, or retransmitted in any form or by any means, electronic
+or mechanical, in whole or in part, without the express written permission of the copyright owner.
+
+Eclipse is a mark of SLB. Copyright (c) 1981-2024 SLB. All rights reserved.
+
+Version =  2024.3  
+Arch    =  Linux X86_64 (64 bit, LINRH8_IL24GC13_OPT)
+
+Annex    | Modification date    | Update date          | Baseline     | Build       | Hash                 
+=====    | =================    | ===========          | ========     | =====       | ====                      
+Eclipse  | 03-OCT-2024 15:11:31 | 03-OCT-2024 14:46:31 | 2024.3       | 20241003.2  | e0fd3c13172-(branch: 2024.3)
+petlast  | 03-OCT-2024 15:11:32 | 03-OCT-2024 14:46:31 | 2024.3       | 20241003.2  | e0fd3c13172-(branch: 2024.3)
+system   | 03-OCT-2024 15:11:32 | 03-OCT-2024 14:46:31 | 2024.3       | 20241003.2  | e0fd3c13172-(branch: 2024.3)
+tpb      | 03-OCT-2024 15:11:32 | 03-OCT-2024 14:46:31 | 2024.3       | 20241003.2  | e0fd3c13172-(branch: 2024.3)
+utility  | 03-OCT-2024 15:11:31 | 03-OCT-2024 14:46:31 | 2024.3       | 20241003.2  | e0fd3c13172-(branch: 2024.3)
+ 
+
+1
+
+ ******** ECHO OF INPUT DATA FOR RUN DROGON-0_FIP
+ RUN ON  7/02/2025 AT 10:28:02 VERSION 2024.3  
+
+ 0: --==============================================================================
+ 0: --		Synthetic reservoir simulation model Drogon (2020)
+ 0: --==============================================================================
+ 0: 
+ 0: -- The Drogon model - the successor of the Reek model
+ 0: -- Used in a FMU set up
+ 0: -- Grid input data generated from RMS project
+ 0: 
+ 0: 
+ 0: -- =============================================================================
+ 0: RUNSPEC
+ 0: -- =============================================================================
+ 0: 
+ 0: -- Simulation run title
+ 0: TITLE
+ 0:  Drogon synthetic reservoir model
+ 0: 
+ 0: -- Simulation run start
+ 0: START
+ 0:  1 JAN 2018 /
+ 0: 
+ 0: -- Fluid phases present
+ 0: OIL
+ 0: GAS
+ 0: WATER
+ 0: DISGAS
+ 0: VAPOIL
+ 0: 
+ 0: 
+ 0: NOSIM
+ 0: -- Measurement unit used
+ 0: METRIC
+ 0: 
+ 0: CPR
+ 0: /
+ 0: 
+ 0: -- Options for equilibration
+ 0: EQLOPTS
+ 0:  'THPRES'  /
+ 0: 
+ 0: -- Dimensions and options for tracers
+ 0: -- 2 water tracers
+ 0: TRACERS
+ 0: 
+ 0: -- Grid dimension
+ 0: INCLUDE
+
+ ******** START OF INCLUDED FILE ../include/runspec/drogon.dimens                                                                                                    
+
+ 1: -- Generated by RMS
+ 1: DIMENS
+ 1:   46  73  32 /
+
+ ******** END OF INCLUDED FILE 
+
+ 0: 
+ 0: -- Table dimensions
+ 0: INCLUDE
+
+ ******** START OF INCLUDED FILE ../include/runspec/drogon.tabdims                                                                                                   
+
+ 1: -- Generated by RMS
+ 1: TABDIMS
+ 1: -- NTSFUN  NTPVT  NSSFUN  NPPVT  NTFIP  NRPVT   ...
+ 1:     12      2      200     24     6      20    /
+
+ ******** END OF INCLUDED FILE 
+
+ 0: 
+ 0: -- Dimension of equilibration tables
+ 0: INCLUDE
+
+ ******** START OF INCLUDED FILE ../include/runspec/drogon.eqldims                                                                                                   
+
+ 1: -- Generated by RMS
+ 1: EQLDIMS
+ 1: -- NTEQUL
+ 1:     7 /
+
+ ******** END OF INCLUDED FILE 
+
+ 0: 
+ 0: -- Regions dimension data
+ 0: INCLUDE
+
+ ******** START OF INCLUDED FILE ../include/runspec/drogon.regdims                                                                                                   
+
+ 1: -- Generated by RMS
+ 1: REGDIMS
+ 1: -- NTFIP  NMFIPR
+ 1:     21      2 /
+
+ ******** END OF INCLUDED FILE 
+
+ 0: 
+ 0: -- x-,y-,z- and multnum regions
+ 0: INCLUDE
+
+ ******** START OF INCLUDED FILE ../include/runspec/drogon.gridopts                                                                                                  
+
+ 1: -- Generated by RMS
+ 1: GRIDOPTS
+ 1:  'YES'   21    /
+
+ ******** END OF INCLUDED FILE 
+
+ 0: 
+ 0: -- Dimensions for fault data
+ 0: FAULTDIM
+ 0:  500 /
+ 0: 
+ 0: -- Well dimension data
+ 0: -- nwmaxz: max wells in the model
+ 0: -- ncwmax: max connections per well
+ 0: -- ngmaxz: max groups in the model
+ 0: -- nwgmax: max wells in any one group
+ 0: WELLDIMS
+ 0: -- nwmaxz  ncwmax  ngmaxz  nwgmax
+ 0:    20       100     10       20 /
+ 0: 
+ 0: -- Dimensions for multi-segment wells
+ 0: -- nswlmx: max multi-segment wells in the model
+ 0: -- nsegmx: max segments per well
+ 0: -- nlbrmx: max branches per multi-segment well
+ 0: WSEGDIMS
+ 0: -- nswlmx  nsegmx  nlbrmx
+ 0:    3       150      100 /
+ 0: 
+ 0: -- VFP table dimensions
+ 0: -- 1. Max number of flow values per table
+ 0: -- 2. Max number of THP values per table
+ 0: -- 3. Max number of WFR values per table
+ 0: -- 4. Max number of GFR values per table
+ 0: -- 5. Max number of ALQ values per table
+ 0: -- 6. Max number of VFP tables
+ 0: VFPPDIMS
+ 0: 11 8 8 8 1 4 /
+ 0: 
+ 0: 
+ 0: -- Input and output files format
+ 0: UNIFIN
+ 0: UNIFOUT
+ 0: 
+ 0: 
+ 0: -- print and stop limits
+ 0: -- -----------print------------  -----------stop--------------------
+ 0: -- mes  com  war  prb  err  bug  mes  com   war     prb    err  bug
+ 0: MESSAGES
+ 0:    1*   1*   1*   1000 10   1*   1*    1*  1000000 7000    1    1   /
+ 0: 
+ 0: 
+ 0: -- =============================================================================
+ 0: GRID
+ 0: -- =============================================================================
+ 0: NOECHO
+
+ ******** START OF INCLUDED FILE ../include/grid/drogon.faults                                                                                                       
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/grid/drogon.multnum                                                                                                      
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/grid/drogon.multregt                                                                                                     
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE NEW_ACTNUM.GRDECL                                                                                                                   
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/edit/drogon.trans                                                                                                        
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/props/drogon.sattab                                                                                                      
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/props/drogon.pvt                                                                                                         
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/regions/drogon.eqlnum                                                                                                    
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/regions/drogon.fipnum                                                                                                    
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/regions/drogon.fipzon                                                                                                    
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/regions/drogon.satnum                                                                                                    
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/regions/drogon.pvtnum                                                                                                    
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/solution/drogon.equil                                                                                                    
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/solution/drogon.rxvd                                                                                                     
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/solution/drogon.thpres                                                                                                   
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/summary/drogon.summary                                                                                                   
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/schedule/vfp/A-1.inc                                                                                                     
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/schedule/vfp/A-2.inc                                                                                                     
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/schedule/vfp/A-3.inc                                                                                                     
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/schedule/vfp/A-4.inc                                                                                                     
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** START OF INCLUDED FILE ../include/schedule/drogon_hist.sch                                                                                                 
+
+
+ ******** END OF INCLUDED FILE 
+
+
+ ******** END OF INPUT DATA FOR RUN DROGON-0_FIP
+     1 READING RUNSPEC 
+     2 READING TITLE   
+     3 READING START   
+     4 READING OIL     
+     5 READING GAS     
+     6 READING WATER   
+     7 READING DISGAS  
+     8 READING VAPOIL  
+     9 READING NOSIM   
+    10 READING METRIC  
+    11 READING CPR     
+    12 READING EQLOPTS 
+    13 READING TRACERS 
+    14 READING INCLUDE ../include/runspec/drogon.dimens                                                                                                    
+    15 READING DIMENS  
+               END OF INCLUDE FILE 
+    16 READING INCLUDE ../include/runspec/drogon.tabdims                                                                                                   
+    17 READING TABDIMS 
+               END OF INCLUDE FILE 
+    18 READING INCLUDE ../include/runspec/drogon.eqldims                                                                                                   
+    19 READING EQLDIMS 
+               END OF INCLUDE FILE 
+    20 READING INCLUDE ../include/runspec/drogon.regdims                                                                                                   
+    21 READING REGDIMS 
+               END OF INCLUDE FILE 
+    22 READING INCLUDE ../include/runspec/drogon.gridopts                                                                                                  
+    23 READING GRIDOPTS
+               END OF INCLUDE FILE 
+    24 READING FAULTDIM
+    25 READING WELLDIMS
+    26 READING WSEGDIMS
+    27 READING VFPPDIMS
+    28 READING UNIFIN  
+    29 READING UNIFOUT 
+    30 READING MESSAGES
+    31 READING GRID    
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           **************************                                      
+ @           * DATA CHECKING RUN ONLY *                                      
+ @           **************************                                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THE CPR LINEAR SOLVER HAS BEEN ACTIVATED                        
+ @           IN ADAPTIVE MODE.                                               
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           CHECKING FOR LICENSES                                           
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           DATACHECK LICENSE CHECKED OUT                                   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THE MEMORY REQUIRED TO PROCESS THE GRID SECTION IS              
+ @                70200 KBYTES                                               
+    32 READING NOECHO  
+    33 READING NEWTRAN 
+    34 READING GRIDFILE
+    35 READING INIT    
+    36 READING PINCH   
+    37 READING IMPORT  
+    38 READING MAPAXES 
+    39 READING SPECGRID
+    40 READING COORD   
+    41 READING ZCORN   
+    42 READING ACTNUM  
+    43 READING INCLUDE ../include/grid/drogon.faults                                                                                                       
+    44 READING FAULTS  
+               END OF INCLUDE FILE 
+    45 READING IMPORT  
+    46 READING PORO    
+    47 READING IMPORT  
+    48 READING PERMX   
+    49 READING PERMY   
+    50 READING PERMZ   
+    51 READING INCLUDE ../include/grid/drogon.multnum                                                                                                      
+    52 READING MULTNUM 
+               END OF INCLUDE FILE 
+    53 READING INCLUDE ../include/grid/drogon.multregt                                                                                                     
+    54 READING MULTREGT
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      1 AND      8                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      1 AND     15                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      8 AND     15                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      2 AND      9                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      2 AND     16                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      9 AND     16                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      3 AND     10                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      3 AND     17                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     10 AND     17                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      4 AND     11                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      4 AND     18                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     11 AND     18                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      5 AND     12                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      5 AND     19                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND     19                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      6 AND     13                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      6 AND     20                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     13 AND     20                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      7 AND     14                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS      7 AND     21                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     14 AND     21                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND      2                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND      9                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND     16                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND      6                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND     13                      
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @            THE MULTNUM ARRAY WILL BE USED WITH THE MULTREGT               
+ @            KEYWORD BETWEEN REGIONS     12 AND     20                      
+               END OF INCLUDE FILE 
+    55 READING INCLUDE NEW_ACTNUM.GRDECL                                                                                                                   
+    56 READING ACTNUM  
+               END OF INCLUDE FILE 
+    57 READING EDIT    
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @               2453 PINCH-OUT CONNECTIONS GENERATED                        
+    58 READING INCLUDE ../include/edit/drogon.trans                                                                                                        
+    59 READING MULTIPLY
+    60 READING EDITNNC 
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @              852 OUT OF   7135 NNCS DEFINED UNDER EDITNNC  WERE           
+ @           NOT FOUND. SET MNEMONIC ALLNNC IN RPTGRID TO                    
+ @           OBTAIN A FULL LISTING OF THESE MISSING NNCS                     
+               END OF INCLUDE FILE 
+    61 READING PROPS   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @                8   NON-NEIGHBOUR CONNECTIONS NNCS HAVE BEEN               
+ @           DELETED SINCE THEY HAVE ZERO TRANSMISSIBILITY                   
+ @           AFTER PROCESSING THE EDIT SECTION                               
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           PRE-PROCESSING HAS FOUND 2359 NON-NEIGHBOUR CONNECTIONS         
+ @           WHICH EITHER JOIN ADJACENT CELLS OR CAN BE TREATED AS A         
+ @           NORMAL CONNECTION. THE TRANSMISSIBILITY HAS BEEN ADDED TO       
+ @           THE APPROPRIATE CELL TRANSMISSIBILITY AND THE                   
+ @           NON-NEIGHBOUR CONNECTION REMOVED FROM THE SIMULATION            
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           A FULL LISTING OF THESE NNCS CAN BE OBTAINED BY SETTING         
+ @           THE ALLNNC MNEMONIC IN RPTGRID. THE OUTPUT HAS THE              
+ @           TITLE MNEMONIC DEL-NNC                                          
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @                244 NON-NEIGHBOUR CONNECTIONS HAVE BEEN IGNORED            
+ @           AS THEIR TRANSMISSIBILITY IS LESS THAN 0.100000E-05             
+ @                 94 OF THESE ARE Z-PINCHOUTS.                              
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           6207 NON-NEIGHBOUR CONNECTIONS PRESENT                          
+
+ @--COMMENT  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           LEFT HANDED GRIDS MAY NOT BE SUPPORTED                          
+ @            IN ALL PRE AND POST PROCESSORS                                 
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           NUMBER OF ACTIVE CELLS IS 70161                                 
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           ADDITIONAL    15.020 MEGABYTES REQUIRED FOR SIMULATION          
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THE MEMORY REQUIRED TO PROCESS THE SOLUTION SECTION IS          
+ @               169171 KBYTES                                               
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @              62973 CHARACTER VARIABLES USED                               
+    62 READING FILLEPS 
+    63 READING INCLUDE ../include/props/drogon.sattab                                                                                                      
+    64 READING SWOF    
+    65 READING SGOF    
+               END OF INCLUDE FILE 
+    66 READING IMPORT  
+    67 READING SWATINIT
+    68 READING IMPORT  
+    69 READING SWL     
+    70 READING IMPORT  
+    71 READING SWCR    
+    72 READING IMPORT  
+    73 READING SGU     
+    74 READING INCLUDE ../include/props/drogon.pvt                                                                                                         
+    75 READING ROCKOPTS
+    76 READING ROCK    
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           ALTHOUGH ROCK DATA WAS ASSOCIATED WITH ROCKNUM                  
+ @           THE NUMBER OF REGIONS WAS NOT EXPLICITLY SET                    
+ @           USING ARGUMENT 13 OF KEYWORD TABDIMS                            
+ @           ROCK WILL BE ASSOCIATED WITH PVTNUM INSTEAD                     
+    77 READING PVTW    
+    78 READING DENSITY 
+    79 READING PVTO    
+    80 READING PVTG    
+               END OF INCLUDE FILE 
+    81 READING TRACER  
+    82 READING EXTRAPMS
+    83 READING REGIONS 
+    84 READING INCLUDE ../include/regions/drogon.eqlnum                                                                                                    
+    85 READING EQLNUM  
+               END OF INCLUDE FILE 
+    86 READING INCLUDE ../include/regions/drogon.fipnum                                                                                                    
+    87 READING FIPNUM  
+               END OF INCLUDE FILE 
+    88 READING INCLUDE ../include/regions/drogon.fipzon                                                                                                    
+    89 READING FIPZON  
+               END OF INCLUDE FILE 
+    90 READING INCLUDE ../include/regions/drogon.satnum                                                                                                    
+    91 READING SATNUM  
+               END OF INCLUDE FILE 
+    92 READING INCLUDE ../include/regions/drogon.pvtnum                                                                                                    
+    93 READING PVTNUM  
+               END OF INCLUDE FILE 
+    94 READING SOLUTION
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 26,7,1 AND 27,7,1                                 
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 27,7,1 AND 28,7,1                                 
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 25,8,1 AND 26,8,1                                 
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 27,8,1 AND 28,8,1                                 
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 24,9,1 AND 25,9,1                                 
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 27,9,1 AND 28,9,1                                 
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 23,10,1 AND 24,10,1                               
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 26,10,1 AND 27,10,1                               
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 22,11,1 AND 23,11,1                               
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THERE IS A TRANSMISSIBILITY IN THE  X  DIRECTION                
+ @           BETWEEN CELLS 26,11,1 AND 27,11,1                               
+ @           THESE CELLS ARE IN DIFFERENT PVT REGIONS                        
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           NO FURTHER MESSAGES ABOUT                                       
+ @           PVT REGION CONNECTION CONSISTENCY                               
+ @           WILL BE EMITTED.                                                
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THE OUTPUT LIMIT FOR THESE MESSAGES                             
+ @           CAN BE CHANGED WITH ITEM 13 OF THE                              
+ @           MESSAGES KEYWORD OR WITH ITEM 220                               
+ @           OF THE OPTIONS KEYWORD.                                         
+    95 READING INCLUDE ../include/solution/drogon.equil                                                                                                    
+    96 READING EQUIL   
+               END OF INCLUDE FILE 
+    97 READING INCLUDE ../include/solution/drogon.rxvd                                                                                                     
+    98 READING RSVD    
+    99 READING RVVD    
+               END OF INCLUDE FILE 
+   100 READING INCLUDE ../include/solution/drogon.thpres                                                                                                   
+   101 READING THPRES  
+               END OF INCLUDE FILE 
+   102 READING TVDPFWT1
+   103 READING TVDPFWT2
+   104 READING RPTSOL  
+   105 READING RPTRST  
+   106 READING SUMMARY 
+1                             **********************************************************************   1
+  THPRES   AT      0.00  DAYS * Drogon synthetic reservoir model                                       * ECLIPSE  VERSION 2024.3     
+  REPORT   0     1 JAN 2018   *DROGON-0_FIP                                                            * RUN AT 10:28 ON 07 FEB 2025 
+                              **************************************************************************
+ 
+
+ LIST OF ALL NON-ZERO THRESHOLD PRESSURES
+ ----------------------------------------
+
+    FLOW FROM REGION              TO REGION                     THRESHOLD PRESSURE
+    ----------------              ---------                     -------------------
+         1                             2                           0.358161        BARSA 
+         1                             4                            1.53010        BARSA 
+         2                             1                           0.358161        BARSA 
+         3                             4                           0.454532        BARSA 
+         4                             1                            1.53010        BARSA 
+         4                             3                           0.454532        BARSA 
+         6                             7                           0.358134        BARSA 
+         7                             6                           0.358134        BARSA 
+    ----------------              ---------                     -------------------
+1                             **********************************************************************   2
+  BALANCE  AT      0.00  DAYS * Drogon synthetic reservoir model                                       * ECLIPSE  VERSION 2024.3     
+  REPORT   0     1 JAN 2018   *DROGON-0_FIP                                                            * RUN AT 10:28 ON 07 FEB 2025 
+                              **************************************************************************
+
+
+                                                     ==================================================
+                                                     :               FIELD TOTALS                     :
+                                                     :         PAV =        300.55  BARSA             :
+                                                     :         PORV=    494456506.   RM3              :
+                                                     :(PRESSURE IS WEIGHTED BY HYDROCARBON PORE VOLUME:
+                                                     : PORE VOLUMES ARE TAKEN AT REFERENCE CONDITIONS):
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :     34223257.       160037.      34383295.:     426941336. :   1042531913.   4879324116.    5921856030.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :WELL  MATERIAL BAL. ERROR:                                         0.:             0. :                                         0.:
+ :FIELD MATERIAL BAL. ERROR:                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :     34223257.       160037.      34383295.:     426941336. :   1042531913.   4879324116.    5921856030.:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    1    :
+                                                :     PAV =        300.02  BARSA:
+                                                :     PORV=     84033003.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      1254802.            0.       1254802.:      79641533. :            0.    176701219.     176701219.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      1254802.            0.       1254802.:      79641533. :            0.    176701219.     176701219.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    2    :
+                                                :     PAV =        301.03  BARSA:
+                                                :     PORV=     20623510.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      5296458.            0.       5296458.:      12624691. :            0.    745847213.     745847213.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      5296458.            0.       5296458.:      12624691. :            0.    745847213.     745847213.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    3    :
+                                                :     PAV =        300.95  BARSA:
+                                                :     PORV=     13185880.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      2103036.            0.       2103036.:       9853279. :            0.    296149517.     296149517.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      2103036.            0.       2103036.:       9853279. :            0.    296149517.     296149517.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    4    :
+                                                :     PAV =        299.37  BARSA:
+                                                :     PORV=      6488176.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       215722.        98870.        314593.:       3256781. :    644838017.     42255864.     687093880.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       215722.        98870.        314593.:       3256781. :    644838017.     42255864.     687093880.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    6    :
+                                                :     PAV =        299.49  BARSA:
+                                                :     PORV=     15159930.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      5802336.            0.       5802336.:       6626351. :            0.    817084898.     817084898.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      5802336.            0.       5802336.:       6626351. :            0.    817084898.     817084898.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    7    :
+                                                :     PAV =        300.90  BARSA:
+                                                :     PORV=     30100635.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :        63379.            0.         63379.:      29089935. :            0.      8924979.       8924979.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :        63379.            0.         63379.:      29089935. :            0.      8924979.       8924979.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    8    :
+                                                :     PAV =        300.20  BARSA:
+                                                :     PORV=     85889225.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       263197.            0.        263197.:      82820223. :            0.     37063382.      37063382.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       263197.            0.        263197.:      82820223. :            0.     37063382.      37063382.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION    9    :
+                                                :     PAV =        301.67  BARSA:
+                                                :     PORV=      7673929.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      1936590.            0.       1936590.:       4744839. :           -0.    272710543.     272710543.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      1936590.            0.       1936590.:       4744839. :           -0.    272710543.     272710543.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   10    :
+                                                :     PAV =        301.55  BARSA:
+                                                :     PORV=     11240561.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       644551.            0.        644551.:       9994112. :            0.     90765626.      90765626.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       644551.            0.        644551.:       9994112. :            0.     90765626.      90765626.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   11    :
+                                                :     PAV =        299.74  BARSA:
+                                                :     PORV=      5886615.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       340782.        51329.        392110.:       3773480. :    333855851.     66752277.     400608128.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       340782.        51329.        392110.:       3773480. :    333855851.     66752277.     400608128.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   12    :
+                                                :     PAV =        300.66  BARSA:
+                                                :     PORV=      2120671.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       932835.            0.        932835.:        759661. :            0.    131361842.     131361842.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       932835.            0.        932835.:        759661. :            0.    131361842.     131361842.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   13    :
+                                                :     PAV =        300.09  BARSA:
+                                                :     PORV=     11528513.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      4277134.            0.       4277134.:       5229128. :            0.    602305941.     602305941.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      4277134.            0.       4277134.:       5229128. :            0.    602305941.     602305941.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   14    :
+                                                :     PAV =        318.74  BARSA:
+                                                :     PORV=     18593659.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :            0.            0.             0.:      18028595. :            0.            0.             0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :            0.            0.             0.:      18028595. :            0.            0.             0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   15    :
+                                                :     PAV =        300.72  BARSA:
+                                                :     PORV=     85226231.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :        66472.            0.         66472.:      82472893. :            0.      9360520.       9360520.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :        66472.            0.         66472.:      82472893. :            0.      9360520.       9360520.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   16    :
+                                                :     PAV =        302.00  BARSA:
+                                                :     PORV=     36538329.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      2739071.            0.       2739071.:      31590679. :            0.    385715915.     385715915.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      2739071.            0.       2739071.:      31590679. :            0.    385715915.     385715915.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   17    :
+                                                :     PAV =        301.91  BARSA:
+                                                :     PORV=      5962777.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       302715.            0.        302715.:       5356334. :            0.     42628262.      42628262.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       302715.            0.        302715.:       5356334. :            0.     42628262.      42628262.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   18    :
+                                                :     PAV =        300.27  BARSA:
+                                                :     PORV=      3261741.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       533181.         9838.        543019.:       2053135. :     63838046.    104446286.     168284332.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       533181.         9838.        543019.:       2053135. :     63838046.    104446286.     168284332.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   19    :
+                                                :     PAV =        301.37  BARSA:
+                                                :     PORV=      2642182.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :       941727.            0.        941727.:       1252561. :            0.    132613965.     132613965.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :       941727.            0.        941727.:       1252561. :            0.    132613965.     132613965.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   20    :
+                                                :     PAV =        300.75  BARSA:
+                                                :     PORV=     19201011.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :      6505726.            0.       6505726.:       9568317. :           -0.    916136273.     916136273.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :      6505726.            0.       6505726.:       9568317. :           -0.    916136273.     916136273.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                                =================================
+                                                : FIPNUM  REPORT REGION   21    :
+                                                :     PAV =        301.35  BARSA:
+                                                :     PORV=     29099930.   RM3 :
+                           :--------------- OIL    SM3  ---------------:-- WAT    SM3  -:--------------- GAS    SM3  ---------------:
+                           :     LIQUID         VAPOUR         TOTAL   :       TOTAL    :       FREE      DISSOLVED         TOTAL   :
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :CURRENTLY IN PLACE       :         3548.            0.          3548.:      28204807. :           -0.       499594.        499594.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :OUTFLOW TO OTHER REGIONS :            0.            0.             0.:             0. :            0.            0.             0.:
+ :OUTFLOW THROUGH WELLS    :                                         0.:             0. :                                         0.:
+ :MATERIAL BALANCE ERROR.  :                                         0.:             0. :                                         0.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ :ORIGINALLY IN PLACE      :         3548.            0.          3548.:      28204807. :           -0.       499594.        499594.:
+ :-------------------------:-------------------------------------------:----------------:-------------------------------------------:
+ ====================================================================================================================================
+
+
+                                             ===========================================
+                                             : FIPNUM REGION AVERAGED GRID QUANTITIES  :
+                                             :        ( WEIGHTED BY PORE VOLUMES       :
+                                             :          AT REFERENCE CONDITIONS )      :
+ :----------:--------------:--------------:--------------:--------------:--------------:                                             
+ :  REGION  :     PERMX    :     PERMY    :     PERMZ    :      PORO    :      DZ      :                                             
+ :----------:--------------:--------------:--------------:--------------:--------------:                                             
+ :   FIELD  :    668.659   :    669.407   :    386.255   :    0.19633   :       2.72   :                                             
+ :     1    :    547.076   :    533.356   :    373.594   :    0.19409   :       1.49   :                                             
+ :     2    :    501.806   :    490.103   :    350.439   :    0.18960   :       1.68   :                                             
+ :     3    :    527.971   :    515.242   :    364.875   :    0.18636   :       2.06   :                                             
+ :     4    :    544.556   :    532.541   :    369.975   :    0.19283   :       2.23   :                                             
+ :     5    :              :              :              :    0.00000   :       0.00   :                                             
+ :     6    :    463.105   :    448.381   :    316.125   :    0.18640   :       2.06   :                                             
+ :     7    :    369.939   :    359.951   :    232.768   :    0.15443   :       2.55   :                                             
+ :     8    :    333.190   :    333.988   :    193.551   :    0.20889   :       1.97   :                                             
+ :     9    :    666.502   :    669.129   :    409.512   :    0.26215   :       1.94   :                                             
+ :    10    :    494.710   :    495.661   :    296.241   :    0.20808   :       1.97   :                                             
+ :    11    :    455.625   :    455.611   :    285.830   :    0.20350   :       1.97   :                                             
+ :    12    :    628.910   :    629.322   :    364.810   :    0.26870   :       1.99   :                                             
+ :    13    :    703.281   :    704.423   :    439.163   :    0.26522   :       1.93   :                                             
+ :    14    :    587.633   :    588.798   :    348.865   :    0.22557   :       1.93   :                                             
+ :    15    :    961.034   :    976.427   :    487.507   :    0.18528   :       4.12   :                                             
+ :    16    :   1086.770   :   1096.328   :    597.883   :    0.19505   :       5.47   :                                             
+ :    17    :    968.720   :    987.902   :    472.043   :    0.18334   :       1.66   :                                             
+ :    18    :   1262.547   :   1268.875   :    728.392   :    0.21166   :       1.41   :                                             
+ :    19    :   1097.473   :   1120.476   :    578.394   :    0.19450   :       3.64   :                                             
+ :    20    :    984.131   :    995.385   :    506.231   :    0.19549   :       4.05   :                                             
+ :    21    :   1031.038   :   1042.233   :    564.237   :    0.18531   :       3.52   :                                             
+ =======================================================================================
+
+
+                                                      ===========================================
+                                                      : FIPNUM REGION AVERAGED GRID QUANTITIES  :
+            :-----------------------------------------------------------:-----------------------:                                    
+            :   ( WEIGHTED BY BULK VOLUMES AT REFERENCE CONDITIONS )    : ( WEIGHTED BY DX*DY ) :                                    
+ :----------:-----------------------------------------------------------:-----------------------:                                    
+ :  REGION  :     PERMX    :     PERMY    :     PERMZ    :      PORO    :           DZ          :                                    
+ :----------:--------------:--------------:--------------:--------------:-----------------------:                                    
+ :   FIELD  :    476.796   :    478.375   :    251.063   :    0.16002   :           2.04        :                                    
+ :     1    :    350.310   :    338.871   :    225.381   :    0.15504   :           1.41        :                                    
+ :     2    :    311.501   :    302.029   :    208.360   :    0.15065   :           1.66        :                                    
+ :     3    :    301.055   :    291.943   :    196.244   :    0.13880   :           2.08        :                                    
+ :     4    :    329.840   :    320.387   :    212.572   :    0.14971   :           2.23        :                                    
+ :     5    :              :              :              :    0.00000   :           0.00        :                                    
+ :     6    :    273.045   :    262.256   :    175.376   :    0.14567   :           2.02        :                                    
+ :     7    :    201.537   :    194.456   :    113.348   :    0.11646   :           2.44        :                                    
+ :     8    :    191.013   :    191.445   :    105.351   :    0.16058   :           1.85        :                                    
+ :     9    :    464.932   :    466.912   :    277.375   :    0.22085   :           1.70        :                                    
+ :    10    :    262.656   :    262.895   :    143.476   :    0.15659   :           1.85        :                                    
+ :    11    :    221.305   :    220.500   :    131.478   :    0.14442   :           1.84        :                                    
+ :    12    :    446.768   :    447.120   :    248.818   :    0.22234   :           1.76        :                                    
+ :    13    :    522.208   :    523.413   :    309.700   :    0.23273   :           1.73        :                                    
+ :    14    :    332.840   :    333.386   :    189.575   :    0.16773   :           1.75        :                                    
+ :    15    :    815.063   :    832.326   :    371.063   :    0.16856   :           2.70        :                                    
+ :    16    :    926.427   :    938.143   :    466.113   :    0.17829   :           4.93        :                                    
+ :    17    :    783.236   :    804.721   :    339.450   :    0.16283   :           1.60        :                                    
+ :    18    :   1136.384   :   1144.509   :    606.185   :    0.19787   :           1.37        :                                    
+ :    19    :    913.757   :    942.769   :    432.783   :    0.17733   :           3.48        :                                    
+ :    20    :    832.983   :    846.100   :    388.112   :    0.17810   :           3.57        :                                    
+ :    21    :    881.421   :    894.817   :    439.485   :    0.16951   :           3.15        :                                    
+ ================================================================================================
+
+
+                                                     ===================================
+                                                     :  FIPNUM OIL RECOVERY FACTORS    :
+ :---------:-----------------------------:---------------------------------------------:--------------------------------------------:
+ :         :                             : RATIO OF       RATIO OF       RATIO OF      : RATIO OF       RATIO OF       RATIO OF     :
+ : REGION  : MOBILE OIIP    MOBILE OIIP  : DISPLACED OIL  DISPLACED OIL  DISPLACED OIL : WELL FLOW      WELL FLOW      WELL FLOW    :
+ :         : (W.R.T WATER)  (W.R.T GAS)  : TO INITIAL     TO INITIAL     TO INITIAL    : TO INITIAL     TO INITIAL     TO INITIAL   :
+ :         :                             : OIP            MOBILE OIL     MOBILE OIL    : OIP            MOBILE OIL     MOBILE OIL   :
+ :         :                             :                (WATER)        (GAS)         :                (WATER)        (GAS)        :
+ :---------:-----------------------------:---------------------------------------------:--------------------------------------------:
+ :   FIELD :    2.505E+07      2.849E+07 :         0              0             0      :         0              0              0    :
+ :       1 :    9.178E+05      1.036E+06 :         0              0             0      :         0              0              0    :
+ :       2 :    3.910E+06      4.396E+06 :         0              0             0      :         0              0              0    :
+ :       3 :    1.572E+06      1.760E+06 :         0              0             0      :         0              0              0    :
+ :       4 :    1.568E+05      2.765E+05 :         0              0             0      :         0              0              0    :
+ :       5 :    0.000E+00      0.000E+00 :                                             :                                            :
+ :       6 :    4.142E+06      4.752E+06 :         0              0             0      :         0              0              0    :
+ :       7 :    4.066E+04      4.899E+04 :         0              0             0      :         0              0              0    :
+ :       8 :    1.719E+05      2.046E+05 :         0              0             0      :         0              0              0    :
+ :       9 :    1.368E+06      1.572E+06 :         0              0             0      :         0              0              0    :
+ :      10 :    4.387E+05      5.118E+05 :         0              0             0      :         0              0              0    :
+ :      11 :    2.172E+05      3.076E+05 :         0              0             0      :         0              0              0    :
+ :      12 :    6.883E+05      7.762E+05 :         0              0             0      :         0              0              0    :
+ :      13 :    3.166E+06      3.580E+06 :         0              0             0      :         0              0              0    :
+ :      14 :    0.000E+00      0.000E+00 :                                             :                                            :
+ :      15 :    4.621E+04      5.322E+04 :         0              0             0      :         0              0              0    :
+ :      16 :    2.014E+06      2.266E+06 :         0              0             0      :         0              0              0    :
+ :      17 :    2.232E+05      2.511E+05 :         0              0             0      :         0              0              0    :
+ :      18 :    3.946E+05      4.526E+05 :         0              0             0      :         0              0              0    :
+ :      19 :    7.007E+05      7.862E+05 :         0              0             0      :         0              0              0    :
+ :      20 :    4.880E+06      5.452E+06 :         0              0             0      :         0              0              0    :
+ :      21 :    1.891E+03      2.464E+03 :         0              0             0      :         0              0              0    :
+ ====================================================================================================================================
+
+
+                                                     ===================================
+                                                     :  RESERVOIR VOLUMES      RM3     :
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  : 
+ :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   : 
+ :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON : 
+ :---------:---------------:---------------:---------------:---------------:---------------:
+ :   FIELD :     495236617.:      49290244.:     441458276.:       4488098.:      53778341.:                                         
+ :       1 :      84157705.:       1799762.:      82357943.:             0.:       1799762.:                                         
+ :       2 :      20650912.:       7594804.:      13056108.:             0.:       7594804.:                                         
+ :       3 :      13204867.:       3015687.:      10189180.:             0.:       3015687.:                                         
+ :       4 :       6496191.:        351284.:       3368247.:       2776660.:       3127944.:                                         
+ :       5 :             0.:             0.:             0.:             0.:             0.:                                         
+ :       6 :      15177352.:       8323397.:       6853956.:             0.:       8323397.:                                         
+ :       7 :      30161297.:         90884.:      30070413.:             0.:         90884.:                                         
+ :       8 :      86020214.:        377487.:      85642727.:             0.:        377487.:                                         
+ :       9 :       7683797.:       2776509.:       4907289.:             0.:       2776509.:                                         
+ :      10 :      11258240.:        924126.:      10334114.:             0.:        924126.:                                         
+ :      11 :       5894250.:        554917.:       3902511.:       1436823.:       1991740.:                                         
+ :      12 :       2123357.:       1337751.:        785606.:             0.:       1337751.:                                         
+ :      13 :      11542703.:       6134592.:       5408111.:             0.:       6134592.:                                         
+ :      14 :      18634047.:             0.:      18634047.:             0.:             0.:                                         
+ :      15 :      85369189.:         95323.:      85273866.:             0.:         95323.:                                         
+ :      16 :      36593532.:       3926708.:      32666824.:             0.:       3926708.:                                         
+ :      17 :       5972383.:        433979.:       5538404.:             0.:        433979.:                                         
+ :      18 :       3266079.:        868214.:       2123251.:        274614.:       1142828.:                                         
+ :      19 :       2645626.:       1350264.:       1295362.:             0.:       1350264.:                                         
+ :      20 :      19225216.:       9329470.:       9895746.:             0.:       9329470.:                                         
+ :      21 :      29159659.:          5087.:      29154572.:             0.:          5087.:                                         
+ ===========================================================================================
+   107 READING SUMTHIN 
+   108 READING INCLUDE ../include/summary/drogon.summary                                                                                                   
+   109 READING FOPR    
+   110 READING FOPRH   
+   111 READING FGPR    
+   112 READING FGPRH   
+   113 READING FWPR    
+   114 READING FWPRH   
+   115 READING FLPR    
+   116 READING FLPRH   
+   117 READING FVPR    
+   118 READING FOPRF   
+   119 READING FOPRS   
+   120 READING FGSR    
+   121 READING FGPRF   
+   122 READING FGPRS   
+   123 READING FOPP    
+   124 READING FWPP    
+   125 READING FGPP    
+   126 READING FMWPR   
+   127 READING FMWIN   
+   128 READING FVIR    
+   129 READING FWIR    
+   130 READING FWIRH   
+   131 READING FGIR    
+   132 READING FGIRH   
+   133 READING FGLIR   
+   134 READING FMCTP   
+   135 READING FVPT    
+   136 READING FOPT    
+   137 READING FOPTH   
+   138 READING FWPT    
+   139 READING FWPTH   
+   140 READING FGPT    
+   141 READING FGPTH   
+   142 READING FWIT    
+   143 READING FWITH   
+   144 READING FGIT    
+   145 READING FGITH   
+   146 READING FOPTF   
+   147 READING FOPTS   
+   148 READING FWIP    
+   149 READING FOIP    
+   150 READING FGIP    
+   151 READING FWCT    
+   152 READING FWCTH   
+   153 READING FGOR    
+   154 READING FGORH   
+   155 READING FGLR    
+   156 READING FWGR    
+   157 READING FPR     
+   158 READING RPR     
+   159 READING ROIP    
+   160 READING ROE     
+   161 READING ROIPL   
+   162 READING ROIPG   
+   163 READING RGIP    
+   164 READING RGIPL   
+   165 READING RGIPG   
+   166 READING RGPR    
+   167 READING RGPT    
+   168 READING GMWPR   
+   169 READING GMWIN   
+   170 READING GGLIR   
+   171 READING GOPR    
+   172 READING GOPRH   
+   173 READING GGPR    
+   174 READING GGPRH   
+   175 READING GWPR    
+   176 READING GWPRH   
+   177 READING GVPR    
+   178 READING GLPR    
+   179 READING GOPRF   
+   180 READING GOPRS   
+   181 READING GGPRF   
+   182 READING GGPRS   
+   183 READING GWCT    
+   184 READING GWCTH   
+   185 READING GGOR    
+   186 READING GGORH   
+   187 READING GWGR    
+   188 READING GGLR    
+   189 READING GOPT    
+   190 READING GOPTH   
+   191 READING GGPT    
+   192 READING GGPTH   
+   193 READING GWPT    
+   194 READING GWPTH   
+   195 READING GVPT    
+   196 READING GLPT    
+   197 READING GOPTF   
+   198 READING GOPTS   
+   199 READING GGPTF   
+   200 READING GGPTS   
+   201 READING GWIR    
+   202 READING GVIR    
+   203 READING GWIRH   
+   204 READING GGIR    
+   205 READING GGIRH   
+   206 READING GPR     
+   207 READING GOPP    
+   208 READING GGPP    
+   209 READING GWPP    
+   210 READING GMCTP   
+   211 READING WOPR    
+   212 READING WOPRH   
+   213 READING WGPR    
+   214 READING WGPRH   
+   215 READING WWPR    
+   216 READING WWPRH   
+   217 READING WLPR    
+   218 READING WLPRH   
+   219 READING WOPT    
+   220 READING WWPT    
+   221 READING WGPT    
+   222 READING WOPTH   
+   223 READING WWPTH   
+   224 READING WGPTH   
+   225 READING WWCT    
+   226 READING WWCTH   
+   227 READING WGOR    
+   228 READING WGORH   
+   229 READING WWIR    
+   230 READING WWIRH   
+   231 READING WGIR    
+   232 READING WGIRH   
+   233 READING WWIT    
+   234 READING WWITH   
+   235 READING WGIT    
+   236 READING WGITH   
+   237 READING WBHP    
+   238 READING WTHP    
+   239 READING WPI     
+   240 READING WVPR    
+   241 READING WBP     
+   242 READING WBP4    
+   243 READING WBP9    
+   244 READING WMCTL   
+   245 READING WSTAT   
+   246 READING WGLIR   
+   247 READING WOGLR   
+   248 READING WTPRWT1 
+   249 READING WTPRWT2 
+   250 READING WTPTWT1 
+   251 READING WTPTWT2 
+   252 READING WTPCWT1 
+   253 READING WTPCWT2 
+   254 READING WTIRWT1 
+   255 READING WTIRWT2 
+   256 READING WTITWT1 
+   257 READING WTITWT2 
+   258 READING WTICWT1 
+   259 READING WTICWT2 
+   260 READING TCPU    
+   261 READING TCPUDAY 
+   262 READING WOPRL   
+   263 READING WWPRL   
+   264 READING WGPRL   
+   265 READING WWIRL   
+               END OF INCLUDE FILE 
+   266 READING SCHEDULE
+   267 READING INCLUDE ../include/schedule/vfp/A-1.inc                                                                                                     
+   268 READING VFPPROD 
+               END OF INCLUDE FILE 
+   269 READING INCLUDE ../include/schedule/vfp/A-2.inc                                                                                                     
+   270 READING VFPPROD 
+               END OF INCLUDE FILE 
+   271 READING INCLUDE ../include/schedule/vfp/A-3.inc                                                                                                     
+   272 READING VFPPROD 
+               END OF INCLUDE FILE 
+   273 READING INCLUDE ../include/schedule/vfp/A-4.inc                                                                                                     
+   274 READING VFPPROD 
+               END OF INCLUDE FILE 
+   275 READING INCLUDE ../include/schedule/drogon_hist.sch                                                                                                 
+   276 READING WELSPECS
+   277 READING COMPORD 
+   278 READING GRUPTREE
+   279 READING COMPDAT 
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  28  41   1). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  28  41   2). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  28  41   3). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  28  41   4). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  28  41   5). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  29  41   5). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  29  41   6). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  29  41   7). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  29  41   8). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           WELL R_A3     CONNECTS WITH A DEAD BLOCK                        
+ @           (  29  41   9). THIS CONNECTION WILL BE IGNORED.                
+
+ @--WARNING  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           NO FURTHER MESSAGES ABOUT                                       
+ @           WELLS CONNECTING WITH DEAD BLOCKS                               
+ @           WILL BE EMITTED.                                                
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           THE OUTPUT LIMIT FOR THESE MESSAGES                             
+ @           CAN BE CHANGED WITH ITEM 13 OF THE                              
+ @           MESSAGES KEYWORD OR WITH ITEM 220                               
+ @           OF THE OPTIONS KEYWORD.                                         
+   280 READING WCONHIST
+   281 READING WRFTPLT 
+   282 READING TUNING  
+   283 READING RPTRST  
+   284 READING DATES   
+
+ @--MESSAGE  AT TIME        0.0   DAYS    ( 1-JAN-2018):
+ @           GRAPHICS ONLY RESTART FILE WRITTEN   REPORT     0               
+ @           RESTART INCLUDES FLUIDS IN PLACE                                
+ @                            BUBBLE AND DEW POINT PRESSURES                 
+ @                            SATURATED GOR                                  
+ @                            SATURATED OGR                                  
+   285 READING WELSPECS
+   286 READING COMPORD 
+   287 READING COMPDAT 
+
+ @--WARNING  AT TIME        4.0   DAYS    ( 5-JAN-2018):
+ @           CONNECTION (  32  33  29) IN WELL A1                            
+ @           HAS ROCK Z-PERMEABILITY   0.0000E+00 .                          
+ @           RESETTING KZ TO 10**(-10)                                       
+   288 READING COMPLUMP
+   289 READING WCONHIST
+
+ @--MESSAGE  AT TIME        4.0   DAYS    ( 5-JAN-2018):
+ @           OPENING WELL A1       AT TIME      4.00   DAYS                  
+ @           CONTROLLED BY RESERVOIR FLUID VOLUME RATE                       
+   290 READING WELTARG 
+   291 READING DATES   
+   292 READING WCONHIST
+   293 READING DATES   
+   294 READING WCONHIST
+   295 READING WRFTPLT 
+   296 READING DATES   
+   297 READING WELSPECS
+   298 READING COMPORD 
+   299 READING COMPDAT 
+   300 READING COMPLUMP
+   301 READING WCONHIST
+
+ @--MESSAGE  AT TIME       68.0   DAYS    (10-MAR-2018):
+ @           OPENING WELL A2       AT TIME     68.00   DAYS                  
+ @           CONTROLLED BY RESERVOIR FLUID VOLUME RATE                       
+   302 READING WELTARG 
+   303 READING DATES   
+   304 READING WCONHIST
+   305 READING DATES   
+   306 READING WCONHIST
+   307 READING DATES   
+   308 READING WCONHIST
+   309 READING WRFTPLT 
+   310 READING DATES   
+   311 READING WCONHIST
+   312 READING DATES   
+   313 READING WELSPECS
+   314 READING COMPORD 
+   315 READING COMPDAT 
+   316 READING COMPLUMP
+   317 READING WCONHIST
+   318 READING WCONINJH
+
+ @--MESSAGE  AT TIME      127.0   DAYS    ( 8-MAY-2018):
+ @           OPENING WELL A5       AT TIME    127.00   DAYS                  
+ @           CONTROLLED BY WATER RATE                                        
+   319 READING DATES   
+   320 READING WCONHIST
+   321 READING DATES   
+   322 READING WCONHIST
+   323 READING DATES   
+   324 READING WTRACER 
+   325 READING WCONHIST
+   326 READING DATES   
+   327 READING WTRACER 
+   328 READING WCONHIST
+   329 READING DATES   
+   330 READING WCONHIST
+   331 READING DATES   
+   332 READING WCONHIST
+   333 READING RPTSCHED
+   334 READING RPTRST  
+
+ @--MESSAGE  AT TIME      180.0   DAYS    (30-JUN-2018):
+ @           ROCKC TRAN_ OUTPUT HAS BEEN RENAMED TO PERM_                    
+ @           FROM 2013.1 FOR COMPATIBILITY WITH E300                         
+   335 READING DATES   
+   336 READING WCONHIST
+   337 READING RPTSCHED
+   338 READING RPTRST  
+
+ @--COMMENT  AT TIME      181.0   DAYS    ( 1-JLY-2018):
+ @           RESTART OUTPUT HAS BEEN TURNED OFF WITH BASIC=0                 
+ @           ALL OTHER MNEMONICS WILL BE IGNORED                             
+   339 READING DATES   
+   340 READING WCONHIST
+   341 READING WRFTPLT 
+   342 READING DATES   
+   343 READING WELSPECS
+   344 READING COMPORD 
+   345 READING COMPDAT 
+   346 READING COMPLUMP
+   347 READING WCONHIST
+
+ @--MESSAGE  AT TIME      193.0   DAYS    (13-JLY-2018):
+ @           OPENING WELL A3       AT TIME    193.00   DAYS                  
+ @           CONTROLLED BY RESERVOIR FLUID VOLUME RATE                       
+   348 READING WELTARG 
+   349 READING DATES   
+   350 READING WCONHIST
+   351 READING DATES   
+   352 READING WCONHIST
+   353 READING DATES   
+   354 READING WCONHIST
+   355 READING DATES   
+   356 READING WCONHIST
+   357 READING WRFTPLT 
+   358 READING DATES   
+   359 READING WCONHIST
+   360 READING DATES   
+   361 READING WELSPECS
+   362 READING COMPORD 
+   363 READING COMPDAT 
+   364 READING COMPLUMP
+   365 READING WELSEGS 
+   366 READING WSEGVALV
+   367 READING COMPSEGS
+
+ @--WARNING  AT TIME      264.0   DAYS    (22-SEP-2018):
+ @           WELL A4       DOES NOT HAVE A CONNECTION IN                     
+ @           THE GRID BLOCK     35    49     1 WHEN READING COMPSEGS.        
+ @           THIS CONNECTION WILL BE IGNORED.                                
+   368 READING WCONHIST
+
+ @--MESSAGE  AT TIME      264.0   DAYS    (22-SEP-2018):
+ @           OPENING WELL A4       AT TIME    264.00   DAYS                  
+ @           CONTROLLED BY RESERVOIR FLUID VOLUME RATE                       
+   369 READING WELTARG 
+   370 READING DATES   
+   371 READING WCONHIST
+   372 READING DATES   
+   373 READING WCONHIST
+   374 READING DATES   
+   375 READING WCONHIST
+   376 READING DATES   
+   377 READING WCONHIST
+   378 READING WRFTPLT 
+   379 READING DATES   
+   380 READING WELSPECS
+   381 READING COMPORD 
+   382 READING COMPDAT 
+   383 READING COMPLUMP
+   384 READING WCONHIST
+   385 READING WCONINJH
+
+ @--MESSAGE  AT TIME      320.0   DAYS    (17-NOV-2018):
+ @           OPENING WELL A6       AT TIME    320.00   DAYS                  
+ @           CONTROLLED BY WATER RATE                                        
+   386 READING DATES   
+   387 READING WCONHIST
+   388 READING DATES   
+   389 READING WCONHIST
+   390 READING DATES   
+   391 READING WCONHIST
+   392 READING DATES   
+   393 READING WTRACER 
+   394 READING WCONHIST
+   395 READING DATES   
+   396 READING WTRACER 
+   397 READING WCONHIST
+   398 READING DATES   
+   399 READING WCONHIST
+   400 READING DATES   
+   401 READING WCONHIST
+   402 READING DATES   
+   403 READING WCONHIST
+   404 READING DATES   
+   405 READING WCONHIST
+   406 READING DATES   
+   407 READING WCONHIST
+   408 READING DATES   
+   409 READING WCONHIST
+   410 READING DATES   
+   411 READING WCONHIST
+   412 READING DATES   
+   413 READING WCONHIST
+   414 READING DATES   
+   415 READING WCONHIST
+   416 READING WCONINJH
+   417 READING DATES   
+   418 READING DATES   
+   419 READING WCONHIST
+   420 READING WCONINJH
+   421 READING DATES   
+   422 READING WCONHIST
+   423 READING DATES   
+   424 READING WCONHIST
+   425 READING DATES   
+   426 READING WCONHIST
+   427 READING DATES   
+   428 READING WCONHIST
+   429 READING RPTSCHED
+   430 READING RPTRST  
+
+ @--MESSAGE  AT TIME      545.0   DAYS    (30-JUN-2019):
+ @           ROCKC TRAN_ OUTPUT HAS BEEN RENAMED TO PERM_                    
+ @           FROM 2013.1 FOR COMPATIBILITY WITH E300                         
+   431 READING DATES   
+   432 READING WCONHIST
+   433 READING RPTSCHED
+   434 READING RPTRST  
+
+ @--COMMENT  AT TIME      546.0   DAYS    ( 1-JLY-2019):
+ @           RESTART OUTPUT HAS BEEN TURNED OFF WITH BASIC=0                 
+ @           ALL OTHER MNEMONICS WILL BE IGNORED                             
+   435 READING DATES   
+   436 READING WCONHIST
+   437 READING DATES   
+   438 READING WCONHIST
+   439 READING DATES   
+   440 READING WCONHIST
+   441 READING DATES   
+   442 READING WCONHIST
+   443 READING DATES   
+   444 READING WCONHIST
+   445 READING DATES   
+   446 READING WCONHIST
+   447 READING DATES   
+   448 READING WCONHIST
+   449 READING DATES   
+   450 READING WCONHIST
+   451 READING DATES   
+   452 READING WCONHIST
+   453 READING WCONINJH
+   454 READING DATES   
+   455 READING WCONHIST
+   456 READING WCONINJH
+   457 READING DATES   
+   458 READING WCONHIST
+   459 READING DATES   
+   460 READING WCONHIST
+   461 READING DATES   
+   462 READING WCONHIST
+   463 READING DATES   
+   464 READING WCONHIST
+   465 READING DATES   
+   466 READING WCONHIST
+   467 READING DATES   
+   468 READING WCONHIST
+   469 READING DATES   
+   470 READING WCONHIST
+   471 READING DATES   
+   472 READING WCONHIST
+   473 READING DATES   
+   474 READING WCONHIST
+   475 READING DATES   
+   476 READING WCONHIST
+   477 READING DATES   
+   478 READING WCONHIST
+   479 READING DATES   
+   480 READING WCONHIST
+   481 READING DATES   
+   482 READING WCONHIST
+   483 READING DATES   
+   484 READING WCONHIST
+   485 READING DATES   
+   486 READING WCONHIST
+   487 READING WCONINJH
+   488 READING DATES   
+   489 READING DATES   
+   490 READING WCONHIST
+   491 READING WCONINJH
+   492 READING DATES   
+   493 READING WCONHIST
+   494 READING DATES   
+   495 READING WCONHIST
+   496 READING DATES   
+   497 READING WCONHIST
+   498 READING DATES   
+   499 READING WCONHIST
+   500 READING RPTSCHED
+   501 READING RPTRST  
+
+ @--MESSAGE  AT TIME      911.0   DAYS    (30-JUN-2020):
+ @           ROCKC TRAN_ OUTPUT HAS BEEN RENAMED TO PERM_                    
+ @           FROM 2013.1 FOR COMPATIBILITY WITH E300                         
+   502 READING DATES   
+   503 READING END     
+1                             **********************************************************************   3
+  END      AT    912.00  DAYS * Drogon synthetic reservoir model                                       * ECLIPSE  VERSION 2024.3     
+  REPORT  82     1 JLY 2020   *DROGON-0_FIP                                                            * RUN AT 10:28 ON 07 FEB 2025 
+                              **************************************************************************
+          219 Mbytes of storage required                         
+       3.2011 KB/active cell                                     
+          443 Mbytes (image size)                                
+
+ Error summary 
+ Comments               3
+ Warnings              26
+ Problems               0
+ Errors                 0
+ Bugs                   0
+ Final cpu       1.13 elapsed       1.67
+ Total number of time steps forced to be accepted          0
