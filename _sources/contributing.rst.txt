@@ -58,11 +58,9 @@ running tests that rely upon a black oil simulation.
 
 .. code-block:: console
 
-  # running on redhat 7
-  pytest -n auto --flow-simulator="/project/res/x86_64_RH_7/bin/flowdaily" --eclipse-simulator="runeclipse"
-
   # running on redhat 8
-  pytest -n auto --flow-simulator="/project/res/x86_64_RH_8/bin/flowdaily" --eclipse-simulator="runeclipse"
+  source /prog/res/ecl/script/eclrun.cshrc  # Use eclrun.bash if using the bash shell
+  pytest -n auto --flow-simulator="/project/res/x86_64_RH_8/bin/flowdaily" --eclipse-simulator="eclrun"
 
 Code style
 ----------
