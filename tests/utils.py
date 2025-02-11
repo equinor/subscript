@@ -20,8 +20,8 @@ def run_simulator(simulator, data_file_path):
         None
     """
     simulator_option = []
-    if "runeclipse" in simulator:
-        simulator_option = ["-i"]
+    if "eclrun" in simulator:
+        simulator_option = ["eclipse"]
     if "flow" in simulator:
         simulator_option = ["--parsing-strictness=low"]
 
@@ -33,7 +33,7 @@ def run_simulator(simulator, data_file_path):
 
     if (
         result.returncode != 0
-        and "runeclipse" in simulator
+        and "eclipse" in simulator
         and "LICENSE FAILURE" in result.stdout.decode() + result.stderr.decode()
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")

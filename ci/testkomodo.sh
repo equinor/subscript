@@ -30,5 +30,6 @@ get_os_arch () {
 
 start_tests () {
     os_arch="$(get_os_arch)"
-    pytest -n auto --flow-simulator="/project/res/$os_arch/bin/flowdaily" --eclipse-simulator="runeclipse"
+    source /prog/res/ecl/script/eclrun.bash
+    pytest -n auto --flow-simulator="/project/res/$os_arch/bin/flowdaily" --eclipse-simulator="eclrun"
 }

@@ -407,9 +407,9 @@ class Datafile:
                 raise
 
         if ecl_version:
-            commandline = f"runeclipse -i -v {ecl_version} {self.DUMPFLUX_name}"
+            commandline = f"eclrun eclipse -v {ecl_version} {self.DUMPFLUX_name}"
         else:
-            commandline = f"runeclipse -i {self.DUMPFLUX_name}"
+            commandline = f"eclrun eclipse {self.DUMPFLUX_name}"
 
         args = shlex.split(commandline)
 
