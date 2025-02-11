@@ -5,7 +5,7 @@
 #
 # How it works:
 #   Makes a copy of your ECLDECK.DATA, callled .NOSIMMED.DATA
-#   Runs the modified copy using 'runeclipse'
+#   Runs the modified copy using 'eclrun'
 #
 # NB: No cleanup is performed, but the temporary file is
 # hidden so it will not clutter too much.
@@ -49,7 +49,7 @@ my $args = " -p $progname " ;
 if ($version) { $args .= "-v $version " ; } ;
 $args .= ".NOSIMMED.DATA" ;
 
-system("runeclipse -i $args") ;
+system("eclrun eclipse $args") ;
 
 
 sub in_error 

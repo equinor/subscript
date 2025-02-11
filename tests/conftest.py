@@ -41,8 +41,8 @@ def pytest_addoption(parser):
         action="store",
         default=None,
         help="The path to eclipse simulator executable."
-        " Expects parameters like the runeclipse utility provided,"
-        " by subscript. Defaults to not running tests with eclipse.",
+        " Expects a parameter like the eclrun Eclipse"
+        " launcher. Defaults to not running tests with eclipse.",
     )
 
 

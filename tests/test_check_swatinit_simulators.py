@@ -108,7 +108,7 @@ def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
     qc_frame = run_reservoir_simulator(simulator, model)
     assert np.isclose(qc_frame["PPCWMAX"][0], 3.01)
     qc_vols = qc_volumes(qc_frame)
-    if "eclipse" in simulator:
+    if "ecl" in simulator:
         # for PPCWMAX set to 3.01 Eclipse100 will scale the swatinit value to this:
         actual_pc = 1.4226775
         swat_if_ppcwmax = 0.5746147
@@ -651,7 +651,7 @@ def test_swlpc_trunc(simulator, tmp_path):
     )
     qc_frame = run_reservoir_simulator(simulator, model)
     print(qc_frame)
-    if "eclipse" in simulator:
+    if "ecl" in simulator:
         assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
     else:
         # SWLPC is not supported by flow, the SWLPC data is effectively ignored.
@@ -673,7 +673,7 @@ def test_swlpc_correcting_swl(simulator, tmp_path):
     )
     qc_frame = run_reservoir_simulator(simulator, model)
     print(qc_frame)
-    if "eclipse" in simulator:
+    if "ecl" in simulator:
         assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
     else:
         # SWLPC is not supported by flow, the SWLPC data is effectively ignored.
