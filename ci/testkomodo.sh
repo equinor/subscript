@@ -30,6 +30,12 @@ get_os_arch () {
 
 start_tests () {
     os_arch="$(get_os_arch)"
+
+    SHELLOPTS_BEFORE=$(set +o)
+    set +e
+    # (this script becomes flaky if set -e is active)
     source /prog/res/ecl/script/eclrun.bash
+    eval "$SHELLOPTS_BEFORE"
+
     pytest -n auto --flow-simulator="/project/res/$os_arch/bin/flowdaily" --eclipse-simulator="eclrun"
 }
