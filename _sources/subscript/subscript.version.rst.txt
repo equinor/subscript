@@ -8,3 +8,40 @@
       :local:
 
 .. currentmodule:: subscript.version
+
+
+Variables
+=========
+
+- :py:data:`__version__`
+- :py:data:`__version_tuple__`
+- :py:data:`version`
+- :py:data:`version_tuple`
+
+.. autodata:: __version__
+   :annotation:
+
+   .. code-block:: text
+
+      '1.11.1.dev1+gec09241c'
+
+.. autodata:: __version_tuple__
+   :annotation:
+
+   .. code-block:: text
+
+      (1, 11, 1, 'dev1', 'gec09241c')
+
+.. autodata:: version
+   :annotation:
+
+   .. code-block:: text
+
+      '1.11.1.dev1+gec09241c'
+
+.. autodata:: version_tuple
+   :annotation:
+
+   .. code-block:: text
+
+      (1, 11, 1, 'dev1', 'gec09241c')
