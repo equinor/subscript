@@ -25,6 +25,12 @@ jobs:
         python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
+
+      - name: Install Ubuntu dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install libegl1
+
       - name: Checkout commit locally
         uses: actions/checkout@v4
         with:
