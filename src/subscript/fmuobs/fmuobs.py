@@ -12,7 +12,6 @@ from typing import Optional, Tuple, Union
 import ert
 import pandas as pd
 import yaml
-from ert.config import ErtScript
 
 from subscript import __version__, getLogger
 from subscript.fmuobs.parsers import (
@@ -436,7 +435,7 @@ def dump_results(
             print(ertobs_str)
 
 
-class FmuObs(ErtScript):
+class FmuObs(ert.ErtScript):
     """This class defines the ERT workflow hook.
 
     It is constructed to work identical to the command line except

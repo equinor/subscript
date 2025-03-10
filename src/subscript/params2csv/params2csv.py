@@ -14,7 +14,6 @@ from pathlib import Path
 
 import ert
 import pandas as pd
-from ert.config import ErtScript
 
 from subscript import __version__, getLogger
 
@@ -96,7 +95,7 @@ class CustomFormatter(
     # pylint: disable=unnecessary-pass
 
 
-class Params2Csv(ErtScript):
+class Params2Csv(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,
     to be used as an ERT workflow (wrapping the command line utility)"""
 
