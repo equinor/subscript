@@ -23,7 +23,6 @@ import fmu.config.utilities as utils
 import numpy as np
 import xtgeo
 import yaml
-from ert.config import ErtScript
 
 import subscript
 
@@ -1793,7 +1792,7 @@ if __name__ == "__main__":
         file.write("\n")
 
 
-class FieldStatistics(ErtScript):
+class FieldStatistics(ert.ErtScript):
     """This class defines the ERT workflow hook.
 
     It is constructed to work identical to the command line except

@@ -9,7 +9,6 @@ from typing import Dict, List, Optional
 
 import ert
 import pandas as pd
-from ert.config import ErtScript
 
 from subscript import __version__, getLogger
 from subscript.eclcompress.eclcompress import glob_patterns
@@ -56,7 +55,7 @@ class CustomFormatter(
     # pylint: disable=unnecessary-pass
 
 
-class CsvMerge(ErtScript):
+class CsvMerge(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin"""
 
     # pylint: disable=too-few-public-methods
