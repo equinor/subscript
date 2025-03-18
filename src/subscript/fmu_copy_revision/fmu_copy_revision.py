@@ -401,6 +401,15 @@ class CopyFMU:
         logger.info("Default target is %s", self.default_target.resolve())
 
     def construct_target(self, proposal):
+        def _clean_folder(folder):
+            """Remove all files and subdirectories inside the folder,
+            while keeping the folder itself intact, unlike shutil.rmtree."""
+            for item in Path(folder).iterdir():
+                if item.is_dir():
+                    shutil.rmtree(item)
+                else:
+                    item.unlink()
+
         """Final target as abs path string, and evaluate cleanup or merge."""
         target = Path(proposal)
         self.target = str(target.absolute())
@@ -413,7 +422,8 @@ class CopyFMU:
             print(f"Target is already present: <{self.target}>")
             if self.args.cleanup:
                 print("Doing cleanup of current target...")
-                shutil.rmtree(self.target)
+                _clean_folder(self.target)
+
             elif self.args.merge:
                 print("Doing merge copy of current target...")
             else:
