@@ -280,7 +280,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--profile",
         dest="profile",
         type=int,
-        help="profile for copy profile to use, default is 4",
+        help=f"profile for copy profile to use, default is {DEFAULT_PROFILE}",
     )
     parser.add_argument(
         "--threads",
@@ -676,7 +676,7 @@ def main(args=None) -> None:
         runner.do_rsyncing()
     else:
         print("Command line mode!")
-        runner.profile = int(runner.args.profile)
+        runner.profile = int(runner.args.profile or DEFAULT_PROFILE)
         runner.source = runner.args.source
         runner.batch = True
 
