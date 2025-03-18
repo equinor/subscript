@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 import subscript.fmu_copy_revision.fmu_copy_revision as fcr
+from subscript.fmu_copy_revision.fmu_copy_revision import DEFAULT_PROFILE
 
 SCRIPTNAME = "fmu_copy_revision"
 
@@ -263,6 +264,15 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
 def test_integration():
     """Test that the endpoint is installed."""
     assert subprocess.check_output([SCRIPTNAME, "-h"])
+
+
+def test_default_profile(datatree):
+    """Test command line mode"""
+    os.chdir(datatree)
+    result = subprocess.run(
+        ["fmu_copy_revision", "--source", datatree], check=True, stdout=subprocess.PIPE
+    )
+    assert f"Doing copy with profile {DEFAULT_PROFILE}" in result.stdout.decode()
 
 
 def test_choice_profile1(datatree):
