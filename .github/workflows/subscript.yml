@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
 
     steps:
 
@@ -91,7 +91,7 @@ jobs:
         run: sphinx-build -b html docs build/docs/html
 
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/main' && matrix.python-version == '3.8'
+        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/main' && matrix.python-version == '3.12'
         run: |
           cp -R ./build/docs/html ../html
 
