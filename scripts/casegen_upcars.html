@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CASEGEN_UPCARS &mdash; subscript 1.12.0 documentation</title>
+  <title>CASEGEN_UPCARS &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -63,8 +64,8 @@
 <li class="toctree-l1"><a class="reference internal" href="bjobsusers.html">BJOBSUSERS</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CASEGEN_UPCARS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-syntax">Command line syntax</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subscript.casegen_upcars.casegen_upcars-get_parser-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#subscript.casegen_upcars.casegen_upcars-get_parser-named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -129,7 +130,7 @@
            <div itemprop="articleBody">
              
   <section id="casegen-upcars">
-<h1>CASEGEN_UPCARS<a class="headerlink" href="#casegen-upcars" title="Permalink to this heading"></a></h1>
+<h1>CASEGEN_UPCARS<a class="headerlink" href="#casegen-upcars" title="Link to this heading"></a></h1>
 <p>casegen_upcars is a script to generate simple conceptual models at different
 scales, containing different types of heterogeneity e.g. matrix, fracture, vug,
 fault, super-K layers etc. The script is developed as part of UpCaRs (Upscaling
@@ -140,7 +141,8 @@ fluid flow.</p>
 <p>The script can generate various types of grid structures (tilting, dome, and
 hull) and throws. The input file is in yaml format.</p>
 <figure class="align-center">
-<a class="reference internal image-reference" href="../_images/casegen_upcars_geometry.png"><img alt="../_images/casegen_upcars_geometry.png" src="../_images/casegen_upcars_geometry.png" style="width: 90%;" /></a>
+<a class="reference internal image-reference" href="../_images/casegen_upcars_geometry.png"><img alt="../_images/casegen_upcars_geometry.png" src="../_images/casegen_upcars_geometry.png" style="width: 90%;" />
+</a>
 </figure>
 <div class="line-block">
 <div class="line"><br /></div>
@@ -385,7 +387,7 @@ hull) and throws. The input file is in yaml format.</p>
 <p>There is an ERT workflow which utilized casegen_upcars for sensitivity study.
 More information can be found in <a class="reference external" href="https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegenERT">wiki page</a></p>
 <section id="command-line-syntax">
-<h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Permalink to this heading"></a></h2>
+<h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Link to this heading"></a></h2>
 <p><p>Case generator for UpCars project</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">casegen_upcars</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">top</span> <span class="n">TOP_DEPTH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">radiusX</span> <span class="n">RADIUS_X</span><span class="p">]</span>
@@ -467,16 +469,16 @@ More information can be found in <a class="reference external" href="https://wik
                       <span class="n">config_file</span>
 </pre></div>
 </div>
-<section id="positional-arguments">
-<h3>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h3>
+<section id="subscript.casegen_upcars.casegen_upcars-get_parser-positional-arguments">
+<h3>Positional Arguments<a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars-get_parser-positional-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>config_file</kbd></dt>
 <dd><p>Configuration file with all default values</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments">
-<h3>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h3>
+<section id="subscript.casegen_upcars.casegen_upcars-get_parser-named-arguments">
+<h3>Named Arguments<a class="headerlink" href="#subscript.casegen_upcars.casegen_upcars-get_parser-named-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>--top, --depth</kbd></dt>
 <dd><p>Top of the model</p>
@@ -549,7 +551,7 @@ More information can be found in <a class="reference external" href="https://wik
 </dd>
 <dt><kbd>--no_streak</kbd></dt>
 <dd><p>Remove all streaks setting</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>--streak_k</kbd></dt>
 <dd><p>Streak starting location (k-index). Specify for each streak</p>

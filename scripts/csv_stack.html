@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CSV_STACK &mdash; subscript 1.12.0 documentation</title>
+  <title>CSV_STACK &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -67,8 +68,8 @@
 <li class="toctree-l1"><a class="reference internal" href="csv2ofmvol.html">CSV2OFMVOL</a></li>
 <li class="toctree-l1"><a class="reference internal" href="csv_merge.html">CSV_MERGE</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CSV_STACK</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.csv_stack.csv_stack-get_parser-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.csv_stack.csv_stack-get_parser-named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
@@ -127,7 +128,7 @@
            <div itemprop="articleBody">
              
   <section id="csv-stack">
-<h1>CSV_STACK<a class="headerlink" href="#csv-stack" title="Permalink to this heading"></a></h1>
+<h1>CSV_STACK<a class="headerlink" href="#csv-stack" title="Link to this heading"></a></h1>
 <p><p>Stack columns in a CSV exported file.</p>
 <p>All columns in your data set with a colon “:” in it, will be split such that the
 string after the colon will become a column value instead of its own column.
@@ -142,36 +143,36 @@ friends by wellname, instead of selecting individual columns.</p>
                  <span class="n">csvfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.csv_stack.csv_stack-get_parser-positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#subscript.csv_stack.csv_stack-get_parser-positional-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>csvfile</kbd></dt>
 <dd><p>Input CSV file. If you use -, it will read from stdin</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.csv_stack.csv_stack-get_parser-named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#subscript.csv_stack.csv_stack-get_parser-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of output csv file. Use - to write to stdout.</p>
-<p>Default: “stacked.csv”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'stacked.csv'</span></code></p>
 </dd>
 <dt><kbd>-s, --split</kbd></dt>
 <dd><p>Type of column to be split/unpivoted/stacked. Choose from the the predefined set: well, region, group, block, all</p>
-<p>Default: “well”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'well'</span></code></p>
 </dd>
 <dt><kbd>--keepconstantcolumns</kbd></dt>
 <dd><p>Keep constant columns before stacking</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>--keepminimal</kbd></dt>
 <dd><p>Keep only REAL, ENSEMBLE, ITER, DATE and unpivoted columns. Implies dropping constant columns</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Be verbose</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -179,7 +180,7 @@ friends by wellname, instead of selecting individual columns.</p>
 </dl>
 </section>
 <section id="example">
-<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading"></a></h2>
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
 <p>If a CSV file contains:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">REALIZATION</span><span class="p">,</span> <span class="n">DATE</span><span class="p">,</span> <span class="n">poro</span><span class="p">,</span> <span class="n">WOPT</span><span class="p">:</span><span class="n">A1</span><span class="p">,</span> <span class="n">WOPT</span><span class="p">:</span><span class="n">A2</span><span class="p">,</span> <span class="n">RPR</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="n">RPR</span><span class="p">:</span><span class="mi">2</span>
 <span class="mi">1</span><span class="p">,</span>     <span class="mi">2015</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span><span class="p">,</span>  <span class="mi">6</span><span class="p">,</span>    <span class="mi">1</span><span class="p">,</span>        <span class="mi">2</span><span class="p">,</span>       <span class="mi">3</span><span class="p">,</span>    <span class="mi">4</span>

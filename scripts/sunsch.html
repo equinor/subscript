@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SUNSCH &mdash; subscript 1.12.0 documentation</title>
+  <title>SUNSCH &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -88,8 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="sector2fluxnum.html">SECTOR2FLUXNUM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="summaryplot.html">SUMMARYPLOT</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">SUNSCH</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.sunsch.sunsch-get_parser-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.sunsch.sunsch-get_parser-named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#features-in-short">Features in short</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#when-to-use">When to use</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#yaml-file-syntax">Yaml file syntax</a></li>
@@ -132,7 +133,7 @@
            <div itemprop="articleBody">
              
   <section id="sunsch">
-<h1>SUNSCH<a class="headerlink" href="#sunsch" title="Permalink to this heading"></a></h1>
+<h1>SUNSCH<a class="headerlink" href="#sunsch" title="Link to this heading"></a></h1>
 <p>Sunsch is a tool to build your final Schedule section to Eclipse. This can be done
 through merging multiple partial Schedule files, or inserting small Schedule commands
 at specific dates, possibly with templating included while inserting. Insertion
@@ -150,28 +151,28 @@ Eclipse, checking provided by OPM.</p>
               <span class="n">config</span>
 </pre></div>
 </div>
-<section id="positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.sunsch.sunsch-get_parser-positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#subscript.sunsch.sunsch-get_parser-positional-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>config</kbd></dt>
 <dd><p>Config file in YAML format for Schedule merging</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.sunsch.sunsch-get_parser-named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#subscript.sunsch.sunsch-get_parser-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Output filename to write to</p>
-<p>Default: “”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">''</span></code></p>
 </dd>
 <dt><kbd>-v, --verbose</kbd></dt>
 <dd><p>Set logging level to info.</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>--debug</kbd></dt>
 <dd><p>Set logging level to debug.</p>
-<p>Default: False</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">False</span></code></p>
 </dd>
 <dt><kbd>--startdate</kbd></dt>
 <dd><p>Start date (START keyword), YYYY-MM-DD.</p>
@@ -215,7 +216,7 @@ Eclipse, checking provided by OPM.</p>
 </div>
 </p>
 <section id="features-in-short">
-<h2>Features in short<a class="headerlink" href="#features-in-short" title="Permalink to this heading"></a></h2>
+<h2>Features in short<a class="headerlink" href="#features-in-short" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Configuration in YAML format</p></li>
 <li><p>Merging via DATE keyword</p></li>
@@ -231,7 +232,7 @@ temporary files.</p></li>
 </ul>
 </section>
 <section id="when-to-use">
-<h2>When to use<a class="headerlink" href="#when-to-use" title="Permalink to this heading"></a></h2>
+<h2>When to use<a class="headerlink" href="#when-to-use" title="Link to this heading"></a></h2>
 <p>The tool is designed for FMU runs. It can be used both for the history section
 and for prediction, but probably has its most relevant usage in sensitivities
 for prediction. It will enable usage of the aging Schlumberger Schedule
@@ -241,7 +242,7 @@ planning and Schedule export, the need for this tool is less, and one should
 possibly try not to use both unless needed.</p>
 </section>
 <section id="yaml-file-syntax">
-<h2>Yaml file syntax<a class="headerlink" href="#yaml-file-syntax" title="Permalink to this heading"></a></h2>
+<h2>Yaml file syntax<a class="headerlink" href="#yaml-file-syntax" title="Link to this heading"></a></h2>
 <p>Write a configuration file in YAML format, describing which Schedule files you
 are starting from and which you want to merge in, and any other directives to
 insert at specific points in the Schedule file.</p>
@@ -287,7 +288,7 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 <p>See the example below for how the insert statement is used.</p>
 </section>
 <section id="yaml-example">
-<h2>YAML example<a class="headerlink" href="#yaml-example" title="Permalink to this heading"></a></h2>
+<h2>YAML example<a class="headerlink" href="#yaml-example" title="Link to this heading"></a></h2>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">startdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1995-06-01</span>
 <span class="nt">refdate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2022-01-01</span>
 <span class="nt">enddate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2030-12-01</span>
@@ -314,7 +315,7 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 </div>
 </section>
 <section id="ert-usage">
-<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Permalink to this heading"></a></h2>
+<h2>ERT usage<a class="headerlink" href="#ert-usage" title="Link to this heading"></a></h2>
 <p>Sunsch is installed as a forward model in ERT. A typical configuration could look like:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">--</span> <span class="p">[</span> <span class="n">various</span> <span class="n">DESIGN_KW</span> <span class="n">statements</span> <span class="n">producing</span> <span class="nb">input</span> <span class="n">files</span> <span class="n">to</span> <span class="n">sunsch</span><span class="p">]</span>
 <span class="n">FORWARD_MODEL</span> <span class="n">DESIGN_KW</span><span class="p">(</span><span class="o">&lt;</span><span class="n">template_file</span><span class="o">&gt;=&lt;</span><span class="n">CONFIG_PATH</span><span class="o">&gt;/../</span><span class="nb">input</span><span class="o">/</span><span class="n">templates</span><span class="o">/</span><span class="n">config_sunsch</span><span class="o">.</span><span class="n">tmpl</span><span class="p">,</span> <span class="o">&lt;</span><span class="n">result_file</span><span class="o">&gt;=&lt;</span><span class="n">RUNPATH</span><span class="o">&gt;/</span><span class="n">sunsch_config</span><span class="o">.</span><span class="n">yml</span><span class="p">)</span>
@@ -324,7 +325,7 @@ inserted, but doing it in this yaml file can allow for cleaner directories).</p>
 <p>(if you don’t need to templatize your sunsch configuration, you can simplify)</p>
 </section>
 <section id="caveats">
-<h2>Caveats<a class="headerlink" href="#caveats" title="Permalink to this heading"></a></h2>
+<h2>Caveats<a class="headerlink" href="#caveats" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Any comments (starting with <code class="docutils literal notranslate"><span class="pre">--</span></code> in the source files) are lost in the final
 output. This is unfortunate, but hard to fix. It is related to the comments in

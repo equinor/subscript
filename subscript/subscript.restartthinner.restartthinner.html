@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.restartthinner.restartthinner &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript.restartthinner.restartthinner &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,11 +168,11 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.restartthinner.restartthinner">
-<span id="subscript-restartthinner-restartthinner"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code><a class="headerlink" href="#module-subscript.restartthinner.restartthinner" title="Permalink to this heading"></a></h1>
+<span id="subscript-restartthinner-restartthinner"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.restartthinner.restartthinner</span></code><a class="headerlink" href="#module-subscript.restartthinner.restartthinner" title="Link to this heading"></a></h1>
 <p>Restart file (UNRST) thinner, command line application</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.date_slicer">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">date_slicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slicedates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartdates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.date_slicer" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">date_slicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slicedates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartdates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.date_slicer" title="Link to this definition"></a></dt>
 <dd><p>Make a dict that maps a chosen restart date to a report index</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -182,7 +183,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.find_resdata_app">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">find_resdata_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toolname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.find_resdata_app" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">find_resdata_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toolname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.find_resdata_app" title="Link to this definition"></a></dt>
 <dd><p>Locate path of apps in resdata.</p>
 <p>These have varying suffixes due through the history of resdata Makefiles.</p>
 <p>Depending on resdata-version, it has the .x or the .c.x suffix
@@ -202,7 +203,7 @@ We prefer .x.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_parser" title="Link to this definition"></a></dt>
 <dd><p>Setup parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -213,7 +214,7 @@ We prefer .x.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.get_restart_indices">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_restart_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_restart_indices" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_restart_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_restart_indices" title="Link to this definition"></a></dt>
 <dd><p>Extract a list of RST indices for a filename</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -224,13 +225,13 @@ We prefer .x.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.main" title="Link to this definition"></a></dt>
 <dd><p>Endpoint for command line script</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.rd_repacker">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">rd_repacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slicerstindices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.rd_repacker" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">rd_repacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slicerstindices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.rd_repacker" title="Link to this definition"></a></dt>
 <dd><p>Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
 utilities are from resdata.</p>
 <p>First unpacking a UNRST file, then deleting dates the dont’t want, then
@@ -247,7 +248,7 @@ modify the original filename.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.restartthinner">
-<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">restartthinner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberofslices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dryrun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.restartthinner" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">restartthinner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberofslices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dryrun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.restartthinner" title="Link to this definition"></a></dt>
 <dd><p>Thin an existing UNRST file to selected number of restarts.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

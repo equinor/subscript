@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -162,7 +163,7 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript">
-<span id="subscript"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript</span></code><a class="headerlink" href="#module-subscript" title="Permalink to this heading"></a></h1>
+<span id="subscript"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript</span></code><a class="headerlink" href="#module-subscript" title="Link to this heading"></a></h1>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#submodules" id="id1">Submodules</a></p></li>
@@ -170,7 +171,7 @@
 </nav>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.detect_os">
-<span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">detect_os</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/redhat-release')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.detect_os" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">detect_os</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">release_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">PosixPath('/etc/redhat-release')</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.detect_os" title="Link to this definition"></a></dt>
 <dd><p>Detect operating system string in runtime, just use default if not found.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -181,7 +182,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.getLogger">
-<span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">getLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'subscript'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.getLogger" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.</span></span><span class="sig-name descname"><span class="pre">getLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'subscript'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.getLogger" title="Link to this definition"></a></dt>
 <dd><p>Provides a unified logger for subscript scripts.</p>
 <p>Scripts in subscript are encouraged to use logging.info() instead of
 print().</p>
@@ -209,7 +210,7 @@ __name__ should be supplied</p>
 </dd></dl>
 
 <section id="submodules">
-<h2><a class="toc-backref" href="#id1" role="doc-backlink">Submodules</a><a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Submodules</a><a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="subscript.bjobsusers.html"><code class="docutils literal notranslate"><span class="pre">subscript.bjobsusers</span></code></a><ul>
@@ -533,21 +534,15 @@ __name__ should be supplied</p>
 <li class="toctree-l2"><a class="reference internal" href="subscript.grav_subs_maps.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_maps.grav_subs_maps</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc"><code class="docutils literal notranslate"><span class="pre">GravMapsCalc</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravMapsCalc.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_config"><code class="docutils literal notranslate"><span class="pre">GravMapsCalc.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsCalc.model_fields"><code class="docutils literal notranslate"><span class="pre">GravMapsCalc.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig"><code class="docutils literal notranslate"><span class="pre">GravMapsConfig</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravMapsConfig.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig.model_config"><code class="docutils literal notranslate"><span class="pre">GravMapsConfig.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsConfig.model_fields"><code class="docutils literal notranslate"><span class="pre">GravMapsConfig.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput"><code class="docutils literal notranslate"><span class="pre">GravMapsInput</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravMapsInput.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_config"><code class="docutils literal notranslate"><span class="pre">GravMapsInput.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.GravMapsInput.model_fields"><code class="docutils literal notranslate"><span class="pre">GravMapsInput.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_maps.grav_subs_maps.html#subscript.grav_subs_maps.grav_subs_maps.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
@@ -563,27 +558,19 @@ __name__ should be supplied</p>
 <li class="toctree-l2"><a class="reference internal" href="subscript.grav_subs_points.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html"><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points.grav_subs_points</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsCalc"><code class="docutils literal notranslate"><span class="pre">GravPointsCalc</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsCalc.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_config"><code class="docutils literal notranslate"><span class="pre">GravPointsCalc.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsCalc.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsConfig"><code class="docutils literal notranslate"><span class="pre">GravPointsConfig</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsConfig.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_config"><code class="docutils literal notranslate"><span class="pre">GravPointsConfig.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsConfig.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsInput"><code class="docutils literal notranslate"><span class="pre">GravPointsInput</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsInput.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_config"><code class="docutils literal notranslate"><span class="pre">GravPointsInput.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsInput.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsStations"><code class="docutils literal notranslate"><span class="pre">GravPointsStations</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsStations.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_config"><code class="docutils literal notranslate"><span class="pre">GravPointsStations.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_fields"><code class="docutils literal notranslate"><span class="pre">GravPointsStations.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.grav_subs_points.grav_subs_points.html#subscript.grav_subs_points.grav_subs_points.export_grav_points_ert"><code class="docutils literal notranslate"><span class="pre">export_grav_points_ert()</span></code></a></li>
@@ -615,15 +602,11 @@ __name__ should be supplied</p>
 <li class="toctree-l2"><a class="reference internal" href="subscript.interp_relperm.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html"><code class="docutils literal notranslate"><span class="pre">subscript.interp_relperm.interp_relperm</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.InterpRelpermConfig"><code class="docutils literal notranslate"><span class="pre">InterpRelpermConfig</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.InterpRelpermConfig.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">InterpRelpermConfig.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.InterpRelpermConfig.model_config"><code class="docutils literal notranslate"><span class="pre">InterpRelpermConfig.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.InterpRelpermConfig.model_fields"><code class="docutils literal notranslate"><span class="pre">InterpRelpermConfig.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.Interpolator"><code class="docutils literal notranslate"><span class="pre">Interpolator</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.Interpolator.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">Interpolator.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.Interpolator.model_config"><code class="docutils literal notranslate"><span class="pre">Interpolator.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.Interpolator.model_fields"><code class="docutils literal notranslate"><span class="pre">Interpolator.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.interp_relperm.interp_relperm.html#subscript.interp_relperm.interp_relperm.get_parser"><code class="docutils literal notranslate"><span class="pre">get_parser()</span></code></a></li>
@@ -902,15 +885,11 @@ __name__ should be supplied</p>
 <li class="toctree-l2"><a class="reference internal" href="subscript.sunsch.html#submodules">Submodules</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="subscript.sunsch.sunsch.html"><code class="docutils literal notranslate"><span class="pre">subscript.sunsch.sunsch</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.InsertStatement"><code class="docutils literal notranslate"><span class="pre">InsertStatement</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.InsertStatement.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">InsertStatement.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.InsertStatement.model_config"><code class="docutils literal notranslate"><span class="pre">InsertStatement.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.InsertStatement.model_fields"><code class="docutils literal notranslate"><span class="pre">InsertStatement.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.SunschConfig"><code class="docutils literal notranslate"><span class="pre">SunschConfig</span></code></a><ul>
-<li class="toctree-l5"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.SunschConfig.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">SunschConfig.model_computed_fields</span></code></a></li>
 <li class="toctree-l5"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.SunschConfig.model_config"><code class="docutils literal notranslate"><span class="pre">SunschConfig.model_config</span></code></a></li>
-<li class="toctree-l5"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.SunschConfig.model_fields"><code class="docutils literal notranslate"><span class="pre">SunschConfig.model_fields</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l4"><a class="reference internal" href="subscript.sunsch.sunsch.html#subscript.sunsch.sunsch.dategrid"><code class="docutils literal notranslate"><span class="pre">dategrid()</span></code></a></li>

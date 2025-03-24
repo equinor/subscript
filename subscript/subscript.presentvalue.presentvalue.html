@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.presentvalue.presentvalue &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript.presentvalue.presentvalue &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,11 +168,11 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.presentvalue.presentvalue">
-<span id="subscript-presentvalue-presentvalue"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code><a class="headerlink" href="#module-subscript.presentvalue.presentvalue" title="Permalink to this heading"></a></h1>
+<span id="subscript-presentvalue-presentvalue"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.presentvalue.presentvalue</span></code><a class="headerlink" href="#module-subscript.presentvalue.presentvalue" title="Link to this heading"></a></h1>
 <p>NPV calculation of oil and gas production income</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.calc_presentvalue_df">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_presentvalue_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">econ_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_presentvalue_df" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_presentvalue_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">summary_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">econ_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountto</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_presentvalue_df" title="Link to this definition"></a></dt>
 <dd><p>Calculate a dataframe for present value computations.</p>
 <p>Discount rate will be obtained from the econ_df dataframe.</p>
 <dl class="field-list simple">
@@ -196,7 +197,7 @@ can then be summed to obtain the presentvalue over all years.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.calc_pv_bep_constantgas">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_bep_constantgas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oilprice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_bep_constantgas" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_bep_constantgas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oilprice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_bep_constantgas" title="Link to this definition"></a></dt>
 <dd><p>Calculate break-even oilprice without touching the gas price:</p>
 <p>Gas price is fixed, from the dataframe, the resulting break-even price
 is in USD/bbl. This can be used to evaluate gas injection/deferral projects.</p>
@@ -219,7 +220,7 @@ is in USD/bbl. This can be used to evaluate gas injection/deferral projects.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.calc_pv_bep_relativegas">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_bep_relativegas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oilprice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relativegasprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0035258811000000003</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_bep_relativegas" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_bep_relativegas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">oilprice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relativegasprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0035258811000000003</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_bep_relativegas" title="Link to this definition"></a></dt>
 <dd><p>Calculate break-even oilprice with gasprice strongly correlated to
 oilprice using EPA QX 201X External Assumptions;
 there is a link between gas and oil prices and the
@@ -245,7 +246,7 @@ resulting break-even price is in USD/boe.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.calc_pv_irr">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_irr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_irr" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calc_pv_irr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calc_pv_irr" title="Link to this definition"></a></dt>
 <dd><p>Calculate internal rate of return (IRR)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -266,7 +267,7 @@ resulting break-even price is in USD/boe.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.calculate_financials">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calculate_financials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calculate_financials" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">calculate_financials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pv_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.calculate_financials" title="Link to this definition"></a></dt>
 <dd><p>Calculate economical parameters given a dataframe with
 income and costs.</p>
 <dl class="field-list simple">
@@ -286,7 +287,7 @@ will only exist if computation was successful.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.dict_to_parameterstxt">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">dict_to_parameterstxt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.dict_to_parameterstxt" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">dict_to_parameterstxt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paramname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.dict_to_parameterstxt" title="Link to this definition"></a></dt>
 <dd><p>Produce a key-value string with newlines from a dict of results</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -306,7 +307,7 @@ will only exist if computation was successful.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.get_paramfilename">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_paramfilename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_paramfilename" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_paramfilename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_paramfilename" title="Link to this definition"></a></dt>
 <dd><p>Locate the parameters.txt file closest to the Eclipse DATA file</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -324,7 +325,7 @@ will only exist if computation was successful.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_parser" title="Link to this definition"></a></dt>
 <dd><p>Parser for command line arguments and for documentation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -338,7 +339,7 @@ will only exist if computation was successful.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.get_yearly_summary">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_yearly_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FOPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasinjvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGIT'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_yearly_summary" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">get_yearly_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eclfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FOPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasinjvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGIT'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.get_yearly_summary" title="Link to this definition"></a></dt>
 <dd><p>Obtain a yearly summary with only three production vectors from
 an Eclipse output file.</p>
 <p>Only cumulative vectors can be used, which will be linearly interpolated
@@ -364,7 +365,7 @@ calculated from the cumulatives.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.main" title="Link to this definition"></a></dt>
 <dd><p>Function for command line invocation.</p>
 <p>Parses command line arguments, and writes output to file and/or terminal.</p>
 <dl class="field-list simple">
@@ -376,7 +377,7 @@ calculated from the cumulatives.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.prepare_econ_table">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">prepare_econ_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usdtonok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.prepare_econ_table" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">prepare_econ_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasprice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">usdtonok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.prepare_econ_table" title="Link to this definition"></a></dt>
 <dd><p>Parse a CSV file with economical input</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -401,7 +402,7 @@ to calc_presentvalue_df().</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.presentvalue.presentvalue.presentvalue_main">
-<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">presentvalue_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">economics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FOPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasinjvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGIT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basedatafile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.presentvalue_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.presentvalue.presentvalue.</span></span><span class="sig-name descname"><span class="pre">presentvalue_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datafile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">economics</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountrate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discountto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2025</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oilvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FOPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGPT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gasinjvector</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FGIT'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoffyear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basedatafile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.presentvalue.presentvalue.presentvalue_main" title="Link to this definition"></a></dt>
 <dd><p>Calculate presentvalue and financial parameters for a single Eclipse
 run</p>
 <dl class="field-list simple">

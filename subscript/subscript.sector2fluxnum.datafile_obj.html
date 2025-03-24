@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sector2fluxnum.datafile_obj &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript.sector2fluxnum.datafile_obj &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,15 +168,15 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.sector2fluxnum.datafile_obj">
-<span id="subscript-sector2fluxnum-datafile-obj"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.datafile_obj</span></code><a class="headerlink" href="#module-subscript.sector2fluxnum.datafile_obj" title="Permalink to this heading"></a></h1>
+<span id="subscript-sector2fluxnum-datafile-obj"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.sector2fluxnum.datafile_obj</span></code><a class="headerlink" href="#module-subscript.sector2fluxnum.datafile_obj" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.sector2fluxnum.datafile_obj.</span></span><span class="sig-name descname"><span class="pre">Datafile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datafile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.sector2fluxnum.datafile_obj.</span></span><span class="sig-name descname"><span class="pre">Datafile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datafile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile" title="Link to this definition"></a></dt>
 <dd><p>Class containing parsers and write routines for
 DATA files and local executions of DATA files</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.create_DUMPFLUX_file">
-<span class="sig-name descname"><span class="pre">create_DUMPFLUX_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.create_DUMPFLUX_file" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_DUMPFLUX_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.create_DUMPFLUX_file" title="Link to this definition"></a></dt>
 <dd><p>Writes a DATA file with DUMPFLUX keyword.</p>
 <p>Also includes NOSIM and OPTION entries for EOR functionality.</p>
 <p>&#64;fluxnumfile_name : Name of the FLUXNUM kw file to be included</p>
@@ -183,58 +184,58 @@ DATA files and local executions of DATA files</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.create_USEFLUX_file">
-<span class="sig-name descname"><span class="pre">create_USEFLUX_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.create_USEFLUX_file" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">create_USEFLUX_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.create_USEFLUX_file" title="Link to this definition"></a></dt>
 <dd><p>Writes a DATA file with USEFLUX keyword.</p>
 <p>&#64;fluxnumfile_name : Name of the FLUXNUM kw file to be included</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position">
-<span class="sig-name descname"><span class="pre">get_KW_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_KW_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position" title="Link to this definition"></a></dt>
 <dd><p>Get the position for a certain keyword</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning">
-<span class="sig-name descname"><span class="pre">get_RESTART_warning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_RESTART_warning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning" title="Link to this definition"></a></dt>
 <dd><p>Print a warning if the RESTART keyword is detected</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_content">
-<span class="sig-name descname"><span class="pre">get_datafile_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_content" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_datafile_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_content" title="Link to this definition"></a></dt>
 <dd><p>Return a list of all lines in a text file.
 Newlines are kept at the end of each line.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content">
-<span class="sig-name descname"><span class="pre">get_datafile_text_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_datafile_text_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content" title="Link to this definition"></a></dt>
 <dd><p>Return the contents of a text file as a multiline string</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean">
-<span class="sig-name descname"><span class="pre">get_lines_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_lines_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean" title="Link to this definition"></a></dt>
 <dd><p>Remove lines we don’t want</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.has_KW">
-<span class="sig-name descname"><span class="pre">has_KW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.has_KW" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">has_KW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.has_KW" title="Link to this definition"></a></dt>
 <dd><p>Determine if a certain keyword is present</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.run_DUMPFLUX_nosim">
-<span class="sig-name descname"><span class="pre">run_DUMPFLUX_nosim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ecl_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.run_DUMPFLUX_nosim" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run_DUMPFLUX_nosim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ecl_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.run_DUMPFLUX_nosim" title="Link to this definition"></a></dt>
 <dd><p>Executes interactive ECLIPSE run with DUMPFLUX DATA file.</p>
 <p>Checks for errors in the output PRT file</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_USEFLUX_header">
-<span class="sig-name descname"><span class="pre">set_USEFLUX_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_USEFLUX_header" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_USEFLUX_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_USEFLUX_header" title="Link to this definition"></a></dt>
 <dd><p>Adds header to the output USEFLUX file</p>
 <p>Input
 &#64;args: Arguments from the intput to the wrapper scripts</p>
@@ -242,49 +243,49 @@ Newlines are kept at the end of each line.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX">
-<span class="sig-name descname"><span class="pre">set_update_GRID_DUMPFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_GRID_DUMPFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX" title="Link to this definition"></a></dt>
 <dd><p>Set or update DUMPFLUX in the GRID section</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX">
-<span class="sig-name descname"><span class="pre">set_update_GRID_USEFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_GRID_USEFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX" title="Link to this definition"></a></dt>
 <dd><p>Set or update USEFLUX in the GRID section</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE">
-<span class="sig-name descname"><span class="pre">set_update_INCLUDE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_INCLUDE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE" title="Link to this definition"></a></dt>
 <dd><p>Set or update the (first) INCLUDE statement</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM">
-<span class="sig-name descname"><span class="pre">set_update_NOSIM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_NOSIM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM" title="Link to this definition"></a></dt>
 <dd><p>Set or update the NOSIM keyword</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL">
-<span class="sig-name descname"><span class="pre">set_update_PARALLEL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_PARALLEL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL" title="Link to this definition"></a></dt>
 <dd><p>Set or update the PARALLEL keyword</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS">
-<span class="sig-name descname"><span class="pre">set_update_REGDIMS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_REGDIMS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS" title="Link to this definition"></a></dt>
 <dd><p>Set or update the REGDIMS keyword</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC">
-<span class="sig-name descname"><span class="pre">set_update_RUNSPEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_RUNSPEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC" title="Link to this definition"></a></dt>
 <dd><p>Set or update the RUNSPEC in the DATA file</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION">
-<span class="sig-name descname"><span class="pre">set_update_SOLUTION</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_update_SOLUTION</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION" title="Link to this definition"></a></dt>
 <dd><p>Set or update the SOLUTION section</p>
 </dd></dl>
 

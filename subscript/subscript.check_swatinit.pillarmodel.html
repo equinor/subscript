@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.check_swatinit.pillarmodel &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript.check_swatinit.pillarmodel &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,17 +168,17 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.check_swatinit.pillarmodel">
-<span id="subscript-check-swatinit-pillarmodel"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.pillarmodel</span></code><a class="headerlink" href="#module-subscript.check_swatinit.pillarmodel" title="Permalink to this heading"></a></h1>
+<span id="subscript-check-swatinit-pillarmodel"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.check_swatinit.pillarmodel</span></code><a class="headerlink" href="#module-subscript.check_swatinit.pillarmodel" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.pillarmodel.</span></span><span class="sig-name descname"><span class="pre">PillarModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poro</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swatinit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swlpc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxpc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minpc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppcwmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqlnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oip_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filleps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FILLEPS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rptrst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ALLPROPS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UNIFOUT'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.check_swatinit.pillarmodel.</span></span><span class="sig-name descname"><span class="pre">PillarModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phases</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poro</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swatinit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swlpc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxpc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minpc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ppcwmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eqlnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">oip_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filleps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FILLEPS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rptrst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ALLPROPS'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unifout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'UNIFOUT'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel" title="Link to this definition"></a></dt>
 <dd><p>Represents a simple Eclipse reservoir model with one or more
 rectangular cells stacked on top of each other.</p>
 <p>The reservoir model is parametrizable in terms of options related
 to SWATINIT analysis</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc">
-<span class="sig-name descname"><span class="pre">evaluate_pc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_water</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">evaluate_pc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s_water</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_pc" title="Link to this definition"></a></dt>
 <dd><p>Evaluate the capilllary pressure value for a given Sw value
 for a SATNUM. Interpolated linearly.</p>
 <dl class="field-list simple">
@@ -199,13 +200,13 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw">
-<span class="sig-name descname"><span class="pre">evaluate_sw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_cap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">evaluate_sw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_cap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">satnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.evaluate_sw" title="Link to this definition"></a></dt>
 <dd><p>Evaluate the saturation at a given capillary pressure
 for a SATNUM. Interpolated linearly.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>p_cap</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – </p></li>
+<li><p><strong>p_cap</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>)</p></li>
 <li><p><strong>scaling</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></span>) – Scaling factor capillary pressure</p></li>
 <li><p><strong>satnum</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Starts at 1. Default 1.</p></li>
 </ul>
@@ -221,7 +222,7 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.grid">
-<span class="sig-name descname"><span class="pre">grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.grid" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">grid</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.grid" title="Link to this definition"></a></dt>
 <dd><p>Make a string for the GRID section</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -232,7 +233,7 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.props">
-<span class="sig-name descname"><span class="pre">props</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.props" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">props</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.props" title="Link to this definition"></a></dt>
 <dd><p>Make a string for the PROPS section</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -243,7 +244,7 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.regions">
-<span class="sig-name descname"><span class="pre">regions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.regions" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">regions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.regions" title="Link to this definition"></a></dt>
 <dd><p>Make a string for the REGIONS section</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -254,7 +255,7 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.runspec">
-<span class="sig-name descname"><span class="pre">runspec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.runspec" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">runspec</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.runspec" title="Link to this definition"></a></dt>
 <dd><p>Make a string for the RUNSPEC section</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -265,7 +266,7 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.schedule">
-<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.schedule" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.schedule" title="Link to this definition"></a></dt>
 <dd><p>Make a string for the SCHEDULE section</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -276,7 +277,7 @@ for a SATNUM. Interpolated linearly.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.check_swatinit.pillarmodel.PillarModel.solution">
-<span class="sig-name descname"><span class="pre">solution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.solution" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">solution</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.check_swatinit.pillarmodel.PillarModel.solution" title="Link to this definition"></a></dt>
 <dd><p>Make a string for the SOLUTION section</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>

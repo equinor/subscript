@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GRAV_SUBS_MAPS &mdash; subscript 1.12.0 documentation</title>
+  <title>GRAV_SUBS_MAPS &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -73,8 +74,8 @@
 <li class="toctree-l1"><a class="reference internal" href="fmu_copy_revision.html">FMU_COPY_REVISION</a></li>
 <li class="toctree-l1"><a class="reference internal" href="fmuobs.html">FMUOBS</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GRAV_SUBS_MAPS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.grav_subs_maps.grav_subs_maps-get_parser-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.grav_subs_maps.grav_subs_maps-get_parser-named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#include-dates">Include dates</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#the-output-files">The output files</a></li>
 </ul>
@@ -128,7 +129,7 @@
            <div itemprop="articleBody">
              
   <section id="grav-subs-maps">
-<h1>GRAV_SUBS_MAPS<a class="headerlink" href="#grav-subs-maps" title="Permalink to this heading"></a></h1>
+<h1>GRAV_SUBS_MAPS<a class="headerlink" href="#grav-subs-maps" title="Link to this heading"></a></h1>
 <p><p>Modelling maps of gravity change and subsidence from flow
 simulation output (EGRID, INIT and UNRST files).</p>
 <p>The script reads flow simulation results and a yaml configuration file specifying input
@@ -139,23 +140,23 @@ For configuration of the yaml config file, see:
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">grav_subs_maps</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUTDIR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span> <span class="n">UNRSTfile</span>
 </pre></div>
 </div>
-<section id="positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.grav_subs_maps.grav_subs_maps-get_parser-positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps-get_parser-positional-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>UNRSTfile</kbd></dt>
 <dd><p>Path to flowsimulator UNRST file</p>
 </dd>
 </dl>
 </section>
-<section id="named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.grav_subs_maps.grav_subs_maps-get_parser-named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#subscript.grav_subs_maps.grav_subs_maps-get_parser-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>-c, -C, --configfile</kbd></dt>
 <dd><p>Name of YAML config file</p>
 </dd>
 <dt><kbd>-o, --outputdir</kbd></dt>
 <dd><p>Path to directory for output maps. Directory must exist.</p>
-<p>Default: “./”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'./'</span></code></p>
 </dd>
 <dt><kbd>--version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
@@ -177,7 +178,7 @@ For configuration of the yaml config file, see:
 </div>
 </p>
 <section id="include-dates">
-<h2>Include dates<a class="headerlink" href="#include-dates" title="Permalink to this heading"></a></h2>
+<h2>Include dates<a class="headerlink" href="#include-dates" title="Link to this heading"></a></h2>
 <p>Instead of specifying the modelling dates directly in the yaml config file
 it is possible to include them from another yaml file:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>input:
@@ -195,7 +196,7 @@ it is possible to include them from another yaml file:</p>
 </div>
 </section>
 <section id="the-output-files">
-<h2>The output files<a class="headerlink" href="#the-output-files" title="Permalink to this heading"></a></h2>
+<h2>The output files<a class="headerlink" href="#the-output-files" title="Link to this heading"></a></h2>
 <p>The output from this job are maps in irap binary format. For each difference date there will be one subsidence map and one or more gravity change maps (depending on which phases are specified to model).</p>
 <p>The naming of the output files have been standardised to:</p>
 <div class="line-block">

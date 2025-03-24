@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.grav_subs_points.grav_subs_points &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript.grav_subs_points.grav_subs_points &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,110 +168,54 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.grav_subs_points.grav_subs_points">
-<span id="subscript-grav-subs-points-grav-subs-points"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points.grav_subs_points</span></code><a class="headerlink" href="#module-subscript.grav_subs_points.grav_subs_points" title="Permalink to this heading"></a></h1>
+<span id="subscript-grav-subs-points-grav-subs-points"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.grav_subs_points.grav_subs_points</span></code><a class="headerlink" href="#module-subscript.grav_subs_points.grav_subs_points" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsCalc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_computed_fields">
-<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_computed_fields" title="Permalink to this definition"></a></dt>
-<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_config" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_config" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'phases':</span> <span class="pre">FieldInfo(annotation=List[str],</span> <span class="pre">required=True),</span> <span class="pre">'poisson_ratio':</span> <span class="pre">FieldInfo(annotation=float,</span> <span class="pre">required=True,</span> <span class="pre">metadata=[Strict(strict=True),</span> <span class="pre">Ge(ge=0),</span> <span class="pre">Le(le=0.5)])}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsCalc.model_fields" title="Permalink to this definition"></a></dt>
-<dd><p>Metadata about the fields defined on the model,
-mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
-<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_computed_fields">
-<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_computed_fields" title="Permalink to this definition"></a></dt>
-<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_config" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_config" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'calculations':</span> <span class="pre">FieldInfo(annotation=GravPointsCalc,</span> <span class="pre">required=True),</span> <span class="pre">'input':</span> <span class="pre">FieldInfo(annotation=GravPointsInput,</span> <span class="pre">required=True),</span> <span class="pre">'stations':</span> <span class="pre">FieldInfo(annotation=GravPointsStations,</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsConfig.model_fields" title="Permalink to this definition"></a></dt>
-<dd><p>Metadata about the fields defined on the model,
-mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
-<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_computed_fields">
-<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_computed_fields" title="Permalink to this definition"></a></dt>
-<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_config" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_config" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'diffdates':</span> <span class="pre">FieldInfo(annotation=List[Tuple[datetime.date,</span> <span class="pre">datetime.date]],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsInput.model_fields" title="Permalink to this definition"></a></dt>
-<dd><p>Metadata about the fields defined on the model,
-mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
-<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsStations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">GravPointsStations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations" title="Link to this definition"></a></dt>
 <dd><dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_computed_fields">
-<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">ComputedFieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_computed_fields" title="Permalink to this definition"></a></dt>
-<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
-</dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_config">
-<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_config" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[ConfigDict]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_config" title="Link to this definition"></a></dt>
 <dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
-</dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_fields">
-<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar[Dict[str,</span> <span class="pre">FieldInfo]]</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'grav':</span> <span class="pre">FieldInfo(annotation=Dict[str,</span> <span class="pre">Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')]],</span> <span class="pre">required=True),</span> <span class="pre">'subs':</span> <span class="pre">FieldInfo(annotation=Dict[str,</span> <span class="pre">Annotated[pathlib.Path,</span> <span class="pre">PathType(path_type='file')]],</span> <span class="pre">required=True)}</span></em><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.GravPointsStations.model_fields" title="Permalink to this definition"></a></dt>
-<dd><p>Metadata about the fields defined on the model,
-mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
-<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_grav_points_ert">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_ert" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_ert" title="Link to this definition"></a></dt>
 <dd><p>Export for ert for each diffdate, only total, not per phase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -281,7 +226,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_grav_points_xyz">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_xyz" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_grav_points_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_grav_points_xyz" title="Link to this definition"></a></dt>
 <dd><p>Write points in xyz format, roxar.FileFormat.RMS_POINTS</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -292,7 +237,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_subs_points_ert">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_ert" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_ert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_ert" title="Link to this definition"></a></dt>
 <dd><p>Export for ert for each diffdate</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -303,7 +248,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.export_subs_points_xyz">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_xyz" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">export_subs_points_xyz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">act_stations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diff_date</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.export_subs_points_xyz" title="Link to this definition"></a></dt>
 <dd><p>Write points in xyz format, roxar.FileFormat.RMS_POINTS</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -314,7 +259,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.get_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.get_parser" title="Link to this definition"></a></dt>
 <dd><p>Function to create the argument parser that is going to be served to the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
@@ -328,7 +273,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main" title="Link to this definition"></a></dt>
 <dd><p>Invocated from the command line, parsing command line arguments</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -339,7 +284,7 @@ mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] ob
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.grav_subs_points.grav_subs_points.main_gravpoints">
-<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main_gravpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unrst_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main_gravpoints" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.grav_subs_points.grav_subs_points.</span></span><span class="sig-name descname"><span class="pre">main_gravpoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unrst_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_folder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pref_gendata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ext_gendata</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.grav_subs_points.grav_subs_points.main_gravpoints" title="Link to this definition"></a></dt>
 <dd><p>Process a configuration, model gravity and subsidence points and write to disk.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WELLTEST_DPDS &mdash; subscript 1.12.0 documentation</title>
+  <title>WELLTEST_DPDS &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -91,8 +92,8 @@
 <li class="toctree-l1"><a class="reference internal" href="sw_model_utilities.html">SW_MODEL_UTILITIES</a></li>
 <li class="toctree-l1"><a class="reference internal" href="vfp2csv.html">VFP2CSV</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">WELLTEST_DPDS</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.welltest_dpds.welltest_dpds-get_parser-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subscript.welltest_dpds.welltest_dpds-get_parser-named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -126,7 +127,7 @@
            <div itemprop="articleBody">
              
   <section id="welltest-dpds">
-<h1>WELLTEST_DPDS<a class="headerlink" href="#welltest-dpds" title="Permalink to this heading"></a></h1>
+<h1>WELLTEST_DPDS<a class="headerlink" href="#welltest-dpds" title="Link to this heading"></a></h1>
 <p><p>Script to extract simulated welltest results. Typically used to compare with welltest
 analysis, from eg Kappa Saphir.</p>
 <dl class="simple">
@@ -166,8 +167,8 @@ note: the outfilesuffix argument is then used to pass on the RESTART/report step
                      <span class="n">eclcase</span> <span class="n">wellname</span>
 </pre></div>
 </div>
-<section id="positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#positional-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.welltest_dpds.welltest_dpds-get_parser-positional-arguments">
+<h2>Positional Arguments<a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds-get_parser-positional-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>eclcase</kbd></dt>
 <dd><p>Eclipse case to extract from</p>
@@ -177,25 +178,25 @@ note: the outfilesuffix argument is then used to pass on the RESTART/report step
 </dd>
 </dl>
 </section>
-<section id="named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#named-arguments" title="Permalink to this heading"></a></h2>
+<section id="subscript.welltest_dpds.welltest_dpds-get_parser-named-arguments">
+<h2>Named Arguments<a class="headerlink" href="#subscript.welltest_dpds.welltest_dpds-get_parser-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--outfilessuffix</kbd></dt>
 <dd><p>Suffix to be added to result files.</p>
-<p>Default: “”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">''</span></code></p>
 </dd>
 <dt><kbd>-n, --buildup_nr</kbd></dt>
 <dd><p>Buildup nr, eg which buildup to extract. Counting from 1.</p>
-<p>Default: 1</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
 </dd>
 <dt><kbd>-o, --outputdirectory</kbd></dt>
 <dd><p>Directory to put the output files.</p>
-<p>Default: “.”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'.'</span></code></p>
 </dd>
 <dt><kbd>--phase</kbd></dt>
 <dd><p>Possible choices: OIL, GAS, WATER</p>
 <p>Main fluid phase in test (OIL/GAS/WATER).</p>
-<p>Default: “OIL”</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'OIL'</span></code></p>
 </dd>
 <dt><kbd>--genobs_resultfile</kbd></dt>
 <dd><p>Option to trigger export of result files compatible with ERTGENERAL_OBSERVATION file format to be used in history matching. Expected argument is a file with welltest results used to definethe time steps to be reported (file typically exported from Saphir.)</p>

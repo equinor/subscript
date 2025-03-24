@@ -1,30 +1,31 @@
 
 
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.params2csv.params2csv &mdash; subscript 1.12.0 documentation</title>
+  <title>subscript.params2csv.params2csv &mdash; subscript 1.12.1.dev1+gc4d950b2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js?v=86ab961f"></script>
-      <script src="../_static/doctools.js?v=888ff710"></script>
-      <script src="../_static/sphinx_highlight.js?v=4825356b"></script>
+      <script src="../_static/documentation_options.js?v=dfc6bad4"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
       <script>let toggleHintShow = 'Click to show';</script>
       <script>let toggleHintHide = 'Click to hide';</script>
       <script>let toggleOpenOnPrint = 'true';</script>
       <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
       <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -167,25 +168,25 @@
            <div itemprop="articleBody">
              
   <section id="module-subscript.params2csv.params2csv">
-<span id="subscript-params2csv-params2csv"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.params2csv.params2csv</span></code><a class="headerlink" href="#module-subscript.params2csv.params2csv" title="Permalink to this heading"></a></h1>
+<span id="subscript-params2csv-params2csv"></span><h1><code class="docutils literal notranslate"><span class="pre">subscript.params2csv.params2csv</span></code><a class="headerlink" href="#module-subscript.params2csv.params2csv" title="Link to this heading"></a></h1>
 <p>Takes a list of files with &lt;key&gt; &lt;values&gt; pr. line, and turns them
 into a csv database (sort of transposing and concatenation of all the
 data, ensuring labels for each value matches).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.CustomFormatter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.CustomFormatter" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">CustomFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.CustomFormatter" title="Link to this definition"></a></dt>
 <dd><p>Multiple inheritance used for argparse to get both
 defaults and raw description formatter</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.Params2Csv">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">Params2Csv</span></span><a class="headerlink" href="#subscript.params2csv.params2csv.Params2Csv" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">Params2Csv</span></span><a class="headerlink" href="#subscript.params2csv.params2csv.Params2Csv" title="Link to this definition"></a></dt>
 <dd><p>A class with a run() function that can be registered as an ERT plugin,
 to be used as an ERT workflow (wrapping the command line utility)</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.Params2Csv.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.Params2Csv.run" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.Params2Csv.run" title="Link to this definition"></a></dt>
 <dd><p>Parse with a simplified command line parser, for ERT only,
 calling params2csv_main()</p>
 </dd></dl>
@@ -194,13 +195,18 @@ calling params2csv_main()</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_metadata_from_path">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_metadata_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paramfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_metadata_from_path" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_metadata_from_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paramfile</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_metadata_from_path" title="Link to this definition"></a></dt>
 <dd><p>Get some metadata from the Path object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>] | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_number_from_folder">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_number_from_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">foldername</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_number_from_folder" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_number_from_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">foldername</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_number_from_folder" title="Link to this definition"></a></dt>
 <dd><p>Retrive the integer after the ‘-’ from the folder name</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -211,7 +217,7 @@ calling params2csv_main()</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_parser">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_parser" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_parser" title="Link to this definition"></a></dt>
 <dd><p>Set up parser for command line utility</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -222,18 +228,18 @@ calling params2csv_main()</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.get_realization_path">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_realization_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_realization_path" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">get_realization_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.get_realization_path" title="Link to this definition"></a></dt>
 <dd><p>Retrive the realization path, return None if not found</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type">Path | None</span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.legacy_ertscript_workflow">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.legacy_ertscript_workflow" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">legacy_ertscript_workflow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.legacy_ertscript_workflow" title="Link to this definition"></a></dt>
 <dd><p>Hook the CsvStack class into ERT with the name PARAMS2CSV,
 and inject documentation</p>
 <dl class="field-list simple">
@@ -245,7 +251,7 @@ and inject documentation</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.main">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.main" title="Link to this definition"></a></dt>
 <dd><p>Entry point from command line</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -256,7 +262,7 @@ and inject documentation</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.params2csv.params2csv.params2csv_main">
-<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">params2csv_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.params2csv_main" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.params2csv.params2csv.</span></span><span class="sig-name descname"><span class="pre">params2csv_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.params2csv.params2csv.params2csv_main" title="Link to this definition"></a></dt>
 <dd><p>A main function to be used both from the command line, and
 when used as an ERT plugin (ERT workflow).</p>
 <dl class="field-list simple">
