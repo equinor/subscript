@@ -21,54 +21,6 @@ from subscript import __version__, getLogger
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 import rips  # noqa: E402 # pylint: disable=wrong-import-position, wrong-import-order
 
-DESCRIPTION = """
-``ri_wellmod`` is a utility to generate Eclipse well model definitions
-(WELSPECS/WELSPECL, COMPDAT/COMPDATL, WELSEGS, COMPSEGS) using ResInsight. The script
-takes as input a ResInsight project with wells and completions defined, in addition to
-an Eclipse case (either an initialized case or an input case with grid and PERMX|Y|Z
-and NTG defined in the GRDECL format).
-
-.. note:: Well names specified as command line arguments are assumed to refer to the
-   Eclipse well names, i.e., the completion export names as defined in the ResInsight
-   wells project.
-"""
-
-CATEGORY = "modelling.reservoir"
-
-EXAMPLES = """
-.. code-block:: console
-
- FORWARD_MODEL RI_WELLMOD(
-    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
-    <ECLBASE>=<ECLBASE>,
-    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch)
-
- FORWARD_MODEL RI_WELLMOD(
-    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
-    <ECLBASE>=<ECLBASE>,
-    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-    <MSW>="A2;A4;'R*'")
-
- FORWARD_MODEL RI_WELLMOD(
-    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
-    <ECLBASE>=<ECLBASE>,
-    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-    <MSW>="A4",
-    <XARG0>="--lgr",
-    <XARG1>="A4:3;3;1")
-
-
-.. warning:: Remember to remove line breaks in argument list when copying the
-   examples into your own ERT config.
-
-
-.. note:: More examples and options may be seen in the subscript docs for the script
-   ``ri_wellmod``, just replace ',' by ';' and note that spaces cannot be part of
-   argument strings, so you may need to use <XARGn> for the individual parts.
-
-"""
-
-
 logger = getLogger(__name__)
 
 RI_HOME = "/prog/ResInsight"

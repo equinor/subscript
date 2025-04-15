@@ -16,7 +16,6 @@ def test_presence_init_py(path_to_subscript):
 
     # Some directories do not need API docs generated, list them here:
     exceptions = [
-        "config_jobs",
         "csv_merge_ensembles",  # deprecated name, docs are in csv_merge
         "eclgrid2roff",  # ERT docs placeholder
         "eclinit2roff",  # ERT docs placeholder

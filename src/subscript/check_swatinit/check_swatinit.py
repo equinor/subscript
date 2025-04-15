@@ -35,18 +35,6 @@ QC_FLAGS = [
     __WATER__,
 ]
 
-DESCRIPTION = "QC tool for SWATINIT vs SWAT in Eclipse runs"
-
-CATEGORY = "utility.eclipse"
-
-EXAMPLES = """
-.. code-block:: console
-
-  FORWARD_MODEL CHECK_SWATINIT(<DATAFILE>=<ECLBASE>, <OUTPUT>=check_swatinit.csv)
-
-where ``ECLBASE`` is already defined in your ERT config.
-"""
-
 
 def main() -> None:
     """Executed when called from the command line.
@@ -667,7 +655,9 @@ def augment_grid_frame_qc_vectors(grid_df: pd.DataFrame) -> pd.DataFrame:
 
 def get_parser() -> argparse.ArgumentParser:
     """Construct a command line argument parser"""
-    parser = argparse.ArgumentParser(description=DESCRIPTION)
+    parser = argparse.ArgumentParser(
+        description="QC tool for SWATINIT vs SWAT in Eclipse runs"
+    )
     parser.add_argument(
         "DATAFILE",
         help=(

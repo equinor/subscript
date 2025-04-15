@@ -27,31 +27,6 @@ If called with ``<FILES>``, the argument provided must be a filepath to
 a text file containing a file list to compress.
 """
 
-EXAMPLES = """
-.. code-block:: console
-
-  FORWARD_MODEL ECLCOMPRESS
-
-You can provide your own list of files to compress with the ``<FILES>``
-argument.
-
-.. code-block:: console
-
-  FORWARD_MODEL ECLCOMPRESS(<FILES>=paths_to_compress.txt)
-
-where ``paths_to_compress.txt`` contains a list of files or filepaths to
-compress.
-
-.. code-block:: text
-  :caption: paths_to_compress.txt
-
-  eclipse/include/grid/*
-  eclipse/include/regions/*
-  eclipse/include/props/*
-
-Note that this list of file paths is the default list used when no file is
-provided.
-"""
 
 DEFAULT_FILES_TO_COMPRESS = [
     "eclipse/include/grid/*",
@@ -62,7 +37,6 @@ DEFAULT_FILES_TO_COMPRESS = [
 EPILOG = """
 Default list of files to compress is """ + " ".join(DEFAULT_FILES_TO_COMPRESS)
 
-CATEGORY = "modelling.reservoir"
 
 # The string used here must match what is used as the DEFAULT
 # parameter in the ert joob config. It is not used elsewhere.

@@ -24,32 +24,6 @@ the keys "region2fipnum" and/or "zone2fipnum". A YAML file can only be used toge
 with FIPNUM, - not with any additional FIP vector.
 """
 
-CATEGORY = "utility.eclipse"
-
-
-EXAMPLES = """
-.. code-block:: console
-
-  FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>, <REGIONS>=regions.yml, <FIPNAME>=FIPNUM, <DIR>=., <OUTPUTFILENAME>=simulator_volume_fipnum.csv)
-
-where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
-basename relative to ``RUNPATH`` and ``regions.yml`` is a YAML file defining
-the map from regions and/or zones to FIPNUM. The YAML file could be omitted in the
-FORWARD_MODEL and specified directly in the Webviz config file, if the REGIONS argument
-is not given a default value in the forward model job configuration.
-
-The ``FIPNAME`` argument is by default set to ``FIPNUM``, but any FIP-vector can be used. 
-Ensure the PRT file has volume reports for the additional FIP-vector. 
-
-By using the ``rename2fipnum`` option, the column name would be set to FIPNUM in 
-the csv-file for any FIP-vector, as required by ``webviz-subsurface`` plugin ``VolumetricAnalysis``. 
-This renaming is not needed for ``Webviz-Sumo``. An additional column with the actual 
-FIPNAME is included for information.
-
-Using anything else than "." in the ``DIR`` argument is deprecated. To write to a CSV
-file in a specific directory, add the path in the ``OUTPUTFILENAME`` argument.
-The directory to export to must exist.
-"""  # noqa
 
 logger = getLogger(__name__)
 

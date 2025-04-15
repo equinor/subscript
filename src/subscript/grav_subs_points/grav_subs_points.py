@@ -27,17 +27,14 @@ DUMMY_YOUNGS = 10
 PREFIX_POINTS = "all"  # calculation is cumulative over all zones
 EXTENSION_POINTS = ".poi"  # extension for points in roxar points format
 
-DESCRIPTION = """
-Modelling gravity change and subsidence based on flow simulation
+DESCRIPTION = """Modelling gravity change and subsidence based on flow simulation
 output (EGRID, INIT and UNRST files) for a list of locations (
 bencmark stations) at seabed.
 
 The script reads flow simulation results and a yaml configuration file
 specifying input and calculation parameters.
 For configuration of the yaml config file, see:
-https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_points.html
-
-"""
+https://fmu-docs.equinor.com/docs/subscript/scripts/grav_subs_points.html"""
 
 EPILOGUE = """
 .. code-block:: yaml
@@ -59,32 +56,6 @@ EPILOGUE = """
     phases: ["gas", "oil","water", "total"] # One pointset for each phase specified
 
 """
-
-
-CATEGORY = "modelling.reservoir"
-
-
-EXAMPLES = """
-.. code-block:: console
-
-  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml)
-  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=<CONFIG_PATH>/../input/config/grav_subs_points.yml, <OUTPUT_DIR>=share/results/points)
-
-  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <EXTENSION_GENDATA>="_10.txt")
-  FORWARD_MODEL GRAV_SUBS_POINTS(<UNRST_FILE=<ECLBASE>.UNRST, <GRAVPOINTS_CONFIG>=grav_subs_points.yml, <PREFIX_GENDATA>="fieldA_")
-
-where ``ECLBASE`` is already defined in your ERT config, pointing to the flowsimulator
-basename relative to ``RUNPATH``, grav_subs_points.yml is a YAML file defining
-the inputs and modelling parameters and ``OUTPUT_DIR`` is the path to the output folder.
-If not specified OUTPUT_DIR will be defaulted to "./".
-``PREFIX_GENDATA`` and ``EXTENSION_GENDATA`` is the file prefix and extension used for
-the output files of type GEN_DATA. The prefix can be used to separate datasets for
-different structures/fields within the dataset and is defaulted to an empty string,
-i.e. no prefix. The extension could include the report step number by defining e.g. "_10.txt",
-but is defaulted without it a report step number, to only ".txt"
-
-The directory to export point files to must exist.
-"""  # noqa
 
 
 class GravPointsInput(BaseModel):

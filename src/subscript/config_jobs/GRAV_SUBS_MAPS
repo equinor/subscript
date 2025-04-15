@@ -1,9 +1,0 @@
-EXECUTABLE  grav_subs_maps
-
-DEFAULT  <OUTPUT_DIR> "./"
-
-ARGLIST  "--configfile" <GRAVMAPS_CONFIG> "--outputdir" <OUTPUT_DIR> <UNRST_FILE> 
-
-MIN_ARG  2
-MAX_ARG  3
-ARG_TYPE 0 STRING

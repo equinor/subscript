@@ -1,9 +1,0 @@
-EXECUTABLE  interp_relperm
-
-DEFAULT  <ROOT_PATH> "./"
-
-ARGLIST  "-c" <INTERP_CONFIG> "--root-path" <ROOT_PATH>
-
-MIN_ARG  1
-MAX_ARG  2
-ARG_TYPE 0 STRING

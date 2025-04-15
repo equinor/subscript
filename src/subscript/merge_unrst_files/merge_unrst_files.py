@@ -12,15 +12,6 @@ argument and pred file as the second positional argument (i.e. in the order of s
 to largest report step numbers).
 """
 
-CATEGORY = "utility.eclipse"
-
-EXAMPLES = """
-.. code-block:: console
-
-  DEFINE <RESTART_DIR>      iter-3
-  FORWARD_MODEL MERGE_UNRST_FILES(<UNRST1>=../<RESTART_DIR>/<ECLBASE>.UNRST, <UNRST2>=<ECLBASE>.UNRST, <MERGED_FILE>=eclipse/model/ECLIPSE_MERGED.UNRST)
-
-"""  # noqa
 
 logger = getLogger(__name__)
 logger.setLevel(logging.INFO)

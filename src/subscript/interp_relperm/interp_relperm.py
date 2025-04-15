@@ -92,15 +92,6 @@ EPILOGUE = """
 
 """
 
-CATEGORY = "modelling.reservoir"
-
-EXAMPLES = """
-.. code-block:: console
-
- FORWARD_MODEL INTERP_RELPERM(<INTERP_CONFIG>=interp_relperm.yml, <ROOT_PATH>=<CONFIG_PATH>)
-
-"""  # noqa
-
 
 class Interpolator(BaseModel):
     tables: Optional[List[int]] = []

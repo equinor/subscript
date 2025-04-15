@@ -29,14 +29,6 @@ A-1, A-2, or A-3 as values.
 If importing the output CSV into Spotfire, you may then view and filter WOPT and
 friends by wellname, instead of selecting individual columns."""
 
-# The following string is used for the ERT forward model:
-EXAMPLE = """
-Put this in your ERT config::
-
-  FORWARD_MODEL CSV_STACK(<CSVFILE>=stackme.csv, <OUTPUT>=stacked.csv, <OPTION>="--keepminimal")
-
-"""  # noqa
-
 CATEGORY = "utility.transformation"
 
 # The following string is used for the ERT workflow documentation, note

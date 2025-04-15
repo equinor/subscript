@@ -34,25 +34,6 @@ Beware if you have that as a <key> in the text files.
 
 CATEGORY = "utility.eclipse"
 
-EXAMPLES = """
-.. code-block:: console
-
-  FORWARD_MODEL PARAMS2CSV(<PARAMETERFILES>=parameters.txt, <OUTPUT>=parameters.csv)
-
-This forward model will convert all keys in `parameters.txt` to columns in
-`parameters.csv`.
-
-In addition, it will add a column `filename` which list the source parameters.txt file.
-This column will be useful when <PARAMETERFILES> contains wildcards.
-
-The `filename` column can be renamed by adding an argument <FILENAMECOLUMN> to the FORWARD_MODEL.
-
-.. code-block:: console
-
-  FORWARD_MODEL PARAMS2CSV(<PARAMETERFILES>=parameters.txt, <OUTPUT>=parameters.csv,<FILENAMECOLUMN>=source_file)
-
-"""  # noqa
-
 # The following string is used for the ERT workflow documentation, note
 # the very subtle difference in variable name.
 WORKFLOW_EXAMPLE = """
