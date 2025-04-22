@@ -15,7 +15,6 @@ Result:
 import argparse
 import copy
 import logging
-import sys
 from pathlib import Path
 
 import ert
@@ -330,7 +329,7 @@ def main():
 def field_stat(args):
     # parse the config file for this script
     if not Path(args.configfile).exists():
-        sys.exit("No such file:" + args.configfile)
+        raise FileNotFoundError("No such file: " + args.configfile)
 
     config_file = args.configfile
     config_dict = read_field_stat_config(config_file)
@@ -338,12 +337,12 @@ def field_stat(args):
 
     # Path to FMU project models ert/model directory (ordinary CONFIG PATH in ERT)
     if not Path(args.ertconfigpath).exists():
-        sys.exit("No such file:" + args.ertconfigpath)
+        raise FileNotFoundError("No such file: " + args.ertconfigpath)
     ert_config_path = Path(args.ertconfigpath)
 
     # Path to ensemble on SCRATCH disk
     if not Path(args.ensemblepath).exists():
-        sys.exit("No such file:" + args.ensemblepath)
+        raise FileNotFoundError("No such file: " + args.ensemblepath)
     ens_path = Path(args.ensemblepath)
     if not check_if_iterations_exist(ens_path, field_stat):
         # The ensemble realization does not exist for all specified iterations

@@ -303,8 +303,7 @@ def csv_merge_main(
         merged_df.drop(columnstodelete, inplace=True, axis=1)
 
     if merged_df.empty:
-        logger.error("No data to output.")
-        sys.exit(1)
+        raise ValueError("No data to output.")
 
     logger.info("Final column list: %s", str(merged_df.columns))
 
