@@ -1,5 +1,6 @@
 """Test the convert_grid_format script"""
 
+import os
 import subprocess
 from pathlib import Path
 
@@ -150,3 +151,26 @@ def test_datesfile(dates, date_mode, expected_files, tmp_path, mocker):
 def test_integration():
     """Test that the endpoint is installed"""
     assert subprocess.check_output(["convert_grid_format", "-h"])
+
+
+@pytest.mark.integration
+def test_ert_integration_eclgrid2roff(tmp_path):
+    pytest.importorskip("ert")
+    os.chdir(tmp_path)
+    outfile = "reek_grid.roff"
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        f"""
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        FORWARD_MODEL ECLGRID2ROFF(<ECLROOT>={RFILE1}, \
+            <OUTPUT>={outfile})
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert Path(outfile).exists()
+    # check number of active cells
+    geogrid = xtgeo.grid_from_file(str(outfile))
+    assert geogrid.nactive == 35817

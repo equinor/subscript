@@ -688,3 +688,43 @@ def test_file_is_binary(byte_sequence, expected, tmp_path):
     else:
         Path("foo.txt").write_bytes(byte_sequence)
         assert file_is_binary("foo.txt") == expected
+
+
+@pytest.mark.integration
+def test_ert_integration_with_defaulted_files(tmpdir):
+    pytest.importorskip("ert")
+    os.chdir(tmpdir)
+    grid_dir = Path("simulations/realization-0/iter-0/eclipse/include/grid")
+    grid_dir.mkdir(parents=True)
+    (grid_dir / "poro.grdecl").write_text("PORO\n1 1/\n", encoding="utf-8")
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        """
+        NUM_REALIZATIONS 1
+        FORWARD_MODEL ECLCOMPRESS()
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert "PORO\n  2*1 /\n" in (grid_dir / "poro.grdecl").read_text(encoding="utf-8")
+
+
+@pytest.mark.integration
+def test_ert_integration_with_explicit_files(tmpdir):
+    pytest.importorskip("ert")
+    os.chdir(tmpdir)
+    Path("filelist").write_text("poro.grdecl")
+    Path("poro.grdecl").write_text("PORO\n1 1/\n", encoding="utf-8")
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        f"""
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        FORWARD_MODEL ECLCOMPRESS(<FILES>={tmpdir / "filelist"})
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert "PORO\n  2*1 /\n" in Path("poro.grdecl").read_text(encoding="utf-8")
