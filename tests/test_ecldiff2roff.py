@@ -324,3 +324,24 @@ def test_integration(reek_data):
     # pylint: disable=unused-argument
     # pylint: disable=redefined-outer-name
     assert subprocess.check_output(["ecldiff2roff", "-h"])
+
+
+@pytest.mark.integration
+def test_ert_integration(tmpdir, reek_data):
+    pytest.importorskip("ert")
+    os.chdir(tmpdir / "reekdata")
+    Path("validdates.txt").write_text("2000-01-01 2000-07-01", encoding="utf8")
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        """
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        FORWARD_MODEL ECLDIFF2ROFF(<ECLROOT>=2_R001_REEK-0, \
+            <PROP>=SGAS, <DIFFDATES>=validdates.txt, \
+            <OUTPUT>=OUT)
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert Path("OUT--sgas--20000101_20000701.roff").exists()

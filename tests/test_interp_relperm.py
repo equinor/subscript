@@ -640,3 +640,22 @@ def test_main(tmp_path, mocker):
     interp_relperm.main()
 
     assert Path("outfile.inc").exists()
+
+
+@pytest.mark.integration
+def test_ert_integration(tmpdir):
+    pytest.importorskip("ert")
+    os.chdir(tmpdir)
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        f"""
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        FORWARD_MODEL INTERP_RELPERM(<INTERP_CONFIG>={TESTDATA / "cfg.yml"}, \
+            <ROOT_PATH>={TESTDATA})
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert Path("outfile.inc").exists()

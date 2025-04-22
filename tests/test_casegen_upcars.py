@@ -383,3 +383,29 @@ def test_demo_large_scale_with_cmdline_throws(tmp_path, mocker):
     assert data_frame.Values["rotation"] == 0.0
     assert data_frame.Values["top"] == 1500.0
     assert data_frame.Values["bottom"] == 1875.0
+
+
+@pytest.mark.integration
+def test_ert_integration(tmp_path):
+    pytest.importorskip("ert")
+    os.chdir(tmp_path)
+    ert_config = "config.ert"
+    shutil.copytree(DATADIR, tmp_path, dirs_exist_ok=True)
+    base_name = "TEST_SMALL"
+    Path(ert_config).write_text(
+        f"""
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        FORWARD_MODEL CASEGEN_UPCARS(<CONFIG>=demo_small_scale.yaml,  \
+            <ECLIPSE_TEMPLATE>=dump_value.tmpl, <ECLIPSE_OUTPUT>={base_name})
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+
+    for pre, suf in zip(
+        ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
+        [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+    ):
+        assert Path(pre + base_name + suf).exists()

@@ -88,3 +88,22 @@ def test_check_report_numbers(tmp_path, mocker):
         + f"actual restart report_numbers: {report_numbers}"
     )
     assert report_numbers == expected_report_numbers
+
+
+@pytest.mark.integration
+def test_ert_integration(tmpdir):
+    pytest.importorskip("ert")
+    os.chdir(tmpdir)
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        f"""
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        FORWARD_MODEL MERGE_UNRST_FILES(<UNRST1>={UNRST_HIST}, \
+            <UNRST2>={UNRST_PRED}, <OUTPUT>=MERGED.UNRST)
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert Path("MERGED.UNRST").exists()

@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -266,3 +267,27 @@ def test_to_csv(tmp_path):
     dframe = pd.read_csv("mock.csv", skipinitialspace=True)
     assert dframe["vec"].size == 4
     assert dframe["vecb"].iloc[-1] == pytest.approx(100)
+
+
+@pytest.mark.integration
+def test_ert_integration(tmpdir):
+    pytest.importorskip("ert")
+    os.chdir(tmpdir)
+    shutil.copy(str(DATAFILEPATH) + ".SMSPEC", ".")
+    shutil.copy(str(DATAFILEPATH) + ".UNSMRY", ".")
+    ert_config = "config.ert"
+    Path(ert_config).write_text(
+        """
+        NUM_REALIZATIONS 1
+        RUNPATH .
+        ECLBASE DROGON_DST_PLT-0
+        FORWARD_MODEL WELLTEST_DPDS(<WELLNAME>="55_33-1")
+    """,
+        encoding="utf-8",
+    )
+
+    subprocess.run(["ert", "test_run", "--disable-monitor", ert_config], check=True)
+    assert Path("welltest_output.csv").exists()
+    assert Path("dpdspt_lag1.csv").exists()
+    assert Path("dpdspt_lag2.csv").exists()
+    assert Path("spt.csv").exists()
