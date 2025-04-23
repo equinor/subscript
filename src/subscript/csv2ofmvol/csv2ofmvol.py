@@ -11,6 +11,9 @@ from subscript import __version__, getLogger as subscriptlogger
 from subscript.eclcompress.eclcompress import glob_patterns
 
 logger = subscriptlogger(__name__)
+
+DESCRIPTION = "Convert CSV files with production data to OFM vol-format"
+
 EPILOG = """The indented usage is to process CSV files outputted from the pyPDM
 library (possibly from the script 'export_production_data') and then
 convert this back to OFM (OilField Manager) "vol"-format, which gives
@@ -248,9 +251,7 @@ class CustomFormatter(
 def get_parser() -> argparse.ArgumentParser:
     """Parse command line arguments, return a Namespace with arguments"""
     parser = argparse.ArgumentParser(
-        description="Convert CSV files with production data to OFM vol-format",
-        epilog=EPILOG,
-        formatter_class=CustomFormatter,
+        description=DESCRIPTION, epilog=EPILOG, formatter_class=CustomFormatter
     )
     parser.add_argument("csvfiles", nargs="+", help="CSV files with data")
     parser.add_argument("-o", "--output", type=str, default="pdm_data.vol")

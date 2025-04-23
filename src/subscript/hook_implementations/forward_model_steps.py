@@ -13,6 +13,7 @@ from subscript.ecldiff2roff import ecldiff2roff
 from subscript.grav_subs_maps import grav_subs_maps
 from subscript.grav_subs_points import grav_subs_points
 from subscript.interp_relperm import interp_relperm
+from subscript.csv2ofmvol import csv2ofmvol
 from subscript.merge_rft_ertobs import merge_rft_ertobs
 from subscript.merge_unrst_files import merge_unrst_files
 from subscript.ofmvol2csv import ofmvol2csv
@@ -108,7 +109,7 @@ class Csv2Ofmvol(ForwardModelStepPlugin):
     @staticmethod
     def documentation() -> Optional[ForwardModelStepDocumentation]:
         return ForwardModelStepDocumentation(
-            description="Convert CSV files with production data to OFM vol-format",
+            description=csv2ofmvol.DESCRIPTION,
             category="modelling.production",
         )
 
@@ -132,6 +133,7 @@ class CsvStack(ForwardModelStepPlugin):
     def documentation() -> Optional[ForwardModelStepDocumentation]:
         return ForwardModelStepDocumentation(
             description=csv_stack.DESCRIPTION,
+            category=csv_stack.CATEGORY,
             examples="""
 Put this in your ERT config::
 
@@ -139,7 +141,6 @@ Put this in your ERT config::
       <OUTPUT>=stacked.csv, <OPTION>="--keepminimal")
 
 """,
-            category=csv_stack.CATEGORY,
         )
 
 
@@ -160,6 +161,7 @@ class EclCompress(ForwardModelStepPlugin):
     def documentation() -> Optional[ForwardModelStepDocumentation]:
         return ForwardModelStepDocumentation(
             description=eclcompress.DESCRIPTION,
+            category="modelling.reservoir",
             examples="""
 .. code-block:: console
 
@@ -185,7 +187,6 @@ compress.
 Note that this list of file paths is the default list used when no file is
 provided.
 """,
-            category="modelling.reservoir",
         )
 
 
@@ -689,7 +690,7 @@ class RiWellmod(ForwardModelStepPlugin):
                 *[f"<XARG{num}>" for num in range(12)],
             ],
             default_mapping={
-                "<OUTPUTFIL>": "well_defs.sch",
+                "<OUTPUTFILE>": "well_defs.sch",
                 "<MSW>": "",
                 **{f"<XARG{num}>": "--dummy" for num in range(12)},
             },
