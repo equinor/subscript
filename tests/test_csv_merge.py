@@ -9,14 +9,6 @@ import pytest
 
 from subscript.csv_merge import csv_merge
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
 
 def test_taglist():
     """Test that we extract taglists correctly"""
@@ -239,10 +231,10 @@ def test_empty_files(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(tmp_path):
     """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
     realizations"""
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
     Path("realization-0/iter-0").mkdir(parents=True)
     Path("realization-1/iter-0").mkdir(parents=True)

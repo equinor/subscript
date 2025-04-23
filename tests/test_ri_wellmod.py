@@ -10,14 +10,6 @@ SCRIPTNAME = "ri_wellmod"
 DATAPATH = Path(__file__).parent / "testdata_ri_wellmod"
 RI_DEV = "/project/res/bin/resinsightdev"
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
 
 def drogon_runpath():
     """Return path to large test dataset"""
@@ -205,11 +197,11 @@ def test_main_lgr_cmdline(tmp_path, mocker):
     not has_resinsight(), reason="Could not find a ResInsight executable"
 )
 @pytest.mark.skipif(drogon_runpath() is None, reason="Could not find Drogon data")
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT")
 def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     proj_name = str(DATAPATH / "drogon_wells_noicd.rsp")

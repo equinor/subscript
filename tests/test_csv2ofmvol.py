@@ -11,15 +11,6 @@ import pytest
 from subscript.csv2ofmvol import csv2ofmvol
 from subscript.ofmvol2csv import ofmvol2csv
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
-
 PRODDATA_A3 = pd.DataFrame(
     data={
         "DATE": ["2010-01-01", "2011-01-01", "2012-01-01"],
@@ -427,10 +418,10 @@ def fixture_datadir(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(datadir):
     """Mock an ERT config with CSV2OFMVOL as a FORWARD_MODEL and run it"""
     # pylint: disable=unused-argument  # false positive on fixture
+    pytest.importorskip("ert")
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOO.DATA",
