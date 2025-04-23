@@ -7,13 +7,13 @@ from ert import (
     plugin as ert_plugin,
 )
 
+from subscript.csv2ofmvol import csv2ofmvol
 from subscript.csv_stack import csv_stack
 from subscript.eclcompress import eclcompress
 from subscript.ecldiff2roff import ecldiff2roff
 from subscript.grav_subs_maps import grav_subs_maps
 from subscript.grav_subs_points import grav_subs_points
 from subscript.interp_relperm import interp_relperm
-from subscript.csv2ofmvol import csv2ofmvol
 from subscript.merge_rft_ertobs import merge_rft_ertobs
 from subscript.merge_unrst_files import merge_unrst_files
 from subscript.ofmvol2csv import ofmvol2csv
