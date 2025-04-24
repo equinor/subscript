@@ -15,6 +15,7 @@ Result:
 import argparse
 import copy
 import logging
+import sys
 from pathlib import Path
 
 import ert
@@ -318,18 +319,26 @@ GLOBAL_VARIABLES_FILE = "../../fmuconfig/output/global_variables.yml"
 ERTBOX_GRID_PATH = "../../rms/output/aps/ERTBOX.EGRID"
 
 
+class ArgumentFileNotFound(Exception):
+    pass
+
+
 def main():
     """Invocated from the command line, parsing command line arguments"""
     parser = get_parser()
     args = parser.parse_args()
     logger.setLevel(logging.INFO)
-    field_stat(args)
+    try:
+        field_stat(args)
+    except ArgumentFileNotFound:
+        sys.exit(1)
 
 
 def field_stat(args):
     # parse the config file for this script
     if not Path(args.configfile).exists():
-        raise FileNotFoundError("No such file: " + args.configfile)
+        logger.error(f"No such file: {args.configfile}")
+        raise ArgumentFileNotFound
 
     config_file = args.configfile
     config_dict = read_field_stat_config(config_file)
@@ -337,12 +346,14 @@ def field_stat(args):
 
     # Path to FMU project models ert/model directory (ordinary CONFIG PATH in ERT)
     if not Path(args.ertconfigpath).exists():
-        raise FileNotFoundError("No such file: " + args.ertconfigpath)
+        logger.error(f"No such file: {args.ertconfigpath}")
+        raise ArgumentFileNotFound
     ert_config_path = Path(args.ertconfigpath)
 
     # Path to ensemble on SCRATCH disk
     if not Path(args.ensemblepath).exists():
-        raise FileNotFoundError("No such file: " + args.ensemblepath)
+        logger.error(f"No such file: {args.ensemblepath}")
+        raise ArgumentFileNotFound
     ens_path = Path(args.ensemblepath)
     if not check_if_iterations_exist(ens_path, field_stat):
         # The ensemble realization does not exist for all specified iterations

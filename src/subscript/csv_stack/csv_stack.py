@@ -81,6 +81,10 @@ STACK_LIBRARY = {
 }
 
 
+class ArgumentError(Exception):
+    pass
+
+
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
 ):
@@ -178,7 +182,10 @@ def main() -> None:
     """Function for command line invocation"""
     parser = get_parser()
     args = parser.parse_args()
-    csv_stack_main(args, support_magics=True)
+    try:
+        csv_stack_main(args, support_magics=True)
+    except ArgumentError:
+        sys.exit(1)
 
 
 def csv_stack_main(args: argparse.Namespace, support_magics: bool = False) -> None:
@@ -195,7 +202,8 @@ def csv_stack_main(args: argparse.Namespace, support_magics: bool = False) -> No
     if not support_magics and (
         args.output == __MAGIC_STDOUT__ or args.csvfile == __MAGIC_STDIN__
     ):
-        raise ValueError("Can't use stdin/stdout")
+        logger.error("Can't use stdin/stdout")
+        raise ArgumentError
 
     if args.verbose:
         if args.output == __MAGIC_STDOUT__:
@@ -210,7 +218,8 @@ def csv_stack_main(args: argparse.Namespace, support_magics: bool = False) -> No
         dframe = pd.read_csv(args.csvfile)
 
     if args.split not in STACK_LIBRARY:
-        raise ValueError(f"Don't know how to split on {args.split}")
+        logger.error(f"Don't know how to split on {args.split}")
+        raise ArgumentError
 
     stackargs = STACK_LIBRARY[args.split]
 
