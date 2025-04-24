@@ -203,7 +203,7 @@ def csv_stack_main(args: argparse.Namespace, support_magics: bool = False) -> No
         args.output == __MAGIC_STDOUT__ or args.csvfile == __MAGIC_STDIN__
     ):
         logger.error("Can't use stdin/stdout")
-        raise ArgumentError
+        raise ArgumentError("Can't use stdin/stdout")
 
     if args.verbose:
         if args.output == __MAGIC_STDOUT__:
@@ -219,7 +219,7 @@ def csv_stack_main(args: argparse.Namespace, support_magics: bool = False) -> No
 
     if args.split not in STACK_LIBRARY:
         logger.error(f"Don't know how to split on {args.split}")
-        raise ArgumentError
+        raise ArgumentError(f"Don't know how to split on {args.split}")
 
     stackargs = STACK_LIBRARY[args.split]
 

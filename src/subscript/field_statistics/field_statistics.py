@@ -338,7 +338,7 @@ def field_stat(args):
     # parse the config file for this script
     if not Path(args.configfile).exists():
         logger.error(f"No such file: {args.configfile}")
-        raise ArgumentFileNotFound
+        raise ArgumentFileNotFound(f"No such file: {args.configfile}")
 
     config_file = args.configfile
     config_dict = read_field_stat_config(config_file)
@@ -347,13 +347,13 @@ def field_stat(args):
     # Path to FMU project models ert/model directory (ordinary CONFIG PATH in ERT)
     if not Path(args.ertconfigpath).exists():
         logger.error(f"No such file: {args.ertconfigpath}")
-        raise ArgumentFileNotFound
+        raise ArgumentFileNotFound(f"No such file: {args.ertconfigpath}")
     ert_config_path = Path(args.ertconfigpath)
 
     # Path to ensemble on SCRATCH disk
     if not Path(args.ensemblepath).exists():
         logger.error(f"No such file: {args.ensemblepath}")
-        raise ArgumentFileNotFound
+        raise ArgumentFileNotFound(f"No such file: {args.ensemblepath}")
     ens_path = Path(args.ensemblepath)
     if not check_if_iterations_exist(ens_path, field_stat):
         # The ensemble realization does not exist for all specified iterations
