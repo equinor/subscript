@@ -13,14 +13,6 @@ from subscript.ofmvol2csv import ofmvol2csv
 # pylint: disable=unused-argument  # false positive on fixtures
 # pylint: disable=unsubscriptable-object  # false positive on Pandas objects.
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
 
 @pytest.mark.parametrize(
     "filelines, expected",
@@ -507,9 +499,9 @@ def test_roundtrip(datadir, mocker):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(datadir):
     """Test the installed ERT forward model"""
+    pytest.importorskip("ert")
     Path("FOOBAR.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE FOOBAR.DATA",

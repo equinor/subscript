@@ -7,15 +7,6 @@ import pytest
 
 from subscript.params2csv import params2csv
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
-
 ERT_CONFIG_WF = [
     "QUEUE_SYSTEM LOCAL",
     "NUM_REALIZATIONS 1",
@@ -115,11 +106,11 @@ def test_integration():
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     ert_config_fname = "test_params2csv.ert"
@@ -138,11 +129,11 @@ def test_ert_forward_model(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_forward_model_filename_column(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     ert_config_fname = "test_params2csv.ert"
@@ -163,9 +154,9 @@ def test_ert_forward_model_filename_column(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_workflow(tmp_path):
     """Test that PARAMS2CSV can be run as an ERT workflow/plugin"""
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     realizations = 3
@@ -194,12 +185,12 @@ def test_ert_workflow(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_workflow_multiple_iter(tmp_path):
     """
     Test that PARAMS2CSV can be run as an ERT workflow/plugin on
     multiple iterations.
     """
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     realizations = 3
@@ -235,9 +226,9 @@ def test_ert_workflow_multiple_iter(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_workflow_pred_params(tmp_path):
     """Test that PARAMS2CSV can be run on folders not starting with iter"""
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     realizations = 3
@@ -267,9 +258,9 @@ def test_ert_workflow_pred_params(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_workflow_no_iter_folder(tmp_path):
     """Test that PARAMS2CSV can be run on cases without iteration folders"""
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     realizations = 3

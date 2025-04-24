@@ -17,13 +17,6 @@ from subscript.merge_rft_ertobs.merge_rft_ertobs import (
 
 # pylint: disable=unused-argument  # false positive on fixtures
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
 
 logger = getLogger("subscript.merge_rft_ertobs.merge_rft_ertobs")
 logger.setLevel(logging.INFO)
@@ -250,9 +243,9 @@ def test_endpoint(drogondata):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_hook(drogondata):
     """Test that the ERT hook can run on a mocked case"""
+    pytest.importorskip("ert")
     Path("DROGON.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
         "ECLBASE DROGON.DATA",

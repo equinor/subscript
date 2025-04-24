@@ -10,15 +10,6 @@ import pytest
 
 from subscript.csv_stack import csv_stack
 
-try:
-    # pylint: disable=unused-import
-    import ert.shared  # noqa
-
-    HAVE_ERT = True
-except ImportError:
-    HAVE_ERT = False
-
-
 TESTFRAME = pd.DataFrame(
     columns=["REAL", "DATE", "PORO", "WOPT:A1", "WOPT:A2", "RPR:1", "RPR:2", "CONST"],
     data=[
@@ -242,11 +233,11 @@ def test_csv_stack_stdout(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
@@ -270,11 +261,11 @@ def test_ert_forward_model(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_forward_model_keepminimal(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
@@ -301,11 +292,11 @@ def test_ert_forward_model_keepminimal(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_ert_forward_model_keepconstants(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
     # pylint: disable=redefined-outer-name
     # pylint: disable=unused-argument
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
@@ -332,9 +323,9 @@ def test_ert_forward_model_keepconstants(tmp_path):
 
 
 @pytest.mark.integration
-@pytest.mark.skipif(not HAVE_ERT, reason="Requires ERT to be installed")
 def test_csv_stack_ert_workflow(tmp_path):
     """Test that CSV_STACK can be run as an ERT workflow/plugin"""
+    pytest.importorskip("ert")
     os.chdir(tmp_path)
 
     csvfile = "some_ensemble/share/results/tables/unsmry--monthly.csv"
