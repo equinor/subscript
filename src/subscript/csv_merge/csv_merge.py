@@ -44,6 +44,10 @@ runs::
 """  # noqa
 
 
+class NoDataError(Exception):
+    pass
+
+
 class CustomFormatter(
     argparse.ArgumentDefaultsHelpFormatter, argparse.RawDescriptionHelpFormatter
 ):
@@ -260,13 +264,16 @@ def main() -> None:
     if args.debug:
         logger.setLevel(logging.DEBUG)
 
-    csv_merge_main(
-        csvfiles=args.csvfiles,
-        output=args.output,
-        filecolumn=args.filecolumn,
-        memoryconservative=args.memoryconservative,
-        dropconstantcolumns=args.dropconstantcolumns,
-    )
+    try:
+        csv_merge_main(
+            csvfiles=args.csvfiles,
+            output=args.output,
+            filecolumn=args.filecolumn,
+            memoryconservative=args.memoryconservative,
+            dropconstantcolumns=args.dropconstantcolumns,
+        )
+    except NoDataError:
+        sys.exit(1)
 
 
 def csv_merge_main(
@@ -303,8 +310,8 @@ def csv_merge_main(
         merged_df.drop(columnstodelete, inplace=True, axis=1)
 
     if merged_df.empty:
-        logger.error("No data to output.")
-        sys.exit(1)
+        logger.error("No data to output")
+        raise NoDataError
 
     logger.info("Final column list: %s", str(merged_df.columns))
 
