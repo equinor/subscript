@@ -23,25 +23,25 @@ Variables
 
    .. code-block:: text
 
-      '1.12.1.dev2+gc7edbbfc'
+      '1.12.1.dev3+g68b5fb4e'
 
 .. autodata:: __version_tuple__
    :annotation:
 
    .. code-block:: text
 
-      (1, 12, 1, 'dev2', 'gc7edbbfc')
+      (1, 12, 1, 'dev3', 'g68b5fb4e')
 
 .. autodata:: version
    :annotation:
 
    .. code-block:: text
 
-      '1.12.1.dev2+gc7edbbfc'
+      '1.12.1.dev3+g68b5fb4e'
 
 .. autodata:: version_tuple
    :annotation:
 
    .. code-block:: text
 
-      (1, 12, 1, 'dev2', 'gc7edbbfc')
+      (1, 12, 1, 'dev3', 'g68b5fb4e')
