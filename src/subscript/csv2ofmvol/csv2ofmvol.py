@@ -14,8 +14,6 @@ logger = subscriptlogger(__name__)
 
 DESCRIPTION = "Convert CSV files with production data to OFM vol-format"
 
-CATEGORY = "modelling.production"
-
 EPILOG = """The indented usage is to process CSV files outputted from the pyPDM
 library (possibly from the script 'export_production_data') and then
 convert this back to OFM (OilField Manager) "vol"-format, which gives

@@ -121,7 +121,7 @@ field_statistics = "subscript.field_statistics.field_statistics:main"
 
 
 [project.entry-points.ert]
-subscript_jobs = "subscript.hook_implementations.jobs"
+subscript_fmsteps = "subscript.hook_implementations.forward_model_steps"
 CsvMerge = "subscript.csv_merge.csv_merge"
 CsvStack = "subscript.csv_stack.csv_stack"
 FmuObs = "subscript.fmuobs.fmuobs"

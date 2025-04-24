@@ -10,29 +10,6 @@ from subscript.casegen_upcars.model import Model
 from subscript.casegen_upcars.udf import TERMINALCOLORS, conversion, flatten, listify
 from subscript.casegen_upcars.udf_arg_parser import fill_parser
 
-DESCRIPTION = """casegen_upcars is script to create conceptual model
-based on sugar-cube representation of fracture.
-
-It has capability to:
-
-- simple geometric: tilting, hull and dome shape
-- Layers heterogeneity (streaks)
-- multple throws (vertical shifting in any part of the model)
-- vugs distribution: random, near fracture and near streak
-- etc. Check wiki for more details:
-  https://wiki.equinor.com/wiki/index.php/UpCaRs_Upscaling_casegen"""
-
-CATEGORY = "modelling.reservoir"
-
-EXAMPLES = """
-.. code-block:: console
-
-  DEFINE <CASEGEN_CONFIG_FILE>      <RUNPATH>/model.yaml
-  DEFINE <CASEGEN_ECLIPSE_TEMPLATE> <CONFIG_PATH>/../input/config/eclipse.tmpl
-  FORWARD_MODEL CASEGEN_UPCARS(<CONFIG>=<CASEGEN_CONFIG_FILE>, <ECLIPSE_TEMPLATE>=<CASEGEN_ECLIPSE_TEMPLATE>, <ECLIPSE_OUTPUT>=<ECLIPSE_NAME>-<IENS>)
-
-"""  # noqa
-
 logger = getLogger(__name__)
 
 
