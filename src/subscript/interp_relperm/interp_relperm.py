@@ -375,21 +375,21 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
             sys.exit(1)
 
         logger.info("Loading relperm parametrization from %s", config.pyscalfile)
-        param_dframe = pyscal.PyscalFactory.load_relperm_df(
-            config.pyscalfile
-        ).set_index("CASE")
+        param_dframe = pyscal.factory.load_relperm_df(config.pyscalfile).set_index(
+            "CASE"
+        )
         base_df = (
-            pyscal.PyscalFactory.create_pyscal_list(param_dframe.loc["base"])
+            pyscal.factory.create_pyscal_list(param_dframe.loc["base"])
             .df()
             .set_index("SATNUM")
         )
         low_df = (
-            pyscal.PyscalFactory.create_pyscal_list(param_dframe.loc["low"])
+            pyscal.factory.create_pyscal_list(param_dframe.loc["low"])
             .df()
             .set_index("SATNUM")
         )
         high_df = (
-            pyscal.PyscalFactory.create_pyscal_list(param_dframe.loc["high"])
+            pyscal.factory.create_pyscal_list(param_dframe.loc["high"])
             .df()
             .set_index("SATNUM")
         )
