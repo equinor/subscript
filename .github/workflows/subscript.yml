@@ -63,6 +63,11 @@ jobs:
           ResInsight --console --help | grep "ResInsight v. 2020.10" \
             && pip install rips==2020.10.0.2 || true
 
+      - name: Log OPM-Flow and ResInsight version
+        run: |
+          flow --version
+          ResInsight --console --version
+
       - name: List all installed packages
         run: pip freeze
 
