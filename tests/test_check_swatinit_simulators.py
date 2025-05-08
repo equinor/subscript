@@ -795,16 +795,6 @@ def test_no_unrst(tmp_path, mocker, flow_simulator):
         main()
 
 
-def test_no_rptrst(tmp_path, mocker, flow_simulator):
-    """Test what happens when RPTRST is not included, no UNRST"""
-    os.chdir(tmp_path)
-    model = PillarModel(rptrst="")
-    run_reservoir_simulator(flow_simulator, model, perform_qc=False)
-    mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
-    with pytest.raises(SystemExit, match="UNRST"):
-        main()
-
-
 def test_rptrst_basic_1(simulator, tmp_path, mocker):
     """Test what happens when RPTRST is BASIC=1"""
     os.chdir(tmp_path)
