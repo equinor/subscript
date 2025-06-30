@@ -569,6 +569,36 @@ def test_inactive_fipnum(tmp_path, mocker):
     assert dframe.loc[dframe["FIPNUM"].idxmax(), "HCPV_TOTAL"] != 0
 
 
+def test_warning_not_initial(tmp_path, mocker):
+    """Test that the warning about not inital volume report is triggered"""
+
+    # with Eclipse PRT file, BALANCE report only
+    prtfile_ecl = TEST_PRT_DATADIR / "DROGON_NO_INITIAL_BALANCE.PRT"
+
+    # with OPM Flow PRT file, BALANCE, BALZON (for FIPZON), RESERVOIR VOLUME reports
+    prtfile_flow = TEST_PRT_DATADIR / "DROGON_NO_INITIAL_BALANCE_FLOW.PRT"
+
+    os.chdir(tmp_path)
+
+    with pytest.warns(UserWarning, match="not at initial time") as warnings_record:
+        mocker.patch(
+            "sys.argv",
+            ["prtvol2csv", "--debug", "--dir", ".", str(prtfile_ecl)],
+        )
+        prtvol2csv.main()
+
+        mocker.patch(
+            "sys.argv",
+            ["prtvol2csv", "--debug", "--dir", ".", str(prtfile_flow)],
+        )
+        prtvol2csv.main()
+
+        # Extra output for debugging, if test fails
+        for i, warning in enumerate(warnings_record):
+            print(f"{i + 1} Recorded warnings: {warning.message}")
+    assert len(warnings_record) == 2
+
+
 def test_find_prtfile(tmp_path):
     """Test location service for PRT files"""
     os.chdir(tmp_path)
