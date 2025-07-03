@@ -35,6 +35,7 @@ CONFIG_DICT = {
     "iterations": [0, 3],
     "use_population_stdev": False,
     "geogrid_fields": {
+        "geogrid_name": "my_geogrid",
         "use_zones": ["A", "B", "C"],
         "zone_code_names": {
             1: "A",
@@ -74,7 +75,7 @@ def make_box_grid(dimensions, grid_name, result_path):
     grid.to_file(filename_egrid, fformat="egrid")
 
 
-def make_file_names(ensemble_path, iter_number, real_number, param_name):
+def make_file_names(ensemble_path, iter_number, real_number, param_name, geogrid_name):
     filedir = ensemble_path / Path("realization-" + str(real_number))
     if not filedir.exists():
         filedir.mkdir()
@@ -90,9 +91,9 @@ def make_file_names(ensemble_path, iter_number, real_number, param_name):
     filedir = filedir / Path("grids")
     if not filedir.exists():
         filedir.mkdir()
-    filename = filedir / Path("geogrid--" + param_name + ".roff")
-    filename_active = filedir / Path("geogrid--active.roff")
-    filename_grid = filedir / Path("geogrid.roff")
+    filename = filedir / Path(f"{geogrid_name}--" + param_name + ".roff")
+    filename_active = filedir / Path(f"{geogrid_name}--active.roff")
+    filename_grid = filedir / Path(f"{geogrid_name}.roff")
     return filename, filename_active, filename_grid
 
 
@@ -110,6 +111,7 @@ def make_ensemble_test_data(
 
     iteration_list = [0, 3]
     zone_code_names = config_dict["geogrid_fields"]["zone_code_names"]
+    geogrid_name = config_dict["geogrid_fields"]["geogrid_name"]
     discrete_param_name_per_zone = config_dict["geogrid_fields"][
         "discrete_property_param_per_zone"
     ]
@@ -138,7 +140,11 @@ def make_ensemble_test_data(
                             (nx, ny, 3 * nz_ertbox), dtype=np.float32
                         )
                         filename, filename_active, filename_grid = make_file_names(
-                            ensemble_path, iter_number, real_number, param_name
+                            ensemble_path,
+                            iter_number,
+                            real_number,
+                            param_name,
+                            geogrid_name,
                         )
                         values = assign_values_continuous_param(
                             nz_ertbox,
@@ -195,7 +201,11 @@ def make_ensemble_test_data(
                             (nx, ny, 3 * nz_ertbox), dtype=np.uint8
                         )
                         filename, filename_active, filename_grid = make_file_names(
-                            ensemble_path, iter_number, real_number, param_name
+                            ensemble_path,
+                            iter_number,
+                            real_number,
+                            param_name,
+                            geogrid_name,
                         )
 
                         values, code_names = assign_values_discrete_param(
@@ -683,6 +693,7 @@ CONFIG_DICT_REF = {
     "nreal": 10,
     "iterations": [0, 3],
     "geogrid_fields": {
+        "geogrid_name": "my_geogrid",
         "use_zones": ["A", "B", "C"],
         "zone_code_names": {
             1: "A",
@@ -713,6 +724,7 @@ CONFIG_A = {
     "nreal": 10,
     "iterations": [0],
     "geogrid_fields": {
+        "geogrid_name": "geogrid",
         "zone_code_names": {
             1: "A",
             2: "B",
@@ -736,6 +748,7 @@ CONFIG_A_REF = {
     "nreal": 10,
     "iterations": [0],
     "geogrid_fields": {
+        "geogrid_name": "geogrid",
         "zone_code_names": {
             1: "A",
             2: "B",
@@ -761,6 +774,7 @@ CONFIG_B = {
     "nreal": 10,
     "iterations": [0],
     "geogrid_fields": {
+        "geogrid_name": "geogrid",
         "zone_code_names": {
             1: "A",
             2: "B",
@@ -785,6 +799,7 @@ CONFIG_B_REF = {
     "nreal": 10,
     "iterations": [0],
     "geogrid_fields": {
+        "geogrid_name": "geogrid",
         "zone_code_names": {
             1: "A",
             2: "B",
@@ -884,6 +899,7 @@ def test_get_specification(
         zone_names,
         zone_conformity,
         zone_code_names,
+        geogrid_name,
         param_name_dict,
         disc_param_name_dict,
         _,
