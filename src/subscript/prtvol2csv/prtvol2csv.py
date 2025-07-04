@@ -5,6 +5,7 @@ import argparse
 import logging
 import re
 import warnings
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -96,7 +97,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def prep_output_dir(tablesdir: Optional[str], suffix: Optional[str]) -> Path:
+def prep_output_dir(tablesdir: Optional[str]) -> Path:
     """Ensures an output directory exists, and returns
     the name of the directory.
 
@@ -105,16 +106,12 @@ def prep_output_dir(tablesdir: Optional[str], suffix: Optional[str]) -> Path:
 
     Args:
         tablesdir (str): Directory to create. Default is share/results/volumes.
-        suffix (str): If nonempty, added to the results-part in tablesdir.
 
     Returns:
         str: The directory that was ensured existed.
     """
     if not tablesdir:
-        if not suffix or suffix == "":
-            tablesdir = "share/results/volumes/"  # FMU standard
-        else:
-            tablesdir = "share/results-" + suffix + "/volumes"
+        tablesdir = "share/results/volumes/"  # FMU standard
     if not Path(tablesdir).is_dir():
         warnings.warn(
             (
@@ -203,6 +200,53 @@ def currently_in_place_from_prt(
     inplace_df.index.name = fipname  # Use "FIPNUM" if not handled by Webviz
 
     logger.info("Extracted CURRENTLY IN PLACE from %s at date %s", prt_file, date_str)
+
+    # Find the initial date from the PRT file, to compare with date for report extracted
+    # Eclipse: Look for "  REPORT   0" at start of line (OBS! Not very robust)
+    date_matcher_ecl = re.compile(r"^\s{2}REPORT\s{3}0")
+    # Flow: Look for "Report step  0" at start of line
+    date_matcher_flow = re.compile(r"^Report step\s{2}0")
+
+    with Path(prt_file).open(encoding="utf8") as f_handle:
+        for line in f_handle:
+            if date_matcher_ecl.search(line) is not None:
+                line_split = line.split("*")
+                initial_date_string = line_split[0].rstrip().split("  ")[-1]
+                initial_date_object = datetime.strptime(
+                    initial_date_string, "%d %b %Y"
+                ).date()
+                logger.info(
+                    f"Initial date is {initial_date_object}, report date is {date_str}"
+                )
+                initial_date_found = True
+                break
+            if date_matcher_flow.search(line) is not None:
+                line_split = line.split("=")
+                initial_date_string = line_split[-1].strip()
+                initial_date_object = datetime.strptime(
+                    initial_date_string, "%d-%b-%Y"
+                ).date()
+                logger.info(
+                    f"Initial date is {initial_date_object}, report date is {date_str}"
+                )
+                initial_date_found = True
+                break
+
+    if initial_date_found and (date_str > initial_date_object):
+        warnings.warn(
+            (
+                "The volume report extracted is not at initial time. \n The volume "
+                f"report is from {date_str}, which is later than start of simulation "
+                f"({initial_date_object})."
+            ),
+            UserWarning,
+        )
+    elif not initial_date_found:
+        warnings.warn(
+            ("Cannot determine if volume report is at initial time."),
+            UserWarning,
+        )
+
     return inplace_df
 
 
@@ -289,7 +333,7 @@ def main() -> None:
     """Function for command line invocation"""
     args = get_parser().parse_args()
 
-    tablesdir = prep_output_dir(args.dir, "")
+    tablesdir = prep_output_dir(args.dir)
 
     if args.dir != ".":
         logger.warning(
