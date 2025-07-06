@@ -615,7 +615,7 @@ def read_ensemble_realization(
     geogrid_name,
 ):
     realization_path = Path(f"realization-{realization_number}/iter-{iter_number}")
-    grid_path = Path("share/results/grids/" + geogrid_name.strip() + ".roff")
+    grid_path = Path("share/results/grids/" + geogrid_name + ".roff")
     file_path_grid = Path(ensemble_path) / realization_path / grid_path
     if file_path_grid.exists():
         grid = xtgeo.grid_from_file(file_path_grid, fformat="roff")
@@ -624,7 +624,7 @@ def read_ensemble_realization(
         return None, None, None
 
     property_path = Path(
-        "share/results/grids/" + geogrid_name.strip() + f"--{property_param_name}.roff"
+        "share/results/grids/" + geogrid_name + f"--{property_param_name}.roff"
     )
     file_path_property = Path(ensemble_path) / realization_path / property_path
     property_param = xtgeo.gridproperty_from_file(file_path_property, fformat="roff")
@@ -645,7 +645,7 @@ def read_geogrid_realization(
     geogrid_name,
 ):
     realization_path = Path(f"realization-{realization_number}/iter-{iter_number}")
-    grid_path = Path("share/results/grids/" + geogrid_name.strip() + ".roff")
+    grid_path = Path("share/results/grids/" + geogrid_name + ".roff")
     file_path_grid = Path(ensemble_path) / realization_path / grid_path
     if file_path_grid.exists():
         grid = xtgeo.grid_from_file(file_path_grid, fformat="roff")
@@ -895,9 +895,9 @@ def ertbox_to_geogrid_statistics(
     facies_name=None,
 ):
     if param_name:
-        geogrid_stat_name = f"{geogrid_name.strip()}--{statistics_name}_{param_name}"
+        geogrid_stat_name = f"{geogrid_name}--{statistics_name}_{param_name}"
     if facies_name:
-        geogrid_stat_name = f"{geogrid_name.strip()}--{statistics_name}_{facies_name}"
+        geogrid_stat_name = f"{geogrid_name}--{statistics_name}_{facies_name}"
     assert (param_name is not None) or (facies_name is not None)
     geogrid_stat_file_name = (
         ens_path
@@ -1069,7 +1069,8 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
             geogrid_name = geogrid_fields_dict[key]
             geogrid_name = geogrid_name.strip()
         else:
-            raise KeyError(f"Missing keyword:  {key} specifying name of geomodel grid.")
+            # Set default
+            geogrid_name = "geogrid"
 
         key = "zone_code_names"
         if key in geogrid_fields_dict:
