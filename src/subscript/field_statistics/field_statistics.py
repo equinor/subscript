@@ -37,7 +37,7 @@ from field parameters using ERTBOX grid.
 The script reads ensembles of realizations from scratch disk  from
 <RUN_PATH> directory::
 
-  share/results/grids/geogrid--<propertyname>.roff.
+  share/results/grids/<geogridname>--<propertyname>.roff.
 
 Optionally also temporary field parameters coming from APS or petrophysical
 field parameters can be used to calculate mean and standard deviations.
@@ -172,9 +172,13 @@ EPILOGUE = """
 
     # Specify which geogrid fields to use
     # Geogrid fields are typically found in:
-    # <RUN_PATH>/share/results/grids/geogrid--<property-name>.roff
+    # <RUN_PATH>/share/results/grids/<geogridname>--<property-name>.roff
     # Optional keyword
     geogrid_fields:
+        # Prefix (name of geogrid) to be used for field parameters related to the
+        # geogrid.
+        geogrid_name: "geogrid"
+
         # Selected set of zone names to use in calculations of statistics.
         # Must be one or more of the defined zones.
         # Require at least one zone to be selected.
@@ -201,7 +205,7 @@ EPILOGUE = """
         # For each zone specify which discrete parameter to use to calculate
         # facies probability estimates.
         # Possible names are those found in the
-        # share/results/grids/geogrid--<name>.roff
+        # share/results/grids/<geogridname>--<name>.roff
         # files that are of discrete type.
         # This key can be omitted or some of the lines specifying parameters
         # for a zone if you don't want to use it.
@@ -213,7 +217,7 @@ EPILOGUE = """
         # For each zone specify which continuous parameter to use to
         # calculate estimate of mean and stdev over ensemble.
         # Possible names are those found in the
-        #  share/results/grids/geogrid--<name>.roff
+        #  share/results/grids/<geogridname>--<name>.roff
         # files that are of continuous type
         # This key can be omitted or some of the lines specifying
         # parameters for a zone if you don't want to use it.
@@ -608,9 +612,10 @@ def read_ensemble_realization(
     iter_number,
     property_param_name,
     zone_code_names,
+    geogrid_name,
 ):
     realization_path = Path(f"realization-{realization_number}/iter-{iter_number}")
-    grid_path = Path("share/results/grids/geogrid.roff")
+    grid_path = Path("share/results/grids/" + geogrid_name + ".roff")
     file_path_grid = Path(ensemble_path) / realization_path / grid_path
     if file_path_grid.exists():
         grid = xtgeo.grid_from_file(file_path_grid, fformat="roff")
@@ -618,7 +623,9 @@ def read_ensemble_realization(
     else:
         return None, None, None
 
-    property_path = Path(f"share/results/grids/geogrid--{property_param_name}.roff")
+    property_path = Path(
+        "share/results/grids/" + geogrid_name + f"--{property_param_name}.roff"
+    )
     file_path_property = Path(ensemble_path) / realization_path / property_path
     property_param = xtgeo.gridproperty_from_file(file_path_property, fformat="roff")
 
@@ -635,9 +642,10 @@ def read_geogrid_realization(
     realization_number,
     iter_number,
     zone_code_names,
+    geogrid_name,
 ):
     realization_path = Path(f"realization-{realization_number}/iter-{iter_number}")
-    grid_path = Path("share/results/grids/geogrid.roff")
+    grid_path = Path("share/results/grids/" + geogrid_name + ".roff")
     file_path_grid = Path(ensemble_path) / realization_path / grid_path
     if file_path_grid.exists():
         grid = xtgeo.grid_from_file(file_path_grid, fformat="roff")
@@ -778,6 +786,7 @@ def write_mean_stdev_nactive(
     result_path,
     ens_path,
     zone_code_names,
+    geogrid_name,
     copy_to_geogrid_realization=False,
 ):
     output_path = result_path
@@ -826,7 +835,11 @@ def write_mean_stdev_nactive(
         # Use realization number 0
         real_number = 0
         geogrid_dimensions, geogrid_subgrids = read_geogrid_realization(
-            ens_path, real_number, iter_number, zone_code_names
+            ens_path,
+            real_number,
+            iter_number,
+            zone_code_names,
+            geogrid_name,
         )
 
         ertbox_to_geogrid_statistics(
@@ -839,6 +852,7 @@ def write_mean_stdev_nactive(
             ertbox_dims,
             conformity,
             ens_path,
+            geogrid_name,
             param_name=param_name,
         )
 
@@ -852,6 +866,7 @@ def write_mean_stdev_nactive(
             ertbox_dims,
             conformity,
             ens_path,
+            geogrid_name,
             param_name=param_name,
         )
 
@@ -875,13 +890,14 @@ def ertbox_to_geogrid_statistics(
     ertbox_dimensions,
     zone_conformity,
     ens_path,
+    geogrid_name,
     param_name=None,
     facies_name=None,
 ):
     if param_name:
-        geogrid_stat_name = f"geogrid--{statistics_name}_{param_name}"
+        geogrid_stat_name = f"{geogrid_name}--{statistics_name}_{param_name}"
     if facies_name:
-        geogrid_stat_name = f"geogrid--{statistics_name}_{facies_name}"
+        geogrid_stat_name = f"{geogrid_name}--{statistics_name}_{facies_name}"
     assert (param_name is not None) or (facies_name is not None)
     geogrid_stat_file_name = (
         ens_path
@@ -930,6 +946,7 @@ def write_fraction_nactive(
     result_path,
     ens_path,
     zone_code_names,
+    geogrid_name,
     ncount_active_values=None,
     copy_to_geogrid_realization=False,
 ):
@@ -979,7 +996,11 @@ def write_fraction_nactive(
         # Use realization number 0
         real_number = 0
         geogrid_dimensions, geogrid_subgrids = read_geogrid_realization(
-            ens_path, real_number, iter_number, zone_code_names
+            ens_path,
+            real_number,
+            iter_number,
+            zone_code_names,
+            geogrid_name,
         )
         ertbox_to_geogrid_statistics(
             "prob",
@@ -991,6 +1012,7 @@ def write_fraction_nactive(
             ertbox_dimensions,
             conformity,
             ens_path,
+            geogrid_name,
             facies_name=facies_name,
         )
 
@@ -1041,6 +1063,14 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
     if "geogrid_fields" in input_dict:
         use_geogrid_fields = True
         geogrid_fields_dict = input_dict["geogrid_fields"]
+
+        key = "geogrid_name"
+        if key in geogrid_fields_dict:
+            geogrid_name = geogrid_fields_dict[key]
+            geogrid_name = geogrid_name.strip()
+        else:
+            # Set default
+            geogrid_name = "geogrid"
 
         key = "zone_code_names"
         if key in geogrid_fields_dict:
@@ -1119,6 +1149,7 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
         zone_names_used,
         zone_conformity,
         zone_code_names,
+        geogrid_name,
         param_name_dict,
         disc_param_name_dict,
         init_path,
@@ -1254,6 +1285,7 @@ def calc_stats(
         zone_names,
         zone_conformity,
         zone_code_names,
+        geogrid_name,
         param_name_dict,
         disc_param_name_dict,
         _,
@@ -1290,6 +1322,7 @@ def calc_stats(
                                 iter_number,
                                 param_name,
                                 zone_code_names,
+                                geogrid_name,
                             )
                         )
                         if grid_dimensions is None:
@@ -1342,6 +1375,7 @@ def calc_stats(
                             result_path,
                             ens_path,
                             zone_code_names,
+                            geogrid_name,
                             copy_to_geogrid_realization=copy_to_geogrid_realization,
                         )
                         has_written_nactive = True
@@ -1377,6 +1411,7 @@ def calc_stats(
                                 iter_number,
                                 param_name,
                                 zone_code_names,
+                                geogrid_name,
                             )
                         )
 
@@ -1439,6 +1474,7 @@ def calc_stats(
                                     result_path,
                                     ens_path,
                                     zone_code_names,
+                                    geogrid_name,
                                     ncount_active_values=sum_active,
                                     copy_to_geogrid_realization=copy_to_geogrid_realization,
                                 )
@@ -1453,6 +1489,7 @@ def calc_stats(
                                     result_path,
                                     ens_path,
                                     zone_code_names,
+                                    geogrid_name,
                                     copy_to_geogrid_realization=copy_to_geogrid_realization,
                                 )
                         txt4 = f"  Sum facies volume fraction: {sum_fraction}"

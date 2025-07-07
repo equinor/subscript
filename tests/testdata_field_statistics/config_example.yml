@@ -2,6 +2,7 @@ field_stat:
     nreal: 10
     iterations: [0, 3]
     geogrid_fields:
+        geogrid_name: "my_geogrid"
         use_zones: ["A", "B", "C"]
         zone_code_names:
             1: "A"
