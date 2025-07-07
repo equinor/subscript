@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD_STATISTICS &mdash; subscript 1.13.2.dev1+gf19cbac3 documentation</title>
+  <title>FIELD_STATISTICS &mdash; subscript 1.13.2.dev2+gc174caf2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=70637f1c"></script>
+      <script src="../_static/documentation_options.js?v=bf486025"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -132,7 +132,7 @@
 from field parameters using ERTBOX grid.</p>
 <p>The script reads ensembles of realizations from scratch disk  from
 &lt;RUN_PATH&gt; directory:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">share</span><span class="o">/</span><span class="n">results</span><span class="o">/</span><span class="n">grids</span><span class="o">/</span><span class="n">geogrid</span><span class="o">--&lt;</span><span class="n">propertyname</span><span class="o">&gt;.</span><span class="n">roff</span><span class="o">.</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">share</span><span class="o">/</span><span class="n">results</span><span class="o">/</span><span class="n">grids</span><span class="o">/&lt;</span><span class="n">geogridname</span><span class="o">&gt;--&lt;</span><span class="n">propertyname</span><span class="o">&gt;.</span><span class="n">roff</span><span class="o">.</span>
 </pre></div>
 </div>
 <p>Optionally also temporary field parameters coming from APS or petrophysical
@@ -285,9 +285,13 @@ but return without doing anything.</p>
 
 <span class="w">  </span><span class="c1"># Specify which geogrid fields to use</span>
 <span class="w">  </span><span class="c1"># Geogrid fields are typically found in:</span>
-<span class="w">  </span><span class="c1"># &lt;RUN_PATH&gt;/share/results/grids/geogrid--&lt;property-name&gt;.roff</span>
+<span class="w">  </span><span class="c1"># &lt;RUN_PATH&gt;/share/results/grids/&lt;geogridname&gt;--&lt;property-name&gt;.roff</span>
 <span class="w">  </span><span class="c1"># Optional keyword</span>
 <span class="w">  </span><span class="nt">geogrid_fields</span><span class="p">:</span>
+<span class="w">      </span><span class="c1"># Prefix (name of geogrid) to be used for field parameters related to the</span>
+<span class="w">      </span><span class="c1"># geogrid.</span>
+<span class="w">      </span><span class="nt">geogrid_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;geogrid&quot;</span>
+
 <span class="w">      </span><span class="c1"># Selected set of zone names to use in calculations of statistics.</span>
 <span class="w">      </span><span class="c1"># Must be one or more of the defined zones.</span>
 <span class="w">      </span><span class="c1"># Require at least one zone to be selected.</span>
@@ -314,7 +318,7 @@ but return without doing anything.</p>
 <span class="w">      </span><span class="c1"># For each zone specify which discrete parameter to use to calculate</span>
 <span class="w">      </span><span class="c1"># facies probability estimates.</span>
 <span class="w">      </span><span class="c1"># Possible names are those found in the</span>
-<span class="w">      </span><span class="c1"># share/results/grids/geogrid--&lt;name&gt;.roff</span>
+<span class="w">      </span><span class="c1"># share/results/grids/&lt;geogridname&gt;--&lt;name&gt;.roff</span>
 <span class="w">      </span><span class="c1"># files that are of discrete type.</span>
 <span class="w">      </span><span class="c1"># This key can be omitted or some of the lines specifying parameters</span>
 <span class="w">      </span><span class="c1"># for a zone if you don&#39;t want to use it.</span>
@@ -326,7 +330,7 @@ but return without doing anything.</p>
 <span class="w">      </span><span class="c1"># For each zone specify which continuous parameter to use to</span>
 <span class="w">      </span><span class="c1"># calculate estimate of mean and stdev over ensemble.</span>
 <span class="w">      </span><span class="c1"># Possible names are those found in the</span>
-<span class="w">      </span><span class="c1">#  share/results/grids/geogrid--&lt;name&gt;.roff</span>
+<span class="w">      </span><span class="c1">#  share/results/grids/&lt;geogridname&gt;--&lt;name&gt;.roff</span>
 <span class="w">      </span><span class="c1"># files that are of continuous type</span>
 <span class="w">      </span><span class="c1"># This key can be omitted or some of the lines specifying</span>
 <span class="w">      </span><span class="c1"># parameters for a zone if you don&#39;t want to use it.</span>
