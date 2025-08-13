@@ -17,47 +17,31 @@ Variables
 - :py:data:`__version_tuple__`
 - :py:data:`version`
 - :py:data:`version_tuple`
-- :py:data:`__commit_id__`
-- :py:data:`commit_id`
 
 .. autodata:: __version__
    :annotation:
 
    .. code-block:: text
 
-      '1.13.2.dev2+gc174caf25'
+      '1.13.2.dev2+gc174caf2'
 
 .. autodata:: __version_tuple__
    :annotation:
 
    .. code-block:: text
 
-      (1, 13, 2, 'dev2', 'gc174caf25')
+      (1, 13, 2, 'dev2', 'gc174caf2')
 
 .. autodata:: version
    :annotation:
 
    .. code-block:: text
 
-      '1.13.2.dev2+gc174caf25'
+      '1.13.2.dev2+gc174caf2'
 
 .. autodata:: version_tuple
    :annotation:
 
    .. code-block:: text
 
-      (1, 13, 2, 'dev2', 'gc174caf25')
-
-.. autodata:: __commit_id__
-   :annotation:
-
-   .. code-block:: text
-
-      'gc174caf25'
-
-.. autodata:: commit_id
-   :annotation:
-
-   .. code-block:: text
-
-      'gc174caf25'
+      (1, 13, 2, 'dev2', 'gc174caf2')
