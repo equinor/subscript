@@ -22,7 +22,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install libegl1
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Setup Python
       uses: actions/setup-python@v5
@@ -53,6 +53,6 @@ jobs:
         pytest tests --disable-warnings --cov=subscript --cov-report=xml
 
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
