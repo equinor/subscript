@@ -2,7 +2,6 @@
 requires = [
     "setuptools>=45.0",
     "setuptools_scm[toml]>=6.2",
-    "wheel>=0.38.1",
 ]
 build-backend = "setuptools.build_meta"
 
@@ -61,7 +60,6 @@ tests = [
     "pytest-cov",
     "pytest-mock",
     "pytest-xdist",
-    "PyQt5-sip",
     "rstcheck",
     "rstcheck-core",
     "ruff",
@@ -71,9 +69,9 @@ tests = [
 ]
 docs = [
     "autoapi",
-    "sphinx<8.2.0",
+    "sphinx",
     "sphinx-argparse",
-    "sphinx-autodoc-typehints<2.4",
+    "sphinx-autodoc-typehints",
     "sphinx-copybutton",
     "sphinx-togglebutton",
     "sphinx_rtd_theme",
