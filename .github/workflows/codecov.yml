@@ -40,13 +40,13 @@ jobs:
 
     - name: Install subscript and test dependencies
       run: |
-        pip install pip -U
-        pip install .[tests]
+        pip install -U pip
+        pip install ".[tests]"
 
-    - name: Force correct RIPS version
+    - name: Log OPM-Flow and ResInsight version
       run: |
-        ResInsight --console --help | grep "ResInsight v. 2021.06" && pip install rips==2021.6.0.1 || true
-        ResInsight --console --help | grep "ResInsight v. 2020.10" && pip install rips==2020.10.0.2 || true
+        flow --version
+        ResInsight --console --version
 
     - name: Generate coverage report
       run: |
