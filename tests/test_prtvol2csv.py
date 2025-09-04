@@ -644,20 +644,20 @@ def test_prtvol2df(tmp_path):
 
     assert prtvol2csv.prtvol2df(
         simv, resv, FipMapper(mapdata={"region2fipnum": {"West": 1}})
-    )["REGION"].values == ["West"]
+    )["REGION"].to_numpy() == ["West"]
 
     # Reverse the supplied map, should give the same:
     assert prtvol2csv.prtvol2df(
         simv, resv, FipMapper(mapdata={"fipnum2region": {1: "West"}})
-    )["REGION"].values == ["West"]
+    )["REGION"].to_numpy() == ["West"]
 
     # And then for zones:
     assert prtvol2csv.prtvol2df(
         simv, resv, FipMapper(mapdata={"fipnum2zone": {1: "Upper"}})
-    )["ZONE"].values == ["Upper"]
+    )["ZONE"].to_numpy() == ["Upper"]
     assert prtvol2csv.prtvol2df(
         simv, resv, FipMapper(mapdata={"zone2fipnum": {"Upper": 1}})
-    )["ZONE"].values == ["Upper"]
+    )["ZONE"].to_numpy() == ["Upper"]
     # if we use {"Upper": "1"} it will fail, but no pytest.raises on
     # that yet, perhaps it will be fixed later.
 
@@ -668,7 +668,7 @@ def test_prtvol2df(tmp_path):
     )
     assert prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="z2f_int.yml"))[
         "ZONE"
-    ].values == ["Upper"]
+    ].to_numpy() == ["Upper"]
     prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="z2f_int.yml")).to_csv(
         "foo.csv"
     )
@@ -679,8 +679,8 @@ def test_prtvol2df(tmp_path):
         resv,
         FipMapper(mapdata={"fipnum2region": {1: "West"}, "zone2fipnum": {"Upper": 1}}),
     )
-    assert volumes["REGION"].values == ["West"]
-    assert volumes["ZONE"].values == ["Upper"]
+    assert volumes["REGION"].to_numpy() == ["West"]
+    assert volumes["ZONE"].to_numpy() == ["Upper"]
 
     # fipnummaps referring to non-existing fipnums:
     volumes = prtvol2csv.prtvol2df(
@@ -702,7 +702,7 @@ def test_prtvol2df(tmp_path):
     )
     assert prtvol2csv.prtvol2df(
         simv, resv, FipMapper(yamlfile="global_master_config.yml")
-    )["ZONE"].values == ["Upper"]
+    )["ZONE"].to_numpy() == ["Upper"]
 
 
 def test_webviz_regiontofipnum_format(tmp_path):
@@ -717,8 +717,8 @@ def test_webviz_regiontofipnum_format(tmp_path):
         encoding="utf8",
     )
     dframe = prtvol2csv.prtvol2df(simv, resv, FipMapper(yamlfile="webviz_fip.yml"))
-    assert dframe["ZONE"].values == ["Volon"]
-    assert dframe["REGION"].values == ["West"]
+    assert dframe["ZONE"].to_numpy() == ["Volon"]
+    assert dframe["REGION"].to_numpy() == ["West"]
 
 
 @pytest.mark.integration
@@ -819,8 +819,8 @@ def test_prtvol2csv_regions_typemix(tmp_path, mocker):
     assert not dframe.empty
     assert "REGION" in dframe
     assert "ZONE" not in dframe
-    assert "RegionA" in dframe["REGION"].values
-    assert "8" in dframe["REGION"].values
+    assert "RegionA" in dframe["REGION"].to_numpy()
+    assert "8" in dframe["REGION"].to_numpy()
     assert len(dframe) == 6
 
 

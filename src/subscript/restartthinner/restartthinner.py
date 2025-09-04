@@ -145,7 +145,7 @@ def restartthinner(
                 pandas.Timestamp(restart_dates[-1]).value,
                 int(numberofslices),
             )
-        ).values
+        ).to_numpy()
     else:
         slicedates = [restart_dates[-1]]  # Only return last date if only one is wanted
 

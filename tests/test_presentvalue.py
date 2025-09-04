@@ -99,7 +99,7 @@ def test_prepare_econ_table_csv(tmp_path):
     assert econ_df["discountrate"].unique() == [8]  # defaulted
     assert econ_df["usdtonok"].unique() == [7]
     assert econ_df["costs"].unique() == [100]
-    assert econ_df.index.values == [2030]
+    assert econ_df.index.to_numpy() == [2030]
 
 
 ECONCOLS = ["year", "oilprice", "gasprice", "usdtonok", "costs", "discountrate"]

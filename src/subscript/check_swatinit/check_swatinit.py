@@ -80,7 +80,9 @@ def main() -> None:
         print(f"Dumping volume plot to {args.volplotfile}")
         pyplot.savefig(args.volplotfile)
 
-    if (args.plotfile or args.plot) and args.eqlnum not in qc_frame["EQLNUM"].values:
+    if (args.plotfile or args.plot) and args.eqlnum not in qc_frame[
+        "EQLNUM"
+    ].to_numpy():
         sys.exit(f"Error: EQLNUM {args.eqlnum} does not exist in grid. No plotting.")
     if args.plot or args.plotfile:
         plotter.plot_qc_panels(qc_frame[qc_frame["EQLNUM"] == args.eqlnum])
@@ -253,7 +255,7 @@ def make_qc_gridframe(eclfiles: res2df.ResdataFiles) -> pd.DataFrame:
         # GLOBAL_INDEX is 0-indexed.
         grid_df["SWATINIT_DECK"] = pd.Series(swatinit_deckdata)[
             grid_df["GLOBAL_INDEX"].astype(int).tolist()
-        ].values
+        ].to_numpy()
 
     if "SWATINIT" not in grid_df:
         # OPM-flow does not include SWATINIT in the INIT file.
@@ -496,8 +498,10 @@ def _evaluate_pc(
             np.interp(
                 swat,
                 swl
-                + (satfunc[sat_name].values - sw_min) / (sw_max - sw_min) * (swu - swl),
-                satfunc[pc_name].values * pc_scaling,
+                + (satfunc[sat_name].to_numpy() - sw_min)
+                / (sw_max - sw_min)
+                * (swu - swl),
+                satfunc[pc_name].to_numpy() * pc_scaling,
             )
         )
     return p_cap
@@ -534,15 +538,15 @@ def compute_pc(qc_frame: pd.DataFrame, satfunc_df: pd.DataFrame) -> pd.Series:
 
     for satnum, satnum_frame in qc_frame.groupby("SATNUM"):
         if "SWLPC" in satnum_frame:
-            swls = satnum_frame["SWLPC"].values
+            swls = satnum_frame["SWLPC"].to_numpy()
         elif "SWL" in satnum_frame:
-            swls = satnum_frame["SWL"].values
+            swls = satnum_frame["SWL"].to_numpy()
         else:
             swls = None
-        swus = satnum_frame["SWU"].values if "SWU" in satnum_frame else None
+        swus = satnum_frame["SWU"].to_numpy() if "SWU" in satnum_frame else None
         p_cap[satnum_frame.index] = _evaluate_pc(
-            satnum_frame["SWAT"].values,
-            satnum_frame["PC_SCALING"].values,
+            satnum_frame["SWAT"].to_numpy(),
+            satnum_frame["PC_SCALING"].to_numpy(),
             swls,
             swus,
             satfunc_df[satfunc_df["SATNUM"] == satnum],

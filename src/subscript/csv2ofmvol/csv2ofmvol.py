@@ -116,7 +116,7 @@ def read_pdm_csv_files(
     # Reindex:
     data = data.set_index(["WELL", "DATE"])
 
-    if not [data.columns.values]:
+    if not [data.columns.to_numpy()]:
         raise ValueError("No data columns found")
 
     # Drop duplicate multiindices (WELL, DATE)
