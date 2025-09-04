@@ -237,9 +237,9 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
         logger.info("Found %s active observation points", str(len(obs_df)))
 
     if "report_step" in sim_df.columns:
-        return pd.merge(sim_df, obs_df, how="left", on=["well", "order", "report_step"])
+        return sim_df.merge(obs_df, how="left", on=["well", "order", "report_step"])
     # Ensure backward compatibility where gendata_rft doesn't have report_step
-    return pd.merge(sim_df, obs_df, how="left", on=["well", "order"])
+    return sim_df.merge(obs_df, how="left", on=["well", "order"])
 
 
 def main() -> None:
