@@ -36,7 +36,7 @@ def test_main(tmp_path, mocker):
     assert "CONSTANT" not in result
     assert "BOGUS" not in result
     assert "filename" in result
-    assert set(result["filename"].values) == {"parameters1.txt", "parameters2.txt"}
+    assert set(result["filename"].to_numpy()) == {"parameters1.txt", "parameters2.txt"}
 
     # Test the cleaning mode:
     mocker.patch(
@@ -69,7 +69,7 @@ def test_main(tmp_path, mocker):
     assert "CONSTANT" not in result
     assert "BOGUS" not in result
     assert "filename" in result
-    assert set(result["filename"].values) == {"parameters1.txt", "parameters2.txt"}
+    assert set(result["filename"].to_numpy()) == {"parameters1.txt", "parameters2.txt"}
 
 
 def test_spaces_in_values(tmp_path, mocker):
@@ -84,7 +84,7 @@ def test_spaces_in_values(tmp_path, mocker):
     params2csv.main()
     result = pd.read_csv("params.csv")
     assert "somekey" in result
-    assert result["somekey"].values[0] == "value with spaces"
+    assert result["somekey"].to_numpy()[0] == "value with spaces"
 
 
 def test_spaces_in_values_single_quotes(tmp_path, mocker):
@@ -96,7 +96,7 @@ def test_spaces_in_values_single_quotes(tmp_path, mocker):
     params2csv.main()
     result = pd.read_csv("params.csv")
     assert "somekey" in result
-    assert result["somekey"].values[0] == "value with spaces"
+    assert result["somekey"].to_numpy()[0] == "value with spaces"
 
 
 @pytest.mark.integration

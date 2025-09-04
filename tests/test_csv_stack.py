@@ -157,8 +157,8 @@ def test_commandlinetool(tmp_path, mocker):
     assert "WELL" in stacked
     assert "WOPT:A1" not in stacked
     assert "WOPT" in stacked
-    assert "A1" in stacked["WELL"].values
-    assert "A2" in stacked["WELL"].values
+    assert "A1" in stacked["WELL"].to_numpy()
+    assert "A2" in stacked["WELL"].to_numpy()
     assert "CONST" not in stacked
 
     mocker.patch(
@@ -197,8 +197,8 @@ def test_commandlinetool(tmp_path, mocker):
     assert "REGION" in stacked
     assert "CONST" not in stacked
     assert "RPR" in stacked
-    assert 1 in stacked["REGION"].astype(int).values
-    assert 2 in stacked["REGION"].astype(int).values
+    assert 1 in stacked["REGION"].astype(int).to_numpy()
+    assert 2 in stacked["REGION"].astype(int).to_numpy()
 
 
 @pytest.mark.parametrize("verbose", [False, True])

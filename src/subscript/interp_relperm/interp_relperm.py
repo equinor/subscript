@@ -169,7 +169,7 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
 
     # If we have parsed family 2 input, KRO and KROW are not
     # on the same row. Merge the rows into family 1 style:
-    if "KEYWORD" in dframe and "SOF3" in dframe["KEYWORD"].values:
+    if "KEYWORD" in dframe and "SOF3" in dframe["KEYWORD"].to_numpy():
         sof3_rows = dframe["KEYWORD"] == "SOF3"
         dframe.loc[sof3_rows, "SW"] = 1 - dframe[sof3_rows]["SO"]
         swl = dframe["SW"].min()
@@ -406,9 +406,9 @@ def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> Non
         set(base_df.columns) == set(low_df.columns)
         and set(base_df.columns) == set(high_df.columns)
     ):
-        logger.error("Base input had columns: %s", str(base_df.columns.values))
-        logger.error("Low input had columns: %s", str(low_df.columns.values))
-        logger.error("High input had columns: %s", str(high_df.columns.values))
+        logger.error("Base input had columns: %s", str(base_df.columns.to_numpy()))
+        logger.error("Low input had columns: %s", str(low_df.columns.to_numpy()))
+        logger.error("High input had columns: %s", str(high_df.columns.to_numpy()))
         logger.error("Inconsistent input data, check keywords in input files")
         sys.exit(1)
 

@@ -503,10 +503,10 @@ def test_compute_pc(propslist, satfunc_df, expected_pc):
         if not pc_series.empty:
             assert all(pd.isnull(pc_series))
     else:
-        if pd.isnull(expected_pc):
-            assert pd.isnull(pc_series.values[0])
+        if pd.isna(expected_pc):
+            assert pd.isna(pc_series.to_numpy()[0])
         else:
-            assert pc_series.values[0] == expected_pc
+            assert pc_series.to_numpy()[0] == expected_pc
 
 
 def test_eqlnum2(tmp_path, mocker):

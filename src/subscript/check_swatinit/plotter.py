@@ -63,8 +63,8 @@ def plot_qc_panels(
     pyplot.subplot(2, 2, 4)
     pc_depth(qc_frame)
 
-    oip_init = qc_frame["OIP_INIT"].values[0]
-    eqlnum = qc_frame["EQLNUM"].values[0]
+    oip_init = qc_frame["OIP_INIT"].to_numpy()[0]
+    eqlnum = qc_frame["EQLNUM"].to_numpy()[0]
     pyplot.suptitle(f"EQLNUM: {eqlnum}, OIP_INIT: {oip_init}")
     if show:
         pyplot.show()
@@ -150,15 +150,15 @@ def pc_depth(
 def add_contacts_to_plot(qc_frame: pd.DataFrame, axis: pyplot.Axes) -> None:
     """Annotate axes with named horizontal lines for contacts."""
     if "OWC" in qc_frame:
-        owc = qc_frame["OWC"].values[0]  # OWC is assumed constant in the dataframe
+        owc = qc_frame["OWC"].to_numpy()[0]  # OWC is assumed constant in the dataframe
         axis.axhline(owc, color="black", linestyle="--", linewidth=1)
         axis.annotate(f"OWC={owc:g}", (0, owc))
     if "GOC" in qc_frame:
-        goc = qc_frame["GOC"].values[0]
+        goc = qc_frame["GOC"].to_numpy()[0]
         axis.axhline(goc, color="black", linestyle="--", linewidth=1)
         axis.annotate(f"GOC={goc:g}", (0, goc))
     if "GWC" in qc_frame:
-        gwc = qc_frame["GWC"].values[0]
+        gwc = qc_frame["GWC"].to_numpy()[0]
         axis.axhline(gwc, color="black", linestyle="--", linewidth=1)
         axis.annotate(f"GWC={gwc:g}", (0, gwc))
 
@@ -199,10 +199,10 @@ def wvol_waterfall(qc_vols: Dict[str, float]) -> None:
     blank.loc["SWAT_WVOL"] = 0
 
     fig = trans.plot(kind="bar", alpha=0.7, stacked=True, legend=None, bottom=blank)
-    fig.plot(step.index, step.values, "k")
+    fig.plot(step.index, step.to_numpy(), "k")
     pyplot.gcf().subplots_adjust(bottom=0.25)
 
-    blanktrans = blank.values + trans["volume"].values
+    blanktrans = blank.to_numpy() + trans["volume"].to_numpy()
     span = blank.max() - blanktrans[1:-1].min()
 
     if np.isclose(span, 0.0):

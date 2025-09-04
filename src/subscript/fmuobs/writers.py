@@ -75,7 +75,9 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
                 logger.warning("Inconsistency in COMMENT in block dataframe")
             ertobs_str += (
                 "    -- "
-                + str(block_df["COMMENT"].values[0]).replace("\n", "\n    -- ").strip()
+                + str(block_df["COMMENT"].to_numpy()[0])
+                .replace("\n", "\n    -- ")
+                .strip()
                 + "\n"
             )
         for dataname in ["FIELD", "DATE"]:
@@ -85,7 +87,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
                         "    "
                         + dataname
                         + " = "
-                        + str(block_df[dataname].values[0])
+                        + str(block_df[dataname].to_numpy()[0])
                         + ";\n"
                     )
                 else:
@@ -372,13 +374,13 @@ def df2obsdict(obs_df: pd.DataFrame) -> dict:
         return {}
 
     # Process SUMMARY_OBSERVATION:
-    if "SUMMARY_OBSERVATION" in obs_df["CLASS"].values:
+    if "SUMMARY_OBSERVATION" in obs_df["CLASS"].to_numpy():
         obsdict[CLASS_SHORTNAME["SUMMARY_OBSERVATION"]] = summary_df2obsdict(
             obs_df.set_index("CLASS").loc[["SUMMARY_OBSERVATION"]]
         )
 
     # Process BLOCK_OBSERVATION:
-    if "BLOCK_OBSERVATION" in obs_df["CLASS"].values:
+    if "BLOCK_OBSERVATION" in obs_df["CLASS"].to_numpy():
         obsdict[CLASS_SHORTNAME["BLOCK_OBSERVATION"]] = block_df2obsdict(
             obs_df.set_index("CLASS").loc[["BLOCK_OBSERVATION"]]
         )
