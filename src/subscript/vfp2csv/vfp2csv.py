@@ -177,10 +177,10 @@ def vfpfile2df(filename: str) -> pd.DataFrame:
         # stacking to the correct rows, we should either understand
         # how to do that properly using pandas, but for now, we try a
         # backwards fill, hopefully that is robust enough
-        bhp_values_stacked.bfill(inplace=True)
-        # Also reset the index:
-        bhp_values_stacked.reset_index(inplace=True)
-        bhp_values_stacked.drop("level_0", axis="columns", inplace=True)
+        # Also reset the index
+        bhp_values_stacked = (
+            bhp_values_stacked.bfill().reset_index().drop("level_0", axis="columns")
+        )
         # This column is not meaningful (it is the old index)
 
         # Delete rows that does not belong to any flow rate (this is

@@ -242,11 +242,11 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     assert isinstance(smry_df, pd.DataFrame)
     if "CLASS" in smry_df:
         assert len(smry_df["CLASS"].unique()) == 1
-        smry_df.drop("CLASS", axis=1, inplace=True)
+        smry_df = smry_df.drop("CLASS", axis=1)
 
     smry_obs_list = []
     if isinstance(smry_df, pd.DataFrame):
-        smry_df.dropna(axis=1, how="all", inplace=True)
+        smry_df = smry_df.dropna(axis=1, how="all")
 
     if "DATE" not in smry_df:
         raise ValueError("Can't have summary observation without a date")
@@ -263,7 +263,7 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
         if "COMMENT" in smrykey_df and not pd.isna(smrykey_df["COMMENT"]).all():
             smry_obs_element["comment"] = smrykey_df["COMMENT"].unique()[0]
         if isinstance(smrykey_df, pd.DataFrame):
-            smrykey_df.drop("KEY", axis=1, inplace=True)
+            smrykey_df = smrykey_df.drop("KEY", axis=1)
         if "SUBCOMMENT" in smrykey_df:
             smrykey_df["COMMENT"] = smrykey_df["SUBCOMMENT"]
             del smrykey_df["SUBCOMMENT"]
@@ -319,14 +319,12 @@ def block_df2obsdict(block_df: pd.DataFrame) -> List[dict]:
     block_obs_list = []
     if "CLASS" in block_df:
         assert len(block_df["CLASS"].unique()) == 1
-        block_df.drop("CLASS", axis=1, inplace=True)
+        block_df = block_df.drop("CLASS", axis=1)
 
     if "DATE" not in block_df:
         raise ValueError("Can't have rft/block observation without a date")
 
-    block_df = convert_dframe_date_to_str(block_df)
-
-    block_df.dropna(axis=1, how="all", inplace=True)
+    block_df = convert_dframe_date_to_str(block_df).dropna(axis=1, how="all")
 
     for blocklabel, blocklabel_df in block_df.groupby(["LABEL", "DATE"]):
         blocklabel_dict = {}
@@ -410,9 +408,9 @@ def df2resinsight_df(obs_df: pd.DataFrame) -> pd.DataFrame:
     ri_dframe = obs_df.copy()
 
     # Only SUMMARY_OBSERVATION is supported:
-    ri_dframe = ri_dframe[ri_dframe["CLASS"] == "SUMMARY_OBSERVATION"]
-
-    ri_dframe.rename({"KEY": "VECTOR"}, axis="columns", inplace=True)
+    ri_dframe = ri_dframe[ri_dframe["CLASS"] == "SUMMARY_OBSERVATION"].rename(
+        {"KEY": "VECTOR"}, axis="columns"
+    )
 
     # Ensure all vectors are present:
     for ri_vec in ri_column_names:

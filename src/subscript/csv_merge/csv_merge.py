@@ -307,7 +307,7 @@ def csv_merge_main(
             if len(merged_df[col].unique()) == 1:
                 columnstodelete.append(col)
         logger.info("Dropping constant columns %s", str(columnstodelete))
-        merged_df.drop(columnstodelete, inplace=True, axis=1)
+        merged_df = merged_df.drop(columnstodelete, axis=1)
 
     if merged_df.empty:
         logger.error("No data to output")

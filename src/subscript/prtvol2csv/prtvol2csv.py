@@ -193,10 +193,9 @@ def currently_in_place_from_prt(
     inplace_df = inplace_df[inplace_df["DATATYPE"] == "CURRENTLY IN PLACE"]
 
     # Cleanup dataframe:
-    inplace_df.drop(
-        ["DATATYPE", "TO_REGION", "FIPNAME", "DATE"], axis="columns", inplace=True
-    )
-    inplace_df.set_index("REGION", inplace=True)
+    inplace_df = inplace_df.drop(
+        ["DATATYPE", "TO_REGION", "FIPNAME", "DATE"], axis="columns"
+    ).set_index("REGION")
     inplace_df.index.name = fipname  # Use "FIPNUM" if not handled by Webviz
 
     logger.info("Extracted CURRENTLY IN PLACE from %s at date %s", prt_file, date_str)

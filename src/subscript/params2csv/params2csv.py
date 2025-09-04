@@ -176,10 +176,9 @@ def params2csv_main(args: argparse.Namespace) -> None:
             header=None,
             usecols=[0, 1],
             sep=r"\s+",
-        )
-
-        paramtable.drop_duplicates(
-            "key", keep="last", inplace=True
+        ).drop_duplicates(
+            "key",
+            keep="last",
         )  # if key is repeated, keep the last one.
         transposed = paramtable.set_index("key").transpose()
         if args.filenamecolumnname in transposed.columns:
