@@ -30,7 +30,7 @@ from multiprocessing import Process
 from pathlib import Path
 from typing import Optional
 
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 import numpy as np
 
 # Get rid of FutureWarning from pandas/plotting.py
@@ -374,7 +374,6 @@ def summaryplotter(
     # TODO: Fill restartvectordata with NaN's if restart data is missing
 
     # Make the plots
-    pyplot = matplotlib.pyplot
 
     numberofcolours = len(summaryfiles)
     alpha = 0.7  # default
@@ -389,45 +388,43 @@ def summaryplotter(
         numberofcolours = len(matchedsummaryvectors)
 
     colours = list(
-        map(tuple, pyplot.get_cmap("jet")(np.linspace(0, 1.0, numberofcolours)))
+        map(tuple, plt.get_cmap("jet")(np.linspace(0, 1.0, numberofcolours)))
     )
 
     if colourby or logcolourby:
-        colours = list(
-            map(tuple, pyplot.get_cmap("viridis")(normalizedparametervalues))
-        )
+        colours = list(map(tuple, plt.get_cmap("viridis")(normalizedparametervalues)))
 
     if colourby or logcolourby:
         # Using contourf to provide the colorbar info, then clearing the figure
         zeromatrix = [[0, 0], [0, 0]]
         step = (maxvalue - minvalue) / 100
         levels = np.arange(minvalue, maxvalue + step, step)
-        invisiblecontourplot = pyplot.contourf(zeromatrix, levels, cmap="viridis")
-        pyplot.clf()
-        pyplot.close()
+        invisiblecontourplot = plt.contourf(zeromatrix, levels, cmap="viridis")
+        plt.clf()
+        plt.close()
 
     for vector_idx, vector in enumerate(matchedsummaryvectors):
         if (not singleplot) or vector == matchedsummaryvectors[0]:
-            fig = pyplot.figure()
+            fig = plt.figure()
             if colourby or logcolourby:
-                pyplot.colorbar(invisiblecontourplot, ax=pyplot.gca())
-            pyplot.xlabel("Date")
+                plt.colorbar(invisiblecontourplot, ax=plt.gca())
+            plt.xlabel("Date")
 
         # Set background colour outside plot area to white:
         fig.patch.set_facecolor("white")
 
         # Add grey major gridlines:
-        pyplot.grid(visible=True, which="both", color="0.85", linestyle="-")
+        plt.grid(visible=True, which="both", color="0.85", linestyle="-")
 
         if not singleplot:
             if colourby:
-                pyplot.title(vector + ", colouring: " + colourby)
+                plt.title(vector + ", colouring: " + colourby)
             elif logcolourby:
-                pyplot.title(vector + ", colouring: Log10(" + logcolourby + ")")
+                plt.title(vector + ", colouring: Log10(" + logcolourby + ")")
             else:
-                pyplot.title(vector)
+                plt.title(vector)
         else:
-            pyplot.title("")
+            plt.title("")
 
         # Look for historic vectors in first summaryfile
         if histvectors:
@@ -449,7 +446,7 @@ def summaryplotter(
                             "Could not normalize %s, maxvalue is %g", histvec, maxvalue
                         )
 
-                pyplot.plot_date(firstsummary.dates, values, "k.", label=sumlabel)
+                plt.plot(firstsummary.dates, values, "k.", label=sumlabel)
                 fig.autofmt_xdate()
 
         for idx, summaryfile in enumerate(summaryfiles):
@@ -482,12 +479,10 @@ def summaryplotter(
                             "Could not normalize %s, maxvalue is %g", vector, maxvalue
                         )
 
-                pyplot.plot_date(
+                plt.plot(
                     summaryfile.dates,
                     values,
-                    fmt="-",
-                    xdate=True,
-                    ydate=False,
+                    "-",
                     color=cycledcolor,
                     label=sumlabel,
                     linewidth=1.5,
@@ -496,31 +491,31 @@ def summaryplotter(
                 fig.autofmt_xdate()
 
         if not nolegend:
-            pyplot.legend(loc="best", fancybox=True, framealpha=0.5)
+            plt.legend(loc="best", fancybox=True, framealpha=0.5)
     for rstvec_idx, rstvec in enumerate(restartvectors):
         if not singleplot or (
             rstvec == restartvectors[0] and not matchedsummaryvectors
         ):
-            fig = pyplot.figure()
+            fig = plt.figure()
             if colourby or logcolourby:
-                pyplot.colorbar(invisiblecontourplot)
-            pyplot.xlabel("Date")
+                plt.colorbar(invisiblecontourplot)
+            plt.xlabel("Date")
 
         if not singleplot:
             if colourby:
-                pyplot.title(rstvec + ", colouring: " + colourby)
+                plt.title(rstvec + ", colouring: " + colourby)
             elif logcolourby:
-                pyplot.title(rstvec + ", colouring: Log10(" + logcolourby + ")")
+                plt.title(rstvec + ", colouring: Log10(" + logcolourby + ")")
             else:
-                pyplot.title(rstvec)
+                plt.title(rstvec)
         else:
-            pyplot.title("")
+            plt.title("")
 
         # Set background colour outside plot area to white:
         fig.patch.set_facecolor("white")
 
         # Add grey major gridlines:
-        pyplot.grid(visible=True, which="both", color="0.85", linestyle="-")
+        plt.grid(visible=True, which="both", color="0.85", linestyle="-")
 
         if datafiles is None:
             datafiles = []
@@ -543,12 +538,10 @@ def summaryplotter(
                 values = [i * 1 / maxvalue for i in values]
                 rstlabel = rstlabel + " " + str(maxvalue)
 
-            pyplot.plot_date(
+            plt.plot(
                 restartvectordates[rstvec][datafiles[datafile_idx]],
                 values,
-                fmt="-",
-                xdate=True,
-                ydate=False,
+                "-",
                 color=cycledcolor,
                 label=rstlabel,
                 linewidth=1.5,
@@ -556,13 +549,13 @@ def summaryplotter(
             )
 
         if not nolegend:
-            pyplot.legend(loc="best")
+            plt.legend(loc="best")
 
     if dumpimages:
-        pyplot.savefig("summaryplotdump.png", bbox_inches="tight")
-        pyplot.savefig("summaryplotdump.pdf", bbox_inches="tight")
+        plt.savefig("summaryplotdump.png", bbox_inches="tight")
+        plt.savefig("summaryplotdump.pdf", bbox_inches="tight")
     else:
-        pyplot.show()
+        plt.show()
 
 
 def split_vectorsdatafiles(vectorsdatafiles):

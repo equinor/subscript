@@ -3,6 +3,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import pytest
 from resdata.summary import Summary
 
@@ -50,6 +51,37 @@ def test_summaryplotter(cmd_args, tmp_path, mocker, plot):
     if not plot:
         assert Path("summaryplotdump.png").exists()
         assert Path("summaryplotdump.pdf").exists()
+
+
+@pytest.mark.mpl_image_compare(tolerance=5)
+@pytest.mark.parametrize(
+    "cmd_args",
+    [
+        ["FOPR"],
+        ["-H", "FOPR"],
+        ["--hist", "FOPR"],
+        ["SWAT:30,50,10"],
+        ["SOIL:30,50,10"],
+        ["-e", "FOPT"],
+        ["--nolegend", "FOPT"],
+        ["--verbose", "FOPT"],
+        ["--maxlabels", "100", "--verbose", "FOPR"],
+        ["--maxlabels", "0", "--verbose", "FOPR"],
+        ["--normalize", "FWCT"],
+        ["--normalize", "--singleplot", "FGPR", "FOPR"],
+    ],
+)
+def test_summaryplotter_mpl_test(cmd_args, tmp_path, mocker, plot):
+    """Test multiple command line invocations"""
+    os.chdir(tmp_path)
+    mocker.patch(
+        "sys.argv",
+        get_plot_cmds(plot) + cmd_args + [str(DATAFILE), str(DATAFILE), "--nolegend"],
+        # DATAFILE is repeated, or else colourby will not be triggered.
+        # Using nolegend for all since full path of DATAFILE is in the legend
+    )
+    summaryplot.main()
+    return plt.gcf()
 
 
 @pytest.mark.parametrize(
