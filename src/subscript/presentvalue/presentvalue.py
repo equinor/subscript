@@ -373,7 +373,7 @@ def calc_presentvalue_df(
     prodecon[["oilprice", "gasprice", "usdtonok", "discountrate"]] = prodecon[
         ["oilprice", "gasprice", "usdtonok", "discountrate"]
     ].bfill()
-    prodecon.fillna(value=0, inplace=True)  # Zero-pad other data (costs)
+    prodecon = prodecon.fillna(value=0)  # Zero-pad other data (costs)
 
     prodecon["deltayears"] = prodecon.index - discountto
 
@@ -422,15 +422,18 @@ def get_yearly_summary(
     ):
         raise ValueError("Only cumulative Eclipse vectors can be used")
     eclfiles = res2df.ResdataFiles(eclfile)
-    sum_df = res2df.summary.df(
-        eclfiles, column_keys=[oilvector, gasvector, gasinjvector], time_index="yearly"
+    sum_df = (
+        res2df.summary.df(
+            eclfiles,
+            column_keys=[oilvector, gasvector, gasinjvector],
+            time_index="yearly",
+        )
+        .rename(
+            {oilvector: "OPT", gasvector: "GPT", gasinjvector: "GIT"},
+            axis="columns",
+        )
+        .reset_index()
     )
-    sum_df.rename(
-        {oilvector: "OPT", gasvector: "GPT", gasinjvector: "GIT"},
-        axis="columns",
-        inplace=True,
-    )
-    sum_df = sum_df.reset_index()
 
     if "GIT" not in sum_df:
         sum_df["GIT"] = 0

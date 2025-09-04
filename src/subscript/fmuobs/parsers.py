@@ -458,8 +458,7 @@ def resinsight_df2df(ri_dframe: pd.DataFrame) -> pd.DataFrame:
     if ri_dframe.empty:
         return pd.DataFrame()
 
-    dframe = ri_dframe.copy()
-    dframe.rename({"VECTOR": "KEY"}, axis="columns", inplace=True)
+    dframe = ri_dframe.copy().rename({"VECTOR": "KEY"}, axis="columns")
     dframe["LABEL"] = (
         dframe["KEY"].astype(str)
         + "-"

@@ -267,7 +267,7 @@ def test_parse_well(inputlines, expected):
     """Test parsing well data"""
     if "DATE" in expected:
         expected["DATE"] = pd.to_datetime(expected["DATE"])
-        expected.set_index(["WELL", "DATE"], inplace=True)
+        expected = expected.set_index(["WELL", "DATE"])
     # Assume there is DATE line in the test input
     inputlines = ofmvol2csv.cleanse_ofm_lines(inputlines)
     colnames = ofmvol2csv.extract_columnnames(inputlines)
@@ -362,7 +362,7 @@ def test_process_volstr(inputlines, expected):
     and well data"""
     if "DATE" in expected:
         expected["DATE"] = pd.to_datetime(expected["DATE"])
-        expected.set_index(["WELL", "DATE"], inplace=True)
+        expected = expected.set_index(["WELL", "DATE"])
     dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
     pd.testing.assert_frame_equal(dframe, expected)
 

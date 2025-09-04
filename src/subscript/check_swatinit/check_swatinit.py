@@ -259,7 +259,7 @@ def make_qc_gridframe(eclfiles: res2df.ResdataFiles) -> pd.DataFrame:
 
     if "SWATINIT" not in grid_df:
         # OPM-flow does not include SWATINIT in the INIT file.
-        grid_df.rename({"SWATINIT_DECK": "SWATINIT"}, axis="columns", inplace=True)
+        grid_df = grid_df.rename({"SWATINIT_DECK": "SWATINIT"}, axis="columns")
     elif "SWATINIT_DECK" in grid_df:
         # (if SWATINIT is inputted using binary data in Eclipse deck, the code above
         # is not able to extract it)
@@ -411,9 +411,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
 
     # Tag the remainder with "unknown", when/if this happens, it is a bug or a
     # feature request:
-    qc_col.fillna(__UNKNOWN__, inplace=True)
-
-    return qc_col
+    return qc_col.fillna(__UNKNOWN__)
 
 
 def qc_volumes(qc_frame: pd.DataFrame) -> Dict[str, float]:
@@ -600,7 +598,7 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
     assert "PRESSURE" in equil_df
 
     # Be compatible with future change in res2df:
-    equil_df.rename({"ACCURACY": "OIP_INIT"}, axis="columns", inplace=True)
+    equil_df = equil_df.rename({"ACCURACY": "OIP_INIT"}, axis="columns")
 
     contacts = list({"OWC", "GOC", "GWC"}.intersection(set(equil_df.columns)))
     # Rename and slice the equil dataframe:

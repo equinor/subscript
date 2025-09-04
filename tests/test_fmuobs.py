@@ -112,9 +112,8 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
 
     # Convert to ERT obs format and back again:
     ertobs_str = df2ertobs(dframe)
-    ert_roundtrip_dframe = ertobs2df(ertobs_str)
-    ert_roundtrip_dframe.set_index("CLASS", inplace=True)
-    dframe.set_index("CLASS", inplace=True)
+    ert_roundtrip_dframe = ertobs2df(ertobs_str).set_index("CLASS")
+    dframe = dframe.set_index("CLASS")
 
     # This big loop is only here to aid in debugging when
     # the dataframes do not match, asserting equivalence of
@@ -126,25 +125,24 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
             .sort_index(axis=1)
         )
         subframe = dframe.loc[[_class]].dropna(axis=1, how="all").sort_index(axis=1)
-        roundtrip_subframe.set_index(
+        roundtrip_subframe = roundtrip_subframe.set_index(
             list(
                 {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(
                     set(roundtrip_subframe.columns)
                 )
             ),
-            inplace=True,
-        )
-        roundtrip_subframe.sort_index(inplace=True)
-        subframe.set_index(
-            list(
-                {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(set(subframe.columns))
-            ),
-            inplace=True,
-        )
-        subframe.sort_index(inplace=True)
+        ).sort_index()
         # Comments are not preservable through ertobs roundtrips:
-        subframe.drop(
-            ["COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore", inplace=True
+        subframe = (
+            subframe.set_index(
+                list(
+                    {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(
+                        set(subframe.columns)
+                    )
+                ),
+            )
+            .sort_index()
+            .drop(["COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore")
         )
         if _class == "BLOCK_OBSERVATION" and "WELL" in subframe:
             # WELL as used in yaml is not preservable in roundtrips
@@ -189,9 +187,8 @@ def test_roundtrip_yaml(filename, readonly_testdata_dir):
     ].dropna(axis="columns", how="all")
     # Convert to YAML (really dict) format and back again:
     obsdict = df2obsdict(dframe)
-    yaml_roundtrip_dframe = obsdict2df(obsdict)
-    yaml_roundtrip_dframe.set_index("CLASS", inplace=True)
-    dframe.set_index("CLASS", inplace=True)
+    yaml_roundtrip_dframe = obsdict2df(obsdict).set_index("CLASS")
+    dframe = dframe.set_index("CLASS")
     if "WELL" in yaml_roundtrip_dframe:
         # WELL as used in yaml is not preservable in roundtrips
         del yaml_roundtrip_dframe["WELL"]
