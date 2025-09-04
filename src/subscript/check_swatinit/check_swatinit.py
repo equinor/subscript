@@ -74,21 +74,21 @@ def main() -> None:
 
     if args.volplot or args.volplotfile:
         plotter.wvol_waterfall(qc_vols)
-    if args.volplot:
-        pyplot.show()
     if args.volplotfile:
         print(f"Dumping volume plot to {args.volplotfile}")
         pyplot.savefig(args.volplotfile)
+    if args.volplot:
+        pyplot.show()
 
     if (args.plotfile or args.plot) and args.eqlnum not in qc_frame["EQLNUM"].values:
         sys.exit(f"Error: EQLNUM {args.eqlnum} does not exist in grid. No plotting.")
     if args.plot or args.plotfile:
         plotter.plot_qc_panels(qc_frame[qc_frame["EQLNUM"] == args.eqlnum])
-    if args.plot:
-        pyplot.show()
     if args.plotfile:
         print(f"Dumping plot to {args.plotfile}")
         pyplot.savefig(args.plotfile)
+    if args.plot:
+        pyplot.show()
 
 
 def check_applicability(eclfiles: res2df.ResdataFiles) -> None:
