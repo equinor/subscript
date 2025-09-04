@@ -131,7 +131,7 @@ def reorder_dframe_for_nonnans(dframe: pd.DataFrame) -> pd.DataFrame:
     will aid data analysis application to deduce correct datatypes for
     columns"""
     null_count = "__NULL_COUNT__"
-    dframe[null_count] = dframe.isnull().sum(axis=1)
+    dframe[null_count] = dframe.isna().sum(axis=1)
     return (
         dframe.sort_values(null_count).drop(null_count, axis=1).reset_index(drop=True)
     )
@@ -354,7 +354,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
         qc_col[
             (~np.isclose(qc_frame["OIP_INIT"], 0))
             & (~np.isclose(qc_frame["SWAT"], qc_frame["SWATINIT"], atol=1e-6))
-            & (~pd.isnull(qc_frame["PC_SCALING"]))
+            & (~pd.isna(qc_frame["PC_SCALING"]))
         ] = __FINE_EQUIL__
 
     # SWATINIT=1 above contact:
@@ -611,7 +611,7 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
         equil_df = equil_df[equil_df["KEYWORD"] == "EQUIL"]
     equil_df = equil_df[["Z_DATUM", "PRESSURE_DATUM", "EQLNUM", "OIP_INIT"] + contacts]
     equil_df["EQLNUM"] = equil_df["EQLNUM"].astype(int)
-    assert not pd.isnull(equil_df).any().any(), (
+    assert not pd.isna(equil_df).any().any(), (
         f"BUG: NaNs in equil dataframe:\n{equil_df}"
     )
     return grid_df.merge(equil_df, on="EQLNUM", how="left")

@@ -90,8 +90,8 @@ def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
 
     # When SWL is truncated, we cannot trust PC_SCALING to be used to
     # compute PC, so it is removed from the dataframe.
-    assert pd.isnull(qc_frame["PC_SCALING"][0])
-    assert pd.isnull(qc_frame["PC"][0])
+    assert pd.isna(qc_frame["PC_SCALING"][0])
+    assert pd.isna(qc_frame["PC"][0])
 
 
 def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
@@ -446,11 +446,11 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
         # E100 will not report a PPCW in this case, resdata gives -1e20,
         # which becomes a NaN through res2df and then NaN columns are dropped.
         if "PPCW" in qc_frame:
-            assert pd.isnull(qc_frame["PPCW"][0])
+            assert pd.isna(qc_frame["PPCW"][0])
         if "PC_SCALING" in qc_frame:
-            assert pd.isnull(qc_frame["PC_SCALING"][0])
+            assert pd.isna(qc_frame["PC_SCALING"][0])
         if "PC" in qc_frame:
-            assert pd.isnull(qc_frame["PC"][0])
+            assert pd.isna(qc_frame["PC"][0])
 
 
 @pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
@@ -502,11 +502,11 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
         assert np.isclose(qc_frame["SWAT"][0], expected_swat)
         # PPCW is set to NaN, so we don't have that column
         if "PPCW" in qc_frame:
-            assert pd.isnull(qc_frame["PPCW"][0])
+            assert pd.isna(qc_frame["PPCW"][0])
         if "PC_SCALING" in qc_frame:
-            assert pd.isnull(qc_frame["PC_SCALING"][0])
+            assert pd.isna(qc_frame["PC_SCALING"][0])
         if "PC" in qc_frame:
-            assert pd.isnull(qc_frame["PC"][0])
+            assert pd.isna(qc_frame["PC"][0])
         assert np.isclose(qc_frame["PCW"][0], 3.0)  # Untouched input
 
         assert np.isclose(
@@ -631,7 +631,7 @@ def test_swatinit_1_below_contact(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"][0], 0)
     else:
         if "PPCW" in qc_frame:
-            assert pd.isnull(qc_frame["PPCW"][0])
+            assert pd.isna(qc_frame["PPCW"][0])
 
     qc_vols = qc_volumes(qc_frame)
     assert np.isclose(qc_vols[__WATER__], 0.0)

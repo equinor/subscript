@@ -125,7 +125,7 @@ def test_merge_drogon_inactive(drogondata):
     dframe = merge_rft_ertobs("gendata_rft.csv", "rft")
     assert not dframe.empty
     assert {"pressure", "observed", "error", "well", "time"}.issubset(dframe.columns)
-    assert sum(dframe["pressure"].isnull()) == 1
+    assert sum(dframe["pressure"].isna()) == 1
     assert not np.isclose(
         (dframe["observed"] - dframe["pressure"]).abs().mean(), 6.2141156
     )
@@ -138,7 +138,7 @@ def test_merge_drogon_missing_observation(drogondata):
     dframe = merge_rft_ertobs("gendata_rft.csv", "rft")
     assert not dframe.empty
     assert {"pressure", "observed", "error", "well", "time"}.issubset(dframe.columns)
-    assert sum(dframe["observed"].isnull()) == 1
+    assert sum(dframe["observed"].isna()) == 1
     assert not np.isclose(
         (dframe["observed"] - dframe["pressure"]).abs().mean(), 6.2141156
     )

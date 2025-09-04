@@ -33,20 +33,20 @@ def dfsummary2ertobs(obs_df: pd.DataFrame) -> str:
     for _, row in smry_df.iterrows():
         ertobs_str += "SUMMARY_OBSERVATION " + str(row["LABEL"]) + "\n"
         ertobs_str += "{\n"
-        if "COMMENT" in row and not pd.isnull(row["COMMENT"]):
+        if "COMMENT" in row and not pd.isna(row["COMMENT"]):
             ertobs_str += (
                 "    -- "
                 + str(row["COMMENT"]).replace("\n", "\n    -- ").strip()
                 + "\n"
             )
-        if "DATE" in row and not pd.isnull(row["DATE"]):
+        if "DATE" in row and not pd.isna(row["DATE"]):
             ertobs_str += (
                 "    DATE = "
                 + str(pd.to_datetime(row["DATE"]).strftime(ERT_ISO_DATE_FORMAT))
                 + ";\n"
             )
         for dataname in ["KEY", "DAYS", "RESTART", "VALUE", "ERROR", "SOURCE"]:
-            if dataname in row and not pd.isnull(row[dataname]):
+            if dataname in row and not pd.isna(row[dataname]):
                 ertobs_str += "    " + dataname + " = " + str(row[dataname]) + ";\n"
         ertobs_str += "};\n"
     return ertobs_str
@@ -70,7 +70,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
         )
     for obslabel, block_df in block_obs_df.groupby("LABEL"):
         ertobs_str += "BLOCK_OBSERVATION " + obslabel + "\n{\n"
-        if "COMMENT" in block_df and not pd.isnull(block_df["COMMENT"]).any():
+        if "COMMENT" in block_df and not pd.isna(block_df["COMMENT"]).any():
             if len(block_df["COMMENT"].dropna().unique()) != 1:
                 logger.warning("Inconsistency in COMMENT in block dataframe")
             ertobs_str += (
@@ -96,7 +96,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
                         f"block dataframe for one label has multiple {dataname}"
                     )
         for _, row in block_df.iterrows():
-            if "SUBCOMMENT" in row and not pd.isnull("SUBCOMMENT"):
+            if "SUBCOMMENT" in row and not pd.isna("SUBCOMMENT"):
                 ertobs_str += (
                     "    -- "
                     + str(row["SUBCOMMENT"]).strip().replace("\n", "\n    -- ").strip()
@@ -104,7 +104,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
                 )
             ertobs_str += "    OBS " + row["OBS"] + " {"
             for dataname in ["I", "J", "K", "VALUE", "ERROR", "SOURCE"]:
-                if dataname in row and not pd.isnull(row[dataname]):
+                if dataname in row and not pd.isna(row[dataname]):
                     ertobs_str += " " + dataname + " = " + str(row[dataname]) + ";"
             ertobs_str += "};\n"
         ertobs_str += "};\n"
@@ -140,17 +140,17 @@ def dfhistory2ertobs(obs_df: pd.DataFrame) -> str:
             .to_dict(orient="records")[0]
         )
         for dataname in ["ERROR", "ERROR_MODE", "ERROR_MIN"]:
-            if dataname in default_row and not pd.isnull(default_row[dataname]):
+            if dataname in default_row and not pd.isna(default_row[dataname]):
                 ertobs_str += (
                     "  " + dataname + " = " + str(default_row[dataname]) + ";\n"
                 )
         for _, row in history_df.iterrows():
-            if "SEGMENT" in row and not pd.isnull(row["SEGMENT"]):
+            if "SEGMENT" in row and not pd.isna(row["SEGMENT"]):
                 if row["SEGMENT"] == "DEFAULT":
                     continue
                 ertobs_str += "  SEGMENT " + row["SEGMENT"] + " {"
                 for dataname in ["START", "STOP", "ERROR", "ERROR_MODE"]:
-                    if dataname in row and not pd.isnull(row[dataname]):
+                    if dataname in row and not pd.isna(row[dataname]):
                         ertobs_str += " " + dataname + " = " + str(row[dataname]) + ";"
                 ertobs_str += "};\n"
         ertobs_str += "};\n"
@@ -187,7 +187,7 @@ def dfgeneral2ertobs(obs_df: pd.DataFrame) -> str:
             "INDEX_LIST",
             "ERROR_COVAR",
         ]:
-            if dataname in row and not pd.isnull(row[dataname]):
+            if dataname in row and not pd.isna(row[dataname]):
                 ertobs_str += "    " + dataname + " = " + str(row[dataname]) + ";\n"
         ertobs_str += "};\n"
 
@@ -260,7 +260,7 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
     for smrykey, smrykey_df in smry_df.groupby("KEY"):
         smry_obs_element = {}
         smry_obs_element["key"] = smrykey
-        if "COMMENT" in smrykey_df and not pd.isnull(smrykey_df["COMMENT"]).all():
+        if "COMMENT" in smrykey_df and not pd.isna(smrykey_df["COMMENT"]).all():
             smry_obs_element["comment"] = smrykey_df["COMMENT"].unique()[0]
         if isinstance(smrykey_df, pd.DataFrame):
             smrykey_df.drop("KEY", axis=1, inplace=True)

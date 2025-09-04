@@ -220,7 +220,7 @@ def df2vol(data: pd.DataFrame) -> str:
 
     # Fill empty cells with zeros, empty cells can stem from concatenation
     # of dataframes with gas and water injectors.
-    voldata.fillna(value=0.0, inplace=True)
+    voldata = voldata.fillna(value=0.0)
 
     volstr = ""
     volstr += "*METRIC\n"

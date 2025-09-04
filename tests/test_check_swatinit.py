@@ -501,7 +501,7 @@ def test_compute_pc(propslist, satfunc_df, expected_pc):
     pc_series = compute_pc(qc_frame, satfunc_df)
     if qc_frame.empty:
         if not pc_series.empty:
-            assert all(pd.isnull(pc_series))
+            assert all(pd.isna(pc_series))
     else:
         if pd.isna(expected_pc):
             assert pd.isna(pc_series.to_numpy()[0])
