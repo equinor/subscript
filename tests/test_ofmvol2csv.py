@@ -263,6 +263,7 @@ def test_find_wellstart_indices(inputlines, expected):
         ),
     ],
 )
+@pytest.mark.filterwarnings("ignore:Parsing dates in")
 def test_parse_well(inputlines, expected):
     """Test parsing well data"""
     if "DATE" in expected:
