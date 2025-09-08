@@ -164,10 +164,11 @@ markers = [
 ignore_directives = ["argparse", "automodule"]
 
 [tool.ruff]
-lint.ignore = [
-    "C901",
-]
-lint.select = [
+src = ["src"]
+line-length = 88
+
+[tool.ruff.lint]
+select = [
     "C",
     "E",
     "F",
@@ -178,8 +179,12 @@ lint.select = [
     "RSE",
     "SIM",
     "W",
+    "PD",
 ]
-line-length = 88
+ignore = [
+    "C901",
+    "PD013",
+]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
