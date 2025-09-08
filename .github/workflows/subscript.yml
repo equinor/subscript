@@ -16,6 +16,7 @@ on:
 
 env:
   MPLBACKEND: Agg
+  UV_SYSTEM_PYTHON: 1
 
 jobs:
   subscript:
@@ -41,6 +42,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+
       - name: Install OPM-flow and ResInsight (for testing)
         run: |
           sudo apt-get install software-properties-common
@@ -53,8 +60,7 @@ jobs:
       - name: Install subscript with dependencies
         if: ${{ always() }}
         run: |
-          pip install -U pip
-          pip install ".[tests, docs]"
+          uv pip install ".[tests, docs]"
 
       - name: Log OPM-Flow and ResInsight version
         run: |
@@ -62,7 +68,7 @@ jobs:
           ResInsight --console --version
 
       - name: List all installed packages
-        run: pip freeze
+        run: uv pip freeze
 
       - name: Format with ruff
         if: ${{ always() }}
