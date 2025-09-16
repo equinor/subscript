@@ -187,11 +187,12 @@ def test_correct_parsing_date(tmp_path):
     shutil.copy(TEST_PRT_DATADIR / "DROGON_FIPNUM.PRT", tmp_path / "DROGON_FIPNUM.PRT")
     os.chdir(tmp_path)
     # Replace "REPORT   0     1 JAN 2018" with "REPORT   0     5 JLY 2018"
+    report_string = "REPORT   0     1 JLY 2018"
     prt_path = tmp_path / "DROGON_FIPNUM.PRT"
     prt_text = prt_path.read_text(encoding="utf8")
-    prt_text = prt_text.replace(
-        "REPORT   0     1 JAN 2018", "REPORT   0     1 JLY 2018"
-    )
+    prt_text = prt_text.replace("REPORT   0     1 JAN 2018", report_string)
+    assert report_string in prt_text
+
     prt_path.write_text(prt_text, encoding="utf8")
 
     df_inplace = prtvol2csv.currently_in_place_from_prt(prt_path)
