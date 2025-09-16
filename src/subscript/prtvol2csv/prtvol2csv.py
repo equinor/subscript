@@ -211,6 +211,8 @@ def currently_in_place_from_prt(
             if date_matcher_ecl.search(line) is not None:
                 line_split = line.split("*")
                 initial_date_string = line_split[0].rstrip().split("  ")[-1]
+                # Handle Eclipse dumping out July as JLY instead of JUL
+                initial_date_string = initial_date_string.replace("JLY", "JUL")
                 initial_date_object = datetime.strptime(
                     initial_date_string, "%d %b %Y"
                 ).date()
