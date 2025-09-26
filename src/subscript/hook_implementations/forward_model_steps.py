@@ -1,5 +1,4 @@
 import shutil
-from typing import Optional
 
 from ert import (
     ForwardModelStepDocumentation,
@@ -38,7 +37,7 @@ class CasegenUpcars(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description="""casegen_upcars is script to create conceptual model
 based on sugar-cube representation of fracture.
@@ -79,7 +78,7 @@ class CheckSwatinit(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description="QC tool for SWATINIT vs SWAT in Eclipse runs",
             category="utility.eclipse",
@@ -107,7 +106,7 @@ class Csv2Ofmvol(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=csv2ofmvol.DESCRIPTION,
             category="modelling.production",
@@ -130,7 +129,7 @@ class CsvStack(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=csv_stack.DESCRIPTION,
             category=csv_stack.CATEGORY,
@@ -158,7 +157,7 @@ class EclCompress(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=eclcompress.DESCRIPTION,
             category="modelling.reservoir",
@@ -207,7 +206,7 @@ class Ecldiff2Roff(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=ecldiff2roff.DESCRIPTION,
             category="utility.eclipse",
@@ -239,7 +238,7 @@ class Eclgrid2Roff(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description="""Convert between Eclipse binary EGRID output to ROFF grid
 format.
@@ -283,7 +282,7 @@ class Eclinit2Roff(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description="""Convert Eclipse INIT file to ROFF grid format.
 
@@ -333,7 +332,7 @@ class Eclrst2Roff(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description="""Convert between Eclipse restart files ROFF grid format.
 
@@ -380,7 +379,7 @@ class GravSubsMaps(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=grav_subs_maps.DESCRIPTION,
             category="modelling.reservoir",
@@ -427,7 +426,7 @@ class GravSubsPoints(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=grav_subs_points.DESCRIPTION,
             category="modelling.reservoir",
@@ -477,7 +476,7 @@ class InterpRelperm(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=interp_relperm.DESCRIPTION,
             category="modelling.reservoir",
@@ -509,7 +508,7 @@ class MergeRftErtobs(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=merge_rft_ertobs.DESCRIPTION, category="utility.eclipse"
         )
@@ -532,7 +531,7 @@ class MergeUnrstFiles(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=merge_unrst_files.DESCRIPTION,
             category="utility.eclipse",
@@ -561,7 +560,7 @@ class Ofmvol2Csv(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=ofmvol2csv.DESCRIPTION,
             category="modelling.production",
@@ -590,7 +589,7 @@ class Params2Csv(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=params2csv.DESCRIPTION,
             category=params2csv.CATEGORY,
@@ -644,7 +643,7 @@ class Prtvol2Csv(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=prtvol2csv.DESCRIPTION,
             category="utility.eclipse",
@@ -697,7 +696,7 @@ class RiWellmod(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description="""
 ``ri_wellmod`` is a utility to generate Eclipse well model definitions
@@ -758,7 +757,7 @@ class Sunsch(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=sunsch.DESCRIPTION,
             category="modelling.production",
@@ -799,7 +798,7 @@ class WelltestDpds(ForwardModelStepPlugin):
         )
 
     @staticmethod
-    def documentation() -> Optional[ForwardModelStepDocumentation]:
+    def documentation() -> ForwardModelStepDocumentation | None:
         return ForwardModelStepDocumentation(
             description=welltest_dpds.DESCRIPTION,
             category="modelling.reservoir",

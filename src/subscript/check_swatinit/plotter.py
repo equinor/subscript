@@ -1,5 +1,3 @@
-from typing import Dict, Optional
-
 import numpy as np
 import pandas as pd
 import seaborn
@@ -30,7 +28,7 @@ QC_PALETTE = {
 
 
 def plot_qc_panels(
-    qc_frame: pd.DataFrame, eqlnum: Optional[int] = None, show: bool = False
+    qc_frame: pd.DataFrame, eqlnum: int | None = None, show: bool = False
 ) -> None:
     """Make a plotting panel (multiple plots) on cell-based dataframe.
 
@@ -88,7 +86,7 @@ def visual_depth(qc_frame: pd.DataFrame) -> float:
 
 
 def swat_depth(
-    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a SWAT vs depth plot on current axis"""
     if axis is None:
@@ -103,7 +101,7 @@ def swat_depth(
 
 
 def swatinit_depth(
-    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a swatinit vs depth plot on current axis"""
     if axis is None:
@@ -118,7 +116,7 @@ def swatinit_depth(
 
 
 def pressure_depth(
-    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a pressure vs. depth plot on current axis"""
     if axis is None:
@@ -133,7 +131,7 @@ def pressure_depth(
 
 
 def pc_depth(
-    qc_frame: pd.DataFrame, axis: Optional[pyplot.Axes] = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a pc vs depth plot on current axis"""
     if axis is None:
@@ -163,7 +161,7 @@ def add_contacts_to_plot(qc_frame: pd.DataFrame, axis: pyplot.Axes) -> None:
         axis.annotate(f"GWC={gwc:g}", (0, gwc))
 
 
-def wvol_waterfall(qc_vols: Dict[str, float]) -> None:
+def wvol_waterfall(qc_vols: dict[str, float]) -> None:
     """Make a waterfall chart of the computed volumes
 
     Plots on current axis.

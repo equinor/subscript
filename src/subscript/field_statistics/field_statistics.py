@@ -373,7 +373,7 @@ def field_stat(args):
         relative_result_path = Path(args.resultpath)
     result_path = ens_path / relative_result_path
     if not result_path.exists():
-        raise IOError(f"Result directory:  {result_path} does not exist.")
+        raise OSError(f"Result directory:  {result_path} does not exist.")
 
     rms_load_script = None
     if args.generate_rms_load_script:
@@ -1167,7 +1167,7 @@ def get_ertbox_size(ertbox_path):
 
 def copy_ertbox_grid_to_result_path(ertbox_path, result_path):
     if not Path(ertbox_path).exists():
-        raise IOError(f"The ertbox file does not exist in:  {ertbox_path}")
+        raise OSError(f"The ertbox file does not exist in:  {ertbox_path}")
     ertbox_grid = xtgeo.grid_from_file(ertbox_path, fformat="egrid")
     grid_file_name = result_path / Path("ertbox.roff")
     print(f"Copy ertbox grid file from {ertbox_path} to {grid_file_name}")

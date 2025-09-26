@@ -7,7 +7,6 @@ import os
 import signal
 import sys
 from pathlib import Path
-from typing import Optional, Tuple, Union
 
 import ert
 import pandas as pd
@@ -191,7 +190,7 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
     return not failed
 
 
-def autoparse_file(filename: str) -> Tuple[Optional[str], Union[pd.DataFrame, dict]]:
+def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame | dict]:
     """Detects the observation file format for a given filename. This
     is done by attempting to parse its content and giving up on
     exceptions.
@@ -299,14 +298,14 @@ def main() -> None:
 
 def fmuobs(
     inputfile: str,
-    ertobs: Optional[str] = None,
-    yml: Optional[str] = None,
-    resinsight: Optional[str] = None,
-    csv: Optional[str] = None,
+    ertobs: str | None = None,
+    yml: str | None = None,
+    resinsight: str | None = None,
+    csv: str | None = None,
     verbose: bool = False,
     debug: bool = False,
-    starttime: Optional[str] = None,
-    includedir: Optional[bool] = None,
+    starttime: str | None = None,
+    includedir: bool | None = None,
 ):
     # pylint: disable=too-many-arguments
     """Alternative to main() with named arguments"""
@@ -371,10 +370,10 @@ def fmuobs(
 
 def dump_results(
     dframe: pd.DataFrame,
-    csvfile: Optional[str] = None,
-    yamlfile: Optional[str] = None,
-    resinsightfile: Optional[str] = None,
-    ertfile: Optional[str] = None,
+    csvfile: str | None = None,
+    yamlfile: str | None = None,
+    resinsightfile: str | None = None,
+    ertfile: str | None = None,
 ) -> None:
     """Dump dataframe with ERT observations to CSV and/or YML
     format to disk. Writes to stdout if filenames are "-". Skips

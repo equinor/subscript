@@ -15,7 +15,7 @@ def detect_os(release_file: Path = Path("/etc/redhat-release")) -> str:
     default_os_version = "x86_64_RH_7"
 
     if release_file.is_file():
-        with open(release_file, "r", encoding="utf-8") as buffer:
+        with open(release_file, encoding="utf-8") as buffer:
             tokens = buffer.read().split()
             for t in tokens:
                 if "." in t:

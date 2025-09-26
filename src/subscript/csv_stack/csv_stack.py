@@ -6,7 +6,7 @@ import logging
 import re
 import sys
 import warnings
-from typing import Pattern
+from re import Pattern
 
 import ert
 import pandas as pd

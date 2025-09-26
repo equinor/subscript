@@ -2,7 +2,6 @@ import argparse
 import logging
 from os.path import abspath, isdir
 from pathlib import Path
-from typing import Tuple
 
 import numpy as np
 import pandas as pd
@@ -72,7 +71,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def split_wellname_reportstep(wellname_reportstep: str) -> Tuple[str, int]:
+def split_wellname_reportstep(wellname_reportstep: str) -> tuple[str, int]:
     """Split a string that might contain both a wellname and a report step,
     at least it should contain a wellname.
 

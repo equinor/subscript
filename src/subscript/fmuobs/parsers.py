@@ -4,7 +4,6 @@ equivalent DataFrame representation"""
 import datetime
 import re
 from pathlib import Path
-from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -108,7 +107,7 @@ def mask_curly_braces(string: str, mask_char: str = "X") -> str:
 
 def split_by_sep_in_masked_string(
     string: str, masked_string: str, sep: str = ";"
-) -> List[str]:
+) -> list[str]:
     """Splits a string by a separator, but the separators are searched
     for in an auxiliary string, the "masked_string". This is so in order
     to mask out separator characters that should be ignored due to
@@ -302,7 +301,7 @@ def parse_subobservation_args(string: str) -> dict:
 
 def flatten_observation_unit(
     obsunit: dict, subunit_label: str = "obs_sub_id"
-) -> List[Dict[str, str]]:
+) -> list[dict[str, str]]:
     """Flatten/unroll a observation unit represented as a nested dict, return
     as a list of dicts.
 
@@ -370,7 +369,7 @@ def flatten_observation_unit(
     return obs_subunits
 
 
-def ertobs2df(input_str: str, cwd=".", starttime: Optional[str] = None) -> pd.DataFrame:
+def ertobs2df(input_str: str, cwd=".", starttime: str | None = None) -> pd.DataFrame:
     """Parse a string with ERT observations and convert into
     the internal dataframe format.
 
@@ -416,7 +415,7 @@ def ertobs2df(input_str: str, cwd=".", starttime: Optional[str] = None) -> pd.Da
     return compute_date_from_days(pd.DataFrame(obs_list), starttime)
 
 
-def compute_date_from_days(dframe: pd.DataFrame, starttime: Optional[str] = None):
+def compute_date_from_days(dframe: pd.DataFrame, starttime: str | None = None):
     """Fill in DATE cells in a dataframe computed from
     a given starttime and data in DAYS cells.
 
@@ -470,7 +469,7 @@ def resinsight_df2df(ri_dframe: pd.DataFrame) -> pd.DataFrame:
     return dframe
 
 
-def smrydictlist2df(smrylist: List[dict]) -> pd.DataFrame:
+def smrydictlist2df(smrylist: list[dict]) -> pd.DataFrame:
     """Parse a list structure (subpart of yaml syntax) of summary observations
     into  dataframe format
 
@@ -511,7 +510,7 @@ def smrydictlist2df(smrylist: List[dict]) -> pd.DataFrame:
     return dframe
 
 
-def blockdictlist2df(blocklist: List[dict]) -> pd.DataFrame:
+def blockdictlist2df(blocklist: list[dict]) -> pd.DataFrame:
     """Parse a list structure (subpart of yaml syntax) of block observations
     into  dataframe format
 

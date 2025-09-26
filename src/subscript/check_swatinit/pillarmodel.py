@@ -1,5 +1,4 @@
 import textwrap
-from typing import List, Optional, Union
 
 import numpy as np
 
@@ -16,26 +15,22 @@ class PillarModel:
         self,
         cells: int = 1,
         apex: int = 1000,
-        phases: Optional[List[str]] = None,
-        perm: Optional[List[float]] = None,
-        poro: Optional[List[float]] = None,
-        swatinit: Optional[List[float]] = None,
-        satnum: Optional[List[int]] = None,  # one value pr. cell
-        swl: Optional[List[float]] = None,  # first saturation in swof, one pr. satnum
-        swlpc: Optional[
-            List[float]
-        ] = None,  # swl scaler for pc only, leaving kr unmodified
-        swu: Optional[List[float]] = None,  # maximum saturation in swof, one pr. satnum
-        maxpc: Optional[List[float]] = None,  # max pc in SWOF
-        minpc: Optional[List[float]] = None,  # pc at sw=1 in SWOF
-        ppcwmax: Optional[List[float]] = None,  # PPCWMAX keyword.
-        eqlnum: Optional[List[int]] = None,  # One value pr cell
-        owc: Optional[
-            List[float]
-        ] = None,  # One value pr. eqlnum region, also used for gwc.
-        goc: Optional[
-            Union[List[float], List[str]]
-        ] = None,  # One value pr. eqlnum region
+        phases: list[str] | None = None,
+        perm: list[float] | None = None,
+        poro: list[float] | None = None,
+        swatinit: list[float] | None = None,
+        satnum: list[int] | None = None,  # one value pr. cell
+        swl: list[float] | None = None,  # first saturation in swof, one pr. satnum
+        swlpc: list[float]
+        | None = None,  # swl scaler for pc only, leaving kr unmodified
+        swu: list[float] | None = None,  # maximum saturation in swof, one pr. satnum
+        maxpc: list[float] | None = None,  # max pc in SWOF
+        minpc: list[float] | None = None,  # pc at sw=1 in SWOF
+        ppcwmax: list[float] | None = None,  # PPCWMAX keyword.
+        eqlnum: list[int] | None = None,  # One value pr cell
+        owc: list[float]
+        | None = None,  # One value pr. eqlnum region, also used for gwc.
+        goc: list[float] | list[str] | None = None,  # One value pr. eqlnum region
         oip_init: int = 0,  # EQUIL item 9. Eclipse default is -5
         filleps: str = "FILLEPS",
         rptrst: str = "ALLPROPS",
@@ -117,7 +112,7 @@ class PillarModel:
         else:
             self.owc = owc
 
-        self.goc: Union[List[str], List[float]]
+        self.goc: list[str] | list[float]
         if goc is None:
             self.goc = ["1*"] * max(self.eqlnum)
         else:

@@ -2,7 +2,7 @@ import argparse
 import os
 import re
 import subprocess
-from typing import Callable
+from collections.abc import Callable
 
 import pandas as pd
 

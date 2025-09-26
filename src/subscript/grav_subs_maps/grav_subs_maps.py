@@ -4,7 +4,7 @@ import os
 import sys
 from datetime import date
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Annotated, Any
 
 import xtgeo
 import yaml
@@ -13,7 +13,6 @@ from pydantic import BaseModel, Field, FilePath, field_validator
 from resdata.gravimetry import ResdataGrav, ResdataSubsidence
 from resdata.grid import Grid
 from resdata.resfile import ResdataFile
-from typing_extensions import Annotated
 
 import subscript
 
@@ -56,18 +55,18 @@ EPILOGUE = """
 
 
 class GravMapsInput(BaseModel):
-    diffdates: List[Tuple[date, date]]
+    diffdates: list[tuple[date, date]]
     seabed_map: FilePath
 
 
 class GravMapsCalc(BaseModel):
     poisson_ratio: Annotated[float, Field(strict=True, ge=0, le=0.5)]
-    coarsening: Optional[Annotated[int, Field(strict=True, ge=1)]] = None
-    phases: List[str]
+    coarsening: Annotated[int, Field(strict=True, ge=1)] | None = None
+    phases: list[str]
 
     @field_validator("phases")
     @classmethod
-    def check_phases(cls, phases: List[str]) -> List[str]:
+    def check_phases(cls, phases: list[str]) -> list[str]:
         allowed_phases = ["oil", "gas", "water", "total"]
         for item in phases:
             assert item in allowed_phases, f"allowed phases are {str(allowed_phases)}"
@@ -128,7 +127,7 @@ def main() -> None:
     if not Path(args.configfile).exists():
         sys.exit("No such file:" + args.configfile)
 
-    with open(Path(args.configfile), "r", encoding="utf8") as stream:
+    with open(Path(args.configfile), encoding="utf8") as stream:
         config = yaml.load(stream, Loader=FMUYamlSafeLoader)
 
     if not Path(args.outputdir).exists():
@@ -141,7 +140,7 @@ def main() -> None:
 
 def main_gravmaps(
     unrst_file: str,
-    config: Dict[str, Any],
+    config: dict[str, Any],
     output_folder: Path,
 ) -> None:
     """

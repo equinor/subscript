@@ -3,7 +3,6 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
-from typing import List
 
 import numpy as np
 import pandas as pd
@@ -221,7 +220,7 @@ def df2ertobs(obs_df: pd.DataFrame) -> str:
     return ertobs_str
 
 
-def summary_df2obsdict(smry_df: pd.DataFrame) -> List[dict]:
+def summary_df2obsdict(smry_df: pd.DataFrame) -> list[dict]:
     """Generate a dictionary structure suitable for yaml
     for summary observations in dataframe representation
 
@@ -304,7 +303,7 @@ def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     return dframe
 
 
-def block_df2obsdict(block_df: pd.DataFrame) -> List[dict]:
+def block_df2obsdict(block_df: pd.DataFrame) -> list[dict]:
     """Generate a dictionary structure suitable for yaml
     for block observations in dataframe representation
 

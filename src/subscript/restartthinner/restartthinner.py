@@ -48,7 +48,7 @@ def find_resdata_app(toolname: str) -> str:
             candidatepath = Path(path) / candidate
             if candidatepath.exists():
                 return str(candidatepath)
-    raise IOError(toolname + " not found in path, PATH=" + str(os.environ["PATH"]))
+    raise OSError(toolname + " not found in path, PATH=" + str(os.environ["PATH"]))
 
 
 def date_slicer(slicedates: list, restartdates: list, restartindices: list) -> dict:
@@ -79,7 +79,7 @@ def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
     try:
         find_resdata_app("rd_unpack")
         find_resdata_app("rd_pack")
-    except IOError:
+    except OSError:
         sys.exit(
             "ERROR: rd_unpack.x and/or rd_pack.x not found.\n"
             "These tools are required and must be installed separately"

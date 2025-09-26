@@ -437,7 +437,7 @@ def make_test_case(tmp_path, config_dict):
 def compare_with_referencedata(ens_path, result_path, print_check=False):
     lines = []
     file_list = result_path / Path("referencedata/files.txt")
-    with open(file_list, "r") as file:
+    with open(file_list) as file:
         lines = file.readlines()
     is_ok = []
 

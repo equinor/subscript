@@ -1,7 +1,6 @@
 import argparse
 import logging
 from pathlib import Path
-from typing import List, Set, Tuple, Union
 
 import dateutil.parser
 import xtgeo  # type: ignore
@@ -81,7 +80,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def parse_diff_dates(filename: str) -> List[Tuple[str, str]]:
+def parse_diff_dates(filename: str) -> list[tuple[str, str]]:
     """Read a text file with one date pair pr. line, each date separated by space.
 
     The file can have dates in YYYYMMDD or in YYYY-MM-DD format, and
@@ -127,7 +126,7 @@ def parse_diff_dates(filename: str) -> List[Tuple[str, str]]:
 def ecldiff2roff_main(
     eclroot: str,
     prop: str,
-    diffdates: Union[str, List[Tuple[str, str]]],
+    diffdates: str | list[tuple[str, str]],
     outputfilebase: str = "eclgrid",
     sep: str = "--",
     datesep: str = "_",
@@ -145,7 +144,7 @@ def ecldiff2roff_main(
     if isinstance(diffdates, str):
         diffdates = parse_diff_dates(diffdates)
 
-    alldates: Set[str]
+    alldates: set[str]
     alldates = set()
     for date_pair in diffdates:
         alldates = alldates.union(set(date_pair))

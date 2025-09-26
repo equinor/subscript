@@ -92,7 +92,7 @@ class Fluxnum:
 
         int_type = ResDataType.RD_INT
 
-        with open(fluxnum_file, "r", encoding="utf8") as file_handle:
+        with open(fluxnum_file, encoding="utf8") as file_handle:
             self.fluxnum_kw = ResdataKW.read_grdecl(
                 file_handle, "FLUXNUM", rd_type=int_type
             )
@@ -245,7 +245,7 @@ class FluxnumFipnum(Fluxnum):
             if not os.path.isfile(fipnum_file):
                 raise Exception("ERROR: FIPNUM input file not found!")
 
-            with open(fipnum_file, "r", encoding="utf8") as file_handle:
+            with open(fipnum_file, encoding="utf8") as file_handle:
                 fipnum = ResdataKW.read_grdecl(
                     file_handle, "FIPNUM", rd_type=ResDataType.RD_INT
                 )

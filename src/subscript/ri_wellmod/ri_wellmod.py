@@ -12,7 +12,6 @@ import xml.dom.minidom
 from importlib import reload
 from pathlib import Path
 from types import ModuleType
-from typing import List, Optional, Set, Tuple
 
 import grpc
 
@@ -44,7 +43,7 @@ class CustomFormatter(
     # pylint: disable=unnecessary-pass
 
 
-def get_resinsight_exe() -> Optional[str]:
+def get_resinsight_exe() -> str | None:
     """
     Return the path to a ResInsight executable (or wrapper script).
     Returns None if not able to find a version matching the rips major.minor version.
@@ -85,7 +84,7 @@ def get_resinsight_version_string(ri_exe: str) -> str:
     return match.group(1)
 
 
-def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, int]:
+def get_resinsight_version_triplet(ri_exe: str) -> tuple[int, int, int]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
@@ -104,7 +103,7 @@ def get_resinsight_version_triplet(ri_exe: str) -> Tuple[int, int, int]:
     return (major, minor, patch)
 
 
-def get_rips_version_triplet() -> Tuple[int, int, int]:
+def get_rips_version_triplet() -> tuple[int, int, int]:
     """
     Get the rips (client-side) version, without instanciating/launching ResInsight
     """
@@ -115,8 +114,8 @@ def get_rips_version_triplet() -> Tuple[int, int, int]:
 
 
 def find_and_wrap_resinsight_version(
-    version_triplet: Tuple[int, int, int],
-) -> Optional[str]:
+    version_triplet: tuple[int, int, int],
+) -> str | None:
     """
     Find a ResInsight executable matching at least the major.minor version
     of the version triplet, and create a temporary wrapper that may be used to
@@ -131,7 +130,7 @@ def find_and_wrap_resinsight_version(
     (major, minor, patch) = version_triplet  # pylint: disable=unused-variable
     ri_home_path = Path(RI_HOME)
 
-    def _find_ri_exe(pattern: str) -> Optional[Path]:
+    def _find_ri_exe(pattern: str) -> Path | None:
         """
         Utility function to search for the ResInsight executable
         """
@@ -166,7 +165,7 @@ def find_and_wrap_resinsight_version(
     return wrapper_file.name
 
 
-def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
+def launch_resinsight(console_mode: bool, command_line_parameters: list[str]):
     """
     Try to launch a version of ResInsight matching the client version
 
@@ -222,7 +221,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: List[str]):
     return resinsight
 
 
-def find_candidate_modules(top_path: Path) -> Set[str]:
+def find_candidate_modules(top_path: Path) -> set[str]:
     """
     Find candidate python modules below a specified top path (which must
     be a member of sys.path)
@@ -231,7 +230,7 @@ def find_candidate_modules(top_path: Path) -> Set[str]:
 
     :return: set of importable names, empty set if top_path not in sys.path
     """
-    mod_names: Set[str] = set()
+    mod_names: set[str] = set()
     if str(top_path) not in sys.path:
         return mod_names
 
@@ -249,8 +248,8 @@ def find_candidate_modules(top_path: Path) -> Set[str]:
 def deep_reload(
     module: ModuleType,
     top_path: Path,
-    loaded: Optional[Set] = None,
-    ok_names: Optional[Set[str]] = None,
+    loaded: set | None = None,
+    ok_names: set[str] | None = None,
 ):
     """
     Deep module reload constrained to names possibly found in a given folder
@@ -280,7 +279,7 @@ def deep_reload(
 
 
 def launch_resinsight_dev(
-    resinsightdev: str, console_mode: bool, command_line_parameters: List[str]
+    resinsightdev: str, console_mode: bool, command_line_parameters: list[str]
 ):
     """
     Launch development version of ResInsight
@@ -401,8 +400,8 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def select_matching_strings(
-    pattern_list: List[str], string_list: List[str]
-) -> List[str]:
+    pattern_list: list[str], string_list: list[str]
+) -> list[str]:
     """
     Utility function to select mathching strings (fnmatch wildcard style)
 
@@ -450,7 +449,7 @@ def has_restart_file(ecl_case: Path) -> bool:
     )
 
 
-def rsp_extract_export_names(well_project: str, well_path_names: List[str]):
+def rsp_extract_export_names(well_project: str, well_path_names: list[str]):
     """
     Extract export well names from ResInsight project
 
@@ -469,7 +468,7 @@ def rsp_extract_export_names(well_project: str, well_path_names: List[str]):
     return dict(zip(export_names, well_path_names))
 
 
-def decode_lgr_spec(spec: str) -> Optional[Tuple[str, int, int, int]]:
+def decode_lgr_spec(spec: str) -> tuple[str, int, int, int] | None:
     """
     Decode LGR spec and return as parsed tuple. For ERT FM replace ',' by ';'.
 
@@ -730,7 +729,7 @@ def main() -> int:
                 logger.debug("Found LGR completion file %s", lgr_perf_fn)
 
             if perf_fn_exists or Path(perf_fn).exists():
-                with open(perf_fn, "r", encoding="utf8") as perf_fd:
+                with open(perf_fn, encoding="utf8") as perf_fd:
                     shutil.copyfileobj(perf_fd, out_fd)
             else:
                 logger.debug("No completion file found for well %s", well)
@@ -742,7 +741,7 @@ def main() -> int:
             if well in msw_well_names:
                 msw_fn = get_exported_msw_filename(well, ri_case_name)
                 if Path(msw_fn).exists():
-                    with open(msw_fn, "r", encoding="utf8") as msw_fd:
+                    with open(msw_fn, encoding="utf8") as msw_fd:
                         shutil.copyfileobj(msw_fd, out_fd)
                 else:
                     logger.debug("No msw completion file found for well %s", well)
@@ -761,7 +760,7 @@ def main() -> int:
             for lgr_well_path in lgr_well_path_names:
                 lgr_spec_fn = get_lgr_spec_filename(lgr_well_path)
                 if Path(lgr_spec_fn).exists():
-                    with open(lgr_spec_fn, "r", encoding="utf8") as lgr_fd:
+                    with open(lgr_spec_fn, encoding="utf8") as lgr_fd:
                         # shutil.copyfileobj(lgr_fd, out_fd)
                         # Ugly hack to get around 'multiple-wells-in-lgr'
                         # For now, assuming 5 wells in each LGR is sufficient..

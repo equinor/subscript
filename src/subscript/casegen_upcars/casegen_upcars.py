@@ -59,7 +59,7 @@ def main():
     parser = arg_parse.parse_args()
 
     # YAML format
-    with open(parser.config_file, "r", encoding="utf8") as file_handle:
+    with open(parser.config_file, encoding="utf8") as file_handle:
         config = load(file_handle.read(), Loader=Loader)
 
         general = config["General"]
@@ -518,7 +518,7 @@ def main():
         [vug1_swatinit, vug2_swatinit],
     )
 
-    with open(template_file, "r", encoding="utf8") as file_handle:
+    with open(template_file, encoding="utf8") as file_handle:
         buffer_ = mask_token(file_handle.read(), unmask=False)
         case_template = env.from_string(buffer_)
         ast = env.parse(buffer_)

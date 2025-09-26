@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-from typing import List
 
 import pandas as pd
 import pytest
@@ -210,10 +209,10 @@ from subscript.rmsecl_volumetrics.rmsecl_volumetrics import (
     ],
 )
 def test_compare_volumetrics(
-    disjoint_sets: List[dict],
-    simvolumes: List[dict],
-    volumetrics: List[dict],
-    expected: List[dict],
+    disjoint_sets: list[dict],
+    simvolumes: list[dict],
+    volumetrics: list[dict],
+    expected: list[dict],
 ):
     """Test comparisons of example datasets"""
     comparison_df = _compare_volumetrics(

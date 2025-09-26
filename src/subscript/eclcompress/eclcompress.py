@@ -9,7 +9,6 @@ import os
 import shutil
 import textwrap
 from pathlib import Path
-from typing import List, Tuple, Union
 
 import subscript
 
@@ -46,7 +45,7 @@ DENYLIST_KEYWORDS = ["INCLUDE"]  # Due to slashes in filenames
 
 
 def eclcompress(
-    files: Union[str, List[str]],
+    files: str | list[str],
     keeporiginal: bool = False,
     dryrun: bool = False,
 ) -> int:
@@ -146,7 +145,7 @@ def eclcompress(
     return totalsavings
 
 
-def file_is_binary(filename: Union[str, Path]) -> bool:
+def file_is_binary(filename: str | Path) -> bool:
     """Determine if a file is assumed binary
 
     This uses the same heuristic as the Linux `file` command. Only the first
@@ -179,8 +178,8 @@ def acceptedvalue(valuestring: str) -> bool:
 
 
 def compress_multiple_keywordsets(
-    keywordsets: List[Tuple[int, int]], filelines: List[str]
-) -> List[str]:
+    keywordsets: list[tuple[int, int]], filelines: list[str]
+) -> list[str]:
     """Apply Eclipse type compression to data in filelines
 
     The list of strings given as input (filelines) is indexed
@@ -196,7 +195,7 @@ def compress_multiple_keywordsets(
         Strings to be used as a replacement Eclipse deck
     """
 
-    compressedlines: List[str] = []
+    compressedlines: list[str] = []
 
     # Line pointer to the last line with a slash in it:
     lastslash_linepointer = 0
@@ -212,7 +211,7 @@ def compress_multiple_keywordsets(
         compressedlines += filelines[lastslash_linepointer:start_linepointer]
 
         # List of strings, each string is one data element (typically integer):
-        data: List[str] = []
+        data: list[str] = []
 
         end_linepointer = keywordtuple[1]
         lastslash_linepointer = end_linepointer + 1
@@ -261,7 +260,7 @@ def compress_multiple_keywordsets(
     return compressedlines
 
 
-def find_keyword_sets(filelines: List[str]) -> List[Tuple[int, int]]:
+def find_keyword_sets(filelines: list[str]) -> list[tuple[int, int]]:
     """Parse list of strings, looking for Eclipse data sets that we want.
 
     Example:
@@ -331,7 +330,7 @@ def find_keyword_sets(filelines: List[str]) -> List[Tuple[int, int]]:
     return keywordsets
 
 
-def glob_patterns(patterns: List[str]) -> List[str]:
+def glob_patterns(patterns: list[str]) -> list[str]:
     """
     Args:
         patterns: List of strings with filename patterns
@@ -410,7 +409,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def parse_wildcardfile(filename: str) -> List[str]:
+def parse_wildcardfile(filename: str) -> list[str]:
     """Parse a file with one filename wildcard pr. line
 
     If a magic filename is supplied, default list of
@@ -424,7 +423,7 @@ def parse_wildcardfile(filename: str) -> List[str]:
     if filename == MAGIC_DEFAULT_FILELIST:
         return DEFAULT_FILES_TO_COMPRESS
     if not os.path.exists(filename):
-        raise IOError(f"File {filename} not found")
+        raise OSError(f"File {filename} not found")
 
     lines = Path(filename).read_text(encoding="utf8").splitlines()
     lines = [line.strip() for line in lines]
@@ -450,7 +449,7 @@ def main():
 
 
 def main_eclcompress(
-    grdeclfiles: Union[List[str], str],
+    grdeclfiles: list[str] | str,
     wildcardfile: str,
     keeporiginal: bool = False,
     dryrun: bool = False,

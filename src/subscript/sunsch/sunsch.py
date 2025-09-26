@@ -12,7 +12,7 @@ import logging
 import tempfile
 import textwrap
 from pathlib import Path
-from typing import Dict, List, Literal, Optional, Union
+from typing import Literal
 
 import dateutil.parser
 import yaml
@@ -45,25 +45,25 @@ EXAMPLES = """
 
 
 class InsertStatement(BaseModel):
-    date: Optional[datetime.date] = None
-    filename: Optional[FilePath] = None
-    template: Optional[FilePath] = None
-    days: Optional[float] = None
-    string: Optional[str] = None
-    substitute: Optional[Dict[str, Union[int, float, str]]] = None
+    date: datetime.date | None = None
+    filename: FilePath | None = None
+    template: FilePath | None = None
+    days: float | None = None
+    string: str | None = None
+    substitute: dict[str, int | float | str] | None = None
 
 
 class SunschConfig(BaseModel):
-    files: Optional[List[FilePath]] = None
-    output: Optional[str] = "-"
-    startdate: Union[datetime.date, datetime.datetime]
+    files: list[FilePath] | None = None
+    output: str | None = "-"
+    startdate: datetime.date | datetime.datetime
     starttime: datetime.datetime
-    refdate: Union[datetime.date, datetime.datetime]
-    enddate: Optional[datetime.date] = None
-    dategrid: Optional[
-        Literal["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"]
-    ] = None
-    insert: Optional[List[InsertStatement]] = None
+    refdate: datetime.date | datetime.datetime
+    enddate: datetime.date | None = None
+    dategrid: (
+        Literal["daily", "monthly", "yearly", "weekly", "biweekly", "bimonthly"] | None
+    ) = None
+    insert: list[InsertStatement] | None = None
 
     def __init__(self, **config):
         """Transform the input to provide defaults to required fields"""
@@ -85,7 +85,7 @@ class SunschConfig(BaseModel):
 
 
 def datetime_from_date(
-    date: Union[str, datetime.datetime, datetime.date],
+    date: str | datetime.datetime | datetime.date,
 ) -> datetime.datetime:
     """Set time to 00:00:00 in a date, keep time info if given a datetime object"""
     if isinstance(date, datetime.datetime):
@@ -95,7 +95,7 @@ def datetime_from_date(
     return datetime.datetime.combine(date, datetime.datetime.min.time())
 
 
-def process_sch_config(conf: Union[dict, SunschConfig]) -> TimeVector:
+def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
     """Process a Schedule configuration into a opm.tools TimeVector
 
     Recognized keys in the configuration dict: files, startdate, startime,
@@ -404,7 +404,7 @@ def wrap_long_lines(string: str, maxchars: int = 128, warn: bool = True) -> str:
 
 def dategrid(
     startdate: datetime.date, enddate: datetime.date, interval: str
-) -> List[datetime.date]:
+) -> list[datetime.date]:
     """Return a list of dates at given interval
 
     Args:

@@ -2,7 +2,7 @@
 
 import argparse
 import sys
-from typing import Any, Dict, List, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -137,7 +137,7 @@ def reorder_dframe_for_nonnans(dframe: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def human_report_qc_vols(qc_vols: Dict[str, float]) -> str:
+def human_report_qc_vols(qc_vols: dict[str, float]) -> str:
     """Produce a string with a human report for volumes
 
     Arguments:
@@ -414,7 +414,7 @@ def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
     return qc_col.fillna(__UNKNOWN__)
 
 
-def qc_volumes(qc_frame: pd.DataFrame) -> Dict[str, float]:
+def qc_volumes(qc_frame: pd.DataFrame) -> dict[str, float]:
     """Compute numbers relevant for QC of saturation initialization of a
     reservoir model.
 
@@ -428,7 +428,7 @@ def qc_volumes(qc_frame: pd.DataFrame) -> Dict[str, float]:
         dict: Summed water and hydrocarbon reservoir volumes for different cell
         groupings.
     """
-    watergains: Dict[str, float]
+    watergains: dict[str, float]
     watergains = {}
 
     if "QC_FLAG" in qc_frame:
@@ -458,14 +458,14 @@ def qc_volumes(qc_frame: pd.DataFrame) -> Dict[str, float]:
 
 
 def _evaluate_pc(
-    swats: List[float],
-    scale_vert: List[float],
-    swls: List[float],
-    swus: Union[None, List[float]],
+    swats: list[float],
+    scale_vert: list[float],
+    swls: list[float],
+    swus: None | list[float],
     satfunc: pd.DataFrame,
     sat_name: str = "SW",
     pc_name: str = "PCOW",
-) -> List[Any]:
+) -> list[Any]:
     """Evaluate pc as a function of saturation on a scaled Pc-curve
 
     Args:

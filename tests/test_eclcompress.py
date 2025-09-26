@@ -667,9 +667,9 @@ def test_binary_example_file(tmp_path, mocker):
         ("foo æøå", False),
         (bytearray([0, 30, 50, 100, 129]), True),  # "random" bytes
         (bytearray([7, 8, 9, 10, 12, 13, 27]), False),  # allow-listed bytes.
-        (bytearray("foo".encode()), False),
+        (bytearray(b"foo"), False),
         # Null-terminated string makes it binary:
-        (bytearray("foo".encode()) + bytearray([0]), True),
+        (bytearray(b"foo") + bytearray([0]), True),
         # Only first 1024 characters are checked, so we can fool it:
         (bytearray([7] * 1024), False),
         (bytearray([7] * 1023 + [0]), True),

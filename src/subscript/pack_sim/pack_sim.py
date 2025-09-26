@@ -7,7 +7,7 @@ import time
 from io import StringIO
 from pathlib import Path
 from shutil import copy
-from typing import Dict, List, Optional, TextIO, Union
+from typing import TextIO
 
 from subscript import __version__, getLogger
 from subscript.eclcompress.eclcompress import file_is_binary
@@ -27,7 +27,7 @@ EOL_WINDOWS = r"\r\n"
 EOL_MAC = r"\r"
 
 
-def _read_lines(filename: Path) -> List[str]:
+def _read_lines(filename: Path) -> list[str]:
     try:
         with open(filename, encoding="utf-8") as fin:
             lines = fin.readlines()
@@ -96,12 +96,12 @@ def _expand_filename(filename: Path, org_sim_loc: Path) -> Path:
         return filename
     if (org_sim_loc / filename).exists():
         return org_sim_loc / filename
-    raise IOError(f"Could not open '{str(filename)}'. Make sure you have read access.")
+    raise OSError(f"Could not open '{str(filename)}'. Make sure you have read access.")
 
 
 def _md5checksum(
-    filepath: Optional[Union[str, Path]] = None, data: Optional[str] = None
-) -> Optional[str]:
+    filepath: str | Path | None = None, data: str | None = None
+) -> str | None:
     """Perform an MD5 checksum on a file or a string
 
     Checksums are made independent of line endings (win/unix), by removing
@@ -128,14 +128,14 @@ def _md5checksum(
     if data is not None:
         return _md5_on_fhandle(StringIO(data))
     if filepath is not None:
-        with open(filepath, "r", encoding="utf8") as fhandle:
+        with open(filepath, encoding="utf8") as fhandle:
             return _md5_on_fhandle(fhandle)
     raise ValueError(
         "Either a file path or data string need to be supplied. Nothing to checksum."
     )
 
 
-def _get_paths(filename: Path, org_sim_loc: Path) -> Dict[str, Path]:
+def _get_paths(filename: Path, org_sim_loc: Path) -> dict[str, Path]:
     """Method to scan for a PATHS keyword in the datafile
     Multiple paths can be defined in the keyword
 
@@ -184,7 +184,7 @@ def _get_paths(filename: Path, org_sim_loc: Path) -> Dict[str, Path]:
     return paths
 
 
-def _replace_paths(text: Union[str, Path], paths: Dict[str, Path]) -> Path:
+def _replace_paths(text: str | Path, paths: dict[str, Path]) -> Path:
     """Helper method to replace PATHS keys
 
     Args:
@@ -205,7 +205,7 @@ def inspect_file(
     filename: Path,
     org_sim_loc: Path,
     packing_path: Path,
-    eclipse_paths: Dict[str, Path],
+    eclipse_paths: dict[str, Path],
     indent: str = "",
     clear_comments: bool = False,
     fmu: bool = False,
@@ -358,8 +358,8 @@ def inspect_file(
                                             indent,
                                             new_include,
                                         )
-                                    except IOError as orig_exc:
-                                        raise IOError(
+                                    except OSError as orig_exc:
+                                        raise OSError(
                                             "Script stopped: Could not write to "
                                             f"'{new_include}'. "
                                             "Make sure you have write access for "

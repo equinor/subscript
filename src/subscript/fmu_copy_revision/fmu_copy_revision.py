@@ -522,7 +522,7 @@ class CopyFMU:
 
         if self.profile == 9:
             ffile = input("Choose rsync filter file: ")
-            with open(ffile, "r", encoding="utf8") as stream:
+            with open(ffile, encoding="utf8") as stream:
                 self.filter = stream.read()
 
     def define_filterpattern(self):

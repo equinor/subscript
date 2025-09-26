@@ -12,7 +12,6 @@
 import argparse
 import math
 from copy import deepcopy
-from typing import List
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -124,14 +123,14 @@ def convert_normal2inverse(aval: float, bval: float):
 
 def plotting(
     option: int,
-    av: List[float],
-    bv: List[float],
-    avorig: List[float],
-    bvorig: List[float],
-    poro: List[float],
-    perm: List[float],
-    swirra: List[float],
-    desc: List[str],
+    av: list[float],
+    bv: list[float],
+    avorig: list[float],
+    bvorig: list[float],
+    poro: list[float],
+    perm: list[float],
+    swirra: list[float],
+    desc: list[str],
     hmax: float,
     show=True,
 ):

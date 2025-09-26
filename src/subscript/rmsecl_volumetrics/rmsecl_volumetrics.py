@@ -4,7 +4,7 @@ a mapping between Region and Zones in RMS, to FIPNUMs in Eclipse"""
 import argparse
 import logging
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 import yaml
@@ -60,7 +60,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _prefix_keys(prefix: str, somedict: Dict[str, Any]) -> Dict[str, Any]:
+def _prefix_keys(prefix: str, somedict: dict[str, Any]) -> dict[str, Any]:
     """Add a string prefix to every key of a dictionary"""
     return {prefix + key: value for key, value in somedict.items()}
 
@@ -126,7 +126,7 @@ def _compare_volumetrics(
 
 def _disjoint_sets_to_dict(
     disjoint_sets_df: pd.DataFrame,
-) -> Dict[int, Dict[str, list]]:
+) -> dict[int, dict[str, list]]:
     """From the dataframe of sets, construct a dictionary indexed by set
     index provide lists of members in the set for FIPNUM, ZONE and REGION"""
     regions = disjoint_sets_df.groupby(["SET"])["REGION"].apply(
