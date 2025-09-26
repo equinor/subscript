@@ -4,7 +4,6 @@ import argparse
 import datetime
 import logging
 from pathlib import Path
-from typing import Dict, Optional
 
 import numpy as np
 import pandas as pd
@@ -186,7 +185,7 @@ def main() -> None:
             print(str(results))
 
 
-def dict_to_parameterstxt(results: Dict[str, float], paramname: str) -> str:
+def dict_to_parameterstxt(results: dict[str, float], paramname: str) -> str:
     """Produce a key-value string with newlines from a dict of results
 
     Args:
@@ -234,8 +233,8 @@ def presentvalue_main(
     gasvector: str = "FGPT",
     gasinjvector: str = "FGIT",
     cutoffyear: int = 2100,
-    basedatafile: Optional[str] = None,
-) -> Dict[str, float]:
+    basedatafile: str | None = None,
+) -> dict[str, float]:
     """Calculate presentvalue and financial parameters for a single Eclipse
     run
 
@@ -288,7 +287,7 @@ def presentvalue_main(
     return results
 
 
-def calculate_financials(pv_df: pd.DataFrame, cutoffyear: int) -> Dict[str, float]:
+def calculate_financials(pv_df: pd.DataFrame, cutoffyear: int) -> dict[str, float]:
     """Calculate economical parameters given a dataframe with
     income and costs.
 
@@ -451,10 +450,10 @@ def get_yearly_summary(
 
 
 def prepare_econ_table(
-    filename: Optional[str] = None,
-    oilprice: Optional[float] = None,
-    gasprice: Optional[float] = None,
-    usdtonok: Optional[float] = None,
+    filename: str | None = None,
+    oilprice: float | None = None,
+    gasprice: float | None = None,
+    usdtonok: float | None = None,
     discountrate: float = 8,
 ) -> pd.DataFrame:
     """Parse a CSV file with economical input

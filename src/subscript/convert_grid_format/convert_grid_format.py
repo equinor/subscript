@@ -5,7 +5,6 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import List, Optional
 
 import xtgeo  # type: ignore
 from xtgeo.common import XTGeoDialog  # type: ignore
@@ -113,7 +112,7 @@ def _convert_ecl2roff(
     outfile: str,
     option: str,
     props: str,
-    dates: Optional[str],
+    dates: str | None,
 ) -> None:
     """Conversion..."""
 
@@ -155,7 +154,7 @@ def _convert_ecl2roff(
         fformat = mode
         fformat = fformat.replace("restart", "unrst")
 
-        dates_list: Optional[List[str]]
+        dates_list: list[str] | None
         if mode == "restart":
             if dates is None:
                 raise SystemExit("STOP. No dates given")

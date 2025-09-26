@@ -3,7 +3,6 @@ import io
 import logging
 import re
 from pathlib import Path
-from typing import List, Union
 
 import pandas as pd
 
@@ -77,7 +76,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def cleanse_ofm_lines(filelines: List[str]) -> List[str]:
+def cleanse_ofm_lines(filelines: list[str]) -> list[str]:
     """Cleanup a list of lines::
 
       * Remove comment lines
@@ -105,7 +104,7 @@ def cleanse_ofm_lines(filelines: List[str]) -> List[str]:
     return [line.replace("\t", " ") for line in filelines]
 
 
-def unify_dateformat(lines: List[str]) -> List[str]:
+def unify_dateformat(lines: list[str]) -> list[str]:
     """Some OFM files have day, month year in separate columns.
 
     This function catches one variant of this, with day-month-year
@@ -132,7 +131,7 @@ def unify_dateformat(lines: List[str]) -> List[str]:
     return lines
 
 
-def extract_columnnames(filelines: List[str]) -> List[str]:
+def extract_columnnames(filelines: list[str]) -> list[str]:
     """Look for lines starting with `*DATE`, these signify the columns
     available in the current file being read.
 
@@ -157,7 +156,7 @@ def extract_columnnames(filelines: List[str]) -> List[str]:
     return columnnamelines[0].rstrip().replace("*", "").split()
 
 
-def split_list(linelist: List[str], splitidxs: List[int]) -> List[List[str]]:
+def split_list(linelist: list[str], splitidxs: list[int]) -> list[list[str]]:
     """Split a list of lines into chunks, where each chunck
     is a list of lines with each chunk only containing data for
     one well
@@ -191,7 +190,7 @@ def split_list(linelist: List[str], splitidxs: List[int]) -> List[List[str]]:
     return [linelist[i:j] for i, j in zipped if linelist[i:j]]
 
 
-def find_wellstart_indices(filelines: List[str]) -> List[int]:
+def find_wellstart_indices(filelines: list[str]) -> list[int]:
     """Locate the indices of the lines that start with the identifier
     for a new well, the string ``*NAME``.
 
@@ -204,7 +203,7 @@ def find_wellstart_indices(filelines: List[str]) -> List[int]:
     return [i for i in range(len(filelines)) if filelines[i].startswith("*NAME")]
 
 
-def parse_well(well_lines: List[str], columnnames: List[str]) -> pd.DataFrame:
+def parse_well(well_lines: list[str], columnnames: list[str]) -> pd.DataFrame:
     """Parse a list of lines with OFM data for only one well
     into a DataFrame
 
@@ -240,9 +239,7 @@ def parse_well(well_lines: List[str], columnnames: List[str]) -> pd.DataFrame:
     return pd.DataFrame()
 
 
-def parse_ofmtable(
-    ofmstring: Union[str, List[str]], columnnames: List[str]
-) -> pd.DataFrame:
+def parse_ofmtable(ofmstring: str | list[str], columnnames: list[str]) -> pd.DataFrame:
     """Parse an OFM table from a list of lines, either called once
     pr. well, or all data in one go with wellname as a table column.
 
@@ -334,7 +331,7 @@ def process_volstr(volstr: str) -> pd.DataFrame:
 
 
 def ofmvol2csv_main(
-    volfiles: Union[str, List[str]], output: str, includefileorigin: bool = False
+    volfiles: str | list[str], output: str, includefileorigin: bool = False
 ) -> None:
     """Convert a set of volfiles (or wildcard patterns) into one CSV file.
 

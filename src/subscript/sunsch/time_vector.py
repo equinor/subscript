@@ -77,7 +77,7 @@ def _make_datetime(dates_record):
     )
 
 
-class TimeStep(object):
+class TimeStep:
     def __init__(self, dt, keywords):
         """The TimeStep class consist of a list of keywords and a corresponding date.
 
@@ -117,38 +117,20 @@ class TimeStep(object):
             month = self.dt.month
             year = self.dt.year
             if not self.dt.time():
-                string.write(
-                    "DATES\n  {day} '{month}' {year}/\n/\n\n".format(
-                        day=day, month=inv_ecl_month[month], year=year
-                    )
-                )
+                string.write(f"DATES\n  {day} '{inv_ecl_month[month]}' {year}/\n/\n\n")
             else:
                 hour = self.dt.hour
                 minute = self.dt.minute
                 second = self.dt.second + self.dt.microsecond * 1.0e-6
                 if self.dt.microsecond > 0:
                     string.write(
-                        "DATES\n  {day} '{month}' {year}"
-                        " {hour:02d}:{minute:02d}:{second:07.4f} /\n/\n\n".format(
-                            day=day,
-                            month=inv_ecl_month[month],
-                            year=year,
-                            hour=hour,
-                            minute=minute,
-                            second=second,
-                        )
+                        f"DATES\n  {day} '{inv_ecl_month[month]}' {year}"
+                        f" {hour:02d}:{minute:02d}:{second:07.4f} /\n/\n\n"
                     )
                 else:
                     string.write(
-                        "DATES\n  {day} '{month}' {year}"
-                        " {hour:02d}:{minute:02d}:{second:02d} /\n/\n\n".format(
-                            day=day,
-                            month=inv_ecl_month[month],
-                            year=year,
-                            hour=hour,
-                            minute=minute,
-                            second=int(second),
-                        )
+                        f"DATES\n  {day} '{inv_ecl_month[month]}' {year}"
+                        f" {hour:02d}:{minute:02d}:{int(second):02d} /\n/\n\n"
                     )
 
         for kw in self.keywords:
@@ -158,7 +140,7 @@ class TimeStep(object):
         return string.getvalue()
 
 
-class TimeVector(object):
+class TimeVector:
     def __init__(self, start_date, base_string=None, base_file=None):
         """The TimeVector class is a simple vector class with DATES/TSTEP blocks.
 
@@ -323,7 +305,7 @@ class TimeVector(object):
 
     def add_keywords(self, dt, keywords):
         if dt < self.start_date:
-            raise ValueError("Invalid datetime argument: {}".format(dt))
+            raise ValueError(f"Invalid datetime argument: {dt}")
 
         if dt in self.time_steps_dict:
             ts = self[dt]

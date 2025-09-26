@@ -5,14 +5,13 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Literal, Optional
+from typing import Annotated, Any, Literal
 
 import pandas as pd
 import pyscal
 import yaml
 from pydantic import BaseModel, Field, FilePath, model_validator
 from res2df import satfunc
-from typing_extensions import Annotated
 
 import subscript
 
@@ -94,9 +93,9 @@ EPILOGUE = """
 
 
 class Interpolator(BaseModel):
-    tables: Optional[List[int]] = []
-    param_w: Optional[Annotated[float, Field(strict=True, ge=-1, le=1)]] = None
-    param_g: Optional[Annotated[float, Field(strict=True, ge=-1, le=1)]] = None
+    tables: list[int] | None = []
+    param_w: Annotated[float, Field(strict=True, ge=-1, le=1)] | None = None
+    param_g: Annotated[float, Field(strict=True, ge=-1, le=1)] | None = None
 
     @model_validator(mode="after")
     def check_param_w_or_param_g(self) -> Interpolator:
@@ -107,14 +106,14 @@ class Interpolator(BaseModel):
 
 
 class InterpRelpermConfig(BaseModel):
-    low: Optional[List[FilePath]] = None
-    base: Optional[List[FilePath]] = None
-    high: Optional[List[FilePath]] = None
-    pyscalfile: Optional[FilePath] = None
+    low: list[FilePath] | None = None
+    base: list[FilePath] | None = None
+    high: list[FilePath] | None = None
+    pyscalfile: FilePath | None = None
     result_file: str
     family: Literal[1, 2] = 1
     delta_s: float = 0.01
-    interpolations: Annotated[List[Interpolator], Field(..., min_length=1)]
+    interpolations: Annotated[list[Interpolator], Field(..., min_length=1)]
 
     @model_validator(mode="after")
     def check_lowbasehigh_or_pyscalfile(self) -> InterpRelpermConfig:
@@ -129,7 +128,7 @@ class InterpRelpermConfig(BaseModel):
         return self
 
 
-def parse_satfunc_files(filenames: List[Path]) -> pd.DataFrame:
+def parse_satfunc_files(filenames: list[Path]) -> pd.DataFrame:
     """
     Routine to gather scal tables (SWOF and SGOF) from ecl include files.
 
@@ -231,7 +230,7 @@ def make_interpolant(
     base_df: pd.DataFrame,
     low_df: pd.DataFrame,
     high_df: pd.DataFrame,
-    interp_param: Dict[str, float],
+    interp_param: dict[str, float],
     satnum: int,
     delta_s: float,
 ) -> pyscal.WaterOilGas:
@@ -314,8 +313,8 @@ def main() -> None:
 
 
 def prepend_root_path_to_relative_files(
-    cfg: Dict[str, Any], root_path: Path
-) -> Dict[str, Any]:
+    cfg: dict[str, Any], root_path: Path
+) -> dict[str, Any]:
     """Prepend root_path to relative files found paths in a configuration
     dictionary.
 
@@ -348,7 +347,7 @@ def prepend_root_path_to_relative_files(
     return cfg
 
 
-def process_config(cfg: Dict[str, Any], root_path: Optional[Path] = None) -> None:
+def process_config(cfg: dict[str, Any], root_path: Path | None = None) -> None:
     """
     Process a configuration and dumps produced Eclipse include file to disk.
 

@@ -240,7 +240,7 @@ class Datafile:
         if not os.path.exists(dst_dir):
             try:
                 os.mkdir(dst_dir)
-            except IOError:
+            except OSError:
                 print("ERROR: Could not create new INCLUDE directory\n")
                 raise
 
@@ -266,11 +266,9 @@ class Datafile:
 
                 # Copy text content in read/write sequence
                 try:
-                    with open(
-                        src_file_path, "r", encoding="utf8", errors="ignore"
-                    ) as fin:
+                    with open(src_file_path, encoding="utf8", errors="ignore") as fin:
                         infile_text_content = fin.read()
-                except IOError:
+                except OSError:
                     print(f"Could not open {src_file_path} at {idx}")
                     raise
 
@@ -324,7 +322,7 @@ class Datafile:
             "-- **************************************************\n\n\n",
         ]
 
-        with open(self.USEFLUX_name, "r", encoding="utf8") as fin:
+        with open(self.USEFLUX_name, encoding="utf8") as fin:
             lines = fin.readlines()
 
         for idx, line in enumerate(insert_lines):

@@ -7,7 +7,6 @@ import re
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 import pandas as pd
 import res2df
@@ -97,7 +96,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def prep_output_dir(tablesdir: Optional[str]) -> Path:
+def prep_output_dir(tablesdir: str | None) -> Path:
     """Ensures an output directory exists, and returns
     the name of the directory.
 
@@ -156,7 +155,7 @@ def find_prtfile(basefile: str) -> str:
 
 
 def currently_in_place_from_prt(
-    prt_file: str, fipname: str = "FIPNUM", date: Optional[str] = None
+    prt_file: str, fipname: str = "FIPNUM", date: str | None = None
 ) -> pd.DataFrame:
     """Extracts currently-in-place volumes from a PRT file
 
@@ -361,7 +360,7 @@ def main() -> None:
 
     resvolumes_df = reservoir_volumes_from_prt(prt_file, args.fipname)
 
-    fipmapper: Optional[FipMapper]
+    fipmapper: FipMapper | None
     if args.yaml:
         fipmapper = FipMapper(yamlfile=args.yaml, skipstring="Totals")
         if args.fipname != "FIPNUM":
@@ -385,7 +384,7 @@ def main() -> None:
 def prtvol2df(
     simvolumes_df: pd.DataFrame,
     resvolumes_df: pd.DataFrame,
-    fipmapper: Optional[FipMapper] = None,
+    fipmapper: FipMapper | None = None,
     fipname: str = "FIPNUM",
     rename2fipnum: bool = False,
 ) -> pd.DataFrame:

@@ -28,8 +28,7 @@ def run_simulator(simulator, data_file_path):
 
     result = subprocess.run(  # pylint: disable=subprocess-run-check
         [simulator] + simulator_option + [data_file_path],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        capture_output=True,
         check=False,
     )
     if (
@@ -51,8 +50,7 @@ def run_simulator(simulator, data_file_path):
         time.sleep(30)
         result = subprocess.run(  # pylint: disable=subprocess-run-check
             [simulator] + simulator_option + [data_file_path],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
         )
 
     if result.returncode != 0:

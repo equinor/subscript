@@ -805,8 +805,7 @@ Initializing model
         for _i in range(self._xv.shape[0]):
             for _j in range(self._xv.shape[1]):
                 print(
-                    # pylint: disable=consider-using-f-string
-                    "{{x:{0}}} {{y:{0}}} {{z:{0}}} "
+                    "{{x:{0}}} {{y:{0}}} {{z:{0}}} "  # noqa: UP032
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}}".format(
                         self._eclipse_output_float
                     ).format(x=self._xv[_i, _j], y=self._yv[_i, _j], z=0.0),

@@ -5,7 +5,6 @@ import logging
 import os
 import re
 import sys
-from typing import Dict, List, Optional
 
 import ert
 import pandas as pd
@@ -159,7 +158,7 @@ def get_ertwf_parser() -> argparse.ArgumentParser:
 
 
 def merge_csvfiles(
-    csvfiles: list, tags: Optional[Dict[str, List]], memoryconservative: bool = False
+    csvfiles: list, tags: dict[str, list] | None, memoryconservative: bool = False
 ) -> pd.DataFrame:
     """
     Load CSV files from disk. Tag each row with filename origin.
@@ -238,7 +237,7 @@ def merge_csvfiles(
     return merged_df
 
 
-def taglist(strings: List[str], regexp_str: str) -> list:
+def taglist(strings: list[str], regexp_str: str) -> list:
     """Apply a regexp string to a list of strings
     and return a list of the matches.
 

@@ -2,7 +2,6 @@ import argparse
 import datetime
 import logging
 import sys
-from typing import List, Union
 
 import pandas as pd
 from dateutil.relativedelta import relativedelta
@@ -68,7 +67,7 @@ SUPPORTED_COLS = SUPPORTED_VOLCOLS + SUPPORTED_DAYCOLS
 
 
 def read_pdm_csv_files(
-    csvfiles: Union[pd.DataFrame, str, List[str], List[pd.DataFrame]],
+    csvfiles: pd.DataFrame | str | list[str] | list[pd.DataFrame],
 ) -> pd.DataFrame:
     """Read a list of CSV files and return a dataframe
 
@@ -264,7 +263,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def csv2ofmvol_main(csvfilepatterns: List[str], output: str) -> bool:
+def csv2ofmvol_main(csvfilepatterns: list[str], output: str) -> bool:
     """Convert a list of CSV files into one OFM vol-file.
 
     Arguments:

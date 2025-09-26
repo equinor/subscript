@@ -334,10 +334,8 @@ def test_csv_stack_ert_workflow(tmp_path):
     pd.DataFrame([{"WOPT:A": 1, "WOPT:B": 2}]).to_csv(csvfile, index=False)
 
     Path("CSV_STACK_WELLS").write_text(
-        (
-            'CSV_STACK "<CASEDIR>/share/results/tables/unsmry--monthly.csv" '
-            '"--split" well "--output" stacked.csv "--keepconstantcolumns"'
-        )
+        'CSV_STACK "<CASEDIR>/share/results/tables/unsmry--monthly.csv" '
+        '"--split" well "--output" stacked.csv "--keepconstantcolumns"'
     )
 
     Path("test.ert").write_text(

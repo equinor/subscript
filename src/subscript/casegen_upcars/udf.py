@@ -22,8 +22,7 @@ def iter_flatten(iterable):
     it_obj = iter(iterable)
     for enum_obj in it_obj:
         if isinstance(enum_obj, (list, tuple)):
-            for flatten_obj in iter_flatten(enum_obj):
-                yield flatten_obj
+            yield from iter_flatten(enum_obj)
         else:
             yield enum_obj
 

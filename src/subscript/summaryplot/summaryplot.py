@@ -28,7 +28,6 @@ import termios
 import tty
 from multiprocessing import Process
 from pathlib import Path
-from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -128,9 +127,9 @@ def get_parser() -> argparse.ArgumentParser:
 
 def summaryplotter(
     summaryfiles: list,
-    datafiles: Optional[list] = None,
-    vectors: Optional[list] = None,
-    parameterfiles: Optional[list] = None,
+    datafiles: list | None = None,
+    vectors: list | None = None,
+    parameterfiles: list | None = None,
     histvectors: bool = False,
     normalize: bool = False,
     singleplot: bool = False,
@@ -138,8 +137,8 @@ def summaryplotter(
     maxlabels: int = 5,
     ensemblemode: bool = False,
     dumpimages: bool = False,
-    colourby: Optional[str] = None,
-    logcolourby: Optional[str] = None,
+    colourby: str | None = None,
+    logcolourby: str | None = None,
 ):
     # pylint: disable=too-many-arguments
     """
@@ -592,7 +591,7 @@ def split_vectorsdatafiles(vectorsdatafiles):
                 if path.exists():
                     parameterfiles.append(str(path.resolve()))
                     break
-        except IOError:
+        except OSError:
             # If we get here, we assume it was an Eclipse vector name.
             vectors.append(vecdata)
     return (summaryfiles, datafiles, vectors, parameterfiles)
