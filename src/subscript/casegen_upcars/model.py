@@ -20,13 +20,12 @@ def fracture_idx(matrix_elements, fracture_cell_count, boundary_fracture):
         for idx in matrix_elements:
             offset += idx + fracture_cell_count
             result.append(offset)
-    else:
-        if len(matrix_elements) > 1:
-            offset = matrix_elements[0]
+    elif len(matrix_elements) > 1:
+        offset = matrix_elements[0]
+        result.append(offset)
+        for idx in matrix_elements[1:-1]:
+            offset += idx + fracture_cell_count
             result.append(offset)
-            for idx in matrix_elements[1:-1]:
-                offset += idx + fracture_cell_count
-                result.append(offset)
     return np.asarray(result, dtype=np.int16)
 
 

@@ -162,7 +162,7 @@ def restartthinner(
         print("Selected restarts:")
         print("-----------------------")
         for idx, rstidx in enumerate(restart_indices):
-            slicepresent = "X" if restart_indices[idx] in slicerstindices else ""
+            slicepresent = "X" if rstidx in slicerstindices else ""
             print(
                 f"{rstidx:4d}  "
                 f"{datetime.date.strftime(restart_dates[idx], '%Y-%m-%d')}  "

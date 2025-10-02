@@ -473,14 +473,13 @@ def main_eclcompress(
     if grdeclfiles:
         if wildcardfile and wildcardfile != MAGIC_DEFAULT_FILELIST:
             patterns += parse_wildcardfile(wildcardfile)
+    # If no explicit wildcards on the command line, default filelist will be
+    # processed:
+    elif wildcardfile is not None:
+        patterns += parse_wildcardfile(wildcardfile)
     else:
-        # If no explicit wildcards on the command line, default filelist will be
-        # processed:
-        if wildcardfile is not None:
-            patterns += parse_wildcardfile(wildcardfile)
-        else:
-            logger.info("Defaulted wildcards")
-            patterns += parse_wildcardfile(MAGIC_DEFAULT_FILELIST)
+        logger.info("Defaulted wildcards")
+        patterns += parse_wildcardfile(MAGIC_DEFAULT_FILELIST)
 
     globbedfiles = glob_patterns(patterns)
 

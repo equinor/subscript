@@ -45,9 +45,7 @@ def filter_region(
 
     # Combine regions by
     if (
-        combine_operator == "intersect"
-        or combine_operator == ""
-        or combine_operator is None
+        combine_operator in {"intersect", "", None}
     ):
         # Intersection
         region.select_all()  # region.select_active()

@@ -629,9 +629,8 @@ def test_swatinit_1_below_contact(simulator, tmp_path):
     if "flow" in simulator:
         assert np.isclose(qc_frame["PPCW"][0], 3.0)
         assert np.isclose(qc_frame["PC"][0], 0)
-    else:
-        if "PPCW" in qc_frame:
-            assert pd.isna(qc_frame["PPCW"][0])
+    elif "PPCW" in qc_frame:
+        assert pd.isna(qc_frame["PPCW"][0])
 
     qc_vols = qc_volumes(qc_frame)
     assert np.isclose(qc_vols[__WATER__], 0.0)

@@ -502,11 +502,10 @@ def test_compute_pc(propslist, satfunc_df, expected_pc):
     if qc_frame.empty:
         if not pc_series.empty:
             assert all(pd.isna(pc_series))
+    elif pd.isna(expected_pc):
+        assert pd.isna(pc_series.to_numpy()[0])
     else:
-        if pd.isna(expected_pc):
-            assert pd.isna(pc_series.to_numpy()[0])
-        else:
-            assert pc_series.to_numpy()[0] == expected_pc
+        assert pc_series.to_numpy()[0] == expected_pc
 
 
 def test_eqlnum2(tmp_path, mocker):

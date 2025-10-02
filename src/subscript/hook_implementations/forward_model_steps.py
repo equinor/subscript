@@ -359,7 +359,7 @@ if the file ``dates.txt`` contains only the line::
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
 basename relative to ``RUNPATH``.
-""",  #
+""",
         )
 
 
