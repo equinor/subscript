@@ -134,7 +134,7 @@ def make_ensemble_test_data(
     nreal = 10
     vparam = 1.0
     for iter_number in iteration_list:
-        for zone_number, zone_name in zone_code_names.items():
+        for zone_name in zone_code_names.values():
             param_name_list = []
             if zone_name in param_name_per_zone:
                 param_name_list = param_name_per_zone[zone_name]
@@ -317,37 +317,19 @@ def assign_values_continuous_param(
             # Zone 1 Top conform (layer 0,..,nz-1)
             # Bottom layer of zone is active for some realizations
             layer_values[k] = (
-                1.0
-                * vparam
-                * k
-                * (real_number + 1)
-                / nreal
-                * (iter_number + 1)
-                / niter
+                1.0 * vparam * k * (real_number + 1) / nreal * (iter_number + 1) / niter
             )
         elif (2 * nz) <= k <= (3 * nz - 1):
             # Zone 3 Base conform  (layer nz,..,2*nz-1)
             # Top layer of zone is active for some realizations
             layer_values[k] = (
-                3.0
-                * vparam
-                * k
-                * (real_number + 1)
-                / nreal
-                * (iter_number + 1)
-                / niter
+                3.0 * vparam * k * (real_number + 1) / nreal * (iter_number + 1) / niter
             )
         elif nz <= k <= (2 * nz - 1):
             # Zone 2 Proportional (layer nz,.. 2*nz-1)
             # All layer of zone is active
             layer_values[k] = (
-                2.0
-                * vparam
-                * k
-                * (real_number + 1)
-                / nreal
-                * (iter_number + 1)
-                / niter
+                2.0 * vparam * k * (real_number + 1) / nreal * (iter_number + 1) / niter
             )
     for k in range(3 * nz):
         values[:, :, k] = layer_values[k]
@@ -386,8 +368,8 @@ def assign_values_discrete_param(
             if code not in all_code_names:
                 all_code_names[code] = name
 
-    for code, name in all_code_names.items():
-        assert code in [1, 2, 3]
+    for code in all_code_names:
+        assert code in {1, 2, 3}
 
     for k in range(nz * 3):
         if real_number < (nreal - 1):
@@ -1088,7 +1070,6 @@ def test_get_specification(
     [(Path("config_example.yml"), CONFIG_DICT)],
 )
 def test_main(tmp_path, config_file, config_dict, print_info=True):
-
     # First make an ensemble to be used as testdata. This is based on the config_dict
     _, ens_path, result_path, ert_config_path, _ = make_test_case(tmp_path, config_dict)
     tmp_testdata_path = tmp_path / TESTDATA

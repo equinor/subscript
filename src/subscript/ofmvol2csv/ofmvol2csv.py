@@ -181,7 +181,11 @@ def split_list(linelist: list[str], splitidxs: list[int]) -> list[list[str]]:
         return [linelist]
     size = len(linelist)
     zipped = list(
-        zip([0, *splitidxs], splitidxs + ([size] if splitidxs[-1] != size else []))
+        zip(
+            [0, *splitidxs],
+            splitidxs + ([size] if splitidxs[-1] != size else []),
+            strict=False,
+        )
     )
     if not all(i <= j for i, j in zipped):
         raise ValueError("splitidxs must be increasing")

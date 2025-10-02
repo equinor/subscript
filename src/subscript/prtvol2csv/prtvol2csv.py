@@ -116,6 +116,7 @@ def prep_output_dir(tablesdir: str | None) -> Path:
                 "Later versions will not create directories for you"
             ),
             FutureWarning,
+            stacklevel=2,
         )
         Path(tablesdir).mkdir(parents=True)
     return Path(tablesdir)
@@ -236,11 +237,13 @@ def currently_in_place_from_prt(
                 f"({initial_date_object})."
             ),
             UserWarning,
+            stacklevel=2,
         )
     elif initial_date_object is None:
         warnings.warn(
             ("Cannot determine if volume report is at initial time."),
             UserWarning,
+            stacklevel=2,
         )
 
     return inplace_df

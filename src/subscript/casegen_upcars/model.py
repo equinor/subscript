@@ -106,7 +106,7 @@ class Model:
 
         prts = [-1] * nz
         if streak_k is not None:
-            for idx, (_k, _nz) in enumerate(zip(streak_k, streak_nz)):
+            for idx, (_k, _nz) in enumerate(zip(streak_k, streak_nz, strict=False)):
                 if _nz > 0:
                     if _k - 1 < 0 or _k + _nz - 1 > nz:
                         print(
@@ -169,21 +169,20 @@ class Model:
         self._fracture_offset_x = listify(fracture_offset_x, self._n_faults_y, float)
         self._fracture_height_x = listify(fracture_height_x, self._n_faults_y, float)
         self._fracture_zoffset_x = listify(fracture_zoffset_x, self._n_faults_y, float)
-        for idx, (var, title) in enumerate(
-            zip(
-                [
-                    self._fracture_length_x,
-                    self._fracture_offset_x,
-                    self._fracture_height_x,
-                    self._fracture_zoffset_x,
-                ],
-                [
-                    "fracture length",
-                    "fracture offset",
-                    "fracture height",
-                    "fracture vertical offset",
-                ],
-            )
+        for var, title in zip(
+            [
+                self._fracture_length_x,
+                self._fracture_offset_x,
+                self._fracture_height_x,
+                self._fracture_zoffset_x,
+            ],
+            [
+                "fracture length",
+                "fracture offset",
+                "fracture height",
+                "fracture vertical offset",
+            ],
+            strict=False,
         ):
             if len(var) != self._n_faults_y:
                 raise ValueError(
@@ -196,21 +195,20 @@ class Model:
         self._fracture_offset_y = listify(fracture_offset_y, self._n_faults_x, float)
         self._fracture_height_y = listify(fracture_height_y, self._n_faults_x, float)
         self._fracture_zoffset_y = listify(fracture_zoffset_y, self._n_faults_x, float)
-        for idx, (var, title) in enumerate(
-            zip(
-                [
-                    self._fracture_length_y,
-                    self._fracture_offset_y,
-                    self._fracture_height_y,
-                    self._fracture_zoffset_y,
-                ],
-                [
-                    "fracture length",
-                    "fracture offset",
-                    "fracture height",
-                    "fracture vertical offset",
-                ],
-            )
+        for var, title in zip(
+            [
+                self._fracture_length_y,
+                self._fracture_offset_y,
+                self._fracture_height_y,
+                self._fracture_zoffset_y,
+            ],
+            [
+                "fracture length",
+                "fracture offset",
+                "fracture height",
+                "fracture vertical offset",
+            ],
+            strict=False,
         ):
             if len(var) != self._n_faults_x:
                 raise ValueError(
@@ -272,7 +270,7 @@ class Model:
         self._streak_idx = np.full((self._total_nx, self._total_ny, self._total_nz), -1)
         offset = 0
         streak_idx = -1
-        for idx, (_prt, _nz) in enumerate(zip(layer_prt, layer_nz)):
+        for _prt, _nz in zip(layer_prt, layer_nz, strict=False):
             if _prt >= 0:
                 # Streak
                 streak_idx += 1
@@ -845,7 +843,7 @@ Initializing model
                 list_value.append(props[idx])
                 list_count.append(1)
         string_buffer = ""
-        for idx, (count, value) in enumerate(zip(list_count, list_value)):
+        for count, value in zip(list_count, list_value, strict=False):
             string_new = (
                 (" {0}*{1:" + value_format + "}").format(count, value)
                 if count > 1
@@ -1020,7 +1018,7 @@ Initializing model
             )
             streak_box = []
             for _k, nz_size, rect in zip(
-                self._streak_k, self._streak_nz, self._streak_rect
+                self._streak_k, self._streak_nz, self._streak_rect, strict=False
             ):
                 _k -= 1
                 box = self.bounded_box(

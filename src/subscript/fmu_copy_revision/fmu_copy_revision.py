@@ -493,7 +493,7 @@ class CopyFMU:
             return disksum
 
         def _filesize(size: float) -> str:
-            for unit in ("B", "K", "M", "G"):
+            for unit in ("B", "K", "M", "G"):  # noqa: B007
                 if size < 1024:
                     break
                 size /= 1024

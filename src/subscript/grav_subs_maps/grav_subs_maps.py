@@ -226,7 +226,7 @@ def main_gravmaps(
             dgsim = seabed.copy()
             df_dgsim = dgsim.get_dataframe()
             dgsim_series = []
-            for index, row in df_dgsim.iterrows():
+            for _index, row in df_dgsim.iterrows():
                 dgsim_series.append(
                     grav.eval(
                         diffdate[1],
@@ -253,7 +253,7 @@ def main_gravmaps(
         dzsim = seabed.copy()
         df_dzsim = dzsim.get_dataframe()
         dzsim_series = []
-        for index, row in df_dzsim.iterrows():
+        for _index, row in df_dzsim.iterrows():
             dzsim_series.append(
                 subsidence.eval_geertsma_rporv(
                     diffdate[1],

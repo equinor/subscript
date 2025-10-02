@@ -182,7 +182,7 @@ def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
     )
 
     with open(os.path.join(out_folder, outfile), "w") as file:
-        for index, row in act_stations.iterrows():
+        for _index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "
                 f"{row['dgsim_' + phase + '_' + diff_date[0] + '_' + diff_date[1]]:.3f}"
@@ -219,7 +219,7 @@ def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
     )
 
     with open(os.path.join(out_folder, outfile), "w") as file:
-        for index, row in act_stations.iterrows():
+        for _index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "
                 f"{row['subsidence_' + diff_date[0] + '_' + diff_date[1]]:.3f}\n"
@@ -335,6 +335,7 @@ def main_gravpoints(
                     active_stations["utmx"],
                     active_stations["utmy"],
                     active_stations["depth"],
+                    strict=False,
                 )
             ]
             active_stations[
@@ -363,6 +364,7 @@ def main_gravpoints(
                 active_stations["utmx"],
                 active_stations["utmy"],
                 active_stations["depth"],
+                strict=False,
             )
         ]
 

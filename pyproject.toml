@@ -196,6 +196,7 @@ select = [
     "UP",  # pyupgrade
     "RUF", # RUFF specific rules
     "PL",  # pylint
+    "B",  # flake8-bugbear
 ]
 ignore = [
     "C901",  # complex-structure
