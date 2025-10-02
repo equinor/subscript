@@ -51,6 +51,7 @@ def run_simulator(simulator, data_file_path):
         result = subprocess.run(
             [simulator, *simulator_option, data_file_path],
             capture_output=True,
+            check=False,
         )
 
     if result.returncode != 0:

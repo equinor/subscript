@@ -196,8 +196,8 @@ def _replace_paths(text: str | Path, paths: dict[str, Path]) -> Path:
 
     """
     if "$" in str(text):
-        for key in paths:
-            text = str(text).replace("$" + key, str(paths[key]))
+        for key, val in paths.items():
+            text = str(text).replace("$" + key, str(val))
     return Path(text)
 
 
@@ -491,10 +491,9 @@ def inspect_file(
                 "**********************************************************************"
             )
             new_data_file += line
-        else:
-            if not (clear_comments and len(line.strip()) == 0):
-                # This line represents anything else: just copy the info.
-                new_data_file += line
+        elif not (clear_comments and len(line.strip()) == 0):
+            # This line represents anything else: just copy the info.
+            new_data_file += line
 
     # Return modified text of inspected file
     return new_data_file

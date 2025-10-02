@@ -1,12 +1,11 @@
 # import logging
 import shutil
+import subprocess
 from pathlib import Path
 
 import fmu.config.utilities as utils
 import numpy as np
 import pytest
-
-# import yaml
 import xtgeo
 
 from subscript.field_statistics.field_statistics import (
@@ -18,9 +17,6 @@ from subscript.field_statistics.field_statistics import (
     get_specifications,
     set_subgrid_names,
 )
-
-# logger = subscript.getLogger(__name__)
-# logger.setLevel(logging.INFO)
 
 TESTDATA = Path("testdata_field_statistics")
 ENSEMBLE = Path("ensemble")
@@ -316,44 +312,43 @@ def assign_values_continuous_param(
                     * (iter_number + 1)
                     / niter
                 )
-        else:
-            # For 1 realizations, fill all layers
-            if 0 <= k <= (nz - 1):
-                # Zone 1 Top conform (layer 0,..,nz-1)
-                # Bottom layer of zone is active for some realizations
-                layer_values[k] = (
-                    1.0
-                    * vparam
-                    * k
-                    * (real_number + 1)
-                    / nreal
-                    * (iter_number + 1)
-                    / niter
-                )
-            elif (2 * nz) <= k <= (3 * nz - 1):
-                # Zone 3 Base conform  (layer nz,..,2*nz-1)
-                # Top layer of zone is active for some realizations
-                layer_values[k] = (
-                    3.0
-                    * vparam
-                    * k
-                    * (real_number + 1)
-                    / nreal
-                    * (iter_number + 1)
-                    / niter
-                )
-            elif nz <= k <= (2 * nz - 1):
-                # Zone 2 Proportional (layer nz,.. 2*nz-1)
-                # All layer of zone is active
-                layer_values[k] = (
-                    2.0
-                    * vparam
-                    * k
-                    * (real_number + 1)
-                    / nreal
-                    * (iter_number + 1)
-                    / niter
-                )
+        # For 1 realizations, fill all layers
+        elif 0 <= k <= (nz - 1):
+            # Zone 1 Top conform (layer 0,..,nz-1)
+            # Bottom layer of zone is active for some realizations
+            layer_values[k] = (
+                1.0
+                * vparam
+                * k
+                * (real_number + 1)
+                / nreal
+                * (iter_number + 1)
+                / niter
+            )
+        elif (2 * nz) <= k <= (3 * nz - 1):
+            # Zone 3 Base conform  (layer nz,..,2*nz-1)
+            # Top layer of zone is active for some realizations
+            layer_values[k] = (
+                3.0
+                * vparam
+                * k
+                * (real_number + 1)
+                / nreal
+                * (iter_number + 1)
+                / niter
+            )
+        elif nz <= k <= (2 * nz - 1):
+            # Zone 2 Proportional (layer nz,.. 2*nz-1)
+            # All layer of zone is active
+            layer_values[k] = (
+                2.0
+                * vparam
+                * k
+                * (real_number + 1)
+                / nreal
+                * (iter_number + 1)
+                / niter
+            )
     for k in range(3 * nz):
         values[:, :, k] = layer_values[k]
     return values
@@ -1093,7 +1088,6 @@ def test_get_specification(
     [(Path("config_example.yml"), CONFIG_DICT)],
 )
 def test_main(tmp_path, config_file, config_dict, print_info=True):
-    import subprocess
 
     # First make an ensemble to be used as testdata. This is based on the config_dict
     _, ens_path, result_path, ert_config_path, _ = make_test_case(tmp_path, config_dict)
@@ -1120,7 +1114,8 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
             "-z",
             rms_load_script.as_posix(),
             "-g",
-        ]
+        ],
+        check=True,
     )
     # For this test not to fail, the CONFIG_DICT and the specified
     # config file in yaml format must define the same setup

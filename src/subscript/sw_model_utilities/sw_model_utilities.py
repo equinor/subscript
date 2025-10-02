@@ -143,7 +143,7 @@ def plotting(
             txt = (
                 desc[ix]
                 + "  a="
-                + str(av[ix])
+                + str(_vec)
                 + " b="
                 + str(bv[ix])
                 + " $\\phi=$"
@@ -164,7 +164,7 @@ def plotting(
                 + str(perm[ix])
             )
 
-        swn = av[ix] * (hei * math.sqrt(perm[ix] / poro[ix])) ** bv[ix]
+        swn = _vec * (hei * math.sqrt(perm[ix] / poro[ix])) ** bv[ix]
         sw = swirra[ix] + (1.0 - swirra[ix]) * swn
         plt.plot(sw, hei, label=txt)
         if swirra[ix] > 0.0:

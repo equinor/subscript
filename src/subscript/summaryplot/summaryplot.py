@@ -451,11 +451,10 @@ def summaryplotter(
             if vector in summaryfile:
                 if idx >= maxlabels:  # Truncate legend if too many
                     sumlabel = "_nolegend_"
+                elif singleplot:
+                    sumlabel = vector + " " + summaryfile.case.lower()
                 else:
-                    if singleplot:
-                        sumlabel = vector + " " + summaryfile.case.lower()
-                    else:
-                        sumlabel = summaryfile.case.lower()
+                    sumlabel = summaryfile.case.lower()
 
                 values = summaryfile.numpy_vector(vector)
 

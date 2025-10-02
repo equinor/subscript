@@ -183,23 +183,31 @@ line-length = 88
 [tool.ruff.lint]
 select = [
     "C",
-    "E",
-    "F",
-    "I",
-    "PIE",
-    "Q",
-    "RET",
-    "RSE",
-    "SIM",
-    "W",
-    "PD",
-    "UP",
-    "RUF",
+    "E",  # pycodestyle error
+    "F",  # pyflakes
+    "I",  # isort
+    "PIE",  # flake8-pie
+    "Q",  # flake8-quotes
+    "RET",  # flake8-return
+    "RSE",  # flake8-raise
+    "SIM",  # flake8-simplify
+    "W",  # pycodestyle warning
+    "PD",  # pandas-vet
+    "UP",  # pyupgrade
+    "RUF", # RUFF specific rules
+    "PL",  # pylint
 ]
 ignore = [
-    "C901",
-    "PD013",
+    "C901",  # complex-structure
+    "PD013",  # pandas-use-of-dot-stack
+    "PLR0915",  # too-many-statements
+    "PLR0912",  # too-many-branches
+    "PLR2004",  # magic-value-comparison
+    "PLW2901",  # redefined-loop-name
 ]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
+
+[tool.ruff.lint.pylint]
+max-args = 35

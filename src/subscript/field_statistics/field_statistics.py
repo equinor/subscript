@@ -11,7 +11,9 @@ Result:
 
 import argparse
 import copy
+import glob
 import logging
+import shutil
 import sys
 from pathlib import Path
 
@@ -1216,9 +1218,6 @@ def copy_ertbox_grid_to_result_path(ertbox_path, result_path):
 
 
 def copy_to_real0_dirs(field_stat, result_path, ens_path):
-    import glob
-    import shutil
-
     iteration_list = field_stat["iterations"]
     for iter in iteration_list:
         source_files = result_path / Path(f"ertbox--*_{iter}.roff")
