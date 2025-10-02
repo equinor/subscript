@@ -248,7 +248,7 @@ def main():
             throws_j2 = throws_section["j2"]
             throws_dz = throws_section["dz"]
             for _i1, _i2, _j1, _j2, _dz in zip(
-                throws_i1, throws_i2, throws_j1, throws_j2, throws_dz
+                throws_i1, throws_i2, throws_j1, throws_j2, throws_dz, strict=False
             ):
                 throws.append([_i1, _i2, _j1, _j2, _dz])
         else:
@@ -462,6 +462,7 @@ def main():
         [matrix_poro, matrix_multpv, matrix_multx, matrix_multy],
         [streak_poro, streak_multpv, streak_multx, streak_multy],
         [fracture_poro, fracture_multpv, fracture_multx, fracture_multy],
+        strict=False,
     ):
         grid.set_fracture_property(keyword, var_fracture)
         grid.set_layers_property(keyword, var_matrix, var_layer)
@@ -494,6 +495,7 @@ def main():
             [vug1_satnum, vug2_satnum, vug3_satnum],
             [vug1_swatinit, vug2_swatinit, vug3_swatinit],
         ],
+        strict=False,
     ):
         logger.info("Exporting " + keyword + " include file")
         include_file = f"{keyword.lower()}_file"

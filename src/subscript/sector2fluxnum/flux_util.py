@@ -44,9 +44,7 @@ def filter_region(
         region_fip.select_all()
 
     # Combine regions by
-    if (
-        combine_operator in {"intersect", "", None}
-    ):
+    if combine_operator in {"intersect", "", None}:
         # Intersection
         region.select_all()  # region.select_active()
         return region & region_i & region_j & region_k & region_fip

@@ -232,7 +232,6 @@ def test_endpoint(drogondata):
         "error",
         "well",
         "report_step",
-        "report_step",
         "time",
     }.issubset(dframe.columns)
 

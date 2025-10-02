@@ -492,7 +492,7 @@ def _evaluate_pc(
         swls = np.full(len(swats), sw_min)
     if swus is None:
         swus = np.full(len(swats), sw_max)
-    for swat, pc_scaling, swl, swu in zip(swats, scale_vert, swls, swus):
+    for swat, pc_scaling, swl, swu in zip(swats, scale_vert, swls, swus, strict=False):
         p_cap.append(
             np.interp(
                 swat,

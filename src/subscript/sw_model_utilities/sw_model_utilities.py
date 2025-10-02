@@ -208,7 +208,7 @@ def main() -> None:
         if option == 4:
             newav = []
             newbv = []
-            for aval, bval in zip(av, bv):
+            for aval, bval in zip(av, bv, strict=False):
                 avx, bvx = convert_normal2inverse(aval, bval)
                 newav.append(avx)
                 newbv.append(bvx)

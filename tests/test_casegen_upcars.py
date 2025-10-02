@@ -44,6 +44,7 @@ def test_demo_small_scale(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -83,6 +84,7 @@ def test_demo_small_scale_with_no_streaks(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -131,6 +133,7 @@ def test_demo_small_scale_with_vugs(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -170,6 +173,7 @@ def test_demo_large_scale(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -215,6 +219,7 @@ def test_demo_large_scale_with_coordinate_transformation(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -263,6 +268,7 @@ def test_demo_large_scale_with_origin_shifting(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -314,6 +320,7 @@ def test_demo_large_scale_with_cmdline_streaks(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -362,6 +369,7 @@ def test_demo_large_scale_with_cmdline_throws(tmp_path, mocker):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()
         if suf != ".DATA":
@@ -405,5 +413,6 @@ def test_ert_integration(tmp_path):
     for pre, suf in zip(
         ["", "fipnum_", "gridinc_", "satnum_", "swat_"],
         [".DATA", ".INC", ".GRDECL", ".INC", ".INC"],
+        strict=False,
     ):
         assert Path(pre + base_name + suf).exists()

@@ -160,7 +160,9 @@ def split_by_sep_in_masked_string(
             len,
             (
                 string[i + 1 : j].strip()
-                for i, j in zip(sep_positions, [*sep_positions[1:], len(string)])
+                for i, j in zip(
+                    sep_positions, [*sep_positions[1:], len(string)], strict=False
+                )
             ),
         )
     )
