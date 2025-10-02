@@ -1187,8 +1187,8 @@ Initializing model
             if len(val) < 3:
                 result[idx] = 0.0
             else:
-                idx_start = int(round(len(val) / 3.0))
-                idx_end = int(round(len(val) * 2.0 / 3.0))
+                idx_start = round(len(val) / 3.0)
+                idx_end = round(len(val) * 2.0 / 3.0)
                 center_block = sum(val[idx_start:idx_end])
                 result[idx] = 0.5 * (sum(val) - center_block - 1)
         return result[0], result[1]

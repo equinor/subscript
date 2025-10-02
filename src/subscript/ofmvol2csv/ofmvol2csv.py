@@ -183,7 +183,7 @@ def split_list(linelist: list[str], splitidxs: list[int]) -> list[list[str]]:
         return [linelist]
     size = len(linelist)
     zipped = list(
-        zip([0] + splitidxs, splitidxs + ([size] if splitidxs[-1] != size else []))
+        zip([0, *splitidxs], splitidxs + ([size] if splitidxs[-1] != size else []))
     )
     if not all(i <= j for i, j in zipped):
         raise ValueError("splitidxs must be increasing")
@@ -320,9 +320,9 @@ def process_volstr(volstr: str) -> pd.DataFrame:
             frames.append(parse_well(wellchunk, columnnames))
     else:
         # For the OFM syntax with WELL as a table attribute:
-        data_start_row = [idx for idx, line in enumerate(filelines) if "WELL" in line][
-            0
-        ]
+        data_start_row = next(
+            idx for idx, line in enumerate(filelines) if "WELL" in line
+        )
         frames.append(parse_ofmtable(filelines[data_start_row:], columnnames))
 
     if frames:

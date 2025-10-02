@@ -607,7 +607,7 @@ def merge_equil(grid_df: pd.DataFrame, equil_df: pd.DataFrame) -> pd.DataFrame:
     )
     if "KEYWORD" in equil_df:
         equil_df = equil_df[equil_df["KEYWORD"] == "EQUIL"]
-    equil_df = equil_df[["Z_DATUM", "PRESSURE_DATUM", "EQLNUM", "OIP_INIT"] + contacts]
+    equil_df = equil_df[["Z_DATUM", "PRESSURE_DATUM", "EQLNUM", "OIP_INIT", *contacts]]
     equil_df["EQLNUM"] = equil_df["EQLNUM"].astype(int)
     assert not pd.isna(equil_df).any().any(), (
         f"BUG: NaNs in equil dataframe:\n{equil_df}"

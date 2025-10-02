@@ -150,7 +150,7 @@ def get_observations(obsdir: str = "", filepattern: str = "*.obs") -> pd.DataFra
     Return:
         pd.DataFrame
 
-    """  # noqa
+    """
     if "/" in filepattern:
         raise ValueError("Do not include paths in filepattern")
     if not isdir(obsdir):

@@ -147,7 +147,7 @@ def test_two_datafiles(cmd_args, tmp_path, mocker, plot):
 def test_warnings(cmd_args, match, tmp_path, mocker, caplog):
     """Run command line arguments that give warning"""
     os.chdir(tmp_path)
-    mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages"] + cmd_args)
+    mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages", *cmd_args])
     summaryplot.main()
     assert match in caplog.text
     assert Path("summaryplotdump.png").exists()
@@ -166,7 +166,7 @@ def test_warnings(cmd_args, match, tmp_path, mocker, caplog):
 def test_sysexit(cmd_args, tmp_path, mocker):
     """Run command line arguments that should end in failure"""
     os.chdir(tmp_path)
-    mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages"] + cmd_args)
+    mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages", *cmd_args])
     with pytest.raises(SystemExit):
         summaryplot.main()
     assert not Path("summaryplotdump.png").exists()

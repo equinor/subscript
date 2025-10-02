@@ -108,8 +108,7 @@ def _compare_volumetrics(
             _prefix_keys("RMS_", dict(volumetrics_df.loc[list(regzones)].sum()))
         )
 
-        if "RMS_FACIES" in set_results:
-            del set_results["RMS_FACIES"]
+        set_results.pop("RMS_FACIES", None)
 
         set_data_list.append(set_results)
 

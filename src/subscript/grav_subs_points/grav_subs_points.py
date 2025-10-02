@@ -75,7 +75,7 @@ class GravPointsCalc(BaseModel):
     def check_phases(cls, phases: list[str]) -> list[str]:
         allowed_phases = ["oil", "gas", "water", "total"]
         for item in phases:
-            assert item in allowed_phases, f"allowed phases are {str(allowed_phases)}"
+            assert item in allowed_phases, f"allowed phases are {allowed_phases!s}"
         return phases
 
 
@@ -377,8 +377,7 @@ def main_gravpoints(
         )
 
     logger.info(
-        f"Done; All gravity and subsidence points written to folder: "
-        f"{str(output_folder)}",
+        f"Done; All gravity and subsidence points written to folder: {output_folder!s}",
     )
 
 

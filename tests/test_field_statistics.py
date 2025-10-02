@@ -890,8 +890,8 @@ def test_get_specification(
     input_dict, reference_dict, ert_config_path, ertbox_size=None
 ):
     (
-        use_geogrid_fields,
-        use_temporary_fields,
+        _use_geogrid_fields,
+        _use_temporary_fields,
         ertbox_size,
         nreal,
         iter_list,
@@ -920,6 +920,7 @@ def test_get_specification(
         disc_param_name_dict
         == reference_dict["geogrid_fields"]["discrete_property_param_per_zone"]
     )
+    assert geogrid_name == reference_dict["geogrid_fields"]["geogrid_name"]
 
 
 @pytest.mark.parametrize(

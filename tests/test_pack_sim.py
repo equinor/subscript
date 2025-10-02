@@ -97,7 +97,7 @@ def test_restart_warning(injected, expectedwarning, tmp_path, mocker, capsys):
     mocker.patch("sys.argv", ["pack_sim", str(datafile), "."])
 
     modifieddata = "\n".join(
-        datafile.read_text(encoding="utf8").splitlines() + [injected]
+        [*datafile.read_text(encoding="utf8").splitlines(), injected]
     )
     datafile.write_text(modifieddata, encoding="utf8")
 

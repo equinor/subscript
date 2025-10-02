@@ -165,9 +165,13 @@ def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
     ).to_csv("bar.csv", index=False)
     mocker.patch(
         "sys.argv",
-        ["csv_merge", "foo.csv", "bar.csv", "--filecolumn", "FILETYPE"]
-        + options
-        + [
+        [
+            "csv_merge",
+            "foo.csv",
+            "bar.csv",
+            "--filecolumn",
+            "FILETYPE",
+            *options,
             "-o",
             "merged.csv",
         ],
