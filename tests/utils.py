@@ -27,7 +27,7 @@ def run_simulator(simulator, data_file_path):
         simulator_option = ["--parsing-strictness=low"]
 
     result = subprocess.run(  # pylint: disable=subprocess-run-check
-        [simulator] + simulator_option + [data_file_path],
+        [simulator, *simulator_option, data_file_path],
         capture_output=True,
         check=False,
     )
@@ -48,8 +48,8 @@ def run_simulator(simulator, data_file_path):
     ):
         print("Eclipse failed due to license server issues. Retrying in 30 seconds.")
         time.sleep(30)
-        result = subprocess.run(  # pylint: disable=subprocess-run-check
-            [simulator] + simulator_option + [data_file_path],
+        result = subprocess.run(
+            [simulator, *simulator_option, data_file_path],
             capture_output=True,
         )
 

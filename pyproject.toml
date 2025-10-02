@@ -180,6 +180,7 @@ select = [
     "W",
     "PD",
     "UP",
+    "RUF",
 ]
 ignore = [
     "C901",

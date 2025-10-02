@@ -18,7 +18,7 @@ import grpc
 from subscript import __version__, getLogger
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
-import rips  # noqa: E402 # pylint: disable=wrong-import-position, wrong-import-order
+import rips  # pylint: disable=wrong-import-position, wrong-import-order
 
 logger = getLogger(__name__)
 

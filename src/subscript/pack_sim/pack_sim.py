@@ -96,7 +96,7 @@ def _expand_filename(filename: Path, org_sim_loc: Path) -> Path:
         return filename
     if (org_sim_loc / filename).exists():
         return org_sim_loc / filename
-    raise OSError(f"Could not open '{str(filename)}'. Make sure you have read access.")
+    raise OSError(f"Could not open '{filename!s}'. Make sure you have read access.")
 
 
 def _md5checksum(
@@ -560,7 +560,7 @@ def pack_simulation(
     # Write out DATA file if not already exists
     if path_new_data_file.exists():
         raise ValueError(
-            f"DATA file {str(path_new_data_file)} exists already, will not overwrite."
+            f"DATA file {path_new_data_file!s} exists already, will not overwrite."
         )
 
     path_new_data_file.write_text(data_file)

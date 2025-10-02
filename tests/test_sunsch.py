@@ -4,7 +4,7 @@ import shutil
 import subprocess
 from pathlib import Path
 
-import pytest  # noqa: F401
+import pytest
 import yaml
 from pydantic import ValidationError
 

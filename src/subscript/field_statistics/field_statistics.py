@@ -1277,7 +1277,7 @@ def calc_stats(
 ):
     (
         use_geogrid_fields,
-        use_temporary_fields,
+        _use_temporary_fields,
         ertbox_size,
         nreal,
         iter_list,
@@ -1511,7 +1511,7 @@ def calc_temporary_field_stats(
     ertbox_size,
 ):
     (
-        use_geogrid_fields,
+        _use_geogrid_fields,
         use_temporary_fields,
         ertbox_size,
         nreal,

@@ -160,7 +160,7 @@ def split_by_sep_in_masked_string(
             len,
             (
                 string[i + 1 : j].strip()
-                for i, j in zip(sep_positions, sep_positions[1:] + [len(string)])
+                for i, j in zip(sep_positions, [*sep_positions[1:], len(string)])
             ),
         )
     )
@@ -536,8 +536,7 @@ def blockdictlist2df(blocklist: list[dict]) -> pd.DataFrame:
         for obs_idx, obs in enumerate(keylist["observations"]):
             rowdict = {"CLASS": "BLOCK_OBSERVATION"}
             rowdict.update(uppercase_dictkeys(keylist))
-            if "OBSERVATIONS" in rowdict:
-                del rowdict["OBSERVATIONS"]
+            rowdict.pop("OBSERVATIONS", None)
             if "label" not in obs:
                 rowdict["LABEL"] = keylist["well"]
             if "obs" not in obs:

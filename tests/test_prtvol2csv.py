@@ -936,7 +936,7 @@ def test_ert_forward_model(tmp_path):
                     "FORWARD_MODEL PRTVOL2CSV("
                     "<DATAFILE>="
                     + str(prtfile)
-                    + ', <REGIONS>=regions.yml, <DIR>=".",<OUTPUTFILENAME>=sim.csv)'  # noqa
+                    + ', <REGIONS>=regions.yml, <DIR>=".",<OUTPUTFILENAME>=sim.csv)'
                 ),
             ]
         ),
@@ -971,9 +971,7 @@ def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
                 "NUM_REALIZATIONS 1",
                 "RUNPATH <CONFIG_PATH>",
                 "",
-                (
-                    "FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=" + str(prtfile) + ")"  # noqa
-                ),
+                ("FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=" + str(prtfile) + ")"),
             ]
         ),
         encoding="utf8",

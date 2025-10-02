@@ -69,7 +69,7 @@ class GravMapsCalc(BaseModel):
     def check_phases(cls, phases: list[str]) -> list[str]:
         allowed_phases = ["oil", "gas", "water", "total"]
         for item in phases:
-            assert item in allowed_phases, f"allowed phases are {str(allowed_phases)}"
+            assert item in allowed_phases, f"allowed phases are {allowed_phases!s}"
         return phases
 
 
