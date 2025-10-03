@@ -36,8 +36,6 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
-    # pylint: disable=unnecessary-pass
-
 
 def get_parser() -> argparse.ArgumentParser:
     """A parser for command line argument parsing and for documentation."""
@@ -204,7 +202,7 @@ def currently_in_place_from_prt(
     date_matcher_ecl = re.compile(r"^\s{2}REPORT\s{3}0")
     # Flow: Look for "Report step  0" at start of line
     date_matcher_flow = re.compile(r"^Report step\s{2}0")
-
+    initial_date_object = None
     with Path(prt_file).open(encoding="utf8") as f_handle:
         for line in f_handle:
             if date_matcher_ecl.search(line) is not None:
@@ -218,7 +216,6 @@ def currently_in_place_from_prt(
                 logger.info(
                     f"Initial date is {initial_date_object}, report date is {date_str}"
                 )
-                initial_date_found = True
                 break
             if date_matcher_flow.search(line) is not None:
                 line_split = line.split("=")
@@ -229,10 +226,9 @@ def currently_in_place_from_prt(
                 logger.info(
                     f"Initial date is {initial_date_object}, report date is {date_str}"
                 )
-                initial_date_found = True
                 break
 
-    if initial_date_found and (date_str > initial_date_object):
+    if initial_date_object is not None and (date_str > initial_date_object):
         warnings.warn(
             (
                 "The volume report extracted is not at initial time. \n The volume "
@@ -241,7 +237,7 @@ def currently_in_place_from_prt(
             ),
             UserWarning,
         )
-    elif not initial_date_found:
+    elif initial_date_object is None:
         warnings.warn(
             ("Cannot determine if volume report is at initial time."),
             UserWarning,
@@ -276,7 +272,7 @@ def reservoir_volumes_from_prt(prt_file: str, fipname: str = "FIPNUM") -> pd.Dat
 
     Returns:
         pd.DataFrame
-    """  # noqa
+    """  # noqa: E501
     records = []
     start_matcher = re.compile(r"^\s*:\s*RESERVOIR VOLUMES.*$")
 
@@ -355,7 +351,7 @@ def main() -> None:
     simvolumes_df.to_csv(Path(tablesdir) / args.outputfilename)
     logger.info(
         "Written CURRENTLY_IN_PLACE data to %s",
-        str(Path(tablesdir) / args.outputfilename),
+        Path(tablesdir) / args.outputfilename,
     )
 
     resvolumes_df = reservoir_volumes_from_prt(prt_file, args.fipname)
@@ -378,7 +374,7 @@ def main() -> None:
     )
 
     volumes.to_csv(Path(tablesdir) / args.outputfilename)
-    logger.info("Written CSV file %s", str(Path(tablesdir) / args.outputfilename))
+    logger.info("Written CSV file %s", Path(tablesdir) / args.outputfilename)
 
 
 def prtvol2df(
