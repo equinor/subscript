@@ -4,10 +4,10 @@ import argparse
 import sys
 from typing import Any
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import res2df
-from matplotlib import pyplot
 
 import subscript
 from subscript.check_swatinit import plotter
@@ -76,9 +76,9 @@ def main() -> None:
         plotter.wvol_waterfall(qc_vols)
     if args.volplotfile:
         print(f"Dumping volume plot to {args.volplotfile}")
-        pyplot.savefig(args.volplotfile)
+        plt.savefig(args.volplotfile)
     if args.volplot:
-        pyplot.show()
+        plt.show()
 
     if (args.plotfile or args.plot) and args.eqlnum not in qc_frame[
         "EQLNUM"
@@ -88,9 +88,9 @@ def main() -> None:
         plotter.plot_qc_panels(qc_frame[qc_frame["EQLNUM"] == args.eqlnum])
     if args.plotfile:
         print(f"Dumping plot to {args.plotfile}")
-        pyplot.savefig(args.plotfile)
+        plt.savefig(args.plotfile)
     if args.plot:
-        pyplot.show()
+        plt.show()
 
 
 def check_applicability(eclfiles: res2df.ResdataFiles) -> None:

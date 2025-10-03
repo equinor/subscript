@@ -121,16 +121,16 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
     schedule = TimeVector(conf.starttime)
 
     if conf.files is not None:
-        for filename in conf.files:
-            if sch_file_nonempty(filename):
-                logger.info("Loading %s", filename)
+        for conf_filename in conf.files:
+            if sch_file_nonempty(conf_filename):
+                logger.info("Loading %s", conf_filename)
             else:
-                logger.warning("No Eclipse statements in %s, skipping", filename)
+                logger.warning("No Eclipse statements in %s, skipping", conf_filename)
                 continue
 
-            file_starts_with_dates = sch_file_starts_with_dates_keyword(filename)
+            file_starts_with_dates = sch_file_starts_with_dates_keyword(conf_filename)
             timevector = load_timevector_from_file(
-                filename, conf.startdate, file_starts_with_dates
+                conf_filename, conf.startdate, file_starts_with_dates
             )
             if file_starts_with_dates:
                 schedule.load_string(str(timevector))
@@ -141,7 +141,7 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
         logger.info("Processing %s insert statements", str(len(conf.insert)))
         for insert_statement in conf.insert:
             logger.debug(str(insert_statement))
-
+            filename: Path | None = None
             if insert_statement.substitute and insert_statement.template:
                 filename = substitute(insert_statement)
                 logger.debug("Produced file: %s", str(filename))
@@ -153,8 +153,7 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
             elif insert_statement.filename:
                 filename = insert_statement.filename
             elif not insert_statement.string:
-                logger.error("Invalid insert statement: %s", str(insert_statement))
-
+                logger.error("Invalid insert statement: %s", insert_statement)
             # Which date to use for insertion?
             if insert_statement.date:
                 date = datetime_from_date(insert_statement.date)
@@ -169,7 +168,7 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
 
             # Do the insertion:
             if date >= conf.starttime:
-                if insert_statement.string is None:
+                if insert_statement.string is None and filename is not None:
                     if sch_file_nonempty(filename):
                         schedule.load(str(filename), date=date)
                     else:

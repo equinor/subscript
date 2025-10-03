@@ -1536,7 +1536,7 @@ def calc_temporary_field_stats(
             param_filename = param_name + ".roff"
             if iteration == 0:
                 full_param_filename = init_path + "/" + param_filename
-            elif iteration == iter_list[-1]:
+            else:
                 full_param_filename = param_filename
             logger.info(f"Property: {param_name}")
             all_values = np.ma.masked_all(

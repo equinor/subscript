@@ -88,6 +88,8 @@ def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
     # Take special care if the UNRST file we get in is not in current directory
     cwd = os.getcwd()
     rstfilepath = Path(rstfilename).parent
+    tempdir = None
+
     try:
         os.chdir(Path(rstfilename).parent)
         tempdir = tempfile.mkdtemp(dir=".")
@@ -111,7 +113,8 @@ def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
         )
     finally:
         os.chdir(cwd)
-        shutil.rmtree(rstfilepath / tempdir)
+        if tempdir is not None:
+            shutil.rmtree(rstfilepath / tempdir)
 
 
 def get_restart_indices(rstfilename: str) -> list:

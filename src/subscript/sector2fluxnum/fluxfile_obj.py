@@ -108,7 +108,7 @@ def create_map_rst(
             (x_f, y_f, z_f) = dest_flux.grid.get_xyz(global_index=index - 1)
 
             min_dist = 1e12
-
+            min_pos_index = None
             for active_cell in range(source_grid.get_num_active()):
                 (x_s, y_s, z_s) = source_grid.get_xyz(active_index=active_cell)
 
@@ -120,7 +120,8 @@ def create_map_rst(
 
             # print min_pos_index, min_dist, c_g_index
             # Identify map of coarse grid to collect values to fine grid
-            mapping.append(min_pos_index)
+            if min_pos_index is not None:
+                mapping.append(min_pos_index)
 
         if (counter + 1) % 100 == 0:
             print(f"Map progress: {counter + 1:d}")
@@ -182,6 +183,7 @@ def write_new_fluxfile_from_rst(
 
         for j_idx in range(n_common_elements, n_common_elements + block_size):
             # Not related to grid cells
+            kw_temp = None
             if flux_fine[j_idx].header[0] == "ITIME":
                 kw_temp = flux_fine[j_idx].deep_copy()
                 kw_temp[0] = 1
@@ -269,7 +271,7 @@ def write_new_fluxfile_from_rst(
 
                     for k_idx in range(flux_fine[j_idx].header[1]):
                         kw_temp[k_idx] = kw_source[mapping[k_idx]]
-
-            kw_temp.fwrite(fortio)
+            if kw_temp is not None:
+                kw_temp.fwrite(fortio)
 
         print(f"Writing restart reportstep {index} to FLUX file")
