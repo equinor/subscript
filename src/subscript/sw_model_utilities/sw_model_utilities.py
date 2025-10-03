@@ -55,8 +55,8 @@ def menu():
     print(MENU)
     try:
         mode = int(input("Choose: "))
-    except ValueError:
-        print("Not a number")
+    except ValueError as e:
+        raise ValueError("Not a number") from e
 
     # initial
     av = []
@@ -81,7 +81,7 @@ def menu():
         bv.append(bval)
         inverse = True
 
-    elif mode >= 3:
+    elif mode in {3, 4}:
         nplot = int(input("Number of curves: "))
 
         hmax = float(input("Height maximum: "))
@@ -100,6 +100,9 @@ def menu():
             if mode == 4:
                 av.append(float(input("A: ")))
                 bv.append(float(input("B: ")))
+
+    else:
+        raise ValueError(f"Invalid mode {mode}, must be one of \n:{MENU}")
 
     return mode, inverse, av, bv, poro, perm, swirra, desc, hmax
 

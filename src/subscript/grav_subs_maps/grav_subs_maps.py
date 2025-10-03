@@ -193,10 +193,10 @@ def main_gravmaps(
 
     for diffdate in diffdates:
         for singledate in diffdate:  # base and monitor
-            rsb = rest.restartView(0)
+            rsb = rest.restart_view(0)
             if singledate not in added_dates:
                 if singledate in restart_index:
-                    rsb = rest.restartView(restart_index[singledate])
+                    rsb = rest.restart_view(restart_index[singledate])
                     if rest.has_kw("RFIPGAS"):
                         grav.add_survey_RFIP(singledate, rsb)
                     else:

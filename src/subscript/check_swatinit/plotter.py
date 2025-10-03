@@ -1,7 +1,7 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn
-from matplotlib import pyplot
 
 from subscript.check_swatinit.constants import (
     __FINE_EQUIL__,
@@ -48,24 +48,24 @@ def plot_qc_panels(
     assert len(qc_frame["EQLNUM"].unique()) == 1, (
         "Can only plot for one EQLNUM at a time"
     )
-    pyplot.style.use("seaborn-v0_8-darkgrid")
+    plt.style.use("seaborn-v0_8-darkgrid")
     seaborn.color_palette("tab10")
 
-    pyplot.figure(figsize=(16, 8))
-    pyplot.subplot(2, 2, 1)
+    plt.figure(figsize=(16, 8))
+    plt.subplot(2, 2, 1)
     swatinit_depth(qc_frame)
-    pyplot.subplot(2, 2, 2)
+    plt.subplot(2, 2, 2)
     swat_depth(qc_frame)
-    pyplot.subplot(2, 2, 3)
+    plt.subplot(2, 2, 3)
     pressure_depth(qc_frame)
-    pyplot.subplot(2, 2, 4)
+    plt.subplot(2, 2, 4)
     pc_depth(qc_frame)
 
     oip_init = qc_frame["OIP_INIT"].to_numpy()[0]
     eqlnum = qc_frame["EQLNUM"].to_numpy()[0]
-    pyplot.suptitle(f"EQLNUM: {eqlnum}, OIP_INIT: {oip_init}")
+    plt.suptitle(f"EQLNUM: {eqlnum}, OIP_INIT: {oip_init}")
     if show:
-        pyplot.show()
+        plt.show()
 
 
 def visual_depth(qc_frame: pd.DataFrame) -> float:
@@ -86,66 +86,66 @@ def visual_depth(qc_frame: pd.DataFrame) -> float:
 
 
 def swat_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: plt.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a SWAT vs depth plot on current axis"""
     if axis is None:
-        axis = pyplot.gca()
+        axis = plt.gca()
     seaborn.scatterplot(
         x="SWAT", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
     )
-    bottom, _ = pyplot.ylim()
-    pyplot.ylim(bottom, visual_depth(qc_frame))
+    bottom, _ = plt.ylim()
+    plt.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
     add_contacts_to_plot(qc_frame, axis)
 
 
 def swatinit_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: plt.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a swatinit vs depth plot on current axis"""
     if axis is None:
-        axis = pyplot.gca()
+        axis = plt.gca()
     seaborn.scatterplot(
         x="SWATINIT", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
     )
-    bottom, _ = pyplot.ylim()
-    pyplot.ylim(bottom, visual_depth(qc_frame))
+    bottom, _ = plt.ylim()
+    plt.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
     add_contacts_to_plot(qc_frame, axis)
 
 
 def pressure_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: plt.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a pressure vs. depth plot on current axis"""
     if axis is None:
-        axis = pyplot.gca()
+        axis = plt.gca()
     seaborn.scatterplot(
         x="PRESSURE", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
     )
-    bottom, _ = pyplot.ylim()
-    pyplot.ylim(bottom, visual_depth(qc_frame))
+    bottom, _ = plt.ylim()
+    plt.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
     add_contacts_to_plot(qc_frame, axis)
 
 
 def pc_depth(
-    qc_frame: pd.DataFrame, axis: pyplot.Axes | None = None, hue: str = "QC_FLAG"
+    qc_frame: pd.DataFrame, axis: plt.Axes | None = None, hue: str = "QC_FLAG"
 ) -> None:
     """Make a pc vs depth plot on current axis"""
     if axis is None:
-        axis = pyplot.gca()
+        axis = plt.gca()
     seaborn.scatterplot(
         x="PC", y="Z", data=qc_frame, hue=hue, palette=QC_PALETTE, alpha=0.5
     )
-    bottom, _ = pyplot.ylim()
-    pyplot.ylim(bottom, visual_depth(qc_frame))
+    bottom, _ = plt.ylim()
+    plt.ylim(bottom, visual_depth(qc_frame))
     axis.invert_yaxis()
     add_contacts_to_plot(qc_frame, axis)
 
 
-def add_contacts_to_plot(qc_frame: pd.DataFrame, axis: pyplot.Axes) -> None:
+def add_contacts_to_plot(qc_frame: pd.DataFrame, axis: plt.Axes) -> None:
     """Annotate axes with named horizontal lines for contacts."""
     if "OWC" in qc_frame:
         owc = qc_frame["OWC"].to_numpy()[0]  # OWC is assumed constant in the dataframe
@@ -196,9 +196,9 @@ def wvol_waterfall(qc_vols: dict[str, float]) -> None:
     step[1::3] = np.nan
     blank.loc["SWAT_WVOL"] = 0
 
-    fig = trans.plot(kind="bar", alpha=0.7, stacked=True, legend=None, bottom=blank)
+    fig = trans.plot(kind="bar", alpha=0.7, stacked=True, legend=False, bottom=blank)
     fig.plot(step.index, step.to_numpy(), "k")
-    pyplot.gcf().subplots_adjust(bottom=0.25)
+    plt.gcf().subplots_adjust(bottom=0.25)
 
     blanktrans = blank.to_numpy() + trans["volume"].to_numpy()
     span = blank.max() - blanktrans[1:-1].min()
@@ -209,7 +209,7 @@ def wvol_waterfall(qc_vols: dict[str, float]) -> None:
     # Calculate percent changed relative to SWATINIT_WVOL
     for number, qc_flag in enumerate(index[1:]):
         change = qc_vols[qc_flag] / qc_vols["SWATINIT_WVOL"]
-        pyplot.gca().annotate(
+        plt.gca().annotate(
             f"{change * 100:3.2f}%",
             (
                 number + 1,
@@ -219,7 +219,7 @@ def wvol_waterfall(qc_vols: dict[str, float]) -> None:
             color="C0",
         )
         hc_change = -qc_vols[qc_flag] / swatinit_hcvol
-        pyplot.gca().annotate(
+        plt.gca().annotate(
             f"{hc_change * 100:3.2f}%",
             (number + 1, blanktrans[number] + max(0, qc_vols[qc_flag]) + 4 * span / 20),
             horizontalalignment="center",
@@ -228,19 +228,19 @@ def wvol_waterfall(qc_vols: dict[str, float]) -> None:
     final_change = (qc_vols["SWAT_WVOL"] - qc_vols["SWATINIT_WVOL"]) / qc_vols[
         "SWATINIT_WVOL"
     ]
-    pyplot.gca().annotate(
+    plt.gca().annotate(
         f"{final_change * 100:>3.2f}%",
         (6, total + span / 20),
         horizontalalignment="center",
         color="C0",
     )
     final_hc_change = (swat_hcvol - swatinit_hcvol) / swatinit_hcvol
-    pyplot.gca().annotate(
+    plt.gca().annotate(
         f"{final_hc_change * 100:>3.2f}%",
         (6, total + 4 * span / 20),
         horizontalalignment="center",
         color="C2",
     )
 
-    pyplot.ylim((max(0.0, blank[1:-1].min() - span), blank.max() + span))
-    pyplot.xticks(rotation=45)
+    plt.ylim((max(0.0, blank[1:-1].min() - span), blank.max() + span))
+    plt.xticks(rotation=45)

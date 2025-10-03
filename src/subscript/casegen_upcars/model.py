@@ -1182,7 +1182,7 @@ Initializing model
             > 1 : N/S- or E/W- blocks are larger than center blocks
             < 1 : center blocks are larger than N/S- or E/W- blocks
         """
-        result = [0] * 2
+        result = [0.0] * 2
         for idx, val in enumerate([self._matrix_x_arr, self._matrix_y_arr]):
             if len(val) < 3:
                 result[idx] = 0.0
