@@ -25,39 +25,39 @@ Variables
 
    .. code-block:: text
 
-      '1.14.3.dev4+g9c2790af0'
+      '1.14.3.dev5+gb225db03a'
 
 .. autodata:: __version_tuple__
    :annotation:
 
    .. code-block:: text
 
-      (1, 14, 3, 'dev4', 'g9c2790af0')
+      (1, 14, 3, 'dev5', 'gb225db03a')
 
 .. autodata:: version
    :annotation:
 
    .. code-block:: text
 
-      '1.14.3.dev4+g9c2790af0'
+      '1.14.3.dev5+gb225db03a'
 
 .. autodata:: version_tuple
    :annotation:
 
    .. code-block:: text
 
-      (1, 14, 3, 'dev4', 'g9c2790af0')
+      (1, 14, 3, 'dev5', 'gb225db03a')
 
 .. autodata:: __commit_id__
    :annotation:
 
    .. code-block:: text
 
-      'g9c2790af0'
+      'gb225db03a'
 
 .. autodata:: commit_id
    :annotation:
 
    .. code-block:: text
 
-      'g9c2790af0'
+      'gb225db03a'
