@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from typing import cast
 
 import numpy as np
 import pandas as pd
@@ -171,7 +172,7 @@ def vfpfile2df(filename: str) -> pd.DataFrame:
         bhp_values.columns = pd.MultiIndex.from_tuples(indextuples)
 
         # Now stack
-        bhp_values_stacked = bhp_values.stack(future_stack=True)
+        bhp_values_stacked = cast(pd.DataFrame, bhp_values.stack(future_stack=True))
 
         # In order to propagate the gfr, thp, wct values after
         # stacking to the correct rows, we should either understand

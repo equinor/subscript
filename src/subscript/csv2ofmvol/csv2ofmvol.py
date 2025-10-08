@@ -142,6 +142,8 @@ def check_consecutive_dates(data: pd.DataFrame) -> None:
     Returns:
         None
     """
+
+    assert isinstance(data.index, pd.MultiIndex)
     for well in data.index.levels[0]:
         welldata = data.loc[well].reset_index()
         welldata["DATE"] = pd.to_datetime(welldata["DATE"])
@@ -227,6 +229,7 @@ def df2vol(data: pd.DataFrame) -> str:
     if any(colname in SUPPORTED_DAYCOLS for colname in voldata.columns):
         volstr += "*HRS_IN_DAYS\n"
     volstr += "*DATE *" + " *".join(voldata.columns)
+    assert isinstance(voldata.index, pd.MultiIndex)
     if not voldata.empty:
         for well in voldata.index.levels[0]:
             volstr += f"\n\n*NAME {well}\n"
@@ -300,6 +303,8 @@ def csv2ofmvol_main(csvfilepatterns: list[str], output: str) -> bool:
         outfile.write(f"-- Data printed by csv2ofmvol at {datetime.datetime.now()}\n")
         outfile.write(f"-- Input files: {csvfiles}\n\n")
         outfile.write(volstr)
+
+    assert isinstance(data.index, pd.MultiIndex)
     logger.info("Well count: %s", str(len(data.index.levels[0])))
     logger.info("Date count: %s", str(len(data.index.levels[1])))
 

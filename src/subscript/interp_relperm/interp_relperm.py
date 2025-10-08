@@ -247,9 +247,9 @@ def make_interpolant(
         delta_s: the saturation spacing to be used in out tables
     """
 
-    base = make_wateroilgas(base_df.loc[satnum], delta_s)
-    low = make_wateroilgas(low_df.loc[satnum], delta_s)
-    high = make_wateroilgas(high_df.loc[satnum], delta_s)
+    base = make_wateroilgas(base_df.loc[[satnum]], delta_s)
+    low = make_wateroilgas(low_df.loc[[satnum]], delta_s)
+    high = make_wateroilgas(high_df.loc[[satnum]], delta_s)
     rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=delta_s)
 
     return rec.interpolate(
@@ -425,9 +425,9 @@ def process_config(cfg: dict[str, Any], root_path: Path | None = None) -> None:
 
         interpolants.append(
             make_interpolant(
-                base_df.loc[satnum],
-                low_df.loc[satnum],
-                high_df.loc[satnum],
+                base_df.loc[[satnum]],
+                low_df.loc[[satnum]],
+                high_df.loc[[satnum]],
                 interp_values,
                 satnum,
                 config.delta_s,

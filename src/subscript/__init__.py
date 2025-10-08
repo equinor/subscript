@@ -26,7 +26,6 @@ def detect_os(release_file: Path = Path("/etc/redhat-release")) -> str:
 
 
 def getLogger(module_name="subscript"):
-    # pylint: disable=invalid-name
     """Provides a unified logger for subscript scripts.
 
     Scripts in subscript are encouraged to use logging.info() instead of

@@ -42,6 +42,7 @@ dependencies = [
     "numpy",
     "opm>=2023.04",
     "pandas",
+    "pydantic",
     "pyscal",
     "pyyaml",
     "rips",
@@ -67,6 +68,9 @@ tests = [
     "types-Jinja2",
     "types-PyYAML",
     "types-python-dateutil",
+    "pandas-stubs",
+    "types-seaborn",
+    "scipy-stubs",
 ]
 docs = [
     "autoapi",
@@ -136,6 +140,26 @@ script-files = [
 ]
 
 [tool.mypy]
+
+plugins = ["pydantic.mypy"]
+
+strict_equality = true
+extra_checks = true
+
+[[tool.mypy.overrides]]
+module = [
+    "xtgeo.*",
+    "opm.*",
+    "resdata.*",
+    "res2df.*",
+    "ert",
+    "resfo",
+    "grid3d_maps.*",
+    "fmu.tools.*",
+    "pyscal",
+    "cwrap",
+    "grpc"
+]
 ignore_missing_imports = true
 
 [tool.pylint]

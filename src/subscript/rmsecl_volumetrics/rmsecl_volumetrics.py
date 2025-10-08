@@ -4,7 +4,7 @@ a mapping between Region and Zones in RMS, to FIPNUMs in Eclipse"""
 import argparse
 import logging
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import pandas as pd
 import yaml
@@ -135,7 +135,10 @@ def _disjoint_sets_to_dict(
     fipnums = disjoint_sets_df.groupby(["SET"])["FIPNUM"].apply(
         lambda x: sorted(set(x))
     )
-    return pd.concat([regions, zones, fipnums], axis=1).to_dict(orient="index")
+    return cast(
+        dict[int, dict[str, list]],
+        pd.concat([regions, zones, fipnums], axis=1).to_dict(orient="index"),
+    )
 
 
 def main() -> None:

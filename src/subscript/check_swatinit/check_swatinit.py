@@ -6,6 +6,7 @@ from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 import res2df
 
@@ -299,7 +300,7 @@ def make_qc_gridframe(eclfiles: res2df.ResdataFiles) -> pd.DataFrame:
     return grid_df
 
 
-def qc_flag(qc_frame: pd.DataFrame) -> pd.DataFrame:
+def qc_flag(qc_frame: pd.DataFrame) -> pd.Series:
     """Compute a series categorizing the QC type of the cell, determining
     how SWATINIT behaved in that cell
 
@@ -433,12 +434,12 @@ def qc_volumes(qc_frame: pd.DataFrame) -> dict[str, float]:
 
     if "QC_FLAG" in qc_frame:
         # Ensure all categories are represented:
-        for qc_cat in QC_FLAGS:
-            watergains[qc_cat] = 0.0
+        for qc_categ in QC_FLAGS:
+            watergains[qc_categ] = 0.0
 
         # Overwrite dict values with correct figures:
         for qc_cat, qc_subframe in qc_frame.groupby("QC_FLAG"):
-            watergains[qc_cat] = (
+            watergains[str(qc_cat)] = (
                 (qc_subframe["SWAT"] - qc_subframe["SWATINIT"]) * qc_subframe["PORV"]
             ).sum()
 
@@ -458,10 +459,10 @@ def qc_volumes(qc_frame: pd.DataFrame) -> dict[str, float]:
 
 
 def _evaluate_pc(
-    swats: list[float],
-    scale_vert: list[float],
-    swls: list[float],
-    swus: None | list[float],
+    swats: npt.NDArray[np.float64],
+    scale_vert: npt.NDArray[np.float64],
+    swls: npt.NDArray[np.float64] | None,
+    swus: npt.NDArray[np.float64] | None,
     satfunc: pd.DataFrame,
     sat_name: str = "SW",
     pc_name: str = "PCOW",
@@ -488,9 +489,9 @@ def _evaluate_pc(
     sw_min = satfunc[sat_name].min()
     sw_max = satfunc[sat_name].max()
     if swls is None:
-        swls = [sw_min] * len(swats)
+        swls = np.full(len(swats), sw_min)
     if swus is None:
-        swus = [sw_max] * len(swats)
+        swus = np.full(len(swats), sw_max)
     for swat, pc_scaling, swl, swu in zip(swats, scale_vert, swls, swus):
         p_cap.append(
             np.interp(
@@ -533,18 +534,21 @@ def compute_pc(qc_frame: pd.DataFrame, satfunc_df: pd.DataFrame) -> pd.Series:
 
     if "SATNUM" not in qc_frame or "PC_SCALING" not in qc_frame:
         return p_cap
-
     for satnum, satnum_frame in qc_frame.groupby("SATNUM"):
         if "SWLPC" in satnum_frame:
-            swls = satnum_frame["SWLPC"].to_numpy()
+            swls = satnum_frame["SWLPC"].to_numpy(dtype=np.float64)
         elif "SWL" in satnum_frame:
-            swls = satnum_frame["SWL"].to_numpy()
+            swls = satnum_frame["SWL"].to_numpy(dtype=np.float64)
         else:
             swls = None
-        swus = satnum_frame["SWU"].to_numpy() if "SWU" in satnum_frame else None
+        swus = (
+            satnum_frame["SWU"].to_numpy(dtype=np.float64)
+            if "SWU" in satnum_frame
+            else None
+        )
         p_cap[satnum_frame.index] = _evaluate_pc(
-            satnum_frame["SWAT"].to_numpy(),
-            satnum_frame["PC_SCALING"].to_numpy(),
+            satnum_frame["SWAT"].to_numpy(dtype=np.float64),
+            satnum_frame["PC_SCALING"].to_numpy(dtype=np.float64),
             swls,
             swus,
             satfunc_df[satfunc_df["SATNUM"] == satnum],
