@@ -7,6 +7,7 @@ import re
 import sys
 import warnings
 from re import Pattern
+from typing import cast
 
 import ert
 import pandas as pd
@@ -311,7 +312,7 @@ def csv_stack(
 
         # Stack the multiindex columns, this will add a lot of rows to
         # our ensemble, and condense the number of columns
-        dframe = dframe.stack(future_stack=True)
+        dframe = cast(pd.DataFrame, dframe.stack(future_stack=True))
 
         # The values from non-multiindex-columns must be propagated to
         # the rows that emerged from the stacking. If you use the

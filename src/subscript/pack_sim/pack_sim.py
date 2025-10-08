@@ -512,10 +512,10 @@ def pack_simulation(
         fmu: use fmu packing style or not
 
     """
-    if ecl_case == "":
+    if not ecl_case or not ecl_case.name:
         raise ValueError("Script stopped: please supply a non-empty Eclipse DATA-file")
 
-    if packing_path == "":
+    if not packing_path or not packing_path.name:
         raise ValueError("Script stopped: please supply a non-empty packing path")
 
     # This can raise IOError

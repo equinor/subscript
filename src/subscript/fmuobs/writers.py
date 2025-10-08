@@ -3,6 +3,7 @@ dataframe format to ERT observation format, YAML format and ResInsight
 format"""
 
 import re
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -68,7 +69,7 @@ def dfblock2ertobs(obs_df: pd.DataFrame) -> str:
             ERT_ISO_DATE_FORMAT
         )
     for obslabel, block_df in block_obs_df.groupby("LABEL"):
-        ertobs_str += "BLOCK_OBSERVATION " + obslabel + "\n{\n"
+        ertobs_str += "BLOCK_OBSERVATION " + str(obslabel) + "\n{\n"
         if "COMMENT" in block_df and not pd.isna(block_df["COMMENT"]).any():
             if len(block_df["COMMENT"].dropna().unique()) != 1:
                 logger.warning("Inconsistency in COMMENT in block dataframe")
@@ -130,7 +131,7 @@ def dfhistory2ertobs(obs_df: pd.DataFrame) -> str:
             history_df["SEGMENT"] = "DEFAULT"
         else:
             history_df["SEGMENT"] = history_obs_df["SEGMENT"].fillna(value="DEFAULT")
-        ertobs_str += "HISTORY_OBSERVATION " + histlabel + " \n"
+        ertobs_str += "HISTORY_OBSERVATION " + str(histlabel) + " \n"
         ertobs_str += "{\n"
         # Write statements for the implicit DEFAULT segment.
         default_row = (
@@ -257,7 +258,7 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> list[dict]:
         logger.warning("Using LABEL, but this might not be Eclipse summary vectors.")
         smry_df["KEY"] = smry_df["LABEL"]
     for smrykey, smrykey_df in smry_df.groupby("KEY"):
-        smry_obs_element = {}
+        smry_obs_element: dict[str, Any] = {}
         smry_obs_element["key"] = smrykey
         if "COMMENT" in smrykey_df and not pd.isna(smrykey_df["COMMENT"]).all():
             smry_obs_element["comment"] = smrykey_df["COMMENT"].unique()[0]
@@ -425,4 +426,4 @@ def df2resinsight_df(obs_df: pd.DataFrame) -> pd.DataFrame:
         logger.warning("\n %s", str(obs_no_date.dropna(axis="columns", how="all")))
 
     # Slice out only the columns we want, in a predefined order:
-    return ri_dframe[ri_column_names].dropna(axis="rows", subset=["DATE"])
+    return ri_dframe[ri_column_names].dropna(axis="index", subset=["DATE"])

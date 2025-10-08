@@ -495,14 +495,14 @@ def prepare_econ_table(
 
     econ_df.index.name = "year"
 
-    required_columns = {"oilprice", "gasprice", "usdtonok", "costs", "discountrate"}
+    required_cols = {"oilprice", "gasprice", "usdtonok", "costs", "discountrate"}
 
-    if not required_columns.issubset(set(econ_df)):
+    if not required_cols.issubset(set(econ_df.columns)):
         raise ValueError(
-            f"Missing economical input columns: {required_columns - set(econ_df)}"
+            f"Missing economical input columns: {required_cols - set(econ_df.columns)}"
         )
 
-    if len(econ_df.columns) > len(required_columns):
+    if len(econ_df.columns) > len(required_cols):
         logger.warning("Superfluous columns in economical input")
 
     return econ_df

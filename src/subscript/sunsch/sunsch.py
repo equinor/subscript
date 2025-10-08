@@ -19,7 +19,7 @@ import yaml
 from pydantic import BaseModel, FilePath
 
 from subscript import __version__, getLogger
-from subscript.sunsch.time_vector import TimeVector  # type: ignore
+from subscript.sunsch.time_vector import TimeVector
 
 logger = getLogger(__name__)
 
@@ -55,7 +55,7 @@ class InsertStatement(BaseModel):
 
 class SunschConfig(BaseModel):
     files: list[FilePath] | None = None
-    output: str | None = "-"
+    output: str = "-"
     startdate: datetime.date | datetime.datetime
     starttime: datetime.datetime
     refdate: datetime.date | datetime.datetime
@@ -445,7 +445,7 @@ def dategrid(
     return dates
 
 
-def file_startswith_dates(filename):
+def file_startswith_dates(filename: str) -> bool:
     """Check if a sch file starts with DATES
 
     This information is sometimes needed to determine how to send
@@ -467,7 +467,7 @@ def file_startswith_dates(filename):
         return True
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -537,7 +537,7 @@ def get_parser():
     return parser
 
 
-def main():
+def main() -> None:
     """Entry point from command line"""
     parser = get_parser()
     args = parser.parse_args()

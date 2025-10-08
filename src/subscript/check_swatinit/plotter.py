@@ -200,7 +200,9 @@ def wvol_waterfall(qc_vols: dict[str, float]) -> None:
     fig.plot(step.index, step.to_numpy(), "k")
     plt.gcf().subplots_adjust(bottom=0.25)
 
-    blanktrans = blank.to_numpy() + trans["volume"].to_numpy()
+    blanktrans = blank.to_numpy(dtype=np.float64) + trans["volume"].to_numpy(
+        dtype=np.float64
+    )
     span = blank.max() - blanktrans[1:-1].min()
 
     if np.isclose(span, 0.0):

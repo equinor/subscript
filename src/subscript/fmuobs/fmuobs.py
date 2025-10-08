@@ -64,7 +64,7 @@ Add to your ert config::
     LOAD_WORKFLOW ../bin/workflows/wf_fmuobs
     HOOK_WORKFLOW wf_fmuobs PRE_SIMULATION
 
-"""  # noqa
+"""  # noqa: E501
 
 __MAGIC_STDOUT__ = "-"
 
@@ -74,8 +74,6 @@ class CustomFormatter(
 ):
     """Multiple inheritance used for argparse to get both defaults
     and raw description formatter"""
-
-    # pylint: disable=unnecessary-pass
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -190,7 +188,7 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
     return not failed
 
 
-def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame | dict]:
+def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
     """Detects the observation file format for a given filename. This
     is done by attempting to parse its content and giving up on
     exceptions.
@@ -206,11 +204,8 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame | dict]:
 
     Returns:
         tuple: First element is a string in [resinsight, csv, yaml, ert], second
-        element is a dataframe or a dict (if input was yaml).
+        element is a dataframe.
     """
-    # Pylint exceptions as this code is made to catch these errors and act on them.
-    # pylint: disable=unsubscriptable-object, no-member
-    # pylint: disable=unsupported-assignment-operation
     try:
         dframe = pd.read_csv(filename, sep=";")
         if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
@@ -276,7 +271,7 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame | dict]:
     logger.error(
         "Unable to parse %s as any supported observation file format", filename
     )
-    return (None, pd.DataFrame)
+    return (None, pd.DataFrame())
 
 
 def main() -> None:
@@ -307,7 +302,6 @@ def fmuobs(
     starttime: str | None = None,
     includedir: bool | None = None,
 ):
-    # pylint: disable=too-many-arguments
     """Alternative to main() with named arguments"""
     if verbose or debug:
         if __MAGIC_STDOUT__ in (csv, yml, ertobs):
@@ -324,7 +318,7 @@ def fmuobs(
 
     # For ERT files, there is the problem of include-file-path. If not-found
     # include filepaths are present, the filetype is ert, but dframe is empty.
-    if filetype == "ert" and pd.DataFrame.empty:
+    if filetype == "ert" and dframe.empty:
         input_str = Path(inputfile).read_text(encoding="utf8")
         if not includedir:
             # Try and error for the location of include files, first in current
@@ -360,7 +354,7 @@ def fmuobs(
             .unique()
         )
         if len(error_mode) > 0:
-            logger.warn(
+            logger.warning(
                 f"Unsupported ERROR_MODE : {', '.join(error_mode)}. "
                 "Please verify the output file"
             )
@@ -444,9 +438,7 @@ class FmuObs(ert.ErtScript):
         interference with the ERT comment characters "--".
     """
 
-    # pylint: disable=too-few-public-methods
     def run(self, *args):
-        # pylint: disable=no-self-use
         """Pass the ERT workflow arguments on to the same parser as the command
         line."""
         parser = get_parser()

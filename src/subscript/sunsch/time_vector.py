@@ -1,12 +1,8 @@
 # To be removed once the OPM version of this file is updated
 
 import datetime
+from io import StringIO
 from operator import attrgetter
-
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
 
 import opm.io
 from opm.io.parser import ParseContext, Parser
