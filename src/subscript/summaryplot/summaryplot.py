@@ -140,7 +140,6 @@ def summaryplotter(
     colourby: str | None = None,
     logcolourby: str | None = None,
 ):
-    # pylint: disable=too-many-arguments
     """
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 

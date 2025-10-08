@@ -6,9 +6,6 @@
 # https://wiki.equinor.com/wiki/index.php/Res:The_sw_model_utilities_script
 #
 
-# Some variables are here named to conform to something else than PEP8
-# pylint: disable=invalid-name
-
 import argparse
 import math
 from copy import deepcopy
@@ -137,10 +134,6 @@ def plotting(
     hmax: float,
     show=True,
 ):
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
-    # Pylint rationale: Readability of this function would not improve with
-    # default pylint suggestions.
     """Plot a capillary pressure function to users screen"""
     # height array; create an array from min to max, with step:
     hei = np.arange(0.01, hmax, 0.1)

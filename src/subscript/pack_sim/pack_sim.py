@@ -515,7 +515,7 @@ def pack_simulation(
     if not ecl_case or not ecl_case.name:
         raise ValueError("Script stopped: please supply a non-empty Eclipse DATA-file")
 
-    if not packing_path or not packing_path.name:
+    if not packing_path:
         raise ValueError("Script stopped: please supply a non-empty packing path")
 
     # This can raise IOError

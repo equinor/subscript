@@ -38,8 +38,6 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
-    # pylint: disable=unnecessary-pass
-
 
 def get_parser() -> argparse.ArgumentParser:
     """Construct a parser for the command line utility ofmvol2csv and for
@@ -233,8 +231,6 @@ def parse_well(well_lines: list[str], columnnames: list[str]) -> pd.DataFrame:
 
     data["WELL"] = wellname.strip("'")  # remove single quotes around wellname
     if not data.empty:
-        # pylint: disable=E1101
-        # (false positive)
         return data.reset_index().set_index(["WELL", "DATE"]).sort_index()
     return pd.DataFrame()
 
@@ -258,15 +254,13 @@ def parse_ofmtable(ofmstring: str | list[str], columnnames: list[str]) -> pd.Dat
         skiprows=1,
         sep=r"\s+",
         names=columnnames,
-        on_bad_lines="skip",  # pylint: disable=unexpected-keyword-arg
+        on_bad_lines="skip",
     )
     data["DATE"] = pd.to_datetime(data["DATE"], dayfirst=True)
 
     if "WELL" in data and "DATE" in data:
         data = data.set_index(["WELL", "DATE"]).sort_index()
     else:
-        # pylint: disable=no-member
-        # (false positive)
         data = data.set_index(["DATE"]).sort_index()
     return data
 

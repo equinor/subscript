@@ -40,8 +40,6 @@ class CustomFormatter(
     """Multiple inheritance used for argparse to get both defaults
     and raw description formatter"""
 
-    # pylint: disable=unnecessary-pass
-
 
 def get_parser() -> argparse.ArgumentParser:
     """Set up a parser for the command line utility"""
@@ -206,7 +204,6 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
             f"Need at least the columns well, order and pressure in {gendatacsv}"
         )
     # Replace "-1" in simulated data with NaN, to avoid trouble later.
-    # pylint: disable=unsubscriptable-object
     inactive_rows = np.isclose(sim_df["pressure"], -1)
     if inactive_rows.any():
         sim_df.loc[inactive_rows, "pressure"] = np.nan
@@ -223,7 +220,6 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
     logger.info("Parsed %s observations from files in %s", str(len(obs_df)), obsdir)
 
     # Replace "-1" in observation data with NaN, to avoid trouble later.
-    # pylint: disable=unsubscriptable-object
     inactive_rows = np.isclose(obs_df["observed"], -1)
     if inactive_rows.any():
         obs_df.loc[inactive_rows, "observed"] = np.nan

@@ -9,9 +9,6 @@ Result:
   Output estimate of facies probabilities for facies parameters
 """
 
-# pylint: disable=missing-function-docstring, too-many-arguments
-# pylint: disable=too-many-branches, too-many-statements
-# pylint: disable= too-many-locals, too-many-nested-blocks
 import argparse
 import copy
 import logging
@@ -1903,9 +1900,7 @@ class FieldStatistics(ert.ErtScript):
         interference with the ERT comment characters "--".
     """
 
-    # pylint: disable=too-few-public-methods
     def run(self, *args):
-        # pylint: disable=no-self-use
         """Pass the ERT workflow arguments on to the same parser as the command
         line."""
         parser = get_parser_ert()

@@ -154,7 +154,6 @@ def file_is_binary(filename: str | Path) -> bool:
     Args:
         filename: File to check
     """
-    # pylint: disable=line-too-long
     # https://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python  # noqa
     textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7F})
     with open(filename, "rb") as filehandle:
@@ -362,8 +361,6 @@ class CustomFormatter(
     Multiple inheritance used for argparse to get both
     defaults and raw description formatter
     """
-
-    # pylint: disable=W0107
 
 
 def get_parser() -> argparse.ArgumentParser:

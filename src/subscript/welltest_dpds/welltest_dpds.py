@@ -67,8 +67,6 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
-    # pylint: disable=unnecessary-pass
-
 
 def get_parser():
     """

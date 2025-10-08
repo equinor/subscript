@@ -21,7 +21,6 @@ class Datafile:
         self.datafile_shortname = os.path.basename(self.datafile_name)
         self.datafile_dirname = os.path.dirname(os.path.abspath(self.datafile_name))
 
-        # pylint: disable=invalid-name
         self.DUMPFLUX_name = "DUMPFLUX_" + self.datafile_shortname
         self.USEFLUX_name = "USEFLUX_" + self.datafile_shortname
         self.lines = self.get_datafile_content()
@@ -79,7 +78,6 @@ class Datafile:
         return start_index, np.asarray(end_index)
 
     def set_update_RUNSPEC(self, sim_type=""):
-        # pylint: disable=invalid-name
         """Set or update the RUNSPEC in the DATA file"""
         if not self.has_KW("RUNSPEC"):
             raise Exception("ERROR: No RUNSPEC section in DATA file!")
@@ -107,7 +105,6 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_GRID_DUMPFLUX(self, fluxnumfile_name):
-        # pylint: disable=invalid-name
         """Set or update DUMPFLUX in the GRID section"""
         if not self.has_KW("GRID"):
             raise Exception("ERROR: No GRID section in DATA file!")
@@ -132,7 +129,6 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_GRID_USEFLUX(self, fluxnumfile_name, fluxfile_name):
-        # pylint: disable=invalid-name
         """Set or update USEFLUX in the GRID section"""
 
         if not self.has_KW("GRID"):
@@ -159,7 +155,6 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_SOLUTION(self):
-        # pylint: disable=invalid-name
         """Set or update the SOLUTION section"""
         if not self.has_KW("SOLUTION"):
             return
@@ -183,7 +178,6 @@ class Datafile:
             self.lines.insert(idx, line)
 
     def set_update_PARALLEL(self):
-        # pylint: disable=invalid-name
         """Set or update the PARALLEL keyword"""
         if not self.has_KW("PARALLEL"):
             return
@@ -194,7 +188,6 @@ class Datafile:
             self.lines[idx] = "-- " + self.lines[idx]
 
     def set_update_NOSIM(self):
-        # pylint: disable=invalid-name
         """Set or update the NOSIM keyword"""
 
         if not self.has_KW("NOSIM"):
@@ -206,7 +199,6 @@ class Datafile:
             self.lines[idx] = "-- " + self.lines[idx]
 
     def set_update_REGDIMS(self):
-        # pylint: disable=invalid-name
         """Set or update the REGDIMS keyword"""
 
         if not self.has_KW("REGDIMS"):
@@ -229,7 +221,6 @@ class Datafile:
         raise Exception("Check REGDIMS kw!")
 
     def set_update_INCLUDE(self):
-        # pylint: disable=invalid-name
         """Set or update the (first) INCLUDE statement"""
 
         if not self.has_KW("INCLUDE"):
@@ -279,7 +270,6 @@ class Datafile:
                 self.lines[idx] = "  " + " ".join(line_elements) + " \n"
 
     def get_RESTART_warning(self):
-        # pylint: disable=invalid-name
         """Print a warning if the RESTART keyword is detected"""
         if self.has_KW("RESTART"):
             print("WARNING: DUMPFLUX file contains a RESTART.\n")
@@ -287,7 +277,6 @@ class Datafile:
             print("Please check the RESTART file path before you proceed!")
 
     def set_USEFLUX_header(self, args):
-        # pylint: disable=invalid-name
         """
         Adds header to the output USEFLUX file
 
@@ -332,7 +321,6 @@ class Datafile:
             fout.writelines(lines)
 
     def create_DUMPFLUX_file(self, fluxnumfile_name):
-        # pylint: disable=invalid-name
         """
         Writes a DATA file with DUMPFLUX keyword.
 
@@ -357,7 +345,6 @@ class Datafile:
             raise Exception("ERROR: DUMPFLUX file not created!")
 
     def create_USEFLUX_file(self, fluxnumfile_name, fluxfile_name):
-        # pylint: disable=invalid-name
         """
         Writes a DATA file with USEFLUX keyword.
 
@@ -385,7 +372,6 @@ class Datafile:
             raise Exception("ERROR: USEFLUX file not created!")
 
     def run_DUMPFLUX_nosim(self, ecl_version=None):
-        # pylint: disable=invalid-name
         """
         Executes interactive ECLIPSE run with DUMPFLUX DATA file.
 

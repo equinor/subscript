@@ -12,8 +12,6 @@ ECLDIR = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model
 ECLCASE = "2_R001_REEK-0.DATA"
 ISO_8859_VFP = Path(__file__).absolute().parent / "data" / "vfp" / "pd2.VFP"
 
-# pylint: disable=protected-access
-
 
 @pytest.mark.integration
 def test_integration():

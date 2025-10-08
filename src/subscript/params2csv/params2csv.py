@@ -73,16 +73,12 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
-    # pylint: disable=unnecessary-pass
-
 
 class Params2Csv(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,
     to be used as an ERT workflow (wrapping the command line utility)"""
 
-    # pylint: disable=too-few-public-methods
     def run(self, *args):
-        # pylint: disable=no-self-use
         """Parse with a simplified command line parser, for ERT only,
         calling params2csv_main()"""
         parser = get_parser()

@@ -55,15 +55,11 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
-    # pylint: disable=unnecessary-pass
-
 
 class CsvMerge(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin"""
 
-    # pylint: disable=too-few-public-methods
     def run(self, *args):
-        # pylint: disable=no-self-use
         """Parse with a simplified command line parser, for ERT only,
         call csv_merge_main()"""
         parser = get_ertwf_parser()
@@ -193,8 +189,6 @@ def merge_csvfiles(
             for tag in tags:
                 if len(tags[tag]) == len(csvfiles):
                     if tag not in dframe:
-                        # pylint: disable=E1137
-                        # (false positive)
                         dframe[tag] = tags[tag][idx]
                     else:
                         logger.warning("Tag %s already in dataframe", str(tag))
