@@ -18,7 +18,7 @@ import grpc
 from subscript import __version__, getLogger
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
-import rips  # pylint: disable=wrong-import-position, wrong-import-order
+import rips
 
 logger = getLogger(__name__)
 
@@ -39,8 +39,6 @@ class CustomFormatter(
     Multiple inheritance used for argparse to get both
     defaults and raw description formatter
     """
-
-    # pylint: disable=unnecessary-pass
 
 
 def get_resinsight_exe() -> str | None:
@@ -127,7 +125,7 @@ def find_and_wrap_resinsight_version(
 
     :return: Path to temporary wrapper or None if not found
     """
-    (major, minor, patch) = version_triplet  # pylint: disable=unused-variable
+    (major, minor, patch) = version_triplet
     ri_home_path = Path(RI_HOME)
 
     def _find_ri_exe(pattern: str) -> Path | None:
@@ -197,7 +195,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: list[str]):
             console=console_mode,
             command_line_parameters=command_line_parameters,
         )
-    except Exception as any_exception:  # pylint: disable=broad-except
+    except Exception as any_exception:
         logger.error(str(any_exception))
         logger.debug(
             "Failed to launch ResInsight (%s)- trying once more", resinsight_exe
@@ -208,7 +206,7 @@ def launch_resinsight(console_mode: bool, command_line_parameters: list[str]):
                 console=console_mode,
                 command_line_parameters=command_line_parameters,
             )
-        except Exception as any_exception:  # pylint: disable=broad-except
+        except Exception as any_exception:
             logger.error(str(any_exception))
             logger.critical(
                 "Failed to launch ResInsight (%s) again - stopping now.", resinsight_exe
@@ -305,7 +303,7 @@ def launch_resinsight_dev(
             console=console_mode,
             command_line_parameters=command_line_parameters,
         )
-    except Exception as any_exception:  # pylint: disable=broad-except
+    except Exception as any_exception:
         logger.error("Unable to launch development version of ResInsight")
         logger.error("  (Exception was: %s)", str(any_exception))
         resinsight = None
@@ -657,7 +655,7 @@ def main() -> int:
         resinsight.exit()
         logger.error("Server exception while running ResInsight: %s", grpc_error)
 
-    except Exception as any_exception:  # pylint: disable=broad-except
+    except Exception as any_exception:
         resinsight.exit()
         logger.error(
             "Unknown exception trying to run ResInsight - check logs..: %s",

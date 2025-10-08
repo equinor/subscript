@@ -601,7 +601,6 @@ Initializing model
     def _create_property(
         self, keyword, matrix_property, streak_property, fracture_property, vug_property
     ):
-        # pylint: disable=too-many-arguments
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(self._streak_k), (
             f"Number of input {keyword} is not equal to number of streak"
@@ -630,7 +629,6 @@ Initializing model
         fracture_y_property,
         vug_property,
     ):
-        # pylint: disable=too-many-arguments
         """Distribute property in the cell with anisotropy in fracture property"""
         streak_property = listify(streak_property, len(self._streak_k))
         assert len(streak_property) == len(self._streak_k), (
@@ -704,7 +702,6 @@ Initializing model
     def export_props(
         self, filename, keyword, matrix_prop, streak_prop, frac_props, vug_prop
     ):
-        # pylint: disable=too-many-arguments
         """Print out grid property to Eclipse format file"""
         buffer_ = io.StringIO()
         print(
@@ -872,7 +869,6 @@ Initializing model
         self._vug_idx.fill(0)
 
     def bounded_box(self, i_1, i_2, j_1, j_2, k_1, k_2):
-        # pylint: disable=too-many-arguments
         """Make sure the box is within model domain"""
         return [
             max(i_1, 0),

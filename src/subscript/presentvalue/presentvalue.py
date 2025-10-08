@@ -254,7 +254,6 @@ def presentvalue_main(
         Dictionary with keys "PresentValue", and if input data allows it: "BEP1", "BEP",
         "IRR" and "CEI".
     """
-    # pylint: disable=too-many-arguments
 
     logger.info("Discount rate: %s", str(discountrate))
     logger.info("Cutoff year: %s", str(cutoffyear))
@@ -470,8 +469,6 @@ def prepare_econ_table(
         pd.DataFrame: dataframe with economical data to be given
         to calc_presentvalue_df().
     """
-    # False positives from pylint:
-    # pylint: disable=E1136,E1137,E1101
     if filename:
         econ_df = pd.read_csv(filename, index_col=0)
         econ_df.columns = econ_df.columns.map(str.strip)

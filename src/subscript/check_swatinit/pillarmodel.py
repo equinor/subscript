@@ -10,7 +10,6 @@ class PillarModel:
     The reservoir model is parametrizable in terms of options related
     to SWATINIT analysis"""
 
-    # pylint: disable=too-many-arguments,too-many-instance-attributes,too-many-locals
     def __init__(
         self,
         cells: int = 1,
@@ -357,7 +356,6 @@ PVDG
         return string
 
     def schedule(self) -> str:
-        # pylint: disable=no-self-use
         """Make a string for the SCHEDULE section"""
         string = "SCHEDULE\n\n"
         string += "TSTEP \n  1 / \n"

@@ -116,8 +116,6 @@ def _convert_ecl2roff(
 ) -> None:
     """Conversion..."""
 
-    # pylint: disable=too-many-arguments
-
     xtg.say("ecl2roff...")
 
     fname, fext = os.path.splitext(filename)

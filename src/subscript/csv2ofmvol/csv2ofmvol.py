@@ -247,8 +247,6 @@ class CustomFormatter(
     defaults and raw description formatter
     """
 
-    # pylint: disable=unnecessary-pass
-
 
 def get_parser() -> argparse.ArgumentParser:
     """Parse command line arguments, return a Namespace with arguments"""

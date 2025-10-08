@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 
 import dateutil.parser
-import xtgeo  # type: ignore
+import xtgeo
 
 import subscript
 
@@ -26,8 +26,6 @@ class CustomFormatter(
 ):
     """Multiple inheritance used for argparse to get both defaults
     and raw description formatter"""
-
-    # pylint: disable=unnecessary-pass
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -122,7 +120,6 @@ def parse_diff_dates(filename: str) -> list[tuple[str, str]]:
     return datelist
 
 
-# pylint: disable=too-many-arguments
 def ecldiff2roff_main(
     eclroot: str,
     prop: str,
