@@ -8,7 +8,21 @@ field_stat:
             1: "A"
             2: "B"
             3: "C"
-    
+
+        facies_per_zone:
+            "A":
+                1: "F1"
+                2: "F2"
+                3: "F3"
+            "B":
+                1: "F1"
+                2: "F2"
+                3: "F3"
+            "C":
+                1: "F1"
+                2: "F2"
+                3: "F3"
+
         zone_conformity:
             "A": Top_conform
             "B": Proportional
