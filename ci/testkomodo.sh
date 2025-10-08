@@ -36,6 +36,6 @@ start_tests () {
     # (this script becomes flaky if set -e is active)
     source /prog/res/ecl/script/eclrun.bash
     eval "$SHELLOPTS_BEFORE"
-
+    export PATH=$PATH:/global/bin # For bjobsusers tests
     pytest -n auto --flow-simulator="/project/res/$os_arch/bin/flowdaily" --eclipse-simulator="eclrun"
 }
