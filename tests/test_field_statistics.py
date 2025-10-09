@@ -42,6 +42,23 @@ CONFIG_DICT = {
             2: "B",
             3: "C",
         },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+        },
         "zone_conformity": {
             "A": "Top_conform",
             "B": "Proportional",
@@ -410,11 +427,26 @@ def make_test_case(tmp_path, config_dict):
     glob_cfg_path = ert_config_path / GLOBAL_VARIABLES_FILE
     cfg_global = utils.yaml_load(glob_cfg_path)["global"]
     keyword = "FACIES_ZONE"
-    if keyword in cfg_global:
-        facies_per_zone = cfg_global[keyword]
-    else:
-        raise KeyError(f"Missing keyword: {keyword} in {glob_cfg_path}")
-
+    facies_per_zone = cfg_global.get(keyword, None)
+    if facies_per_zone is None:
+        # Must set if in config file if not in global variables file
+        facies_per_zone = {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+        }
     (nx, ny, nz) = config_dict["geogrid_fields"]["ertbox_size"]
 
     # Write file with ERTBOX grid for the purpose to import to visualize
@@ -700,6 +732,23 @@ CONFIG_DICT_REF = {
             2: "B",
             3: "C",
         },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+        },
         "zone_conformity": {
             "A": "Top_conform",
             "B": "Proportional",
@@ -733,6 +782,18 @@ CONFIG_A = {
             "A": "Base_conform",
             "B": "Top_conform",
         },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+        },
         "discrete_property_param_per_zone": {
             "A": ["facies"],
         },
@@ -752,6 +813,18 @@ CONFIG_A_REF = {
         "zone_code_names": {
             1: "A",
             2: "B",
+        },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
         },
         "zone_conformity": {
             "A": "Base_conform",
@@ -781,6 +854,28 @@ CONFIG_B = {
             3: "C",
             4: "D",
         },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "D": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+        },
         "use_zones": ["B", "D"],
         "zone_conformity": {
             "B": "Top_conform",
@@ -806,6 +901,28 @@ CONFIG_B_REF = {
             3: "C",
             4: "D",
         },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "D": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+        },
         "zone_conformity": {
             "B": "Top_conform",
             "D": "Proportional",
@@ -830,6 +947,28 @@ CONFIG_C = {
             2: "B",
             3: "C",
             4: "D",
+        },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "D": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
         },
         "zone_conformity": {
             "A": "Base_conform",
@@ -857,6 +996,28 @@ CONFIG_C_REF = {
             2: "B",
             3: "C",
             4: "D",
+        },
+        "facies_per_zone": {
+            "A": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "B": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "C": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
+            "D": {
+                1: "F1",
+                2: "F2",
+                3: "F3",
+            },
         },
         "zone_conformity": {
             "A": "Base_conform",
@@ -899,18 +1060,22 @@ def test_get_specification(
         zone_names,
         zone_conformity,
         zone_code_names,
+        facies_per_zone,
         geogrid_name,
         param_name_dict,
         disc_param_name_dict,
         _,
         _,
-    ) = get_specifications(input_dict, ertbox_size, ert_config_path)
+    ) = get_specifications(
+        input_dict, ertbox_size, ert_config_path, use_facies_per_zone=True
+    )
     assert ertbox_size == reference_dict["geogrid_fields"]["ertbox_size"]
     assert zone_names == reference_dict["geogrid_fields"]["use_zones"]
     assert nreal == reference_dict["nreal"]
     assert iter_list == reference_dict["iterations"]
     assert zone_conformity == reference_dict["geogrid_fields"]["zone_conformity"]
     assert zone_code_names == reference_dict["geogrid_fields"]["zone_code_names"]
+    assert facies_per_zone == reference_dict["geogrid_fields"]["facies_per_zone"]
     assert use_population_stdev == reference_dict["use_population_stdev"]
     assert (
         param_name_dict

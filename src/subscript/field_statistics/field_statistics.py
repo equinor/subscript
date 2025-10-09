@@ -108,6 +108,9 @@ in the global_variables.yml file specified in the FMU project
 
   fmuconfig/output/global_variables.yml
 
+If it is not defined, the keyword 'facies_per_zone' must be specified
+in the config file instead.
+
 Example of format for FACIES_ZONE keyword in global_variables.yml file
 from the Drogon case:
 
@@ -129,7 +132,10 @@ from the Drogon case:
       1: Channel
       6: Calcite
 
-If this does not exist, it must be added.
+If this does not exist, add the keyword 'facies_per_zone' to the config file
+within the section under the keyword 'geogrid_fields'. The 'facies_per_zone'
+keyword for the config file is defined in same way as 'FACIES_ZONE'
+keyword is defined in the global variables file.
 
 There is an option to copy the resulting statistical estimates into the geogrid
 for a single realization of the grid. This makes it possible to visualize
@@ -189,6 +195,23 @@ EPILOGUE = """
             1: "Valysar"
             2: "Therys"
             3: "Volon"
+
+        # Specify facies per zone either here or in global variables file.
+        facies_per_zone:
+            Valysar:
+                0: Floodplain
+                1: Channel
+                2: Crevasse
+                5: Coal
+            Therys:
+                6: Calcite
+                10: Offshore
+                11: Lowershoreface
+                12: Uppershoreface
+            Volon:
+                0: Floodplain
+                1: Channel
+                6: Calcite
 
         # For each zone specify either Proportional, Top_conform or Base_conform
         # as grid conformity.
@@ -384,10 +407,7 @@ def field_stat(args):
     glob_var_config_path = ert_config_path / Path(GLOBAL_VARIABLES_FILE)
     cfg_global = utils.yaml_load(glob_var_config_path)["global"]
     keyword = "FACIES_ZONE"
-    if keyword in cfg_global:
-        facies_per_zone = cfg_global[keyword]
-    else:
-        raise KeyError(f"Missing keyword: {keyword} in {glob_var_config_path}")
+    facies_per_zone = cfg_global.get(keyword, None)
 
     # The ERTBOX grid file location in FMU
     ertbox_path = ert_config_path / ERTBOX_GRID_PATH
@@ -1017,7 +1037,13 @@ def write_fraction_nactive(
         )
 
 
-def get_specifications(input_dict, ertbox_size, ert_config_path):
+def get_specifications(
+    input_dict,
+    ertbox_size,
+    ert_config_path,
+    use_facies_per_zone=True,
+    facies_per_zone=None,
+):
     # Required keywords
     key = "nreal"
     if key in input_dict:
@@ -1088,6 +1114,23 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
                 zone_names_used = zone_names_input
         check_use_zones(zone_code_names, zone_names_used)
 
+        if use_facies_per_zone and (facies_per_zone is None):
+            # Not defined in global variables file.
+            # Look for specification of it in config file instead.
+            key = "facies_per_zone"
+            if key in geogrid_fields_dict:
+                facies_per_zone_input = geogrid_fields_dict["facies_per_zone"]
+                if (facies_per_zone_input is not None) and len(
+                    facies_per_zone_input
+                ) > 0:
+                    facies_per_zone = facies_per_zone_input
+            else:
+                raise KeyError(
+                    f"Keyword '{key}' is required in config file for this script "
+                    "if global_variables.yml file has not defined the "
+                    "keyword 'FACIES_ZONE'"
+                )
+
         key = "zone_conformity"
         if key in geogrid_fields_dict:
             zone_conformity = geogrid_fields_dict[key]
@@ -1149,6 +1192,7 @@ def get_specifications(input_dict, ertbox_size, ert_config_path):
         zone_names_used,
         zone_conformity,
         zone_code_names,
+        facies_per_zone,
         geogrid_name,
         param_name_dict,
         disc_param_name_dict,
@@ -1285,12 +1329,15 @@ def calc_stats(
         zone_names,
         zone_conformity,
         zone_code_names,
+        facies_per_zone,
         geogrid_name,
         param_name_dict,
         disc_param_name_dict,
         _,
         _,
-    ) = get_specifications(input_dict, ertbox_size, ert_config_path)
+    ) = get_specifications(
+        input_dict, ertbox_size, ert_config_path, facies_per_zone=facies_per_zone
+    )
 
     # Check if any need to continue to calculation
     if not use_geogrid_fields:
@@ -1522,9 +1569,13 @@ def calc_temporary_field_stats(
         _,
         _,
         _,
+        _,
+        _,
         init_path,
         param_list,
-    ) = get_specifications(input_dict, ertbox_size, ert_config_path)
+    ) = get_specifications(
+        input_dict, ertbox_size, ert_config_path, use_facies_per_zone=False
+    )
 
     # Check if any need to continue to calculation
     if not use_temporary_fields:
@@ -1649,13 +1700,15 @@ def read_field_stat_config(config_file_name):
         return yaml.safe_load(yml_file)
 
 
-def get_facies_per_zone(glob_var_file):
+def get_facies_per_zone(glob_var_file, geogrid_fields_dict):
     cfg_global = utils.yaml_load(glob_var_file)["global"]
     keyword = "FACIES_ZONE"
     if keyword in cfg_global:
         facies_per_zone = cfg_global[keyword]
     else:
-        raise KeyError(f"Missing keyword: {{keyword}} in {{GLOBAL_VARIABLES_FILE}}")
+        facies_per_zone = geogrid_fields_dict.get('facies_per_zone',None)
+        if facies_per_zone is None:
+            raise KeyError(f"Missing keyword: {{keyword}}")
     return facies_per_zone
 
 
@@ -1667,7 +1720,8 @@ def main():
     if key in field_stat:
         geogrid_fields_dict = field_stat[key]
         zone_code_names = geogrid_fields_dict["zone_code_names"]
-        facies_per_zone = get_facies_per_zone(GLOBAL_VARIABLES_FILE)
+        facies_per_zone = get_facies_per_zone(
+            GLOBAL_VARIABLES_FILE, geogrid_fields_dict)
 
         key = "use_zones"
         if key in geogrid_fields_dict:
