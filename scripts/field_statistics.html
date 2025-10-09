@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD_STATISTICS &mdash; subscript 1.14.3.dev5+gb225db03a documentation</title>
+  <title>FIELD_STATISTICS &mdash; subscript 1.14.3.dev6+gef3e3b3b6 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=5a6b5632"></script>
+      <script src="../_static/documentation_options.js?v=4b6de361"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -195,6 +195,8 @@ in the global_variables.yml file specified in the FMU project
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fmuconfig</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">global_variables</span><span class="o">.</span><span class="n">yml</span>
 </pre></div>
 </div>
+<p>If it is not defined, the keyword ‘facies_per_zone’ must be specified
+in the config file instead.</p>
 <p>Example of format for FACIES_ZONE keyword in global_variables.yml file
 from the Drogon case:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">FACIES_ZONE</span><span class="p">:</span>
@@ -214,7 +216,10 @@ from the Drogon case:</p>
 <span class="w">    </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Calcite</span>
 </pre></div>
 </div>
-<p>If this does not exist, it must be added.</p>
+<p>If this does not exist, add the keyword ‘facies_per_zone’ to the config file
+within the section under the keyword ‘geogrid_fields’. The ‘facies_per_zone’
+keyword for the config file is defined in same way as ‘FACIES_ZONE’
+keyword is defined in the global variables file.</p>
 <p>There is an option to copy the resulting statistical estimates into the geogrid
 for a single realization of the grid. This makes it possible to visualize
 the results together with well paths. But be aware that the statistical
@@ -301,6 +306,23 @@ but return without doing anything.</p>
 <span class="w">          </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
 <span class="w">          </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
 <span class="w">          </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
+
+<span class="w">      </span><span class="c1"># Specify facies per zone either here or in global variables file.</span>
+<span class="w">      </span><span class="nt">facies_per_zone</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">Valysar</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Floodplain</span>
+<span class="w">              </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Channel</span>
+<span class="w">              </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Crevasse</span>
+<span class="w">              </span><span class="nt">5</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Coal</span>
+<span class="w">          </span><span class="nt">Therys</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Calcite</span>
+<span class="w">              </span><span class="nt">10</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Offshore</span>
+<span class="w">              </span><span class="nt">11</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lowershoreface</span>
+<span class="w">              </span><span class="nt">12</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Uppershoreface</span>
+<span class="w">          </span><span class="nt">Volon</span><span class="p">:</span>
+<span class="w">              </span><span class="nt">0</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Floodplain</span>
+<span class="w">              </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Channel</span>
+<span class="w">              </span><span class="nt">6</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Calcite</span>
 
 <span class="w">      </span><span class="c1"># For each zone specify either Proportional, Top_conform or Base_conform</span>
 <span class="w">      </span><span class="c1"># as grid conformity.</span>
