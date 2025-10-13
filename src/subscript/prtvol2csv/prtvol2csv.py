@@ -7,9 +7,15 @@ import re
 import warnings
 from datetime import datetime
 from pathlib import Path
-
+import sys
 import pandas as pd
-import res2df
+
+try:
+    import res2df
+
+    _HAS_RES2DF = True
+except ImportError:
+    _HAS_RES2DF = False
 from fmu.tools.fipmapper.fipmapper import FipMapper
 
 from subscript import __version__, getLogger
@@ -327,6 +333,10 @@ def reservoir_volumes_from_prt(prt_file: str, fipname: str = "FIPNUM") -> pd.Dat
 
 def main() -> None:
     """Function for command line invocation"""
+    if not _HAS_RES2DF:
+        sys.exit(
+            "Error 'res2df' is required for 'prtvol2csv' to work.\n Please install using 'pip install subscript[res2df]' or similar."
+        )
     args = get_parser().parse_args()
 
     tablesdir = prep_output_dir(args.dir)

@@ -17,9 +17,9 @@ from typing import Literal
 import dateutil.parser
 import yaml
 from pydantic import BaseModel, FilePath
-
+import sys
 from subscript import __version__, getLogger
-from subscript.sunsch.time_vector import TimeVector
+from .time_vector import TimeVector, _HAS_OPM
 
 logger = getLogger(__name__)
 
@@ -539,6 +539,10 @@ def get_parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     """Entry point from command line"""
+    if not _HAS_OPM:
+        sys.exit(
+            "Error 'opm' is required for 'sunsch' to work.\nPlease install using 'pip install subscript[opm]' or similar."
+        )
     parser = get_parser()
     args = parser.parse_args()
 

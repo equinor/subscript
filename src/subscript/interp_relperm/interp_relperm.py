@@ -11,11 +11,17 @@ import pandas as pd
 import pyscal
 import yaml
 from pydantic import BaseModel, Field, FilePath, model_validator
-from res2df import satfunc
 
-import subscript
+try:
+    from res2df import satfunc
 
-logger = subscript.getLogger(__name__)
+    _HAS_RES2DF = True
+except ImportError:
+    _HAS_RES2DF = False
+
+from subscript import getLogger, __version__
+
+logger = getLogger(__name__)
 
 DESCRIPTION = """Interpolation script for relperm tables.
 
@@ -288,13 +294,17 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 
 
 def main() -> None:
     """Invocated from the command line, parsing command line arguments"""
+    if not _HAS_RES2DF:
+        sys.exit(
+            "Error 'res2df' is required for 'interp_relperm' to work.\n Please install using 'pip install subscript[res2df]' or similar."
+        )
     parser = get_parser()
     args = parser.parse_args()
 

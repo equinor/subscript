@@ -13,13 +13,13 @@ import pandas as pd
 import yaml
 
 from subscript import __version__, getLogger
-from subscript.fmuobs.parsers import (
+from .parsers import (
     compute_date_from_days,
     ertobs2df,
     obsdict2df,
     resinsight_df2df,
 )
-from subscript.fmuobs.writers import (
+from .writers import (
     CLASS_SHORTNAME,
     df2ertobs,
     df2obsdict,

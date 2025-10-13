@@ -4,10 +4,13 @@ import datetime
 from io import StringIO
 from operator import attrgetter
 
-import opm.io
-from opm.io.parser import ParseContext, Parser
-
-error_actions = [("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore)]
+try:
+    import opm.io
+    from opm.io.parser import ParseContext, Parser
+    _HAS_OPM=True
+    error_actions = [("PARSE_INVALID_KEYWORD_COMBINATION", opm.io.action.ignore)]
+except ImportError:
+    _HAS_OPM=False
 
 # This is from the TimeMap.cpp implementation in opm
 ecl_month = {

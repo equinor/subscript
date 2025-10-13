@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from subscript import getLogger
-from subscript.fmuobs.util import (
+from .util import (
     CLASS_SHORTNAME,
     ERT_ISO_DATE_FORMAT,
     lowercase_dictkeys,

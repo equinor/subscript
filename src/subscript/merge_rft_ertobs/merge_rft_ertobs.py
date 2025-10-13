@@ -6,9 +6,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-import subscript
+from subscript import getLogger, __version__
 
-logger = subscript.getLogger(__name__)
+logger = getLogger(__name__)
 
 DESCRIPTION = """Collect ERT RFT observations and merge with CSV output
 from GENDATA_RFT. Dump to CSV file for visualization in Webviz.
@@ -64,7 +64,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

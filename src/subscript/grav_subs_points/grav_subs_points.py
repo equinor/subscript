@@ -14,9 +14,9 @@ from resdata.gravimetry import ResdataGrav, ResdataSubsidence
 from resdata.grid import Grid
 from resdata.resfile import ResdataFile
 
-import subscript
+from subscript import getLogger, __version__
 
-logger = subscript.getLogger(__name__)
+logger = getLogger(__name__)
 
 # Constant for subsidence modelling, not influencing results
 # since subsidence is calculated from porevolume change RPORV
@@ -133,7 +133,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 

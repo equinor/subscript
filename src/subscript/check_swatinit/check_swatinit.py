@@ -8,7 +8,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-import res2df
+
+try:
+    import res2df
+
+    _HAS_RES2DF = True
+except ImportError:
+    _HAS_RES2DF = False
 
 import subscript
 from subscript.check_swatinit import plotter
@@ -42,6 +48,10 @@ def main() -> None:
 
     Acts on command line arguments, loads data, performs qc and dumps to
     CSV if requested."""
+    if not _HAS_RES2DF:
+        sys.exit(
+            "Error 'res2df' is required for 'check_swatinit' to work.\n Please install using 'pip install subscript[res2df]' or similar."
+        )
     parser = get_parser()
     args = parser.parse_args()
 

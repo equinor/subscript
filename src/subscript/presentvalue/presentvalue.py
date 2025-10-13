@@ -4,10 +4,16 @@ import argparse
 import datetime
 import logging
 from pathlib import Path
-
+import sys
 import numpy as np
 import pandas as pd
-import res2df
+
+try:
+    import res2df
+
+    _HAS_RES2DF = True
+except ImportError:
+    _HAS_RES2DF = False
 import scipy.optimize
 
 from subscript import __version__, getLogger
@@ -124,6 +130,10 @@ def main() -> None:
     """Function for command line invocation.
 
     Parses command line arguments, and writes output to file and/or terminal."""
+    if not _HAS_RES2DF:
+        sys.exit(
+            "Error 'res2df' is required for 'presentvalue' to work.\n Please install using 'pip install subscript[res2df]' or similar."
+        )
     parser = get_parser()
     args = parser.parse_args()
 

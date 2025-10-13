@@ -34,13 +34,13 @@ import numpy as np
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
-from resdata.grid import Grid  # type: ignore
-from resdata.resfile import ResdataFile  # type: ignore
-from resdata.summary import Summary  # type: ignore
+from resdata.grid import Grid
+from resdata.resfile import ResdataFile
+from resdata.summary import Summary
 
-import subscript
+from subscript import getLogger, __version__
 
-logger = subscript.getLogger(__name__)
+logger = getLogger(__name__)
 
 register_matplotlib_converters()
 
@@ -120,7 +120,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
     return parser
 
