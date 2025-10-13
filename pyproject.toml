@@ -34,13 +34,11 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
     "resdata",
-    "res2df",
     "ert>=10.2.0b13",
     "fmu-tools",
     "grid3d_maps",
     "matplotlib",
     "numpy",
-    "opm>=2023.04",
     "pandas",
     "pydantic",
     "pyscal",
@@ -55,6 +53,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+res2df = ["res2df"]
+opm = ["opm"]
+all = [res2f, opm]
 tests = [
     "mypy",
     "pytest",

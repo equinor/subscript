@@ -1,4 +1,8 @@
-from res2df import ResdataFiles, compdat
+try:
+    from res2df import ResdataFiles, compdat
+    _HAS_RES2DF = True
+except ImportError:
+    _HAS_RES2DF=False
 
 
 def get_completion_list(ecl_data_file_name):

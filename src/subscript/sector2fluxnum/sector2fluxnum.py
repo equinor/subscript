@@ -5,8 +5,8 @@ import os
 import cwrap
 from resdata.grid import Grid
 from resdata.resfile import FortIO, ResdataFile
-
-from subscript.sector2fluxnum import completions, datafile_obj, flux_obj, fluxfile_obj
+import sys
+from . import completions, datafile_obj, flux_obj, fluxfile_obj
 
 DESCRIPTION = """
 The script sector2fluxnum will execute different steps in a workflow
@@ -225,6 +225,10 @@ def main():
     """
     main method
     """
+    if not completions._HAS_RES2DF:
+        sys.exit(
+            "Error 'res2df' is required for 'sector2fluxnum' to work.\n Please install using 'pip install subscript[res2df]' or similar."
+        )
     parser = get_parser()
     input_args = parser.parse_args()
 

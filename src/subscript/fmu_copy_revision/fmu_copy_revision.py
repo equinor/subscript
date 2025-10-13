@@ -15,9 +15,9 @@ from multiprocessing import cpu_count
 from os.path import join
 from pathlib import Path
 
-import subscript
+from subscript import getLogger, __version__
 
-logger = subscript.getLogger(__name__)
+logger = getLogger(__name__)
 
 DESCRIPTION = """This is a simple interactive script for copying a FMU revision folder
 with features:
@@ -293,7 +293,7 @@ def get_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version",
         action="version",
-        version="%(prog)s (subscript version " + subscript.__version__ + ")",
+        version="%(prog)s (subscript version " + __version__ + ")",
     )
 
     logger.info("Parsing commandline")

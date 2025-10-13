@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 from subscript import getLogger
-from subscript.fmuobs.util import (
+from .util import (
     ERT_ALT_DATE_FORMAT,
     ERT_DATE_FORMAT,
     ERT_ISO_DATE_FORMAT,

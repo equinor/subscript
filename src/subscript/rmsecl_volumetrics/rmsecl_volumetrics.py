@@ -5,14 +5,14 @@ import argparse
 import logging
 from pathlib import Path
 from typing import Any, cast
-
+import sys
 import pandas as pd
 import yaml
 from fmu.tools.fipmapper import fipmapper
 from fmu.tools.rms import volumetrics
 
 from subscript import getLogger
-from subscript.prtvol2csv.prtvol2csv import currently_in_place_from_prt
+from subscript.prtvol2csv.prtvol2csv import currently_in_place_from_prt, _HAS_RES2DF
 
 logger = getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -143,6 +143,10 @@ def _disjoint_sets_to_dict(
 
 def main() -> None:
     """Parse command line arguments and run"""
+    if not _HAS_RES2DF:
+        sys.exit(
+            "Error 'res2df' is required for 'rmsecl_volumetrics' to work.\n Please install using 'pip install subscript[res2df]' or similar."
+        )
     args = get_parser().parse_args()
 
     if args.PRTFILE.endswith("csv"):
