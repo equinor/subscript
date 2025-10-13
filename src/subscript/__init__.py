@@ -56,11 +56,6 @@ def getLogger(module_name="subscript"):
     if not module_name:
         return getLogger("subscript")
 
-    # This logger is also used by subscript-internal, but we
-    # don't want to expose that detail and repo difference in
-    # the log output:
-    module_name = module_name.replace("subscript_internal", "subscript")
-
     compressed_name = []
     for elem in module_name.split("."):
         if len(compressed_name) == 0 or elem != compressed_name[-1]:

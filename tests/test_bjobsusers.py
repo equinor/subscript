@@ -20,6 +20,7 @@ def bjobs_errors(status):
 
 class FakePinky:
     """Emulate the Linux pinky utility"""
+
     def __init__(self, name):
         self._name = name
 

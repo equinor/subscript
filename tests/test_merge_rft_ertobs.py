@@ -15,7 +15,6 @@ from subscript.merge_rft_ertobs.merge_rft_ertobs import (
     split_wellname_reportstep,
 )
 
-
 logger = getLogger("subscript.merge_rft_ertobs.merge_rft_ertobs")
 logger.setLevel(logging.INFO)
 
