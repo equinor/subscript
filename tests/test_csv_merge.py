@@ -77,7 +77,6 @@ def test_main_merge(tmp_path, mocker):
     mocker.patch("sys.argv", ["csv_merge", test_csv_1, test_csv_2, "-o", merged_csv])
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
-    # pylint: disable=unsubscriptable-object  # false positive on Pandas dataframe
     assert len(merged) == 4
     assert len(merged.columns) == 5  # 4 unique in input, and 1 FILENAME-col
     assert test_csv_1 in merged["FILENAME"].unique()
@@ -98,7 +97,6 @@ def test_main_merge(tmp_path, mocker):
     )
     csv_merge.main()
     merged = pd.read_csv(merged_csv)
-    # pylint: disable=no-member  # false positive on Pandas dataframe
     assert len(merged) == 4
     assert "CONST" not in merged.columns
     assert len(merged.columns) == 4
@@ -155,7 +153,6 @@ def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
 
     Warning: This test is fragile if the other test functions manipulate
     the loglevel"""
-    # pylint: disable=too-many-arguments
     os.chdir(tmp_path)
     pd.DataFrame(
         columns=["REAL", "FOO", "CONST"], data=[[0, 10, 1], [1, 20, 1]]

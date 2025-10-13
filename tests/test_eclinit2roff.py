@@ -11,8 +11,6 @@ from subscript import getLogger
 logger = getLogger("subscript.ecldiff2roff.ecldiff2roff")
 logger.setLevel(logging.INFO)
 
-# pylint: disable=unused-argument  # false positive on fixtures
-
 
 @pytest.fixture(name="reek_data")
 def fixture_reek_data(tmp_path):

@@ -14,8 +14,6 @@ from subscript.ecldiff2roff import ecldiff2roff
 logger = getLogger("subscript.ecldiff2roff.ecldiff2roff")
 logger.setLevel(logging.INFO)
 
-# pylint: disable=unused-argument  # false positive on fixtures
-
 
 @pytest.mark.parametrize(
     "datetxt, expected",
@@ -43,7 +41,6 @@ logger.setLevel(logging.INFO)
 )
 def test_dateparsing(datetxt, expected, tmp_path):
     """Test parsing of dates"""
-    # pylint: disable=unused-argument
     Path(tmp_path / "datediff.txt").write_text(datetxt, encoding="utf8")
     assert ecldiff2roff.parse_diff_dates(tmp_path / "datediff.txt") == expected
 
@@ -162,9 +159,6 @@ def test_mainfunction(
     tmp_path,
 ):
     """Test the command line functionality of ecldiff2roff"""
-    # pylint: disable=unused-argument
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=too-many-arguments
 
     if outputfilebase.startswith("/tmp"):
         outputfilebase = str(tmp_path / outputfilebase[5:])
@@ -279,9 +273,6 @@ def test_values_multiple_datepairs(reek_data):
 
 def test_errors(reek_data):
     """Test errors from the module"""
-    # pylint: disable=unused-argument
-    # pylint: disable=redefined-outer-name
-
     Path("validdates.txt").write_text("2000-01-01 2000-07-01", encoding="utf8")
     Path("invaliddates.txt").write_text("1860-01-01 2000-07-01", encoding="utf8")
     Path("singledate.txt").write_text("2000-07-01", encoding="utf8")
@@ -321,8 +312,6 @@ def test_commandline(reek_data, mocker):
 @pytest.mark.integration
 def test_integration(reek_data):
     """Test that endpoint is installed and works"""
-    # pylint: disable=unused-argument
-    # pylint: disable=redefined-outer-name
     assert subprocess.check_output(["ecldiff2roff", "-h"])
 
 

@@ -14,8 +14,6 @@ UNRST_PRED = (
     Path(__file__).absolute().parent / "testdata_merge_unrst_files" / "PRED.UNRST"
 )
 
-# pylint: disable=protected-access
-
 
 @pytest.mark.integration
 def test_integration():

@@ -12,8 +12,6 @@ from subscript.sunsch import sunsch
 
 DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"
 
-# pylint: disable=unused-argument
-
 
 @pytest.fixture(name="readonly_datadir")
 def fixture_readonly_datadir():

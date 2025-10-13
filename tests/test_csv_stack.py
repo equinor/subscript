@@ -235,8 +235,6 @@ def test_csv_stack_stdout(tmp_path):
 @pytest.mark.integration
 def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     pytest.importorskip("ert")
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
@@ -263,8 +261,6 @@ def test_ert_forward_model(tmp_path):
 @pytest.mark.integration
 def test_ert_forward_model_keepminimal(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     pytest.importorskip("ert")
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
@@ -294,8 +290,6 @@ def test_ert_forward_model_keepminimal(tmp_path):
 @pytest.mark.integration
 def test_ert_forward_model_keepconstants(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     pytest.importorskip("ert")
     os.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)

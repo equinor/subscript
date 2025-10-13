@@ -6,8 +6,8 @@ import os
 import sys
 from pathlib import Path
 
-import xtgeo  # type: ignore
-from xtgeo.common import XTGeoDialog  # type: ignore
+import xtgeo
+from xtgeo.common import XTGeoDialog
 
 from subscript import __version__
 
