@@ -8,22 +8,18 @@ from subscript.bjobsusers import bjobsusers
 
 
 def fake_bjobs(status):
-    # pylint: disable=unused-argument
     """Return a string that could have been a real response from
     the command line bjobs program"""
     return "foobar 3*computenode1\nfoobert 1*computenode2\nfoobar 8*computenode3"
 
 
 def bjobs_errors(status):
-    # pylint: disable=unused-argument
     """Example error message from bjobs"""
     return "LIM not responding"
 
 
 class FakePinky:
     """Emulate the Linux pinky utility"""
-
-    # pylint:  disable=too-few-public-methods
     def __init__(self, name):
         self._name = name
 
@@ -72,8 +68,6 @@ def test_userinfo():
         "New LSF Admin user",
         "",
     )
-
-    # assert isinstance(fake_pinky(''), unicode)  # only relevant for Python 2
     for name in names:
         usersummary = bjobsusers.userinfo("foobar", FakePinky(name))
         assert isinstance(usersummary, str)

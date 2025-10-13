@@ -15,8 +15,6 @@ from subscript.merge_rft_ertobs.merge_rft_ertobs import (
     split_wellname_reportstep,
 )
 
-# pylint: disable=unused-argument  # false positive on fixtures
-
 
 logger = getLogger("subscript.merge_rft_ertobs.merge_rft_ertobs")
 logger.setLevel(logging.INFO)
@@ -118,7 +116,6 @@ def test_merge_drogon_inactive(drogondata):
     """Check that inactive cells are taken care of as such"""
     # Modify simulated data:
     gdata = pd.read_csv("gendata_rft.csv")
-    # pylint: disable=no-member  # false positive on Pandas objects
     gdata.loc[0, "pressure"] = -1.0
     gdata.to_csv("gendata_rft.csv")
 
@@ -230,7 +227,6 @@ def test_endpoint(drogondata):
     )
     dframe = pd.read_csv("mergedrft.csv")
     assert not dframe.empty
-    # pylint: disable=no-member  # false positive on Pandas objects
     assert {
         "pressure",
         "observed",
@@ -264,7 +260,6 @@ def test_ert_hook(drogondata):
     subprocess.run(["ert", "test_run", ert_config_fname], check=True)
 
     dframe = pd.read_csv("mergedrft.csv")
-    # pylint: disable=no-member  # false positive on Pandas objects
     assert not dframe.empty
     assert {"pressure", "observed", "error", "well", "report_step", "time"}.issubset(
         dframe.columns

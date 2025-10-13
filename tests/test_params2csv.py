@@ -108,8 +108,6 @@ def test_integration():
 @pytest.mark.integration
 def test_ert_forward_model(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     pytest.importorskip("ert")
     os.chdir(tmp_path)
 
@@ -131,8 +129,6 @@ def test_ert_forward_model(tmp_path):
 @pytest.mark.integration
 def test_ert_forward_model_filename_column(tmp_path):
     """Test that the ERT hook can run on a mocked case"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     pytest.importorskip("ert")
     os.chdir(tmp_path)
 

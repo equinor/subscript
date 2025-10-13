@@ -70,8 +70,6 @@ def test_main(tmp_path, mocker):
     welltest_dpds.main()
     assert Path("welltest_output.csv").exists()
     suptimew = pd.read_csv("spt.csv")
-    # pylint: disable=no-member
-    # (false positive)
     assert suptimew.iloc[0, 0] == pytest.approx(-9.87037983)
     assert suptimew.iloc[-1, 0] == pytest.approx(-0.65693308)
     Path("welltest_output.csv").unlink()

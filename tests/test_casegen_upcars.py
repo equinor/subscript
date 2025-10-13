@@ -14,8 +14,6 @@ from subscript.casegen_upcars import casegen_upcars
 TESTDATA = "testdata_casegen_upcars"
 DATADIR = Path(__file__).absolute().parent / TESTDATA
 
-# pylint: disable=no-member  # false positive on Pandas dataframe
-
 
 @pytest.mark.integration
 def test_installed():

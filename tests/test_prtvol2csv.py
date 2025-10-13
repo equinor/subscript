@@ -833,7 +833,6 @@ def test_prtvol2csv_regions_typemix(tmp_path, mocker):
     with pytest.warns(FutureWarning, match="Output directories"):
         prtvol2csv.main()
     dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
-    # pylint: disable=unsubscriptable-object
     assert not dframe.empty
     assert "REGION" in dframe
     assert "ZONE" not in dframe

@@ -478,7 +478,6 @@ def test_mock_two_satnums_via_files(tmp_path):
     parsing from disk, and is thus not representative for how flexible
     the code is for reading from include files not originating in pyscal.
     """
-    # pylint: disable=no-value-for-parameter
     os.chdir(tmp_path)
     Path("pess.inc").write_text(
         create_pyscal_list(TWO_SATNUM_PYSCAL_MOCK.loc["low"]).build_eclipse_data(

@@ -713,8 +713,6 @@ def test_reek(tmp_path, mocker):
     assert Path("scatter.png").exists()
     assert Path("volplot.png").exists()
 
-    # pylint: disable=no-member  # false positive on Pandas dataframe
-    # Check that we never get -1e20 from resdata in any data:
     assert np.isclose(qc_frame.select_dtypes("number").min().min(), -7097, atol=1)
     assert np.isclose(qc_frame.select_dtypes("number").max().max(), 5938824, atol=1)
 

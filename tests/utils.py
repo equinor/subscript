@@ -26,7 +26,7 @@ def run_simulator(simulator, data_file_path):
     if "flow" in simulator:
         simulator_option = ["--parsing-strictness=low"]
 
-    result = subprocess.run(  # pylint: disable=subprocess-run-check
+    result = subprocess.run(
         [simulator, *simulator_option, data_file_path],
         capture_output=True,
         check=False,

@@ -16,8 +16,6 @@ from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
 TESTDATA_DIR = Path(__file__).absolute().parent / "testdata_fmuobs"
 
-# pylint: disable=unused-argument  # false positive from fixtures
-
 
 @pytest.fixture(name="readonly_testdata_dir")
 def fixture_readonly_testdata_dir():
@@ -336,7 +334,6 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
     ]
     run_result = subprocess.run(arguments, check=True, stdout=subprocess.PIPE)
     dframe_from_stdout = pd.read_csv(io.StringIO(run_result.stdout.decode("utf-8")))
-    # pylint: disable=no-member  # false positive on Pandas object
     pd.testing.assert_frame_equal(
         dframe_from_stdout.sort_index(axis=1),
         reference_dframe_from_disk.sort_index(axis=1),
@@ -347,8 +344,6 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
 @pytest.mark.parametrize("verbose", ["", '"--verbose"', '"--debug"'])
 def test_ert_workflow_hook(verbose, tmp_path):
     """Mock an ERT config with FMUOBS as a workflow and run it"""
-    # pylint: disable=redefined-outer-name
-    # pylint: disable=unused-argument
     obs_file = TESTDATA_DIR / "ert-doc.obs"
     os.chdir(tmp_path)
 

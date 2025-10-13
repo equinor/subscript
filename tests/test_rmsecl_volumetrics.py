@@ -285,7 +285,6 @@ def test_disjoint_sets_to_dict(dframe: list, expected: dict):
 
 def test_documentation_example(tmp_path, mocker):
     """Test the example that is used in the documentation"""
-    # pylint: disable=line-too-long
     os.chdir(tmp_path)
     print(f"\nLook in {tmp_path} for input and output to be used in documentation")
     Path("FOO.PRT").write_text(
@@ -421,7 +420,6 @@ FIPNUM:
 
 def test_command_line(tmp_path, mocker):
     """Test the command line utility with options"""
-    # pylint: disable=line-too-long
     os.chdir(tmp_path)
     Path("FOO.PRT").write_text(
         """

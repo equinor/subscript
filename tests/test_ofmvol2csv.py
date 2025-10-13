@@ -10,9 +10,6 @@ import pytest
 from subscript.csv2ofmvol import csv2ofmvol
 from subscript.ofmvol2csv import ofmvol2csv
 
-# pylint: disable=unused-argument  # false positive on fixtures
-# pylint: disable=unsubscriptable-object  # false positive on Pandas objects.
-
 
 @pytest.mark.parametrize(
     "filelines, expected",
@@ -423,7 +420,6 @@ def test_main(datadir):
 
     output = pd.read_csv("volfiles.csv")
     assert isinstance(output, pd.DataFrame)
-    # pylint: disable=no-member
     assert not output.empty
     assert len(output) == 4379
     assert set(output.columns) == {

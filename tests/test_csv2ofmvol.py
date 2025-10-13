@@ -31,7 +31,6 @@ PRODDATA_A4 = pd.DataFrame(
 
 def test_read_pdf_csv_files():
     """Test parsing of CSV or dataframes"""
-    # pylint: disable=no-value-for-parameter
     with pytest.raises(TypeError):
         csv2ofmvol.read_pdm_csv_files()
     with pytest.raises(IOError):
@@ -365,7 +364,6 @@ def test_cvs2volstr():
 
 def test_main(datadir, mocker):
     """Test command line interface"""
-    # pylint: disable=unused-argument  # false positive on fixture
     # Test installation
     assert subprocess.check_output(["csv2ofmvol", "-h"])
 
@@ -420,7 +418,6 @@ def fixture_datadir(tmp_path):
 @pytest.mark.integration
 def test_ert_hook(datadir):
     """Mock an ERT config with CSV2OFMVOL as a FORWARD_MODEL and run it"""
-    # pylint: disable=unused-argument  # false positive on fixture
     pytest.importorskip("ert")
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
