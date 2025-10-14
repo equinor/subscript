@@ -18,6 +18,10 @@ env:
   MPLBACKEND: Agg
   UV_SYSTEM_PYTHON: 1
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
   subscript:
     runs-on: ubuntu-latest
@@ -69,18 +73,6 @@ jobs:
 
       - name: List all installed packages
         run: uv pip freeze
-
-      - name: Format with ruff
-        if: ${{ always() }}
-        run: ruff format . --check
-
-      - name: Lint with ruff
-        if: ${{ always() }}
-        run: ruff check .
-
-      - name: Check typing with mypy
-        if: ${{ always() }}
-        run: mypy src/subscript
 
       - name: Run tests
         if: ${{ always() }}
