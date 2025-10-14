@@ -674,77 +674,6 @@ The directory to export to must exist.
         )
 
 
-class RiWellmod(ForwardModelStepPlugin):
-    def __init__(self) -> None:
-        super().__init__(
-            name="RI_WELLMOD",
-            command=[
-                shutil.which("ri_wellmod"),
-                "<RI_PROJECT>",
-                "<ECLBASE>",
-                "-o",
-                "<OUTPUTFILE>",
-                "--msw",
-                "<MSW>",
-                *[f"<XARG{num}>" for num in range(12)],
-            ],
-            default_mapping={
-                "<OUTPUTFILE>": "well_defs.sch",
-                "<MSW>": "",
-                **{f"<XARG{num}>": "--dummy" for num in range(12)},
-            },
-        )
-
-    @staticmethod
-    def documentation() -> ForwardModelStepDocumentation | None:
-        return ForwardModelStepDocumentation(
-            description="""
-``ri_wellmod`` is a utility to generate Eclipse well model definitions
-(WELSPECS/WELSPECL, COMPDAT/COMPDATL, WELSEGS, COMPSEGS) using ResInsight. The script
-takes as input a ResInsight project with wells and completions defined, in addition to
-an Eclipse case (either an initialized case or an input case with grid and PERMX|Y|Z
-and NTG defined in the GRDECL format).
-
-.. note:: Well names specified as command line arguments are assumed to refer to the
-   Eclipse well names, i.e., the completion export names as defined in the ResInsight
-   wells project.
-""",
-            category="modelling.reservoir",
-            examples="""
-.. code-block:: console
-
- FORWARD_MODEL RI_WELLMOD(
-    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
-    <ECLBASE>=<ECLBASE>,
-    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch)
-
- FORWARD_MODEL RI_WELLMOD(
-    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
-    <ECLBASE>=<ECLBASE>,
-    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-    <MSW>="A2;A4;'R*'")
-
- FORWARD_MODEL RI_WELLMOD(
-    <RI_PROJECT>=<CONFIG_PATH>/../../resinsight/input/well_modelling/wells.rsp,
-    <ECLBASE>=<ECLBASE>,
-    <OUTPUTFILE>=<RUNPATH>/eclipse/include/schedule/well_def.sch,
-    <MSW>="A4",
-    <XARG0>="--lgr",
-    <XARG1>="A4:3;3;1")
-
-
-.. warning:: Remember to remove line breaks in argument list when copying the
-   examples into your own ERT config.
-
-
-.. note:: More examples and options may be seen in the subscript docs for the script
-   ``ri_wellmod``, just replace ',' by ';' and note that spaces cannot be part of
-   argument strings, so you may need to use <XARGn> for the individual parts.
-
-""",
-        )
-
-
 class Sunsch(ForwardModelStepPlugin):
     def __init__(self) -> None:
         super().__init__(
@@ -856,7 +785,6 @@ def installable_forward_model_steps() -> list[type[ForwardModelStepPlugin]]:
         Ofmvol2Csv,
         Params2Csv,
         Prtvol2Csv,
-        RiWellmod,
         Sunsch,
         WelltestDpds,
     ]
