@@ -45,7 +45,6 @@ dependencies = [
     "pydantic",
     "pyscal",
     "pyyaml",
-    "rips",
     "scipy",
     "seaborn",
     "segyio",
@@ -110,7 +109,6 @@ params2csv = "subscript.params2csv.params2csv:main"
 presentvalue = "subscript.presentvalue.presentvalue:main"
 prtvol2csv = "subscript.prtvol2csv.prtvol2csv:main"
 restartthinner = "subscript.restartthinner.restartthinner:main"
-ri_wellmod = "subscript.ri_wellmod.ri_wellmod:main"
 rmsecl_volumetrics = "subscript.rmsecl_volumetrics.rmsecl_volumetrics:main"
 sector2fluxnum = "subscript.sector2fluxnum.sector2fluxnum:main"
 summaryplot = "subscript.summaryplot.summaryplot:main"
@@ -176,11 +174,10 @@ norecursedirs = [
     "build",
     "opm-common",
 ]
-addopts = "-ra --strict-markers --ignore=docs/conf.py --ignore=setup.py --ignore=.eggs"
+addopts = "-ra --strict-markers --ignore=docs/conf.py --ignore=.eggs"
 markers = [
     "integration: Marks a test as an integration test",
     "plot: Marks a test as interactive, plots will flash to the screen",
-    "ri_dev: A test using a dev version of ResInsight, skipped by default"
 ]
 
 [tool.rstcheck]

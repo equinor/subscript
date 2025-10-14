@@ -48,24 +48,22 @@ jobs:
           enable-cache: true
           python-version: ${{ matrix.python-version }}
 
-      - name: Install OPM-flow and ResInsight (for testing)
+      - name: Install OPM-flow (for testing)
         run: |
           sudo apt-get install software-properties-common
           sudo apt-add-repository ppa:opm/ppa
           sudo apt-get update
           sudo apt-get install mpi-default-bin
           sudo apt-get install libopm-simulators-bin
-          sudo apt-get install resinsight
 
       - name: Install subscript with dependencies
         if: ${{ always() }}
         run: |
           uv pip install ".[tests, docs]"
 
-      - name: Log OPM-Flow and ResInsight version
+      - name: Log OPM-Flow version
         run: |
           flow --version
-          ResInsight --console --version
 
       - name: List all installed packages
         run: uv pip freeze
