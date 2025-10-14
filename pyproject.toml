@@ -47,9 +47,6 @@ dependencies = [
     "pyyaml",
     "scipy",
     "seaborn",
-    "segyio",
-    "shapely",
-    "xlrd",
     "xtgeo",
 ]
 
