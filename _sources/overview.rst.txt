@@ -29,7 +29,6 @@ params2csv                ✅   ✅                 ✅
 presentvalue              ✅   ⛔️                 ⛔️
 prtvol2csv                ✅   ✅                 ⛔️
 restartthinner            ✅   ⛔️                 ⛔️
-ri_wellmod                ✅   ✅                 ⛔️
 rmsecl_volumetrics        ✅   ⛔️                 ⛔️
 sector2fluxnum            ✅   ⛔️                 ⛔️
 summaryplot               ✅   ⛔️                 ⛔️

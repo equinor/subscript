@@ -37,7 +37,6 @@ Submodules
    subscript.presentvalue
    subscript.prtvol2csv
    subscript.restartthinner
-   subscript.ri_wellmod
    subscript.rmsecl_volumetrics
    subscript.sector2fluxnum
    subscript.summaryplot
