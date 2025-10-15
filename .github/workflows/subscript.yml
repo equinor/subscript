@@ -76,7 +76,7 @@ jobs:
 
       - name: Run tests
         if: ${{ always() }}
-        run: pytest -n auto tests --mpl
+        run: pytest -n logical tests --mpl
 
       - name: Syntax check documentation
         if: ${{ always() }}
