@@ -1,6 +1,6 @@
 import datetime
 
-import create_date_files as cdf
+from subscript.create_date_files import create_date_files as cdf
 
 
 def test_is_iso_date_item_with_date_object():
