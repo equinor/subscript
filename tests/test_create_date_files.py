@@ -1,8 +1,6 @@
 import datetime
 
-# Replace `dates_module` with your actual module name, e.g. `from mypkg import dates_module`
 import create_date_files as cdf
-import pytest
 
 
 def test_is_iso_date_item_with_date_object():

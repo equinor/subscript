@@ -4,6 +4,7 @@ import logging
 import re
 
 import fmu.config.utilities as utils
+
 import subscript
 
 logger = subscript.getLogger(__name__)
