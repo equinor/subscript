@@ -5,6 +5,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
 from resdata.summary import Summary
 
@@ -68,7 +69,7 @@ class CustomFormatter(
     """
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """
     Define the argparse parser
 
@@ -138,7 +139,7 @@ def get_parser():
     return parser
 
 
-def summary_vec(summary, key, required=True):
+def summary_vec(summary: Summary, key: str, required: bool = True) -> npt.NDArray:
     """
     Read vector corresponding to key from summary instance
 
@@ -161,7 +162,7 @@ def summary_vec(summary, key, required=True):
     return np.array([])
 
 
-def get_buildup_indices(rates):
+def get_buildup_indices(rates: npt.NDArray) -> tuple[list[int], list[int]]:
     """
     Go through the simulated rate and identify bu periods, as defined by zero flow.
 
@@ -193,7 +194,9 @@ def get_buildup_indices(rates):
     return buildup_indices, buildup_end_indices
 
 
-def supertime(time, rate, bu_start_ind, bu_end_ind):
+def supertime(
+    time: npt.NDArray, rate: npt.NDArray, bu_start_ind: int, bu_end_ind: int
+) -> npt.NDArray:
     """
     Calculate supertime
 
@@ -230,7 +233,9 @@ def supertime(time, rate, bu_start_ind, bu_end_ind):
     return super_time[1:]
 
 
-def weighted_avg_press_time_derivative_lag1(delta_p, dspt):
+def weighted_avg_press_time_derivative_lag1(
+    delta_p: npt.NDArray, dspt: npt.NDArray
+) -> npt.NDArray:
     """
     Compute weighted average of pressure time derivative,
     one time step to each side. Lag1
@@ -270,8 +275,13 @@ def weighted_avg_press_time_derivative_lag1(delta_p, dspt):
 
 
 def weighted_avg_press_time_derivative_lag2(
-    delta_p, dspt, super_time, wbhp, bu_start_ind, bu_end_ind
-):
+    delta_p: npt.NDArray,
+    dspt: npt.NDArray,
+    super_time: npt.NDArray,
+    wbhp: npt.NDArray,
+    bu_start_ind: int,
+    bu_end_ind: int,
+) -> npt.NDArray:
     """
     Compute weighted average using LAG 2 for pressure time derivative
 
@@ -326,7 +336,14 @@ def weighted_avg_press_time_derivative_lag2(
     ) / (dspt_lag2_backward + dspt_lag2_forward)
 
 
-def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):
+def to_csv(
+    filen: str,
+    field_list: list[npt.NDArray],
+    header_list: list[str] | None = None,
+    start: int = 0,
+    end: int | None = None,
+    sep: str = ",",
+) -> None:
     """
     Dump vectors to csv file. Handles arbitrarly number of fields
 
@@ -359,7 +376,9 @@ def to_csv(filen, field_list, header_list=None, start=0, end=None, sep=","):
     print("Writing file:" + filen)
 
 
-def genobs_vec(filen, vec, time):
+def genobs_vec(
+    filen: str, vec: npt.NDArray, time: npt.NDArray
+) -> npt.NDArray[np.float64]:
     """
     Adjust vector to time axis defined by observation file.
     Used to create output compatible with ERTs GENERAL_OBSERVATION
@@ -376,7 +395,7 @@ def genobs_vec(filen, vec, time):
 
     """
 
-    if not Path(filen).exists():
+    if not Path(filen).is_file():
         raise FileNotFoundError("No such file:", filen)
 
     dframe = pd.read_csv(filen, sep="\t")
@@ -385,7 +404,7 @@ def genobs_vec(filen, vec, time):
     return np.interp(obs_time, time, vec)
 
 
-def main():
+def main() -> None:
     """
     Main entry point for the script
 

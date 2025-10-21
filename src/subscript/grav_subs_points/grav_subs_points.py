@@ -3,13 +3,14 @@ import logging
 import os
 import sys
 from datetime import date
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated, Any
 
 import pandas as pd
 import yaml
 from grid3d_maps.avghc._loader import FMUYamlSafeLoader
-from pydantic import BaseModel, Field, FilePath, field_validator
+from pydantic import BaseModel, Field, FilePath
 from resdata.gravimetry import ResdataGrav, ResdataSubsidence
 from resdata.grid import Grid
 from resdata.resfile import ResdataFile
@@ -56,6 +57,18 @@ EPILOGUE = """
 
 """
 
+DateString = Annotated[str, "Date in YYYYMMDD format"]
+
+
+class Phase(StrEnum):
+    OIL = "oil"
+    GAS = "gas"
+    WATER = "water"
+    TOTAL = "total"
+
+
+PHASE_CODE = {Phase.OIL: 1, Phase.GAS: 2, Phase.WATER: 4, Phase.TOTAL: 7}
+
 
 class GravPointsInput(BaseModel):
     diffdates: list[tuple[date, date]]
@@ -68,15 +81,7 @@ class GravPointsStations(BaseModel):
 
 class GravPointsCalc(BaseModel):
     poisson_ratio: Annotated[float, Field(strict=True, ge=0, le=0.5)]
-    phases: list[str]
-
-    @field_validator("phases")
-    @classmethod
-    def check_phases(cls, phases: list[str]) -> list[str]:
-        allowed_phases = ["oil", "gas", "water", "total"]
-        for item in phases:
-            assert item in allowed_phases, f"allowed phases are {allowed_phases!s}"
-        return phases
+    phases: list[Phase]
 
 
 class GravPointsConfig(BaseModel):
@@ -146,15 +151,16 @@ def main() -> None:
     logger.setLevel(logging.INFO)
 
     # parse the config file
-    if not Path(args.configfile).exists():
+    config_file = Path(args.configfile)
+    if not config_file.is_file():
         sys.exit("No such file:" + args.configfile)
 
-    with open(Path(args.configfile), encoding="utf8") as stream:
+    with open(config_file, encoding="utf8") as stream:
         config = yaml.load(stream, Loader=FMUYamlSafeLoader)
 
-    if not Path(args.outputdir).exists():
+    if not Path(args.outputdir).is_dir():
         sys.exit("Output folder does not exist:" + args.outputdir)
-    if not Path(args.UNRSTfile).exists():
+    if not Path(args.UNRSTfile).is_file():
         sys.exit("UNRST file does not exist:" + args.UNRSTfile)
 
     main_gravpoints(
@@ -166,7 +172,12 @@ def main() -> None:
     )
 
 
-def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
+def export_grav_points_xyz(
+    act_stations: pd.DataFrame,
+    phase: Phase,
+    diff_date: tuple[DateString, DateString],
+    out_folder: Path,
+) -> None:
     """Write points in xyz format, roxar.FileFormat.RMS_POINTS"""
     logger.info(f"Exporting simulated gravity values to {out_folder} as xyz points")
     outfile = (
@@ -191,7 +202,11 @@ def export_grav_points_xyz(act_stations, phase, diff_date, out_folder) -> None:
 
 
 def export_grav_points_ert(
-    act_stations, diff_date, out_folder, pref_gendata, ext_gendata
+    act_stations: pd.DataFrame,
+    diff_date: tuple[DateString, DateString],
+    out_folder: Path,
+    pref_gendata: str,
+    ext_gendata: str,
 ) -> None:
     """Export for ert for each diffdate, only total, not per phase"""
     logger.info(f"Exporting simulated gravity values to {out_folder} for use by ert")
@@ -200,11 +215,15 @@ def export_grav_points_ert(
         pref_gendata + "gravity_" + diff_date[0] + "_" + diff_date[1] + ext_gendata
     )
 
-    output_path = Path(out_folder) / outfile
-    part.to_csv(output_path, header=None, index=None)
+    output_path = out_folder / outfile
+    part.to_csv(output_path, header=False, index=False)
 
 
-def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
+def export_subs_points_xyz(
+    act_stations: pd.DataFrame,
+    diff_date: tuple[DateString, DateString],
+    out_folder: Path,
+) -> None:
     """Write points in xyz format, roxar.FileFormat.RMS_POINTS"""
     logger.info(f"Exporting simulated subsidence values to {out_folder} as xyz points")
     outfile = (
@@ -218,7 +237,7 @@ def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
         + EXTENSION_POINTS
     )
 
-    with open(os.path.join(out_folder, outfile), "w") as file:
+    with open(out_folder / outfile, "w") as file:
         for _index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "
@@ -227,7 +246,11 @@ def export_subs_points_xyz(act_stations, diff_date, out_folder) -> None:
 
 
 def export_subs_points_ert(
-    act_stations, diff_date, out_folder, pref_gendata, ext_gendata
+    act_stations: pd.DataFrame,
+    diff_date: tuple[DateString, DateString],
+    out_folder: Path,
+    pref_gendata: str,
+    ext_gendata: str,
 ) -> None:
     """Export for ert for each diffdate"""
     logger.info(f"Exporting simulated subsidence values to {out_folder} for use by ert")
@@ -236,66 +259,66 @@ def export_subs_points_ert(
         pref_gendata + "subsidence_" + diff_date[0] + "_" + diff_date[1] + ext_gendata
     )
 
-    output_path = Path(out_folder) / outfile
-    part.to_csv(output_path, header=None, index=None)
+    output_path = out_folder / outfile
+    part.to_csv(output_path, header=False, index=False)
 
 
 def main_gravpoints(
     unrst_file: str,
     config: dict[str, Any],
-    output_folder: Path | None,
-    pref_gendata: str | None,
-    ext_gendata: str | None,
+    output_folder: Path,
+    pref_gendata: str,
+    ext_gendata: str,
 ) -> None:
     """
     Process a configuration, model gravity and subsidence points and write to disk.
 
     Args:
-        resdata: Path to flow simulation UNRST file
         config: Configuration for modelling
     """
 
-    cfg = GravPointsConfig.model_validate(config).model_dump()
+    cfg = GravPointsConfig(**config)
 
     # Read inputs and calculation parameters
-    input_diffdates = cfg["input"]["diffdates"]
-    station_files = cfg["stations"]
-    phases = cfg["calculations"]["phases"]
-    poisson_ratio = cfg["calculations"]["poisson_ratio"]
+    input_diffdates = cfg.input.diffdates
+    station_files = cfg.stations
+    phases = cfg.calculations.phases
+    poisson_ratio = cfg.calculations.poisson_ratio
 
-    if isinstance(unrst_file, str):
-        restart_file = unrst_file[:-6] + ".UNRST"
-        egrid_file = unrst_file[:-6] + ".EGRID"
-        init_file = unrst_file[:-6] + ".INIT"
-        grid = Grid(egrid_file)
-        init = ResdataFile(init_file)
-        rest = ResdataFile(restart_file)
+    restart_file = unrst_file[:-6] + ".UNRST"
+    egrid_file = unrst_file[:-6] + ".EGRID"
+    init_file = unrst_file[:-6] + ".INIT"
+    grid = Grid(egrid_file)
+    init = ResdataFile(init_file)
+    rest = ResdataFile(restart_file)
 
-    restart_index = {}
+    restart_index: dict[DateString, int] = {}
 
     # From restart datetime format to YYYYMMDD as key
     for i, restart_date in enumerate(rest.dates):
         restart_index[restart_date.strftime("%Y%m%d")] = i
 
-    diffdates = []
+    diffdates: list[tuple[DateString, DateString]] = []
     # Convert dates from datetime format to strings
     logger.info("Starting modelling for diffdates: ")
-    for diffdate in input_diffdates:
-        diff = [diffdate[0].strftime("%Y%m%d"), diffdate[1].strftime("%Y%m%d")]
+    for input_diffdate in input_diffdates:
+        diff = (
+            input_diffdate[0].strftime("%Y%m%d"),
+            input_diffdate[1].strftime("%Y%m%d"),
+        )
         diffdates.append(diff)
-        logger.info(f"{diffdate[0]}_{diffdate[1]}")
+        logger.info(f"{input_diffdate[0]}_{input_diffdate[1]}")
 
     grav = ResdataGrav(grid, init)
     subsidence = ResdataSubsidence(grid, init)
 
-    added_dates = []
+    added_dates: list[DateString] = []
 
     for diffdate in diffdates:
         for singledate in diffdate:  # base and monitor
-            rsb = rest.restartView(0)
             if singledate not in added_dates:
                 if singledate in restart_index:
-                    rsb = rest.restartView(restart_index[singledate])
+                    rsb = rest.restart_view(restart_index[singledate])
                     if rest.has_kw("RFIPGAS"):
                         grav.add_survey_RFIP(singledate, rsb)
                     else:
@@ -314,12 +337,10 @@ def main_gravpoints(
                     )
                     sys.exit(1)
 
-    phase_code = {"oil": 1, "gas": 2, "water": 4, "total": 7}
-
     # Gravity
     for diffdate in diffdates:
         diff_year = str(diffdate[0][0:4]) + "_" + str(diffdate[1][0:4])
-        active_stations = pd.read_csv(station_files["grav"][diff_year], sep=";")
+        active_stations = pd.read_csv(station_files.grav[diff_year], sep=";")
 
         for phase in phases:
             logger.info(
@@ -329,7 +350,7 @@ def main_gravpoints(
 
             gravity_values = [
                 grav.eval(
-                    diffdate[1], diffdate[0], (x, y, z), phase_mask=phase_code[phase]
+                    diffdate[1], diffdate[0], (x, y, z), phase_mask=PHASE_CODE[phase]
                 )
                 for x, y, z in zip(
                     active_stations["utmx"],
@@ -354,7 +375,7 @@ def main_gravpoints(
 
     for diffdate in diffdates:
         diff_year = str(diffdate[0][0:4]) + "_" + str(diffdate[1][0:4])
-        active_stations = pd.read_csv(station_files["subs"][diff_year], sep=";")
+        active_stations = pd.read_csv(station_files.subs[diff_year], sep=";")
 
         subs_values = [
             subsidence.eval_geertsma_rporv(

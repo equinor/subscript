@@ -139,7 +139,7 @@ def summaryplotter(
     dumpimages: bool = False,
     colourby: str | None = None,
     logcolourby: str | None = None,
-):
+) -> None:
     """
     Will plot Eclipse summary vectors to screen or dump to file based on kwargs.
 
@@ -555,7 +555,9 @@ def summaryplotter(
         plt.show()
 
 
-def split_vectorsdatafiles(vectorsdatafiles):
+def split_vectorsdatafiles(
+    vectorsdatafiles: list[str],
+) -> tuple[list[str], list[str], list[str], list[str]]:
     """
     Takes a list of strings and determines which of the arguments are Eclipse runs
     (by attempting to construct an Summary object), and which are summary
@@ -595,7 +597,7 @@ def split_vectorsdatafiles(vectorsdatafiles):
     return (summaryfiles, datafiles, vectors, parameterfiles)
 
 
-def main():
+def main() -> None:
     """Parse command line, and control user interface."""
 
     parser = get_parser()

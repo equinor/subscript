@@ -5,6 +5,7 @@ import logging
 import os
 import re
 import sys
+from typing import Any
 
 import ert
 import pandas as pd
@@ -59,15 +60,15 @@ class CustomFormatter(
 class CsvMerge(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin"""
 
-    def run(self, *args):
+    def run(self, *args: Any) -> None:  # noqa: ANN401
         """Parse with a simplified command line parser, for ERT only,
         call csv_merge_main()"""
         parser = get_ertwf_parser()
-        args = parser.parse_args(args)
+        parsed_args = parser.parse_args(args)
         logger.setLevel(logging.INFO)
-        globbedfiles = glob_patterns(args.csvfiles)
+        globbedfiles = glob_patterns(parsed_args.csvfiles)
         csv_merge_main(
-            csvfiles=globbedfiles, output=args.output, memoryconservative=True
+            csvfiles=globbedfiles, output=parsed_args.output, memoryconservative=True
         )
 
 
@@ -319,7 +320,7 @@ def csv_merge_main(
 
 
 @ert.plugin(name="subscript")
-def legacy_ertscript_workflow(config):
+def legacy_ertscript_workflow(config: ert.WorkflowConfigs) -> None:
     """Hook the CsvMerge class into ERT with the name CSV_MERGE,
     and inject documentation"""
     workflow = config.add_workflow(CsvMerge, "CSV_MERGE")

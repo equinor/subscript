@@ -42,7 +42,7 @@ def _read_lines(filename: Path) -> list[str]:
     return lines
 
 
-def _normalize_line_endings(lines: str, line_ending: str = "unix"):
+def _normalize_line_endings(lines: str, line_ending: str = "unix") -> str:
     """Normalize line endings to unix (\n), windows (\r\n) or mac (\r).
     Acceptable values are 'unix' (default), 'windows' and 'mac'.
 
@@ -62,7 +62,7 @@ def _normalize_line_endings(lines: str, line_ending: str = "unix"):
     return lines
 
 
-def _remove_comments(clear_comments: bool, tmp_in: str):
+def _remove_comments(clear_comments: bool, tmp_in: str) -> str:
     """Remove comments, when needed, in the tmp_in string.
     In-line comments will not be removed.
 

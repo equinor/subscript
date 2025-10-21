@@ -11,6 +11,7 @@ import logging
 import shutil
 from glob import glob
 from pathlib import Path
+from typing import Any
 
 import ert
 import pandas as pd
@@ -62,7 +63,7 @@ Add to your ERT config to have the workflow automatically executed on successful
   LOAD_WORKFLOW ../bin/workflows/wf_params2csv_hist
   HOOK_WORKFLOW wf_params2csv_hist POST_SIMULATION
 
-"""  # noqa
+"""  # noqa: E501
 
 
 class CustomFormatter(
@@ -78,12 +79,12 @@ class Params2Csv(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,
     to be used as an ERT workflow (wrapping the command line utility)"""
 
-    def run(self, *args):
+    def run(self, *args: Any) -> None:  # noqa: ANN401
         """Parse with a simplified command line parser, for ERT only,
         calling params2csv_main()"""
         parser = get_parser()
-        args = parser.parse_args(args)
-        params2csv_main(args)
+        parsed_args = parser.parse_args(args)
+        params2csv_main(parsed_args)
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -239,7 +240,7 @@ def main() -> None:
 
 
 @ert.plugin(name="subscript")
-def legacy_ertscript_workflow(config) -> None:
+def legacy_ertscript_workflow(config: ert.WorkflowConfigs) -> None:
     """Hook the CsvStack class into ERT with the name PARAMS2CSV,
     and inject documentation"""
     workflow = config.add_workflow(Params2Csv, "PARAMS2CSV")
