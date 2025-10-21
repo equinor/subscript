@@ -429,7 +429,7 @@ def parse_wildcardfile(filename: str) -> list[str]:
     return list(filter(len, lines))
 
 
-def main():
+def main() -> None:
     """Wrapper for the function main_eclcompress, parsing command line arguments"""
     parser = get_parser()
     args = parser.parse_args()

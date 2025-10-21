@@ -217,7 +217,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def main():
+def main() -> None:
     """Endpoint for command line script"""
     parser = get_parser()
     args = parser.parse_args()

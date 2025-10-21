@@ -197,6 +197,7 @@ select = [
     "RUF", # RUFF specific rules
     "PL",  # pylint
     "B",  # flake8-bugbear
+    "ANN",  # flake8-annotations
 ]
 ignore = [
     "C901",  # complex-structure
@@ -206,6 +207,13 @@ ignore = [
     "PLR2004",  # magic-value-comparison
     "PLW2901",  # redefined-loop-name
 ]
+
+[tool.ruff.lint.extend-per-file-ignores]
+"src/subscript/sunsch/time_vector.py" = ["ANN"]
+"src/subscript/casegen_upcars/*" = ["ANN"]
+"src/subscript/field_statistics/*" = ["ANN"]
+"src/subscript/fmu_copy_revision/*" = ["ANN"]
+"tests/*" = ["ANN"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

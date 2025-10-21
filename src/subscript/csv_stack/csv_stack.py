@@ -6,7 +6,7 @@ import logging
 import re
 import sys
 from re import Pattern
-from typing import cast
+from typing import Any, cast
 
 import ert
 import pandas as pd
@@ -90,12 +90,12 @@ class CsvStack(ert.ErtScript):
     """A class with a run() function that can be registered as an ERT plugin,
     to be used as an ERT workflow (wrapping the command line utility)"""
 
-    def run(self, *args):
+    def run(self, *args: Any) -> None:  # noqa: ANN401
         """Parse with a simplified command line parser, for ERT only,
         calling csv_stack_main()"""
         parser = get_parser()
-        args = parser.parse_args(args)
-        csv_stack_main(args, support_magics=False)
+        parsed_args = parser.parse_args(args)
+        csv_stack_main(parsed_args, support_magics=False)
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -323,7 +323,7 @@ def csv_stack(
 
 
 @ert.plugin(name="subscript")
-def legacy_ertscript_workflow(config) -> None:
+def legacy_ertscript_workflow(config: ert.WorkflowConfigs) -> None:
     """Hook the CsvStack class into ERT with the name CSV_STACK,
     and inject documentation"""
     workflow = config.add_workflow(CsvStack, "CSV_STACK")

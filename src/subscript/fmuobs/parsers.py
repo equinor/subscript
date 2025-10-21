@@ -192,7 +192,7 @@ def filter_comments(input_str: str, comment_identifier: str = "--") -> str:
     return "\n".join(filter(len, _lines))
 
 
-def fix_dtype(value):
+def fix_dtype(value: str) -> int | float | datetime.datetime | str:
     """Guess the correct datatype for an incoming value.
 
     If parseable as float, return as integer if it is, return float if not.
@@ -371,7 +371,9 @@ def flatten_observation_unit(
     return obs_subunits
 
 
-def ertobs2df(input_str: str, cwd=".", starttime: str | None = None) -> pd.DataFrame:
+def ertobs2df(
+    input_str: str, cwd: str = ".", starttime: str | None = None
+) -> pd.DataFrame:
     """Parse a string with ERT observations and convert into
     the internal dataframe format.
 
@@ -417,7 +419,9 @@ def ertobs2df(input_str: str, cwd=".", starttime: str | None = None) -> pd.DataF
     return compute_date_from_days(pd.DataFrame(obs_list), starttime)
 
 
-def compute_date_from_days(dframe: pd.DataFrame, starttime: str | None = None):
+def compute_date_from_days(
+    dframe: pd.DataFrame, starttime: str | None = None
+) -> pd.DataFrame:
     """Fill in DATE cells in a dataframe computed from
     a given starttime and data in DAYS cells.
 

@@ -321,7 +321,7 @@ def csv2ofmvol_main(csvfilepatterns: list[str], output: str) -> bool:
     return True
 
 
-def main():
+def main() -> None:
     """Entry point if called from command line"""
     args = get_parser().parse_args()
 

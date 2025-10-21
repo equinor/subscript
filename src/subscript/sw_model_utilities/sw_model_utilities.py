@@ -30,7 +30,7 @@ MENU = """1. Convert a TO A and b to B from Sw = aJ^b to Sw=(J/A)^(1/B)
 """
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Make a dummy parser for the command line for the sake of docs."""
     parser = argparse.ArgumentParser(
         description=DESCRIPTION,
@@ -46,7 +46,17 @@ def get_parser():
     return parser
 
 
-def menu():
+def menu() -> tuple[
+    int,
+    bool,
+    list[float],
+    list[float],
+    list[float],
+    list[float],
+    list[float],
+    list[str],
+    float,
+]:
     """Print an interactive menu to the user"""
     print("Choices:\n")
     print(MENU)
@@ -56,12 +66,12 @@ def menu():
         raise ValueError("Not a number") from e
 
     # initial
-    av = []
-    bv = []
-    poro = []
-    perm = []
-    swirra = []
-    desc = []
+    av: list[float] = []
+    bv: list[float] = []
+    poro: list[float] = []
+    perm: list[float] = []
+    swirra: list[float] = []
+    desc: list[str] = []
     inverse = False
     hmax = 0.0
 
@@ -111,7 +121,7 @@ def autoformat(num: float) -> str:
     return f"{num:.4e}"
 
 
-def convert_normal2inverse(aval: float, bval: float):
+def convert_normal2inverse(aval: float, bval: float) -> tuple[float, float]:
     """A and B algebraic conversion
 
     Note: same formula is valid in both conversion directions!"""
@@ -132,8 +142,8 @@ def plotting(
     swirra: list[float],
     desc: list[str],
     hmax: float,
-    show=True,
-):
+    show: bool = True,
+) -> None:
     """Plot a capillary pressure function to users screen"""
     # height array; create an array from min to max, with step:
     hei = np.arange(0.01, hmax, 0.1)
