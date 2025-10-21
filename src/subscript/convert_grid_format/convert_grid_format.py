@@ -4,6 +4,7 @@ import argparse
 import logging
 import os
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 
 import xtgeo
@@ -88,7 +89,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _do_parse_args(args):
+def _do_parse_args(args: Sequence[str] | None) -> argparse.Namespace:
     """Parse command line arguments"""
 
     if args is None:
@@ -96,14 +97,12 @@ def _do_parse_args(args):
 
     parser = get_parser()
 
-    args = parser.parse_args(args)
-
     if len(sys.argv[1:]) < 2:
         parser.print_help()
         print("QUIT")
         sys.exit(0)
 
-    return args
+    return parser.parse_args(args)
 
 
 def _convert_ecl2roff(
@@ -182,23 +181,28 @@ def _convert_ecl2roff(
             raise SystemExit("Invalid grid extention")
 
 
-def main(args=None) -> None:
+def main(args: Sequence[str] | None = None) -> None:
     """Entry-point"""
 
     XTGeoDialog.print_xtgeo_header(APPNAME, __version__)
 
-    args = _do_parse_args(args)
+    parsed_args = _do_parse_args(args)
 
-    logger.info(args)
+    logger.info(parsed_args)
 
-    if args.conversion not in set(CONVERSIONS):
+    if parsed_args.conversion not in set(CONVERSIONS):
         raise ValueError(
-            f"Illegal conversion <{args.conversion}>. Allowed are: {CONVERSIONS}"
+            f"Illegal conversion <{parsed_args.conversion}>. Allowed are: {CONVERSIONS}"
         )
 
     xtg.say("Running conversion...")
     _convert_ecl2roff(
-        args.infile, args.mode, args.outfile, args.stdfmu, args.propnames, args.dates
+        parsed_args.infile,
+        parsed_args.mode,
+        parsed_args.outfile,
+        parsed_args.stdfmu,
+        parsed_args.propnames,
+        parsed_args.dates,
     )
 
 

@@ -66,7 +66,7 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def is_iso_date_item(item: Any) -> bool:
+def is_iso_date_item(item: Any) -> bool:  # noqa: ANN401
     """
     Return True if item is:
     - a datetime.date or datetime.datetime, OR

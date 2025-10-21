@@ -364,7 +364,7 @@ def ofmvol2csv_main(
         logger.warning("No data was extracted")
 
 
-def main():
+def main() -> None:
     """Entry point if called from command line"""
     args = get_parser().parse_args()
 

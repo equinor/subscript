@@ -33,7 +33,7 @@ EOL_MAC = r"\r"
 EPILOG = ""
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Function to create the argument parser that is going to be served to the user.
 
     Returns:
@@ -77,7 +77,7 @@ def get_parser():
     return parser
 
 
-def sector_to_fluxnum(args):
+def sector_to_fluxnum(args: argparse.Namespace) -> None:
     """
     Wrapper function that generates an ECL DATA file with single FLUXNUM based on
     user Region-of-Interest.
@@ -221,7 +221,7 @@ def sector_to_fluxnum(args):
     new_data_file.set_USEFLUX_header(args)
 
 
-def main():
+def main() -> None:
     """
     main method
     """

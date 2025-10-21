@@ -34,7 +34,7 @@ class PillarModel:
         filleps: str = "FILLEPS",
         rptrst: str = "ALLPROPS",
         unifout: str = "UNIFOUT",
-    ):
+    ) -> None:
         """Set up a reservoir grid and dynamic model that can be
         exported as an Eclipse deck.
 

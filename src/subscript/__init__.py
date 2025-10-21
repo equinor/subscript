@@ -9,7 +9,7 @@ except metadata.PackageNotFoundError:
     __version__ = "0.0.0"
 
 
-def getLogger(module_name="subscript"):
+def getLogger(module_name: str = "subscript") -> logging.Logger:
     """Provides a unified logger for subscript scripts.
 
     Scripts in subscript are encouraged to use logging.info() instead of
@@ -40,7 +40,7 @@ def getLogger(module_name="subscript"):
     if not module_name:
         return getLogger("subscript")
 
-    compressed_name = []
+    compressed_name: list[str] = []
     for elem in module_name.split("."):
         if len(compressed_name) == 0 or elem != compressed_name[-1]:
             compressed_name.append(elem)
