@@ -1,7 +1,11 @@
 import shutil
 
-from ert import ForwardModelStepDocumentation, ForwardModelStepPlugin
-from ert import plugin as ert_plugin
+from ert import (
+    ForwardModelStepDocumentation,
+    ForwardModelStepPlugin,
+    plugin as ert_plugin,
+)
+
 from subscript.create_date_files import create_date_files
 from subscript.csv2ofmvol import csv2ofmvol
 from subscript.csv_stack import csv_stack
@@ -111,7 +115,8 @@ class CreateDateFiles(ForwardModelStepPlugin):
             examples="""
 .. code-block:: console
 
-FORWARD_MODEL CREATE_DATE_FILES(<GLOBVAR_FILE>="fmuconfig/output/global_variables.yml",\
+  FORWARD_MODEL CREATE_DATE_FILES(<GLOBVAR_FILE>=\
+            "fmuconfig/output/global_variables.yml",\
             <SINGLE_DATES>="SEISMIC_HIST_DATES", <DIFF_DATES>="SEISMIC_DIFF_DATES")
 """,
         )
