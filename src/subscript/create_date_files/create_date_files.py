@@ -10,7 +10,7 @@ import subscript
 logger = subscript.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-DESCRIPTION = """ Make 'single_dates.txt' and 'diff_dates.txt' files that can be used
+DESCRIPTION = """Make 'single_dates.txt' and 'diff_dates.txt' files that can be used
 with ECLRST2ROFF and ECLDIFF2ROFF. The output files are stored directly in runpath
 folder.
 

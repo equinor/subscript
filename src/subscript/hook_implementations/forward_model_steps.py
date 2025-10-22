@@ -1,11 +1,8 @@
 import shutil
 
-from ert import (
-    ForwardModelStepDocumentation,
-    ForwardModelStepPlugin,
-    plugin as ert_plugin,
-)
-
+from ert import ForwardModelStepDocumentation, ForwardModelStepPlugin
+from ert import plugin as ert_plugin
+from subscript.create_date_files import create_date_files
 from subscript.csv2ofmvol import csv2ofmvol
 from subscript.csv_stack import csv_stack
 from subscript.eclcompress import eclcompress
@@ -88,6 +85,34 @@ class CheckSwatinit(ForwardModelStepPlugin):
   FORWARD_MODEL CHECK_SWATINIT(<DATAFILE>=<ECLBASE>, <OUTPUT>=check_swatinit.csv)
 
 where ``ECLBASE`` is already defined in your ERT config.
+""",
+        )
+
+
+class CreateDateFiles(ForwardModelStepPlugin):
+    def __init__(self) -> None:
+        super().__init__(
+            name="CREATE_DATE_FILES",
+            command=[
+                shutil.which("create_date_files"),
+                "<GLOBVARFILE>",
+                "--single_dates",
+                "<SINGLE_DATES>",
+                "--diff_dates",
+                "<DIFF_DATES>",
+            ],
+        )
+
+    @staticmethod
+    def documentation() -> ForwardModelStepDocumentation | None:
+        return ForwardModelStepDocumentation(
+            description=create_date_files.DESCRIPTION,
+            category="utility.transformation",
+            examples="""
+.. code-block:: console
+
+FORWARD_MODEL CREATE_DATE_FILES(<GLOBVAR_FILE>="fmuconfig/output/global_variables.yml",\
+            <SINGLE_DATES>="SEISMIC_HIST_DATES", <DIFF_DATES>="SEISMIC_DIFF_DATES")
 """,
         )
 
@@ -770,6 +795,7 @@ def installable_forward_model_steps() -> list[type[ForwardModelStepPlugin]]:
     return [
         CasegenUpcars,
         CheckSwatinit,
+        CreateDateFiles,
         Csv2Ofmvol,
         CsvStack,
         EclCompress,
