@@ -166,14 +166,14 @@ def main():
 
     if single_dates is not None:
         logger.info(f"Create {singledates_output_file}")
-        with open(singledates_output_file, "w") as f_single:
+        with open(singledates_output_file, "w", encoding="utf-8") as f_single:
             for date in cfg_dates[single_dates]:
                 logger.info(f"{date}")
                 f_single.write(f"{date!s}\n")
 
     if diff_dates is not None:
         logger.info(f"Create {diffdates_output_file}")
-        with open(diffdates_output_file, "w") as f_diff:
+        with open(diffdates_output_file, "w", encoding="utf-8") as f_diff:
             for dates in cfg_dates[diff_dates]:
                 logger.info(f"{dates[0]} {dates[1]}")
                 f_diff.write(f"{dates[0]!s} {dates[1]!s}\n")
