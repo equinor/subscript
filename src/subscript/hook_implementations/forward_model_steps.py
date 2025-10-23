@@ -100,10 +100,10 @@ class CreateDateFiles(ForwardModelStepPlugin):
             command=[
                 shutil.which("create_date_files"),
                 "<GLOBVARFILE>",
-                "--single_dates",
-                "<SINGLE_DATES>",
-                "--diff_dates",
-                "<DIFF_DATES>",
+                "--single-dates",
+                "<SINGLEDATES>",
+                "--diff-dates",
+                "<DIFFDATES>",
             ],
         )
 
@@ -117,7 +117,7 @@ class CreateDateFiles(ForwardModelStepPlugin):
 
   FORWARD_MODEL CREATE_DATE_FILES(<GLOBVAR_FILE>=\
             "fmuconfig/output/global_variables.yml",\
-            <SINGLE_DATES>="SEISMIC_HIST_DATES", <DIFF_DATES>="SEISMIC_DIFF_DATES")
+            <SINGLEDATES>="SEISMIC_HIST_DATES", <DIFFDATES>="SEISMIC_DIFF_DATES")
 """,
         )
 

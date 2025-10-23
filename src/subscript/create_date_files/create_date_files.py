@@ -14,21 +14,24 @@ DESCRIPTION = """Make 'single_dates.txt' and 'diff_dates.txt' files that can be 
 with ECLRST2ROFF and ECLDIFF2ROFF. The output files are stored directly in runpath
 folder.
 
-The script will extract dates the global variable yaml file. Name of the global variable
-file is read from input argument. Name of the date lists are also read from input
-arguments.
+The script extracts date lists from a global variables YAML file. The path to the
+global variables YAML file is provided via an input argument, and the names of
+the date lists in that YAML file are also provided via input arguments.
 
-The date lists must be defined under global:dates: level in the global variable file.
+The date lists must be defined under global:dates: level in the YAML file.
+
 Example of expected structure in global variable file:
 
-global:
-  dates:
-    SEISMIC_HIST_DATES:
-    - 2018-01-01
-    - 2020-07-01
-    SEISMIC_HIST_DIFFDATES:
-    - - 2020-07-01
-      - 2018-01-01
+    .. code-block:: yaml
+
+      global:
+        dates:
+          SEISMIC_HIST_DATES:
+            - 2018-01-01
+            - 2020-07-01
+          SEISMIC_HIST_DIFFDATES:
+            - - 2020-07-01
+              - 2018-01-01
 
 """
 
