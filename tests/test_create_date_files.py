@@ -1,6 +1,7 @@
 import datetime
 import io
 import sys
+import textwrap
 
 from subscript.create_date_files import create_date_files
 
@@ -53,7 +54,7 @@ def test_is_iso_diffdate_list_rejects_bad_pairs():
     assert not create_date_files.is_iso_diffdate_list(bad3)
 
 
-def test_validate_cfg_success_single_and_diff(tmp_path):
+def test_validate_cfg_success_single_and_diff():
     cfg = {
         "global": {
             "dates": {
@@ -83,42 +84,55 @@ def test_validate_cfg_missing_global_dates():
 
 
 def test_main(monkeypatch, tmp_path):
-    # Prepare fake arguments
+    # Prepare paths
     globvar_file = tmp_path / "global_variables.yml"
-    single_dates = tmp_path / "single_dates.txt"
-    diff_dates = tmp_path / "diff_dates.txt"
+    single_out = tmp_path / "single_dates.txt"
+    diff_out = tmp_path / "diff_dates.txt"
 
     # Write a minimal YAML file for testing
-    globvar_file.write_text("""
-global:
-  dates:
-    SEISMIC_HIST_DATES:
-    - 2018-01-01
-    - 2018-07-01
-    SEISMIC_HIST_DIFFDATES:
-    - - 2018-07-01
-      - 2018-01-01
+    globvar_file.write_text(
+        textwrap.dedent("""
+    global:
+      dates:
+        SEISMIC_HIST_DATES:
+          - 2018-01-01
+          - 2018-07-01
+        SEISMIC_HIST_DIFFDATES:
+          - - 2018-07-01
+            - 2018-01-01
     """)
+    )
 
+    # Ensure hardcoded output files are created in tmp_path
+    monkeypatch.chdir(tmp_path)
+
+    # Pass the YAML file plus the *key names* using the correct flags
     args = [
         "create_date_files",
         str(globvar_file),
-        "--single_dates",
-        str(single_dates),
-        "--diff_dates",
-        str(diff_dates),
+        "--single-dates",
+        "SEISMIC_HIST_DATES",
+        "--diff-dates",
+        "SEISMIC_HIST_DIFFDATES",
     ]
     monkeypatch.setattr(sys, "argv", args)
 
-    # Optionally capture stdout/stderr
+    # Capture stdout (optional)
     out = io.StringIO()
     monkeypatch.setattr(sys, "stdout", out)
 
-    # Call main
+    # Call main (should not raise SystemExit with correct args)
     create_date_files.main()
 
-    # Check that output files are created
-    assert single_dates.exists()
-    assert diff_dates.exists()
-    # Optionally, check file contents
-    assert "2018-01-01" in single_dates.read_text()
+    # Assert the hardcoded output files exist in tmp_path
+    assert single_out.exists()
+    assert diff_out.exists()
+
+    # Check file contents more strictly
+    single_text = single_out.read_text()
+    assert "2018-01-01" in single_text
+    assert "2018-07-01" in single_text
+
+    diff_text = diff_out.read_text()
+    assert "2018-07-01" in diff_text
+    assert "2018-01-01" in diff_text
