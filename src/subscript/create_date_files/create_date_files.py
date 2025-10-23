@@ -72,7 +72,7 @@ def is_iso_date_item(item) -> bool:
     - a datetime.date or datetime.datetime, OR
     - a string in ISO format YYYY-MM-DD (parsable by date.fromisoformat).
     """
-    if isinstance(item, datetime.date | datetime.datetime):
+    if isinstance(item, datetime.date):
         return True
     if isinstance(item, str):
         if not ISO_RE.match(item):
@@ -87,7 +87,7 @@ def is_iso_date_item(item) -> bool:
 
 def is_iso_date_list(date_list) -> bool:
     """All items must be valid ISO date items (date objects or ISO strings)."""
-    if not isinstance(date_list, list | tuple):
+    if not isinstance(date_list, (list, tuple)):
         return False
     return all(is_iso_date_item(it) for it in date_list)
 
@@ -97,7 +97,7 @@ def is_iso_diffdate_list(diffdate_list) -> bool:
     Each element must be a 2-tuple/list of ISO date items.
     Accepts [(date, date), ['YYYY-MM-DD', date], ...].
     """
-    if not isinstance(diffdate_list, list | tuple):
+    if not isinstance(diffdate_list, (list, tuple)):
         return False
     for pair in diffdate_list:
         if not isinstance(pair, list | tuple) or len(pair) != 2:
