@@ -123,6 +123,8 @@ def validate_cfg(cfg, single_dates: str | None, diff_dates: str | None) -> bool:
         if not isinstance(cfg_dates[single_dates], list):
             logger.error(f"Value for {single_dates} is not a list.")
             return False
+        if not cfg_dates[single_dates]:
+            logger.warning(f"{single_dates} is empty")
         if not is_iso_date_list(cfg_dates[single_dates]):
             logger.warning(
                 f"{single_dates} is not in the recommended format YYYY-MM-DD."
@@ -135,6 +137,8 @@ def validate_cfg(cfg, single_dates: str | None, diff_dates: str | None) -> bool:
         if not isinstance(cfg_dates[diff_dates], list):
             logger.error(f"Value for {diff_dates} is not a list.")
             return False
+        if not cfg_dates[diff_dates]:
+            logger.warning(f"{diff_dates} is empty")
         if not is_iso_diffdate_list(cfg_dates[diff_dates]):
             logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
 
