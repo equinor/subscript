@@ -114,28 +114,28 @@ def validate_cfg(cfg, single_dates: str | None, diff_dates: str | None) -> bool:
         logger.error("Missing 'global:dates:' section in config file.")
         return False
 
-    cfg_global = cfg["global"]["dates"]
+    cfg_dates = cfg["global"]["dates"]
 
     if single_dates is not None:
-        if single_dates not in cfg_global:
+        if single_dates not in cfg_dates:
             logger.error(f"Key {single_dates} not found in global variable file.")
             return False
-        if not isinstance(cfg_global[single_dates], list):
+        if not isinstance(cfg_dates[single_dates], list):
             logger.error(f"Value for {single_dates} is not a list.")
             return False
-        if not is_iso_date_list(cfg_global[single_dates]):
+        if not is_iso_date_list(cfg_dates[single_dates]):
             logger.warning(
                 f"{single_dates} is not in the recommended format YYYY-MM-DD."
             )
 
     if diff_dates is not None:
-        if diff_dates not in cfg_global:
+        if diff_dates not in cfg_dates:
             logger.error(f"Key {diff_dates} not found in global variable file.")
             return False
-        if not isinstance(cfg_global[diff_dates], list):
+        if not isinstance(cfg_dates[diff_dates], list):
             logger.error(f"Value for {diff_dates} is not a list.")
             return False
-        if not is_iso_diffdate_list(cfg_global[diff_dates]):
+        if not is_iso_diffdate_list(cfg_dates[diff_dates]):
             logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
 
     return True
@@ -162,19 +162,19 @@ def main():
     if not validate_cfg(cfg, single_dates, diff_dates):
         return
 
-    cfg_global = cfg["global"]["dates"]
+    cfg_dates = cfg["global"]["dates"]
 
     if single_dates is not None:
         logger.info(f"Create {singledates_output_file}")
         with open(singledates_output_file, "w") as f_single:
-            for date in cfg_global[single_dates]:
+            for date in cfg_dates[single_dates]:
                 logger.info(f"{date}")
                 f_single.write(f"{date!s}\n")
 
     if diff_dates is not None:
         logger.info(f"Create {diffdates_output_file}")
         with open(diffdates_output_file, "w") as f_diff:
-            for dates in cfg_global[diff_dates]:
+            for dates in cfg_dates[diff_dates]:
                 logger.info(f"{dates[0]} {dates[1]}")
                 f_diff.write(f"{dates[0]!s} {dates[1]!s}\n")
 
