@@ -2,6 +2,7 @@ import argparse
 import datetime
 import logging
 import re
+from typing import Any
 
 import fmu.config.utilities as utils
 
@@ -45,28 +46,26 @@ class CustomFormatter(
     and raw description formatter"""
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=DESCRIPTION,
         formatter_class=CustomFormatter,
     )
-    parser.add_argument("globvar_file", type=str, help="Name of global variable file")
+    parser.add_argument("globvar_file", help="Name of global variable YAML file")
     parser.add_argument(
         "--single-dates",
-        type=str,
         default=None,
         help="Name of single dates list in global variable file",
     )
     parser.add_argument(
         "--diff-dates",
-        type=str,
         default=None,
         help="Name of diffdates list in global variable file",
     )
     return parser
 
 
-def is_iso_date_item(item) -> bool:
+def is_iso_date_item(item: Any) -> bool:
     """
     Return True if item is:
     - a datetime.date or datetime.datetime, OR
@@ -85,14 +84,14 @@ def is_iso_date_item(item) -> bool:
     return False
 
 
-def is_iso_date_list(date_list) -> bool:
+def is_iso_date_list(date_list: Any) -> bool:
     """All items must be valid ISO date items (date objects or ISO strings)."""
     if not isinstance(date_list, (list, tuple)):
         return False
     return all(is_iso_date_item(it) for it in date_list)
 
 
-def is_iso_diffdate_list(diffdate_list) -> bool:
+def is_iso_diffdate_list(diffdate_list: Any) -> bool:
     """
     Each element must be a 2-tuple/list of ISO date items.
     Accepts [(date, date), ['YYYY-MM-DD', date], ...].
@@ -100,18 +99,44 @@ def is_iso_diffdate_list(diffdate_list) -> bool:
     if not isinstance(diffdate_list, (list, tuple)):
         return False
     for pair in diffdate_list:
-        if not isinstance(pair, list | tuple) or len(pair) != 2:
+        if not isinstance(pair, (list, tuple)) or len(pair) != 2:
             return False
         if not (is_iso_date_item(pair[0]) and is_iso_date_item(pair[1])):
             return False
     return True
 
 
-def validate_cfg(cfg, single_dates: str | None, diff_dates: str | None) -> bool:
-    """Validate the structure of the config dictionary"""
+def validate_cfg(
+    cfg: dict[str, Any] | None, single_dates: str | None, diff_dates: str | None
+) -> bool:
+    """Validate the structure of the config dictionary
 
-    if "global" not in cfg or "dates" not in cfg["global"]:
-        logger.error("Missing 'global:dates:' section in config file.")
+    Args:
+        cfg: Configuration dictionary loaded from YAML
+        single_dates: Name of single dates list key (optional)
+        diff_dates: Name of diff dates list key (optional)
+
+    Returns:
+        True if validation passes, False otherwise
+    """
+    # Check if cfg is None
+    if cfg is None:
+        logger.error("Configuration file is empty or invalid.")
+        return False
+
+    # Check if cfg is a dictionary
+    if not isinstance(cfg, dict):
+        logger.error("Configuration file does not contain a valid dictionary.")
+        return False
+
+    # Check for 'global' section
+    if "global" not in cfg or not isinstance(cfg["global"], dict):
+        logger.error("Missing or invalid 'global' section in config file.")
+        return False
+
+    # Check for 'dates' section
+    if "dates" not in cfg["global"] or not isinstance(cfg["global"]["dates"], dict):
+        logger.error("Missing or invalid 'global:dates:' section in config file.")
         return False
 
     cfg_dates = cfg["global"]["dates"]
@@ -145,7 +170,7 @@ def validate_cfg(cfg, single_dates: str | None, diff_dates: str | None) -> bool:
     return True
 
 
-def main():
+def main() -> None:
     """Parse arguments and create date files compatible with ECLRST2ROFF and
     ECLDIFF2ROFF."""
 
@@ -170,6 +195,9 @@ def main():
     if not validate_cfg(cfg, single_dates, diff_dates):
         return
 
+    # After validation passes, we know cfg is a valid dict with the expected structure
+    # We can safely assert this for type checking
+    assert isinstance(cfg, dict)  # Type narrowing for mypy
     cfg_dates = cfg["global"]["dates"]
 
     if single_dates is not None:
@@ -177,14 +205,14 @@ def main():
         with open(singledates_output_file, "w", encoding="utf-8") as f_single:
             for date in cfg_dates[single_dates]:
                 logger.info(f"{date}")
-                f_single.write(f"{date!s}\n")
+                f_single.write(f"{date}\n")
 
     if diff_dates is not None:
         logger.info(f"Create {diffdates_output_file}")
         with open(diffdates_output_file, "w", encoding="utf-8") as f_diff:
             for dates in cfg_dates[diff_dates]:
                 logger.info(f"{dates[0]} {dates[1]}")
-                f_diff.write(f"{dates[0]!s} {dates[1]!s}\n")
+                f_diff.write(f"{dates[0]} {dates[1]}\n")
 
     logger.info("Done.")
 
