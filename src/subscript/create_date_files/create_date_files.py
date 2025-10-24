@@ -91,13 +91,11 @@ def is_iso_date_list(date_list: Any) -> bool:
     return all(is_iso_date_item(it) for it in date_list)
 
 
-def is_iso_diffdate_list(diffdate_list: Any) -> bool:
+def is_iso_diffdate_list(diffdate_list: list) -> bool:
     """
     Each element must be a 2-tuple/list of ISO date items.
     Accepts [(date, date), ['YYYY-MM-DD', date], ...].
     """
-    if not isinstance(diffdate_list, (list, tuple)):
-        return False
     for pair in diffdate_list:
         if not isinstance(pair, (list, tuple)) or len(pair) != 2:
             return False
