@@ -154,12 +154,16 @@ def main():
     single_dates: str | None = args.single_dates
     diff_dates: str | None = args.diff_dates
 
+    if single_dates is None and diff_dates is None:
+        logger.error("At least one of --single-dates or --diff-dates must be provided.")
+        return
+
     singledates_output_file = "single_dates.txt"
     diffdates_output_file = "diff_dates.txt"
 
     try:
         cfg = utils.yaml_load(globvar_file)
-    except Exception as e:
+    except (OSError, ValueError, KeyError) as e:
         logger.error(f"Failed to load {globvar_file} file: {e}")
         return
 
