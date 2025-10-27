@@ -10,7 +10,7 @@ Getting started
 ---------------
 
 We recommend developing from a personal fork rather than branches on the
-upstream repository. Create a fork from the repository and then clone it 
+upstream repository. Create a fork from the repository and then clone it
 to your machine:
 
 .. code-block:: console
@@ -24,7 +24,7 @@ Then add the upstream repository:
 
   git remote add upstream git@github.com:equinor/subscript
 
-After cloning, you need a Python virtual environment in which you install 
+After cloning, you need a Python virtual environment in which you install
 subscript and its dependencies. If you develop on an Equinor computer you
 should use ``komodoenv``; instructions for how to do this can be found
 `here <https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html>`_
@@ -70,7 +70,7 @@ the linting done in CI:
 
  .. code-block:: console
 
-  ruff . 
+  ruff check .
   ruff format .
   mypy src/subscript
   rstcheck -r docs
@@ -92,20 +92,28 @@ Repository conventions
 ----------------------
 
 * Each tool has its own subdirectory under ``src/subscript``.
-* Use ``pyproject.toml`` for installing endpoints that users should have in 
+* Use ``pyproject.toml`` for installing endpoints that users should have in
   their ``$PATH``
-* Use ``argparse``, and with a specific ``get_parser()`` function to facilitate 
+* Use ``argparse``, and with a specific ``get_parser()`` function to facilitate
   ``sphinx-argparse``
-* Always use the ``if __name__ = "__main__"`` idiom. Scripts should not start 
+* Always use the ``if __name__ = "__main__"`` idiom. Scripts should not start
   if they are imported, this is to facilitate testing.
-* There must be at least test code that directly test that the endpoint is 
+* There must be at least test code that directly test that the endpoint is
   installed and that it does at least something to a standard input. Preferably
   unit test code for isolated parts of the code as well.
 * Docstrings on all functions. Docstrings can include RST formatting and will
-  be checked for compliance with sphinx on every pull request. Warnings from 
+  be checked for compliance with sphinx on every pull request. Warnings from
   sphinx must be fixed.
 * For a new script, write a new file ``docs/scripts/scriptname.rst`` describing
-  the script, its usage, and examples. Use sphinx-argparse to document the 
+  the script, its usage, and examples. Use sphinx-argparse to document the
   command line syntax.
 * Type hinting is encouraged. If type hinting is included in the source, it has
   to pass mypy.
+
+
+ERT plugin
+----------
+
+One can hook a script to `ERT` as a forward model by adding it to the
+``src/subscript/hook_implementations/forward_model_steps.py`` and
+``tests/test_hook_implementations.py`` files.
