@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contributing &mdash; subscript 1.14.4.dev10+g69591ee5a documentation</title>
+  <title>Contributing &mdash; subscript 1.14.4.dev11+gff4339e75 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=5373ced7"></script>
+      <script src="_static/documentation_options.js?v=87eaea78"></script>
       <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -60,6 +60,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#code-style">Code style</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#documentation">Documentation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#repository-conventions">Repository conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ert-plugin">ERT plugin</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
@@ -179,7 +180,7 @@ running tests that rely upon a black oil simulation.</p>
 <p>Before making a pull request you should verify that your changes will pass
 the linting done in CI:</p>
 <blockquote>
-<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ruff .</span>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ruff check .</span>
 <span class="go">ruff format .</span>
 <span class="go">mypy src/subscript</span>
 <span class="go">rstcheck -r docs</span>
@@ -220,6 +221,12 @@ command line syntax.</p></li>
 <li><p>Type hinting is encouraged. If type hinting is included in the source, it has
 to pass mypy.</p></li>
 </ul>
+</section>
+<section id="ert-plugin">
+<h2>ERT plugin<a class="headerlink" href="#ert-plugin" title="Link to this heading"></a></h2>
+<p>One can hook a script to <cite>ERT</cite> as a forward model by adding it to the
+<code class="docutils literal notranslate"><span class="pre">src/subscript/hook_implementations/forward_model_steps.py</span></code> and
+<code class="docutils literal notranslate"><span class="pre">tests/test_hook_implementations.py</span></code> files.</p>
 </section>
 </section>
 
