@@ -1,8 +1,11 @@
 import shutil
+from typing import ClassVar
 
 from ert import (
     ForwardModelStepDocumentation,
+    ForwardModelStepJSON,
     ForwardModelStepPlugin,
+    ForwardModelStepValidationError,
     plugin as ert_plugin,
 )
 
@@ -94,18 +97,60 @@ where ``ECLBASE`` is already defined in your ERT config.
 
 
 class CreateDateFiles(ForwardModelStepPlugin):
+    PLACEHOLDER_GLOBFILE: ClassVar[str] = "<GLOBVARFILE>"
+    PLACEHOLDER_SINGLE: ClassVar[str] = "<SINGLEDATES>"
+    PLACEHOLDER_DIFF: ClassVar[str] = "<DIFFDATES>"
+
     def __init__(self) -> None:
+        exe = shutil.which("create_date_files")
         super().__init__(
             name="CREATE_DATE_FILES",
             command=[
-                shutil.which("create_date_files"),
-                "<GLOBVARFILE>",
+                exe,
+                self.PLACEHOLDER_GLOBFILE,
                 "--single-dates",
-                "<SINGLEDATES>",
+                self.PLACEHOLDER_SINGLE,
                 "--diff-dates",
-                "<DIFFDATES>",
+                self.PLACEHOLDER_DIFF,
             ],
         )
+
+    def validate_pre_experiment(self, fm_step_json: ForwardModelStepJSON) -> None:
+        errors: list[str] = []
+
+        # Executable availability
+        if self.command[0] is None:
+            errors.append("Executable 'create_date_files' not found in PATH.")
+
+        mapping = fm_step_json.get("mapping", {})
+        if not isinstance(mapping, dict):
+            errors.append("fm_step_json['mapping'] must be a dict.")
+        else:
+            glob_val = mapping.get(self.PLACEHOLDER_GLOBFILE)
+            if glob_val in (None, ""):
+                errors.append(f"Missing required argument {self.PLACEHOLDER_GLOBFILE}.")
+
+            single_val = mapping.get(self.PLACEHOLDER_SINGLE)
+            diff_val = mapping.get(self.PLACEHOLDER_DIFF)
+            has_single = single_val not in (None, "")
+            has_diff = diff_val not in (None, "")
+            if not (has_single or has_diff):
+                errors.append(
+                    f"Provide at least one of {self.PLACEHOLDER_SINGLE} or "
+                    f"{self.PLACEHOLDER_DIFF}."
+                )
+            elif has_single and has_diff and single_val == diff_val:
+                # Non-fatal; convert to a warning if you add logging
+                errors.append(
+                    f"{self.PLACEHOLDER_SINGLE} and {self.PLACEHOLDER_DIFF} have "
+                    f"identical values '{single_val}'."
+                )
+
+        if errors:
+            joined_errors = "\n".join(errors)
+            raise ForwardModelStepValidationError(
+                f"Validation failed for CREATE_DATE_FILES:\n{joined_errors}"
+            )
 
     @staticmethod
     def documentation() -> ForwardModelStepDocumentation | None:
