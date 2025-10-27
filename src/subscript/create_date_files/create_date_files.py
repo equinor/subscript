@@ -104,68 +104,97 @@ def is_iso_diffdate_list(diffdate_list: list) -> bool:
     return True
 
 
+def _validate_cfg_structure(cfg: dict[str, Any] | None) -> bool:
+    """Validate basic config structure."""
+    if cfg is None:
+        logger.error("Configuration is empty or invalid.")
+        return False
+
+    if not isinstance(cfg, dict):
+        logger.error("Configuration does not contain a valid dictionary.")
+        return False
+
+    if "global" not in cfg or not isinstance(cfg["global"], dict):
+        logger.error("Missing or invalid 'global' section in config file.")
+        return False
+
+    if "dates" not in cfg["global"] or not isinstance(cfg["global"]["dates"], dict):
+        logger.error("Missing or invalid 'global:dates:' section in config file.")
+        return False
+
+    return True
+
+
+def _validate_single_dates(cfg_dates: dict[str, Any], single_dates: str) -> bool:
+    """Validate single dates configuration."""
+    if single_dates not in cfg_dates:
+        logger.error(f"Key {single_dates} not found in global variable file.")
+        return False
+
+    if not isinstance(cfg_dates[single_dates], list):
+        logger.error(f"Value for {single_dates} is not a list.")
+        return False
+
+    if not cfg_dates[single_dates]:
+        logger.warning(f"{single_dates} is empty")
+
+    if not is_iso_date_list(cfg_dates[single_dates]):
+        logger.warning(f"{single_dates} is not in the recommended format YYYY-MM-DD.")
+
+    return True
+
+
+def _validate_diff_dates(cfg_dates: dict[str, Any], diff_dates: str) -> bool:
+    """Validate diff dates configuration."""
+    if diff_dates not in cfg_dates:
+        logger.error(f"Key {diff_dates} not found in global variable file.")
+        return False
+
+    if not isinstance(cfg_dates[diff_dates], list):
+        logger.error(f"Value for {diff_dates} is not a list.")
+        return False
+
+    if not cfg_dates[diff_dates]:
+        logger.warning(f"{diff_dates} is empty")
+
+    if not is_iso_diffdate_list(cfg_dates[diff_dates]):
+        logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
+
+    return True
+
+
 def validate_cfg(
     cfg: dict[str, Any] | None, single_dates: str | None, diff_dates: str | None
 ) -> bool:
     """Validate the structure of the config dictionary
 
     Args:
-        cfg: Configuration dictionary loaded from YAML
+        cfg: Configuration dictionary loaded from YAML (can be None)
         single_dates: Name of single dates list key (optional)
         diff_dates: Name of diff dates list key (optional)
 
     Returns:
         True if validation passes, False otherwise
     """
-    # Check if cfg is None
-    if cfg is None:
-        logger.error("Configuration file is empty or invalid.")
+    # Validate basic structure
+    if not _validate_cfg_structure(cfg):
         return False
 
-    # Check if cfg is a dictionary
-    if not isinstance(cfg, dict):
-        logger.error("Configuration file does not contain a valid dictionary.")
-        return False
-
-    # Check for 'global' section
-    if "global" not in cfg or not isinstance(cfg["global"], dict):
-        logger.error("Missing or invalid 'global' section in config file.")
-        return False
-
-    # Check for 'dates' section
-    if "dates" not in cfg["global"] or not isinstance(cfg["global"]["dates"], dict):
-        logger.error("Missing or invalid 'global:dates:' section in config file.")
-        return False
-
+    # At this point we know cfg is a valid dict
+    assert isinstance(cfg, dict)
     cfg_dates = cfg["global"]["dates"]
 
-    if single_dates is not None:
-        if single_dates not in cfg_dates:
-            logger.error(f"Key {single_dates} not found in global variable file.")
-            return False
-        if not isinstance(cfg_dates[single_dates], list):
-            logger.error(f"Value for {single_dates} is not a list.")
-            return False
-        if not cfg_dates[single_dates]:
-            logger.warning(f"{single_dates} is empty")
-        if not is_iso_date_list(cfg_dates[single_dates]):
-            logger.warning(
-                f"{single_dates} is not in the recommended format YYYY-MM-DD."
-            )
+    # Validate single_dates if provided
+    if (single_dates is not None) and (
+        not _validate_single_dates(cfg_dates, single_dates)
+    ):
+        return False
 
-    if diff_dates is not None:
-        if diff_dates not in cfg_dates:
-            logger.error(f"Key {diff_dates} not found in global variable file.")
-            return False
-        if not isinstance(cfg_dates[diff_dates], list):
-            logger.error(f"Value for {diff_dates} is not a list.")
-            return False
-        if not cfg_dates[diff_dates]:
-            logger.warning(f"{diff_dates} is empty")
-        if not is_iso_diffdate_list(cfg_dates[diff_dates]):
-            logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
+    # Validate diff_dates if provided - return the result directly
+    if diff_dates is None:
+        return True
 
-    return True
+    return _validate_diff_dates(cfg_dates, diff_dates)
 
 
 def main() -> None:
