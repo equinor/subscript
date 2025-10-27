@@ -115,7 +115,7 @@ class CreateDateFiles(ForwardModelStepPlugin):
             examples="""
 .. code-block:: console
 
-  FORWARD_MODEL CREATE_DATE_FILES(<GLOBVAR_FILE>=\
+  FORWARD_MODEL CREATE_DATE_FILES(<GLOBVARFILE>=\
             "fmuconfig/output/global_variables.yml",\
             <SINGLEDATES>="SEISMIC_HIST_DATES", <DIFFDATES>="SEISMIC_DIFF_DATES")
 """,
