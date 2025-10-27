@@ -84,26 +84,6 @@ def is_iso_date_item(item: Any) -> bool:
     return False
 
 
-def is_iso_date_list(date_list: Any) -> bool:
-    """All items must be valid ISO date items (date objects or ISO strings)."""
-    if not isinstance(date_list, (list, tuple)):
-        return False
-    return all(is_iso_date_item(it) for it in date_list)
-
-
-def is_iso_diffdate_list(diffdate_list: list) -> bool:
-    """
-    Each element must be a 2-tuple/list of ISO date items.
-    Accepts [(date, date), ['YYYY-MM-DD', date], ...].
-    """
-    for pair in diffdate_list:
-        if not isinstance(pair, (list, tuple)) or len(pair) != 2:
-            return False
-        if not (is_iso_date_item(pair[0]) and is_iso_date_item(pair[1])):
-            return False
-    return True
-
-
 def _validate_cfg_structure(cfg: dict[str, Any] | None) -> bool:
     """Validate basic config structure."""
     if cfg is None:
@@ -138,14 +118,17 @@ def _validate_single_dates(cfg_dates: dict[str, Any], single_dates: str) -> bool
     if not cfg_dates[single_dates]:
         logger.warning(f"{single_dates} is empty")
 
-    if not is_iso_date_list(cfg_dates[single_dates]):
+    if not all(is_iso_date_item(it) for it in cfg_dates[single_dates]):
         logger.warning(f"{single_dates} is not in the recommended format YYYY-MM-DD.")
 
     return True
 
 
 def _validate_diff_dates(cfg_dates: dict[str, Any], diff_dates: str) -> bool:
-    """Validate diff dates configuration."""
+    """Validate diff dates configuration.
+    Each element must be a list of two ISO date items.
+    Accepts [['YYYY-MM-DD', date], ...].
+    """
     if diff_dates not in cfg_dates:
         logger.error(f"Key {diff_dates} not found in global variable file.")
         return False
@@ -157,8 +140,13 @@ def _validate_diff_dates(cfg_dates: dict[str, Any], diff_dates: str) -> bool:
     if not cfg_dates[diff_dates]:
         logger.warning(f"{diff_dates} is empty")
 
-    if not is_iso_diffdate_list(cfg_dates[diff_dates]):
-        logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
+    for pair in cfg_dates[diff_dates]:
+        if len(pair) != 2:
+            logger.warning("Diff dates must have two dates per item.")
+            return False
+        if not (is_iso_date_item(pair[0]) and is_iso_date_item(pair[1])):
+            logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
+            return False
 
     return True
 
