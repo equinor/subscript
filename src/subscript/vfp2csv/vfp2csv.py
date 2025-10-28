@@ -21,7 +21,7 @@ FILENAME is absolute or relative, depending on the input.
 """
 
 
-def get_parser():
+def get_parser() -> argparse.ArgumentParser:
     """Set up parser for command line utility"""
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument(
@@ -42,7 +42,7 @@ def get_parser():
     return parser
 
 
-def main():
+def main() -> None:
     """Process command line arguments"""
     parser = get_parser()
     args = parser.parse_args()

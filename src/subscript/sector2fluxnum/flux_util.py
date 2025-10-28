@@ -1,9 +1,22 @@
-from resdata.grid import ResdataRegion
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+from resdata.grid import Grid, ResdataRegion
+
+if TYPE_CHECKING:
+    from resdata.resfile import ResdataKW
 
 
 def filter_region(
-    grid, idx_i, idx_j, idx_k, fipnum, fipnum_kw, combine_operator="intersect"
-):
+    grid: Grid,
+    idx_i: str,
+    idx_j: str,
+    idx_k: str,
+    fipnum: str,
+    fipnum_kw: ResdataKW,
+    combine_operator: str = "intersect",
+) -> ResdataRegion:
     # Filter out the selected grid cells
     region = ResdataRegion(grid, False)
     region1 = ResdataRegion(grid, False)
@@ -60,8 +73,8 @@ def filter_region(
     )
 
 
-def unpack_filter(filter_list):
-    filter_list = filter_list.split(",")
+def unpack_filter(filter_string: str) -> list[int]:
+    filter_list = filter_string.split(",")
     filter_list_return = []
     for idx, _ in enumerate(filter_list):
         if "-" in str(filter_list[idx]):
@@ -74,7 +87,7 @@ def unpack_filter(filter_list):
     return filter_list_return
 
 
-def unpack_ijk(i_str, j_str, k_str):
+def unpack_ijk(i_str: str, j_str: str, k_str: str) -> list[int]:
     i_str_split = i_str.split("-")
     if len(i_str_split) < 2:
         raise Exception("Wrong format of i range. Should be: i_start-i_end")

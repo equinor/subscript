@@ -7,6 +7,7 @@ import os
 import signal
 import sys
 from pathlib import Path
+from typing import Any
 
 import ert
 import pandas as pd
@@ -300,8 +301,8 @@ def fmuobs(
     verbose: bool = False,
     debug: bool = False,
     starttime: str | None = None,
-    includedir: bool | None = None,
-):
+    includedir: str | None = None,
+) -> None:
     """Alternative to main() with named arguments"""
     if verbose or debug:
         if __MAGIC_STDOUT__ in (csv, yml, ertobs):
@@ -438,7 +439,7 @@ class FmuObs(ert.ErtScript):
         interference with the ERT comment characters "--".
     """
 
-    def run(self, *args):
+    def run(self, *args: Any) -> None:  # noqa: ANN401
         """Pass the ERT workflow arguments on to the same parser as the command
         line."""
         parser = get_parser()
@@ -447,7 +448,7 @@ class FmuObs(ert.ErtScript):
 
 
 @ert.plugin(name="subscript")
-def legacy_ertscript_workflow(config):
+def legacy_ertscript_workflow(config: ert.WorkflowConfigs) -> None:
     """A hook for usage of this script in an ERT workflow,
     using the legacy hook format."""
     workflow = config.add_workflow(FmuObs, "FMUOBS")

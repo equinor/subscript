@@ -1,7 +1,9 @@
 from res2df import ResdataFiles, compdat
 
 
-def get_completion_list(ecl_data_file_name):
+def get_completion_list(
+    ecl_data_file_name: str,
+) -> tuple[list[list[tuple[int, int, int]]], list[str]]:
     """
     Create a datafram of unrolled well completions
 
@@ -10,8 +12,8 @@ def get_completion_list(ecl_data_file_name):
 
     Returns:
     Tuple:
-    List of unique well names
     List of completions associated to well names
+    List of unique well names
     """
 
     ecl_file = ResdataFiles(ecl_data_file_name)
@@ -29,5 +31,4 @@ def get_completion_list(ecl_data_file_name):
         completion_list.append(
             compdat_df["IJK"].loc[compdat_df["WELL"] == well].to_list()
         )
-
     return completion_list, well_list
