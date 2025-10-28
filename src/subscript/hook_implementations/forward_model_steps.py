@@ -101,6 +101,9 @@ class CreateDateFiles(ForwardModelStepPlugin):
     PLACEHOLDER_SINGLE: ClassVar[str] = "<SINGLEDATES>"
     PLACEHOLDER_DIFF: ClassVar[str] = "<DIFFDATES>"
 
+    REQUIRED: ClassVar[set[str]] = {PLACEHOLDER_GLOBFILE}
+    CONDITIONAL_ONE_OF: ClassVar[set[str]] = {PLACEHOLDER_SINGLE, PLACEHOLDER_DIFF}
+
     def __init__(self) -> None:
         exe = shutil.which("create_date_files")
         super().__init__(
@@ -114,42 +117,65 @@ class CreateDateFiles(ForwardModelStepPlugin):
                 self.PLACEHOLDER_DIFF,
             ],
         )
+        # Mark strictly required placeholders (only the mandatory one)
+        self.required_keywords = [self.PLACEHOLDER_GLOBFILE]
+
+    def _is_provided(
+        self, placeholder: str, fm_step_json: ForwardModelStepJSON
+    ) -> bool:
+        """
+        A placeholder is considered provided if:
+          1. User supplied it in private_args with a non-empty value, OR
+          2. It does not appear verbatim in the argList anymore (already substituted).
+        """
+        if placeholder in self.private_args and self.private_args[placeholder] not in (
+            "",
+            None,
+        ):
+            return True
+        return placeholder not in fm_step_json["argList"]
 
     def validate_pre_experiment(self, fm_step_json: ForwardModelStepJSON) -> None:
         errors: list[str] = []
 
         # Executable availability
-        if self.command[0] is None:
-            errors.append("Executable 'create_date_files' not found in PATH.")
+        if self.executable is None:
+            errors.append("Executable 'create_date_files' not found.")
 
-        mapping = fm_step_json.get("mapping", {})
-        if not isinstance(mapping, dict):
-            errors.append("fm_step_json['mapping'] must be a dict.")
-        else:
-            glob_val = mapping.get(self.PLACEHOLDER_GLOBFILE)
-            if glob_val in (None, ""):
-                errors.append(f"Missing required argument {self.PLACEHOLDER_GLOBFILE}.")
+        # Required placeholders
+        missing_required = [
+            p for p in self.REQUIRED if not self._is_provided(p, fm_step_json)
+        ]
+        if missing_required:
+            plural = "s" if len(missing_required) > 1 else ""
+            errors.append(
+                f"Required placeholder{plural} {', '.join(sorted(missing_required))} "
+                "not supplied."
+            )
 
-            single_val = mapping.get(self.PLACEHOLDER_SINGLE)
-            diff_val = mapping.get(self.PLACEHOLDER_DIFF)
-            has_single = single_val not in (None, "")
-            has_diff = diff_val not in (None, "")
-            if not (has_single or has_diff):
-                errors.append(
-                    f"Provide at least one of {self.PLACEHOLDER_SINGLE} or "
-                    f"{self.PLACEHOLDER_DIFF}."
-                )
-            elif has_single and has_diff and single_val == diff_val:
-                # Non-fatal; convert to a warning if you add logging
+        # Conditional: at least one of SINGLE or DIFF
+        provided_conditional = [
+            p for p in self.CONDITIONAL_ONE_OF if self._is_provided(p, fm_step_json)
+        ]
+        if not provided_conditional:
+            errors.append(
+                f"Provide at least one of {', '.join(sorted(self.CONDITIONAL_ONE_OF))}."
+            )
+
+        # Both provided but identical
+        if len(provided_conditional) == 2:
+            single_val = self.private_args.get(self.PLACEHOLDER_SINGLE)
+            diff_val = self.private_args.get(self.PLACEHOLDER_DIFF)
+            if single_val and diff_val and single_val == diff_val:
                 errors.append(
                     f"{self.PLACEHOLDER_SINGLE} and {self.PLACEHOLDER_DIFF} have "
                     f"identical values '{single_val}'."
                 )
 
         if errors:
-            joined_errors = "\n".join(errors)
             raise ForwardModelStepValidationError(
-                f"Validation failed for CREATE_DATE_FILES:\n{joined_errors}"
+                "Validation failed for CREATE_DATE_FILES:\n"
+                + "\n".join(f"{i}. {msg}" for i, msg in enumerate(errors, 1))
             )
 
     @staticmethod
