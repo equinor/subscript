@@ -6,7 +6,7 @@ try:
 
     __version__ = metadata.version(__name__)
 except metadata.PackageNotFoundError:
-    pass
+    __version__ = "0.0.0"
 
 
 def getLogger(module_name="subscript"):
