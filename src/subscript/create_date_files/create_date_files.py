@@ -141,6 +141,9 @@ def _validate_diff_dates(cfg_dates: dict[str, Any], diff_dates: str) -> bool:
         logger.warning(f"{diff_dates} is empty")
 
     for pair in cfg_dates[diff_dates]:
+        if not isinstance(pair, list):
+            logger.warning("Each diff date entry must be a list of two dates.")
+            return False
         if len(pair) != 2:
             logger.warning("Diff dates must have two dates per item.")
             return False
