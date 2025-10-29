@@ -1,8 +1,8 @@
 import argparse
 import datetime
 import logging
-import sys
 import re
+import sys
 from typing import Any
 
 import fmu.config.utilities as utils
