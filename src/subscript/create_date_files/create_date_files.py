@@ -1,6 +1,7 @@
 import argparse
 import datetime
 import logging
+import sys
 import re
 from typing import Any
 
@@ -208,10 +209,10 @@ def main() -> None:
         cfg = utils.yaml_load(globvar_file)
     except (OSError, ValueError, KeyError) as e:
         logger.error(f"Failed to load {globvar_file} file: {e}")
-        return
+        sys.exit(1)
 
     if not validate_cfg(cfg, single_dates, diff_dates):
-        return
+        sys.exit(1)
 
     # After validation passes, we know cfg is a valid dict with the expected structure
     # We can safely assert this for type checking
