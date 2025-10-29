@@ -11,6 +11,7 @@ bjobsusers                ✅   ⛔️                 ⛔️
 casegen_upcars            ✅   ⛔️                 ⛔️
 check_swatinit            ✅   ✅                 ⛔️
 convert_grid_format [*]_  ✅   ✅                 ⛔️
+create_date_files         ✅   ✅                 ⛔️
 csv2ofmvol                ✅   ✅                 ⛔️
 csv_merge                 ✅   ⛔️                 ✅
 csv_stack                 ✅   ✅                 ✅

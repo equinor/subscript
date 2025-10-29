@@ -1,11 +1,15 @@
 import shutil
+from typing import ClassVar
 
 from ert import (
     ForwardModelStepDocumentation,
+    ForwardModelStepJSON,
     ForwardModelStepPlugin,
+    ForwardModelStepValidationError,
     plugin as ert_plugin,
 )
 
+from subscript.create_date_files import create_date_files
 from subscript.csv2ofmvol import csv2ofmvol
 from subscript.csv_stack import csv_stack
 from subscript.eclcompress import eclcompress
@@ -88,6 +92,103 @@ class CheckSwatinit(ForwardModelStepPlugin):
   FORWARD_MODEL CHECK_SWATINIT(<DATAFILE>=<ECLBASE>, <OUTPUT>=check_swatinit.csv)
 
 where ``ECLBASE`` is already defined in your ERT config.
+""",
+        )
+
+
+class CreateDateFiles(ForwardModelStepPlugin):
+    PLACEHOLDER_GLOBFILE: ClassVar[str] = "<GLOBVARFILE>"
+    PLACEHOLDER_SINGLE: ClassVar[str] = "<SINGLEDATES>"
+    PLACEHOLDER_DIFF: ClassVar[str] = "<DIFFDATES>"
+
+    REQUIRED: ClassVar[set[str]] = {PLACEHOLDER_GLOBFILE}
+    CONDITIONAL_ONE_OF: ClassVar[set[str]] = {PLACEHOLDER_SINGLE, PLACEHOLDER_DIFF}
+
+    def __init__(self) -> None:
+        exe = shutil.which("create_date_files")
+        super().__init__(
+            name="CREATE_DATE_FILES",
+            command=[
+                exe,
+                self.PLACEHOLDER_GLOBFILE,
+                "--single-dates",
+                self.PLACEHOLDER_SINGLE,
+                "--diff-dates",
+                self.PLACEHOLDER_DIFF,
+            ],
+        )
+        # Mark strictly required placeholders (only the mandatory one)
+        self.required_keywords = [self.PLACEHOLDER_GLOBFILE]
+
+    def _is_provided(
+        self, placeholder: str, fm_step_json: ForwardModelStepJSON
+    ) -> bool:
+        """
+        A placeholder is considered provided if:
+          1. User supplied it in private_args with a non-empty value, OR
+          2. It does not appear verbatim in the argList anymore (already substituted).
+        """
+        if placeholder in self.private_args and self.private_args[placeholder] not in (
+            "",
+            None,
+        ):
+            return True
+        return placeholder not in fm_step_json["argList"]
+
+    def validate_pre_experiment(self, fm_step_json: ForwardModelStepJSON) -> None:
+        errors: list[str] = []
+
+        # Executable availability
+        if self.executable is None:
+            errors.append("Executable 'create_date_files' not found.")
+
+        # Required placeholders
+        missing_required = [
+            p for p in self.REQUIRED if not self._is_provided(p, fm_step_json)
+        ]
+        if missing_required:
+            plural = "s" if len(missing_required) > 1 else ""
+            errors.append(
+                f"Required placeholder{plural} {', '.join(sorted(missing_required))} "
+                "not supplied."
+            )
+
+        # Conditional: at least one of SINGLE or DIFF
+        provided_conditional = [
+            p for p in self.CONDITIONAL_ONE_OF if self._is_provided(p, fm_step_json)
+        ]
+        if not provided_conditional:
+            errors.append(
+                f"Provide at least one of {', '.join(sorted(self.CONDITIONAL_ONE_OF))}."
+            )
+
+        # Both provided but identical
+        if len(provided_conditional) == 2:
+            single_val = self.private_args.get(self.PLACEHOLDER_SINGLE)
+            diff_val = self.private_args.get(self.PLACEHOLDER_DIFF)
+            if single_val and diff_val and single_val == diff_val:
+                errors.append(
+                    f"{self.PLACEHOLDER_SINGLE} and {self.PLACEHOLDER_DIFF} have "
+                    f"identical values '{single_val}'."
+                )
+
+        if errors:
+            raise ForwardModelStepValidationError(
+                "Validation failed for CREATE_DATE_FILES:\n"
+                + "\n".join(f"{i}. {msg}" for i, msg in enumerate(errors, 1))
+            )
+
+    @staticmethod
+    def documentation() -> ForwardModelStepDocumentation | None:
+        return ForwardModelStepDocumentation(
+            description=create_date_files.DESCRIPTION,
+            category="utility.transformation",
+            examples="""
+.. code-block:: console
+
+  FORWARD_MODEL CREATE_DATE_FILES(<GLOBVARFILE>=\
+            "fmuconfig/output/global_variables.yml",\
+            <SINGLEDATES>="SEISMIC_HIST_DATES", <DIFFDATES>="SEISMIC_DIFF_DATES")
 """,
         )
 
@@ -770,6 +871,7 @@ def installable_forward_model_steps() -> list[type[ForwardModelStepPlugin]]:
     return [
         CasegenUpcars,
         CheckSwatinit,
+        CreateDateFiles,
         Csv2Ofmvol,
         CsvStack,
         EclCompress,
