@@ -7,11 +7,11 @@ import pytest
 import yaml
 from pydantic import ValidationError
 from pyscal.factory import create_pyscal_list
-from pyscal.utils.testing import sat_table_str_ok
 from res2df import satfunc
 
 from subscript.interp_relperm import interp_relperm
 from subscript.interp_relperm.interp_relperm import InterpRelpermConfig
+from tests.utils import sat_table_str_ok
 
 TESTDATA = Path(__file__).absolute().parent / "testdata_interp_relperm"
 
