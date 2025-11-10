@@ -120,7 +120,8 @@ def _validate_single_dates(cfg_dates: dict[str, Any], single_dates: str) -> bool
         logger.warning(f"{single_dates} is empty")
 
     if not all(is_iso_date_item(it) for it in cfg_dates[single_dates]):
-        logger.warning(f"{single_dates} is not in the recommended format YYYY-MM-DD.")
+        logger.error(f"{single_dates} is not in the recommended format YYYY-MM-DD.")
+        return False
 
     return True
 
@@ -143,13 +144,13 @@ def _validate_diff_dates(cfg_dates: dict[str, Any], diff_dates: str) -> bool:
 
     for pair in cfg_dates[diff_dates]:
         if not isinstance(pair, list):
-            logger.warning("Each diff date entry must be a list of two dates.")
+            logger.error("Each diff date entry must be a list of two dates.")
             return False
         if len(pair) != 2:
-            logger.warning("Diff dates must have two dates per item.")
+            logger.error("Diff dates must have two dates per item.")
             return False
         if not (is_iso_date_item(pair[0]) and is_iso_date_item(pair[1])):
-            logger.warning(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
+            logger.error(f"{diff_dates} is not in the recommended format YYYY-MM-DD.")
             return False
 
     return True
