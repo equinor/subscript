@@ -5,8 +5,9 @@ from ert.plugins.plugin_manager import ErtPluginManager
 import subscript.hook_implementations.forward_model_steps
 
 EXPECTED_STEPS = [
-    "CHECK_SWATINIT",
     "CASEGEN_UPCARS",
+    "CHECK_SWATINIT",
+    "CREATE_DATE_FILES",
     "CSV2OFMVOL",
     "CSV_STACK",
     "ECLCOMPRESS",
