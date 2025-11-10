@@ -151,10 +151,8 @@ module = [
     "resdata.*",
     "res2df.*",
     "ert",
-    "resfo",
     "grid3d_maps.*",
     "fmu.tools.*",
-    "pyscal",
     "cwrap",
     "grpc"
 ]

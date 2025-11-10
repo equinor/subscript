@@ -1,6 +1,7 @@
 import argparse
 import logging
 
+import numpy as np
 import resfo
 
 from subscript import __version__, getLogger
@@ -85,16 +86,20 @@ def main() -> None:
 
     for kw, val in unrst_hist:
         if kw == "SEQNUM  ":  # restart report number
+            assert isinstance(val, np.ndarray)
             max_first_seqnum = max(max_first_seqnum, val[0])
         if kw == "INTEHEAD":
+            assert isinstance(val, np.ndarray)
             max_first_solver_step = max(max_first_solver_step, val[67])
             max_first_report_step = max(max_first_report_step, val[68])
 
     for kw, val in unrst_pred:
         if kw == "SEQNUM  ":
+            assert isinstance(val, np.ndarray)
             _check_report_number(args, max_first_seqnum, val[0])
             val[0] += max_first_seqnum
         if kw == "INTEHEAD":
+            assert isinstance(val, np.ndarray)
             val[67] += max_first_solver_step
             val[68] += max_first_report_step
 
