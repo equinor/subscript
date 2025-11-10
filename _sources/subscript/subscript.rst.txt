@@ -17,6 +17,7 @@ Submodules
    subscript.casegen_upcars
    subscript.check_swatinit
    subscript.convert_grid_format
+   subscript.create_date_files
    subscript.csv2ofmvol
    subscript.csv_merge
    subscript.csv_stack

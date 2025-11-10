@@ -1,0 +1,18 @@
+===============================
+``subscript.create_date_files``
+===============================
+
+.. automodule:: subscript.create_date_files
+
+   .. contents::
+      :local:
+
+
+Submodules
+==========
+
+.. toctree::
+
+   subscript.create_date_files.create_date_files
+
+.. currentmodule:: subscript.create_date_files
