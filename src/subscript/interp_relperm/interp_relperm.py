@@ -93,15 +93,14 @@ EPILOGUE = """
 
 
 class Interpolator(BaseModel):
-    tables: list[int] | None = []
+    tables: list[int] = Field(default_factory=list)
     param_w: Annotated[float, Field(strict=True, ge=-1, le=1)] | None = None
     param_g: Annotated[float, Field(strict=True, ge=-1, le=1)] | None = None
 
     @model_validator(mode="after")
     def check_param_w_or_param_g(self) -> Interpolator:
-        assert self.param_w is not None or self.param_g is not None, (
-            "Provide either param_w or param_g"
-        )
+        if self.param_w is None and self.param_g is None:
+            raise ValueError("Provide either param_w or param_g")
         return self
 
 
@@ -118,13 +117,19 @@ class InterpRelpermConfig(BaseModel):
     @model_validator(mode="after")
     def check_lowbasehigh_or_pyscalfile(self) -> InterpRelpermConfig:
         if self.pyscalfile is None:
-            assert self.base is not None, "base is not provided"
-            assert self.high is not None, "high is not provided"
-            assert self.low is not None, "low is not provided"
+            if self.base is None:
+                raise ValueError("base is not provided")
+            if self.low is None:
+                raise ValueError("low is not provided")
+            if self.high is None:
+                raise ValueError("high is not provided")
         else:
-            assert self.base is None, "do not specify base when pyscalfile is set"
-            assert self.high is None, "do not specify high when pyscalfile is set"
-            assert self.low is None, "do not specify low when pyscalfile is set"
+            if self.base is not None:
+                raise ValueError("Do not specify base when pyscalfile is set")
+            if self.low is not None:
+                raise ValueError("Do not specify low when pyscalfile is set")
+            if self.high is not None:
+                raise ValueError("Do not specify high when pyscalfile is set")
         return self
 
 
@@ -184,6 +189,7 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
             .drop_duplicates()
             .reset_index()
         )
+        assert wog.wateroil is not None
         wog.wateroil.add_fromtable(wo_dframe)
         go_dframe = (
             dframe[["SG", "KRG", "KROG", "PCOG"]]
@@ -196,15 +202,18 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
             .drop_duplicates()
             .reset_index()
         )
+        assert wog.gasoil is not None
         wog.gasoil.add_fromtable(go_dframe)
     else:
         if {"SW", "KRW", "KROW", "PCOW"}.issubset(dframe.columns):
+            assert wog.wateroil is not None
             wog.wateroil.add_fromtable(
                 dframe[["SW", "KRW", "KROW", "PCOW"]].dropna().reset_index()
             )
         else:
             wog.wateroil = None
         if {"SG", "KRG", "KROG", "PCOG"}.issubset(dframe.columns):
+            assert wog.gasoil is not None
             wog.gasoil.add_fromtable(
                 dframe[["SG", "KRG", "KROG", "PCOG"]].dropna().reset_index()
             )
@@ -215,13 +224,13 @@ def make_wateroilgas(dframe: pd.DataFrame, delta_s: float) -> pyscal.WaterOilGas
     # sorw, which means we are in an oil paleo zone setting. This is not
     # supported by interp_relperm. Reset the property to ensure interpolation
     # is not affected:
-    if wog.wateroil:
+    if wog.wateroil is not None:
         wog.wateroil.socr = wog.wateroil.sorw
 
     # If sgro > 0, it is a gas condensate object, which cannot be
     # mixed with non-gas condensate (during interpolation). Avoid pitfalls
     # in the estimated sgro by always setting it to zero:
-    if wog.gasoil:
+    if wog.gasoil is not None:
         wog.gasoil.sgro = 0.0
     return wog
 
@@ -251,10 +260,12 @@ def make_interpolant(
     low = make_wateroilgas(low_df.loc[[satnum]], delta_s)
     high = make_wateroilgas(high_df.loc[[satnum]], delta_s)
     rec = pyscal.SCALrecommendation(low, base, high, "SATNUM " + str(satnum), h=delta_s)
-
-    return rec.interpolate(
+    result = rec.interpolate(
         interp_param.get("param_w", 0.0), interp_param.get("param_g", 0), h=delta_s
     )
+    # type narrowing for mypy
+    assert isinstance(result, pyscal.WaterOilGas)
+    return result
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -378,17 +389,17 @@ def process_config(cfg: dict[str, Any], root_path: Path | None = None) -> None:
             "CASE"
         )
         base_df = (
-            pyscal.factory.create_pyscal_list(param_dframe.loc["base"])
+            pyscal.factory.create_pyscal_list(param_dframe.loc[["base"]])
             .df()
             .set_index("SATNUM")
         )
         low_df = (
-            pyscal.factory.create_pyscal_list(param_dframe.loc["low"])
+            pyscal.factory.create_pyscal_list(param_dframe.loc[["low"]])
             .df()
             .set_index("SATNUM")
         )
         high_df = (
-            pyscal.factory.create_pyscal_list(param_dframe.loc["high"])
+            pyscal.factory.create_pyscal_list(param_dframe.loc[["high"]])
             .df()
             .set_index("SATNUM")
         )
