@@ -12,12 +12,13 @@ get_os_arch () {
 
     rhel7=$(echo "$uname_info" | grep "el7")
     rhel8=$(echo "$uname_info" | grep "el8")
+    rhel9=$(echo "$uname_info" | grep "el9")
 
     os_arch="undetermined"
 
     if [ "$rhel7" ]; then
         os_arch="x86_64_RH_7"
-    elif [ "$rhel8" ]; then
+    elif [ "$rhel8" ] || [ "$rhel9" ]; then
         os_arch="x86_64_RH_8"
     else
         echo "$os_arch"
