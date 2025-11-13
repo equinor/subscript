@@ -196,8 +196,9 @@ def main() -> None:
 
     args: argparse.Namespace = get_parser().parse_args()
     globvar_file: str = args.globvar_file
-    single_dates: str | None = args.single_dates
-    diff_dates: str | None = args.diff_dates
+    # Converts empty strings to None
+    single_dates: str | None = args.single_dates or None
+    diff_dates: str | None = args.diff_dates or None
 
     if single_dates is None and diff_dates is None:
         logger.error("At least one of --single-dates or --diff-dates must be provided.")
