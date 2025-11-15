@@ -57,7 +57,7 @@ def fixture_res_data(tmp_path):
                     "phases": ["wrong_phase"],
                 }
             },
-            "Assertion failed, allowed phases are",
+            "Input should be 'oil', 'gas', 'water' or 'total'",
         ),
         (
             {

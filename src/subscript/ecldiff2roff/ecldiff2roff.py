@@ -187,7 +187,7 @@ def ecldiff2roff_main(
         diffprop.to_file(filename, name=diffpropname)
 
 
-def main():
+def main() -> None:
     """Main function when called as a command line application.
 
     Will get arguments from command line, and wrap around ecldiff2roff_main().

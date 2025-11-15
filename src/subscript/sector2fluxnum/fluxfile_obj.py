@@ -1,4 +1,11 @@
+from __future__ import annotations
+
 import sys
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from resdata.grid import Grid
+    from resdata.resfile import FortIO, ResdataFile
 
 
 class Fluxfile:
@@ -8,7 +15,7 @@ class Fluxfile:
 
     #    commonElements in all FLUX files and templates = 7
 
-    def __init__(self, grid, flux):
+    def __init__(self, grid: Grid, flux: ResdataFile) -> None:
         """
         Loads grid from EGRID and FLUX file from
         @grid
@@ -17,29 +24,29 @@ class Fluxfile:
         self.grid = grid
         self.flux = flux
         self.number_flux_cells = int(len(flux[6]) / 3)
-        self.xyz_list = []
-        self.index_list = []
+        self.xyz_list: list[tuple[float, float, float]] = []
+        self.index_list: list[int] = []
 
-    def set_index_list(self):
+    def set_index_list(self) -> None:
         self.index_list = list(self.flux[6][0 : self.number_flux_cells])
 
-    def reset_index_list(self):
+    def reset_index_list(self) -> None:
         self.index_list = []
 
-    def get_index_list(self):
+    def get_index_list(self) -> list[int]:
         return self.index_list
 
-    def set_xyz_list(self):
+    def set_xyz_list(self) -> None:
         for index in self.flux[6][0 : self.number_flux_cells]:
             self.xyz_list.append(self.grid.get_xyz(global_index=index - 1))
 
-    def reset_xyz_list(self):
+    def reset_xyz_list(self) -> None:
         self.xyz_list = []
 
-    def get_xyz_list(self):
+    def get_xyz_list(self) -> list[tuple[float, float, float]]:
         return self.xyz_list
 
-    def get_flux(self):
+    def get_flux(self) -> ResdataFile:
         """
         Returns FLUX file.
         """
@@ -47,8 +54,14 @@ class Fluxfile:
 
 
 def create_map_rst(
-    dest_flux, source_grid, scale_i=1, scale_j=1, scale_k=1, shift_i=0, shift_j=0
-):
+    dest_flux: Fluxfile,
+    source_grid: Grid,
+    scale_i: int = 1,
+    scale_j: int = 1,
+    scale_k: int = 1,
+    shift_i: int = 0,
+    shift_j: int = 0,
+) -> list[int]:
     """
     Creates a map from coarse to fine index.
 
@@ -130,8 +143,12 @@ def create_map_rst(
 
 
 def write_new_fluxfile_from_rst(
-    dest_flux, source_grid, source_restart, mapping, fortio
-):
+    dest_flux: Fluxfile,
+    source_grid: Grid,
+    source_restart: ResdataFile,
+    mapping: list[int],
+    fortio: FortIO,
+) -> None:
     """
     Populates a templated .FLUX file with full field data from a RESTART file.
 

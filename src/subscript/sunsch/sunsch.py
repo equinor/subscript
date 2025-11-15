@@ -65,7 +65,7 @@ class SunschConfig(BaseModel):
     ) = None
     insert: list[InsertStatement] | None = None
 
-    def __init__(self, **config):
+    def __init__(self, **config):  # noqa: ANN204, ANN003
         """Transform the input to provide defaults to required fields"""
         if "startdate" not in config:
             if "starttime" in config:
