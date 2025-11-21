@@ -149,7 +149,6 @@ module = [
     "xtgeo.*",
     "opm.*",
     "resdata.*",
-    "res2df.*",
     "ert",
     "grid3d_maps.*",
     "fmu.tools.*",
