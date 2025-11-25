@@ -6,7 +6,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools_scm]
-write_to = "src/subscript/version.py"
+version_file = "src/subscript/version.py"
 
 [project]
 name = "subscript"
