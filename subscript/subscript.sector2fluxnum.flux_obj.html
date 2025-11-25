@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sector2fluxnum.flux_obj &mdash; subscript 1.14.5.dev3+g4f7ba794d documentation</title>
+  <title>subscript.sector2fluxnum.flux_obj &mdash; subscript 1.14.5.dev4+g5bbc9d038 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=bf1fff66"></script>
+      <script src="../_static/documentation_options.js?v=963aabd3"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -175,6 +175,11 @@
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.flux_obj.Fluxnum.copy_actnum">
 <span class="sig-name descname"><span class="pre">copy_actnum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actnum</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.copy_actnum" title="Link to this definition"></a></dt>
 <dd><p>Copy data from ACTNUM keyword to the FLUXNUM keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -185,6 +190,11 @@
 <p>This is useful for LGR since LGR region must be one cell away from FLUXNUM
 boundaries. If NNC for LGR is outside FLUXNUM, an error will be sent by ECLIPSE.</p>
 <p>Needs NNC data from EGRID file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -196,6 +206,11 @@ the FLUXNUM region.</p>
 <p>&#64;completion_list : List of completions to be included.
 &#64;well_list : List of wells to be included
 &#64;exclude_list = List of wells to be excluded from the FLUXNUM. Usually empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -203,6 +218,11 @@ the FLUXNUM region.</p>
 <span class="sig-name descname"><span class="pre">set_fluxnum_kw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.set_fluxnum_kw" title="Link to this definition"></a></dt>
 <dd><p>Initialize FLUXNUM</p>
 <p>NB: Can take some time if the grid is large</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -210,12 +230,22 @@ the FLUXNUM region.</p>
 <span class="sig-name descname"><span class="pre">set_fluxnum_kw_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnum_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.set_fluxnum_kw_from_file" title="Link to this definition"></a></dt>
 <dd><p>Initialize FLUXNUM from file</p>
 <p>NB: Can take some time if the grid is large</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.flux_obj.Fluxnum.set_inner_region">
-<span class="sig-name descname"><span class="pre">set_inner_region</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.set_inner_region" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_inner_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.set_inner_region" title="Link to this definition"></a></dt>
 <dd><p>Initializes inner region used to define the FLUXNUM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -223,6 +253,11 @@ the FLUXNUM region.</p>
 <span class="sig-name descname"><span class="pre">set_lgr_box_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.set_lgr_box_region" title="Link to this definition"></a></dt>
 <dd><p>Sets an LGR region with one cell indent from the box boundaries.
 Only works for Box regions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -230,6 +265,11 @@ Only works for Box regions</p>
 <span class="sig-name descname"><span class="pre">write_fluxnum_kw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.Fluxnum.write_fluxnum_kw" title="Link to this definition"></a></dt>
 <dd><p>Writes FLUXNUM keyword to file.</p>
 <p>&#64;filename_path : FLUXNUM keyword file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -241,6 +281,11 @@ Only works for Box regions</p>
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.flux_obj.FluxnumBox.set_inner_region">
 <span class="sig-name descname"><span class="pre">set_inner_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j_end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_end</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.FluxnumBox.set_inner_region" title="Link to this definition"></a></dt>
 <dd><p>Initializes inner region used to define the FLUXNUM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -253,6 +298,11 @@ Only works for Box regions</p>
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.flux_obj.FluxnumFipnum.set_inner_region">
 <span class="sig-name descname"><span class="pre">set_inner_region</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">j</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipnum_region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipnum_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.flux_obj.FluxnumFipnum.set_inner_region" title="Link to this definition"></a></dt>
 <dd><p>Initializes inner region used to define the FLUXNUM</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

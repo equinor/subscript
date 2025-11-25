@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.sector2fluxnum.datafile_obj &mdash; subscript 1.14.5.dev3+g4f7ba794d documentation</title>
+  <title>subscript.sector2fluxnum.datafile_obj &mdash; subscript 1.14.5.dev4+g5bbc9d038 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=bf1fff66"></script>
+      <script src="../_static/documentation_options.js?v=963aabd3"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -178,6 +178,11 @@ DATA files and local executions of DATA files</p>
 <dd><p>Writes a DATA file with DUMPFLUX keyword.</p>
 <p>Also includes NOSIM and OPTION entries for EOR functionality.</p>
 <p>&#64;fluxnumfile_name : Name of the FLUXNUM kw file to be included</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -185,18 +190,33 @@ DATA files and local executions of DATA files</p>
 <span class="sig-name descname"><span class="pre">create_USEFLUX_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.create_USEFLUX_file" title="Link to this definition"></a></dt>
 <dd><p>Writes a DATA file with USEFLUX keyword.</p>
 <p>&#64;fluxnumfile_name : Name of the FLUXNUM kw file to be included</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position">
 <span class="sig-name descname"><span class="pre">get_KW_position</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_KW_position" title="Link to this definition"></a></dt>
 <dd><p>Get the position for a certain keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">_ScalarT</span></code>, bound= <code class="xref py py-class docutils literal notranslate"><span class="pre">generic</span></code>)]], <code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code>, <code class="xref py py-data docutils literal notranslate"><span class="pre">...</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">dtype</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">TypeVar</span></code>(<code class="docutils literal notranslate"><span class="pre">_ScalarT</span></code>, bound= <code class="xref py py-class docutils literal notranslate"><span class="pre">generic</span></code>)]]]</span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning">
 <span class="sig-name descname"><span class="pre">get_RESTART_warning</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_RESTART_warning" title="Link to this definition"></a></dt>
 <dd><p>Print a warning if the RESTART keyword is detected</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -204,24 +224,44 @@ DATA files and local executions of DATA files</p>
 <span class="sig-name descname"><span class="pre">get_datafile_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_content" title="Link to this definition"></a></dt>
 <dd><p>Return a list of all lines in a text file.
 Newlines are kept at the end of each line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content">
 <span class="sig-name descname"><span class="pre">get_datafile_text_content</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_datafile_text_content" title="Link to this definition"></a></dt>
 <dd><p>Return the contents of a text file as a multiline string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean">
 <span class="sig-name descname"><span class="pre">get_lines_clean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">comment_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.get_lines_clean" title="Link to this definition"></a></dt>
 <dd><p>Remove lines we don’t want</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.has_KW">
 <span class="sig-name descname"><span class="pre">has_KW</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keyword</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.has_KW" title="Link to this definition"></a></dt>
 <dd><p>Determine if a certain keyword is present</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -229,6 +269,11 @@ Newlines are kept at the end of each line.</p>
 <span class="sig-name descname"><span class="pre">run_DUMPFLUX_nosim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ecl_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.run_DUMPFLUX_nosim" title="Link to this definition"></a></dt>
 <dd><p>Executes interactive ECLIPSE run with DUMPFLUX DATA file.</p>
 <p>Checks for errors in the output PRT file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -236,55 +281,100 @@ Newlines are kept at the end of each line.</p>
 <span class="sig-name descname"><span class="pre">set_USEFLUX_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_USEFLUX_header" title="Link to this definition"></a></dt>
 <dd><p>Adds header to the output USEFLUX file</p>
 <p>Input
-&#64;args: Arguments from the intput to the wrapper scripts</p>
+&#64;args: Arguments from the input to the wrapper scripts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX">
 <span class="sig-name descname"><span class="pre">set_update_GRID_DUMPFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_DUMPFLUX" title="Link to this definition"></a></dt>
 <dd><p>Set or update DUMPFLUX in the GRID section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX">
 <span class="sig-name descname"><span class="pre">set_update_GRID_USEFLUX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluxnumfile_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluxfile_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_GRID_USEFLUX" title="Link to this definition"></a></dt>
 <dd><p>Set or update USEFLUX in the GRID section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE">
 <span class="sig-name descname"><span class="pre">set_update_INCLUDE</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_INCLUDE" title="Link to this definition"></a></dt>
 <dd><p>Set or update the (first) INCLUDE statement</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM">
 <span class="sig-name descname"><span class="pre">set_update_NOSIM</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_NOSIM" title="Link to this definition"></a></dt>
 <dd><p>Set or update the NOSIM keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL">
 <span class="sig-name descname"><span class="pre">set_update_PARALLEL</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_PARALLEL" title="Link to this definition"></a></dt>
 <dd><p>Set or update the PARALLEL keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS">
 <span class="sig-name descname"><span class="pre">set_update_REGDIMS</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_REGDIMS" title="Link to this definition"></a></dt>
 <dd><p>Set or update the REGDIMS keyword</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC">
 <span class="sig-name descname"><span class="pre">set_update_RUNSPEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_RUNSPEC" title="Link to this definition"></a></dt>
 <dd><p>Set or update the RUNSPEC in the DATA file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION">
 <span class="sig-name descname"><span class="pre">set_update_SOLUTION</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.sector2fluxnum.datafile_obj.Datafile.set_update_SOLUTION" title="Link to this definition"></a></dt>
 <dd><p>Set or update the SOLUTION section</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
