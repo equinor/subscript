@@ -25,28 +25,28 @@ Variables
 
    .. code-block:: text
 
-      '1.14.5.dev7+g31f65ed71'
+      '1.14.5'
 
 .. autodata:: __version_tuple__
    :annotation:
 
    .. code-block:: text
 
-      (1, 14, 5, 'dev7', 'g31f65ed71')
+      (1, 14, 5)
 
 .. autodata:: version
    :annotation:
 
    .. code-block:: text
 
-      '1.14.5.dev7+g31f65ed71'
+      '1.14.5'
 
 .. autodata:: version_tuple
    :annotation:
 
    .. code-block:: text
 
-      (1, 14, 5, 'dev7', 'g31f65ed71')
+      (1, 14, 5)
 
 .. autodata:: __commit_id__
    :annotation:
