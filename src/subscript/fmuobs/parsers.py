@@ -5,7 +5,6 @@ import datetime
 import re
 from pathlib import Path
 
-import numpy as np
 import pandas as pd
 
 from subscript import getLogger
@@ -431,20 +430,20 @@ def compute_date_from_days(
             to this starttime, and converted to DATE.
 
     Returns:
-        pd.DataFrame. DATE column is always of type datetime64
+        pd.DataFrame. DATE column is always datetime-like
+        (datetime64 unit depends on pandas)
     """
     assert isinstance(dframe, pd.DataFrame)
-    if starttime and "DAYS" in dframe:
-        if "DATE" not in dframe:
-            dframe["DATE"] = np.nan
-        start = pd.to_datetime(starttime)
-        date_needed_rows = ~dframe["DAYS"].isna() & dframe["DATE"].isna()
-        dframe["DATE"] = pd.to_datetime(dframe["DATE"])
-        dframe.loc[date_needed_rows, "DATE"] = start + pd.to_timedelta(
-            dframe.loc[date_needed_rows, "DAYS"], "d"
-        )
+
     if "DATE" in dframe:
         dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+
+    if starttime and "DAYS" in dframe:
+        computed = pd.to_datetime(starttime) + pd.to_timedelta(dframe["DAYS"], unit="D")
+        dframe["DATE"] = (
+            dframe["DATE"].fillna(computed) if "DATE" in dframe else computed
+        )
+
     return dframe
 
 

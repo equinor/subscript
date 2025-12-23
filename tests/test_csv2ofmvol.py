@@ -279,7 +279,9 @@ def test_df2vol(dframe, expected_lines):
     else:
         # (bogus columns in dframe must be ignored)
         pd.testing.assert_frame_equal(
-            dframe[backagain_df.columns].fillna(value=0.0), backagain_df
+            dframe[backagain_df.columns].fillna(value=0.0),
+            backagain_df,
+            check_index_type=False,
         )
 
 

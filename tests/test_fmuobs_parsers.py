@@ -508,11 +508,13 @@ def test_ertobs2df_starttime(string, expected):
     pd.testing.assert_frame_equal(
         ertobs2df(string, starttime="2020-01-01").sort_index(axis=1),
         expected.sort_index(axis=1),
+        check_dtype=False,
     )
     # Test again with datetime object passed, not string:
     pd.testing.assert_frame_equal(
         ertobs2df(string, starttime=datetime.date(2020, 1, 1)).sort_index(axis=1),
         expected.sort_index(axis=1),
+        check_dtype=False,
     )
 
 

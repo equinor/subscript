@@ -533,6 +533,7 @@ def test_convert_dframe_date_to_str(dframe, expected_dframe):
     pd.testing.assert_frame_equal(
         convert_dframe_date_to_str(dframe),
         expected_dframe,
+        check_dtype=False,
     )
 
 

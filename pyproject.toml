@@ -43,7 +43,7 @@ dependencies = [
     "matplotlib",
     "numpy",
     "opm>=2023.04",
-    "pandas",
+    "pandas >= 2",
     "pydantic",
     "pyscal",
     "pyyaml",
