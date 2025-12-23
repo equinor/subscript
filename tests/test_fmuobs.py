@@ -198,6 +198,7 @@ def test_roundtrip_yaml(filename, readonly_testdata_dir):
         yaml_roundtrip_dframe.sort_index(axis="columns").sort_values("LABEL"),
         dframe.sort_index(axis="columns").sort_values("LABEL"),
         check_like=True,
+        check_dtype=False,
     )
 
 

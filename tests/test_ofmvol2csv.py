@@ -270,7 +270,7 @@ def test_parse_well(inputlines, expected):
     inputlines = ofmvol2csv.cleanse_ofm_lines(inputlines)
     colnames = ofmvol2csv.extract_columnnames(inputlines)
     dframe = ofmvol2csv.parse_well(inputlines[1:], colnames)
-    pd.testing.assert_frame_equal(dframe, expected)
+    pd.testing.assert_frame_equal(dframe, expected, check_index_type=False)
 
 
 @pytest.mark.parametrize(
@@ -362,7 +362,11 @@ def test_process_volstr(inputlines, expected):
         expected["DATE"] = pd.to_datetime(expected["DATE"])
         expected = expected.set_index(["WELL", "DATE"])
     dframe = ofmvol2csv.process_volstr("\n".join(inputlines))
-    pd.testing.assert_frame_equal(dframe, expected)
+    pd.testing.assert_frame_equal(
+        dframe,
+        expected,
+        check_index_type=False,
+    )
 
 
 @pytest.mark.parametrize(

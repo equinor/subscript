@@ -34,9 +34,9 @@ import numpy as np
 
 # Get rid of FutureWarning from pandas/plotting.py
 from pandas.plotting import register_matplotlib_converters
-from resdata.grid import Grid  # type: ignore
-from resdata.resfile import ResdataFile  # type: ignore
-from resdata.summary import Summary  # type: ignore
+from resdata.grid import Grid
+from resdata.resfile import ResdataFile
+from resdata.summary import Summary
 
 import subscript
 

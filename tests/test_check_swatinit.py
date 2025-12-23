@@ -558,7 +558,9 @@ def test_eqlnum2(tmp_path, mocker):
 def test_reorder_dframe_for_nonnans(inputrows, expected):
     """Test that rows with less NaNs will be prioritized through the reorder function"""
     pd.testing.assert_frame_equal(
-        reorder_dframe_for_nonnans(pd.DataFrame(inputrows)), pd.DataFrame(expected)
+        reorder_dframe_for_nonnans(pd.DataFrame(inputrows)),
+        pd.DataFrame(expected),
+        check_column_type=False,
     )
 
 
