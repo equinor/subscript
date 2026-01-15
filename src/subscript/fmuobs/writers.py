@@ -328,7 +328,7 @@ def block_df2obsdict(block_df: pd.DataFrame) -> list[dict]:
     block_df = convert_dframe_date_to_str(block_df).dropna(axis=1, how="all")
 
     for blocklabel, blocklabel_df in block_df.groupby(["LABEL", "DATE"]):
-        blocklabel_dict = {}
+        blocklabel_dict: dict[str, Any] = {}
         if "WELL" not in blocklabel_df:
             blocklabel_dict["well"] = blocklabel[0]
         else:
@@ -351,8 +351,6 @@ def block_df2obsdict(block_df: pd.DataFrame) -> list[dict]:
                 errors="ignore",
             ).iterrows()
         ]
-        # if "subcomment" in blocklabel_dict:
-        #    blocklabel_dict["comment"] = blocklabel_dict.pop("subcomment")
         block_obs_list.append(blocklabel_dict)
     return block_obs_list
 
