@@ -2,18 +2,20 @@
 
 import argparse
 import datetime
-import glob
-import os
+import logging
 import shutil
-import sys
+import subprocess
 import tempfile
+from contextlib import chdir
 from pathlib import Path
 
-import numpy
-import pandas
+import numpy as np
+import pandas as pd
 from resdata.resfile import ResdataFile
 
-from subscript import __version__
+from subscript import __version__, getLogger
+
+logger = getLogger(__name__)
 
 DESCRIPTION = """
 Slice a subset of restart-dates from an E100 Restart file (UNRST)
@@ -28,97 +30,100 @@ written to the same filename (keeping the original is optional)
 
 
 def find_resdata_app(toolname: str) -> str:
-    """Locate path of apps in resdata.
+    """Locate path of resdata apps, trying common suffixes (.x, .c.x, .cpp.x).
 
-    These have varying suffixes due through the history of resdata Makefiles.
-
-    Depending on resdata-version, it has the .x or the .c.x suffix
-    We prefer .x.
+    Args:
+        toolname: Base name of the tool (e.g., 'rd_unpack')
 
     Returns:
-        String with path if found.
+        Full path to the executable.
 
     Raises:
-        IOError: if tool can't be found
+        OSError: If tool cannot be found in PATH.
     """
-    extensions = [".x", ".c.x", ".cpp.x", ""]  # Order matters.
-    candidates = [toolname + extension for extension in extensions]
-    for candidate in candidates:
-        for path in os.environ["PATH"].split(os.pathsep):
-            candidatepath = Path(path) / candidate
-            if candidatepath.exists():
-                return str(candidatepath)
-    raise OSError(toolname + " not found in path, PATH=" + str(os.environ["PATH"]))
+    for ext in [".x", ".c.x", ".cpp.x", ""]:  # Order matters.
+        if path := shutil.which(toolname + ext):
+            return path
+    raise OSError(f"{toolname} not found in PATH")
 
 
-def date_slicer(slicedates: list, restartdates: list, restartindices: list) -> dict:
-    """Make a dict that maps a chosen restart date to a report index"""
-    slicedatemap = {}
+def date_slicer(
+    slicedates: list[pd.Timestamp],
+    restartdates: list[datetime.datetime],
+    restartindices: list[int],
+) -> list[int]:
+    """Make a list of report indices that match the input slicedates."""
+    slicedatelist = []
     for slicedate in slicedates:
-        daydistances = [
-            abs((pandas.Timestamp(slicedate) - x).days) for x in restartdates
-        ]
-        slicedatemap[slicedate] = restartindices[daydistances.index(min(daydistances))]
-    return slicedatemap
+        daydistances = [abs((pd.Timestamp(slicedate) - x).days) for x in restartdates]
+        slicedatelist.append(restartindices[daydistances.index(min(daydistances))])
+    return slicedatelist
 
 
-def rd_repacker(rstfilename: str, slicerstindices: list, quiet: bool) -> None:
+def rd_repacker(rstfilename: str, slicerstindices: list[int], quiet: bool) -> None:
+    """Repack a UNRST file keeping only selected restart indices.
+
+    Uses rd_unpack and rd_pack utilities from resdata to unpack the UNRST file,
+    remove unwanted dates, and repack into a new UNRST file.
+
+    Args:
+        rstfilename: Path to the UNRST file.
+        slicerstindices: List of restart indices to keep.
+        quiet: If True, suppress subprocess output.
+
+    Raises:
+        OSError: If rd_unpack or rd_pack tools are not found.
     """
-    Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
-    utilities are from resdata.
+    rd_unpack = find_resdata_app("rd_unpack")
+    rd_pack = find_resdata_app("rd_pack")
 
-    First unpacking a UNRST file, then deleting dates the dont't want, then
-    pack the remainding files into a new UNRST file
+    rstpath = Path(rstfilename)
+    rstdir = rstpath.parent or Path(".")
+    rstname = rstpath.name
 
-    This function will change working directory to the
-    location of the UNRST file, dump temporary files in there, and
-    modify the original filename.
+    with chdir(rstdir):
+        tempdir = Path(tempfile.mkdtemp(dir="."))
+        try:
+            # Move UNRST into temp directory and work there
+            shutil.move(rstname, tempdir / rstname)
+
+            with chdir(tempdir):
+                subprocess.run(
+                    [rd_unpack, rstname],
+                    stdout=subprocess.DEVNULL if quiet else None,
+                    check=True,
+                )
+
+                for file in Path(".").glob("*.X*"):
+                    index = int(file.suffix.lstrip(".X"))
+                    if index not in slicerstindices:
+                        file.unlink()
+
+                remaining_files = sorted(Path(".").glob("*.X*"))
+                subprocess.run(
+                    [rd_pack, *[str(f) for f in remaining_files]],
+                    stdout=subprocess.DEVNULL if quiet else None,
+                    check=True,
+                )
+
+                # Move result back up
+                shutil.move(rstname, Path("..") / rstname)
+        finally:
+            shutil.rmtree(tempdir)
+
+
+def get_restart_indices(rstfilename: str) -> list[int]:
+    """Extract a list of restart indices for a filename.
+
+    Args:
+        rstfilename: Path to the UNRST file.
+
+    Returns:
+        List of restart report indices.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
     """
-    out = " >/dev/null" if quiet else ""
-    # Error early if resdata tools are not available
-    try:
-        find_resdata_app("rd_unpack")
-        find_resdata_app("rd_pack")
-    except OSError:
-        sys.exit(
-            "ERROR: rd_unpack.x and/or rd_pack.x not found.\n"
-            "These tools are required and must be installed separately"
-        )
-
-    # Take special care if the UNRST file we get in is not in current directory
-    cwd = os.getcwd()
-    rstfilepath = Path(rstfilename).parent
-    tempdir = None
-
-    try:
-        os.chdir(Path(rstfilename).parent)
-        tempdir = tempfile.mkdtemp(dir=".")
-        os.rename(
-            os.path.basename(rstfilename),
-            os.path.join(tempdir, os.path.basename(rstfilename)),
-        )
-        os.chdir(tempdir)
-        os.system(
-            find_resdata_app("rd_unpack") + " " + os.path.basename(rstfilename) + out
-        )
-        unpackedfiles = glob.glob("*.X*")
-        for file in unpackedfiles:
-            if int(file.split(".X")[1]) not in slicerstindices:
-                os.remove(file)
-        os.system(find_resdata_app("rd_pack") + " *.X*" + out)
-        # We are inside the tmp directory, move file one step up:
-        os.rename(
-            os.path.join(os.getcwd(), os.path.basename(rstfilename)),
-            os.path.join(os.getcwd(), "../", os.path.basename(rstfilename)),
-        )
-    finally:
-        os.chdir(cwd)
-        if tempdir is not None:
-            shutil.rmtree(rstfilepath / tempdir)
-
-
-def get_restart_indices(rstfilename: str) -> list:
-    """Extract a list of RST indices for a filename"""
     if Path(rstfilename).exists():
         # This function segfaults if file does not exist
         return ResdataFile.file_report_list(str(rstfilename))
@@ -132,8 +137,14 @@ def restartthinner(
     dryrun: bool = True,
     keep: bool = False,
 ) -> None:
-    """
-    Thin an existing UNRST file to selected number of restarts.
+    """Thin an existing UNRST file to selected number of restarts.
+
+    Args:
+        filename: Path to the UNRST file.
+        numberofslices: Number of restart dates to keep.
+        quiet: If True, suppress informational output.
+        dryrun: If True, only show what would be done without modifying files.
+        keep: If True, keep original file with .orig suffix.
     """
     rst = ResdataFile(filename)
     restart_indices = get_restart_indices(filename)
@@ -142,41 +153,39 @@ def restartthinner(
     ]
 
     if numberofslices > 1:
-        slicedates = pandas.DatetimeIndex(
-            numpy.linspace(
-                pandas.Timestamp(restart_dates[0]).value,
-                pandas.Timestamp(restart_dates[-1]).value,
+        slicedates = pd.DatetimeIndex(
+            np.linspace(
+                pd.Timestamp(restart_dates[0]).value,
+                pd.Timestamp(restart_dates[-1]).value,
                 int(numberofslices),
             )
         ).to_list()
     else:
         slicedates = [restart_dates[-1]]  # Only return last date if only one is wanted
 
-    slicerstindices = list(
-        date_slicer(slicedates, restart_dates, restart_indices).values()
-    )
-    slicerstindices.sort()
-    slicerstindices = list(set(slicerstindices))  # uniquify
+    slicerstindices = date_slicer(slicedates, restart_dates, restart_indices)
+    slicerstindices = sorted(set(slicerstindices))  # uniquify
 
     if not quiet:
-        print("Selected restarts:")
-        print("-----------------------")
+        logger.info("Selected restarts:")
+        logger.info("-----------------------")
         for idx, rstidx in enumerate(restart_indices):
             slicepresent = "X" if rstidx in slicerstindices else ""
-            print(
-                f"{rstidx:4d}  "
-                f"{datetime.date.strftime(restart_dates[idx], '%Y-%m-%d')}  "
-                f"{slicepresent}"
+            logger.info(
+                "%4d  %s  %s",
+                rstidx,
+                datetime.date.strftime(restart_dates[idx], "%Y-%m-%d"),
+                slicepresent,
             )
-        print("-----------------------")
+        logger.info("-----------------------")
+
     if not dryrun:
         if keep:
             backupname = filename + ".orig"
-            if not quiet:
-                print(f"Info: Backing up {filename} to {backupname}")
+            logger.info("Backing up %s to %s", filename, backupname)
             shutil.copyfile(filename, backupname)
         rd_repacker(filename, slicerstindices, quiet)
-    print(f"Written to {filename}")
+        logger.info("Written to %s", filename)
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -186,7 +195,11 @@ def get_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("UNRST", help="Name of UNRST file")
     parser.add_argument(
-        "-n", "--restarts", type=int, help="Number of restart dates wanted", default=0
+        "-n",
+        "--restarts",
+        type=int,
+        help="Number of restart dates wanted",
+        required=True,
     )
     parser.add_argument(
         "-d",
@@ -218,13 +231,19 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
-    """Endpoint for command line script"""
+    """Endpoint for command line script."""
     parser = get_parser()
     args = parser.parse_args()
+
     if args.restarts <= 0:
-        print("ERROR: Number of restarts must be a positive number")
-        sys.exit(1)
-    if args.UNRST.endswith("DATA"):
-        print("ERROR: Provide the UNRST file, not the DATA file")
-        sys.exit(1)
+        parser.error("Number of restarts must be a positive number")
+    if args.UNRST.endswith(".DATA"):
+        parser.error("Provide the UNRST file, not the DATA file")
+    if args.quiet:
+        logger.setLevel(logging.WARNING)
+
     restartthinner(args.UNRST, args.restarts, args.quiet, args.dryrun, args.keep)
+
+
+if __name__ == "__main__":
+    main()
