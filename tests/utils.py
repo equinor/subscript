@@ -100,7 +100,7 @@ def sat_table_str_ok(sat_table_str: str) -> None:
     number_lines = [
         line
         for line in sat_table_str.splitlines()
-        if line.strip() and line.strip()[0] in ["0", "1", "."]
+        if line.strip() and line.strip()[0] in {"0", "1", "."}
     ]
 
     floats_pr_line = {len(line.split()) for line in number_lines}
@@ -119,7 +119,7 @@ def sat_table_str_ok(sat_table_str: str) -> None:
         # or above digits + 1, otherwise it is a sign of some error.
 
     # And pyscal only emits three or four floats pr. line for all keywords:
-    assert next(iter(set(floats_pr_line))) in [3, 4]
+    assert next(iter(set(floats_pr_line))) in {3, 4}
 
     # So we should be able to parse this to a dataframe:
     dframe = pd.read_csv(io.StringIO("\n".join(number_lines)), sep=" ", header=None)

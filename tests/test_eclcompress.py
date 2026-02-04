@@ -308,7 +308,7 @@ def test_formatting():
     numbers = " ".join([str(number) for number in np.random.rand(1, 100)[0]])
     filelines = ["PORO", numbers, "/"]
     formatted = compress_multiple_keywordsets(find_keyword_sets(filelines), filelines)
-    assert max([len(line) for line in formatted]) <= 79
+    assert max(len(line) for line in formatted) <= 79
 
     # But, some keywords will not tolerate random
     # newlines in their data-section, at least the multi-record keywords.
@@ -424,8 +424,8 @@ def test_main(tmp_path, mocker):
     assert os.path.exists("testdeck.inc.orig")
     assert os.path.exists("testdeck.inc")
     compressedlines = Path("testdeck.inc").read_text(encoding="utf8").splitlines()
-    compressedbytes = sum([len(x) for x in compressedlines if not x.startswith("--")])
-    origbytes = sum([len(x) for x in FILELINES])
+    compressedbytes = sum(len(x) for x in compressedlines if not x.startswith("--"))
+    origbytes = sum(len(x) for x in FILELINES)
 
     assert compressedbytes < origbytes
 
@@ -714,7 +714,7 @@ def test_ert_integration_with_defaulted_files(tmpdir):
 def test_ert_integration_with_explicit_files(tmpdir):
     pytest.importorskip("ert")
     os.chdir(tmpdir)
-    Path("filelist").write_text("poro.grdecl")
+    Path("filelist").write_text("poro.grdecl", encoding="utf-8")
     Path("poro.grdecl").write_text("PORO\n1 1/\n", encoding="utf-8")
     ert_config = "config.ert"
     Path(ert_config).write_text(

@@ -186,9 +186,9 @@ def filter_comments(input_str: str, comment_identifier: str = "--") -> str:
     lines = input_str.split("\n")
 
     # Drop comments
-    _lines = (line.strip().split(comment_identifier)[0].strip() for line in lines)
+    lines_ = (line.strip().split(comment_identifier)[0].strip() for line in lines)
 
-    return "\n".join(filter(len, _lines))
+    return "\n".join(filter(len, lines_))
 
 
 def fix_dtype(value: str) -> int | float | datetime.datetime | str:
@@ -407,7 +407,7 @@ def ertobs2df(
         logger.debug("Parsing observation %s %s", obs_unit["CLASS"], obs_unit["LABEL"])
         if len(obs_unit_split) > 2:
             obs_args = " ".join(obs_unit_split[2:])
-            logger.debug("Subunit data: %s", str(obs_args))
+            logger.debug("Subunit data: %s", obs_args)
             for obs_subunit in flatten_observation_unit(
                 parse_observation_unit(obs_args)
             ):

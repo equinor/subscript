@@ -244,9 +244,9 @@ def drop_constants(
         if keepminimal and (not (stackmatcher.match(col) or col.lower() in keepthese)):
             columnstodelete.append(col)
     if keepminimal:
-        logger.info("Deleting constant and unwanted columns %s", str(columnstodelete))
+        logger.info("Deleting constant and unwanted columns %s", columnstodelete)
     else:
-        logger.info("Deleting constant columns %s", str(columnstodelete))
+        logger.info("Deleting constant columns %s", columnstodelete)
     logger.info("Deleted %d columns", len(columnstodelete))
     return dframe.drop(columnstodelete, axis=1)
 
@@ -287,7 +287,7 @@ def csv_stack(
     for col in dframe.columns:
         if stackmatcher.match(col):
             tuplecols.append(tuple(col.split(stackseparator)))
-            colstostack = colstostack + 1
+            colstostack += 1
             dostack = True
         else:
             tuplecols.append((col, ""))

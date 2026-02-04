@@ -148,12 +148,12 @@ def plotting(
     # height array; create an array from min to max, with step:
     hei = np.arange(0.01, hmax, 0.1)
 
-    for ix, _vec in enumerate(av):
+    for ix, vec in enumerate(av):
         if option == 3:
             txt = (
                 desc[ix]
                 + "  a="
-                + str(_vec)
+                + str(vec)
                 + " b="
                 + str(bv[ix])
                 + " $\\phi=$"
@@ -174,7 +174,7 @@ def plotting(
                 + str(perm[ix])
             )
 
-        swn = _vec * (hei * math.sqrt(perm[ix] / poro[ix])) ** bv[ix]
+        swn = vec * (hei * math.sqrt(perm[ix] / poro[ix])) ** bv[ix]
         sw = swirra[ix] + (1.0 - swirra[ix]) * swn
         plt.plot(sw, hei, label=txt)
         if swirra[ix] > 0.0:

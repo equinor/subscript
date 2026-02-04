@@ -417,7 +417,7 @@ def df2resinsight_df(obs_df: pd.DataFrame) -> pd.DataFrame:
     obs_no_date = ri_dframe[ri_dframe["DATE"].isna()]
     if not obs_no_date.empty:
         logger.warning("Some observations are missing DATE, these are skipped")
-        logger.warning("\n %s", str(obs_no_date.dropna(axis="columns", how="all")))
+        logger.warning("\n %s", obs_no_date.dropna(axis="columns", how="all"))
 
     # Slice out only the columns we want, in a predefined order:
     return ri_dframe[ri_column_names].dropna(axis="index", subset=["DATE"])

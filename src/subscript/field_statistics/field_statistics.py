@@ -715,7 +715,7 @@ def get_values_in_ertbox(
         ertbox_prop_values = np.ma.masked_all(
             (ertbox_size[0], ertbox_size[1], ertbox_size[2]), dtype=np.int32
         )
-    if conformity.upper() in ["PROPORTIONAL", "TOP_CONFORM"]:
+    if conformity.upper() in {"PROPORTIONAL", "TOP_CONFORM"}:
         ertbox_prop_values[:, :, :nz_zone] = prop_values[:, :, start_layer:end_layer]
     elif conformity.upper() == "BASE_CONFORM":
         start_layer_ertbox = ertbox_size[2] - nz_zone
@@ -764,7 +764,7 @@ def set_values_in_geogrid(
         prop_values = geogrid_property_param.values
 
     # Update only the property of the geogrid for the given zone
-    if conformity.upper() in ["PROPORTIONAL", "TOP_CONFORM"]:
+    if conformity.upper() in {"PROPORTIONAL", "TOP_CONFORM"}:
         prop_values[:, :, start_layer:end_layer] = ertbox_values[:, :, :nz_zone]
     elif conformity.upper() == "BASE_CONFORM":
         start_layer_ertbox = ertbox_size[2] - nz_zone
@@ -1234,7 +1234,7 @@ def check_zone_conformity(zone_code_names, zone_names_used, zone_conformity):
     for zone_name, conformity in zone_conformity.items():
         if zone_name not in list(zone_code_names.values()):
             raise ValueError("Unknown zone names in keyword 'zone_conformity'.")
-        if conformity.upper() not in ["TOP_CONFORM", "BASE_CONFORM", "PROPORTIONAL"]:
+        if conformity.upper() not in {"TOP_CONFORM", "BASE_CONFORM", "PROPORTIONAL"}:
             raise ValueError(
                 "Undefined zone conformity specified "
                 "(Must be Top_conform, Base_conform or Proportional)."
@@ -1876,9 +1876,9 @@ def main():
 if __name__ == "__main__":
     main()
 
-"""
+"""  # noqa: RUF027
     print(f"Write file: {rms_load_script}")
-    with open(rms_load_script, "w") as file:
+    with open(rms_load_script, "w", encoding="utf-8") as file:
         file.write(
             template_string.format(
                 ert_config_path=ert_config_path,

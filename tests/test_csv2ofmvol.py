@@ -374,11 +374,11 @@ def test_main(datadir, mocker):
     )
     csv2ofmvol.main()
     vollines = Path("outfile.vol").read_text(encoding="utf8").splitlines()
-    assert sum(["*NAME" in line for line in vollines]) == 2
-    assert sum(["*METRIC" in line for line in vollines]) == 1
-    assert sum(["NAME A-3" in line for line in vollines]) == 1
-    assert sum(["NAME A-4" in line for line in vollines]) == 1
-    assert sum(["*OIL" in line for line in vollines]) == 1
+    assert sum("*NAME" in line for line in vollines) == 2
+    assert sum("*METRIC" in line for line in vollines) == 1
+    assert sum("NAME A-3" in line for line in vollines) == 1
+    assert sum("NAME A-4" in line for line in vollines) == 1
+    assert sum("*OIL" in line for line in vollines) == 1
 
 
 def test_emptyfile(tmp_path):

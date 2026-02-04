@@ -41,7 +41,7 @@ def listify(source, count, conversion_func=None):
     if isinstance(source, list):
         # Adjust the size when it is only 1 item
         if len(source) == 1:
-            source = source * count
+            source *= count
 
         if conversion_func is None:
             return source

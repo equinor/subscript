@@ -275,7 +275,7 @@ def get_realization_path(path: Path) -> Path | None:
 
 def get_number_from_folder(foldername: str) -> int:
     """Retrive the integer after the '-' from the folder name"""
-    return int(foldername.split("-")[-1])
+    return int(foldername.rsplit("-", maxsplit=1)[-1])
 
 
 if __name__ == "__main__":

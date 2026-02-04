@@ -20,7 +20,7 @@ def get_completion_list(
     compdat_df = compdat.df(ecl_file)
 
     # Convert from ECL index
-    compdat_df[["I", "J", "K1", "K2"]] = compdat_df[["I", "J", "K1", "K2"]] - 1
+    compdat_df[["I", "J", "K1", "K2"]] -= 1
 
     # Create tuples
     compdat_df["IJK"] = compdat_df[["I", "J", "K1"]].apply(tuple, axis=1)

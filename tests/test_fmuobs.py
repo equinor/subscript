@@ -116,13 +116,13 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
     # This big loop is only here to aid in debugging when
     # the dataframes do not match, asserting equivalence of
     # subframes
-    for _class in dframe.index.unique():
+    for class_ in dframe.index.unique():
         roundtrip_subframe = (
-            ert_roundtrip_dframe.loc[[_class]]
+            ert_roundtrip_dframe.loc[[class_]]
             .dropna(axis=1, how="all")
             .sort_index(axis=1)
         )
-        subframe = dframe.loc[[_class]].dropna(axis=1, how="all").sort_index(axis=1)
+        subframe = dframe.loc[[class_]].dropna(axis=1, how="all").sort_index(axis=1)
         roundtrip_subframe = roundtrip_subframe.set_index(
             list(
                 {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(
@@ -142,7 +142,7 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
             .sort_index()
             .drop(["COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore")
         )
-        if _class == "BLOCK_OBSERVATION" and "WELL" in subframe:
+        if class_ == "BLOCK_OBSERVATION" and "WELL" in subframe:
             # WELL as used in yaml is not preservable in roundtrips
             del subframe["WELL"]
         # print(roundtrip_subframe)

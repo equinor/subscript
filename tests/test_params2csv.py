@@ -164,7 +164,8 @@ def test_ert_workflow(tmp_path):
 
     Path("wf_params2csv").write_text(
         'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
-        "<CONFIG_PATH>/realization-*/iter-0/parameters.txt"
+        "<CONFIG_PATH>/realization-*/iter-0/parameters.txt",
+        encoding="utf-8",
     )
 
     ert_config_fname = "test_params2csv.ert"
@@ -200,7 +201,8 @@ def test_ert_workflow_multiple_iter(tmp_path):
 
     Path("wf_params2csv").write_text(
         'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
-        "<CONFIG_PATH>/realization-*/iter-*/parameters.txt"
+        "<CONFIG_PATH>/realization-*/iter-*/parameters.txt",
+        encoding="utf-8",
     )
 
     ert_config_fname = "test_params2csv.ert"
@@ -232,7 +234,8 @@ def test_ert_workflow_pred_params(tmp_path):
 
     Path("wf_params2csv").write_text(
         'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
-        "<CONFIG_PATH>/realization-*/pred/parameters.txt"
+        "<CONFIG_PATH>/realization-*/pred/parameters.txt",
+        encoding="utf-8",
     )
 
     ert_config_fname = "test_params2csv.ert"
@@ -262,7 +265,8 @@ def test_ert_workflow_no_iter_folder(tmp_path):
 
     Path("wf_params2csv").write_text(
         'PARAMS2CSV "-o" <CONFIG_PATH>/parameters.csv '
-        "<CONFIG_PATH>/realization-*/parameters.txt"
+        "<CONFIG_PATH>/realization-*/parameters.txt",
+        encoding="utf-8",
     )
 
     ert_config_fname = "test_params2csv.ert"

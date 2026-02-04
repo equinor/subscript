@@ -92,16 +92,16 @@ def make_file_names(ensemble_path, iter_number, real_number, param_name, geogrid
     filedir = ensemble_path / Path("realization-" + str(real_number))
     if not filedir.exists():
         filedir.mkdir()
-    filedir = filedir / Path("iter-" + str(iter_number))
+    filedir /= Path("iter-" + str(iter_number))
     if not filedir.exists():
         filedir.mkdir()
-    filedir = filedir / Path("share")
+    filedir /= Path("share")
     if not filedir.exists():
         filedir.mkdir()
-    filedir = filedir / Path("results")
+    filedir /= Path("results")
     if not filedir.exists():
         filedir.mkdir()
-    filedir = filedir / Path("grids")
+    filedir /= Path("grids")
     if not filedir.exists():
         filedir.mkdir()
     filename = filedir / Path(f"{geogrid_name}--" + param_name + ".roff")
@@ -446,7 +446,7 @@ def make_test_case(tmp_path, config_dict):
 def compare_with_referencedata(ens_path, result_path, print_check=False):
     lines = []
     file_list = result_path / Path("referencedata/files.txt")
-    with open(file_list) as file:
+    with open(file_list, encoding="utf-8") as file:
         lines = file.readlines()
     is_ok = []
 
@@ -456,7 +456,7 @@ def compare_with_referencedata(ens_path, result_path, print_check=False):
     for nameinput in lines:
         name = nameinput.strip()
         words = name.split("_")
-        if words[0] in ["mean", "stdev", "prob"]:
+        if words[0] in {"mean", "stdev", "prob"}:
             fullfilename = result_path / Path("ertbox--" + name)
             reference_filename = result_path / Path("referencedata") / Path(name)
             grid_property = xtgeo.gridproperty_from_file(fullfilename, fformat="roff")

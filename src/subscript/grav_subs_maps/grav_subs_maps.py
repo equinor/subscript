@@ -272,7 +272,7 @@ def main_gravmaps(
 
     logger.info(
         "Done; All gravity and subsidence maps written to folder: %s",
-        str(output_folder),
+        output_folder,
     )
 
 
