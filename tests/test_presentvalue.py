@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -35,9 +34,9 @@ def test_dict_to_parameterstxt(res_dict, paramname, expected_str):
     assert presentvalue.dict_to_parameterstxt(res_dict, paramname) == expected_str
 
 
-def test_get_paramfilename(tmp_path):
+def test_get_paramfilename(tmp_path, monkeypatch):
     """Test that we can locate the parameters.txt relative to an Eclipse file"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     (tmp_path / "foo1").mkdir()
     (tmp_path / "foo1" / "foo2").mkdir(parents=True)
     (tmp_path / "foo1" / "foo2" / "foo3").mkdir(parents=True)
@@ -83,9 +82,9 @@ def test_prepare_econ_table_simpletest():
     assert econ_df.index.name == "year"
 
 
-def test_prepare_econ_table_csv(tmp_path):
+def test_prepare_econ_table_csv(tmp_path, monkeypatch):
     """Testing loading economics data from a CSV file"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("econ.csv").write_text(
         "year, oilprice, gasprice, costs\n2030, 60, 2, 100", encoding="utf8"
     )
@@ -280,7 +279,7 @@ def test_calc_pv_irr():
     assert presentvalue.calc_pv_irr(results["IRR"] * 2, IRR_DF, 2100) < 0.0
 
 
-def test_main(tmp_path, mocker):
+def test_main(tmp_path, mocker, monkeypatch):
     """Test the main functionality of presentvalue as endpoint script, writing
     back results to parameters.txt in the original runpath"""
     shutil.copytree(
@@ -289,7 +288,7 @@ def test_main(tmp_path, mocker):
         # This is somewhat spacious, 39M, but the test will fail
         # if you try with a symlink (presentvalue.py looks through symlinks)
     )
-    os.chdir(tmp_path / "model")
+    monkeypatch.chdir(tmp_path / "model")
 
     parameterstxt_fname = "parameters.txt"
 
@@ -316,10 +315,10 @@ def test_main(tmp_path, mocker):
     assert round(float(parametersline.split()[1]), 1) == 11653.9
 
 
-def test_no_gasinj(tmp_path):
+def test_no_gasinj(tmp_path, monkeypatch):
     """Test that summary files with no gas injection works
     (missing GIT is the same as zero GIT)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     smry = pd.DataFrame(
         [
             {"DATE": "2030-01-01", "FOPT": 0, "FGPT": 0},
@@ -341,10 +340,10 @@ def test_no_gasinj(tmp_path):
     )
 
 
-def test_no_gas(tmp_path):
+def test_no_gas(tmp_path, monkeypatch):
     """Test that summary files with no gas prod/injection works
     (missing GPT is the same as zero GPT)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     smry = pd.DataFrame(
         [
             {"DATE": "2030-01-01", "FOPT": 0},
@@ -366,10 +365,10 @@ def test_no_gas(tmp_path):
     )
 
 
-def test_no_oil(tmp_path):
+def test_no_oil(tmp_path, monkeypatch):
     """Test that summary files with only gas prod/injection works"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     smry = pd.DataFrame(
         [
             {"DATE": "2030-01-01", "FGPT": 0},

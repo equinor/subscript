@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -22,9 +21,9 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_main(tmp_path, mocker):
+def test_main(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     # defaults only
     mocker.patch("sys.argv", ["welltest_dpds", DATAFILEPATH, "55_33-1"])
@@ -220,10 +219,10 @@ def test_get_weighted_avg_press_time_derivative_lag2():
     assert dpdspt_w_lag2[-1] == pytest.approx(0.12729989)
 
 
-def test_genobs_vec(tmp_path):
+def test_genobs_vec(tmp_path, monkeypatch):
     """Test genobs_vec"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mockcsv = """
     Time\tdTime
     (hr)\t(hr)
@@ -240,10 +239,10 @@ def test_genobs_vec(tmp_path):
     assert genobs_vec[1] == pytest.approx(0.5)
 
 
-def test_to_csv(tmp_path):
+def test_to_csv(tmp_path, monkeypatch):
     """Test to_csv"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     vec = np.array([0, 0.5, 1, 2])
     welltest_dpds.to_csv("mock.csv", [vec])
@@ -268,9 +267,9 @@ def test_to_csv(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_integration(tmpdir):
+def test_ert_integration(tmpdir, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmpdir)
+    monkeypatch.chdir(tmpdir)
     shutil.copy(str(DATAFILEPATH) + ".SMSPEC", ".")
     shutil.copy(str(DATAFILEPATH) + ".UNSMRY", ".")
     ert_config = "config.ert"

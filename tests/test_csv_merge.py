@@ -1,6 +1,5 @@
 """Test csv_merge"""
 
-import os
 import subprocess
 from pathlib import Path
 
@@ -55,12 +54,12 @@ def test_taglist():
     assert csv_merge.taglist(files4, csv_merge.ENSEMBLE_REGEXP) == []
 
 
-def test_main_merge(tmp_path, mocker):
+def test_main_merge(tmp_path, mocker, monkeypatch):
     """Test command line interface for csv_merge"""
 
     assert subprocess.check_output(["csv_merge", "-h"])
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     test_csv_1 = "foo.csv"
     test_csv_2 = "bar.csv"
@@ -148,12 +147,14 @@ def test_main_merge(tmp_path, mocker):
         (["--debug", "-v"], "Loading foo.csv", None),
     ],
 )
-def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
+def test_logging(
+    options, expected, not_expected, tmp_path, mocker, caplog, monkeypatch
+):
     """Check that --verbose and --debug on the command line works as expected.
 
     Warning: This test is fragile if the other test functions manipulate
     the loglevel"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     pd.DataFrame(
         columns=["REAL", "FOO", "CONST"], data=[[0, 10, 1], [1, 20, 1]]
     ).to_csv("foo.csv", index=False)
@@ -184,9 +185,9 @@ def test_logging(options, expected, not_expected, tmp_path, mocker, caplog):
         assert not_expected not in output
 
 
-def test_empty_files(tmp_path):
+def test_empty_files(tmp_path, monkeypatch):
     """Test behaviour when some files are missing or are empty"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     # Empty but existing file:
     pd.DataFrame().to_csv("real1.csv", index=False)
     pd.DataFrame([{"FOO": 1.0}]).to_csv("real2.csv", index=False)
@@ -232,11 +233,11 @@ def test_empty_files(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_hook(tmp_path):
+def test_ert_hook(tmp_path, monkeypatch):
     """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
     realizations"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("realization-0/iter-0").mkdir(parents=True)
     Path("realization-1/iter-0").mkdir(parents=True)
     Path("realization-0/iter-0/foo.csv").write_text("FOO\nreal0", encoding="utf8")

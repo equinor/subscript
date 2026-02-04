@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 import pytest
@@ -8,9 +7,9 @@ from subscript.sector2fluxnum import sector2fluxnum
 TESTDATA = Path(__file__).absolute().parent / "testdata_sector2fluxnum"
 
 
-def test_main_test(tmp_path, mocker):
+def test_main_test(tmp_path, mocker, monkeypatch):
     """Test the command line utility"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     input_ECL_CASE = TESTDATA / "TEST.DATA"
     input_OUTPUT_FLUX = "OUT_COARSE.FLUX"
@@ -40,9 +39,9 @@ def test_main_test(tmp_path, mocker):
     assert Path("USEFLUX_TEST.DATA").exists()
 
 
-def test_main_test_fipnum(tmp_path, mocker):
+def test_main_test_fipnum(tmp_path, mocker, monkeypatch):
     """Test the --fipnum command line argument"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     input_ECL_CASE = TESTDATA / "TEST.DATA"
     input_OUTPUT_FLUX = "OUT_COARSE.FLUX"
@@ -72,10 +71,10 @@ def test_main_test_fipnum(tmp_path, mocker):
     not Path("/prog/res/ecl/grid").exists(),
     reason="Eclipse must be installed for this test",
 )
-def test_main_with_ecl_run(tmp_path, mocker):
+def test_main_with_ecl_run(tmp_path, mocker, monkeypatch):
     """Test without --test on the command line, requiring
     Eclipse simulator installed in PATH"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     input_ECL_CASE = TESTDATA / "TEST.DATA"
     input_OUTPUT_FLUX = "OUT_COARSE.FLUX"

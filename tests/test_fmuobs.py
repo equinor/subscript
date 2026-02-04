@@ -2,7 +2,6 @@
 other formats, and test the ERT hook"""
 
 import io
-import os
 import subprocess
 from pathlib import Path
 
@@ -18,15 +17,11 @@ TESTDATA_DIR = Path(__file__).absolute().parent / "testdata_fmuobs"
 
 
 @pytest.fixture(name="readonly_testdata_dir")
-def fixture_readonly_testdata_dir():
+def fixture_readonly_testdata_dir(monkeypatch):
     """When used as a fixture, the test function will run in the testdata
     directory. Do not write new or temporary files in here"""
-    cwd = os.getcwd()
-    try:
-        os.chdir(TESTDATA_DIR)
-        yield
-    finally:
-        os.chdir(cwd)
+    monkeypatch.chdir(TESTDATA_DIR)
+    yield
 
 
 @pytest.mark.parametrize(
@@ -82,11 +77,11 @@ def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
         ("rft: foo", "yaml"),
     ],
 )
-def test_autoparse_string(string, expected_format, tmp_path):
+def test_autoparse_string(string, expected_format, tmp_path, monkeypatch):
     """Test that difficult-to-parse-strings are recognized correctly
     (or not recognized at all). The filetype detector code has very mild
     requirements on dataframe validitiy."""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("inputfile.txt").write_text(string, encoding="utf8")
     assert autoparse_file("inputfile.txt")[0] == expected_format
 
@@ -254,14 +249,14 @@ def test_integration():
 
 @pytest.mark.integration
 @pytest.mark.parametrize("verbose", ["", "--verbose", "--debug"])
-def test_commandline(tmp_path, verbose, mocker, caplog):
+def test_commandline(tmp_path, verbose, mocker, caplog, monkeypatch):
     """Test the executable versus on the ERT doc observation data
     and compare to precomputed CSV and YML.
 
     When code changes, updates to the CSV and YML might
     be necessary.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         list(
@@ -343,10 +338,10 @@ def test_commandline(tmp_path, verbose, mocker, caplog):
 
 @pytest.mark.integration
 @pytest.mark.parametrize("verbose", ["", '"--verbose"', '"--debug"'])
-def test_ert_workflow_hook(verbose, tmp_path):
+def test_ert_workflow_hook(verbose, tmp_path, monkeypatch):
     """Mock an ERT config with FMUOBS as a workflow and run it"""
     obs_file = TESTDATA_DIR / "ert-doc.obs"
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
 

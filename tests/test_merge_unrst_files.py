@@ -1,4 +1,3 @@
-import os
 import subprocess
 from pathlib import Path
 
@@ -22,9 +21,9 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_main_default_output(tmp_path, mocker):
+def test_main_default_output(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     mocker.patch("sys.argv", ["merge_unrst_files", str(UNRST_HIST), str(UNRST_PRED)])
     merge_unrst_files.main()
@@ -33,9 +32,9 @@ def test_main_default_output(tmp_path, mocker):
 
 
 @pytest.mark.integration
-def test_main_with_output(tmp_path, mocker):
+def test_main_with_output(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     mocker.patch(
         "sys.argv",
@@ -62,9 +61,9 @@ def get_restart_report_numbers(unrst_merged):
 
 
 @pytest.mark.integration
-def test_check_report_numbers(tmp_path, mocker):
+def test_check_report_numbers(tmp_path, mocker, monkeypatch):
     """Verify that merged restart has the expected restart report numbers."""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     mocker.patch(
         "sys.argv",
@@ -89,9 +88,9 @@ def test_check_report_numbers(tmp_path, mocker):
 
 
 @pytest.mark.integration
-def test_ert_integration(tmpdir):
+def test_ert_integration(tmpdir, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmpdir)
+    monkeypatch.chdir(tmpdir)
     ert_config = "config.ert"
     Path(ert_config).write_text(
         f"""

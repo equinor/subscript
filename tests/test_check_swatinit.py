@@ -1,4 +1,3 @@
-import os
 import subprocess
 from pathlib import Path
 
@@ -508,9 +507,9 @@ def test_compute_pc(propslist, satfunc_df, expected_pc):
         assert pc_series.to_numpy()[0] == expected_pc
 
 
-def test_eqlnum2(tmp_path, mocker):
+def test_eqlnum2(tmp_path, mocker, monkeypatch):
     """What if a model does not have EQLNUM=1 cells present"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     pd.DataFrame(
         [
             # This dataframe is a minimum dataset for check_swatinit

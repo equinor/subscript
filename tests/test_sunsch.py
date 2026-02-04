@@ -1,5 +1,4 @@
 import datetime
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -14,28 +13,19 @@ DATADIR = Path(__file__).absolute().parent / "testdata_sunsch"
 
 
 @pytest.fixture(name="readonly_datadir")
-def fixture_readonly_datadir():
+def fixture_readonly_datadir(monkeypatch):
     """When used as a fixture, the test function will run in the testdata
     directory. Do not write new or temporary files in here"""
-    cwd = Path.cwd()
-    try:
-        os.chdir(DATADIR)
-        yield
-    finally:
-        os.chdir(cwd)
+    monkeypatch.chdir(DATADIR)
+    yield
 
 
 @pytest.fixture(name="testdata")
-def fixture_testdata(tmp_path):
+def fixture_testdata(tmp_path, monkeypatch):
     """Fixture providing test data for test functions"""
-    os.chdir(tmp_path)
-    cwd = os.getcwd()
-    shutil.copytree(DATADIR, "testdata_sunsch")
-    try:
-        os.chdir("testdata_sunsch")
-        yield
-    finally:
-        os.chdir(cwd)
+    shutil.copytree(DATADIR, tmp_path / "testdata_sunsch")
+    monkeypatch.chdir(tmp_path / "testdata_sunsch")
+    yield
 
 
 def test_main(testdata, caplog, mocker):
@@ -157,9 +147,9 @@ def test_dump_stdout(testdata, mocker):
     assert "DEBUG:subscript" not in result.stdout.decode()
 
 
-def test_templating(tmp_path):
+def test_templating(tmp_path, monkeypatch):
     """Test templating"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("template.tmpl").write_text(
         "WCONHIST\n<WELLNAME> OPEN ORAT <ORAT> <GRAT> /\n/", encoding="utf8"
     )
@@ -389,7 +379,7 @@ def test_nonisodate(readonly_datadir):
         sunsch.process_sch_config(sunschconf)
 
 
-def test_merge_include_nonexist(tmp_path):
+def test_merge_include_nonexist(tmp_path, monkeypatch):
     """If a user merges in a sch file which contains INCLUDE
     statements, these files may not exist yet (or only for a
     different path and so on.
@@ -397,7 +387,7 @@ def test_merge_include_nonexist(tmp_path):
     The way to get around this, is to do string insertions
     in the insert section.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("mergewithexistinginclude.sch").write_text(
         """
 DATES
@@ -455,13 +445,13 @@ INCLUDE
     assert "something.sch" in str(sch)
 
 
-def test_merge_paths_in_use(tmp_path, caplog):
+def test_merge_paths_in_use(tmp_path, caplog, monkeypatch):
     """If the PATHS keyword is in use for getting includes,
     there will be "variables" in use in INCLUDE-statements.
 
     These variables are defined in the DATA file and outside
     sunsch's scope, but we should ensure a proper error message"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("pathsinclude.sch").write_text(
         """
 DATES
@@ -503,9 +493,9 @@ def test_merge(readonly_datadir):
     assert "WRFTPLT" in str(sch)
 
 
-def test_sch_file_nonempty(tmp_path):
+def test_sch_file_nonempty(tmp_path, monkeypatch):
     """Test that we can detect empty files"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     Path("empty.sch").write_text("", encoding="utf8")
     assert not sunsch.sch_file_nonempty("empty.sch")
@@ -526,10 +516,10 @@ def test_sch_file_nonempty(tmp_path):
     assert sunsch.sch_file_nonempty("wconprod.sch")
 
 
-def test_emptyfiles(tmp_path):
+def test_emptyfiles(tmp_path, monkeypatch):
     """Test that we don't crash when we try to include files
     which are empty (or only contains comments)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("empty.sch").write_text("", encoding="utf8")
     sunschconf = {"startdate": datetime.date(2000, 1, 1), "files": ["empty.sch"]}
     sch = sunsch.process_sch_config(sunschconf)
@@ -687,9 +677,9 @@ def test_wrap_long_lines():
     )
 
 
-def test_long_vfp_lines(tmp_path, caplog, mocker):
+def test_long_vfp_lines(tmp_path, caplog, mocker, monkeypatch):
     """Make sure that lines can't get too long for Eclipse"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("vfp.inc").write_text(
         """VFPPROD
 1 100 'GAS' 'WGR' 'GOR' 'THP' ' ' 'METRIC' 'BHP' /
@@ -754,9 +744,9 @@ insert:
     assert mycomment in str(sunsch.process_sch_config(conf))
 
 
-def test_weltarg_uda(tmp_path):
+def test_weltarg_uda(tmp_path, monkeypatch):
     """WELTARG supports UDA from opm-common 2020.10"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     weltargkeyword = """WELTARG
   'OP-1' ORAT WU_VALUE /
 /

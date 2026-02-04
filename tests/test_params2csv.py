@@ -1,4 +1,3 @@
-import os
 import subprocess
 from pathlib import Path
 
@@ -16,9 +15,9 @@ ERT_CONFIG_WF = [
 ]
 
 
-def test_main(tmp_path, mocker):
+def test_main(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("parameters1.txt").write_text(
         "\n".join(["FOO     100", "BAR com", "BOGUS", "CONSTANT 1"]), encoding="utf8"
     )
@@ -72,10 +71,10 @@ def test_main(tmp_path, mocker):
     assert set(result["filename"].to_numpy()) == {"parameters1.txt", "parameters2.txt"}
 
 
-def test_spaces_in_values(tmp_path, mocker):
+def test_spaces_in_values(tmp_path, mocker, monkeypatch):
     """Test that we support spaces in values in parameters.txt
     if they are quoted properly"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("parameters.txt").write_text('somekey "value with spaces"', encoding="utf8")
     # Single-qoutes:
     Path("parameters2.txt").write_text("somekey 'value with spaces'", encoding="utf8")
@@ -87,9 +86,9 @@ def test_spaces_in_values(tmp_path, mocker):
     assert result["somekey"].to_numpy()[0] == "value with spaces"
 
 
-def test_spaces_in_values_single_quotes(tmp_path, mocker):
+def test_spaces_in_values_single_quotes(tmp_path, mocker, monkeypatch):
     """Test that single quotes can also be used to support spaces in values"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("parameters.txt").write_text('somekey "value with spaces"', encoding="utf8")
 
     mocker.patch("sys.argv", ["params2csv", "--keepconstantcolumns", "parameters.txt"])
@@ -106,10 +105,10 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_ert_forward_model(tmp_path):
+def test_ert_forward_model(tmp_path, monkeypatch):
     """Test that the ERT hook can run on a mocked case"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     ert_config_fname = "test_params2csv.ert"
     ert_config = [
@@ -127,10 +126,10 @@ def test_ert_forward_model(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_forward_model_filename_column(tmp_path):
+def test_ert_forward_model_filename_column(tmp_path, monkeypatch):
     """Test that the ERT hook can run on a mocked case"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     ert_config_fname = "test_params2csv.ert"
     ert_config = [
@@ -150,10 +149,10 @@ def test_ert_forward_model_filename_column(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_workflow(tmp_path):
+def test_ert_workflow(tmp_path, monkeypatch):
     """Test that PARAMS2CSV can be run as an ERT workflow/plugin"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     realizations = 3
     for i in range(realizations):
@@ -180,13 +179,13 @@ def test_ert_workflow(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_workflow_multiple_iter(tmp_path):
+def test_ert_workflow_multiple_iter(tmp_path, monkeypatch):
     """
     Test that PARAMS2CSV can be run as an ERT workflow/plugin on
     multiple iterations.
     """
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     realizations = 3
     for i in range(realizations):
@@ -220,10 +219,10 @@ def test_ert_workflow_multiple_iter(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_workflow_pred_params(tmp_path):
+def test_ert_workflow_pred_params(tmp_path, monkeypatch):
     """Test that PARAMS2CSV can be run on folders not starting with iter"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     realizations = 3
     for i in range(realizations):
@@ -251,10 +250,10 @@ def test_ert_workflow_pred_params(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_workflow_no_iter_folder(tmp_path):
+def test_ert_workflow_no_iter_folder(tmp_path, monkeypatch):
     """Test that PARAMS2CSV can be run on cases without iteration folders"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     realizations = 3
     for i in range(realizations):

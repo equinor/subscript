@@ -1,6 +1,5 @@
 """Test prtvol2csv, both as library and as command line"""
 
-import os
 import shutil
 import subprocess
 import sys
@@ -22,11 +21,11 @@ TEST_PRT_DATADIR = Path(__file__).absolute().parent / "testdata_prtvol2csv"
 DROGON_TEST_DATA_DIR = Path(__file__).absolute().parent / "data/drogon/eclipse"
 
 
-def test_valid_flow_output(simulator, tmp_path, mocker):
+def test_valid_flow_output(simulator, tmp_path, mocker, monkeypatch):
     """Test that latest simulation output from flow can be processed"""
 
     shutil.copytree(DROGON_TEST_DATA_DIR, tmp_path / "eclipse")
-    os.chdir(tmp_path / "eclipse/model")
+    monkeypatch.chdir(tmp_path / "eclipse/model")
 
     Path(tmp_path / "eclipse/include/schedule/drogon_hist.sch").write_text(
         """
@@ -55,9 +54,9 @@ def test_valid_flow_output(simulator, tmp_path, mocker):
     assert dframe.shape == (21, 14)
 
 
-def test_reservoir_volumes_from_prt(tmp_path):
+def test_reservoir_volumes_from_prt(tmp_path, monkeypatch):
     """Test parsing of PRT to find currently in place"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(
         """
 
@@ -89,11 +88,11 @@ def test_reservoir_volumes_from_prt(tmp_path):
     )
 
 
-def test_prtvol2csv(tmp_path, mocker):
+def test_prtvol2csv(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     with pytest.warns(FutureWarning, match="Output directories"):
         mocker.patch("sys.argv", ["prtvol2csv", "--debug", str(prtfile)])
         prtvol2csv.main()
@@ -183,9 +182,9 @@ def test_prtvol2csv(tmp_path, mocker):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
-def test_correct_parsing_date(tmp_path):
+def test_correct_parsing_date(tmp_path, monkeypatch):
     shutil.copy(TEST_PRT_DATADIR / "DROGON_FIPNUM.PRT", tmp_path / "DROGON_FIPNUM.PRT")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     # Replace "REPORT   0     1 JAN 2018" with "REPORT   0     5 JLY 2018"
     report_string = "REPORT   0     1 JLY 2018"
     prt_path = tmp_path / "DROGON_FIPNUM.PRT"
@@ -201,11 +200,11 @@ def test_correct_parsing_date(tmp_path):
     assert df_inplace["STOIIP_OIL"].head().to_list() == expected_stoiip_oil
 
 
-def test_rename_fip_column(tmp_path, mocker):
+def test_rename_fip_column(tmp_path, mocker, monkeypatch):
     """Test renaming of the region column to FIPNUM"""
     prtfile = TEST_PRT_DATADIR / "DROGON_FIPZON.PRT"
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     with pytest.warns(FutureWarning, match="Output directories"):
         mocker.patch(
@@ -225,11 +224,11 @@ def test_rename_fip_column(tmp_path, mocker):
     assert "FIPNUM" in dframe.columns
 
 
-def test_fipxxx(tmp_path, mocker):
+def test_fipxxx(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
     prtfile = TEST_PRT_DATADIR / "DROGON_FIPZON.PRT"
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     # Test for FIPZON, without the rename2fipnum option:
     with pytest.warns(FutureWarning, match="Output directories"):
@@ -573,12 +572,12 @@ def test_fipxxx(tmp_path, mocker):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
-def test_inactive_fipnum(tmp_path, mocker):
+def test_inactive_fipnum(tmp_path, mocker, monkeypatch):
     """Test the case with non-contiguous active FIPNUM"""
 
     prtfile = TEST_PRT_DATADIR / "DROGON_INACTIVE_FIPNUM.PRT"
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     with pytest.warns(FutureWarning, match="Output directories"):
         mocker.patch("sys.argv", ["prtvol2csv", "--debug", str(prtfile)])
         prtvol2csv.main()
@@ -587,7 +586,7 @@ def test_inactive_fipnum(tmp_path, mocker):
     assert dframe.loc[dframe["FIPNUM"].idxmax(), "HCPV_TOTAL"] != 0
 
 
-def test_warning_not_initial(tmp_path, mocker):
+def test_warning_not_initial(tmp_path, mocker, monkeypatch):
     """Test that the warning about not inital volume report is triggered"""
 
     # with Eclipse PRT file, BALANCE report only
@@ -596,7 +595,7 @@ def test_warning_not_initial(tmp_path, mocker):
     # with OPM Flow PRT file, BALANCE, BALZON (for FIPZON), RESERVOIR VOLUME reports
     prtfile_flow = TEST_PRT_DATADIR / "DROGON_NO_INITIAL_BALANCE_FLOW.PRT"
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     with pytest.warns(UserWarning, match="not at initial time") as warnings_record:
         mocker.patch(
@@ -617,9 +616,9 @@ def test_warning_not_initial(tmp_path, mocker):
     assert len(warnings_record) == 2
 
 
-def test_find_prtfile(tmp_path):
+def test_find_prtfile(tmp_path, monkeypatch):
     """Test location service for PRT files"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     # When nothing is in the current dir, it will not find it:
     assert prtvol2csv.find_prtfile("FOO") == "FOO"
@@ -634,7 +633,7 @@ def test_find_prtfile(tmp_path):
     assert prtvol2csv.find_prtfile("FOO.PRT") == "FOO.PRT"
 
 
-def test_prtvol2df(tmp_path):
+def test_prtvol2df(tmp_path, monkeypatch):
     """Test concatenation of dataframes with volumes"""
     simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
     resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
@@ -680,7 +679,7 @@ def test_prtvol2df(tmp_path):
     # that yet, perhaps it will be fixed later.
 
     # Check integer handling through yaml:
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("z2f_int.yml").write_text(
         yaml.dump({"zone2fipnum": {"Upper": 1}}), encoding="utf8"
     )
@@ -723,9 +722,9 @@ def test_prtvol2df(tmp_path):
     )["ZONE"].to_numpy() == ["Upper"]
 
 
-def test_webviz_regiontofipnum_format(tmp_path):
+def test_webviz_regiontofipnum_format(tmp_path, monkeypatch):
     """Test that the webviz format for mapping regions to fipnums also works"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     simv = pd.DataFrame([{"STOIIP_OIL": 1000}], index=[1])
     resv = pd.DataFrame([{"PORV_TOTAL": 1000}], index=[1])
     Path("webviz_fip.yml").write_text(
@@ -749,7 +748,7 @@ def test_integration():
     sys.version_info < (3, 7), reason="Test function requires Python 3.7 or higher"
 )
 @pytest.mark.integration
-def test_prtvol2csv_regions(tmp_path, mocker):
+def test_prtvol2csv_regions(tmp_path, mocker, monkeypatch):
     """Test region support, getting data from yaml.
 
     The functionality of writing CSV data grouped by regions will
@@ -776,7 +775,7 @@ def test_prtvol2csv_regions(tmp_path, mocker):
             {"FIPNUM": 6, "REGION": "RegionA", "ZONE": "Lower"},
         ]
     )
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("regions.yml").write_text(yaml.dump(yamlexample), encoding="utf8")
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     with pytest.warns(FutureWarning):
@@ -794,11 +793,11 @@ def test_prtvol2csv_regions(tmp_path, mocker):
 @pytest.mark.skipif(
     sys.version_info < (3, 7), reason="Test function requires Python 3.7 or higher"
 )
-def test_prtvol2csv_backwards_compat(tmp_path):
+def test_prtvol2csv_backwards_compat(tmp_path, monkeypatch):
     """Test that we  have managed to keep backwards compatibility at least in
     the deprecation period"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     result = subprocess.run(
         ["prtvol2csv", str(prtfile)],
@@ -815,7 +814,7 @@ def test_prtvol2csv_backwards_compat(tmp_path):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_regions_typemix(tmp_path, mocker):
+def test_prtvol2csv_regions_typemix(tmp_path, mocker, monkeypatch):
     """Test merging in region data, getting data from yaml"""
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -826,7 +825,7 @@ def test_prtvol2csv_regions_typemix(tmp_path, mocker):
         }
     }
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("regions.yml").write_text(yaml.dump(yamlexample), encoding="utf8")
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
     mocker.patch("sys.argv", ["prtvol2csv", str(prtfile), "--yaml", "regions.yml"])
@@ -842,9 +841,9 @@ def test_prtvol2csv_regions_typemix(tmp_path, mocker):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_webvizyaml(tmp_path, mocker):
+def test_prtvol2csv_webvizyaml(tmp_path, mocker, monkeypatch):
     """Test region2fipnum-map in webviz-yaml-format"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -883,14 +882,14 @@ def test_prtvol2csv_webvizyaml(tmp_path, mocker):
 
 
 @pytest.mark.integration
-def test_prtvol2csv_noresvol(tmp_path, mocker):
+def test_prtvol2csv_noresvol(tmp_path, mocker, monkeypatch):
     """Test when FIPRESV is not included
 
     Perform the test by just fiddling with the test PRT file
     """
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     prtlines = (
         Path(prtfile)
         .read_text(encoding="utf8")
@@ -907,9 +906,9 @@ def test_prtvol2csv_noresvol(tmp_path, mocker):
 
 
 @pytest.mark.integration
-def test_ert_forward_model(tmp_path):
+def test_ert_forward_model(tmp_path, monkeypatch):
     """Run ERT with the registered forward model PRTVOL2CSV"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 
@@ -946,9 +945,9 @@ def test_ert_forward_model(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_forward_model_backwards_compat_deprecation(tmp_path):
+def test_ert_forward_model_backwards_compat_deprecation(tmp_path, monkeypatch):
     """Test that the deprecated behaviour still works for backwards compat"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     prtfile = TESTDATADIR / "2_R001_REEK-0.PRT"
 

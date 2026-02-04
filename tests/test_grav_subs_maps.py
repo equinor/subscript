@@ -13,19 +13,13 @@ TESTDATA = Path(__file__).absolute().parent / "testdata_gravity"
 
 
 @pytest.fixture(name="res_data")
-def fixture_res_data(tmp_path):
+def fixture_res_data(tmp_path, monkeypatch):
     """Prepare a data directory with Eclipse binary output"""
 
     resdatadest = tmp_path / "resdata"
     shutil.copytree(TESTDATA, resdatadest, copy_function=os.symlink)
-    cwd = os.getcwd()
-    os.chdir(resdatadest)
-
-    try:
-        yield
-
-    finally:
-        os.chdir(cwd)
+    monkeypatch.chdir(resdatadest)
+    yield
 
 
 @pytest.mark.parametrize(
@@ -109,10 +103,10 @@ def fixture_res_data(tmp_path):
         ),
     ],
 )
-def test_config_errors(dictupdates, expected_error):
+def test_config_errors(dictupdates, expected_error, monkeypatch):
     """Test for error in configuration file"""
 
-    os.chdir(TESTDATA)
+    monkeypatch.chdir(TESTDATA)
     cfg = {
         "input": {
             "diffdates": [["2020-07-01", "2018-01-01"]],
