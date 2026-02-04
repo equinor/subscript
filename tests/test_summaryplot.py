@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -39,9 +38,9 @@ def get_plot_cmds(plot):
         ["--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_summaryplotter(cmd_args, tmp_path, mocker, plot):
+def test_summaryplotter(cmd_args, tmp_path, mocker, plot, monkeypatch):
     """Test multiple command line invocations"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         get_plot_cmds(plot) + cmd_args + [str(DATAFILE), str(DATAFILE)],
@@ -71,9 +70,9 @@ def test_summaryplotter(cmd_args, tmp_path, mocker, plot):
         ["--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_summaryplotter_mpl_test(cmd_args, tmp_path, mocker, plot):
+def test_summaryplotter_mpl_test(cmd_args, tmp_path, mocker, plot, monkeypatch):
     """Test multiple command line invocations"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         get_plot_cmds(plot) + cmd_args + [str(DATAFILE), str(DATAFILE), "--nolegend"],
@@ -93,10 +92,10 @@ def test_summaryplotter_mpl_test(cmd_args, tmp_path, mocker, plot):
         ["--logcolourby", "FOO", "--normalize", "--singleplot", "FGPR", "FOPR"],
     ],
 )
-def test_two_datafiles(cmd_args, tmp_path, mocker, plot):
+def test_two_datafiles(cmd_args, tmp_path, mocker, plot, monkeypatch):
     """Mock two different runs. Need different values in parameters.txt
     to trigger particular test lines."""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("realization-0").mkdir()
     Path("realization-1").mkdir()
     for filename in DATAFILE.parent.glob("*"):
@@ -144,9 +143,9 @@ def test_two_datafiles(cmd_args, tmp_path, mocker, plot):
         ),
     ],
 )
-def test_warnings(cmd_args, match, tmp_path, mocker, caplog):
+def test_warnings(cmd_args, match, tmp_path, mocker, caplog, monkeypatch):
     """Run command line arguments that give warning"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages", *cmd_args])
     summaryplot.main()
     assert match in caplog.text
@@ -163,9 +162,9 @@ def test_warnings(cmd_args, match, tmp_path, mocker, caplog):
         ["--colourby", "FOO", "--ensemblemode", "FOPT", str(DATAFILE)],
     ],
 )
-def test_sysexit(cmd_args, tmp_path, mocker):
+def test_sysexit(cmd_args, tmp_path, mocker, monkeypatch):
     """Run command line arguments that should end in failure"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch("sys.argv", [SCRIPTNAME, "--dumpimages", *cmd_args])
     with pytest.raises(SystemExit):
         summaryplot.main()
@@ -195,9 +194,9 @@ def test_splitvectorsdatafiles():
     )
 
 
-def test_find_parameterstxt_in_current(tmp_path):
+def test_find_parameterstxt_in_current(tmp_path, monkeypatch):
     """Test that we are able to locate a parameters.txt in current directory"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     shutil.copy(DATAFILE, "FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "FOO.UNSMRY")
     shutil.copy(str(DATAFILE).replace("DATA", "SMSPEC"), "FOO.SMSPEC")
@@ -208,10 +207,10 @@ def test_find_parameterstxt_in_current(tmp_path):
     ]
 
 
-def test_find_parameterstxt_two_levels_up(tmp_path):
+def test_find_parameterstxt_two_levels_up(tmp_path, monkeypatch):
     """Test that we are able to locate a parameters.txt located
     two levels up relative to DATA file"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("eclipse/model").mkdir(parents=True)
     shutil.copy(DATAFILE, "eclipse/model/FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/model/FOO.UNSMRY")
@@ -225,10 +224,10 @@ def test_find_parameterstxt_two_levels_up(tmp_path):
     ]
 
 
-def test_find_parameterstxt_one_level_up(tmp_path):
+def test_find_parameterstxt_one_level_up(tmp_path, monkeypatch):
     """Test that we are able to locate a parameters.txt located
     one level up relative to DATA file"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("eclipse").mkdir()
     shutil.copy(DATAFILE, "eclipse/FOO.DATA")
     shutil.copy(str(DATAFILE).replace("DATA", "UNSMRY"), "eclipse/FOO.UNSMRY")

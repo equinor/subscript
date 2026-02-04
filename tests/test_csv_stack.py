@@ -1,6 +1,5 @@
 """Test module for csv_stack"""
 
-import os
 import re
 import subprocess
 from pathlib import Path
@@ -144,12 +143,12 @@ def test_csv_stack_all():
 
 
 @pytest.mark.integration
-def test_commandlinetool(tmp_path, mocker):
+def test_commandlinetool(tmp_path, mocker, monkeypatch):
     """Test command line interface for csv_stack"""
 
     assert subprocess.check_output(["csv_stack", "-h"])  # nosec
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     TESTFRAME.to_csv("testframe.csv", index=False)
 
     mocker.patch("sys.argv", ["csv_stack", "testframe.csv", "-o", "stacked.csv"])
@@ -204,9 +203,9 @@ def test_commandlinetool(tmp_path, mocker):
 
 
 @pytest.mark.parametrize("verbose", [False, True])
-def test_csv_stack_verbose(tmp_path, verbose):
+def test_csv_stack_verbose(tmp_path, verbose, monkeypatch):
     """Test that --verbose gives INFO logging to stdout"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     TESTFRAME.to_csv("testframe.csv", index=False)
 
     commands = ["csv_stack", "testframe.csv", "--output", "stacked.csv"]
@@ -222,9 +221,9 @@ def test_csv_stack_verbose(tmp_path, verbose):
         assert "INFO:" not in output
 
 
-def test_csv_stack_stdout(tmp_path):
+def test_csv_stack_stdout(tmp_path, monkeypatch):
     """Test that csv output can be dumped to stdout"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     TESTFRAME.to_csv("testframe.csv", index=False)
     commands = ["csv_stack", "testframe.csv", "--output", csv_stack.__MAGIC_STDOUT__]
     result = subprocess.run(commands, check=True, capture_output=True)
@@ -235,10 +234,10 @@ def test_csv_stack_stdout(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_forward_model(tmp_path):
+def test_ert_forward_model(tmp_path, monkeypatch):
     """Test that the ERT hook can run on a mocked case"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
@@ -261,10 +260,10 @@ def test_ert_forward_model(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_forward_model_keepminimal(tmp_path):
+def test_ert_forward_model_keepminimal(tmp_path, monkeypatch):
     """Test that the ERT hook can run on a mocked case"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
@@ -290,10 +289,10 @@ def test_ert_forward_model_keepminimal(tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_forward_model_keepconstants(tmp_path):
+def test_ert_forward_model_keepconstants(tmp_path, monkeypatch):
     """Test that the ERT hook can run on a mocked case"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     TESTFRAME.to_csv("stackme.csv", index=False)
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
     ert_config = [
@@ -319,10 +318,10 @@ def test_ert_forward_model_keepconstants(tmp_path):
 
 
 @pytest.mark.integration
-def test_csv_stack_ert_workflow(tmp_path):
+def test_csv_stack_ert_workflow(tmp_path, monkeypatch):
     """Test that CSV_STACK can be run as an ERT workflow/plugin"""
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     csvfile = "some_ensemble/share/results/tables/unsmry--monthly.csv"
     Path(csvfile).parent.mkdir(parents=True)

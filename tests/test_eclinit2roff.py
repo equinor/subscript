@@ -13,26 +13,20 @@ logger.setLevel(logging.INFO)
 
 
 @pytest.fixture(name="reek_data")
-def fixture_reek_data(tmp_path):
+def fixture_reek_data(tmp_path, monkeypatch):
     """Prepare a data directory with Reek Eclipse binary output"""
     reekdir = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 
     reekdest = tmp_path / "reekdata"
     shutil.copytree(reekdir, reekdest, copy_function=os.symlink)
-    cwd = os.getcwd()
-    os.chdir(reekdest)
-
-    try:
-        yield
-
-    finally:
-        os.chdir(cwd)
+    monkeypatch.chdir(reekdest)
+    yield
 
 
 @pytest.mark.integration
-def test_ert_integration(tmp_path, reek_data):
+def test_ert_integration(tmp_path, reek_data, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmp_path / "reekdata")
+    monkeypatch.chdir(tmp_path / "reekdata")
     ert_config = "config.ert"
     Path(ert_config).write_text(
         """

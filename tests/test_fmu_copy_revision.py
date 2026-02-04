@@ -73,10 +73,10 @@ def test_rsync_exclude1(datatree, monkeypatch):
     assert Path(datatree / "xxx/rms/model/workflow.log").is_file()
 
 
-def test_construct_target(datatree):
+def test_construct_target(datatree, monkeypatch):
     """Test the construct target routine."""
 
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     today = time.strftime("%Y%m%d")
     user = getpass.getuser()
     expected = "some_20.1.1"
@@ -94,9 +94,9 @@ def test_construct_target(datatree):
     assert expected in str(runner.default_target)
 
 
-def test_construct_target_shall_fail(datatree):
+def test_construct_target_shall_fail(datatree, monkeypatch):
     """Test the construct target routine with non-existing folder."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
 
     runner = fcr.CopyFMU()
     runner.do_parse_args("")
@@ -108,9 +108,9 @@ def test_construct_target_shall_fail(datatree):
     assert "Input folder does not exist" in str(verr)
 
 
-def test_rsync_profile1(datatree):
+def test_rsync_profile1(datatree, monkeypatch):
     """Testing vs filter profile 1."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     target = "mytest1"
     source = "20.1.1"
     runner = fcr.CopyFMU()
@@ -126,9 +126,9 @@ def test_rsync_profile1(datatree):
     assert (datatree / target / "backup").is_dir()
 
 
-def test_rsync_profile3(datatree):
+def test_rsync_profile3(datatree, monkeypatch):
     """Testing vs filter profile 3."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     target = "mytest3"
     source = "20.1.1"
     runner = fcr.CopyFMU()
@@ -156,9 +156,9 @@ def test_rsync_profile3(datatree):
     assert not (datatree / target / "ert" / "output" / "log").is_dir()
 
 
-def test_rsync_profile4(datatree):
+def test_rsync_profile4(datatree, monkeypatch):
     """Testing vs filter profile 4."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     target = "mytest4"
     source = "20.1.1"
     runner = fcr.CopyFMU()
@@ -200,7 +200,7 @@ def test_rsync_profile4(datatree):
         (0o000, 4),
     ],
 )
-def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
+def test_missing_directory_permissions(tmp_path, rmsinputperm, profile, monkeypatch):
     """Test what happens if one directory is unreadable.
 
     This situation is only expected as a side effect in rare cases
@@ -211,7 +211,7 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile):
     Tests only profiles 1, 3 and 4 which are gives different keepfolders
     values.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     source = "20.1.1"
 
     (tmp_path / source / "rms" / "model").mkdir(parents=True)
@@ -266,18 +266,18 @@ def test_integration():
     assert subprocess.check_output([SCRIPTNAME, "-h"])
 
 
-def test_default_profile(datatree):
+def test_default_profile(datatree, monkeypatch):
     """Test command line mode"""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     result = subprocess.run(
         ["fmu_copy_revision", "--source", datatree], check=True, stdout=subprocess.PIPE
     )
     assert f"Doing copy with profile {DEFAULT_PROFILE}" in result.stdout.decode()
 
 
-def test_choice_profile1(datatree):
+def test_choice_profile1(datatree, monkeypatch):
     """Test interactive mode, using profile 1."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     profile = 1
     target = "users/jriv/xx1"
     user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
@@ -294,9 +294,9 @@ def test_choice_profile1(datatree):
     assert (datatree / target / "backup").is_dir()
 
 
-def test_choice_profile3(datatree):
+def test_choice_profile3(datatree, monkeypatch):
     """Test interactive mode, using profile 3."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     profile = 3
     target = "users/jriv/xx3"
     user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
@@ -314,9 +314,9 @@ def test_choice_profile3(datatree):
     assert not (datatree / target / "backup").is_dir()
 
 
-def test_choice_profile4(datatree):
+def test_choice_profile4(datatree, monkeypatch):
     """Test interactive mode, using profile 4."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     profile = 4
     target = "users/jriv/xx4"
     user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
@@ -334,9 +334,9 @@ def test_choice_profile4(datatree):
     assert not (datatree / target / "backup").is_dir()
 
 
-def test_profile_via_args(datatree):
+def test_profile_via_args(datatree, monkeypatch):
     """Test interactive use but with profile specified on command line"""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     target = "users/jriv/xx_cmd_profile"
     user_input = bytes(f"1\n{target}\n", encoding="ascii")
     result = subprocess.run(
@@ -351,9 +351,9 @@ def test_profile_via_args(datatree):
     assert (datatree / target / "rms" / "input" / "faults" / "f1.dat").exists()
 
 
-def test_choice_profile3_double_target(datatree):
+def test_choice_profile3_double_target(datatree, monkeypatch):
     """Test interactive mode, using profile 3 trying writing to same target twice."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     profile = 3
     target = "users/jriv/xxdouble"
     user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
@@ -406,9 +406,9 @@ def test_choice_profile3_double_target(datatree):
         (6, False),
     ],
 )
-def test_profiles_empty_directory_is_copied(datatree, profile, expected):
+def test_profiles_empty_directory_is_copied(datatree, profile, expected, monkeypatch):
     """Ensure that empty directories are copied as well."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     target = f"users/jriv/xxemptydir{profile}"
     user_input = bytes(f"1\n{target}\n{profile}\n", encoding="ascii")
     subprocess.run(["fmu_copy_revision"], check=True, input=user_input)

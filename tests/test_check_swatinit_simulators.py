@@ -66,13 +66,15 @@ def run_reservoir_simulator(simulator, resmodel, perform_qc=True):
     return None
 
 
-def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
+def test_swat_higher_than_swatinit_via_swl_above_contact(
+    simulator, tmp_path, monkeypatch
+):
     """If SWL is set higher than SWATINIT, both Eclipse and flow
     truncates SWAT to SWL.
 
     QC category is "Water gained"
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(cells=1, apex=1000, owc=[2000], swatinit=[0.3], swl=[0.5])
     qc_frame = run_reservoir_simulator(simulator, model)
     assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
@@ -94,13 +96,13 @@ def test_swat_higher_than_swatinit_via_swl_above_contact(simulator, tmp_path):
     assert pd.isna(qc_frame["PC"][0])
 
 
-def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
+def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path, monkeypatch):
     """Test PPCWMAX far above contact. This keyword is only supported by Eclipse100
     and will be ignored by flow.
 
     This leads to water being lost from SWATINIT to SWAT.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     swatinit = 0.8
     model = PillarModel(
         cells=1, apex=1000, owc=[1100], swatinit=[swatinit], ppcwmax=[3.01]
@@ -131,14 +133,14 @@ def test_swat_limited_by_ppcwmax_above_contact(simulator, tmp_path):
     )
 
 
-def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
+def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path, monkeypatch):
     """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will
     be applied some meters above the contact
 
     QC-wise, these cells will not be flagged, but contribute to average
     PC_SCALING
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[1020], swatinit=[0.5], swl=[0.0], maxpc=[3.0]
     )
@@ -174,11 +176,11 @@ def test_accepted_swatinit_slightly_above_contact(simulator, tmp_path):
         # Note: For e100, this does not change with oip_init (!)
 
 
-def test_accepted_swatinit_far_above_contact(simulator, tmp_path):
+def test_accepted_swatinit_far_above_contact(simulator, tmp_path, monkeypatch):
     """Test a "normal" scenario, SWATINIT is accepted and some PC scaling will
     be applied far above the contact
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[1100], swatinit=[0.1], swl=[0.0], maxpc=[3.0]
     )
@@ -219,12 +221,12 @@ def test_accepted_swatinit_far_above_contact(simulator, tmp_path):
         assert np.isclose(qc_frame["PC"], actual_pc)
 
 
-def test_accepted_swatinit_in_gas(simulator, tmp_path):
+def test_accepted_swatinit_in_gas(simulator, tmp_path, monkeypatch):
     """Repeat the test above, but with a gas-oil contact below the reservoir cell
 
     This gives higher capillary pressure (larger scaling) in the single reservoir cell.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         phases=["OIL", "WATER", "GAS"],
@@ -259,7 +261,7 @@ def test_accepted_swatinit_in_gas(simulator, tmp_path):
 
 
 @pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
-def test_swatinit_1_far_above_contact(simulator, tmp_path):
+def test_swatinit_1_far_above_contact(simulator, tmp_path, monkeypatch):
     """If SWATINIT is 1 far above the contact, we are in an unstable
     situation (water should not be mobile e.g)
 
@@ -272,7 +274,7 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
     the SWOF table and the relevant Pc pressure, and since that Pc curve
     is not touched by SWATINIT, SWAT becomes SWL far above contact.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[2000], swatinit=[1], swl=[0.1], maxpc=[3.0]
     )
@@ -310,13 +312,13 @@ def test_swatinit_1_far_above_contact(simulator, tmp_path):
 
 
 @pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
-def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
+def test_swatinit_1_slightly_above_contact(simulator, tmp_path, monkeypatch):
     """If we are slightly above the contact, item 9 in EQUIL plays
     a small role.
 
     SWATINIT=1 is still ignored above contact, Pc curve is left untouched.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1, apex=1000, owc=[1030], swatinit=[1], swl=[0.1], oip_init=0
     )
@@ -347,11 +349,11 @@ def test_swatinit_1_slightly_above_contact(simulator, tmp_path):
     assert np.isclose(qc_frame["SWAT"][0], expected_swat, atol=0.001)
 
 
-def test_capillary_entry_pressure(simulator, tmp_path):
+def test_capillary_entry_pressure(simulator, tmp_path, monkeypatch):
     """With some capillary entry pressure, we should have SWATINIT=1 some
     distance above the contact and also SWAT=1 there. Above the capillary entry
     pressure, both swat and swatinit should be less than 1."""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     pc_25m_above_contact = 0.373919 if "flow" in simulator else 0.373836
 
@@ -376,9 +378,9 @@ def test_capillary_entry_pressure(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
 
 
-def test_below_capillary_entry_pressure(simulator, tmp_path):
+def test_below_capillary_entry_pressure(simulator, tmp_path, monkeypatch):
     """Test what we get below the capillary entry pressure"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     pc_10m_above_contact = 0.150006 if "flow" in simulator else 0.148862
 
@@ -401,7 +403,7 @@ def test_below_capillary_entry_pressure(simulator, tmp_path):
     assert qc_frame["QC_FLAG"][0] == __SWATINIT_1__
 
 
-def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
+def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path, monkeypatch):
     """The result is discontinuous close to swatinit=1 for Eclipse100, because
     at swatinit = 1 - epsilon, Eclipse will try to scale  the capillary
     pressure, and is only limited by PPCWMAX (but not in this test).
@@ -409,7 +411,7 @@ def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
     flow is not discontinuous in SWAT as a function of SWATINIT, but in PPCW as a
     function of SWATINIT.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     p_cap = 0.37392 if "flow" in simulator else 0.3738366
 
@@ -426,11 +428,11 @@ def test_swatinit_almost1_slightly_above_contact(simulator, tmp_path):
     assert np.isclose(qc_vols[__PC_SCALED__], 0.0, atol=0.0003)
 
 
-def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
+def test_swatinit_less_than_1_below_contact(simulator, tmp_path, monkeypatch):
     """SWATINIT below the contact is ignored, and SWAT is set based on the
     input SWOF table. In water-wet system (pc>0), this always yields SWAT=1
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(cells=1, apex=1000, owc=[900], swatinit=[0.7], swl=[0.1])
     qc_frame = run_reservoir_simulator(simulator, model)
     qc_vols = qc_volumes(qc_frame)
@@ -454,7 +456,7 @@ def test_swatinit_less_than_1_below_contact(simulator, tmp_path):
 
 
 @pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
-def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
+def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path, monkeypatch):
     """For an oil-wet system, there can be oil below free water level.
 
     Flow will set water saturation to 1 no questions asked. Bug?
@@ -462,7 +464,7 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
     Eclipse ignores SWATINIT but calculates SWAT based on the input
     Pc-curve, and can thus give SWAT<1 if pc_min < 0.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -516,12 +518,12 @@ def test_swatinit_less_than_1_below_contact_neg_pc(simulator, tmp_path):
         )
 
 
-def test_swu(simulator, tmp_path):
+def test_swu(simulator, tmp_path, monkeypatch):
     """Test SWATINIT < SWU < 1.
 
     Both flow and Eclipse will scale the PC curve according to
     SWU and SWATINIT."""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=900,  # pc is around 1.443238 here.
@@ -545,12 +547,12 @@ def test_swu(simulator, tmp_path):
 
 
 @pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
-def test_swu_equal_swatinit(simulator, tmp_path):
+def test_swu_equal_swatinit(simulator, tmp_path, monkeypatch):
     """Test SWU equal to SWATINIT, this is the same as SWATINIT_1
 
     Eclipse will ignore SWATINIT because it is equal to SWU.
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=900,  # pc is around 1.443238 here.
@@ -578,14 +580,14 @@ def test_swu_equal_swatinit(simulator, tmp_path):
 
 
 @pytest.mark.skipif(IN_SUBSCRIPT_GITHUB_ACTIONS, reason="Test require flow dev version")
-def test_swu_lessthan_swatinit(simulator, tmp_path):
+def test_swu_lessthan_swatinit(simulator, tmp_path, monkeypatch):
     """Test SWU equal to SWATINIT
 
     In Eclipse this looks like the same situation as SWATINIT_1,
     SWATINIT is totally ignored. In flow, it looks like the SWU
     value (which here is the SWOF table endpoint) is ignored
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=900,  # pc is around 1.443238 here.
@@ -612,9 +614,9 @@ def test_swu_lessthan_swatinit(simulator, tmp_path):
     print(qc_frame)
 
 
-def test_swatinit_1_below_contact(simulator, tmp_path):
+def test_swatinit_1_below_contact(simulator, tmp_path, monkeypatch):
     """An all-good scenario, below contact, water-wet, ask for water, we get water."""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -636,9 +638,9 @@ def test_swatinit_1_below_contact(simulator, tmp_path):
     assert np.isclose(qc_vols[__WATER__], 0.0)
 
 
-def test_swlpc_trunc(simulator, tmp_path):
+def test_swlpc_trunc(simulator, tmp_path, monkeypatch):
     """SWAT truncated by SWLPC is the same as being truncated by SWL"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -657,10 +659,10 @@ def test_swlpc_trunc(simulator, tmp_path):
         assert qc_frame["QC_FLAG"][0] == __PC_SCALED__
 
 
-def test_swlpc_correcting_swl(simulator, tmp_path):
+def test_swlpc_correcting_swl(simulator, tmp_path, monkeypatch):
     """SWLPC should be allowed to override SWL, so that
     if an SWL value would trigger SWL_TRUNC, we can save the day by SWLPC"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -679,9 +681,9 @@ def test_swlpc_correcting_swl(simulator, tmp_path):
         assert qc_frame["QC_FLAG"][0] == __SWL_TRUNC__
 
 
-def test_swlpc_scaling(simulator, tmp_path):
+def test_swlpc_scaling(simulator, tmp_path, monkeypatch):
     """Test that PC is scaled differently when SWLPC is included"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         apex=1000,
@@ -711,10 +713,10 @@ def test_swlpc_scaling(simulator, tmp_path):
 
 
 # Gas-water is not supported by flow.
-def test_pc_scaled_above_gwc(eclipse_simulator, tmp_path):
+def test_pc_scaled_above_gwc(eclipse_simulator, tmp_path, monkeypatch):
     """Test a two-phase gas-water problem, scaled capillary pressure above contact"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=1,
         phases=["WATER", "GAS"],
@@ -730,9 +732,9 @@ def test_pc_scaled_above_gwc(eclipse_simulator, tmp_path):
     assert np.isclose(qc_frame["PC"][0], 9.396621)
 
 
-def test_ppcwmax_gridvector(simulator, tmp_path):
+def test_ppcwmax_gridvector(simulator, tmp_path, monkeypatch):
     """Test that ppcwmax_gridvector maps ppcwmax values correctly in the grid"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=3,
         owc=[1050],
@@ -746,9 +748,9 @@ def test_ppcwmax_gridvector(simulator, tmp_path):
     assert np.isclose(qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique(), 0.02)
 
 
-def test_ppcwmax_gridvector_eqlnum(flow_simulator, tmp_path):
+def test_ppcwmax_gridvector_eqlnum(flow_simulator, tmp_path, monkeypatch):
     """Test that ppcwmax unrolling also works with EQLNUM (historical bug)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(
         cells=3,
         satnum=[2, 1, 2],
@@ -762,9 +764,9 @@ def test_ppcwmax_gridvector_eqlnum(flow_simulator, tmp_path):
     assert qc_frame[qc_frame["SATNUM"] == 2]["PPCWMAX"].unique() == [0.02]
 
 
-def test_no_swatinit(tmp_path, mocker, caplog, flow_simulator):
+def test_no_swatinit(tmp_path, mocker, caplog, flow_simulator, monkeypatch):
     """Test what check_swatinit does on a case not initialized by SWATINIT"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(swatinit=[None])
     run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
@@ -772,9 +774,9 @@ def test_no_swatinit(tmp_path, mocker, caplog, flow_simulator):
     assert "INIT-file/deck does not have SWATINIT" in caplog.text
 
 
-def test_no_filleps(tmp_path, mocker, caplog, flow_simulator):
+def test_no_filleps(tmp_path, mocker, caplog, flow_simulator, monkeypatch):
     """Test the output when we don't have SWL (FILLEPS is needed)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(filleps="")
     run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
@@ -783,9 +785,9 @@ def test_no_filleps(tmp_path, mocker, caplog, flow_simulator):
     assert "FILLEPS" in caplog.text
 
 
-def test_no_unrst(tmp_path, mocker, flow_simulator):
+def test_no_unrst(tmp_path, mocker, flow_simulator, monkeypatch):
     """Test what happens when there is no restart file with SWAT[0]"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel()
     run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     os.unlink("FOO.UNRST")
@@ -794,27 +796,27 @@ def test_no_unrst(tmp_path, mocker, flow_simulator):
         main()
 
 
-def test_rptrst_basic_1(simulator, tmp_path, mocker):
+def test_rptrst_basic_1(simulator, tmp_path, mocker, monkeypatch):
     """Test what happens when RPTRST is BASIC=1"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(rptrst="BASIC=1")
     run_reservoir_simulator(simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     main()  # No exceptions/errors.
 
 
-def test_rptrst_allprops(simulator, tmp_path, mocker):
+def test_rptrst_allprops(simulator, tmp_path, mocker, monkeypatch):
     """Test what happens when RPTRST is ALLPROPS (which probably implies BASIC=1)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(rptrst="ALLPROPS")
     run_reservoir_simulator(simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])
     main()  # No exceptions.
 
 
-def test_no_unifout(tmp_path, mocker, flow_simulator):
+def test_no_unifout(tmp_path, mocker, flow_simulator, monkeypatch):
     """Test what happens when UNIFOUT is not included"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     model = PillarModel(unifout="")
     run_reservoir_simulator(flow_simulator, model, perform_qc=False)
     mocker.patch("sys.argv", ["check_swatinit", "FOO.DATA"])

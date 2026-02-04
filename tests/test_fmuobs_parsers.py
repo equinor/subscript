@@ -4,7 +4,6 @@ They all parse and transform the data into the internal dataframe
 representation."""
 
 import datetime
-import os
 from pathlib import Path
 
 import pandas as pd
@@ -28,9 +27,9 @@ from subscript.fmuobs.parsers import (
 from subscript.fmuobs.writers import df2ertobs, df2obsdict
 
 
-def test_expand_includes(tmp_path):
+def test_expand_includes(tmp_path, monkeypatch):
     """Test that include <filename> statements can be resolved"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("foo.txt").write_text("foo;", encoding="utf8")
     assert expand_includes("hallo; include foo.txt; hei") == "hallo; foo; hei"
 

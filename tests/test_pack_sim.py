@@ -20,9 +20,9 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_main(tmp_path, mocker):
+def test_main(tmp_path, mocker, monkeypatch):
     """Test invocation from command line"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafilepath), "."])
@@ -35,10 +35,10 @@ def test_main(tmp_path, mocker):
     assert Path("include/swof.inc").exists()
 
 
-def test_main_fmu(tmp_path, mocker):
+def test_main_fmu(tmp_path, mocker, monkeypatch):
     """Test the --fmu option on the command line, yielding
     a different directory layout"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafilepath), ".", "--fmu"])
@@ -52,9 +52,9 @@ def test_main_fmu(tmp_path, mocker):
     assert Path("include/props/reek.pvt").exists()
 
 
-def test_repeated_run(tmp_path, mocker):
+def test_repeated_run(tmp_path, mocker, monkeypatch):
     """Test what happens on repeated incovations"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     mocker.patch("sys.argv", ["pack_sim", str(datafilepath), ".", "--fmu"])
@@ -82,9 +82,11 @@ def test_repeated_run(tmp_path, mocker):
         ("RESTART", "WARNING: THE SIMULATION POSSIBLY DEPENDS ON A RESTART FILE"),
     ],
 )
-def test_restart_warning(injected, expectedwarning, tmp_path, mocker, capsys):
+def test_restart_warning(
+    injected, expectedwarning, tmp_path, mocker, capsys, monkeypatch
+):
     """Test that warnings are emitted on various contents in the DATA file"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     shutil.copytree(ECLDIR.parent / "include", "include", copy_function=os.symlink)
     shutil.copytree(ECLDIR.parent / "model", "model", copy_function=os.symlink)
@@ -105,10 +107,10 @@ def test_restart_warning(injected, expectedwarning, tmp_path, mocker, capsys):
     assert expectedwarning in captured.out
 
 
-def test_binary_file_detection(tmp_path):
+def test_binary_file_detection(tmp_path, monkeypatch):
     """Test that binary files are found and handled correctly"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     packing_path = Path("packed")
     tmp_data_file = Path("TMP.DATA")
@@ -123,10 +125,10 @@ def test_binary_file_detection(tmp_path):
     assert filecmp.cmp(f"{ECLDIR}/{egrid_file}", f"{packing_path}/include/{egrid_file}")
 
 
-def test_empty_file_inspection(tmp_path):
+def test_empty_file_inspection(tmp_path, monkeypatch):
     """Test that an empty include file is inspected correctly"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     empty_include_file = Path("empty.inc")
 
@@ -143,9 +145,9 @@ def test_empty_file_inspection(tmp_path):
     assert len(include_text) == 0
 
 
-def test_strip_comments(tmp_path, mocker):
+def test_strip_comments(tmp_path, mocker, monkeypatch):
     """Test that we can strip comments"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     datafilepath = ECLDIR / ECLCASE
     size_with_comments = os.stat(datafilepath).st_size
@@ -158,9 +160,9 @@ def test_strip_comments(tmp_path, mocker):
         assert "--" not in (Path("include") / includefile).read_text()
 
 
-def test_extra_include_due_to_comment(tmp_path, mocker):
+def test_extra_include_due_to_comment(tmp_path, mocker, monkeypatch):
     """Test that comment after INCLUDE/IMPORT/GDFILE is transferred correctly"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     some_include = "some.inc"
     with open(some_include, "w", encoding="utf-8") as fout:
@@ -185,9 +187,9 @@ def test_replace_paths():
     assert "include" in str(transformed_str)
 
 
-def test_get_paths(tmp_path):
+def test_get_paths(tmp_path, monkeypatch):
     """Test that we can obtain the PATHS keyword from a deck"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     file_with_path = Path("pathfile")
     Path("somepath").mkdir()
     file_with_path.write_text("PATHS\n  'IDENTIFIER' 'somepath'/\n", encoding="utf8")
@@ -233,9 +235,9 @@ def test_remove_comments():
     assert "--" in pack_sim._remove_comments(False, test_str)
 
 
-def test_md5sum(tmp_path):
+def test_md5sum(tmp_path, monkeypatch):
     """Check md5sum computations from files"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     test_str = "foo bar com"
     Path("foo.txt").write_text(test_str, encoding="utf8")
     assert pack_sim._md5checksum("foo.txt") == pack_sim._md5checksum(data=test_str)
@@ -246,9 +248,9 @@ def test_md5sum(tmp_path):
     int(pack_sim._md5checksum("foo.txt"), 16)
 
 
-def test_utf8(tmp_path):
+def test_utf8(tmp_path, monkeypatch):
     """Test that no errors are triggered when UTF-8 input is provided"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     datafile_str = """RUNSPEC
 TITLE
 Smørbukk Sør
@@ -258,9 +260,9 @@ Smørbukk Sør
     assert Path("somedir/FOO.DATA").read_text(encoding="utf8") == datafile_str
 
 
-def test_iso8859(tmp_path):
+def test_iso8859(tmp_path, monkeypatch):
     """Test that no errors are triggered when ISO-8859-1 input is provided"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     datafile_str = """RUNSPEC
 TITLE
 sm³

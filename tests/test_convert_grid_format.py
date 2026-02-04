@@ -1,6 +1,5 @@
 """Test the convert_grid_format script"""
 
-import os
 import subprocess
 from pathlib import Path
 
@@ -154,9 +153,9 @@ def test_integration():
 
 
 @pytest.mark.integration
-def test_ert_integration_eclgrid2roff(tmp_path):
+def test_ert_integration_eclgrid2roff(tmp_path, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     outfile = "reek_grid.roff"
     ert_config = "config.ert"
     Path(ert_config).write_text(

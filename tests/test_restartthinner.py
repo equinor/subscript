@@ -12,11 +12,11 @@ ECLDIR = Path(__file__).absolute().parent / "data/reek/eclipse/model"
 UNRST_FNAME = "2_R001_REEK-0.UNRST"
 
 
-def test_dryrun(tmp_path, mocker):
+def test_dryrun(tmp_path, mocker, monkeypatch):
     """Test dry-run"""
     shutil.copyfile(ECLDIR / UNRST_FNAME, tmp_path / UNRST_FNAME)
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     orig_rstindices = restartthinner.get_restart_indices(UNRST_FNAME)
     assert len(orig_rstindices) == 4
@@ -29,11 +29,11 @@ def test_dryrun(tmp_path, mocker):
     assert len(orig_rstindices) == len(restartthinner.get_restart_indices(UNRST_FNAME))
 
 
-def test_first_and_last(tmp_path, mocker):
+def test_first_and_last(tmp_path, mocker, monkeypatch):
     """Ask for two restart points, this should give us the first and last."""
     shutil.copyfile(ECLDIR / UNRST_FNAME, tmp_path / UNRST_FNAME)
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     orig_rstindices = restartthinner.get_restart_indices(UNRST_FNAME)
 
@@ -50,9 +50,9 @@ def test_first_and_last(tmp_path, mocker):
     assert len(restartthinner.get_restart_indices(UNRST_FNAME + ".orig")) == 4
 
 
-def test_subdirectory(tmp_path, mocker):
+def test_subdirectory(tmp_path, mocker, monkeypatch):
     """Check that we can thin an UNRST file two directory levels down"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     subdir = Path("eclipse/model")
     subdir.mkdir(parents=True)
@@ -79,14 +79,14 @@ def test_subdirectory(tmp_path, mocker):
     )
 
 
-def test_get_restart_indices_filenotfound(tmp_path):
+def test_get_restart_indices_filenotfound(tmp_path, monkeypatch):
     """EclFile.file_report_list segfaults unless the code is careful"""
     with pytest.raises(FileNotFoundError, match="foo"):
         restartthinner.get_restart_indices("foo")
     with pytest.raises(FileNotFoundError, match="foo"):
         restartthinner.get_restart_indices(Path("foo"))
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("FOO.UNRST").write_text("this is not an unrst file", encoding="utf8")
     with pytest.raises(TypeError, match="which is not a restart file"):
         restartthinner.get_restart_indices("FOO.UNRST")

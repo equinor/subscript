@@ -46,7 +46,7 @@ def test_dateparsing(datetxt, expected, tmp_path):
 
 
 @pytest.fixture(name="reek_data")
-def fixture_reek_data(tmp_path):
+def fixture_reek_data(tmp_path, monkeypatch):
     """Prepare a data directory with Reek Eclipse binary output"""
     reekdir = Path(__file__).absolute().parent / "data" / "reek" / "eclipse" / "model"
 
@@ -58,14 +58,8 @@ def fixture_reek_data(tmp_path):
 
     reekdest = tmp_path / "reekdata"
     shutil.copytree(reekdir, reekdest, copy_function=os.symlink)
-    cwd = os.getcwd()
-    os.chdir(reekdest)
-
-    try:
-        yield
-
-    finally:
-        os.chdir(cwd)
+    monkeypatch.chdir(reekdest)
+    yield
 
 
 @pytest.mark.parametrize(
@@ -316,9 +310,9 @@ def test_integration(reek_data):
 
 
 @pytest.mark.integration
-def test_ert_integration(tmpdir, reek_data):
+def test_ert_integration(tmpdir, reek_data, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmpdir / "reekdata")
+    monkeypatch.chdir(tmpdir / "reekdata")
     Path("validdates.txt").write_text("2000-01-01 2000-07-01", encoding="utf8")
     ert_config = "config.ert"
     Path(ert_config).write_text(

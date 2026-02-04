@@ -78,9 +78,9 @@ def test_find_keyword_sets():
     assert compress_multiple_keywordsets(kw_sets, kw_nodata) == kw_nodata
 
 
-def test_empty_file(tmp_path):
+def test_empty_file(tmp_path, monkeypatch):
     """Check that compression of empty files is a noop"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     emptyfilename = "emptyfile.grdecl"
     Path(emptyfilename).write_text("", encoding="utf8")
     assert os.stat(emptyfilename).st_size == 0
@@ -88,10 +88,10 @@ def test_empty_file(tmp_path):
     assert os.stat(emptyfilename).st_size == 0
 
 
-def test_no_touch_non_eclipse(tmp_path):
+def test_no_touch_non_eclipse(tmp_path, monkeypatch):
     """Check that we do not change a file that does not contain
     any Eclipse data"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     filename = "foo.txt"
     Path(filename).write_text(
         "Some random text\nAnother line\nbut no Eclipse keywords", encoding="utf8"
@@ -282,7 +282,7 @@ FIPPOLY
     assert compress_multiple_keywordsets(kw_sets, filelines) == expected
 
 
-def test_whitespace(tmp_path):
+def test_whitespace(tmp_path, monkeypatch):
     """Ensure excessive whitespace is not added"""
     kw_string = """
 MULTIPLY
@@ -293,7 +293,7 @@ MULTIPLY
     assert compress_multiple_keywordsets(kw_sets, filelines) == filelines
 
     # Test the same when the string is read from a file:
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("test.inc").write_text(kw_string, encoding="utf8")
     eclcompress("test.inc")
     compressed_lines = Path("test.inc").read_text(encoding="utf8").splitlines()
@@ -373,11 +373,11 @@ def test_integration():
     assert subprocess.check_output(["eclcompress", "-h"])
 
 
-def test_vfpprod(tmp_path, mocker):
+def test_vfpprod(tmp_path, mocker, monkeypatch):
     """VFPPROD contains multiple record data, for which E100
     fails if the record-ending slash is not on the same line as the data
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     vfpstr = """
 VFPPROD
   10 2021.3 LIQ WCT GOR THP GRAT METRIC BHP /
@@ -411,10 +411,10 @@ VFPPROD
     assert "8000 10000 /" in Path("vfpfile.inc").read_text(encoding="utf8")
 
 
-def test_main(tmp_path, mocker):
+def test_main(tmp_path, mocker, monkeypatch):
     """Test installed endpoint"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     Path("testdeck.inc").write_text("\n".join(FILELINES), encoding="utf8")
 
@@ -433,9 +433,9 @@ def test_main(tmp_path, mocker):
     assert opm.io.Parser().parse_string(compressedstr, OPMIO_PARSECONTEXT)
 
 
-def test_binary_file(tmp_path):
+def test_binary_file(tmp_path, monkeypatch):
     """Test that a random binary file is untouched by eclcompress"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     binfile = "wrong.grdecl"
     Path(binfile).write_bytes(os.urandom(100))
     bytes_before = Path(binfile).read_bytes()
@@ -448,10 +448,10 @@ def test_binary_file(tmp_path):
     assert "Skipped wrong.grdecl, not text file" in proc_output
 
 
-def test_iso8859(tmp_path):
+def test_iso8859(tmp_path, monkeypatch):
     """Test that a text file with ISO-8859 encoding does
     not trigger bugs (and is written back as utf-8)"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     nastyfile = "nastyfile.inc"
     Path(nastyfile).write_text(
         "-- Gullfaks Sør\nPORO\n 1 1 1 1/\n", encoding="ISO-8859-1"
@@ -460,9 +460,9 @@ def test_iso8859(tmp_path):
     assert "4*1" in Path(nastyfile).read_text(encoding="utf8")
 
 
-def test_utf8(tmp_path):
+def test_utf8(tmp_path, monkeypatch):
     """Test that we can parse and write a file with utf-8 chars"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     nastyfile = "nastyfile.inc"
     Path(nastyfile).write_text("-- Gullfaks Sør\nPORO\n 1 1 1 1/\n", encoding="utf8")
     main_eclcompress(nastyfile, None)
@@ -470,9 +470,9 @@ def test_utf8(tmp_path):
 
 
 @pytest.fixture(name="eclincludes")
-def fixture_eclincludes(tmp_path):
+def fixture_eclincludes(tmp_path, monkeypatch):
     """Provide a directory structure with grdecl files in it"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     os.makedirs("eclipse/include/props")
     os.makedirs("eclipse/include/regions")
     Path("eclipse/include/props/perm.grdecl").write_text(
@@ -515,9 +515,9 @@ def test_files_override_default_wildcards():
 
 
 @pytest.fixture
-def twofiles(tmp_path):
+def twofiles(tmp_path, monkeypatch):
     """Provide a tmp_path with two sample grdecl files and a filepattern file"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     Path("perm.grdecl").write_text(
         "PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
@@ -602,9 +602,9 @@ def text_compress_argparse_3(mocker):
     assert "7*1" not in Path("poro.grdecl").read_text(encoding="utf8")
 
 
-def test_glob_patterns(tmp_path):
+def test_glob_patterns(tmp_path, monkeypatch):
     """Test globbing filepatterns from a file with patterns"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     dummyfiles = ["perm.grdecl", "poro.grdecl"]
 
@@ -645,12 +645,12 @@ perm.grdecl""",
         parse_wildcardfile("notthere")
 
 
-def test_binary_example_file(tmp_path, mocker):
+def test_binary_example_file(tmp_path, mocker, monkeypatch):
     """Test that a particular binary file is not touched by eclcompress
 
     (historical bug)
     """
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     filename = "permxyz.grdecl"
     shutil.copy(TESTDATADIR / filename, filename)
     origfilehash = hashlib.sha256(Path(filename).read_bytes()).hexdigest()
@@ -676,9 +676,9 @@ def test_binary_example_file(tmp_path, mocker):
         (bytearray([7] * 1024 + [0]), False),
     ],
 )
-def test_file_is_binary(byte_sequence, expected, tmp_path):
+def test_file_is_binary(byte_sequence, expected, tmp_path, monkeypatch):
     """Test binary file detection"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     if isinstance(byte_sequence, str):
         Path("foo-utf8.txt").write_text(byte_sequence, encoding="utf-8")
         assert file_is_binary("foo-utf8.txt") == expected
@@ -691,9 +691,9 @@ def test_file_is_binary(byte_sequence, expected, tmp_path):
 
 
 @pytest.mark.integration
-def test_ert_integration_with_defaulted_files(tmpdir):
+def test_ert_integration_with_defaulted_files(tmpdir, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmpdir)
+    monkeypatch.chdir(tmpdir)
     grid_dir = Path("simulations/realization-0/iter-0/eclipse/include/grid")
     grid_dir.mkdir(parents=True)
     (grid_dir / "poro.grdecl").write_text("PORO\n1 1/\n", encoding="utf-8")
@@ -711,9 +711,9 @@ def test_ert_integration_with_defaulted_files(tmpdir):
 
 
 @pytest.mark.integration
-def test_ert_integration_with_explicit_files(tmpdir):
+def test_ert_integration_with_explicit_files(tmpdir, monkeypatch):
     pytest.importorskip("ert")
-    os.chdir(tmpdir)
+    monkeypatch.chdir(tmpdir)
     Path("filelist").write_text("poro.grdecl", encoding="utf-8")
     Path("poro.grdecl").write_text("PORO\n1 1/\n", encoding="utf-8")
     ert_config = "config.ert"

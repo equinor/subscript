@@ -1,5 +1,4 @@
 import datetime
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -407,12 +406,12 @@ def test_cmdline():
 
 
 @pytest.fixture(name="datadir")
-def fixture_datadir(tmp_path):
+def fixture_datadir(tmp_path, monkeypatch):
     """Provide a fixture with a directory with test data"""
     data = Path(__file__).absolute().parent / "testdata_ofmvol2csv"
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     shutil.copytree(data, "data")
-    os.chdir("data")
+    monkeypatch.chdir("data")
     yield
 
 
@@ -469,9 +468,9 @@ def test_cmdline_globbing(datadir):
     pd.testing.assert_frame_equal(output, output_alt)
 
 
-def test_no_files(tmp_path):
+def test_no_files(tmp_path, monkeypatch):
     """Test what happens when input does not exist"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     ofmvol2csv.ofmvol2csv_main("bogus*.vol", "volfiles.csv")
     assert not Path("volfiles.csv").exists()
 

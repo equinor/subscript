@@ -1,5 +1,4 @@
 import logging
-import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -20,19 +19,13 @@ logger.setLevel(logging.INFO)
 
 
 @pytest.fixture(name="drogondata")
-def fixture_drogondata(tmp_path):
+def fixture_drogondata(tmp_path, monkeypatch):
     """Prepare a directory with Drogon testdata"""
     drogondir = Path(__file__).absolute().parent / "testdata_merge_rft_ertobs/drogon"
     drogondest = tmp_path / "drogondata"
     shutil.copytree(drogondir, drogondest)
-    cwd = os.getcwd()
-    os.chdir(drogondest)
-
-    try:
-        yield
-
-    finally:
-        os.chdir(cwd)
+    monkeypatch.chdir(drogondest)
+    yield
 
 
 def test_invalid_obsdir():
@@ -75,9 +68,9 @@ def test_get_observations(drogondata):
         ("12 -1", 1),  # Might change later. -1 as error does not make sense
     ],
 )
-def test_get_observations_invalid(obsstring, validlength, tmp_path):
+def test_get_observations_invalid(obsstring, validlength, tmp_path, monkeypatch):
     """Check observation parsing"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("foo.obs").write_text(obsstring, encoding="utf8")
     assert len(get_observations(".")) == validlength
 
@@ -140,9 +133,9 @@ def test_merge_drogon_missing_observation(drogondata):
     )
 
 
-def test_merge_multiple_timesteps(tmp_path):
+def test_merge_multiple_timesteps(tmp_path, monkeypatch):
     """Check that multiple timesteps is handled properly"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("R_A2_1.obs").write_text("299.230  3.000", encoding="utf8")
     Path("R_A2_2.obs").write_text("289.120  3.000", encoding="utf8")
     df_gendata = pd.DataFrame(
