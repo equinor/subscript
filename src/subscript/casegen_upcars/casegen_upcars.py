@@ -247,10 +247,10 @@ def main():
             throws_j1 = throws_section["j1"]
             throws_j2 = throws_section["j2"]
             throws_dz = throws_section["dz"]
-            for _i1, _i2, _j1, _j2, _dz in zip(
+            for i1, i2, j1, j2, dz in zip(
                 throws_i1, throws_i2, throws_j1, throws_j2, throws_dz, strict=False
             ):
-                throws.append([_i1, _i2, _j1, _j2, _dz])
+                throws.append([i1, i2, j1, j2, dz])
         else:
             throws = []
             for throw in parser.throws:
@@ -548,8 +548,8 @@ def main():
         ]
         file_list.insert(0, dictionary["GRDECL_file"])
         with open(parser.debug_model, "wb", encoding="utf8") as wfd:
-            for _file in file_list:
-                with open(_file, "rb") as file_handle:
+            for file in file_list:
+                with open(file, "rb") as file_handle:
                     shutil.copyfileobj(file_handle, wfd)
 
 

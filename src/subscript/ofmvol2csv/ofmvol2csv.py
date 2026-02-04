@@ -95,7 +95,7 @@ def cleanse_ofm_lines(filelines: list[str]) -> list[str]:
     # Remove comment lines
     filelines = [line for line in filelines if not line.startswith("--")]
     # Remove empty lines:
-    filelines = [line for line in filelines if line != ""]
+    filelines = [line for line in filelines if line]
     # Make everything upper case (not pretty, but simplifies parsing)
     filelines = [line.upper() for line in filelines]
     # OFM sometimes uses the tab character, replace by space to robustify parsing
@@ -307,7 +307,7 @@ def process_volstr(volstr: str) -> pd.DataFrame:
     columnnames = extract_columnnames(filelines)
     if not columnnames:
         raise ValueError("No columns found, one line must contain *DATE")
-    logger.info("Columns found: %s", str(columnnames))
+    logger.info("Columns found: %s", columnnames)
 
     frames = []
 
@@ -345,10 +345,10 @@ def ofmvol2csv_main(
 
     globbed = glob_patterns(volfiles)
     if set(globbed) != set(volfiles):
-        logger.info("Wildcards expanded to: %s", str(globbed))
+        logger.info("Wildcards expanded to: %s", globbed)
     dframes = []
     if not globbed:
-        logger.warning("Filename(s) %s not found", str(volfiles))
+        logger.warning("Filename(s) %s not found", volfiles)
         return
     for filename in globbed:
         dframe = process_volfile(filename)
@@ -359,7 +359,7 @@ def ofmvol2csv_main(
     if dframes:
         alldata = pd.concat(dframes, sort=False).sort_index()
         alldata.to_csv(output)
-        logger.info("Wrote %s rows to %s", str(len(alldata)), output)
+        logger.info("Wrote %s rows to %s", len(alldata), output)
     else:
         logger.warning("No data was extracted")
 

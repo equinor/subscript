@@ -74,7 +74,7 @@ def _remove_comments(clear_comments: bool, tmp_in: str) -> str:
         tmp_in or tmp_in without comments depending on clear_comments
     """
     if clear_comments and "--" in tmp_in:
-        return tmp_in.split("--")[0] + "\n"
+        return tmp_in.split("--", maxsplit=1)[0] + "\n"
     return tmp_in
 
 
@@ -180,7 +180,7 @@ def _get_paths(filename: Path, org_sim_loc: Path) -> dict[str, Path]:
                         "Could not parse %s as a PATHS definition, skipping",
                         line_strip,
                     )
-    logger.debug("Dictionary created: %s", str(paths))
+    logger.debug("Dictionary created: %s", paths)
     return paths
 
 
@@ -567,8 +567,8 @@ def pack_simulation(
     # Print output to screen
     logger.info(
         "Written modificated %s to packing folder %s",
-        str(data_file_name),
-        str(packing_path),
+        data_file_name,
+        packing_path,
     )
 
 

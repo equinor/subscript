@@ -124,7 +124,7 @@ def _convert_ecl2roff(
     if option:  # standardfmu separator
         filesep = "--"
 
-    if mode in ["grid", "init", "restart"]:
+    if mode in {"grid", "init", "restart"}:
         logger.info("Running GRID conversion...")
 
         logger.info("Convert from EGRID to ROFF...")
@@ -138,7 +138,7 @@ def _convert_ecl2roff(
     else:
         raise SystemExit(f"STOP! Invalid mode: <{mode}>")
 
-    if mode in ("restart", "init"):
+    if mode in {"restart", "init"}:
         xtg.say(f"Mode is {mode}")
         logger.info("Running %s conversion...", mode.upper())
         fname, fext = os.path.splitext(filename)
@@ -162,7 +162,7 @@ def _convert_ecl2roff(
         else:
             dates_list = None
 
-        if fext in (".UNRST", ".INIT", ""):
+        if fext in {".UNRST", ".INIT", ""}:
             usext = f".{fformat.upper()}"
             myprops = xtgeo.gridproperties_from_file(
                 fname + usext,

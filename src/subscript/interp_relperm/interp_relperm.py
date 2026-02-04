@@ -416,9 +416,9 @@ def process_config(cfg: dict[str, Any], root_path: Path | None = None) -> None:
         set(base_df.columns) == set(low_df.columns)
         and set(base_df.columns) == set(high_df.columns)
     ):
-        logger.error("Base input had columns: %s", str(base_df.columns.to_numpy()))
-        logger.error("Low input had columns: %s", str(low_df.columns.to_numpy()))
-        logger.error("High input had columns: %s", str(high_df.columns.to_numpy()))
+        logger.error("Base input had columns: %s", base_df.columns.to_numpy())
+        logger.error("Low input had columns: %s", low_df.columns.to_numpy())
+        logger.error("High input had columns: %s", high_df.columns.to_numpy())
         logger.error("Inconsistent input data, check keywords in input files")
         sys.exit(1)
 
@@ -451,7 +451,7 @@ def process_config(cfg: dict[str, Any], root_path: Path | None = None) -> None:
 
     logger.info(
         "Done; interpolated relperm curves written to file: %s",
-        str(config.result_file),
+        config.result_file,
     )
 
 

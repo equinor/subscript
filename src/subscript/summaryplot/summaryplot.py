@@ -213,7 +213,7 @@ def summaryplotter(
             if not valuefound:
                 logger.warning(
                     "%s was not found in parameter-file %s",
-                    str(colourbyparametername),
+                    colourbyparametername,
                     parameterfile,
                 )
                 parametervalues.append(0.0)
@@ -290,7 +290,7 @@ def summaryplotter(
         matchedsummaryvectors.extend(summaryfiles[0].keys(vector))
     if wildcard_in_use:
         logger.info(
-            "Summary vectors after wildcard expansion: %s", str(matchedsummaryvectors)
+            "Summary vectors after wildcard expansion: %s", matchedsummaryvectors
         )
 
     if datafiles is None:
@@ -300,9 +300,9 @@ def summaryplotter(
     if restartvectors:
         for datafile in datafiles:
             rstfile = datafile.replace(".DATA", "")
-            rstfile = rstfile + ".UNRST"
+            rstfile += ".UNRST"
             gridfile = datafile.replace(".DATA", "")
-            gridfile = gridfile + ".EGRID"  # What about .GRID??
+            gridfile += ".EGRID"  # What about .GRID??
             logger.info("Loading grid and restart file %s", rstfile)
             # TODO: Allow some of the rstfiles to be missing
             # TODO: Handle missing rstfiles gracefully
@@ -610,8 +610,8 @@ def main() -> None:
     (summaryfiles, datafiles, vectors, parameterfiles) = split_vectorsdatafiles(
         args.VECTORSDATAFILES
     )
-    logger.info("Summaryfiles: %s", str(summaryfiles))
-    logger.info("Vectors: %s", str(vectors))
+    logger.info("Summaryfiles: %s", summaryfiles)
+    logger.info("Vectors: %s", vectors)
 
     # If user only wants to dump image to file, then do only that:
     if args.dumpimages:

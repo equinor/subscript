@@ -192,7 +192,7 @@ def export_grav_points_xyz(
         + EXTENSION_POINTS
     )
 
-    with open(os.path.join(out_folder, outfile), "w") as file:
+    with open(os.path.join(out_folder, outfile), "w", encoding="utf-8") as file:
         for _index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "
@@ -237,7 +237,7 @@ def export_subs_points_xyz(
         + EXTENSION_POINTS
     )
 
-    with open(out_folder / outfile, "w") as file:
+    with open(out_folder / outfile, "w", encoding="utf-8") as file:
         for _index, row in act_stations.iterrows():
             file.write(
                 f"{row['utmx']:.3f} {row['utmy']:.3f} "

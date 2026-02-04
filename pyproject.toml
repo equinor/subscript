@@ -198,6 +198,9 @@ select = [
     "B",  # flake8-bugbear
     "ANN",  # flake8-annotations
 ]
+
+preview = true
+
 ignore = [
     "C901",  # complex-structure
     "PD013",  # pandas-use-of-dot-stack
@@ -205,6 +208,13 @@ ignore = [
     "PLR0912",  # too-many-branches
     "PLR2004",  # magic-value-comparison
     "PLW2901",  # redefined-loop-name
+    "PLC2701", # import-private-name
+    "PLR0914", # too-many-locals
+    "PLR6301", # no-self-use
+    "PLR0904", # too-many-public-methods
+    "PLR1702", # too-many-nested-blocks
+    "RUF067",  # non empty init module
+    "PLC1901",  # compare-to-empty-string
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]

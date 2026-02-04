@@ -223,9 +223,7 @@ def supertime(
         tot = 0.0
         for idx in range(bu_start_ind):
             # End at len-1 because n is not included - only n-1 in formul a
-            tot = tot + rdiff[idx] * np.log(
-                time[bu_start_ind + bu_time_ind] - time[idx]
-            )
+            tot += rdiff[idx] * np.log(time[bu_start_ind + bu_time_ind] - time[idx])
         super_time[bu_time_ind] = coeff1 * tot + np.log(
             time[bu_start_ind + bu_time_ind] - time[bu_start_ind]
         )
@@ -438,7 +436,7 @@ def main() -> None:
         outf_suffix = "_" + outf_suffix
 
     if not outdir.endswith("/"):
-        outdir = outdir + "/"
+        outdir += "/"
 
     if not Path(outdir).exists():
         raise FileNotFoundError("No such outputdirectory:", outdir)

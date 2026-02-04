@@ -255,16 +255,16 @@ def presentvalue_main(
         "IRR" and "CEI".
     """
 
-    logger.info("Discount rate: %s", str(discountrate))
-    logger.info("Cutoff year: %s", str(cutoffyear))
-    logger.info("Discount to year: %s", str(discountto))
+    logger.info("Discount rate: %s", discountrate)
+    logger.info("Cutoff year: %s", cutoffyear)
+    logger.info("Discount to year: %s", discountto)
 
-    logger.info("Economics:\n%s", str(economics))
+    logger.info("Economics:\n%s", economics)
 
     summary_df = get_yearly_summary(datafile, oilvector, gasvector, gasinjvector)
 
     if basedatafile:
-        summary_df = summary_df - get_yearly_summary(
+        summary_df -= get_yearly_summary(
             basedatafile, oilvector, gasvector, gasinjvector
         )
     if max(summary_df.index) < discountto:
@@ -276,9 +276,7 @@ def presentvalue_main(
     pvalue = pv_df.loc[: cutoffyear - 1]["presentvalue"].sum() / NOKUNIT
 
     pd.set_option("expand_frame_repr", False)  # Avoid line wrapping in tabular output
-    logger.info(
-        "Production and economic parameters:\n%s", str(pv_df.loc[: cutoffyear - 1])
-    )
+    logger.info("Production and economic parameters:\n%s", pv_df.loc[: cutoffyear - 1])
 
     results = {}
     results["PresentValue"] = pvalue

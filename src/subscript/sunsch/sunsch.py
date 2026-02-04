@@ -138,13 +138,13 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
                 schedule.load_string(str(timevector), conf.starttime)
 
     if conf.insert is not None:
-        logger.info("Processing %s insert statements", str(len(conf.insert)))
+        logger.info("Processing %s insert statements", len(conf.insert))
         for insert_statement in conf.insert:
             logger.debug(str(insert_statement))
             filename: Path | None = None
             if insert_statement.substitute and insert_statement.template:
                 filename = substitute(insert_statement)
-                logger.debug("Produced file: %s", str(filename))
+                logger.debug("Produced file: %s", filename)
             elif insert_statement.template and not insert_statement.substitute:
                 logger.error(
                     "Missing substitute for template %s", insert_statement.template
@@ -163,7 +163,7 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
                 )
             else:
                 logger.error("Could not determine date for insertion")
-                logger.error("From data: %s", str(insert_statement))
+                logger.error("From data: %s", insert_statement)
                 continue
 
             # Do the insertion:
@@ -206,8 +206,8 @@ def process_sch_config(conf: dict | SunschConfig) -> TimeVector:
     # an implicit end-date
     if conf.dategrid:
         dates = dategrid(conf.startdate, enddate, conf.dategrid)
-        for _date in dates:
-            schedule.add_keywords(datetime_from_date(_date), [""])
+        for date_ in dates:
+            schedule.add_keywords(datetime_from_date(date_), [""])
 
     return schedule
 
@@ -230,7 +230,7 @@ def load_timevector_from_file(
         tmpschedule.load(str(filename))
         early_dates = [date for date in tmpschedule.dates if date.date() < startdate]
         if len(early_dates) > 1:
-            logger.info("Clipping away dates: %s", str(early_dates[1:]))
+            logger.info("Clipping away dates: %s", early_dates[1:])
             for date in early_dates:
                 tmpschedule.delete(date)
     else:
@@ -238,7 +238,7 @@ def load_timevector_from_file(
 
         early_dates = [date for date in tmpschedule.dates if date.date() < startdate]
         if len(early_dates) > 1:
-            logger.info("Clipping away dates: %s", str(early_dates[1:]))
+            logger.info("Clipping away dates: %s", early_dates[1:])
             for date in early_dates:
                 tmpschedule.delete(date)
     return tmpschedule
@@ -339,14 +339,14 @@ def substitute(insert_statement: InsertStatement) -> Path:
 
     if len([value for _, value in list(insert_statement) if value is not None]) > 3:
         # (there should be also 'days' or 'date' in the dict)
-        logger.warning(
-            "Too many (?) configuration elements in %s", str(insert_statement)
-        )
+        logger.warning("Too many (?) configuration elements in %s", insert_statement)
 
     assert insert_statement.template is not None
     assert insert_statement.substitute is not None
 
-    with tempfile.NamedTemporaryFile(mode="w", delete=False) as resultfile:
+    with tempfile.NamedTemporaryFile(
+        encoding="utf-8", mode="w", delete=False
+    ) as resultfile:
         resultfilename = resultfile.name
         templatelines = (
             Path(insert_statement.template).read_text(encoding="utf8").splitlines()
@@ -578,7 +578,7 @@ def main() -> None:
     if config.output == __MAGIC_STDOUT__:
         print(schedule)
     else:
-        logger.info("Writing Eclipse deck to %s", str(config.output))
+        logger.info("Writing Eclipse deck to %s", config.output)
         dirname = Path(config.output).parent
         if dirname and not dirname.exists():
             raise OSError(f"The directory {dirname} does not exist")

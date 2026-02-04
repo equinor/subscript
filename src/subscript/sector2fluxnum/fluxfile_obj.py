@@ -211,7 +211,7 @@ def write_new_fluxfile_from_rst(
                 kw_temp[1] = prev_days_flux + delta_days
                 prev_days_flux += delta_days
 
-            elif flux_fine[j_idx].header[0] in (
+            elif flux_fine[j_idx].header[0] in {
                 "WELLNAME",
                 "WELLFLOW",
                 "PMER",
@@ -219,7 +219,7 @@ def write_new_fluxfile_from_rst(
                 "PMAX",
                 "PADS",
                 "",  # OBS!
-            ):
+            }:
                 kw_temp = flux_fine[j_idx].deep_copy()
 
             elif flux_fine[j_idx].header[0] == "POIL":

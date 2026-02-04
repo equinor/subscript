@@ -717,7 +717,7 @@ def test_long_vfp_lines(tmp_path, caplog, mocker):
     mocker.patch("sys.argv", ["sunsch", "conf.yml"])
     sunsch.main()
     schinc = Path("sch.inc").read_text(encoding="utf8")
-    assert max([len(line) for line in schinc.split("\n")]) <= 129
+    assert max(len(line) for line in schinc.split("\n")) <= 129
     # assert "Line 7 had length 146, wrapped" in caplog.text
 
 

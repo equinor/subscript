@@ -107,7 +107,7 @@ def eclcompress(
             continue
 
         compressedlines = compress_multiple_keywordsets(keywordsets, filelines)
-        compressedbytecount = sum([len(x) for x in compressedlines])
+        compressedbytecount = sum(len(x) for x in compressedlines)
 
         # 1 means no compression, the higher the better.
         # The header added below is not included in the calculated

@@ -192,11 +192,9 @@ def merge_csvfiles(
                     if tag not in dframe:
                         dframe[tag] = tags[tag][idx]
                     else:
-                        logger.warning("Tag %s already in dataframe", str(tag))
+                        logger.warning("Tag %s already in dataframe", tag)
                 else:
-                    logger.warning(
-                        "Could not use tag %s, insufficient length", str(tag)
-                    )
+                    logger.warning("Could not use tag %s, insufficient length", tag)
             logger.info(" - Merging with previously loaded CSV files")
             merged_df = pd.concat(
                 [merged_df, dframe], axis=0, ignore_index=True, sort=False
@@ -222,11 +220,9 @@ def merge_csvfiles(
                     if tag not in dframe:
                         dframe[tag] = tags[tag][idx]
                     else:
-                        logger.warning("Tag %s already in dataframe", str(tag))
+                        logger.warning("Tag %s already in dataframe", tag)
                 else:
-                    logger.warning(
-                        "Could not use tag %s, insufficient length", str(tag)
-                    )
+                    logger.warning("Could not use tag %s, insufficient length", tag)
         logger.info("Merging %d files..", loaded_files)
         merged_df = pd.concat(dfs, axis=0, ignore_index=True, sort=False)
     return merged_df
@@ -290,8 +286,8 @@ def csv_merge_main(
         tags[filecolumn] = csvfiles
     tags = {key: value for key, value in tags.items() if len(value)}
 
-    logger.info("Found tags: %s", str(tags.keys()))
-    logger.debug("Tags: %s", str(tags))
+    logger.info("Found tags: %s", tags.keys())
+    logger.debug("Tags: %s", tags)
 
     merged_df = merge_csvfiles(csvfiles, tags, memoryconservative=memoryconservative)
 
@@ -300,18 +296,18 @@ def csv_merge_main(
         for col in merged_df.columns:
             if len(merged_df[col].unique()) == 1:
                 columnstodelete.append(col)
-        logger.info("Dropping constant columns %s", str(columnstodelete))
+        logger.info("Dropping constant columns %s", columnstodelete)
         merged_df = merged_df.drop(columnstodelete, axis=1)
 
     if merged_df.empty:
         logger.error("No data to output")
         raise NoDataError
 
-    logger.info("Final column list: %s", str(merged_df.columns))
+    logger.info("Final column list: %s", merged_df.columns)
 
     logger.info("Exporting CSV data to %s", output)
 
-    if output in ["-", "stdout"]:
+    if output in {"-", "stdout"}:
         merged_df.to_csv(sys.stdout, index=False)
     else:
         merged_df.to_csv(path_or_buf=output, index=False)

@@ -66,9 +66,9 @@ def test_version(capsys):
     assert "subscript version" in out
 
 
-def test_rsync_exclude1(datatree):
+def test_rsync_exclude1(datatree, monkeypatch):
     """Testing exclude pattern 1."""
-    os.chdir(datatree)
+    monkeypatch.chdir(datatree)
     fcr.main(["--source", "20.1.1", "--profile", "1", "--target", "xxx"])
     assert Path(datatree / "xxx/rms/model/workflow.log").is_file()
 

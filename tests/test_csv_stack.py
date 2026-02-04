@@ -26,17 +26,19 @@ TESTFRAME = pd.DataFrame(
 
 def test_drop_constants():
     """Testing that we can drop constants and obey keepminimal"""
-    const_drop = csv_stack.drop_constants(TESTFRAME, False, re.compile("W[A-Z]*:.*"))
+    const_drop = csv_stack.drop_constants(TESTFRAME, False, re.compile(r"W[A-Z]*:.*"))
     assert "CONST" not in const_drop
     assert "RPR:1" in const_drop
     assert "WOPT:A1" in const_drop
 
-    minimal_well = csv_stack.drop_constants(TESTFRAME, True, re.compile("W[A-Z]*:.*"))
+    minimal_well = csv_stack.drop_constants(TESTFRAME, True, re.compile(r"W[A-Z]*:.*"))
     assert "CONST" not in minimal_well
     assert "RPR:1" not in minimal_well
     assert "WOPT:A1" in minimal_well
 
-    minimal_region = csv_stack.drop_constants(TESTFRAME, True, re.compile("R[A-Z]*:.*"))
+    minimal_region = csv_stack.drop_constants(
+        TESTFRAME, True, re.compile(r"R[A-Z]*:.*")
+    )
     assert "CONST" not in minimal_region
     assert "RPR:1" in minimal_region
     assert "WOPT:A1" not in minimal_region
@@ -71,7 +73,7 @@ def test_csv_stack_parametrized(dframe, regexp, newcol, expected):
 def test_csv_stack():
     """Unparametrized test of the TESTFRAME frame"""
     well_stacked = csv_stack.csv_stack(
-        TESTFRAME.copy(), re.compile("W[A-Z]*:.*"), ":", "WELL"
+        TESTFRAME.copy(), re.compile(r"W[A-Z]*:.*"), ":", "WELL"
     )
     assert "WELL" in well_stacked
     assert "WOPT:A1" not in well_stacked
@@ -79,7 +81,7 @@ def test_csv_stack():
     assert "CONST" in well_stacked
 
     region_stacked = csv_stack.csv_stack(
-        TESTFRAME.copy(), re.compile("R[A-Z]*:.*"), ":", "REGION"
+        TESTFRAME.copy(), re.compile(r"R[A-Z]*:.*"), ":", "REGION"
     )
     assert "REGION" in region_stacked
     assert "WOPT:A1" in region_stacked
@@ -329,7 +331,8 @@ def test_csv_stack_ert_workflow(tmp_path):
 
     Path("CSV_STACK_WELLS").write_text(
         'CSV_STACK "<CASEDIR>/share/results/tables/unsmry--monthly.csv" '
-        '"--split" well "--output" stacked.csv "--keepconstantcolumns"'
+        '"--split" well "--output" stacked.csv "--keepconstantcolumns"',
+        encoding="utf-8",
     )
 
     Path("test.ert").write_text(

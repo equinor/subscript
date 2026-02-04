@@ -55,8 +55,7 @@ def main() -> None:
         check_applicability(eclfiles)
 
         qc_frame = make_qc_gridframe(eclfiles)
-
-        if args.output != "":
+        if args.output:
             logger.info("Exporting CSV to %s", args.output)
             reorder_dframe_for_nonnans(qc_frame).to_csv(args.output, index=False)
 
@@ -65,7 +64,7 @@ def main() -> None:
         return
     qc_vols = qc_volumes(qc_frame)
     print(human_report_qc_vols(qc_vols))
-    qcsum = qc_vols["SWATINIT_WVOL"] + sum([qc_vols[qc_flag] for qc_flag in QC_FLAGS])
+    qcsum = qc_vols["SWATINIT_WVOL"] + sum(qc_vols[qc_flag] for qc_flag in QC_FLAGS)
     diff = qc_vols["SWAT_WVOL"] - qcsum
     if not np.isclose(diff, 0, atol=1e-6):
         print(f"Unexplained difference: {diff} Rm3")

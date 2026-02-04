@@ -100,15 +100,15 @@ class Model:
             elif isinstance(streak_rect[0], list):
                 streak_rect = [streak_rect[0]] * len(streak_k)
             else:
-                streak_rect = streak_rect * len(streak_k)
+                streak_rect *= len(streak_k)
         else:
             streak_rect = [None] * len(streak_k)
 
         prts = [-1] * nz
         if streak_k is not None:
-            for idx, (_k, _nz) in enumerate(zip(streak_k, streak_nz, strict=False)):
-                if _nz > 0:
-                    if _k - 1 < 0 or _k + _nz - 1 > nz:
+            for idx, (k, nz_) in enumerate(zip(streak_k, streak_nz, strict=False)):
+                if nz_ > 0:
+                    if k - 1 < 0 or k + nz_ - 1 > nz:
                         print(
                             TERMINALCOLORS["WARNING"]
                             + f"Warning: Streak #{idx + 1} is outside "
@@ -116,7 +116,7 @@ class Model:
                             "The streak will be ignored." + TERMINALCOLORS["ENDC"]
                         )
                     else:
-                        prts[_k - 1 : _k + _nz - 1] = [idx] * _nz
+                        prts[k - 1 : k + nz_ - 1] = [idx] * nz_
 
         layer_nz = []
         layer_dz = []
@@ -270,26 +270,26 @@ class Model:
         self._streak_idx = np.full((self._total_nx, self._total_ny, self._total_nz), -1)
         offset = 0
         streak_idx = -1
-        for _prt, _nz in zip(layer_prt, layer_nz, strict=False):
-            if _prt >= 0:
+        for prt, nz_ in zip(layer_prt, layer_nz, strict=False):
+            if prt >= 0:
                 # Streak
                 streak_idx += 1
-                _rect = streak_rect[_prt]
-                if _rect is None or len(_rect) == 0:
+                rect = streak_rect[prt]
+                if rect is None or len(rect) == 0:
                     box_i1 = 0
                     box_i2 = self._total_nx - 1
                     box_j1 = 0
                     box_j2 = self._total_ny - 1
                 else:
-                    box_i1 = max(0, _rect[0] - 1)
-                    box_i2 = min(self._total_nx - 1, _rect[1] - 1)
-                    box_j1 = max(0, _rect[2] - 1)
-                    box_j2 = min(self._total_ny - 1, _rect[3] - 1)
+                    box_i1 = max(0, rect[0] - 1)
+                    box_i2 = min(self._total_nx - 1, rect[1] - 1)
+                    box_j1 = max(0, rect[2] - 1)
+                    box_j2 = min(self._total_ny - 1, rect[3] - 1)
                 self._streak_rect[streak_idx] = [box_i1, box_i2, box_j1, box_j2]
                 self._streak_idx[
-                    box_i1 : box_i2 + 1, box_j1 : box_j2 + 1, offset : offset + _nz
-                ] = _prt
-            offset += _nz
+                    box_i1 : box_i2 + 1, box_j1 : box_j2 + 1, offset : offset + nz_
+                ] = prt
+            offset += nz_
 
         # Layer Index
         self._layer_idx = np.empty(
@@ -298,10 +298,10 @@ class Model:
         self._layer_dz = np.zeros(self._total_nz)
         # self._layer_nz = layer_nz
         offset = 0
-        for idx, _layer_nz in enumerate(layer_nz):
-            self._layer_idx[:, :, offset : offset + _layer_nz] = idx
-            self._layer_dz[offset : offset + _layer_nz] = layer_dz[idx]
-            offset += _layer_nz
+        for idx, layer_nz_ in enumerate(layer_nz):
+            self._layer_idx[:, :, offset : offset + layer_nz_] = idx
+            self._layer_dz[offset : offset + layer_nz_] = layer_dz[idx]
+            offset += layer_nz_
 
         self._matrix_props = {
             "PORO": 0.0,
@@ -407,10 +407,10 @@ Initializing model
             (self._total_nx, self._total_ny, self._total_nz), dtype=np.int16
         )
         # Use length instead of number of cells
-        for _i, idx in enumerate(self._fracture_i):
-            fracture_length = max(0.0, min(1.0, self._fracture_length_y[_i])) * self._ly
+        for i, idx in enumerate(self._fracture_i):
+            fracture_length = max(0.0, min(1.0, self._fracture_length_y[i])) * self._ly
             start_fracture = (
-                min(self._fracture_offset_y[_i], 1.0 - self._fracture_length_y[_i])
+                min(self._fracture_offset_y[i], 1.0 - self._fracture_length_y[i])
                 * self._ly
             )
             start_fracture_idx = np.abs(self._y - start_fracture).argmin()
@@ -418,9 +418,9 @@ Initializing model
                 self._y - (start_fracture + fracture_length)
             ).argmin()
 
-            fracture_height = max(0.0, min(1.0, self._fracture_height_y[_i])) * self._lz
+            fracture_height = max(0.0, min(1.0, self._fracture_height_y[i])) * self._lz
             start_fracture_vert = (
-                min(self._fracture_zoffset_y[_i], 1.0 - self._fracture_height_y[_i])
+                min(self._fracture_zoffset_y[i], 1.0 - self._fracture_height_y[i])
                 * self._lz
             )
             start_fracture_k = np.abs(self._z - start_fracture_vert).argmin()
@@ -432,12 +432,12 @@ Initializing model
                 idx : idx + self._fracture_cell_count,
                 start_fracture_idx:end_fracture_idx,
                 start_fracture_k : end_fracture_k + 1,
-            ] = _i + 1
+            ] = i + 1
 
-        for _i, idx in enumerate(self._fracture_j):
-            fracture_length = max(0.0, min(1.0, self._fracture_length_x[_i])) * self._lx
+        for i, idx in enumerate(self._fracture_j):
+            fracture_length = max(0.0, min(1.0, self._fracture_length_x[i])) * self._lx
             start_fracture = (
-                min(self._fracture_offset_x[_i], 1.0 - self._fracture_length_x[_i])
+                min(self._fracture_offset_x[i], 1.0 - self._fracture_length_x[i])
                 * self._lx
             )
             start_fracture_idx = np.abs(self._x - start_fracture).argmin()
@@ -445,9 +445,9 @@ Initializing model
                 self._x - (start_fracture + fracture_length)
             ).argmin()
 
-            fracture_height = max(0.0, min(1.0, self._fracture_height_x[_i])) * self._lz
+            fracture_height = max(0.0, min(1.0, self._fracture_height_x[i])) * self._lz
             start_fracture_vert = (
-                min(self._fracture_zoffset_x[_i], 1.0 - self._fracture_height_x[_i])
+                min(self._fracture_zoffset_x[i], 1.0 - self._fracture_height_x[i])
                 * self._lz
             )
             start_fracture_k = np.abs(self._z - start_fracture_vert).argmin()
@@ -458,7 +458,7 @@ Initializing model
                 start_fracture_idx:end_fracture_idx,
                 idx : idx + self._fracture_cell_count,
                 start_fracture_k : end_fracture_k + 1,
-            ] = -(_i + 1)
+            ] = -(i + 1)
 
     def _build_grid(self):
         """Create the mesh xv, yv and zv"""
@@ -796,13 +796,13 @@ Initializing model
         print("/", file=buffer_)
 
         print("COORD", file=buffer_)
-        for _i in range(self._xv.shape[0]):
-            for _j in range(self._xv.shape[1]):
+        for i in range(self._xv.shape[0]):
+            for j in range(self._xv.shape[1]):
                 print(
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}} "  # noqa: UP032
                     "{{x:{0}}} {{y:{0}}} {{z:{0}}}".format(
                         self._eclipse_output_float
-                    ).format(x=self._xv[_i, _j], y=self._yv[_i, _j], z=0.0),
+                    ).format(x=self._xv[i, j], y=self._yv[i, j], z=0.0),
                     file=buffer_,
                 )
         print("/", file=buffer_)
@@ -828,7 +828,7 @@ Initializing model
 
     def _print_property(self, stream, keyword, array_value):
         props = array_value.reshape(array_value.size, order="f")
-        if array_value.dtype.str[1] in ["i", "u"]:
+        if array_value.dtype.str[1] in {"i", "u"}:
             value_format = ""
         else:
             value_format = self._eclipse_output_float_compact
@@ -1017,17 +1017,17 @@ Initializing model
                 )
             )
             streak_box = []
-            for _k, nz_size, rect in zip(
+            for k, nz_size, rect in zip(
                 self._streak_k, self._streak_nz, self._streak_rect, strict=False
             ):
-                _k -= 1
+                k -= 1
                 box = self.bounded_box(
                     rect[0] - near_streak_vug_distance_to_streak,
                     rect[1] + near_streak_vug_distance_to_streak,
                     rect[2] - near_streak_vug_distance_to_streak,
                     rect[3] + near_streak_vug_distance_to_streak,
-                    _k - near_streak_vug_distance_to_streak,
-                    _k + nz_size - 1 + near_streak_vug_distance_to_streak,
+                    k - near_streak_vug_distance_to_streak,
+                    k + nz_size - 1 + near_streak_vug_distance_to_streak,
                 )
                 streak_box.append(box)
                 streak_domain_flag[

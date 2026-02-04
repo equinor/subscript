@@ -209,15 +209,15 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
         sim_df.loc[inactive_rows, "pressure"] = np.nan
         logger.info(
             "Found %s active and %s inactive pressure points",
-            str(len(inactive_rows) - sum(inactive_rows)),  # type: ignore
-            str(sum(inactive_rows)),  # type: ignore
+            len(inactive_rows) - sum(inactive_rows),  # type: ignore
+            sum(inactive_rows),  # type: ignore
         )
     else:
-        logger.info("Found %s active pressure points", str(len(sim_df)))
+        logger.info("Found %s active pressure points", len(sim_df))
 
     obs_df = get_observations(obsdir)
     # For each simulated well, look up
-    logger.info("Parsed %s observations from files in %s", str(len(obs_df)), obsdir)
+    logger.info("Parsed %s observations from files in %s", len(obs_df), obsdir)
 
     # Replace "-1" in observation data with NaN, to avoid trouble later.
     inactive_rows = np.isclose(obs_df["observed"], -1)
@@ -225,11 +225,11 @@ def merge_rft_ertobs(gendatacsv: str, obsdir: str) -> pd.DataFrame:
         obs_df.loc[inactive_rows, "observed"] = np.nan
         logger.info(
             "Found %s active and %s inactive observation points",
-            str(len(inactive_rows) - sum(inactive_rows)),  # type: ignore
-            str(sum(inactive_rows)),  # type: ignore
+            len(inactive_rows) - sum(inactive_rows),  # type: ignore
+            sum(inactive_rows),  # type: ignore
         )
     else:
-        logger.info("Found %s active observation points", str(len(obs_df)))
+        logger.info("Found %s active observation points", len(obs_df))
 
     if "report_step" in sim_df.columns:
         return sim_df.merge(obs_df, how="left", on=["well", "order", "report_step"])

@@ -179,12 +179,12 @@ def check_consecutive_dates(data: pd.DataFrame) -> None:
         if len(datedeltas) > 1 and checkprod > 0.1:
             logger.warning(
                 "Warning: Uneven date intervals for well %s, check these rows:\n%s",
-                str(well),
-                str(checkrows),
+                well,
+                checkrows,
             )
         if int(datedeltas[0]) != 1:
-            logger.warning("Dates are not daily-consecutive for well %s", str(well))
-            logger.warning("Most common timedelta is: %s", str(dominantdelta))
+            logger.warning("Dates are not daily-consecutive for well %s", well)
+            logger.warning("Most common timedelta is: %s", dominantdelta)
 
 
 def df2vol(data: pd.DataFrame) -> str:
@@ -211,7 +211,7 @@ def df2vol(data: pd.DataFrame) -> str:
 
     unsupported = set(columns_trans) - set(columns)
     if unsupported:
-        logger.warning("Unsupported column(s) %s", str(unsupported))
+        logger.warning("Unsupported column(s) %s", unsupported)
 
     # Translate column names:
     voldata = data.rename(columns=PDMCOLS2VOL, inplace=False)
@@ -281,7 +281,7 @@ def csv2ofmvol_main(csvfilepatterns: list[str], output: str) -> bool:
 
     csvfiles = glob_patterns(csvfilepatterns)
     if set(csvfiles) != set(csvfilepatterns):
-        logger.info("Wildcards used: %s", str(csvfilepatterns))
+        logger.info("Wildcards used: %s", csvfilepatterns)
     if not csvfiles:
         logger.error("No filenames found")
         return False
@@ -303,21 +303,21 @@ def csv2ofmvol_main(csvfilepatterns: list[str], output: str) -> bool:
         outfile.write(volstr)
 
     assert isinstance(data.index, pd.MultiIndex)
-    logger.info("Well count: %s", str(len(data.index.levels[0])))
-    logger.info("Date count: %s", str(len(data.index.levels[1])))
+    logger.info("Well count: %s", len(data.index.levels[0]))
+    logger.info("Date count: %s", len(data.index.levels[1]))
 
     if len(data) > 1:
         startdate = data.index.levels[1].min()
         enddate = data.index.levels[1].max()
         delta = relativedelta(enddate, startdate)
-        logger.info("Date range: %s --> %s", str(startdate.date()), str(enddate.date()))
+        logger.info("Date range: %s --> %s", startdate.date(), enddate.date())
         logger.info(
             "            %s years, %s months, %s days.",
-            str(delta.years),
-            str(delta.months),
-            str(delta.days),
+            delta.years,
+            delta.months,
+            delta.days,
         )
-    logger.info("Written %s lines to %s.", str(len(volstr) + 3), output)
+    logger.info("Written %s lines to %s.", len(volstr) + 3, output)
     return True
 
 

@@ -166,14 +166,14 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
         failed = True
     non_supported_classes = set(obs_df["CLASS"]) - set(CLASS_SHORTNAME.keys())
     if non_supported_classes:
-        logger.error("Unsupported observation classes: %s", str(non_supported_classes))
+        logger.error("Unsupported observation classes: %s", non_supported_classes)
         failed = True
 
     index = {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(set(obs_df.columns))
     repeated_rows = obs_df[obs_df.set_index(list(index)).index.duplicated(keep=False)]
     if not repeated_rows.empty:
         logger.error("Non-unique observation classes and labels")
-        logger.error("\n%s", str(repeated_rows.dropna(axis="columns", how="all")))
+        logger.error("\n%s", repeated_rows.dropna(axis="columns", how="all"))
         failed = True
 
     # Possibilities for further validation:
@@ -305,7 +305,7 @@ def fmuobs(
 ) -> None:
     """Alternative to main() with named arguments"""
     if verbose or debug:
-        if __MAGIC_STDOUT__ in (csv, yml, ertobs):
+        if __MAGIC_STDOUT__ in {csv, yml, ertobs}:
             raise SystemExit("Don't use verbose/debug when writing to stdout")
         loglevel = logging.INFO
         if debug:

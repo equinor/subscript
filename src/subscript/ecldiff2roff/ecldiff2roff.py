@@ -167,8 +167,8 @@ def ecldiff2roff_main(
         logger.info(
             "Computing difference for property %s between dates %s and %s",
             prop,
-            str(date_pair[0]),
-            str(date_pair[1]),
+            date_pair[0],
+            date_pair[1],
         )
 
         diffprop = prop1.copy()

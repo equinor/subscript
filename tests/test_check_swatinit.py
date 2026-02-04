@@ -691,11 +691,11 @@ def test_volplot_manynegative():
     pyplot.show()
 
 
-def test_reek(tmp_path, mocker):
+def test_reek(tmp_path, mocker, monkeypatch):
     """Test that we can run on the Reek dataset with no crashes,
     and with plotting to file"""
 
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     mocker.patch(
         "sys.argv",
         [
@@ -749,9 +749,9 @@ def test_reek(tmp_path, mocker):
 
 
 @pytest.mark.integration
-def test_ert_integration(tmp_path):
+def test_ert_integration(tmp_path, monkeypatch):
     """Test the installed ERT forward model"""
-    os.chdir(tmp_path)
+    monkeypatch.chdir(tmp_path)
     Path("test.ert").write_text(
         "\n".join(
             [
