@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.restartthinner.restartthinner &mdash; subscript 1.14.6 documentation</title>
+  <title>subscript.restartthinner.restartthinner &mdash; subscript 1.14.7.dev1+ge949b0d17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=6ef18a28"></script>
+      <script src="../_static/documentation_options.js?v=3afa6ad8"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -171,10 +171,10 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.date_slicer">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">date_slicer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slicedates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartdates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restartindices</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.date_slicer" title="Link to this definition"></a></dt>
-<dd><p>Make a dict that maps a chosen restart date to a report index</p>
+<dd><p>Make a list of report indices that match the input slicedates.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,19 +182,19 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.find_resdata_app">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">find_resdata_app</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">toolname</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.find_resdata_app" title="Link to this definition"></a></dt>
-<dd><p>Locate path of apps in resdata.</p>
-<p>These have varying suffixes due through the history of resdata Makefiles.</p>
-<p>Depending on resdata-version, it has the .x or the .c.x suffix
-We prefer .x.</p>
+<dd><p>Locate path of resdata apps, trying common suffixes (.x, .c.x, .cpp.x).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>toolname</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Base name of the tool (e.g., ‘rd_unpack’)</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>String with path if found.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>IOError</strong> – if tool can’t be found</p>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Full path to the executable.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – If tool cannot be found in PATH.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -213,10 +213,19 @@ We prefer .x.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.get_restart_indices">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">get_restart_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.get_restart_indices" title="Link to this definition"></a></dt>
-<dd><p>Extract a list of RST indices for a filename</p>
+<dd><p>Extract a list of restart indices for a filename.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rstfilename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the UNRST file.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of restart report indices.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>FileNotFoundError</strong> – If the file does not exist.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,7 +233,7 @@ We prefer .x.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.main">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.main" title="Link to this definition"></a></dt>
-<dd><p>Endpoint for command line script</p>
+<dd><p>Endpoint for command line script.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
@@ -235,14 +244,20 @@ We prefer .x.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.restartthinner.restartthinner.rd_repacker">
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">rd_repacker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rstfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slicerstindices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.rd_repacker" title="Link to this definition"></a></dt>
-<dd><p>Wrapper for ecl_unpack.x and ecl_pack.x utilities. These
-utilities are from resdata.</p>
-<p>First unpacking a UNRST file, then deleting dates the dont’t want, then
-pack the remainding files into a new UNRST file</p>
-<p>This function will change working directory to the
-location of the UNRST file, dump temporary files in there, and
-modify the original filename.</p>
+<dd><p>Repack a UNRST file keeping only selected restart indices.</p>
+<p>Uses rd_unpack and rd_pack utilities from resdata to unpack the UNRST file,
+remove unwanted dates, and repack into a new UNRST file.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rstfilename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the UNRST file.</p></li>
+<li><p><strong>slicerstindices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span>) – List of restart indices to keep.</p></li>
+<li><p><strong>quiet</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, suppress subprocess output.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>OSError</strong> – If rd_unpack or rd_pack tools are not found.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
@@ -254,8 +269,17 @@ modify the original filename.</p>
 <span class="sig-prename descclassname"><span class="pre">subscript.restartthinner.restartthinner.</span></span><span class="sig-name descname"><span class="pre">restartthinner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberofslices</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dryrun</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.restartthinner.restartthinner.restartthinner" title="Link to this definition"></a></dt>
 <dd><p>Thin an existing UNRST file to selected number of restarts.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path to the UNRST file.</p></li>
+<li><p><strong>numberofslices</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>) – Number of restart dates to keep.</p></li>
+<li><p><strong>quiet</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, suppress informational output.</p></li>
+<li><p><strong>dryrun</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, only show what would be done without modifying files.</p></li>
+<li><p><strong>keep</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span>) – If True, keep original file with .orig suffix.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
