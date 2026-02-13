@@ -3,6 +3,7 @@
 import shutil
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 import numpy as np
@@ -59,18 +60,21 @@ def test_reservoir_volumes_from_prt(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     Path("FOO.PRT").write_text(
         """
-
-                                                          ===================================
-                                                          :  RESERVOIR VOLUMES      RM3     :
-      :---------:---------------:---------------:---------------:---------------:---------------:
-      : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
-      :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
-      :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
-      :---------:---------------:---------------:---------------:---------------:---------------:
-      :   FIELD :             3.:             4.:             5.:             6.:             7.:
-      :       1 :             8.:             9.:            10.:            11.:            12.:
-      :       2 :            13.:            14.:            15.:            16.:            17.:
-      ===========================================================================================
+                              **************************************************************************
+  BALANCE  AT       181  DAYS * synthetic reservoir model                                              *
+  REPORT   99    10 Jul 2010  *                                             Flow  version 2025.10-pre  *
+                              **************************************************************************
+                                                      ===================================
+                                                      :  RESERVOIR VOLUMES      RM3     :
+  :---------:---------------:---------------:---------------:---------------:---------------:
+  : REGION  :  TOTAL PORE   :  PORE VOLUME  :  PORE VOLUME  : PORE VOLUME   :  PORE VOLUME  :
+  :         :   VOLUME      :  CONTAINING   :  CONTAINING   : CONTAINING    :  CONTAINING   :
+  :         :               :     OIL       :    WATER      :    GAS        :  HYDRO-CARBON :
+  :---------:---------------:---------------:---------------:---------------:---------------:
+  :   FIELD :             3.:             4.:             5.:             6.:             7.:
+  :       1 :             8.:             9.:            10.:            11.:            12.:
+  :       2 :            13.:            14.:            15.:            16.:            17.:
+  ===========================================================================================
     """,  # noqa
         encoding="utf8",
     )
@@ -81,8 +85,10 @@ def test_reservoir_volumes_from_prt(tmp_path, monkeypatch):
     )
     expected_dframe.index.name = "FIPNUM"
 
+    # Function requires numpy array (available_dates with BALANCE report), plus PRT file
+    dummy_date = date(2010, 7, 10)
     pd.testing.assert_frame_equal(
-        prtvol2csv.reservoir_volumes_from_prt("FOO.PRT"),
+        prtvol2csv.reservoir_volumes_from_prt("FOO.PRT", np.array([dummy_date])),
         expected_dframe,
         check_dtype=False,
     )
@@ -182,6 +188,41 @@ def test_prtvol2csv(tmp_path, mocker, monkeypatch):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
+@pytest.mark.parametrize(
+    "line, find_initial, expected_result",
+    [
+        (
+            "Report step  0/82 at day 0/912, date = 01-Jan-2018",
+            True,
+            date(2018, 1, 1),
+        ),
+        ("  REPORT   0     1 JAN 2018   *  RUN  ", True, date(2018, 1, 1)),
+        ("  REPORT   16    01 Jul 2018  *    ", False, date(2018, 7, 1)),
+        ("  REPORT  16     1 JLY 2018   *  RUN    ", False, date(2018, 7, 1)),
+        ("  BALANCE  AT    181.00  DAYS * Drogon ", False, None),
+        ("Report step 15/82 at day 180/912, date = 30-Jun-2018", False, None),
+    ],
+)
+def test_find_report_date_in_prt(line, find_initial, expected_result):
+    """Test that warnings are emitted on various contents in the DATA file"""
+    result = prtvol2csv.find_report_date_in_prt(line, find_initial)
+    assert result == expected_result
+
+
+@pytest.mark.parametrize(
+    "date_str_input, expected_result",
+    [
+        ("2018-07-01", True),
+        ("2018-30-10", False),
+        ("1 SEP 2016", False),
+    ],
+)
+def test_date_string_format_check(date_str_input, expected_result):
+    """Test that date strings are classified correctly as ISO format or not"""
+    result = prtvol2csv.date_string_format_check(date_str_input)
+    assert result == expected_result
+
+
 def test_correct_parsing_date(tmp_path, monkeypatch):
     shutil.copy(TEST_PRT_DATADIR / "DROGON_FIPNUM.PRT", tmp_path / "DROGON_FIPNUM.PRT")
     monkeypatch.chdir(tmp_path)
@@ -194,8 +235,10 @@ def test_correct_parsing_date(tmp_path, monkeypatch):
 
     prt_path.write_text(prt_text, encoding="utf8")
 
-    df_inplace = prtvol2csv.currently_in_place_from_prt(prt_path)
+    df_inplace, _, _ = prtvol2csv.currently_in_place_from_prt(prt_path)
     expected_stoiip_oil = [1885827, 7179776, 2366384, 213993, 986924]
+
+    print(df_inplace)
 
     assert df_inplace["STOIIP_OIL"].head().to_list() == expected_stoiip_oil
 
@@ -225,7 +268,7 @@ def test_rename_fip_column(tmp_path, mocker, monkeypatch):
 
 
 def test_fipxxx(tmp_path, mocker, monkeypatch):
-    """Test invocation from command line"""
+    """Test invocation from command line with "fipname" argument"""
     prtfile = TEST_PRT_DATADIR / "DROGON_FIPZON.PRT"
 
     monkeypatch.chdir(tmp_path)
@@ -572,6 +615,105 @@ def test_fipxxx(tmp_path, mocker, monkeypatch):
     pd.testing.assert_frame_equal(dframe, expected)
 
 
+def test_fipxxx_date(tmp_path, mocker, monkeypatch):
+    """Test invocation from command line with "date" and "fipname" argument"""
+    prtfile = TEST_PRT_DATADIR / "DROGON_FIPZON.PRT"
+
+    monkeypatch.chdir(tmp_path)
+
+    # Test with initial date and FIPZON, without the rename2fipnum option:
+    with pytest.warns(FutureWarning, match="Output directories"):
+        mocker.patch(
+            "sys.argv",
+            [
+                "prtvol2csv",
+                "--date",
+                "2018-01-01",
+                "--fipname",
+                "FIPZON",
+                "--debug",
+                str(prtfile),
+            ],
+        )
+        prtvol2csv.main()
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
+
+    expected = pd.DataFrame.from_dict(
+        {
+            "FIPZON": {0: 1, 1: 2, 2: 3},
+            "STOIIP_OIL": {0: 19549844.0, 1: 11560982.0, 2: 13683668.0},
+            "ASSOCIATEDOIL_GAS": {0: 102008.0, 1: 65583.0, 2: 6790.0},
+            "STOIIP_TOTAL": {0: 19651853.0, 1: 11626565.0, 2: 13690458.0},
+            "WIIP_TOTAL": {0: 153820626.0, 1: 136545137.0, 2: 166492503.0},
+            "GIIP_GAS": {0: 664018338.0, 1: 425072072.0, 2: 43915280.0},
+            "ASSOCIATEDGAS_OIL": {0: 2764802197.0, 1: 1647942723.0, 2: 1962726869.0},
+            "GIIP_TOTAL": {0: 3428820535.0, 1: 2073014795.0, 2: 2006642149.0},
+            "PORV_TOTAL": {0: 190002679.0, 1: 159669348.0, 2: 192088820.0},
+            "HCPV_OIL": {0: 28079757.0, 1: 16649101.0, 2: 19746072.0},
+            "WATPV_TOTAL": {0: 159065528.0, 1: 141192398.0, 2: 172153976.0},
+            "HCPV_GAS": {0: 2857395.0, 1: 1827848.0, 2: 188773.0},
+            "HCPV_TOTAL": {0: 30937151.0, 1: 18476950.0, 2: 19934844.0},
+        }
+    )
+    expected["FIPNAME"] = "FIPZON"
+    pd.testing.assert_frame_equal(dframe, expected)
+
+
+def test_fip_dates(tmp_path, mocker, monkeypatch):
+    """Test invocation from command line with "date" argument and intermediate report"""
+
+    prtfile = TEST_PRT_DATADIR / "DROGON_NO_INITIAL_BALANCE_FLOW.PRT"
+
+    monkeypatch.chdir(tmp_path)
+
+    # Test with initial date and FIPZON, without the rename2fipnum option:
+    with pytest.warns(FutureWarning, match="Output directories"):
+        mocker.patch(
+            "sys.argv",
+            [
+                "prtvol2csv",
+                "--date",
+                "2019-07-01",
+                "--fipname",
+                "FIPNUM",
+                "--debug",
+                str(prtfile),
+            ],
+        )
+        prtvol2csv.main()
+
+    dframe = pd.read_csv("share/results/volumes/simulator_volume_fipnum.csv")
+
+    # Single element series, filtered from dataframe
+    stoiip_fipnum2 = dframe[dframe["FIPNUM"] == 2]["STOIIP_OIL"]
+    giip_gas_fipnum2 = dframe[dframe["FIPNUM"] == 2]["GIIP_GAS"]
+
+    testdata_fipnum2 = {
+        "STOIIP_OIL": float(stoiip_fipnum2.iloc[0]),
+        "GIIP_GAS": float(giip_gas_fipnum2.iloc[0]),
+    }
+
+    expected_fipnum2 = {"STOIIP_OIL": 6539487.0, "GIIP_GAS": 36302620.0}
+
+    assert testdata_fipnum2 == expected_fipnum2
+
+
+def test_available_dates(tmp_path, monkeypatch):
+    """Test that all available BALANCE reports are found, list the report dates"""
+
+    prtfile = TEST_PRT_DATADIR / "DROGON_NO_INITIAL_BALANCE_FLOW.PRT"
+
+    monkeypatch.chdir(tmp_path)
+
+    expected_dates = [date(2018, 7, 1), date(2019, 7, 1), date(2020, 7, 1)]
+
+    _, available_dates, _ = prtvol2csv.currently_in_place_from_prt(prtfile)
+
+    assert available_dates.tolist() == expected_dates, (
+        "List of dates with BALANCE from PRT file not equal to list of dates expected"
+    )
+
+
 def test_inactive_fipnum(tmp_path, mocker, monkeypatch):
     """Test the case with non-contiguous active FIPNUM"""
 
@@ -614,6 +756,33 @@ def test_warning_not_initial(tmp_path, mocker, monkeypatch):
         for i, warning in enumerate(warnings_record):
             print(f"{i + 1} Recorded warnings: {warning.message}")
     assert len(warnings_record) == 2
+
+
+def test_warning_no_volume_report(tmp_path, monkeypatch):
+    """Test that the warning about no volume report is triggered"""
+
+    # with OPM FLow PRT file, no BALANCE report at all
+    prtfile1 = TEST_PRT_DATADIR / "DROGON_NOBAL_FLOW.PRT"
+
+    # with Elipse PRT file, no BALZON report (but a few BALANCE reports)
+    prtfile2 = TEST_PRT_DATADIR / "DROGON_FIPNUM.PRT"
+
+    monkeypatch.chdir(tmp_path)
+
+    result = subprocess.run(
+        ["prtvol2csv", str(prtfile1)], check=True, capture_output=True
+    )
+    output = result.stdout.decode() + result.stderr.decode()
+    assert "has no volume report" in output
+
+    result2 = subprocess.run(
+        ["prtvol2csv", "--fipname", "FIPZON", str(prtfile2)],
+        check=True,
+        capture_output=True,
+    )
+
+    output2 = result2.stdout.decode() + result2.stderr.decode()
+    assert "has no volume report for FIPZON" in output2
 
 
 def test_find_prtfile(tmp_path, monkeypatch):
