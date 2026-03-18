@@ -1,0 +1,28 @@
+ -- These observations are modified from ert-doc.obs
+ -- and stripped down to demonstrate summary observations without dates
+ 
+ SUMMARY_OBSERVATION SEP_TEST_2005
+ {
+    VALUE = 100.0;
+    ERROR =     5;
+    DAYS  = 135;
+    KEY   = GOPR:BRENT;
+ };
+ 
+ SUMMARY_OBSERVATION SEP_TEST_2006
+ {
+    VALUE = 100.0;
+    ERROR =     5;
+    DAYS  = 500;
+    KEY   = GOPR:BRENT;
+ };
+ 
+ SUMMARY_OBSERVATION SEP_TEST_2008
+ {
+    VALUE    = 213;
+    ERROR    =  10;
+    DAYS     = 911;
+    KEY      = GOPR:NESS;
+ };
+
+ 
