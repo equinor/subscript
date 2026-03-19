@@ -1080,6 +1080,7 @@ def get_specifications(
         use_population_stdev = input_dict[key]
 
     use_geogrid_fields = False
+    geogrid_name = None
     zone_names_used = None
     zone_conformity = None
     zone_code_names = None
@@ -1339,6 +1340,11 @@ def calc_stats(
     if not use_geogrid_fields:
         return
 
+    # Get list of active realization (Must be active for all iterations in iter_list)
+    active_real, number_of_skipped = get_active_real(
+        iter_list, ens_path, nreal, geogrid_name
+    )
+
     ensemble_path = ens_path
 
     logger.info(f"Number of realizations: {nreal}")
@@ -1356,8 +1362,8 @@ def calc_stats(
                         (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                         dtype=np.float32,
                     )
-                    number_of_skipped = 0
-                    for real_number in range(nreal):
+
+                    for real_number in active_real:
                         grid_dimensions, subgrids, property_param = (
                             read_ensemble_realization(
                                 ensemble_path,
@@ -1368,11 +1374,7 @@ def calc_stats(
                                 geogrid_name,
                             )
                         )
-                        if grid_dimensions is None:
-                            txt = f" Skip non-existing realization: {real_number}"
-                            logger.info(txt)
-                            number_of_skipped += 1
-                            continue
+                        assert grid_dimensions is not None
                         ertbox_prop_values = get_values_in_ertbox(
                             grid_dimensions,
                             subgrids,
@@ -1445,8 +1447,8 @@ def calc_stats(
                         (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                         dtype=np.int32,
                     )
-                    number_of_skipped = 0
-                    for real_number in range(nreal):
+
+                    for real_number in active_real:
                         grid_dimensions, subgrids, property_param = (
                             read_ensemble_realization(
                                 ensemble_path,
@@ -1457,11 +1459,7 @@ def calc_stats(
                                 geogrid_name,
                             )
                         )
-
-                        if grid_dimensions is None:
-                            logger.info(f" Skip realization: {real_number}")
-                            number_of_skipped += 1
-                            continue
+                        assert grid_dimensions is not None
                         ertbox_prop_values = get_values_in_ertbox(
                             grid_dimensions,
                             subgrids,
@@ -1576,7 +1574,8 @@ def calc_temporary_field_stats(
     # Check if any need to continue to calculation
     if not use_temporary_fields:
         return
-
+    # Get list of active realization (Must be active for all iterations in iter_list)
+    active_real, number_of_skipped = get_active_real(iter_list, ens_path, nreal)
     # Import realizations of temporary field parameters
     for param_name in param_list:
         for iteration in iter_list:
@@ -1590,9 +1589,7 @@ def calc_temporary_field_stats(
                 (ertbox_size[0], ertbox_size[1], ertbox_size[2], nreal),
                 dtype=np.float32,
             )
-
-            number_of_skipped = 0
-            for real_number in range(nreal):
+            for real_number in active_real:
                 filepath = (
                     ens_path
                     / Path(
@@ -1600,11 +1597,7 @@ def calc_temporary_field_stats(
                     )
                     / Path(full_param_filename)
                 )
-                if not filepath.exists():
-                    txt = f" Skip non-existing realization: {real_number}"
-                    logger.info(txt)
-                    number_of_skipped += 1
-                    continue
+                assert filepath.exists()
                 property = xtgeo.gridproperty_from_file(filepath, fformat="roff")
                 values = property.values
                 all_values[:, :, :, real_number] = values
@@ -1655,6 +1648,38 @@ def calc_temporary_field_stats(
                 )
                 logger.info(f"  Write parameter: {name_stdev}")
                 xtgeo_ertbox_stdev.to_file(result_stdev_file_path, fformat="roff")
+
+
+def get_active_real(
+    iter_list: list, ens_path: Path, nreal: int, geogrid_name: str = ""
+):
+    """Get a list of active realizations"""
+    number_of_skipped = 0
+    active_real = []
+    for real_number in range(nreal):
+        real_exist = True
+        for iteration in iter_list:
+            ensemble_path = ens_path / Path(
+                "realization-" + str(real_number) + "/iter-" + str(iteration)
+            )
+            if len(geogrid_name) > 0:
+                grid_path = Path("share/results/grids/" + geogrid_name + ".roff")
+                file_path_grid = ensemble_path / grid_path
+                txt = f" Skip non-existing realization of grid: {real_number}"
+            else:
+                file_path_grid = ensemble_path
+                txt = f" Skip non-existing realization: {real_number}"
+            if not file_path_grid.exists():
+                logger.info(txt)
+                number_of_skipped += 1
+                # No need to check other iterations since active_real should
+                # only be those realizations that exists for all specified
+                # iterations in iter_list
+                real_exist = False
+                continue
+        if real_exist:
+            active_real.append(real_number)
+    return active_real, number_of_skipped
 
 
 def generate_script(
@@ -1853,25 +1878,47 @@ def main():
         if init_path and param_names:
             for param_name in param_names:
                 for iteration in iter_list:
-                    new_name = "mean_" + param_name + "_" + str(iteration)
-                    param_file_name = Path(result_path) / Path(new_name + ".roff")
-                    prop_param = xtgeo.gridproperty_from_file(
-                        param_file_name, fformat="roff"
-                    )
-                    print(f"Read: {{new_name}} into {{GRIDNAME}}")
-                    if label:
-                        new_name = new_name + "_" + label
-                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+                    mean_name = "mean_" + param_name + "_" + str(iteration)
+                    std_name = "stdev_" + param_name + "_" + str(iteration)
 
-                    new_name = "stdev_" + param_name + "_" + str(iteration)
-                    param_file_name = Path(result_path) / Path(new_name + ".roff")
-                    prop_param = xtgeo.gridproperty_from_file(
-                        param_file_name, fformat="roff"
+                    mean_param_file_name = Path(result_path) / Path(mean_name + ".roff")
+                    mean_prop_param = xtgeo.gridproperty_from_file(
+                        mean_param_file_name, fformat="roff"
                     )
-                    print(f"Read: {{new_name}} into {{GRIDNAME}}")
+                    print(f"Read: {{mean_name}} into {{GRIDNAME}}")
+
+                    std_param_file_name = Path(result_path) / Path(std_name + ".roff")
+                    std_prop_param = xtgeo.gridproperty_from_file(
+                        std_param_file_name, fformat="roff"
+                    )
+                    print(f"Read: {{std_name}} into {{GRIDNAME}}")
+
                     if label:
-                        new_name = new_name + "_" + label
-                    prop_param.to_roxar(PRJ, GRIDNAME, new_name)
+                        new_mean_name = mean_name + "_" + label
+                        new_std_name = std_name + "_" + label
+                        difference_mean_name = "diff_" + new_mean_name
+                        difference_std_name = "diff_" + new_std_name
+
+                    mean_prop_param.to_roxar(PRJ, GRIDNAME, new_mean_name)
+                    std_prop_param.to_roxar(PRJ, GRIDNAME, new_std_name)
+
+                    if iteration == iter_list[0]:
+                        # Init
+                        mean_prop_param_init = mean_prop_param
+                        std_prop_param_init = std_prop_param
+                    elif iteration == iter_list[-1]:
+                        mean_prop_param_upd = mean_prop_param
+                        std_prop_param_upd = std_prop_param
+                        diff_mean_prop_param = mean_prop_param_upd.copy()
+                        diff_std_prop_param = std_prop_param_upd.copy()
+                        diff_mean_prop_param.values = \
+                            mean_prop_param_upd.values - mean_prop_param_init.values
+                        diff_std_prop_param.values = \
+                            std_prop_param_upd.values - std_prop_param_init.values
+                        diff_mean_prop_param.to_roxar(PRJ,
+                            GRIDNAME, difference_mean_name)
+                        diff_std_prop_param.to_roxar(PRJ,
+                            GRIDNAME, difference_std_name)
 
 if __name__ == "__main__":
     main()
