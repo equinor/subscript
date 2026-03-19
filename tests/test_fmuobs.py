@@ -248,6 +248,55 @@ def test_integration():
 
 
 @pytest.mark.integration
+def test_startdate_argument(tmp_path, mocker, monkeypatch):
+    """Test that the startdate argument is handled correctly"""
+    monkeypatch.chdir(tmp_path)
+    # Test that summary observations without a date are not valid without
+    # startdate argument
+    mocker.patch(
+        "sys.argv",
+        [
+            "fmuobs",
+            "--yml",
+            "output.yml",
+            str(
+                TESTDATA_DIR / "summary_obs_without_date.obs",
+            ),
+        ],
+    )
+    with pytest.raises(
+        ValueError, match=r"Can't have summary observation without a date"
+    ):
+        main()
+    # Test that summary observations without a date are valid with startdate argument
+    start_date = "2020-01-01"
+    mocker.patch(
+        "sys.argv",
+        [
+            "fmuobs",
+            "--startdate",
+            start_date,
+            "--yml",
+            "output.yml",
+            str(
+                TESTDATA_DIR / "summary_obs_without_date.obs",
+            ),
+        ],
+    )
+    main()
+    assert Path("output.yml").exists()
+    # Test that the dates in the output are correctly calculated
+    # from the startdate and the days in the input
+    with open(Path("output.yml"), encoding="utf8") as stream:
+        config = yaml.safe_load(stream)
+    for smry in config["smry"]:
+        for obs in smry["observations"]:
+            assert pd.to_datetime(obs["date"]) == pd.to_datetime(
+                start_date
+            ) + pd.to_timedelta(obs["days"], unit="D")
+
+
+@pytest.mark.integration
 @pytest.mark.parametrize("verbose", ["", "--verbose", "--debug"])
 def test_commandline(tmp_path, verbose, mocker, caplog, monkeypatch):
     """Test the executable versus on the ERT doc observation data

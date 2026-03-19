@@ -335,10 +335,10 @@ def fmuobs(
                     starttime=starttime,
                 )
         else:
-            dframe = ertobs2df(input_str, cwd=includedir)
+            dframe = ertobs2df(input_str, cwd=includedir, starttime=starttime)
 
     if starttime:
-        dframe = compute_date_from_days(dframe)
+        dframe = compute_date_from_days(dframe, starttime=starttime)
 
     if not validate_internal_dframe(dframe):
         logger.error("Observation dataframe is invalid!")
