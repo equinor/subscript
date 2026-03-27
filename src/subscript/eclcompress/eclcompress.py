@@ -154,7 +154,7 @@ def file_is_binary(filename: str | Path) -> bool:
     Args:
         filename: File to check
     """
-    # https://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python  # noqa
+    # https://stackoverflow.com/questions/898669/how-can-i-detect-if-a-file-is-binary-non-text-in-python
     textchars = bytearray({7, 8, 9, 10, 12, 13, 27} | set(range(0x20, 0x100)) - {0x7F})
     with open(filename, "rb") as filehandle:
         return bool(filehandle.read(1024).translate(None, textchars))
