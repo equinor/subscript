@@ -4,12 +4,14 @@ import subprocess
 from pathlib import Path
 
 import fmu.config.utilities as utils
+import gaussianfft as sim
 import numpy as np
 import pytest
 import xtgeo
 
 from subscript.field_statistics.field_statistics import (
     calc_stats,
+    calc_temporary_field_stats,
     check_disc_param_name_dict,
     check_param_name_dict,
     check_use_zones,
@@ -1101,3 +1103,123 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
     # For this test not to fail, the CONFIG_DICT and the specified
     # config file in yaml format must define the same setup
     assert compare_with_referencedata(ens_path, result_path, print_check=True)
+
+
+def simulate_ensembles(
+    nreal: int, nx: int, ny: int, nz: int, nreal_lost: int, result_dir: str
+) -> None:
+    sim.seed(123456)
+    variogram = sim.variogram("exponential", 100.0, 50.0, 5.0, 45.0, 0.0)
+    dx = 5.0
+    dy = 5.0
+    dz = 1.0
+    init_ens_field_3d = np.zeros((nx, ny, nz, nreal), dtype=np.float32)
+    final_ens_field_3d = np.zeros((nx, ny, nz, nreal - nreal_lost), dtype=np.float32)
+    for i in range(nreal):
+        gauss_vector = sim.simulate(variogram, nx, dx, ny, dy, nz, dz)
+        field_3d = gauss_vector.reshape((nx, ny, nz), order="F")
+        init_ens_field_3d[:, :, :, i] = field_3d
+        if i < (nreal - nreal_lost):
+            final_ens_field_3d[:, :, :, i] = field_3d
+    write_ensemble(init_ens_field_3d, final_ens_field_3d, result_dir)
+
+
+def write_ensemble(init_ens_field_3d, final_ens_field_3d, result_dir):
+    nx, ny, nz, nreal = init_ens_field_3d.shape
+    _, _, _, nreal_final = final_ens_field_3d.shape
+
+    init_real_defined = np.arange(nreal)
+    final_real_defined = np.arange(nreal_final)
+    for iter in [0, 1]:
+        if iter == 0:
+            for i in init_real_defined:
+                real_path = (
+                    Path(result_dir)
+                    / Path("realization-" + str(i))
+                    / Path("iter-" + str(iter))
+                )
+                real_path /= Path("rms/output/aps")
+                values = init_ens_field_3d[:, :, :, i]
+                name = "GRF"
+                xtgeo_param = xtgeo.GridProperty(
+                    ncol=nx,
+                    nrow=ny,
+                    nlay=nz,
+                    name=name,
+                    roxar_dtype=np.float32,
+                    values=values,
+                )
+                if not real_path.exists():
+                    real_path.mkdir(parents=True, exist_ok=True)
+                real_path /= Path("GRF.roff")
+                xtgeo_param.to_file(real_path, fformat="roff")
+        else:
+            for i in final_real_defined:
+                real_path = (
+                    Path(result_dir)
+                    / Path("realization-" + str(i))
+                    / Path("iter-" + str(iter))
+                )
+                values = final_ens_field_3d[:, :, :, i]
+                name = "GRF"
+                xtgeo_param = xtgeo.GridProperty(
+                    ncol=nx,
+                    nrow=ny,
+                    nlay=nz,
+                    name=name,
+                    roxar_dtype=np.float32,
+                    values=values,
+                )
+                if not real_path.exists():
+                    real_path.mkdir(parents=True, exist_ok=True)
+                real_path /= Path("GRF.roff")
+                xtgeo_param.to_file(real_path, fformat="roff")
+
+
+@pytest.mark.parametrize(
+    "nreal, nreal_lost",
+    [
+        (10, 0),
+        (10, 2),
+        (10, 8),  # Number of realizations must be at least 2
+    ],
+)
+def test_compare_mean_stdev_of_ensembles(tmp_path, nreal, nreal_lost):
+    nx = 5
+    ny = 5
+    nz = 2
+    field_name = "GRF"
+    simulate_ensembles(nreal, nx, ny, nz, nreal_lost, tmp_path)
+    ertbox_size = (nx, ny, nz)
+    input_dict = {
+        "nreal": nreal,
+        "iterations": [0, 1],
+        "use_population_stdev": False,
+        "temporary_ertbox_fields": {
+            "initial_relative_path": "rms/output/aps",
+            "parameter_names": [field_name],
+        },
+    }
+    ens_path = tmp_path
+    result_path = tmp_path
+    ert_config_path = None
+    calc_temporary_field_stats(
+        input_dict, ens_path, result_path, ert_config_path, ertbox_size
+    )
+    compare_ensemble_stats(result_path, field_name)
+
+
+def compare_ensemble_stats(result_path, field_name, tolerance=1e-8):
+    mean_file_name1 = Path(result_path) / Path("mean_" + field_name + "_0.roff")
+    mean_file_name2 = Path(result_path) / Path("mean_" + field_name + "_1.roff")
+    xtgeo_mean1_field = xtgeo.gridproperty_from_file(mean_file_name1, fformat="roff")
+    xtgeo_mean2_field = xtgeo.gridproperty_from_file(mean_file_name2, fformat="roff")
+    diff_values = np.abs(xtgeo_mean1_field.values - xtgeo_mean2_field.values)
+    assert np.all(diff_values < tolerance)
+
+    sdev_file_name1 = Path(result_path) / Path("stdev_" + field_name + "_0.roff")
+    sdev_file_name2 = Path(result_path) / Path("stdev_" + field_name + "_1.roff")
+    xtgeo_sdev1_field = xtgeo.gridproperty_from_file(sdev_file_name1, fformat="roff")
+    xtgeo_sdev2_field = xtgeo.gridproperty_from_file(sdev_file_name2, fformat="roff")
+    diff_values = np.abs(xtgeo_sdev1_field.values - xtgeo_sdev2_field.values)
+    assert np.all(diff_values < tolerance)
