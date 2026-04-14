@@ -358,6 +358,10 @@ def flatten_observation_unit(
 
     for subunit in subunit_keys:
         if len(subunit.split()) < 2:
+            if subunit.upper() in ("LOCALIZATION"):
+                # Ignore LOCALIZATION subunit
+                logger.debug("Ignoring unlabeled subunit block: %s", subunit)
+                continue
             # It must be two strings, like "OBS P1", or "SEGMENT FIRST_YEAR".
             raise ValueError("Wrong observation subunit syntax: " + str(subunit))
         obs_subunits.append(
