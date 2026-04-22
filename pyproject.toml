@@ -214,6 +214,7 @@ ignore = [
     "PLR0904", # too-many-public-methods
     "PLR1702", # too-many-nested-blocks
     "RUF067",  # non empty init module
+    "RUF069",  # unreliable-floating-point-equality
     "PLC1901",  # compare-to-empty-string
 ]
 

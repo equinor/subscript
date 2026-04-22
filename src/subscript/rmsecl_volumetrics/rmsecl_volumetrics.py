@@ -148,7 +148,7 @@ def main() -> None:
     if args.PRTFILE.endswith("csv"):
         simvolumes_df = pd.read_csv(args.PRTFILE, index_col="FIPNUM")
     else:
-        simvolumes_df = currently_in_place_from_prt(args.PRTFILE, "FIPNUM")
+        simvolumes_df, _, _ = currently_in_place_from_prt(args.PRTFILE, "FIPNUM")
 
     volumetrics_df = volumetrics.merge_rms_volumetrics(args.volumetricsbase).set_index(
         ["REGION", "ZONE"]

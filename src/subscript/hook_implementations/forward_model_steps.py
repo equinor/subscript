@@ -689,6 +689,8 @@ class Prtvol2Csv(ForwardModelStepPlugin):
                 "--rename2fipnum",
                 "--fipname",
                 "<FIPNAME>",
+                "--date",
+                "<REPORT_DATE>",
                 "<DATAFILE>",
             ],
             default_mapping={
@@ -696,6 +698,7 @@ class Prtvol2Csv(ForwardModelStepPlugin):
                 "<OUTPUTFILENAME>": "simulator_volume_fipnum.csv",
                 "<REGIONS>": "",
                 "<FIPNAME>": "FIPNUM",
+                "<REPORT_DATE>": "first",
             },
         )
 
@@ -708,7 +711,8 @@ class Prtvol2Csv(ForwardModelStepPlugin):
 .. code-block:: console
 
   FORWARD_MODEL PRTVOL2CSV(<DATAFILE>=<ECLBASE>, <REGIONS>=regions.yml, \
-      <FIPNAME>=FIPNUM, <DIR>=., <OUTPUTFILENAME>=simulator_volume_fipnum.csv)
+      <FIPNAME>=FIPNUM, <DATE>=first, <DIR>=., \
+      <OUTPUTFILENAME>=simulator_volume_fipnum.csv)
 
 where ``ECLBASE`` is already defined in your ERT config, pointing to the Eclipse
 basename relative to ``RUNPATH`` and ``regions.yml`` is a YAML file defining
@@ -723,6 +727,11 @@ By using the ``rename2fipnum`` option, the column name would be set to FIPNUM in
 the csv-file for any FIP-vector, as required by ``webviz-subsurface`` plugin
 ``VolumetricAnalysis``. This renaming is not needed for ``Webviz-Sumo``. An additional
 column with the actual FIPNAME is included for information.
+
+The ``DATE`` argument is by default the first available BALANCE report
+in the PRT file, but any valid date for existing BALANCE report can be
+specified. Dates must be in ISO-8601 format (yyyy-mm-dd), or as one of the strings
+"first" and "last".
 
 Using anything else than "." in the ``DIR`` argument is deprecated. To write to a CSV
 file in a specific directory, add the path in the ``OUTPUTFILENAME`` argument.
