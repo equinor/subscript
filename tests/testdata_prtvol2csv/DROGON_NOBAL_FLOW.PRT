@@ -1,0 +1,3087 @@
+
+
+
+ ########  #          ######   #           #
+ #         #         #      #   #         # 
+ #####     #         #      #    #   #   #  
+ #         #         #      #     # # # #   
+ #         #######    ######       #   #    
+
+Flow is a simulator for fully implicit three-phase black-oil flow, and is part of OPM.
+For more information visit: https://opm-project.org 
+
+Flow Version     =  2025.10-pre (a16179683)
+Machine name     =  st-rsb16-16-09.st.statoil.no (Number of logical cores: 64, Memory size: 773069.15 MB) 
+Operating system =  Linux x86_64 (Kernel: 4.18.0-553.82.1.el8_10.x86_64, #1 SMP Thu Oct 23 16:05:55 EDT 2025 )
+Build time       =  2025-08-19 at 14:45:14 hrs
+Simulation started on 18-11-2025 at 12:36:35 hrs
+Using 1 MPI processes with 2 OMP threads on each 
+Parameters used by Flow:
+# [known parameters which were specified at run-time]
+EclDeckFileName="DROGON_NOBAL_FLOW-99.DATA" # default: ""
+# [parameters which were specified at compile-time]
+AcceleratorMode="none"
+ActionParsingStrictness="normal"
+AddCorners="0"
+AllowDistributedWells="0"
+AllowSplittingInactiveWells="1"
+AlternativeWellRateInit="1"
+CheckGroupConstraintsInnerWellIterations="1"
+CheckSatfuncConsistency="1"
+ContinueOnConvergenceError="0"
+ConvergenceMonitoring="0"
+ConvergenceMonitoringCutOff="6"
+ConvergenceMonitoringDecayFactor="0.75"
+CprReuseInterval="30"
+CprReuseSetup="4"
+DbhpMaxRel="1"
+DebugEmitCellPartition="0"
+DebugVerbosityLevel="1"
+DpMaxRel="0.3"
+DsMax="0.2"
+DwellFractionMax="0.2"
+EclOutputDoublePrecision="0"
+EclOutputInterval="-1"
+EdgeWeightsMethod="transmissibility"
+EnableAdaptiveTimeStepping="1"
+EnableAsyncEclOutput="1"
+EnableAsyncVtkOutput="1"
+EnableDriftCompensation="0"
+EnableDryRun="auto"
+EnableEclOutput="1"
+EnableEsmry="0"
+EnableGravity="1"
+EnableGridAdaptation="0"
+EnableIntensiveQuantityCache="1"
+EnableLoggingFalloutWarning="0"
+EnableOpmRstFile="0"
+EnableStorageCache="1"
+EnableTerminalOutput="1"
+EnableThermodynamicHints="0"
+EnableTuning="0"
+EnableVtkOutput="0"
+EnableWellOperabilityCheck="1"
+EnableWellOperabilityCheckIter="0"
+EnableWriteAllSolutions="0"
+EndTime="1e+100"
+ExplicitRockCompaction="0"
+ExternalPartition=""
+ForceDisableFluidInPlaceOutput="0"
+ForceDisableResvFluidInPlaceOutput="0"
+FullTimeStepInitially="0"
+GpuAwareMpi="0"
+GpuDeviceId="0"
+IgnoreKeywords=""
+IluFillinLevel="0"
+IluRedblack="0"
+IluRelaxation="0.9"
+IluReorderSpheres="0"
+ImbalanceTol="1.1"
+InitialTimeStepInDays="1"
+InitialTimeStepSize="86400"
+InjMultDampMult="0.9"
+InjMultMinDampFactor="0.05"
+InjMultOscThreshold="0.1"
+InputSkipMode="100"
+LinearSolver="cprw"
+LinearSolverAccelerator="cpu"
+LinearSolverIgnoreConvergenceFailure="0"
+LinearSolverMaxIter="200"
+LinearSolverPrintJsonDefinition="1"
+LinearSolverReduction="0.01"
+LinearSolverRestart="40"
+LinearSolverVerbosity="0"
+LoadFile=""
+LoadStep="-1"
+LocalDomainsOrderingMeasure="maxpressure"
+LocalDomainsPartitionWellNeighborLevels="1"
+LocalDomainsPartitioningImbalance="1.03"
+LocalDomainsPartitioningMethod="zoltan"
+LocalSolveApproach="gauss-seidel"
+LocalToleranceScalingCnv="0.1"
+LocalToleranceScalingMb="1"
+LocalWellSolveControlSwitching="1"
+MatrixAddWellContributions="0"
+MaxInnerIterMsWells="100"
+MaxInnerIterWells="50"
+MaxLocalSolveIterations="20"
+MaxNewtonIterationsWithInnerWellIterations="8"
+MaxPressureChangeMsWells="1e+06"
+MaxResidualAllowed="1e+07"
+MaxSinglePrecisionDays="20"
+MaxTemperatureChange="5"
+MaxTimeStepDivisions="10"
+MaxTimeStepSize="inf"
+MaxWelleqIter="30"
+MaximumNumberOfGroupSwitches="3"
+MaximumNumberOfWellSwitches="3"
+MaximumWaterSaturation="1"
+MetisParams="default"
+MiluVariant="ilu"
+MinStrictCnvIter="-1"
+MinStrictMbIter="-1"
+MinTimeStepBasedOnNewtonIterations="0"
+MinTimeStepBeforeShuttingProblematicWellsInDays="0.01"
+MinTimeStepSize="0"
+NetworkMaxOuterIterations="10"
+NetworkMaxPressureUpdateInBars="5"
+NetworkMaxStrictOuterIterations="10"
+NetworkMaxSubIterations="20"
+NetworkPressureUpdateDampingFactor="0.1"
+NewtonMaxError="1e+100"
+NewtonMaxIterations="20"
+NewtonMaxRelax="0.5"
+NewtonMinIterations="2"
+NewtonRelaxationType="dampen"
+NewtonTargetIterations="10"
+NewtonTolerance="0.01"
+NewtonVerbose="1"
+NewtonWriteConvergence="0"
+NlddLocalLinearSolver="ilu0"
+NlddLocalLinearSolverMaxIter="200"
+NlddLocalLinearSolverReduction="0.01"
+NlddNumInitialNewtonIter="1"
+NlddRelativeMobilityChangeTol="0.1"
+NonlinearSolver="newton"
+NumLocalDomains="0"
+NumOverlap="1"
+NumPressurePointsEquil="2000"
+NumSatfuncConsistencySamplePoints="5"
+NupcolGroupRateTolerance="0.001"
+OpenclIluParallel="1"
+OpenclPlatformId="0"
+OutputDir=""
+OutputExtraConvergenceInfo="none"
+OutputInterval="1"
+OutputMode="all"
+OwnerCellsFirst="1"
+ParameterFile=""
+ParsingStrictness="normal"
+PartitionMethod="zoltanwell"
+PreSolveNetwork="1"
+PredeterminedTimeStepsFile=""
+PressureMax="1e+99"
+PressureMin="-1e+99"
+PressureScale="1"
+PriVarOscilationThreshold="1e-05"
+PrintParameters="2"
+ProjectSaturations="0"
+RegularizationFactorWells="100"
+RelaxedLinearSolverReduction="0.01"
+RelaxedMaxPvFraction="0.03"
+RelaxedPressureTolMsw="10000"
+RelaxedWellFlowTol="0.001"
+RestartTime="-1e+35"
+RestartWritingInterval="16777215"
+SaveFile=""
+SaveStep=""
+ScaleLinearSystem="0"
+SchedRestart="0"
+SerialPartitioning="0"
+ShutUnsolvableWells="1"
+Slave="0"
+SolveWelleqInitially="1"
+SolverContinueOnConvergenceFailure="0"
+SolverGrowthFactor="2"
+SolverMaxGrowth="3"
+SolverMaxRestarts="10"
+SolverMaxTimeStepInDays="365"
+SolverMinTimeStep="1e-12"
+SolverRestartFactor="0.33"
+SolverVerbosity="1"
+StrictInnerIterWells="40"
+StrictOuterIterWells="6"
+TemperatureMax="1e+09"
+TemperatureMin="0"
+ThreadsPerProcess="2"
+TimeStepAfterEventInDays="-1"
+TimeStepControl="pid+newtoniteration"
+TimeStepControlDecayDampingFactor="1"
+TimeStepControlDecayRate="0.75"
+TimeStepControlFileName="timesteps"
+TimeStepControlGrowthDampingFactor="3.2"
+TimeStepControlGrowthRate="1.25"
+TimeStepControlMaxReductionTimeStep="0.1"
+TimeStepControlParameters="0.125;0.25;0.125;0.75;0.25"
+TimeStepControlRejectCompletedStep="0"
+TimeStepControlSafetyFactor="0.8"
+TimeStepControlTargetIterations="30"
+TimeStepControlTargetNewtonIterations="8"
+TimeStepControlTolerance="0.1"
+TimeStepControlToleranceTestVersion="standard"
+TimeStepVerbosity="1"
+ToleranceCnv="0.01"
+ToleranceCnvEnergy="0.01"
+ToleranceCnvEnergyRelaxed="1"
+ToleranceCnvRelaxed="1"
+ToleranceEnergyBalance="1e-07"
+ToleranceEnergyBalanceRelaxed="1e-06"
+ToleranceMb="1e-07"
+ToleranceMbRelaxed="1e-06"
+TolerancePressureMsWells="1000"
+ToleranceWellControl="1e-07"
+ToleranceWells="0.0001"
+UpdateEquationsScaling="0"
+UseAverageDensityMsWells="0"
+UseGmres="0"
+UseImplicitIpr="1"
+UseMultisegmentWell="1"
+UseUpdateStabilization="1"
+VerifyGpuAwareMpi="0"
+VtkWriteAverageMolarMasses="0"
+VtkWriteDensities="1"
+VtkWriteDiffusionCoefficients="0"
+VtkWriteDofIndex="0"
+VtkWriteEffectiveDiffusionCoefficients="0"
+VtkWriteExtrusionFactor="0"
+VtkWriteFilterVelocities="0"
+VtkWriteFugacities="0"
+VtkWriteFugacityCoeffs="0"
+VtkWriteGasDissolutionFactor="0"
+VtkWriteGasFormationVolumeFactor="0"
+VtkWriteGasSaturationPressure="0"
+VtkWriteIntrinsicPermeabilities="0"
+VtkWriteMassFractions="0"
+VtkWriteMobilities="0"
+VtkWriteMolarities="0"
+VtkWriteMoleFractions="1"
+VtkWriteOilFormationVolumeFactor="0"
+VtkWriteOilSaturationPressure="0"
+VtkWriteOilVaporizationFactor="0"
+VtkWritePorosity="1"
+VtkWritePotentialGradients="0"
+VtkWritePressures="1"
+VtkWritePrimaryVars="0"
+VtkWritePrimaryVarsMeaning="0"
+VtkWriteProcessRank="0"
+VtkWriteRelativePermeabilities="1"
+VtkWriteSaturatedGasOilVaporizationFactor="0"
+VtkWriteSaturatedOilGasDissolutionFactor="0"
+VtkWriteSaturationRatios="0"
+VtkWriteSaturations="1"
+VtkWriteTemperature="1"
+VtkWriteTortuosities="0"
+VtkWriteTotalMassFractions="0"
+VtkWriteTotalMoleFractions="0"
+VtkWriteTracerConcentration="0"
+VtkWriteViscosities="0"
+VtkWriteWaterFormationVolumeFactor="0"
+WaterOnlyThreshold="1"
+WellGroupConstraintsMaxIterations="1"
+ZoltanImbalanceTol="1.1"
+ZoltanParams="graph"
+ZoltanPhgEdgeSizeThreshold="0.35"
+
+Reading deck file 'DROGON_NOBAL_FLOW-99.DATA'
+    0 Reading RUNSPEC  in DROGON_NOBAL_FLOW-99.DATA line 11
+    1 Reading TITLE    in DROGON_NOBAL_FLOW-99.DATA line 15
+    2 Reading START    in DROGON_NOBAL_FLOW-99.DATA line 19
+    3 Reading OIL      in DROGON_NOBAL_FLOW-99.DATA line 23
+    4 Reading GAS      in DROGON_NOBAL_FLOW-99.DATA line 24
+    5 Reading WATER    in DROGON_NOBAL_FLOW-99.DATA line 25
+    6 Reading DISGAS   in DROGON_NOBAL_FLOW-99.DATA line 26
+    7 Reading VAPOIL   in DROGON_NOBAL_FLOW-99.DATA line 27
+    8 Reading METRIC   in DROGON_NOBAL_FLOW-99.DATA line 30
+    9 Reading CPR      in DROGON_NOBAL_FLOW-99.DATA line 32
+   10 Reading EQLOPTS  in DROGON_NOBAL_FLOW-99.DATA line 36
+   11 Reading TRACERS  in DROGON_NOBAL_FLOW-99.DATA line 41
+   12 Reading DIMENS   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/runspec/drogon.dimens line 2
+   13 Reading TABDIMS  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/runspec/drogon.tabdims line 2
+   14 Reading EQLDIMS  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/runspec/drogon.eqldims line 2
+   15 Reading REGDIMS  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/runspec/drogon.regdims line 2
+   16 Reading GRIDOPTS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/runspec/drogon.gridopts line 2
+   17 Reading FAULTDIM in DROGON_NOBAL_FLOW-99.DATA line 65
+   18 Reading WELLDIMS in DROGON_NOBAL_FLOW-99.DATA line 73
+   19 Reading WSEGDIMS in DROGON_NOBAL_FLOW-99.DATA line 81
+   20 Reading VFPPDIMS in DROGON_NOBAL_FLOW-99.DATA line 92
+   21 Reading UNIFIN   in DROGON_NOBAL_FLOW-99.DATA line 97
+   22 Reading UNIFOUT  in DROGON_NOBAL_FLOW-99.DATA line 98
+   23 Reading MESSAGES in DROGON_NOBAL_FLOW-99.DATA line 104
+   24 Reading GRID     in DROGON_NOBAL_FLOW-99.DATA line 109
+   25 Reading NOECHO   in DROGON_NOBAL_FLOW-99.DATA line 111
+   26 Reading NEWTRAN  in DROGON_NOBAL_FLOW-99.DATA line 113
+   27 Reading GRIDFILE in DROGON_NOBAL_FLOW-99.DATA line 115
+   28 Reading INIT     in DROGON_NOBAL_FLOW-99.DATA line 118
+   29 Reading PINCH    in DROGON_NOBAL_FLOW-99.DATA line 121
+   30 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 124
+   31 Loading MAPAXES  from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.grid
+      Skipping SPECGRID from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.grid
+   32 Loading COORD    from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.grid
+   33 Loading ZCORN    from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.grid
+   34 Loading ACTNUM   from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.grid
+   34 Reading FAULTS   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.faults line 10
+   35 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 130
+   36 Loading PORO     from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.poro
+   36 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 133
+   37 Loading PERMX    from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.perm
+   38 Loading PERMY    from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.perm
+   39 Loading PERMZ    from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.perm
+   39 Reading MULTNUM  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.multnum line 13
+   40 Reading MULTREGT in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.multregt line 4
+   41 Reading EDIT     in DROGON_NOBAL_FLOW-99.DATA line 146
+   42 Reading MULTIPLY in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 10
+   43 Reading EDITNNC  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440
+   44 Reading PROPS    in DROGON_NOBAL_FLOW-99.DATA line 154
+   45 Reading FILLEPS  in DROGON_NOBAL_FLOW-99.DATA line 157
+   46 Reading SWOF     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.sattab line 1
+   47 Reading SGOF     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.sattab line 563
+   48 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 162
+   49 Loading SWATINIT from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.swatinit
+   49 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 165
+   50 Loading SWL      from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.swl
+   50 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 168
+   51 Loading SWCR     from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.swcr
+   51 Reading IMPORT   in DROGON_NOBAL_FLOW-99.DATA line 171
+   52 Loading SGU      from IMPORT file /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.sgu
+   52 Reading ROCKOPTS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.pvt line 4
+   53 Reading ROCK     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.pvt line 7
+   54 Reading PVTW     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.pvt line 12
+   55 Reading DENSITY  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.pvt line 16
+   56 Reading PVTO     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.pvt line 21
+   57 Reading PVTG     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/props/drogon.pvt line 378
+   58 Reading TRACER   in DROGON_NOBAL_FLOW-99.DATA line 178
+   59 Reading EXTRAPMS in DROGON_NOBAL_FLOW-99.DATA line 183
+   60 Reading REGIONS  in DROGON_NOBAL_FLOW-99.DATA line 187
+   61 Reading EQLNUM   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/regions/drogon.eqlnum line 5
+   62 Reading FIPNUM   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/regions/drogon.fipnum line 5
+   63 Reading FIPZON   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/regions/drogon.fipzon line 10
+   64 Reading SATNUM   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/regions/drogon.satnum line 5
+   65 Reading PVTNUM   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/regions/drogon.pvtnum line 5
+   66 Reading SOLUTION in DROGON_NOBAL_FLOW-99.DATA line 207
+   67 Reading EQUIL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/solution/drogon.equil line 1
+   68 Reading RSVD     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/solution/drogon.rxvd line 1
+   69 Reading RVVD     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/solution/drogon.rxvd line 17
+   70 Reading THPRES   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/solution/drogon.thpres line 2
+   71 Reading TVDPFWT1 in DROGON_NOBAL_FLOW-99.DATA line 219
+   72 Reading TVDPFWT2 in DROGON_NOBAL_FLOW-99.DATA line 224
+   73 Reading RPTSOL   in DROGON_NOBAL_FLOW-99.DATA line 228
+   74 Reading RPTRST   in DROGON_NOBAL_FLOW-99.DATA line 234
+   75 Reading SUMMARY  in DROGON_NOBAL_FLOW-99.DATA line 239
+   76 Reading SUMTHIN  in DROGON_NOBAL_FLOW-99.DATA line 244
+   77 Reading FOPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 7
+   78 Reading FOPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 8
+   79 Reading FGPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 9
+   80 Reading FGPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 10
+   81 Reading FWPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 11
+   82 Reading FWPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 12
+   83 Reading FLPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 13
+   84 Reading FLPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 14
+   85 Reading FVPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 15
+   86 Reading FOPRF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 16
+   87 Reading FOPRS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 17
+   88 Reading FGSR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 18
+   89 Reading FGPRF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 19
+   90 Reading FGPRS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 20
+   91 Reading FOPP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 24
+   92 Reading FWPP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 25
+   93 Reading FGPP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 26
+   94 Reading FMWPR    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 30
+   95 Reading FMWIN    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 31
+   96 Reading FVIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 33
+   97 Reading FWIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 34
+   98 Reading FWIRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 35
+   99 Reading FGIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 36
+  100 Reading FGIRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 37
+  101 Reading FGLIR    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 39
+  102 Reading FMCTP    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 43
+  103 Reading FVPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 48
+  104 Reading FOPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 49
+  105 Reading FOPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 50
+  106 Reading FWPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 51
+  107 Reading FWPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 52
+  108 Reading FGPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 53
+  109 Reading FGPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 54
+  110 Reading FWIT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 55
+  111 Reading FWITH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 56
+  112 Reading FGIT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 57
+  113 Reading FGITH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 58
+  114 Reading FOPTF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 59
+  115 Reading FOPTS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 60
+  116 Reading FWIP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 64
+  117 Reading FOIP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 65
+  118 Reading FGIP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 66
+  119 Reading FWCT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 68
+  120 Reading FWCTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 69
+  121 Reading FGOR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 70
+  122 Reading FGORH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 71
+  123 Reading FGLR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 72
+  124 Reading FWGR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 73
+  125 Reading FPR      in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 75
+  126 Reading RPR      in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 77
+  127 Reading ROIP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 79
+  128 Reading ROE      in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 81
+  129 Reading ROIPL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 83
+  130 Reading ROIPG    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 85
+  131 Reading RGIP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 87
+  132 Reading RGIPL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 89
+  133 Reading RGIPG    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 91
+  134 Reading RGPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 93
+  135 Reading RGPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 95
+  136 Reading GMWPR    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 100
+  137 Reading GMWIN    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 102
+  138 Reading GGLIR    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 104
+  139 Reading GOPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 106
+  140 Reading GOPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 108
+  141 Reading GGPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 110
+  142 Reading GGPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 112
+  143 Reading GWPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 114
+  144 Reading GWPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 116
+  145 Reading GVPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 118
+  146 Reading GLPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 120
+  147 Reading GOPRF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 122
+  148 Reading GOPRS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 124
+  149 Reading GGPRF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 126
+  150 Reading GGPRS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 128
+  151 Reading GWCT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 130
+  152 Reading GWCTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 132
+  153 Reading GGOR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 134
+  154 Reading GGORH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 136
+  155 Reading GWGR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 138
+  156 Reading GGLR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 140
+  157 Reading GOPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 142
+  158 Reading GOPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 144
+  159 Reading GGPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 146
+  160 Reading GGPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 148
+  161 Reading GWPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 150
+  162 Reading GWPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 152
+  163 Reading GVPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 154
+  164 Reading GLPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 156
+  165 Reading GOPTF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 158
+  166 Reading GOPTS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 160
+  167 Reading GGPTF    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 162
+  168 Reading GGPTS    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 164
+  169 Reading GWIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 166
+  170 Reading GVIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 168
+  171 Reading GWIRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 170
+  172 Reading GGIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 172
+  173 Reading GGIRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 174
+  174 Reading GPR      in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 176
+  175 Reading GOPP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 179
+  176 Reading GGPP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 181
+  177 Reading GWPP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 183
+  178 Reading GMCTP    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 188
+  179 Reading WOPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 193
+  180 Reading WOPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 195
+  181 Reading WGPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 197
+  182 Reading WGPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 199
+  183 Reading WWPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 201
+  184 Reading WWPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 203
+  185 Reading WLPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 205
+  186 Reading WLPRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 207
+  187 Reading WOPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 210
+  188 Reading WWPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 212
+  189 Reading WGPT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 214
+  190 Reading WOPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 216
+  191 Reading WWPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 218
+  192 Reading WGPTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 220
+  193 Reading WWCT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 223
+  194 Reading WWCTH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 225
+  195 Reading WGOR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 227
+  196 Reading WGORH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 229
+  197 Reading WWIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 231
+  198 Reading WWIRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 233
+  199 Reading WGIR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 235
+  200 Reading WGIRH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 237
+  201 Reading WWIT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 239
+  202 Reading WWITH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 241
+  203 Reading WGIT     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 243
+  204 Reading WGITH    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 245
+  205 Reading WBHP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 248
+  206 Reading WTHP     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 250
+  207 Reading WPI      in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 252
+  208 Reading WVPR     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 254
+  209 Reading WBP      in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 256
+  210 Reading WBP4     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 258
+  211 Reading WBP9     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 260
+  212 Reading WMCTL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 262
+  213 Reading WSTAT    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 264
+  214 Reading WGLIR    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 267
+  215 Reading WOGLR    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 272
+  216 Reading WTPRWT1  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 278
+  217 Reading WTPRWT2  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 280
+  218 Reading WTPTWT1  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 283
+  219 Reading WTPTWT2  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 285
+  220 Reading WTPCWT1  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 288
+  221 Reading WTPCWT2  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 290
+  222 Reading WTIRWT1  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 293
+  223 Reading WTIRWT2  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 295
+  224 Reading WTITWT1  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 298
+  225 Reading WTITWT2  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 300
+  226 Reading WTICWT1  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 303
+  227 Reading WTICWT2  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 305
+  228 Reading TCPU     in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 317
+  229 Reading TCPUDAY  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 318
+  230 Reading WOPRL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 322
+  231 Reading WWPRL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 336
+  232 Reading WGPRL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 350
+  233 Reading WWIRL    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 364
+  234 Reading SCHEDULE in DROGON_NOBAL_FLOW-99.DATA line 252
+  235 Reading VFPPROD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-1.inc line 89
+  236 Reading VFPPROD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-2.inc line 89
+  237 Reading VFPPROD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-3.inc line 89
+  238 Reading VFPPROD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-4.inc line 90
+  239 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 9
+  240 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 18
+  241 Reading GRUPTREE in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 26
+  242 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+  243 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 164
+  244 Reading WRFTPLT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 173
+  245 Reading TUNING   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 182
+  246 Reading RPTRST   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 190
+  247 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 193
+  248 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 197
+  249 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 202
+  250 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 206
+  251 Reading COMPLUMP in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 233
+  252 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 258
+  253 Reading WELTARG  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 263
+  254 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 267
+  255 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 271
+  256 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 276
+  257 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 280
+  258 Reading WRFTPLT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 285
+  259 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 290
+  260 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 294
+  261 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 299
+  262 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 303
+  263 Reading COMPLUMP in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 317
+  264 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 329
+  265 Reading WELTARG  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 335
+  266 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 339
+  267 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 343
+  268 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 349
+  269 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 353
+  270 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 359
+  271 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 363
+  272 Reading WRFTPLT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 369
+  273 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 374
+  274 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 378
+  275 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 384
+  276 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 388
+  277 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 393
+  278 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 397
+  279 Reading COMPLUMP in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 428
+  280 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 457
+  281 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 463
+  282 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 468
+  283 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 472
+  284 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 478
+  285 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 482
+  286 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 488
+  287 Reading WTRACER  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 493
+  288 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 498
+  289 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 504
+  290 Reading WTRACER  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 508
+  291 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 513
+  292 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 519
+  293 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 523
+  294 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 529
+  295 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 533
+  296 Reading RPTSCHED in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 539
+  297 Reading RPTRST   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 543
+  298 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 546
+  299 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 550
+  300 Reading RPTSCHED in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 556
+  301 Reading RPTRST   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 560
+  302 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 563
+  303 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 567
+  304 Reading WRFTPLT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 573
+  305 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 578
+  306 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 582
+  307 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 587
+  308 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 591
+  309 Reading COMPLUMP in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 620
+  310 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 647
+  311 Reading WELTARG  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 654
+  312 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 658
+  313 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 662
+  314 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 669
+  315 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 673
+  316 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 680
+  317 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 684
+  318 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 691
+  319 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 695
+  320 Reading WRFTPLT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 702
+  321 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 707
+  322 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 711
+  323 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 718
+  324 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 722
+  325 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 727
+  326 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 731
+  327 Reading COMPLUMP in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 763
+  328 Reading WELSEGS  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 793
+  329 Reading WSEGVALV in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 852
+  330 Reading COMPSEGS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 883
+  331 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 914
+  332 Reading WELTARG  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 922
+  333 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 926
+  334 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 930
+  335 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 938
+  336 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 942
+  337 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 950
+  338 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 954
+  339 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 962
+  340 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 966
+  341 Reading WRFTPLT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 974
+  342 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 979
+  343 Reading WELSPECS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 983
+  344 Reading COMPORD  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 988
+  345 Reading COMPDAT  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 992
+  346 Reading COMPLUMP in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1021
+  347 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1048
+  348 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1056
+  349 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1061
+  350 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1065
+  351 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1073
+  352 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1077
+  353 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1085
+  354 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1089
+  355 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1097
+  356 Reading WTRACER  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1102
+  357 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1107
+  358 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1115
+  359 Reading WTRACER  in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1119
+  360 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1124
+  361 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1132
+  362 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1136
+  363 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1144
+  364 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1148
+  365 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1156
+  366 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1160
+  367 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1168
+  368 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1172
+  369 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1180
+  370 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1184
+  371 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1192
+  372 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1196
+  373 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1204
+  374 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1208
+  375 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1216
+  376 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1220
+  377 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1228
+  378 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1232
+  379 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1240
+  380 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1246
+  381 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1250
+  382 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1254
+  383 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1262
+  384 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1268
+  385 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1272
+  386 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1280
+  387 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1284
+  388 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1292
+  389 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1296
+  390 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1304
+  391 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1308
+  392 Reading RPTSCHED in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1316
+  393 Reading RPTRST   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1319
+  394 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1322
+  395 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1326
+  396 Reading RPTSCHED in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1334
+  397 Reading RPTRST   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1337
+  398 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1340
+  399 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1344
+  400 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1352
+  401 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1356
+  402 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1364
+  403 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1368
+  404 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1376
+  405 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1380
+  406 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1388
+  407 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1392
+  408 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1400
+  409 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1404
+  410 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1412
+  411 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1416
+  412 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1424
+  413 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1428
+  414 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1436
+  415 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1440
+  416 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1448
+  417 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1454
+  418 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1458
+  419 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1466
+  420 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1472
+  421 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1476
+  422 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1484
+  423 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1488
+  424 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1496
+  425 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1500
+  426 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1508
+  427 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1512
+  428 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1520
+  429 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1524
+  430 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1532
+  431 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1536
+  432 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1544
+  433 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1548
+  434 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1556
+  435 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1560
+  436 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1568
+  437 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1572
+  438 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1580
+  439 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1584
+  440 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1592
+  441 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1596
+  442 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1604
+  443 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1608
+  444 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1616
+  445 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1620
+  446 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1628
+  447 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1632
+  448 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1640
+  449 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1644
+  450 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1652
+  451 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1658
+  452 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1662
+  453 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1666
+  454 Reading WCONINJH in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1674
+  455 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1680
+  456 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1684
+  457 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1692
+  458 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1696
+  459 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1704
+  460 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1708
+  461 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1716
+  462 Reading WCONHIST in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1720
+  463 Reading RPTSCHED in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1728
+  464 Reading RPTRST   in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1732
+  465 Reading DATES    in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 1735
+
+Warning: Unsupported keywords or keyword items:
+
+  MESSAGES: invalid value '1000000' for item 9
+  In file: DROGON_NOBAL_FLOW-99.DATA, line 104
+  MESSAGES(STOPWARN): option is not supported
+
+  MESSAGES: invalid value '7000' for item 10
+  In file: DROGON_NOBAL_FLOW-99.DATA, line 104
+  MESSAGES(STOPPROB): option is not supported
+
+  MESSAGES: invalid value '1' for item 11
+  In file: DROGON_NOBAL_FLOW-99.DATA, line 104
+  MESSAGES(STOPERRS): option is not supported
+
+  NOECHO: keyword not supported
+  In file: DROGON_NOBAL_FLOW-99.DATA, line 111
+
+  EXTRAPMS: keyword not supported
+  In file: DROGON_NOBAL_FLOW-99.DATA, line 183
+
+  RPTSOL: keyword not supported
+  In file: DROGON_NOBAL_FLOW-99.DATA, line 228
+
+Creating corner-point grid from keywords COORD, ZCORN and others
+
+Initializing tracers from TRACER in DROGON_NOBAL_FLOW-99.DATA line 178
+Non-default tracer unit [g] from TRACER in DROGON_NOBAL_FLOW-99.DATA line 178
+Loading tracer concentration from TVDPFWT1 in DROGON_NOBAL_FLOW-99.DATA line 219
+Non-default tracer unit [g] from TRACER in DROGON_NOBAL_FLOW-99.DATA line 178
+Reporting limit reached for Tracer tables - see PRT file for additional messages
+Loading tracer concentration from TVDPFWT2 in DROGON_NOBAL_FLOW-99.DATA line 224
+3 fluid phases are active
+
+Loading faults from FAULTS in /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/grid/drogon.faults line 10
+
+Warning: Error in keyword RPTSOL, unrecognized mnemonic THPRES
+In DROGON_NOBAL_FLOW-99.DATA line 228.
+
+Processing dynamic information from
+DROGON_NOBAL_FLOW-99.DATA line 252
+Initializing report step 0/82 at 2018-01-01 0 DAYS line 252
+Reading from: /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-1.inc line 89
+Processing keyword VFPPROD at line 89
+Reading from: /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-2.inc line 89
+Processing keyword VFPPROD at line 89
+Reading from: /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-3.inc line 89
+Processing keyword VFPPROD at line 89
+Reading from: /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/vfp/A-4.inc line 90
+Processing keyword VFPPROD at line 90
+Reading from: /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 9
+Processing keyword WELSPECS at line 9
+Processing keyword COMPORD at line 18
+Processing keyword GRUPTREE at line 26
+Processing keyword COMPDAT at line 32
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (22,30,12) in well R_A2 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (29,41,14) in well R_A3 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (29,41,17) in well R_A3 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (31,20,9) in well R_A5 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (31,20,10) in well R_A5 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (31,21,10) in well R_A5 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 32
+The cell (17,42,18) in well R_A6 is not active and the connection will be ignored
+Processing keyword WCONHIST at line 164
+Processing keyword WRFTPLT at line 173
+Processing keyword TUNING at line 182
+Processing keyword RPTRST at line 190
+Complete report step 1 (4 DAYS) at 2018-01-05 (0 DAYS)
+
+Initializing report step 2/82 at 2018-01-05 (0 DAYS) line 193
+Processing keyword WELSPECS at line 197
+Processing keyword COMPORD at line 202
+Processing keyword COMPDAT at line 206
+Processing keyword COMPLUMP at line 233
+Processing keyword WCONHIST at line 258
+Processing keyword WELTARG at line 263
+Complete report step 2 (27 DAYS) at 2018-02-01 (4 DAYS)
+
+Initializing report step 3/82 at 2018-02-01 (4 DAYS) line 267
+Processing keyword WCONHIST at line 271
+Complete report step 3 (28 DAYS) at 2018-03-01 (31 DAYS)
+
+Initializing report step 4/82 at 2018-03-01 (31 DAYS) line 276
+Processing keyword WCONHIST at line 280
+Processing keyword WRFTPLT at line 285
+Complete report step 4 (9 DAYS) at 2018-03-10 (59 DAYS)
+
+Initializing report step 5/82 at 2018-03-10 (59 DAYS) line 290
+Processing keyword WELSPECS at line 294
+Processing keyword COMPORD at line 299
+Processing keyword COMPDAT at line 303
+Processing keyword COMPLUMP at line 317
+Processing keyword WCONHIST at line 329
+Processing keyword WELTARG at line 335
+Complete report step 5 (20 DAYS) at 2018-03-30 (68 DAYS)
+Report limit reached, see PRT-file for remaining Schedule initialization.
+
+Initializing report step 6/82 at 2018-03-30 (68 DAYS) line 339
+Processing keyword WCONHIST at line 343
+Complete report step 6 (2 DAYS) at 2018-04-01 (88 DAYS)
+
+Initializing report step 7/82 at 2018-04-01 (88 DAYS) line 349
+Processing keyword WCONHIST at line 353
+Complete report step 7 (27 DAYS) at 2018-04-28 (90 DAYS)
+
+Initializing report step 8/82 at 2018-04-28 (90 DAYS) line 359
+Processing keyword WCONHIST at line 363
+Processing keyword WRFTPLT at line 369
+Complete report step 8 (3 DAYS) at 2018-05-01 (117 DAYS)
+
+Initializing report step 9/82 at 2018-05-01 (117 DAYS) line 374
+Processing keyword WCONHIST at line 378
+Complete report step 9 (7 DAYS) at 2018-05-08 (120 DAYS)
+
+Initializing report step 10/82 at 2018-05-08 (120 DAYS) line 384
+Processing keyword WELSPECS at line 388
+Processing keyword COMPORD at line 393
+Processing keyword COMPDAT at line 397
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 397
+The cell (31,20,9) in well A5 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 397
+The cell (31,20,10) in well A5 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 397
+The cell (31,21,10) in well A5 is not active and the connection will be ignored
+Processing keyword COMPLUMP at line 428
+Processing keyword WCONHIST at line 457
+Processing keyword WCONINJH at line 463
+Complete report step 10 (24 DAYS) at 2018-06-01 (127 DAYS)
+
+Initializing report step 11/82 at 2018-06-01 (127 DAYS) line 468
+Processing keyword WCONHIST at line 472
+Complete report step 11 (1 DAYS) at 2018-06-02 (151 DAYS)
+
+Initializing report step 12/82 at 2018-06-02 (151 DAYS) line 478
+Processing keyword WCONHIST at line 482
+Complete report step 12 (6 DAYS) at 2018-06-08 (152 DAYS)
+
+Initializing report step 13/82 at 2018-06-08 (152 DAYS) line 488
+Processing keyword WTRACER at line 493
+Processing keyword WCONHIST at line 498
+Complete report step 13 (1 DAYS) at 2018-06-09 (158 DAYS)
+
+Initializing report step 14/82 at 2018-06-09 (158 DAYS) line 504
+Processing keyword WTRACER at line 508
+Processing keyword WCONHIST at line 513
+Complete report step 14 (13 DAYS) at 2018-06-22 (159 DAYS)
+
+Initializing report step 15/82 at 2018-06-22 (159 DAYS) line 519
+Processing keyword WCONHIST at line 523
+Complete report step 15 (8 DAYS) at 2018-06-30 (172 DAYS)
+
+Initializing report step 16/82 at 2018-06-30 (172 DAYS) line 529
+Processing keyword WCONHIST at line 533
+Processing keyword RPTSCHED at line 539
+Processing keyword RPTRST at line 543
+Complete report step 16 (1 DAYS) at 2018-07-01 (180 DAYS)
+
+Initializing report step 17/82 at 2018-07-01 (180 DAYS) line 546
+Processing keyword WCONHIST at line 550
+Processing keyword RPTSCHED at line 556
+Processing keyword RPTRST at line 560
+Complete report step 17 (2 DAYS) at 2018-07-03 (181 DAYS)
+
+Initializing report step 18/82 at 2018-07-03 (181 DAYS) line 563
+Processing keyword WCONHIST at line 567
+Processing keyword WRFTPLT at line 573
+Complete report step 18 (10 DAYS) at 2018-07-13 (183 DAYS)
+
+Initializing report step 19/82 at 2018-07-13 (183 DAYS) line 578
+Processing keyword WELSPECS at line 582
+Processing keyword COMPORD at line 587
+Processing keyword COMPDAT at line 591
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 591
+The cell (29,41,14) in well A3 is not active and the connection will be ignored
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 591
+The cell (29,41,17) in well A3 is not active and the connection will be ignored
+Processing keyword COMPLUMP at line 620
+Processing keyword WCONHIST at line 647
+Processing keyword WELTARG at line 654
+Complete report step 19 (19 DAYS) at 2018-08-01 (193 DAYS)
+
+Initializing report step 20/82 at 2018-08-01 (193 DAYS) line 658
+Processing keyword WCONHIST at line 662
+Complete report step 20 (24 DAYS) at 2018-08-25 (212 DAYS)
+
+Initializing report step 21/82 at 2018-08-25 (212 DAYS) line 669
+Processing keyword WCONHIST at line 673
+Complete report step 21 (7 DAYS) at 2018-09-01 (236 DAYS)
+
+Initializing report step 22/82 at 2018-09-01 (236 DAYS) line 680
+Processing keyword WCONHIST at line 684
+Complete report step 22 (11 DAYS) at 2018-09-12 (243 DAYS)
+
+Initializing report step 23/82 at 2018-09-12 (243 DAYS) line 691
+Processing keyword WCONHIST at line 695
+Processing keyword WRFTPLT at line 702
+Complete report step 23 (2 DAYS) at 2018-09-14 (254 DAYS)
+
+Initializing report step 24/82 at 2018-09-14 (254 DAYS) line 707
+Processing keyword WCONHIST at line 711
+Complete report step 24 (8 DAYS) at 2018-09-22 (256 DAYS)
+
+Initializing report step 25/82 at 2018-09-22 (256 DAYS) line 718
+Processing keyword WELSPECS at line 722
+Processing keyword COMPORD at line 727
+Processing keyword COMPDAT at line 731
+Processing keyword COMPLUMP at line 763
+Processing keyword WELSEGS at line 793
+Processing keyword WSEGVALV at line 852
+Processing keyword COMPSEGS at line 883
+Processing keyword WCONHIST at line 914
+Processing keyword WELTARG at line 922
+Complete report step 25 (9 DAYS) at 2018-10-01 (264 DAYS)
+
+Initializing report step 26/82 at 2018-10-01 (264 DAYS) line 926
+Processing keyword WCONHIST at line 930
+Complete report step 26 (4 DAYS) at 2018-10-05 (273 DAYS)
+
+Initializing report step 27/82 at 2018-10-05 (273 DAYS) line 938
+Processing keyword WCONHIST at line 942
+Complete report step 27 (27 DAYS) at 2018-11-01 (277 DAYS)
+
+Initializing report step 28/82 at 2018-11-01 (277 DAYS) line 950
+Processing keyword WCONHIST at line 954
+Complete report step 28 (6 DAYS) at 2018-11-07 (304 DAYS)
+
+Initializing report step 29/82 at 2018-11-07 (304 DAYS) line 962
+Processing keyword WCONHIST at line 966
+Processing keyword WRFTPLT at line 974
+Complete report step 29 (10 DAYS) at 2018-11-17 (310 DAYS)
+
+Initializing report step 30/82 at 2018-11-17 (310 DAYS) line 979
+Processing keyword WELSPECS at line 983
+Processing keyword COMPORD at line 988
+Processing keyword COMPDAT at line 992
+
+Warning: Problem with COMPDAT keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/schedule/drogon_hist_nobal.sch line 992
+The cell (17,42,18) in well A6 is not active and the connection will be ignored
+Processing keyword COMPLUMP at line 1021
+Processing keyword WCONHIST at line 1048
+Processing keyword WCONINJH at line 1056
+Complete report step 30 (14 DAYS) at 2018-12-01 (320 DAYS)
+
+Initializing report step 31/82 at 2018-12-01 (320 DAYS) line 1061
+Processing keyword WCONHIST at line 1065
+Complete report step 31 (6 DAYS) at 2018-12-07 (334 DAYS)
+
+Initializing report step 32/82 at 2018-12-07 (334 DAYS) line 1073
+Processing keyword WCONHIST at line 1077
+Complete report step 32 (8 DAYS) at 2018-12-15 (340 DAYS)
+
+Initializing report step 33/82 at 2018-12-15 (340 DAYS) line 1085
+Processing keyword WCONHIST at line 1089
+Complete report step 33 (2 DAYS) at 2018-12-17 (348 DAYS)
+
+Initializing report step 34/82 at 2018-12-17 (348 DAYS) line 1097
+Processing keyword WTRACER at line 1102
+Processing keyword WCONHIST at line 1107
+Complete report step 34 (1 DAYS) at 2018-12-18 (350 DAYS)
+
+Initializing report step 35/82 at 2018-12-18 (350 DAYS) line 1115
+Processing keyword WTRACER at line 1119
+Processing keyword WCONHIST at line 1124
+Complete report step 35 (10 DAYS) at 2018-12-28 (351 DAYS)
+
+Initializing report step 36/82 at 2018-12-28 (351 DAYS) line 1132
+Processing keyword WCONHIST at line 1136
+Complete report step 36 (4 DAYS) at 2019-01-01 (361 DAYS)
+
+Initializing report step 37/82 at 2019-01-01 (361 DAYS) line 1144
+Processing keyword WCONHIST at line 1148
+Complete report step 37 (31 DAYS) at 2019-02-01 (365 DAYS)
+
+Initializing report step 38/82 at 2019-02-01 (365 DAYS) line 1156
+Processing keyword WCONHIST at line 1160
+Complete report step 38 (8 DAYS) at 2019-02-09 (396 DAYS)
+
+Initializing report step 39/82 at 2019-02-09 (396 DAYS) line 1168
+Processing keyword WCONHIST at line 1172
+Complete report step 39 (20 DAYS) at 2019-03-01 (404 DAYS)
+
+Initializing report step 40/82 at 2019-03-01 (404 DAYS) line 1180
+Processing keyword WCONHIST at line 1184
+Complete report step 40 (8 DAYS) at 2019-03-09 (424 DAYS)
+
+Initializing report step 41/82 at 2019-03-09 (424 DAYS) line 1192
+Processing keyword WCONHIST at line 1196
+Complete report step 41 (13 DAYS) at 2019-03-22 (432 DAYS)
+
+Initializing report step 42/82 at 2019-03-22 (432 DAYS) line 1204
+Processing keyword WCONHIST at line 1208
+Complete report step 42 (10 DAYS) at 2019-04-01 (445 DAYS)
+
+Initializing report step 43/82 at 2019-04-01 (445 DAYS) line 1216
+Processing keyword WCONHIST at line 1220
+Complete report step 43 (30 DAYS) at 2019-05-01 (455 DAYS)
+
+Initializing report step 44/82 at 2019-05-01 (455 DAYS) line 1228
+Processing keyword WCONHIST at line 1232
+Processing keyword WCONINJH at line 1240
+Complete report step 44 (3 DAYS) at 2019-05-04 (485 DAYS)
+
+Initializing report step 45/82 at 2019-05-04 (485 DAYS) line 1246
+Complete report step 45 (1 DAYS) at 2019-05-05 (488 DAYS)
+
+Initializing report step 46/82 at 2019-05-05 (488 DAYS) line 1250
+Processing keyword WCONHIST at line 1254
+Processing keyword WCONINJH at line 1262
+Complete report step 46 (19 DAYS) at 2019-05-24 (489 DAYS)
+
+Initializing report step 47/82 at 2019-05-24 (489 DAYS) line 1268
+Processing keyword WCONHIST at line 1272
+Complete report step 47 (8 DAYS) at 2019-06-01 (508 DAYS)
+
+Initializing report step 48/82 at 2019-06-01 (508 DAYS) line 1280
+Processing keyword WCONHIST at line 1284
+Complete report step 48 (13 DAYS) at 2019-06-14 (516 DAYS)
+
+Initializing report step 49/82 at 2019-06-14 (516 DAYS) line 1292
+Processing keyword WCONHIST at line 1296
+Complete report step 49 (16 DAYS) at 2019-06-30 (529 DAYS)
+
+Initializing report step 50/82 at 2019-06-30 (529 DAYS) line 1304
+Processing keyword WCONHIST at line 1308
+Processing keyword RPTSCHED at line 1316
+Processing keyword RPTRST at line 1319
+Complete report step 50 (1 DAYS) at 2019-07-01 (545 DAYS)
+
+Initializing report step 51/82 at 2019-07-01 (545 DAYS) line 1322
+Processing keyword WCONHIST at line 1326
+Processing keyword RPTSCHED at line 1334
+Processing keyword RPTRST at line 1337
+Complete report step 51 (26 DAYS) at 2019-07-27 (546 DAYS)
+
+Initializing report step 52/82 at 2019-07-27 (546 DAYS) line 1340
+Processing keyword WCONHIST at line 1344
+Complete report step 52 (5 DAYS) at 2019-08-01 (572 DAYS)
+
+Initializing report step 53/82 at 2019-08-01 (572 DAYS) line 1352
+Processing keyword WCONHIST at line 1356
+Complete report step 53 (15 DAYS) at 2019-08-16 (577 DAYS)
+
+Initializing report step 54/82 at 2019-08-16 (577 DAYS) line 1364
+Processing keyword WCONHIST at line 1368
+Complete report step 54 (8 DAYS) at 2019-08-24 (592 DAYS)
+
+Initializing report step 55/82 at 2019-08-24 (592 DAYS) line 1376
+Processing keyword WCONHIST at line 1380
+Complete report step 55 (8 DAYS) at 2019-09-01 (600 DAYS)
+
+Initializing report step 56/82 at 2019-09-01 (600 DAYS) line 1388
+Processing keyword WCONHIST at line 1392
+Complete report step 56 (5 DAYS) at 2019-09-06 (608 DAYS)
+
+Initializing report step 57/82 at 2019-09-06 (608 DAYS) line 1400
+Processing keyword WCONHIST at line 1404
+Complete report step 57 (25 DAYS) at 2019-10-01 (613 DAYS)
+
+Initializing report step 58/82 at 2019-10-01 (613 DAYS) line 1412
+Processing keyword WCONHIST at line 1416
+Complete report step 58 (18 DAYS) at 2019-10-19 (638 DAYS)
+
+Initializing report step 59/82 at 2019-10-19 (638 DAYS) line 1424
+Processing keyword WCONHIST at line 1428
+Complete report step 59 (13 DAYS) at 2019-11-01 (656 DAYS)
+
+Initializing report step 60/82 at 2019-11-01 (656 DAYS) line 1436
+Processing keyword WCONHIST at line 1440
+Processing keyword WCONINJH at line 1448
+Complete report step 60 (1 DAYS) at 2019-11-02 (669 DAYS)
+
+Initializing report step 61/82 at 2019-11-02 (669 DAYS) line 1454
+Processing keyword WCONHIST at line 1458
+Processing keyword WCONINJH at line 1466
+Complete report step 61 (6 DAYS) at 2019-11-08 (670 DAYS)
+
+Initializing report step 62/82 at 2019-11-08 (670 DAYS) line 1472
+Processing keyword WCONHIST at line 1476
+Complete report step 62 (8 DAYS) at 2019-11-16 (676 DAYS)
+
+Initializing report step 63/82 at 2019-11-16 (676 DAYS) line 1484
+Processing keyword WCONHIST at line 1488
+Complete report step 63 (13 DAYS) at 2019-11-29 (684 DAYS)
+
+Initializing report step 64/82 at 2019-11-29 (684 DAYS) line 1496
+Processing keyword WCONHIST at line 1500
+Complete report step 64 (2 DAYS) at 2019-12-01 (697 DAYS)
+
+Initializing report step 65/82 at 2019-12-01 (697 DAYS) line 1508
+Processing keyword WCONHIST at line 1512
+Complete report step 65 (31 DAYS) at 2020-01-01 (699 DAYS)
+
+Initializing report step 66/82 at 2020-01-01 (699 DAYS) line 1520
+Processing keyword WCONHIST at line 1524
+Complete report step 66 (10 DAYS) at 2020-01-11 (730 DAYS)
+
+Initializing report step 67/82 at 2020-01-11 (730 DAYS) line 1532
+Processing keyword WCONHIST at line 1536
+Complete report step 67 (20 DAYS) at 2020-01-31 (740 DAYS)
+
+Initializing report step 68/82 at 2020-01-31 (740 DAYS) line 1544
+Processing keyword WCONHIST at line 1548
+Complete report step 68 (1 DAYS) at 2020-02-01 (760 DAYS)
+
+Initializing report step 69/82 at 2020-02-01 (760 DAYS) line 1556
+Processing keyword WCONHIST at line 1560
+Complete report step 69 (7 DAYS) at 2020-02-08 (761 DAYS)
+
+Initializing report step 70/82 at 2020-02-08 (761 DAYS) line 1568
+Processing keyword WCONHIST at line 1572
+Complete report step 70 (13 DAYS) at 2020-02-21 (768 DAYS)
+
+Initializing report step 71/82 at 2020-02-21 (768 DAYS) line 1580
+Processing keyword WCONHIST at line 1584
+Complete report step 71 (9 DAYS) at 2020-03-01 (781 DAYS)
+
+Initializing report step 72/82 at 2020-03-01 (781 DAYS) line 1592
+Processing keyword WCONHIST at line 1596
+Complete report step 72 (31 DAYS) at 2020-04-01 (790 DAYS)
+
+Initializing report step 73/82 at 2020-04-01 (790 DAYS) line 1604
+Processing keyword WCONHIST at line 1608
+Complete report step 73 (3 DAYS) at 2020-04-04 (821 DAYS)
+
+Initializing report step 74/82 at 2020-04-04 (821 DAYS) line 1616
+Processing keyword WCONHIST at line 1620
+Complete report step 74 (20 DAYS) at 2020-04-24 (824 DAYS)
+
+Initializing report step 75/82 at 2020-04-24 (824 DAYS) line 1628
+Processing keyword WCONHIST at line 1632
+Complete report step 75 (7 DAYS) at 2020-05-01 (844 DAYS)
+
+Initializing report step 76/82 at 2020-05-01 (844 DAYS) line 1640
+Processing keyword WCONHIST at line 1644
+Processing keyword WCONINJH at line 1652
+Complete report step 76 (1 DAYS) at 2020-05-02 (851 DAYS)
+
+Initializing report step 77/82 at 2020-05-02 (851 DAYS) line 1658
+Complete report step 77 (3 DAYS) at 2020-05-05 (852 DAYS)
+
+Initializing report step 78/82 at 2020-05-05 (852 DAYS) line 1662
+Processing keyword WCONHIST at line 1666
+Processing keyword WCONINJH at line 1674
+Complete report step 78 (10 DAYS) at 2020-05-15 (855 DAYS)
+
+Initializing report step 79/82 at 2020-05-15 (855 DAYS) line 1680
+Processing keyword WCONHIST at line 1684
+Complete report step 79 (17 DAYS) at 2020-06-01 (865 DAYS)
+
+Initializing report step 80/82 at 2020-06-01 (865 DAYS) line 1692
+Processing keyword WCONHIST at line 1696
+Complete report step 80 (26 DAYS) at 2020-06-27 (882 DAYS)
+
+Initializing report step 81/82 at 2020-06-27 (882 DAYS) line 1704
+Processing keyword WCONHIST at line 1708
+Complete report step 81 (3 DAYS) at 2020-06-30 (908 DAYS)
+
+Initializing report step 82/82 at 2020-06-30 (908 DAYS) line 1716
+Processing keyword WCONHIST at line 1720
+Processing keyword RPTSCHED at line 1728
+Processing keyword RPTRST at line 1732
+Complete report step 82 (1 DAYS) at 2020-07-01 (911 DAYS)
+
+
+Warning: The network node keyword GPR is not supported in runs without networks
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 176
+
+Warning: Problem with keyword WOPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 322
+Completion number 2 not defined for well A2
+
+Warning: Problem with keyword WOPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 322
+Completion number 2 not defined for well A4
+
+Warning: Problem with keyword WOPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 322
+Completion number 3 not defined for well A2
+
+Warning: Problem with keyword WWPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 336
+Completion number 2 not defined for well A2
+
+Warning: Problem with keyword WWPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 336
+Completion number 2 not defined for well A4
+
+Warning: Problem with keyword WWPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 336
+Completion number 3 not defined for well A2
+
+Warning: Problem with keyword WGPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 350
+Completion number 2 not defined for well A2
+
+Warning: Problem with keyword WGPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 350
+Completion number 2 not defined for well A4
+
+Warning: Problem with keyword WGPRL
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 350
+Completion number 3 not defined for well A2
+
+Processing grid
+Total number of active cells: 71098 / total pore volume: 543870734 RM3
+
+Property tree for linear solvers:
+{
+    "maxiter": "20",
+    "tol": "0.0050000000000000001",
+    "verbosity": "0",
+    "solver": "bicgstab",
+    "preconditioner": {
+        "type": "cprw",
+        "use_well_weights": "false",
+        "add_wells": "true",
+        "weight_type": "trueimpes",
+        "pre_smooth": "0",
+        "post_smooth": "1",
+        "finesmoother": {
+            "type": "paroverilu0",
+            "relaxation": "1"
+        },
+        "verbosity": "0",
+        "coarsesolver": {
+            "maxiter": "1",
+            "tol": "0.10000000000000001",
+            "solver": "loopsolver",
+            "verbosity": "0",
+            "preconditioner": {
+                "type": "amg",
+                "alpha": "0.33333333333300003",
+                "relaxation": "1",
+                "iterations": "1",
+                "coarsenTarget": "1200",
+                "pre_smooth": "1",
+                "post_smooth": "1",
+                "beta": "0",
+                "smoother": "ilu0",
+                "verbosity": "0",
+                "maxlevel": "15",
+                "skip_isolated": "0",
+                "accumulate": "1",
+                "prolongationdamping": "1",
+                "maxdistance": "2",
+                "maxconnectivity": "15",
+                "maxaggsize": "6",
+                "minaggsize": "4"
+            }
+        }
+    }
+}
+
+
+Warning: Unhandled summary keyword FGSR
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 18
+
+Warning: Unhandled summary keyword FWGR
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 73
+
+Warning: Unhandled summary keyword ROE
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 81
+
+Warning: Unhandled summary keyword GWGR
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 138
+
+Warning: Unhandled summary keyword WOGLR
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/summary/drogon.summary line 272
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,1) -> (34,10,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (21,12,1) -> (21,13,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,1) -> (31,20,9)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,1) -> (31,20,10)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,1) -> (18,22,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,1) -> (18,24,2)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,1) -> (18,24,3)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,1) -> (18,24,4)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,1) -> (18,24,5)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,24,1) -> (28,24,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,25,1) -> (28,25,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,15)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (20,25,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,1) -> (19,26,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,27,1) -> (19,27,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,27,1) -> (19,27,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,1) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,1) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,67,1) -> (37,67,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,2) -> (34,10,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (21,12,2) -> (21,13,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,2) -> (31,20,9)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,2) -> (31,20,10)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,2) -> (18,22,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,24,2) -> (28,24,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,25,2) -> (28,25,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,25,2) -> (34,25,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (20,25,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,26,2) -> (19,26,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,2) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,2) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,67,2) -> (37,67,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,3) -> (34,10,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (21,12,3) -> (21,13,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,3) -> (31,20,9)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,3) -> (31,20,10)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,3) -> (18,22,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,3) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,23,3) -> (34,23,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,24,3) -> (28,24,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,25,3) -> (34,25,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,3) -> (34,26,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,3) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,3) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,38,3) -> (27,38,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,67,3) -> (37,67,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,4) -> (33,9,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,4) -> (34,10,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (30,20,4) -> (31,20,10)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,4) -> (18,22,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,4) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,4) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,23,4) -> (34,23,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,24,4) -> (28,24,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,25,4) -> (34,25,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,4) -> (34,26,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,4) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,4) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,38,4) -> (27,38,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,67,4) -> (37,67,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,5) -> (33,9,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,5) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,22,5) -> (34,22,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,5) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,23,5) -> (34,23,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,5) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,5) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,67,5) -> (37,67,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,6) -> (33,9,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (29,21,6) -> (29,22,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,6) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,22,6) -> (34,22,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,6) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,6) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,6) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,68,6) -> (37,68,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (34,9,7) -> (33,9,23)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (29,21,7) -> (30,21,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (29,21,7) -> (29,22,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,7) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,22,7) -> (34,22,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,7) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,7) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,7) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,49,7) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,50,7) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,68,7) -> (37,68,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (29,21,8) -> (30,21,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,8) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,8) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,25,8) -> (34,25,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,25,8) -> (34,25,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,25,8) -> (34,25,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,8) -> (34,26,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,8) -> (34,26,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,8) -> (34,26,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,27,8) -> (34,27,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,27,8) -> (34,27,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,8) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (18,29,8) -> (18,28,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,49,8) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,50,8) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,68,8) -> (37,68,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (33,6,9) -> (33,5,10)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,9) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,9) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,9) -> (18,24,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,9) -> (34,26,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,26,9) -> (34,26,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,27,9) -> (34,27,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (35,27,9) -> (34,27,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,49,9) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,68,9) -> (37,68,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,10) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,10) -> (18,23,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,10) -> (18,24,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,10) -> (18,28,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,10) -> (18,28,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,10) -> (18,28,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,10) -> (19,27,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (19,28,10) -> (18,28,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,49,10) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (36,68,10) -> (37,68,11)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,13,11) -> (21,13,22)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,13,11) -> (21,13,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,13,11) -> (21,13,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,13,11) -> (21,13,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,13,11) -> (21,13,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (20,13,11) -> (21,13,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,11) -> (18,22,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,11) -> (18,24,12)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,49,11) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (42,49,11) -> (41,49,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,12) -> (18,22,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,12) -> (18,22,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,12) -> (18,22,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,12) -> (18,22,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,12) -> (18,22,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,22,12) -> (18,22,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,14)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,15)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,23,12) -> (18,23,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,12) -> (18,24,13)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,12) -> (18,24,14)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (17,24,12) -> (18,24,15)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (26,49,12) -> (27,49,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,13,14) -> (26,13,15)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (16,31,14) -> (15,31,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,13,15) -> (26,13,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,14,15) -> (26,14,16)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,14,15) -> (26,14,17)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,14,15) -> (26,14,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,14,15) -> (26,14,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,14,15) -> (26,14,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,18)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,21)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (27,15,15) -> (26,15,31)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (16,31,15) -> (15,31,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (16,31,16) -> (15,31,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (25,48,16) -> (25,47,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (25,48,16) -> (26,48,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (25,48,16) -> (25,47,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (25,48,16) -> (26,48,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (25,48,16) -> (25,47,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (25,48,16) -> (26,48,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (16,31,17) -> (15,31,19)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,46,17) -> (23,45,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,46,17) -> (24,46,28)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,46,17) -> (23,45,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,46,17) -> (24,46,29)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,46,17) -> (23,45,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,46,17) -> (24,46,30)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,11,19) -> (23,10,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,11,19) -> (22,11,20)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,11,19) -> (23,10,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,11,19) -> (22,11,27)
+
+Warning: Problem with EDITNNC keyword
+In /scratch/fmu/lilbe/drogon_testdata_99_dates/eclipse/include/edit/drogon.trans line 440 
+No NNC defined for connection (23,11,19) -> (23,10,28)
+
+Warning: Problems with EDITNNC keyword
+A total of 215 connections not defined in grid
+
+Warning: Saturation Function End-point Consistency Problems
+Consistency Problem:
+  Non-negative minimum oil saturation in G/O system
+  SWL + SGU <= 1
+  Total Violations: 21413
+
+Sample Violations
++--------------+---------------+---------------+---------------+
+| Grid Block   | SWL           | SGU           | SWL + SGU     |
++--------------+---------------+---------------+---------------+
+| (13, 29,  4) |  2.034964e-02 |  9.796504e-01 |  1.000000e+00 |
+| (11, 22,  5) |  2.151808e-02 |  9.784819e-01 |  1.000000e+00 |
+| (27, 65,  9) |  3.064198e-02 |  9.693580e-01 |  1.000000e+00 |
+| (13, 64, 29) |  2.796692e-01 |  7.203308e-01 |  1.000000e+00 |
+| (44, 72, 29) |  1.819886e-02 |  9.818012e-01 |  1.000000e+00 |
++--------------+---------------+---------------+---------------+
+
+
+
+LIST OF ALL NON-ZERO THRESHOLD PRESSURES
+----------------------------------------
+
+    FLOW FROM REGION             TO REGION                     THRESHOLD PRESSURE
+    ----------------             ---------                     ------------------
+         1                            2                           0.572402       BARSA
+         1                            3                        8.945167e-10       BARSA
+         1                            4                           1.144806       BARSA
+         1                            5                                  0       BARSA
+         1                            6                                  0       BARSA
+         1                            7                                  0       BARSA
+         2                            3                        3.67748e-07       BARSA
+         2                            4                                  0       BARSA
+         2                            5                         0.00976378       BARSA
+         2                            6                        4.087165e-09       BARSA
+         2                            7                                  0       BARSA
+         3                            4                            0.58667       BARSA
+         3                            5                        4.811957e-10       BARSA
+         3                            6                        0.003514202       BARSA
+         3                            7                        1.079261e-08       BARSA
+         4                            5                                  0       BARSA
+         4                            6                                  0       BARSA
+         4                            7                                  0       BARSA
+         5                            6                        0.003208209       BARSA
+         5                            7                                  0       BARSA
+         6                            7                          0.5262228       BARSA
+    ----------------             ---------                     ------------------
+
+
+
+================ Starting main simulation loop ===============
+
+
+Report step  0/82 at day 0/912, date = 01-Jan-2018
+Using Newton nonlinear solver.
+
+Starting time step 0, stepsize 1 days, at day 0/4, date = 01-Jan-2018
+Restart file written for report step  0/82, date = 01-Jan-2018 00:00:00
+ Newton its= 2, linearizations= 3 (0.3sec), linear its=  1 (0.3sec)
+
+Starting time step 1, stepsize 3 days, at day 1/4, date = 02-Jan-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step  1/82 at day 4/912, date = 05-Jan-2018
+
+Starting time step 0, stepsize 9 days, at day 4/31, date = 05-Jan-2018
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  5 (0.4sec)
+
+Starting time step 1, stepsize 4.1157 days, at day 13/31, date = 14-Jan-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+Starting time step 2, stepsize 6.94215 days, at day 17.1157/31, date = 18-Jan-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  6 (0.3sec)
+
+Starting time step 3, stepsize 6.94215 days, at day 24.0578/31, date = 25-Jan-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its= 10 (0.4sec)
+
+
+Report step  2/82 at day 31/912, date = 01-Feb-2018
+
+Starting time step 0, stepsize 14 days, at day 31/59, date = 01-Feb-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  9 (0.5sec)
+
+Starting time step 1, stepsize 14 days, at day 45/59, date = 15-Feb-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its= 10 (0.5sec)
+
+
+Report step  3/82 at day 59/912, date = 01-Mar-2018
+
+Starting time step 0, stepsize 9 days, at day 59/68, date = 01-Mar-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  9 (0.4sec)
+
+
+Report step  4/82 at day 68/912, date = 10-Mar-2018
+
+Starting time step 0, stepsize 20 days, at day 68/88, date = 10-Mar-2018
+ Newton its= 6, linearizations= 7 (0.3sec), linear its=  6 (0.7sec)
+
+
+Report step  5/82 at day 88/912, date = 30-Mar-2018
+
+Starting time step 0, stepsize 2 days, at day 88/90, date = 30-Mar-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step  6/82 at day 90/912, date = 01-Apr-2018
+
+Starting time step 0, stepsize 6 days, at day 90/117, date = 01-Apr-2018
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  9 (0.5sec)
+
+Starting time step 1, stepsize 13.2 days, at day 96/117, date = 07-Apr-2018
+ Newton its= 5, linearizations= 6 (0.2sec), linear its=  8 (0.5sec)
+
+Starting time step 2, stepsize 7.8 days, at day 109.2/117, date = 20-Apr-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step  7/82 at day 117/912, date = 28-Apr-2018
+
+Starting time step 0, stepsize 3 days, at day 117/120, date = 28-Apr-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step  8/82 at day 120/912, date = 01-May-2018
+
+Starting time step 0, stepsize 7 days, at day 120/127, date = 01-May-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step  9/82 at day 127/912, date = 08-May-2018
+
+Starting time step 0, stepsize 12 days, at day 127/151, date = 08-May-2018
+ Newton its= 7, linearizations= 8 (0.3sec), linear its=  9 (0.6sec)
+
+Starting time step 1, stepsize 12 days, at day 139/151, date = 20-May-2018
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  8 (0.6sec)
+
+
+Report step 10/82 at day 151/912, date = 01-Jun-2018
+
+Starting time step 0, stepsize 1 days, at day 151/152, date = 01-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 11/82 at day 152/912, date = 02-Jun-2018
+
+Starting time step 0, stepsize 3 days, at day 152/158, date = 02-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+Starting time step 1, stepsize 3 days, at day 155/158, date = 05-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 12/82 at day 158/912, date = 08-Jun-2018
+
+Starting time step 0, stepsize 1 days, at day 158/159, date = 08-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 13/82 at day 159/912, date = 09-Jun-2018
+
+Starting time step 0, stepsize 3 days, at day 159/172, date = 09-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+Starting time step 1, stepsize 5 days, at day 162/172, date = 12-Jun-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  5 (0.4sec)
+
+Starting time step 2, stepsize 5 days, at day 167/172, date = 17-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 14/82 at day 172/912, date = 22-Jun-2018
+
+Starting time step 0, stepsize 8 days, at day 172/180, date = 22-Jun-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 15/82 at day 180/912, date = 30-Jun-2018
+
+Starting time step 0, stepsize 1 days, at day 180/181, date = 30-Jun-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  1 (0.1sec)
+
+
+Report step 16/82 at day 181/912, date = 01-Jul-2018
+
+Starting time step 0, stepsize 2 days, at day 181/183, date = 01-Jul-2018
+Restart file written for report step 16/82, date = 01-Jul-2018 00:00:00
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 17/82 at day 183/912, date = 03-Jul-2018
+
+Starting time step 0, stepsize 6 days, at day 183/193, date = 03-Jul-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.3sec)
+
+Starting time step 1, stepsize 4 days, at day 189/193, date = 09-Jul-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  4 (0.2sec)
+
+
+Report step 18/82 at day 193/912, date = 13-Jul-2018
+
+Starting time step 0, stepsize 12 days, at day 193/212, date = 13-Jul-2018
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  6 (0.5sec)
+
+Starting time step 1, stepsize 7 days, at day 205/212, date = 25-Jul-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 19/82 at day 212/912, date = 01-Aug-2018
+
+Starting time step 0, stepsize 12 days, at day 212/236, date = 01-Aug-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  5 (0.4sec)
+
+Starting time step 1, stepsize 12 days, at day 224/236, date = 13-Aug-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 20/82 at day 236/912, date = 25-Aug-2018
+
+Starting time step 0, stepsize 7 days, at day 236/243, date = 25-Aug-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  5 (0.3sec)
+
+
+Report step 21/82 at day 243/912, date = 01-Sep-2018
+
+Starting time step 0, stepsize 11 days, at day 243/254, date = 01-Sep-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  6 (0.4sec)
+
+
+Report step 22/82 at day 254/912, date = 12-Sep-2018
+
+Starting time step 0, stepsize 2 days, at day 254/256, date = 12-Sep-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 23/82 at day 256/912, date = 14-Sep-2018
+
+Starting time step 0, stepsize 4 days, at day 256/264, date = 14-Sep-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  2 (0.2sec)
+
+Starting time step 1, stepsize 4 days, at day 260/264, date = 18-Sep-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.3sec)
+
+
+Report step 24/82 at day 264/912, date = 22-Sep-2018
+
+Starting time step 0, stepsize 9 days, at day 264/273, date = 22-Sep-2018
+    Oscillating behavior detected: Relaxation set to 0.900000
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  9 (0.5sec)
+
+
+Report step 25/82 at day 273/912, date = 01-Oct-2018
+
+Starting time step 0, stepsize 4 days, at day 273/277, date = 01-Oct-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  7 (0.3sec)
+
+
+Report step 26/82 at day 277/912, date = 05-Oct-2018
+
+Starting time step 0, stepsize 12 days, at day 277/304, date = 05-Oct-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its= 13 (0.6sec)
+
+Starting time step 1, stepsize 15 days, at day 289/304, date = 17-Oct-2018
+ Newton its= 5, linearizations= 6 (0.3sec), linear its= 12 (0.6sec)
+
+
+Report step 27/82 at day 304/912, date = 01-Nov-2018
+
+Starting time step 0, stepsize 6 days, at day 304/310, date = 01-Nov-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  9 (0.5sec)
+
+
+Report step 28/82 at day 310/912, date = 07-Nov-2018
+
+Starting time step 0, stepsize 10 days, at day 310/320, date = 07-Nov-2018
+ Newton its= 4, linearizations= 5 (0.2sec), linear its= 12 (0.6sec)
+
+
+Report step 29/82 at day 320/912, date = 17-Nov-2018
+
+Starting time step 0, stepsize 14 days, at day 320/334, date = 17-Nov-2018
+ Newton its= 9, linearizations=10 (0.4sec), linear its=  7 (0.9sec)
+
+
+Report step 30/82 at day 334/912, date = 01-Dec-2018
+
+Starting time step 0, stepsize 6 days, at day 334/340, date = 01-Dec-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+
+Report step 31/82 at day 340/912, date = 07-Dec-2018
+
+Starting time step 0, stepsize 8 days, at day 340/348, date = 07-Dec-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 32/82 at day 348/912, date = 15-Dec-2018
+
+Starting time step 0, stepsize 2 days, at day 348/350, date = 15-Dec-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 33/82 at day 350/912, date = 17-Dec-2018
+
+Starting time step 0, stepsize 1 days, at day 350/351, date = 17-Dec-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 34/82 at day 351/912, date = 18-Dec-2018
+
+Starting time step 0, stepsize 3 days, at day 351/361, date = 18-Dec-2018
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+Starting time step 1, stepsize 7 days, at day 354/361, date = 21-Dec-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+
+Report step 35/82 at day 361/912, date = 28-Dec-2018
+
+Starting time step 0, stepsize 4 days, at day 361/365, date = 28-Dec-2018
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+
+Report step 36/82 at day 365/912, date = 01-Jan-2019
+
+Starting time step 0, stepsize 12 days, at day 365/396, date = 01-Jan-2019
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  3 (0.4sec)
+
+Starting time step 1, stepsize 19 days, at day 377/396, date = 13-Jan-2019
+ Newton its= 6, linearizations= 7 (0.3sec), linear its=  4 (0.6sec)
+
+
+Report step 37/82 at day 396/912, date = 01-Feb-2019
+
+Starting time step 0, stepsize 8 days, at day 396/404, date = 01-Feb-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 38/82 at day 404/912, date = 09-Feb-2019
+
+Starting time step 0, stepsize 20 days, at day 404/424, date = 09-Feb-2019
+ Newton its= 6, linearizations= 7 (0.3sec), linear its=  6 (0.5sec)
+
+
+Report step 39/82 at day 424/912, date = 01-Mar-2019
+
+Starting time step 0, stepsize 8 days, at day 424/432, date = 01-Mar-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+
+Report step 40/82 at day 432/912, date = 09-Mar-2019
+
+Starting time step 0, stepsize 13 days, at day 432/445, date = 09-Mar-2019
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  3 (0.3sec)
+
+
+Report step 41/82 at day 445/912, date = 22-Mar-2019
+
+Starting time step 0, stepsize 10 days, at day 445/455, date = 22-Mar-2019
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  6 (0.4sec)
+
+
+Report step 42/82 at day 455/912, date = 01-Apr-2019
+
+Starting time step 0, stepsize 15 days, at day 455/485, date = 01-Apr-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  5 (0.3sec)
+
+Starting time step 1, stepsize 15 days, at day 470/485, date = 16-Apr-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 43/82 at day 485/912, date = 01-May-2019
+
+Starting time step 0, stepsize 3 days, at day 485/488, date = 01-May-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.4sec)
+
+
+Report step 44/82 at day 488/912, date = 04-May-2019
+
+Starting time step 0, stepsize 1 days, at day 488/489, date = 04-May-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 45/82 at day 489/912, date = 05-May-2019
+
+Starting time step 0, stepsize 3 days, at day 489/508, date = 05-May-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+Starting time step 1, stepsize 9 days, at day 492/508, date = 08-May-2019
+    Oscillating behavior detected: Relaxation set to 0.900000
+ Newton its=11, linearizations=12 (0.5sec), linear its= 17 (1.1sec)
+
+Starting time step 2, stepsize 3.5 days, at day 501/508, date = 17-May-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+Starting time step 3, stepsize 3.5 days, at day 504.5/508, date = 20-May-2019
+ Newton its= 2, linearizations= 3 (0.2sec), linear its=  3 (0.2sec)
+
+
+Report step 46/82 at day 508/912, date = 24-May-2019
+
+Starting time step 0, stepsize 8 days, at day 508/516, date = 24-May-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  4 (0.2sec)
+
+
+Report step 47/82 at day 516/912, date = 01-Jun-2019
+
+Starting time step 0, stepsize 13 days, at day 516/529, date = 01-Jun-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  5 (0.3sec)
+
+
+Report step 48/82 at day 529/912, date = 14-Jun-2019
+
+Starting time step 0, stepsize 16 days, at day 529/545, date = 14-Jun-2019
+ Newton its= 7, linearizations= 8 (0.4sec), linear its=  7 (0.8sec)
+
+
+Report step 49/82 at day 545/912, date = 30-Jun-2019
+
+Starting time step 0, stepsize 1 days, at day 545/546, date = 30-Jun-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  1 (0.2sec)
+
+                              **************************************************************************
+  WELLS    AT       546  DAYS *Drogon synthetic reservoir model                                          *
+  REPORT   50    01 Jul 2019  *                                             Flow  version 2025.10-pre  *
+                              **************************************************************************
+
+
+======================================================= PRODUCTION REPORT =======================================================
+ :  WELL  : LOCATION  :CTRL:    OIL    :   WATER   :    GAS    :   FLUID   :   WATER   : GAS/OIL  :  WAT/GAS   : BHP OR : THP OR :
+ :  NAME  :  (I,J,K)  :MODE:   RATE    :   RATE    :   RATE    : RES.VOL.  :    CUT    :  RATIO   :   RATIO    :CON.PR. :BLK.PR. :
+ :        :           :    :  SCM/DAY  :  SCM/DAY  :  RCM/DAY  :  SCM/SCM  :  SCM/SCM  : SCM/SCM  :  SCM/SCM   : BARSA  : BARSA  :
+=================================================================================================================================
+:FIELD   :           :    :    10718.8:     1983.5:  1562193.3:    17878.0:      0.156:    145.74:      0.0013:        :        :
+:RFT     :           :    :       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:        :        :
+:OP      :           :    :    10718.8:     1983.5:  1562193.3:    17878.0:      0.156:    145.74:      0.0013:        :        :
+:WI      :           :    :       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:        :        :
+:R_A2    : 22, 30    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A3    : 28, 41    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A4    : 30, 52    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A5    : 31, 20    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A6    : 17, 42    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:A1      : 32, 33    :RESV:     4061.4:      248.8:   580049.4:     6178.4:      0.058:    142.82:      0.0004:   199.1:   111.6:
+:A2      : 22, 30    :RESV:     1027.5:     1167.6:   214534.3:     3028.6:      0.532:    208.79:      0.0054:   135.9:    58.9:
+:A3      : 28, 41    :RESV:     2049.6:      387.5:   286021.9:     3363.8:      0.159:    139.55:      0.0014:   198.5:   111.9:
+:A4      : 31, 52    :RESV:     3580.3:      179.5:   481587.8:     5307.2:      0.048:    134.51:      0.0004:   240.2:   151.2:
+ :--------:-----------:----:-----------:-----------:-----------:-----------:-----------:----------:------------:--------:--------:
+
+============================================= INJECTION REPORT ==============================================
+ :  WELL  : LOCATION  : CTRL : CTRL : CTRL :    OIL    :   WATER   :    GAS    :   FLUID   : BHP OR : THP OR :
+ :  NAME  :  (I,J,K)  : MODE : MODE : MODE :   RATE    :   RATE    :   RATE    : RES.VOL.  :CON.PR. :BLK.PR. :
+ :        :           : OIL  : WAT  : GAS  :  SCM/DAY  :  SCM/DAY  :  SCM/DAY  :  RCM/DAY  : BARSA  : BARSA  :
+=============================================================================================================
+:FIELD   :           :      :      :      :        0.0:    16000.0:        0.0:    16577.5:        :        :
+:RFT     :           :      :      :      :        0.0:        0.0:        0.0:        0.0:        :        :
+:OP      :           :      :      :      :        0.0:        0.0:        0.0:        0.0:        :        :
+:WI      :           :      :      :      :        0.0:    16000.0:        0.0:    16577.5:        :        :
+:A5      : 31, 20    :      :  WRAT:      :        0.0:     8000.0:        0.0:     8288.8:   357.7:     0.0:
+:A6      : 17, 42    :      :  WRAT:      :        0.0:     8000.0:        0.0:     8288.8:   361.8:     0.0:
+ :--------:-----------:------:------:------:-----------:-----------:-----------:-----------:--------:--------:
+
+============================================== CUMULATIVE PRODUCTION/INJECTION TOTALS ==============================================
+ :  WELL  : LOCATION  :  WELL  :CTRL:    OIL    :   WATER   :    GAS    :   Prod    :    OIL    :   WATER   :    GAS    :    INJ    :
+ :  NAME  :  (I,J,K)  :  TYPE  :MODE:   PROD    :   PROD    :   PROD    : RES.VOL.  :    INJ    :    INJ    :    INJ    : RES.VOL.  :
+ :        :           :        :    :   MSCM    :   MSCM    :   MMSCM   :   MRCM    :   MSCM    :   MSCM    :   MMSCM   :   MRCM    :
+====================================================================================================================================
+:FIELD   :           :        :    :     5213.6:      356.2:      735.8:     7940.5:        0.0:     5096.0:        0.0:     5278.7:
+:RFT     :           :        :    :        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:OP      :           :        :    :     5213.6:      356.2:      735.8:     7940.5:        0.0:        0.0:        0.0:        0.0:
+:WI      :           :        :    :        0.0:        0.0:        0.0:        0.0:        0.0:     5096.0:        0.0:     5278.7:
+:R_A2    : 22, 30    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A3    : 28, 41    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A4    : 30, 52    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A5    : 31, 20    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A6    : 17, 42    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:A1      : 32, 33    :    PROD:RESV:     2136.8:       24.8:      295.9:     3096.7:        0.0:        0.0:        0.0:        0.0:
+:A2      : 22, 30    :    PROD:RESV:      935.9:      258.2:      144.9:     1684.1:        0.0:        0.0:        0.0:        0.0:
+:A5      : 31, 20    :     INJ:WRAT:        0.0:        0.0:        0.0:        0.0:        0.0:     3320.0:        0.0:     3438.7:
+:A3      : 28, 41    :    PROD:RESV:     1061.1:       62.2:      148.5:     1601.3:        0.0:        0.0:        0.0:        0.0:
+:A4      : 31, 52    :    PROD:RESV:     1079.8:       11.0:      146.5:     1558.4:        0.0:        0.0:        0.0:        0.0:
+:A6      : 17, 42    :     INJ:WRAT:        0.0:        0.0:        0.0:        0.0:        0.0:     1776.0:        0.0:     1840.0:
+ :--------:-----------:--------:----:-----------:-----------:-----------:-----------:-----------:-----------:-----------:-----------:
+
+================================================ MULTI-SEGMENT WELL REPORT =================================================
+ :   WELL   : BRN : SEG :    OIL    :   WATER   :    GAS    : MIXTURE :HOLDUP FRACTION :PRESSURE :   PRESSURE HEAD LOSSES   :
+ :   NAME   : NO. : NO. :   FLOW    :   FLOW    :   FLOW    :VELOCITY : OIL  WAT  GAS  :         :H-STATIC:FRICTION:ACCELRTN:
+ :          :     :     :  SM3/DAY  :  SM3/DAY  :  SM3/DAY  :  M/SEC  :                :  BARSA  :  BARS  :  BARS  :  BARS  :
+============================================================================================================================
+: A4       :  1  :  1  :     3580.3:      179.5:   481587.8:    3.520: 0.95 0.03 0.02 :    240.2:   0.000:   0.000:   0.000:
+:          :     :  2  :     3580.3:      179.5:   481587.8:    3.520: 0.95 0.03 0.02 :    240.4:   0.030:   0.166:   0.000:
+:          :     :  3  :     3528.4:      179.5:   474825.5:    3.470: 0.95 0.04 0.02 :    240.6:   0.024:   0.143:   0.000:
+:          :     :  4  :     3427.7:      179.5:   461689.8:    3.375: 0.94 0.04 0.02 :    240.8:   0.031:   0.189:   0.000:
+:          :     :  5  :     3321.7:      179.5:   447861.4:    3.276: 0.94 0.04 0.02 :    241.0:   0.031:   0.197:   0.000:
+:          :     :  6  :     3210.6:      179.5:   433350.0:    3.171: 0.94 0.04 0.02 :    241.3:   0.031:   0.205:   0.000:
+:          :     :  7  :     3095.3:      179.5:   418284.3:    3.062: 0.94 0.04 0.02 :    241.5:   0.032:   0.212:   0.000:
+:          :     :  8  :     2979.9:      179.5:   403205.5:    2.954: 0.94 0.04 0.02 :    241.6:   0.021:   0.125:   0.000:
+:          :     :  9  :     2970.9:      179.5:   402025.2:    2.944: 0.94 0.04 0.02 :    241.9:   0.043:   0.241:   0.000:
+:          :     : 10  :     2712.5:      179.5:   368101.4:    2.701: 0.94 0.05 0.02 :    242.2:   0.063:   0.249:   0.000:
+:          :     : 11  :     2628.3:      179.5:   357058.6:    2.622: 0.93 0.05 0.02 :    242.5:   0.065:   0.197:   0.000:
+:          :     : 12  :     2450.8:      179.4:   333796.6:    2.455: 0.93 0.05 0.02 :    242.9:   0.104:   0.240:   0.000:
+:          :     : 13  :     2280.0:      179.4:   311334.1:    2.294: 0.93 0.05 0.02 :    243.2:   0.123:   0.247:   0.000:
+:          :     : 14  :     2072.2:      179.4:   284033.4:    2.099: 0.92 0.06 0.02 :    243.4:   0.061:   0.124:   0.000:
+:          :     : 15  :     2063.0:      179.4:   282821.4:    2.090: 0.92 0.06 0.02 :    243.4:   0.010:   0.025:   0.000:
+:          :     : 16  :     2030.5:      179.4:   278558.3:    2.059: 0.92 0.06 0.02 :    243.7:   0.060:   0.236:   0.000:
+:          :     : 17  :     1722.6:      179.4:   238075.2:    1.771: 0.91 0.07 0.02 :    243.9:   0.037:   0.173:   0.000:
+:          :     : 18  :     1722.6:      179.4:   238074.9:    1.771: 0.91 0.07 0.02 :    244.0:   0.009:   0.034:   0.000:
+:          :     : 19  :     1668.3:      179.4:   230894.1:    1.720: 0.91 0.07 0.02 :    244.1:   0.020:   0.062:   0.000:
+:          :     : 20  :     1648.8:      179.3:   228321.3:    1.701: 0.90 0.07 0.02 :    244.2:   0.021:   0.059:   0.000:
+:          :     : 21  :     1622.0:      179.2:   224784.9:    1.676: 0.90 0.07 0.02 :    244.3:   0.044:   0.106:   0.000:
+:          :     : 22  :     1608.5:      179.1:   223005.3:    1.662: 0.90 0.07 0.02 :    244.7:   0.126:   0.240:   0.000:
+:          :     : 23  :      764.4:      166.7:   106292.2:    0.846: 0.84 0.13 0.02 :    244.8:   0.127:   0.046:   0.000:
+:          :     : 24  :      561.3:      166.7:    78223.6:    0.652: 0.80 0.17 0.02 :    244.9:   0.029:   0.005:   0.000:
+:          :     : 25  :      455.9:      156.2:    63560.4:    0.544: 0.78 0.20 0.02 :    245.1:   0.179:   0.020:   0.000:
+:          :     : 26  :      375.8:      130.3:    52447.3:    0.449: 0.78 0.20 0.02 :    245.5:   0.357:   0.019:   0.000:
+:          :     : 27  :      369.4:       52.8:    51541.1:    0.390: 0.88 0.09 0.02 :    245.7:   0.216:   0.007:   0.000:
+:          :     : 28  :        0.0:        0.0:        0.0:    0.000: 0.56 0.44 0.00 :    245.8:   0.096:   0.000:   0.000::          :  2  : 29  :       51.9:        0.0:     6762.3:    0.048: 1.00 0.00 0.00 :    242.4:   0.000:   1.969:   0.000::          :  3  : 30  :      100.7:        0.0:    13135.6:    0.094: 1.00 0.00 0.00 :    242.4:   0.000:   1.834:   0.000::          :  4  : 31  :      106.0:        0.0:    13828.4:    0.099: 1.00 0.00 0.00 :    242.5:   0.000:   1.689:   0.000::          :  5  : 32  :      111.1:        0.0:    14511.4:    0.104: 1.00 0.00 0.00 :    242.5:   0.000:   1.513:   0.000::          :  6  : 33  :      115.3:        0.0:    15065.6:    0.108: 1.00 0.00 0.00 :    242.6:   0.000:   1.319:   0.000::          :  7  : 34  :      115.3:        0.0:    15078.7:    0.108: 1.00 0.00 0.00 :    242.6:   0.000:   1.069:   0.000::          :  8  : 35  :        9.0:        0.0:     1180.3:    0.008: 1.00 0.00 0.00 :    241.8:   0.000:   0.160:   0.000::          :  9  : 36  :      258.5:        0.0:    33923.8:    0.242: 1.00 0.00 0.00 :    243.1:   0.000:   1.187:   0.000::          : 10  : 37  :       84.2:        0.0:    11042.6:    0.079: 1.00 0.00 0.00 :    243.3:   0.000:   1.076:   0.000::          : 11  : 38  :      177.4:        0.0:    23261.9:    0.166: 1.00 0.00 0.00 :    243.4:   0.000:   0.912:   0.000::          : 12  : 39  :      170.9:        0.0:    22462.4:    0.160: 1.00 0.00 0.00 :    243.7:   0.000:   0.847:   0.000::          : 13  : 40  :      207.8:        0.0:    27300.5:    0.194: 1.00 0.00 0.00 :    243.9:   0.000:   0.688:   0.000::          : 14  : 41  :        9.2:        0.0:     1211.9:    0.009: 1.00 0.00 0.00 :    244.1:   0.000:   0.686:   0.000::          : 15  : 42  :       32.4:        0.0:     4263.1:    0.030: 1.00 0.00 0.00 :    244.1:   0.000:   0.618:   0.000::          : 16  : 43  :      307.9:        0.0:    40482.9:    0.288: 1.00 0.00 0.00 :    244.1:   0.000:   0.362:   0.000::          : 17  : 44  :       54.3:        0.0:     7180.8:    0.051: 1.00 0.00 0.00 :    244.7:   0.000:   0.729:   0.000::          : 18  : 45  :       19.5:        0.1:     2572.7:    0.018: 0.99 0.00 0.00 :    244.1:   0.000:   0.023:   0.000::          : 19  : 46  :       26.8:        0.0:     3536.2:    0.025: 1.00 0.00 0.00 :    244.4:   0.000:   0.220:   0.000::          : 20  : 47  :       13.5:        0.1:     1779.4:    0.013: 0.99 0.01 0.00 :    244.3:   0.000:   0.002:   0.000::          : 21  : 48  :      844.2:       12.5:   116712.7:    0.813: 0.97 0.01 0.02 :    247.6:   0.000:   2.898:   0.000::          : 22  : 49  :      203.0:        0.0:    28068.0:    0.192: 1.00 0.00 0.00 :    254.4:   0.000:   9.587:   0.000::          : 23  : 50  :      105.5:       10.4:    14663.1:    0.107: 0.93 0.07 0.01 :    252.3:   0.000:   7.443:   0.000::          : 24  : 51  :       80.0:       26.0:    11112.2:    0.094: 0.79 0.19 0.02 :    245.1:   0.000:   0.038:   0.000::          : 25  : 52  :        6.4:       77.5:      904.9:    0.059: 0.10 0.89 0.00 :    245.5:   0.000:   0.075:   0.000::          : 26  : 53  :      369.4:       52.8:    51540.5:    0.387: 0.90 0.09 0.01 :    253.0:   0.000:   7.352:   0.000:
+ :----------:-----:-----:-----------:-----------:-----------:---------:----------------:---------:--------:--------:--------:
+
+
+Report step 50/82 at day 546/912, date = 01-Jul-2019
+
+Starting time step 0, stepsize 3 days, at day 546/572, date = 01-Jul-2019
+Restart file written for report step 50/82, date = 01-Jul-2019 00:00:00
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+Starting time step 1, stepsize 9 days, at day 549/572, date = 04-Jul-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+Starting time step 2, stepsize 14 days, at day 558/572, date = 13-Jul-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 51/82 at day 572/912, date = 27-Jul-2019
+
+Starting time step 0, stepsize 5 days, at day 572/577, date = 27-Jul-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 52/82 at day 577/912, date = 01-Aug-2019
+
+Starting time step 0, stepsize 15 days, at day 577/592, date = 01-Aug-2019
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  6 (0.5sec)
+
+
+Report step 53/82 at day 592/912, date = 16-Aug-2019
+
+Starting time step 0, stepsize 8 days, at day 592/600, date = 16-Aug-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  2 (0.2sec)
+
+
+Report step 54/82 at day 600/912, date = 24-Aug-2019
+
+Starting time step 0, stepsize 8 days, at day 600/608, date = 24-Aug-2019
+ Newton its= 4, linearizations= 5 (0.3sec), linear its=  2 (0.3sec)
+
+
+Report step 55/82 at day 608/912, date = 01-Sep-2019
+
+Starting time step 0, stepsize 5 days, at day 608/613, date = 01-Sep-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  1 (0.2sec)
+
+
+Report step 56/82 at day 613/912, date = 06-Sep-2019
+
+Starting time step 0, stepsize 15 days, at day 613/638, date = 06-Sep-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.4sec)
+
+Starting time step 1, stepsize 10 days, at day 628/638, date = 21-Sep-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  5 (0.3sec)
+
+
+Report step 57/82 at day 638/912, date = 01-Oct-2019
+
+Starting time step 0, stepsize 18 days, at day 638/656, date = 01-Oct-2019
+ Newton its= 4, linearizations= 5 (0.2sec), linear its=  4 (0.4sec)
+
+
+Report step 58/82 at day 656/912, date = 19-Oct-2019
+
+Starting time step 0, stepsize 13 days, at day 656/669, date = 19-Oct-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 59/82 at day 669/912, date = 01-Nov-2019
+
+Starting time step 0, stepsize 1 days, at day 669/670, date = 01-Nov-2019
+ Newton its= 2, linearizations= 3 (0.2sec), linear its=  2 (0.2sec)
+
+
+Report step 60/82 at day 670/912, date = 02-Nov-2019
+
+Starting time step 0, stepsize 3 days, at day 670/676, date = 02-Nov-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+Starting time step 1, stepsize 3 days, at day 673/676, date = 05-Nov-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 61/82 at day 676/912, date = 08-Nov-2019
+
+Starting time step 0, stepsize 8 days, at day 676/684, date = 08-Nov-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  4 (0.3sec)
+
+
+Report step 62/82 at day 684/912, date = 16-Nov-2019
+
+Starting time step 0, stepsize 13 days, at day 684/697, date = 16-Nov-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  5 (0.3sec)
+
+
+Report step 63/82 at day 697/912, date = 29-Nov-2019
+
+Starting time step 0, stepsize 2 days, at day 697/699, date = 29-Nov-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 64/82 at day 699/912, date = 01-Dec-2019
+
+Starting time step 0, stepsize 6 days, at day 699/730, date = 01-Dec-2019
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+Starting time step 1, stepsize 12.5 days, at day 705/730, date = 07-Dec-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+Starting time step 2, stepsize 12.5 days, at day 717.5/730, date = 19-Dec-2019
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.5sec)
+
+
+Report step 65/82 at day 730/912, date = 01-Jan-2020
+
+Starting time step 0, stepsize 10 days, at day 730/740, date = 01-Jan-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 66/82 at day 740/912, date = 11-Jan-2020
+
+Starting time step 0, stepsize 20 days, at day 740/760, date = 11-Jan-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  4 (0.3sec)
+
+
+Report step 67/82 at day 760/912, date = 31-Jan-2020
+
+Starting time step 0, stepsize 1 days, at day 760/761, date = 31-Jan-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 68/82 at day 761/912, date = 01-Feb-2020
+
+Starting time step 0, stepsize 3 days, at day 761/768, date = 01-Feb-2020
+ Newton its= 2, linearizations= 3 (0.2sec), linear its=  2 (0.2sec)
+
+Starting time step 1, stepsize 4 days, at day 764/768, date = 04-Feb-2020
+ Newton its= 2, linearizations= 3 (0.3sec), linear its=  1 (0.2sec)
+
+
+Report step 69/82 at day 768/912, date = 08-Feb-2020
+
+Starting time step 0, stepsize 6.5 days, at day 768/781, date = 08-Feb-2020
+ Newton its= 2, linearizations= 3 (0.2sec), linear its=  4 (0.2sec)
+
+Starting time step 1, stepsize 6.5 days, at day 774.5/781, date = 14-Feb-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 70/82 at day 781/912, date = 21-Feb-2020
+
+Starting time step 0, stepsize 9 days, at day 781/790, date = 21-Feb-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 71/82 at day 790/912, date = 01-Mar-2020
+
+Starting time step 0, stepsize 15.5 days, at day 790/821, date = 01-Mar-2020
+ Newton its= 2, linearizations= 3 (0.2sec), linear its=  3 (0.2sec)
+
+Starting time step 1, stepsize 15.5 days, at day 805.5/821, date = 16-Mar-2020
+ Newton its= 4, linearizations= 5 (0.3sec), linear its=  4 (0.4sec)
+
+
+Report step 72/82 at day 821/912, date = 01-Apr-2020
+
+Starting time step 0, stepsize 3 days, at day 821/824, date = 01-Apr-2020
+ Newton its= 2, linearizations= 3 (0.2sec), linear its=  2 (0.2sec)
+
+
+Report step 73/82 at day 824/912, date = 04-Apr-2020
+
+Starting time step 0, stepsize 9 days, at day 824/844, date = 04-Apr-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.4sec)
+
+Starting time step 1, stepsize 11 days, at day 833/844, date = 13-Apr-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  1 (0.3sec)
+
+
+Report step 74/82 at day 844/912, date = 24-Apr-2020
+
+Starting time step 0, stepsize 7 days, at day 844/851, date = 24-Apr-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  1 (0.3sec)
+
+
+Report step 75/82 at day 851/912, date = 01-May-2020
+
+Starting time step 0, stepsize 1 days, at day 851/852, date = 01-May-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  1 (0.2sec)
+
+
+Report step 76/82 at day 852/912, date = 02-May-2020
+
+Starting time step 0, stepsize 3 days, at day 852/855, date = 02-May-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+
+Report step 77/82 at day 855/912, date = 05-May-2020
+
+Starting time step 0, stepsize 5 days, at day 855/865, date = 05-May-2020
+ Newton its= 5, linearizations= 6 (0.3sec), linear its=  8 (0.6sec)
+
+Starting time step 1, stepsize 5 days, at day 860/865, date = 10-May-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  3 (0.2sec)
+
+
+Report step 78/82 at day 865/912, date = 15-May-2020
+
+Starting time step 0, stepsize 8.5 days, at day 865/882, date = 15-May-2020
+ Newton its= 3, linearizations= 4 (0.2sec), linear its=  3 (0.3sec)
+
+Starting time step 1, stepsize 8.5 days, at day 873.5/882, date = 23-May-2020
+ Newton its= 3, linearizations= 4 (0.3sec), linear its=  4 (0.3sec)
+
+
+Report step 79/82 at day 882/912, date = 01-Jun-2020
+
+Starting time step 0, stepsize 26 days, at day 882/908, date = 01-Jun-2020
+ Newton its= 7, linearizations= 8 (0.4sec), linear its=  4 (0.7sec)
+
+
+Report step 80/82 at day 908/912, date = 27-Jun-2020
+
+Starting time step 0, stepsize 3 days, at day 908/911, date = 27-Jun-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  2 (0.2sec)
+
+
+Report step 81/82 at day 911/912, date = 30-Jun-2020
+
+Starting time step 0, stepsize 1 days, at day 911/912, date = 30-Jun-2020
+ Newton its= 2, linearizations= 3 (0.1sec), linear its=  1 (0.2sec)
+
+                              **************************************************************************
+  WELLS    AT       912  DAYS *Drogon synthetic reservoir model                                          *
+  REPORT   82    01 Jul 2020  *                                             Flow  version 2025.10-pre  *
+                              **************************************************************************
+
+
+======================================================= PRODUCTION REPORT =======================================================
+ :  WELL  : LOCATION  :CTRL:    OIL    :   WATER   :    GAS    :   FLUID   :   WATER   : GAS/OIL  :  WAT/GAS   : BHP OR : THP OR :
+ :  NAME  :  (I,J,K)  :MODE:   RATE    :   RATE    :   RATE    : RES.VOL.  :    CUT    :  RATIO   :   RATIO    :CON.PR. :BLK.PR. :
+ :        :           :    :  SCM/DAY  :  SCM/DAY  :  RCM/DAY  :  SCM/SCM  :  SCM/SCM  : SCM/SCM  :  SCM/SCM   : BARSA  : BARSA  :
+=================================================================================================================================
+:FIELD   :           :    :     7205.0:     4787.9:  1100542.4:    15857.6:      0.399:    152.75:      0.0044:        :        :
+:RFT     :           :    :       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:        :        :
+:OP      :           :    :     7205.0:     4787.9:  1100542.4:    15857.6:      0.399:    152.75:      0.0044:        :        :
+:WI      :           :    :       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:        :        :
+:R_A2    : 22, 30    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A3    : 28, 41    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A4    : 30, 52    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A5    : 31, 20    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:R_A6    : 17, 42    :ORAT:       -0.0:       -0.0:       -0.0:       -0.0:      0.000:      0.00:      0.0000:     0.0:     0.0:
+:A1      : 32, 33    :RESV:     2267.8:     1331.8:   346253.9:     4801.6:      0.370:    152.68:      0.0038:   170.0:    81.7:
+:A2      : 22, 30    :RESV:      739.3:     1626.4:   179120.0:     3116.7:      0.687:    242.27:      0.0091:   153.3:    65.1:
+:A3      : 28, 41    :RESV:     1667.8:      626.1:   235093.6:     3071.8:      0.273:    140.96:      0.0027:   197.3:   107.5:
+:A4      : 31, 52    :RESV:     2530.0:     1203.6:   340074.8:     4867.5:      0.322:    134.42:      0.0035:   242.4:   144.9:
+ :--------:-----------:----:-----------:-----------:-----------:-----------:-----------:----------:------------:--------:--------:
+
+============================================= INJECTION REPORT ==============================================
+ :  WELL  : LOCATION  : CTRL : CTRL : CTRL :    OIL    :   WATER   :    GAS    :   FLUID   : BHP OR : THP OR :
+ :  NAME  :  (I,J,K)  : MODE : MODE : MODE :   RATE    :   RATE    :   RATE    : RES.VOL.  :CON.PR. :BLK.PR. :
+ :        :           : OIL  : WAT  : GAS  :  SCM/DAY  :  SCM/DAY  :  SCM/DAY  :  RCM/DAY  : BARSA  : BARSA  :
+=============================================================================================================
+:FIELD   :           :      :      :      :        0.0:    16000.0:        0.0:    16579.1:        :        :
+:RFT     :           :      :      :      :        0.0:        0.0:        0.0:        0.0:        :        :
+:OP      :           :      :      :      :        0.0:        0.0:        0.0:        0.0:        :        :
+:WI      :           :      :      :      :        0.0:    16000.0:        0.0:    16579.1:        :        :
+:A5      : 31, 20    :      :  WRAT:      :        0.0:     8000.0:        0.0:     8289.5:   356.3:     0.0:
+:A6      : 17, 42    :      :  WRAT:      :        0.0:     8000.0:        0.0:     8289.5:   365.0:     0.0:
+ :--------:-----------:------:------:------:-----------:-----------:-----------:-----------:--------:--------:
+
+============================================== CUMULATIVE PRODUCTION/INJECTION TOTALS ==============================================
+ :  WELL  : LOCATION  :  WELL  :CTRL:    OIL    :   WATER   :    GAS    :   Prod    :    OIL    :   WATER   :    GAS    :    INJ    :
+ :  NAME  :  (I,J,K)  :  TYPE  :MODE:   PROD    :   PROD    :   PROD    : RES.VOL.  :    INJ    :    INJ    :    INJ    : RES.VOL.  :
+ :        :           :        :    :   MSCM    :   MSCM    :   MMSCM   :   MRCM    :   MSCM    :   MSCM    :   MMSCM   :   MRCM    :
+====================================================================================================================================
+:FIELD   :           :        :    :     8425.7:     1591.7:     1231.0:    14098.7:        0.0:    10872.0:        0.0:    11263.7:
+:RFT     :           :        :    :        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:OP      :           :        :    :     8425.7:     1591.7:     1231.0:    14098.7:        0.0:        0.0:        0.0:        0.0:
+:WI      :           :        :    :        0.0:        0.0:        0.0:        0.0:        0.0:    10872.0:        0.0:    11263.7:
+:R_A2    : 22, 30    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A3    : 28, 41    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A4    : 30, 52    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A5    : 31, 20    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:R_A6    : 17, 42    :    PROD:ORAT:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:        0.0:
+:A1      : 32, 33    :    PROD:RESV:     3316.7:      301.1:      488.2:     5220.2:        0.0:        0.0:        0.0:        0.0:
+:A2      : 22, 30    :    PROD:RESV:     1242.5:      747.0:      212.6:     2752.5:        0.0:        0.0:        0.0:        0.0:
+:A5      : 31, 20    :     INJ:WRAT:        0.0:        0.0:        0.0:        0.0:        0.0:     6208.0:        0.0:     6431.2:
+:A3      : 28, 41    :    PROD:RESV:     1729.4:      247.2:      241.6:     2758.9:        0.0:        0.0:        0.0:        0.0:
+:A4      : 31, 52    :    PROD:RESV:     2137.1:      296.4:      288.6:     3367.0:        0.0:        0.0:        0.0:        0.0:
+:A6      : 17, 42    :     INJ:WRAT:        0.0:        0.0:        0.0:        0.0:        0.0:     4664.0:        0.0:     4832.5:
+ :--------:-----------:--------:----:-----------:-----------:-----------:-----------:-----------:-----------:-----------:-----------:
+
+================================================ MULTI-SEGMENT WELL REPORT =================================================
+ :   WELL   : BRN : SEG :    OIL    :   WATER   :    GAS    : MIXTURE :HOLDUP FRACTION :PRESSURE :   PRESSURE HEAD LOSSES   :
+ :   NAME   : NO. : NO. :   FLOW    :   FLOW    :   FLOW    :VELOCITY : OIL  WAT  GAS  :         :H-STATIC:FRICTION:ACCELRTN:
+ :          :     :     :  SM3/DAY  :  SM3/DAY  :  SM3/DAY  :  M/SEC  :                :  BARSA  :  BARS  :  BARS  :  BARS  :
+============================================================================================================================
+: A4       :  1  :  1  :     2530.0:     1203.6:   340074.8:    3.211: 0.73 0.25 0.01 :    242.4:   0.000:   0.000:   0.000:
+:          :     :  2  :     2530.0:     1203.6:   340074.8:    3.211: 0.73 0.25 0.01 :    242.6:   0.032:   0.151:   0.000:
+:          :     :  3  :     2479.5:     1203.6:   333429.8:    3.164: 0.73 0.26 0.01 :    242.8:   0.027:   0.130:   0.000:
+:          :     :  4  :     2381.4:     1203.6:   320506.0:    3.071: 0.72 0.27 0.01 :    243.0:   0.035:   0.173:   0.000:
+:          :     :  5  :     2278.0:     1203.6:   306883.7:    2.974: 0.71 0.27 0.01 :    243.2:   0.034:   0.179:   0.000:
+:          :     :  6  :     2169.5:     1203.6:   292571.5:    2.872: 0.71 0.28 0.01 :    243.4:   0.034:   0.186:   0.000:
+:          :     :  7  :     2056.6:     1203.5:   277677.7:    2.765: 0.69 0.30 0.01 :    243.6:   0.036:   0.192:   0.000:
+:          :     :  8  :     1943.5:     1203.5:   262760.0:    2.659: 0.68 0.31 0.01 :    243.8:   0.023:   0.113:   0.000:
+:          :     :  9  :     1934.7:     1203.5:   261599.5:    2.650: 0.68 0.31 0.01 :    244.0:   0.048:   0.218:   0.000:
+:          :     : 10  :     1674.8:     1203.4:   227150.8:    2.406: 0.65 0.34 0.01 :    244.3:   0.071:   0.223:   0.000:
+:          :     : 11  :     1592.0:     1203.4:   216188.4:    2.328: 0.64 0.35 0.01 :    244.6:   0.074:   0.175:   0.000:
+:          :     : 12  :     1416.4:     1203.3:   192951.0:    2.162: 0.61 0.38 0.01 :    244.9:   0.119:   0.213:   0.000:
+:          :     : 13  :     1247.4:     1203.3:   170525.7:    2.003: 0.58 0.41 0.01 :    245.3:   0.142:   0.217:   0.000:
+:          :     : 14  :     1039.4:     1203.2:   142927.7:    1.808: 0.54 0.45 0.01 :    245.5:   0.072:   0.108:   0.000:
+:          :     : 15  :     1030.0:     1203.2:   141692.6:    1.799: 0.54 0.45 0.01 :    245.5:   0.012:   0.021:   0.000:
+:          :     : 16  :      998.1:     1203.2:   137462.5:    1.769: 0.53 0.46 0.01 :    245.8:   0.070:   0.204:   0.000:
+:          :     : 17  :      709.9:     1203.0:    99219.0:    1.498: 0.44 0.55 0.01 :    246.0:   0.045:   0.149:   0.000:
+:          :     : 18  :      709.9:     1203.0:    99218.8:    1.498: 0.44 0.55 0.01 :    246.0:   0.011:   0.029:   0.000:
+:          :     : 19  :      668.8:     1200.7:    93728.3:    1.458: 0.43 0.56 0.01 :    246.1:   0.024:   0.054:   0.000:
+:          :     : 20  :      655.9:     1199.9:    92016.3:    1.446: 0.42 0.56 0.01 :    246.1:   0.026:   0.051:   0.000:
+:          :     : 21  :      630.7:     1199.9:    88659.2:    1.422: 0.41 0.57 0.01 :    246.3:   0.053:   0.092:   0.000:
+:          :     : 22  :      619.7:     1199.7:    87193.4:    1.411: 0.41 0.58 0.01 :    246.7:   0.153:   0.210:   0.000:
+:          :     : 23  :      278.0:      890.3:    39169.6:    0.872: 0.30 0.69 0.01 :    246.9:   0.157:   0.060:   0.000:
+:          :     : 24  :      100.0:      861.3:    14203.6:    0.681: 0.14 0.86 0.00 :    246.9:   0.037:   0.007:   0.000:
+:          :     : 25  :       81.2:      750.5:    11538.1:    0.588: 0.13 0.87 0.00 :    247.2:   0.228:   0.029:   0.000:
+:          :     : 26  :       61.9:      599.6:     8816.9:    0.467: 0.12 0.87 0.00 :    247.7:   0.455:   0.026:   0.000:
+:          :     : 27  :       61.0:      440.4:     8686.2:    0.358: 0.16 0.84 0.01 :    247.9:   0.285:   0.008:   0.000:
+:          :     : 28  :        0.0:        0.0:        0.0:    0.000: 0.56 0.44 0.00 :    248.0:   0.096:   0.000:   0.000::          :  2  : 29  :       50.5:        0.0:     6645.0:    0.047: 1.00 0.00 0.00 :    244.5:   0.000:   1.871:   0.000::          :  3  : 30  :       98.1:        0.0:    12923.7:    0.092: 1.00 0.00 0.00 :    244.5:   0.000:   1.747:   0.000::          :  4  : 31  :      103.4:        0.0:    13622.3:    0.097: 1.00 0.00 0.00 :    244.6:   0.000:   1.613:   0.000::          :  5  : 32  :      108.6:        0.0:    14312.2:    0.102: 1.00 0.00 0.00 :    244.6:   0.000:   1.449:   0.000::          :  6  : 33  :      112.9:        0.0:    14893.8:    0.106: 1.00 0.00 0.00 :    244.7:   0.000:   1.269:   0.000::          :  7  : 34  :      113.0:        0.0:    14917.6:    0.106: 1.00 0.00 0.00 :    244.7:   0.000:   1.030:   0.000::          :  8  : 35  :        8.8:        0.0:     1160.4:    0.008: 1.00 0.00 0.00 :    243.9:   0.000:   0.152:   0.000::          :  9  : 36  :      259.9:        0.1:    34448.7:    0.244: 1.00 0.00 0.00 :    245.2:   0.000:   1.205:   0.000::          : 10  : 37  :       82.8:        0.0:    10962.3:    0.078: 1.00 0.00 0.00 :    245.4:   0.000:   1.045:   0.000::          : 11  : 38  :      175.6:        0.0:    23237.4:    0.164: 1.00 0.00 0.00 :    245.5:   0.000:   0.896:   0.000::          : 12  : 39  :      169.0:        0.1:    22425.2:    0.158: 1.00 0.00 0.00 :    245.7:   0.000:   0.832:   0.000::          : 13  : 40  :      208.1:        0.1:    27597.9:    0.195: 1.00 0.00 0.00 :    246.0:   0.000:   0.692:   0.000::          : 14  : 41  :        9.3:        0.0:     1235.0:    0.009: 1.00 0.00 0.00 :    246.2:   0.000:   0.701:   0.000::          : 15  : 42  :       31.9:        0.0:     4230.0:    0.030: 1.00 0.00 0.00 :    246.1:   0.000:   0.600:   0.000::          : 16  : 43  :      288.3:        0.2:    38243.4:    0.270: 1.00 0.00 0.00 :    246.1:   0.000:   0.319:   0.000::          : 17  : 44  :       41.1:        2.3:     5490.5:    0.040: 0.96 0.04 0.00 :    246.5:   0.000:   0.461:   0.000::          : 18  : 45  :       12.8:        0.8:     1711.9:    0.013: 0.95 0.04 0.00 :    246.1:   0.000:   0.011:   0.000::          : 19  : 46  :       25.2:        0.1:     3357.0:    0.024: 1.00 0.00 0.00 :    246.3:   0.000:   0.196:   0.000::          : 20  : 47  :       11.0:        0.2:     1465.8:    0.010: 0.99 0.01 0.00 :    246.3:   0.000:   0.001:   0.000::          : 21  : 48  :      341.7:      309.4:    48023.5:    0.538: 0.60 0.39 0.01 :    248.1:   0.000:   1.474:   0.000::          : 22  : 49  :      177.9:       29.0:    24966.0:    0.189: 0.89 0.10 0.00 :    256.5:   0.000:   9.648:   0.000::          : 23  : 50  :       18.8:      110.8:     2665.4:    0.093: 0.19 0.81 0.00 :    254.3:   0.000:   7.350:   0.000::          : 24  : 51  :       19.3:      150.9:     2721.2:    0.121: 0.15 0.85 0.00 :    247.3:   0.000:   0.079:   0.000::          : 25  : 52  :        0.9:      159.2:      130.7:    0.109: 0.01 0.99 0.00 :    247.9:   0.000:   0.266:   0.000::          : 26  : 53  :       61.0:      440.4:     8686.2:    0.357: 0.16 0.84 0.00 :    256.1:   0.000:   8.179:   0.000:
+ :----------:-----:-----:-----------:-----------:-----------:---------:----------------:---------:--------:--------:--------:
+
+Restart file written for report step 82/82, date = 01-Jul-2020 00:00:00
+
+
+================    End of simulation     ===============
+
+Number of MPI processes:         1
+Threads per MPI process:         2
+Setup time:                      1.76 s
+  Deck input:                    0.66 s
+Number of timesteps:           116
+Simulation time:               101.95 s
+  Assembly time:                22.21 s (Wasted: 0.0 s; 0.0%)
+    Well assembly:               0.63 s (Wasted: 0.0 s; 0.0%)
+  Linear solve time:            37.38 s (Wasted: 0.0 s; 0.0%)
+    Linear setup:               19.74 s (Wasted: 0.0 s; 0.0%)
+  Props/update time:            17.85 s (Wasted: 0.0 s; 0.0%)
+  Pre/post step:                23.53 s (Wasted: 0.0 s; 0.0%)
+  Output write time:             0.37 s
+Overall Linearizations:        483      (Wasted:     0; 0.0%)
+Overall Newton Iterations:     367      (Wasted:     0; 0.0%)
+Overall Linear Iterations:     481      (Wasted:     0; 0.0%)
+
+
+
+Error summary:
+Warnings          247
+Info              867
+Errors            0
+Bugs              0
+Debug             0
+Problems          0
+
