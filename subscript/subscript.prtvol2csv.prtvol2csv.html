@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.prtvol2csv.prtvol2csv &mdash; subscript 1.15.0 documentation</title>
+  <title>subscript.prtvol2csv.prtvol2csv &mdash; subscript 1.15.1.dev1+g3317bd1e5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=70d5d4a5"></script>
+      <script src="../_static/documentation_options.js?v=fc67757a"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -178,7 +178,7 @@ defaults and raw description formatter</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">currently_in_place_from_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">currently_in_place_from_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.currently_in_place_from_prt" title="Link to this definition"></a></dt>
 <dd><p>Extracts currently-in-place volumes from a PRT file</p>
 <p>This function uses res2df.fipreports, and slices its
 output for the purpose here.</p>
@@ -187,15 +187,29 @@ output for the purpose here.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>prt_file</strong> (<em>str</em>) – Path to a PRT to parse</p></li>
 <li><p><strong>fipname</strong> (<em>str</em>) – FIPNUM, FIPZON or similar.</p></li>
-<li><p><strong>date</strong> (<em>str</em>) – If None, first date will be used. If not None,
-it should be an ISO-formatted date string to extract</p></li>
+<li><p><strong>date_str</strong> (<em>str</em>) – If None or “first”, the first date will be used. If not None,
+“first” or “last”, it should be an ISO-formatted date string
+to extract (YYYY-MM-DD).</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataframe with in-place volumes.
+np.ndarray: Array of available dates with BALANCE reports.
+str: The selected date as a string.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.prtvol2csv.prtvol2csv.date_string_format_check">
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">date_string_format_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date_str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.date_string_format_check" title="Link to this definition"></a></dt>
+<dd><p>Check if a date string is in ISO 8601 format ‘YYYY-MM-DD’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -215,13 +229,31 @@ FOO.PRT</p>
 not be located and the input is returned.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>basefile</strong> (<em>str</em>) – Filename, or “search string”</p>
+<dd class="field-odd"><p><strong>basefile</strong> (<em>str</em>) – Filename, or “search string”.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A possibly existing file that ends in PRT</p>
+<dd class="field-even"><p>A possibly existing file that ends in PRT.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.prtvol2csv.prtvol2csv.find_report_date_in_prt">
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">find_report_date_in_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">find_initial</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.find_report_date_in_prt" title="Link to this definition"></a></dt>
+<dd><p>For a line in PRT file, search for a pattern to find a report date.
+Return the corresponding date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>line</strong> (<em>str</em>) – Line from the PRT file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The report date wanted.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>datetime.date</p>
 </dd>
 </dl>
 </dd></dl>
@@ -274,15 +306,28 @@ explicitly. If directories are not in place, a FutureWarning is emitted.</p>
 <dd><p>Concatenate two dataframes (with common index) horizontally,
 and if fipname=”FIPNUM”, add REGION and ZONE parameter.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>simvolumes_df</strong> (<em>pd.DataFrame</em>) – In-place volumes from PRT (BALANCE report).</p></li>
+<li><p><strong>resvolumes_df</strong> (<em>pd.DataFrame</em>) – Reservoir volumes from PRT (report).</p></li>
+<li><p><strong>fipmapper</strong> (<em>class</em>) – Mapping of regions/zones to FIPNUM (defaults to None).</p></li>
+<li><p><strong>fipname</strong> (<em>str</em>) – Name of FIP-parameter (defaults to FIPNUM)</p></li>
+<li><p><strong>rename2fipnum</strong> (<em>bool</em>) – Option to rename the FIP-vector to FIPNUM
+(for Webviz on-premise, not needed for Webviz-Sumo). Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The merged dataframe with standard volumes and reservoir volumes.</p>
+</dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt">
-<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">reservoir_volumes_from_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.prtvol2csv.prtvol2csv.</span></span><span class="sig-name descname"><span class="pre">reservoir_volumes_from_prt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prt_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dates_bal_report</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fipname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'FIPNUM'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.prtvol2csv.prtvol2csv.reservoir_volumes_from_prt" title="Link to this definition"></a></dt>
 <dd><p>Extracts numbers from the table “RESERVOIR VOLUMES” in an Eclipse PRT
 file, example table is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                                    <span class="o">===================================</span>
@@ -302,14 +347,20 @@ file, example table is:</p>
 <span class="o">===========================================================================================</span>
 </pre></div>
 </div>
+<p>If no BALANCE report, there will be no RESERVOIR VOLUME report in the PRT file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>prt_file</strong> (<em>str</em>) – PRT filename</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prt_file</strong> (<em>str</em>) – PRT filename.</p></li>
+<li><p><strong>dates_bal_report</strong> (<em>np.ndarray</em>) – Available dates with BALANCE report in the PRT file.</p></li>
+<li><p><strong>fipname</strong> (<em>str</em>) – Name of FIP-parameter, defaults to FIPNUM.</p></li>
+<li><p><strong>date_str</strong> (<em>str</em>) – The requested date to extract volume report from PRT file from.</p></li>
+</ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">DataFrame</span></code></span></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The dataframe with reservoir volumes.</p>
 </dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
