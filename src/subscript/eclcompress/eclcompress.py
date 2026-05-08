@@ -31,6 +31,9 @@ DEFAULT_FILES_TO_COMPRESS = [
     "eclipse/include/grid/*",
     "eclipse/include/regions/*",
     "eclipse/include/props/*",
+    "flow/include/grid/*",
+    "flow/include/regions/*",
+    "flow/include/props/*",
 ]
 
 EPILOG = """
@@ -394,8 +397,8 @@ def get_parser() -> argparse.ArgumentParser:
         help=(
             "Path to a text file containing one wildcard filepath per line, "
             "specifying which files to apply compression to. "
-            "Defaults to everything below eclipse/include, but only if "
-            "no files are specified on the command line."
+            "Defaults to everything below eclipse/include and flow/include, but only "
+            "if no files are specified on the command line."
         ),
     )
     parser.add_argument(
