@@ -11,6 +11,7 @@ import opm.io
 import pytest
 
 from subscript.eclcompress.eclcompress import (
+    DEFAULT_FILES_TO_COMPRESS,
     compress_multiple_keywordsets,
     eclcompress,
     file_is_binary,
@@ -440,8 +441,9 @@ def test_binary_file(tmp_path, monkeypatch):
     Path(binfile).write_bytes(os.urandom(100))
     bytes_before = Path(binfile).read_bytes()
     proc_result = subprocess.run(
-        "eclcompress --verbose  " + binfile, check=True, shell=True, capture_output=True
+        ["eclcompress", "--verbose", binfile], check=True, capture_output=True
     )
+
     proc_output = proc_result.stdout.decode() + proc_result.stderr.decode()
     bytes_after = Path(binfile).read_bytes()
     assert bytes_before == bytes_after
@@ -469,22 +471,30 @@ def test_utf8(tmp_path, monkeypatch):
     assert "4*1" in Path(nastyfile).read_text(encoding="utf8")
 
 
-@pytest.fixture(name="eclincludes")
-def fixture_eclincludes(tmp_path, monkeypatch):
+@pytest.fixture(name="include_files")
+def fixture_include_files(tmp_path, monkeypatch):
     """Provide a directory structure with grdecl files in it"""
     monkeypatch.chdir(tmp_path)
-    os.makedirs("eclipse/include/props")
-    os.makedirs("eclipse/include/regions")
+    for simulator in ["eclipse", "flow"]:
+        for subdir in ["props", "regions", "grid"]:
+            os.makedirs(f"{simulator}/include/{subdir}")
+
     Path("eclipse/include/props/perm.grdecl").write_text(
         "PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
     )
     Path("eclipse/include/regions/fipnum.grdecl").write_text(
         "FIPNUM\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
     )
+    Path("flow/include/props/perm.grdecl").write_text(
+        "PERMX\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
+    )
+    Path("flow/include/regions/fipnum.grdecl").write_text(
+        "FIPNUM\n0 0 0 0 0 0 0 0 0 0 0 0 0\n/", encoding="utf8"
+    )
     yield
 
 
-@pytest.mark.usefixtures("eclincludes")
+@pytest.mark.usefixtures("include_files")
 def test_default_pattern():
     """Check how eclcompress behaves as a command line
     tool in a standardized directory structure"""
@@ -500,7 +510,29 @@ def test_default_pattern():
     )
 
 
-@pytest.mark.usefixtures("eclincludes", "twofiles")
+def test_default_files_include_flow():
+    """Verify that flow/include paths are in the default file list"""
+
+    assert "flow/include/grid/*" in DEFAULT_FILES_TO_COMPRESS
+    assert "flow/include/regions/*" in DEFAULT_FILES_TO_COMPRESS
+    assert "flow/include/props/*" in DEFAULT_FILES_TO_COMPRESS
+
+
+@pytest.mark.usefixtures("include_files")
+def test_default_pattern_flow():
+    """Check that flow/include files are compressed with default patterns"""
+    main_eclcompress(None, None)
+
+    flow_perm = Path("flow/include/props/perm.grdecl").read_text(encoding="utf8")
+    assert "File compressed with eclcompress" in flow_perm
+    assert "13*0" in flow_perm
+
+    flow_fipnum = Path("flow/include/regions/fipnum.grdecl").read_text(encoding="utf8")
+    assert "File compressed with eclcompress" in flow_fipnum
+    assert "13*0" in flow_fipnum
+
+
+@pytest.mark.usefixtures("include_files", "twofiles")
 def test_files_override_default_wildcards():
     """Default wildcardlist will not be used if explicit files are provided"""
     assert "0 0 0 0" in Path("perm.grdecl").read_text(encoding="utf8")
