@@ -1,13 +1,21 @@
 field_stat:
     nreal: 10
     iterations: [0, 3]
+    use_population_stdev: False
+    relative_path_ertbox_grids: "../../rms/output/aps"
+    ertbox_default: "ERTBOX"
+    ertbox_per_zone:
+        "A": ertbox_A
+        "B": ertbox_B
+        "C": ertbox_C
+    zone_code_names: 
+        1: "A"
+        2: "B"
+        3: "C"
+
     geogrid_fields:
-        geogrid_name: "my_geogrid"
+        geogrid_name: "geogrid"
         use_zones: ["A", "B", "C"]
-        zone_code_names:
-            1: "A"
-            2: "B"
-            3: "C"
 
         facies_per_zone:
             "A":
@@ -37,7 +45,11 @@ field_stat:
             "A": ["P1", "P2"]
             "B": ["P1"]
             "C": ["P2"]
-        #ertbox_size: [5, 6, 5]
 
-    use_population_stdev: False
+    temporary_ertbox_fields:
+        initial_field_relative_path: "rms/output/aps"
+        parameter_name_per_zone: 
+            "A": [ A_GRF1, A_GRF2 ]
+            "B": [ B_GRF2 ]
+
 
