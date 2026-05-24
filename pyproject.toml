@@ -216,6 +216,7 @@ ignore = [
     "RUF067",  # non empty init module
     "RUF069",  # unreliable-floating-point-equality
     "PLC1901",  # compare-to-empty-string
+    "PLW0717", # too-many-statements-in-try-clause ()
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
