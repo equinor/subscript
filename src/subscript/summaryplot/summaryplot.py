@@ -663,20 +663,28 @@ def main() -> None:
         filedesc = sys.stdin.fileno()
         old_settings = termios.tcgetattr(filedesc)
         print("Menu: 'q' = quit, 'r' = reload plots")
-
-        # change terminal settings to allow keyboard input without user pressing 'enter'
-        tty.setcbreak(sys.stdin.fileno())
-
-        with contextlib.suppress(KeyboardInterrupt):
-            plotprocess = interactive_menu(
-                plotprocess, summaryplotter, datafiles, vectors, args, parameterfiles
-            )
-
-        # We have messed up the terminal, remember to fix:
-        termios.tcsetattr(filedesc, termios.TCSADRAIN, old_settings)
-
+        try:
+            # change terminal settings to allow keyboard input without user pressing
+            # 'enter'
+            tty.setcbreak(filedesc)
+            with contextlib.suppress(KeyboardInterrupt):
+                plotprocess = interactive_menu(
+                    plotprocess,
+                    summaryplotter,
+                    datafiles,
+                    vectors,
+                    args,
+                    parameterfiles,
+                )
+        finally:
+            # Always restore terminal settings, even if an error occurs
+            termios.tcsetattr(filedesc, termios.TCSADRAIN, old_settings)
         # Close plot windows (running in a subprocess)
         plotprocess.terminate()
+        plotprocess.join(timeout=5)
+        if plotprocess.is_alive():
+            plotprocess.kill()
+            plotprocess.join()
 
 
 def interactive_menu(
