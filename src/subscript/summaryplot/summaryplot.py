@@ -690,8 +690,14 @@ def interactive_menu(
     char = ""
     while char != "q" and plotprocess.is_alive():
         char = sys.stdin.read(1)
+        if char == "":
+            break
         if char == "r":
             plotprocess.terminate()
+            plotprocess.join(timeout=5)
+            if plotprocess.is_alive():
+                plotprocess.kill()
+                plotprocess.join()
             plotprocess = Process(
                 target=summaryplotter,
                 kwargs={
