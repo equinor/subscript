@@ -189,62 +189,55 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
     return not failed
 
 
-def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
-    """Detects the observation file format for a given filename. This
-    is done by attempting to parse its content and giving up on
-    exceptions.
-
-    NB: In case of ERT file formats, the include statements are
-    interpreted relative to current working directory. Thus it
-    is recommended to reparse with correct cwd after detecting ERT file
-    format. The correct cwd for include-statement is the path of the
-    ERT config file, which is outside the context of fmuobs.
-
-    Args:
-        filename
-
-    Returns:
-        tuple: First element is a string in [resinsight, csv, yaml, ert], second
-        element is a dataframe.
-    """
+def _try_parse_resinsight(filename: str) -> tuple[str, pd.DataFrame] | None:
     try:
         dframe = pd.read_csv(filename, sep=";")
-        if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
-            set(dframe.columns)
-        ) and not dframe.empty:
-            logger.info("Parsed %s as a ResInsight observation file", filename)
-            return ("resinsight", resinsight_df2df(dframe))
     except ValueError:
-        pass
+        return None
+    if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
+        set(dframe.columns)
+    ) and not dframe.empty:
+        logger.info("Parsed %s as a ResInsight observation file", filename)
+        return ("resinsight", resinsight_df2df(dframe))
+    return None
 
+
+def _try_parse_csv(filename: str) -> tuple[str, pd.DataFrame] | None:
     try:
         dframe = pd.read_csv(filename, sep=",")
-        if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
-            logger.info(
-                "Parsed %s as a CSV (internal dataframe format for ertobs) file",
-                filename,
-            )
-            if "DATE" in dframe:
-                dframe["DATE"] = pd.to_datetime(dframe["DATE"])
-            return ("csv", dframe)
     except ValueError:
-        pass
+        return None
+    if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
+        logger.info(
+            "Parsed %s as a CSV (internal dataframe format for ertobs) file",
+            filename,
+        )
+        if "DATE" in dframe:
+            dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+        return ("csv", dframe)
+    return None
 
+
+def _try_parse_yaml(filename: str) -> tuple[str, pd.DataFrame] | None:
     try:
         obsdict = yaml.safe_load(Path(filename).read_text(encoding="utf8"))
-        if isinstance(obsdict, dict) and (
-            obsdict.get("smry", None) or obsdict.get("rft", None)
-        ):
-            logger.info("Parsed %s as a YAML file with observations", filename)
-            return ("yaml", obsdict2df(obsdict))
     except yaml.scanner.ScannerError as exception:
-        # This occurs if there are tabs in the file, which is not
-        # allowed in a YAML file (but it can be present in ERT observation files)
+        # This occurs if there are tabs in the file, which is not allowed in a YAML file
+        # (but it can be present in ERT observation files)
         logger.debug("ScannerError while attempting yaml-parsing")
         logger.debug(str(exception))
+        return None
     except ValueError:
-        pass
+        return None
+    if isinstance(obsdict, dict) and (
+        obsdict.get("smry", None) or obsdict.get("rft", None)
+    ):
+        logger.info("Parsed %s as a YAML file with observations", filename)
+        return ("yaml", obsdict2df(obsdict))
+    return None
 
+
+def _try_parse_ert(filename: str) -> tuple[str, pd.DataFrame] | None:
     try:
         with open(filename, encoding="utf8") as f_handle:
             # This function does not have information on include file paths.
@@ -259,15 +252,45 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
                     filename,
                 )
                 return ("ert", pd.DataFrame())
-        if (
-            {"CLASS", "LABEL"}.issubset(dframe.columns)
-            and not dframe.empty
-            and set(dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys()))
-        ):
-            logger.info("Parsed %s as an ERT observation file", filename)
-            return ("ert", dframe)
     except ValueError:
-        pass
+        return None
+    if (
+        {"CLASS", "LABEL"}.issubset(dframe.columns)
+        and not dframe.empty
+        and set(dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys()))
+    ):
+        logger.info("Parsed %s as an ERT observation file", filename)
+        return ("ert", dframe)
+    return None
+
+
+def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
+    """Detects the observation file format for a given filename. This is done by
+    attempting to parse its content and giving up on exceptions.
+
+    NB: In case of ERT file formats, the include statements are interpreted relative to
+    current working directory. Thus it is recommended to reparse with correct cwd after
+    detecting ERT file format. The correct cwd for include-statement is the path of the
+    ERT config file, which is outside the context of fmuobs.
+
+    Args:
+        filename
+
+    Returns:
+        tuple: First element is a string in [resinsight, csv, yaml, ert], second
+        element is a dataframe.
+
+    """
+
+    for parser in [
+        _try_parse_resinsight,
+        _try_parse_csv,
+        _try_parse_yaml,
+        _try_parse_ert,
+    ]:
+        result = parser(filename)
+        if result is not None:
+            return result
 
     logger.error(
         "Unable to parse %s as any supported observation file format", filename
