@@ -19,7 +19,6 @@
 
 
 import argparse
-import contextlib
 import difflib
 import logging
 import os
@@ -667,24 +666,58 @@ def main() -> None:
             # change terminal settings to allow keyboard input without user pressing
             # 'enter'
             tty.setcbreak(filedesc)
-            with contextlib.suppress(KeyboardInterrupt):
-                plotprocess = interactive_menu(
-                    plotprocess,
-                    summaryplotter,
-                    datafiles,
-                    vectors,
-                    args,
-                    parameterfiles,
-                )
+            plotprocess = interactive_menu(
+                plotprocess,
+                summaryplotter,
+                datafiles,
+                vectors,
+                args,
+                parameterfiles,
+            )
         finally:
             # Always restore terminal settings, even if an error occurs
             termios.tcsetattr(filedesc, termios.TCSADRAIN, old_settings)
         # Close plot windows (running in a subprocess)
-        plotprocess.terminate()
-        plotprocess.join(timeout=5)
-        if plotprocess.is_alive():
-            plotprocess.kill()
-            plotprocess.join()
+        stop_process(plotprocess)
+
+
+def stop_process(process: Process) -> None:
+    process.terminate()
+    process.join(timeout=5)
+    if process.is_alive():
+        process.kill()
+        process.join()
+
+
+def restart_plotprocess(
+    plotprocess: Process,
+    summaryplotter: Callable[..., Any],
+    datafiles: list[str],
+    vectors: list[str],
+    args: argparse.Namespace,
+    parameterfiles: list[str],
+) -> Process:
+    stop_process(plotprocess)
+    new_process = Process(
+        target=summaryplotter,
+        kwargs={
+            "summaryfiles": None,  # forces reload
+            "datafiles": datafiles,
+            "vectors": vectors,
+            "colourby": args.colourby,
+            "maxlabels": args.maxlabels,
+            "logcolourby": args.logcolourby,
+            "parameterfiles": parameterfiles,
+            "histvectors": args.hist,
+            "normalize": args.normalize,
+            "singleplot": args.singleplot,
+            "nolegend": args.nolegend,
+            "dumpimages": args.dumpimages,
+            "ensemblemode": args.ensemblemode,
+        },
+    )
+    new_process.start()
+    return new_process
 
 
 def interactive_menu(
@@ -697,34 +730,23 @@ def interactive_menu(
 ) -> Process:
     char = ""
     while char != "q" and plotprocess.is_alive():
-        char = sys.stdin.read(1)
+        try:
+            char = sys.stdin.read(1)
+        except KeyboardInterrupt:
+            break
+
         if char == "":
             break
         if char == "r":
-            plotprocess.terminate()
-            plotprocess.join(timeout=5)
-            if plotprocess.is_alive():
-                plotprocess.kill()
-                plotprocess.join()
-            plotprocess = Process(
-                target=summaryplotter,
-                kwargs={
-                    "summaryfiles": None,  # forces reload
-                    "datafiles": datafiles,
-                    "vectors": vectors,
-                    "colourby": args.colourby,
-                    "maxlabels": args.maxlabels,
-                    "logcolourby": args.logcolourby,
-                    "parameterfiles": parameterfiles,
-                    "histvectors": args.hist,
-                    "normalize": args.normalize,
-                    "singleplot": args.singleplot,
-                    "nolegend": args.nolegend,
-                    "dumpimages": args.dumpimages,
-                    "ensemblemode": args.ensemblemode,
-                },
+            plotprocess = restart_plotprocess(
+                plotprocess,
+                summaryplotter,
+                datafiles,
+                vectors,
+                args,
+                parameterfiles,
             )
-            plotprocess.start()
+
     return plotprocess
 
 
