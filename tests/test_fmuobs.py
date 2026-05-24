@@ -248,6 +248,56 @@ def test_roundtrip_resinsight(filename, readonly_testdata_dir):
     )
 
 
+def test_rft_observation_warning(readonly_testdata_dir, caplog):
+    """Test that RFT_OBSERVATION (unsupported class) is silently ignored with
+    a warning instead of raising an error."""
+    import logging
+
+    filename = "drogon_wbhp_rft_wct_gor_tracer_plt_local.obs"
+    with caplog.at_level(logging.WARNING):
+        format_, dframe = autoparse_file(filename)
+
+    assert format_ == "ert"
+    assert not dframe.empty
+    assert "RFT_OBSERVATION" in dframe["CLASS"].values
+
+    # No error should have been logged about unsupported classes
+    assert (
+        "error" not in caplog.text.lower() or "unsupported" not in caplog.text.lower()
+    )
+    # A warning should be emitted from validate_internal_dframe via main(),
+    # but autoparse_file does not call validate; check the class is parseable.
+    assert "SUMMARY_OBSERVATION" in dframe["CLASS"].values
+
+
+def test_rft_observation_warning_via_main(tmp_path, mocker, caplog, monkeypatch):
+    """Test that running main() on a file with RFT_OBSERVATION emits a warning
+    (not an error) and produces valid output for supported classes."""
+    import logging
+
+    monkeypatch.chdir(tmp_path)
+    mocker.patch(
+        "sys.argv",
+        [
+            "fmuobs",
+            "--includedir",
+            str(TESTDATA_DIR),
+            "--csv",
+            "output.csv",
+            str(TESTDATA_DIR / "drogon_wbhp_rft_wct_gor_tracer_plt_local.obs"),
+        ],
+    )
+    with caplog.at_level(logging.WARNING):
+        main()
+
+    assert Path("output.csv").exists()
+    # Should warn about unsupported class, not error
+    assert "RFT_OBSERVATION" in caplog.text
+    assert "Unsupported observation classes (will be ignored)" in caplog.text
+    # Dataframe is still valid (no error logged about invalidity)
+    assert "Observation dataframe is invalid" not in caplog.text
+
+
 @pytest.mark.integration
 def test_integration():
     """Test that the endpoint is installed"""
