@@ -208,7 +208,7 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile, monkeypa
     The important part is to be able to skip the directory with only a
     warning and not a full stop.
 
-    Tests only profiles 1, 3 and 4 which gives different keepfolders values.
+    Tests only profiles 1, 3 and 4 which give different keepfolders values.
 
     """
     monkeypatch.chdir(tmp_path)
