@@ -197,8 +197,8 @@ def _try_parse_resinsight(filename: str) -> tuple[str, pd.DataFrame] | None:
         ) and not dframe.empty:
             logger.info("Parsed %s as a ResInsight observation file", filename)
             return ("resinsight", resinsight_df2df(dframe))
-    except (ValueError, OSError) as exc:
-        logger.debug(f"Failed to parse {filename} as ResInsight: {exc}")
+    except ValueError:
+        return None
     return None
 
 
@@ -213,8 +213,8 @@ def _try_parse_csv(filename: str) -> tuple[str, pd.DataFrame] | None:
             if "DATE" in dframe:
                 dframe["DATE"] = pd.to_datetime(dframe["DATE"])
             return ("csv", dframe)
-    except (ValueError, OSError) as exc:
-        logger.debug(f"Failed to parse {filename} as CSV: {exc}")
+    except ValueError:
+        return None
     return None
 
 

@@ -682,10 +682,13 @@ def main() -> None:
 
 
 def stop_process(process: Process) -> None:
-    process.terminate()
-    process.join(timeout=5)
     if process.is_alive():
-        process.kill()
+        process.terminate()
+        process.join(timeout=5)
+        if process.is_alive():
+            process.kill()
+            process.join()
+    else:
         process.join()
 
 
