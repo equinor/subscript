@@ -289,7 +289,16 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
         _try_parse_yaml,
         _try_parse_ert,
     ]:
-        result = parser(filename)
+        try:
+            result = parser(filename)
+        except OSError as err:
+            logger.debug(
+                "Skipping parser %s for %s due to file access error: %s",
+                parser.__name__,
+                filename,
+                err,
+            )
+            continue
         if result is not None:
             return result
 
