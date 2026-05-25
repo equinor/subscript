@@ -189,89 +189,15 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
     return not failed
 
 
-def _try_parse_resinsight(filename: str) -> tuple[str, pd.DataFrame] | None:
-    try:
-        dframe = pd.read_csv(filename, sep=";")
-        if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
-            set(dframe.columns)
-        ) and not dframe.empty:
-            logger.info("Parsed %s as a ResInsight observation file", filename)
-            return ("resinsight", resinsight_df2df(dframe))
-    except ValueError:
-        return None
-    return None
-
-
-def _try_parse_csv(filename: str) -> tuple[str, pd.DataFrame] | None:
-    try:
-        dframe = pd.read_csv(filename, sep=",")
-        if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
-            logger.info(
-                "Parsed %s as a CSV (internal dataframe format for ertobs) file",
-                filename,
-            )
-            if "DATE" in dframe:
-                dframe["DATE"] = pd.to_datetime(dframe["DATE"])
-            return ("csv", dframe)
-    except ValueError:
-        return None
-    return None
-
-
-def _try_parse_yaml(filename: str) -> tuple[str, pd.DataFrame] | None:
-    try:
-        obsdict = yaml.safe_load(Path(filename).read_text(encoding="utf8"))
-        if isinstance(obsdict, dict) and (
-            obsdict.get("smry", None) or obsdict.get("rft", None)
-        ):
-            logger.info("Parsed %s as a YAML file with observations", filename)
-            return ("yaml", obsdict2df(obsdict))
-    except yaml.scanner.ScannerError as exception:
-        # This occurs if there are tabs in the file, which is not allowed in a YAML file
-        # (but it can be present in ERT observation files)
-        logger.debug("ScannerError while attempting yaml-parsing")
-        logger.debug(str(exception))
-        return None
-    except ValueError:
-        return None
-    return None
-
-
-def _try_parse_ert(filename: str) -> tuple[str, pd.DataFrame] | None:
-    dframe = None
-    try:
-        with open(filename, encoding="utf8") as f_handle:
-            # This function does not have information on include file paths.
-            # Accept a FileNotFoundError while parsing, if we encounter that
-            # it is most likely an ert file, but which needs additional hints
-            # on where include files are located.
-            try:
-                dframe = ertobs2df(f_handle.read())
-            except FileNotFoundError:
-                logger.info(
-                    "Parsed %s as an ERT observation file, with include statements",
-                    filename,
-                )
-                return ("ert", pd.DataFrame())
-    except ValueError:
-        return None
-    if (
-        {"CLASS", "LABEL"}.issubset(dframe.columns)
-        and not dframe.empty
-        and set(dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys()))
-    ):
-        logger.info("Parsed %s as an ERT observation file", filename)
-        return ("ert", dframe)
-    return None
-
-
 def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
-    """Detects the observation file format for a given filename. This is done by
-    attempting to parse its content and giving up on exceptions.
+    """Detects the observation file format for a given filename. This
+    is done by attempting to parse its content and giving up on
+    exceptions.
 
-    NB: In case of ERT file formats, the include statements are interpreted relative to
-    current working directory. Thus it is recommended to reparse with correct cwd after
-    detecting ERT file format. The correct cwd for include-statement is the path of the
+    NB: In case of ERT file formats, the include statements are
+    interpreted relative to current working directory. Thus it
+    is recommended to reparse with correct cwd after detecting ERT file
+    format. The correct cwd for include-statement is the path of the
     ERT config file, which is outside the context of fmuobs.
 
     Args:
@@ -280,27 +206,69 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
     Returns:
         tuple: First element is a string in [resinsight, csv, yaml, ert], second
         element is a dataframe.
-
     """
+    try:
+        dframe = pd.read_csv(filename, sep=";")
+    except ValueError:
+        pass
+    else:
+        if {"DATE", "VECTOR", "VALUE", "ERROR"}.issubset(
+            set(dframe.columns)
+        ) and not dframe.empty:
+            logger.info("Parsed %s as a ResInsight observation file", filename)
+            return ("resinsight", resinsight_df2df(dframe))
 
-    for parser in [
-        _try_parse_resinsight,
-        _try_parse_csv,
-        _try_parse_yaml,
-        _try_parse_ert,
-    ]:
-        try:
-            result = parser(filename)
-        except OSError as err:
-            logger.debug(
-                "Skipping parser %s for %s due to file access error: %s",
-                parser.__name__,
+    try:
+        dframe = pd.read_csv(filename, sep=",")
+    except ValueError:
+        pass
+    else:
+        if {"CLASS", "LABEL"}.issubset(dframe.columns) and not dframe.empty:
+            logger.info(
+                "Parsed %s as a CSV (internal dataframe format for ertobs) file",
                 filename,
-                err,
             )
-            continue
-        if result is not None:
-            return result
+            if "DATE" in dframe:
+                dframe["DATE"] = pd.to_datetime(dframe["DATE"])
+            return ("csv", dframe)
+
+    try:
+        obsdict = yaml.safe_load(Path(filename).read_text(encoding="utf8"))
+    except yaml.scanner.ScannerError as exception:
+        # Tabs in the file (not allowed in YAML, but valid in ERT obs files)
+        logger.debug("ScannerError while attempting yaml-parsing")
+        logger.debug(str(exception))
+    except ValueError:
+        pass
+    else:
+        if isinstance(obsdict, dict) and (
+            obsdict.get("smry", None) or obsdict.get("rft", None)
+        ):
+            logger.info("Parsed %s as a YAML file with observations", filename)
+            return ("yaml", obsdict2df(obsdict))
+
+    try:
+        content = Path(filename).read_text(encoding="utf8")
+    except (OSError, UnicodeDecodeError):
+        content = None
+    if content is not None:
+        try:
+            ert_dframe = ertobs2df(content)
+        except FileNotFoundError:
+            logger.info(
+                "Parsed %s as an ERT observation file, with include statements",
+                filename,
+            )
+            return ("ert", pd.DataFrame())
+        except ValueError:
+            ert_dframe = None
+        if ert_dframe is not None and (
+            {"CLASS", "LABEL"}.issubset(ert_dframe.columns)
+            and not ert_dframe.empty
+            and set(ert_dframe["CLASS"]).intersection(set(CLASS_SHORTNAME.keys()))
+        ):
+            logger.info("Parsed %s as an ERT observation file", filename)
+            return ("ert", ert_dframe)
 
     logger.error(
         "Unable to parse %s as any supported observation file format", filename
