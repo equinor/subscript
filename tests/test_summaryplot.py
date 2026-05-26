@@ -1,6 +1,7 @@
 import shutil
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import matplotlib.pyplot as plt
 import pytest
@@ -242,3 +243,95 @@ def test_find_parameterstxt_one_level_up(tmp_path, monkeypatch):
 def test_integration():
     """Test that the endpoint is installed"""
     assert subprocess.check_output([SCRIPTNAME, "-h"])
+
+
+def _interactive_args():
+    return SimpleNamespace(
+        colourby=None,
+        maxlabels=10,
+        logcolourby=None,
+        hist=None,
+        normalize=False,
+        singleplot=False,
+        nolegend=False,
+        dumpimages=False,
+        ensemblemode=False,
+    )
+
+
+def test_interactive_menu_reload_then_quit(mocker):
+    old_process = mocker.Mock()
+    old_process.is_alive.side_effect = [True, True]
+
+    new_process = mocker.Mock()
+
+    process_cls = mocker.patch(
+        "subscript.summaryplot.summaryplot.Process",
+        return_value=new_process,
+    )
+    stop_process = mocker.patch("subscript.summaryplot.summaryplot.stop_process")
+    mocker.patch("sys.stdin.read", side_effect=["r", "q"])
+
+    args = _interactive_args()
+
+    result = summaryplot.interactive_menu(
+        old_process,
+        mocker.Mock(),
+        ["file1.DATA"],
+        ["FOPR"],
+        args,
+        ["parameters.txt"],
+    )
+
+    stop_process.assert_called_once_with(old_process)
+    process_cls.assert_called_once()
+    new_process.start.assert_called_once()
+    assert result is new_process
+
+
+def test_interactive_menu_breaks_on_eof(mocker):
+    plotprocess = mocker.Mock()
+    plotprocess.is_alive.return_value = True
+
+    process_cls = mocker.patch("subscript.summaryplot.summaryplot.Process")
+    stop_process = mocker.patch("subscript.summaryplot.summaryplot.stop_process")
+    mocker.patch("sys.stdin.read", return_value="")
+
+    args = _interactive_args()
+
+    result = summaryplot.interactive_menu(
+        plotprocess,
+        mocker.Mock(),
+        [],
+        [],
+        args,
+        [],
+    )
+
+    stop_process.assert_not_called()
+    process_cls.assert_not_called()
+    assert result is plotprocess
+
+
+def test_interactive_menu_returns_current_process_on_keyboardinterrupt(mocker):
+    plotprocess = mocker.Mock()
+    plotprocess.is_alive.return_value = True
+
+    process_cls = mocker.patch("subscript.summaryplot.summaryplot.Process")
+    stop_process = mocker.patch("subscript.summaryplot.summaryplot.stop_process")
+    mocker.patch("sys.stdin.read", side_effect=KeyboardInterrupt)
+
+    args = _interactive_args()
+
+    result = summaryplot.interactive_menu(
+        plotprocess,
+        mocker.Mock(),
+        [],
+        [],
+        args,
+        [],
+    )
+
+    stop_process.assert_not_called()
+    process_cls.assert_not_called()
+    assert result is plotprocess

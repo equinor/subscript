@@ -26,8 +26,10 @@ import re
 import sys
 import termios
 import tty
+from collections.abc import Callable
 from multiprocessing import Process
 from pathlib import Path
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -578,22 +580,24 @@ def split_vectorsdatafiles(
     for vecdata in vectorsdatafiles:
         try:
             sumfn = Summary(vecdata)
-            datafiles.append(vecdata)
-
-            summaryfiles.append(sumfn)
-
-            # Try to load a corresponding parameter-file for colouring data
-            paths_to_check = [
-                Path(vecdata).absolute().parent / relpath / "parameters.txt"
-                for relpath in ["../..", "../", "."]
-            ]
-            for path in paths_to_check:
-                if path.exists():
-                    parameterfiles.append(str(path.resolve()))
-                    break
         except OSError:
             # If we get here, we assume it was an Eclipse vector name.
             vectors.append(vecdata)
+            continue
+
+        datafiles.append(vecdata)
+        summaryfiles.append(sumfn)
+
+        # Try to load a corresponding parameter-file for colouring data
+        paths_to_check = [
+            Path(vecdata).absolute().parent / relpath / "parameters.txt"
+            for relpath in ["../..", "../", "."]
+        ]
+        for path in paths_to_check:
+            if path.exists():
+                parameterfiles.append(str(path.resolve()))
+                break
+
     return (summaryfiles, datafiles, vectors, parameterfiles)
 
 
@@ -659,40 +663,94 @@ def main() -> None:
         old_settings = termios.tcgetattr(filedesc)
         print("Menu: 'q' = quit, 'r' = reload plots")
         try:
-            # change terminal settings to allow keyboard
-            # input without user pressing 'enter'
-            tty.setcbreak(sys.stdin.fileno())
-            char = ""
-            while char != "q" and plotprocess.is_alive():
-                char = sys.stdin.read(1)
-                if char == "r":
-                    plotprocess.terminate()
-                    plotprocess = Process(
-                        target=summaryplotter,
-                        kwargs={
-                            "summaryfiles": None,  # forces reload
-                            "datafiles": datafiles,
-                            "vectors": vectors,
-                            "colourby": args.colourby,
-                            "maxlabels": args.maxlabels,
-                            "logcolourby": args.logcolourby,
-                            "parameterfiles": parameterfiles,
-                            "histvectors": args.hist,
-                            "normalize": args.normalize,
-                            "singleplot": args.singleplot,
-                            "nolegend": args.nolegend,
-                            "dumpimages": args.dumpimages,
-                            "ensemblemode": args.ensemblemode,
-                        },
-                    )
-                    plotprocess.start()
-        except KeyboardInterrupt:
-            pass
-        # We have messed up the terminal, remember to fix:
-        termios.tcsetattr(filedesc, termios.TCSADRAIN, old_settings)
-
+            # change terminal settings to allow keyboard input without user pressing
+            # 'enter'
+            tty.setcbreak(filedesc)
+            plotprocess = interactive_menu(
+                plotprocess,
+                summaryplotter,
+                datafiles,
+                vectors,
+                args,
+                parameterfiles,
+            )
+        finally:
+            # Always restore terminal settings, even if an error occurs
+            termios.tcsetattr(filedesc, termios.TCSADRAIN, old_settings)
         # Close plot windows (running in a subprocess)
-        plotprocess.terminate()
+        stop_process(plotprocess)
+
+
+def stop_process(process: Process) -> None:
+    if process.is_alive():
+        process.terminate()
+        process.join(timeout=5)
+        if process.is_alive():
+            process.kill()
+            process.join()
+    else:
+        process.join()
+
+
+def restart_plotprocess(
+    plotprocess: Process,
+    summaryplotter: Callable[..., Any],
+    datafiles: list[str],
+    vectors: list[str],
+    args: argparse.Namespace,
+    parameterfiles: list[str],
+) -> Process:
+    stop_process(plotprocess)
+    new_process = Process(
+        target=summaryplotter,
+        kwargs={
+            "summaryfiles": None,  # forces reload
+            "datafiles": datafiles,
+            "vectors": vectors,
+            "colourby": args.colourby,
+            "maxlabels": args.maxlabels,
+            "logcolourby": args.logcolourby,
+            "parameterfiles": parameterfiles,
+            "histvectors": args.hist,
+            "normalize": args.normalize,
+            "singleplot": args.singleplot,
+            "nolegend": args.nolegend,
+            "dumpimages": args.dumpimages,
+            "ensemblemode": args.ensemblemode,
+        },
+    )
+    new_process.start()
+    return new_process
+
+
+def interactive_menu(
+    plotprocess: Process,
+    summaryplotter: Callable[..., Any],
+    datafiles: list[str],
+    vectors: list[str],
+    args: argparse.Namespace,
+    parameterfiles: list[str],
+) -> Process:
+    char = ""
+    while char != "q" and plotprocess.is_alive():
+        try:
+            char = sys.stdin.read(1)
+        except KeyboardInterrupt:
+            break
+
+        if char == "":
+            break
+        if char == "r":
+            plotprocess = restart_plotprocess(
+                plotprocess,
+                summaryplotter,
+                datafiles,
+                vectors,
+                args,
+                parameterfiles,
+            )
+
+    return plotprocess
 
 
 if __name__ == "__main__":

@@ -88,28 +88,39 @@ def rd_repacker(rstfilename: str, slicerstindices: list[int], quiet: bool) -> No
             shutil.move(rstname, tempdir / rstname)
 
             with chdir(tempdir):
-                subprocess.run(
-                    [rd_unpack, rstname],
-                    stdout=subprocess.DEVNULL if quiet else None,
-                    check=True,
+                _run_unpack_and_slice(
+                    rd_unpack, rstname, quiet, slicerstindices, rd_pack
                 )
-
-                for file in Path(".").glob("*.X*"):
-                    index = int(file.suffix.lstrip(".X"))
-                    if index not in slicerstindices:
-                        file.unlink()
-
-                remaining_files = sorted(Path(".").glob("*.X*"))
-                subprocess.run(
-                    [rd_pack, *[str(f) for f in remaining_files]],
-                    stdout=subprocess.DEVNULL if quiet else None,
-                    check=True,
-                )
-
                 # Move result back up
                 shutil.move(rstname, Path("..") / rstname)
         finally:
             shutil.rmtree(tempdir)
+
+
+def _run_unpack_and_slice(
+    rd_unpack: str,
+    rstname: str,
+    quiet: bool,
+    slicerstindices: list[int],
+    rd_pack: str,
+) -> None:
+
+    # Unpack the UNRST file first
+    subprocess.run(
+        [rd_unpack, rstname], stdout=subprocess.DEVNULL if quiet else None, check=True
+    )
+
+    for file in Path(".").glob("*.X*"):
+        index = int(file.suffix.lstrip(".X"))
+        if index not in slicerstindices:
+            file.unlink()
+
+    remaining_files = sorted(Path(".").glob("*.X*"))
+    subprocess.run(
+        [rd_pack, *[str(f) for f in remaining_files]],
+        stdout=subprocess.DEVNULL if quiet else None,
+        check=True,
+    )
 
 
 def get_restart_indices(rstfilename: str) -> list[int]:

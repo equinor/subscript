@@ -208,25 +208,25 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile, monkeypa
     The important part is to be able to skip the directory with only a
     warning and not a full stop.
 
-    Tests only profiles 1, 3 and 4 which are gives different keepfolders
-    values.
+    Tests only profiles 1, 3 and 4 which give different keepfolders values.
+
     """
     monkeypatch.chdir(tmp_path)
     source = "20.1.1"
+    target = "missing_rms_input"
 
     (tmp_path / source / "rms" / "model").mkdir(parents=True)
     (tmp_path / source / "rms" / "input" / "unreachabledir").mkdir(parents=True)
     (tmp_path / source / "rms" / "xx" / "reachabledir").mkdir(parents=True)
     (tmp_path / source / "rms" / "input" / "unreachablefile").touch()
 
+    (tmp_path / source / "ert").mkdir()
+    (tmp_path / source / "ert" / "xcopyme").touch()
+    (tmp_path / source / "rms" / "model" / "includeme").touch()
+    (tmp_path / source / "rms" / "xx" / "reachabledir" / "a_file").touch()
+
     try:
         os.chmod(source + "/rms/input", rmsinputperm)  # Manipulate permissions
-
-        target = "missing_rms_input"
-        (tmp_path / source / "ert").mkdir()
-        (tmp_path / source / "ert" / "xcopyme").touch()
-        (tmp_path / source / "rms" / "model" / "includeme").touch()
-        (tmp_path / source / "rms" / "xx" / "reachabledir" / "a_file").touch()
 
         subprocess.run(
             [
@@ -241,16 +241,7 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile, monkeypa
             check=True,
             stdout=subprocess.PIPE,
         )
-        assert (tmp_path / target / "ert" / "xcopyme").exists()
-        assert (tmp_path / target / "rms" / "model" / "includeme").exists()
-        assert (tmp_path / target / "rms" / "xx" / "reachabledir").exists()
-        try:
-            assert not (tmp_path / target / "rms" / "input" / "unreachabledir").exists()
-            assert not (
-                tmp_path / target / "rms" / "input" / "unreachablefile"
-            ).exists()
-        except PermissionError:
-            pass
+        _assert_copy_results(tmp_path, target)
     finally:
         # Reinstate all user permissions for pytest garbage collection
         os.chmod(source + "/rms/input", 0o0700)
@@ -258,6 +249,18 @@ def test_missing_directory_permissions(tmp_path, rmsinputperm, profile, monkeypa
             # Some of the fmu_copy_revision setups in this test
             # manage to copy the target directory.
             os.chmod(target + "/rms/input", 0o0700)
+
+
+def _assert_copy_results(tmp_path, target):
+    """Helper to assert copy results for missing directory permissions test."""
+    assert (tmp_path / target / "ert" / "xcopyme").exists()
+    assert (tmp_path / target / "rms" / "model" / "includeme").exists()
+    assert (tmp_path / target / "rms" / "xx" / "reachabledir").exists()
+    try:
+        assert not (tmp_path / target / "rms" / "input" / "unreachabledir").exists()
+        assert not (tmp_path / target / "rms" / "input" / "unreachablefile").exists()
+    except PermissionError:
+        pass
 
 
 @pytest.mark.integration
