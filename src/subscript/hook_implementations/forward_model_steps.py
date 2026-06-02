@@ -581,11 +581,26 @@ class MergeUnrstFiles(ForwardModelStepPlugin):
                 "<UNRST2>",
                 "--output",
                 "<OUTPUT>",
+                "--priority",
+                "<PRIORITY>",
             ],
             default_mapping={
                 "<OUTPUT>": "MERGED.UNRST",
+                "<PRIORITY>": "hist",
             },
         )
+
+    def validate_pre_experiment(self, fm_step_json: ForwardModelStepJSON) -> None:
+        errors = []
+
+        priority = self.private_args.get("<PRIORITY>")
+        if priority is not None and priority not in {"hist", "pred"}:
+            errors.append(f"<PRIORITY> must be 'hist' or 'pred', got '{priority}'.")
+
+        if errors:
+            raise ForwardModelStepValidationError(
+                "Validation failed for MERGE_UNRST_FILES:\n" + "\n".join(errors)
+            )
 
     @staticmethod
     def documentation() -> ForwardModelStepDocumentation | None:
@@ -598,6 +613,8 @@ class MergeUnrstFiles(ForwardModelStepPlugin):
   DEFINE <RESTART_DIR>      iter-3
   FORWARD_MODEL MERGE_UNRST_FILES(<UNRST1>=..<RESTART_DIR>/<ECLBASE>.UNRST, \
       <UNRST2>=<ECLBASE>.UNRST, <OUTPUT>=eclipse/model/ECLIPSE_MERGED.UNRST)
+  FORWARD_MODEL MERGE_UNRST_FILES(<UNRST1>=..<RESTART_DIR>/<ECLBASE>.UNRST, \
+      <UNRST2>=<ECLBASE>.UNRST, <OUTPUT>=MERGED.UNRST, <PRIORITY>=pred)
 
 """,
         )
