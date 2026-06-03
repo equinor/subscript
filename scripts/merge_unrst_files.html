@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MERGE_UNRST_FILES &mdash; subscript 1.15.2.dev2+g58c26f2d1 documentation</title>
+  <title>MERGE_UNRST_FILES &mdash; subscript 1.15.2.dev3+g258eebfdc documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=301707db"></script>
+      <script src="../_static/documentation_options.js?v=50e6fed9"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -133,7 +133,8 @@ differences across dates in the two files. One should give hist file as first po
 argument and pred file as the second positional argument (i.e. in the order of smallest
 to largest report step numbers).</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">merge_unrst_files</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="n">UNRST1</span> <span class="n">UNRST2</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">merge_unrst_files</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">priority</span> <span class="p">{</span><span class="n">hist</span><span class="p">,</span><span class="n">pred</span><span class="p">}]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                         <span class="n">UNRST1</span> <span class="n">UNRST2</span>
 </pre></div>
 </div>
 <section id="subscript.merge_unrst_files.merge_unrst_files-get_parser-positional-arguments">
@@ -153,6 +154,11 @@ to largest report step numbers).</p>
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Name of the merged UNRST file</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">'MERGED.UNRST'</span></code></p>
+</dd>
+<dt><kbd>--priority</kbd></dt>
+<dd><p>Possible choices: hist, pred</p>
+<p>Which file to keep on overlapping report steps (default: hist)</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'hist'</span></code></p>
 </dd>
 <dt><kbd>-v, --version</kbd></dt>
 <dd><p>show program’s version number and exit</p>
