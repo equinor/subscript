@@ -1,10 +1,15 @@
 import argparse
 import logging
+from typing import Any
 
-import numpy as np
 import resfo
 
 from subscript import __version__, getLogger
+
+# Type aliases
+KWEntry = tuple[str, Any]
+Chunk = list[KWEntry]
+
 
 DESCRIPTION = """Read two ``UNRST`` files and export a merged version. This is useful in
 cases where history and prediction are run separately and one wants to calculate
@@ -38,6 +43,14 @@ def get_parser() -> argparse.ArgumentParser:
         default="MERGED.UNRST",
     )
     parser.add_argument(
+        "--priority",
+        type=str,
+        choices=["hist", "pred"],
+        default="hist",
+        help="Which file to keep on overlapping report steps (default: hist)",
+    )
+
+    parser.add_argument(
         "-v",
         "--version",
         action="version",
@@ -46,29 +59,78 @@ def get_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _check_report_number(
-    args: argparse.Namespace,
-    max_report_number_hist: int,
-    current_report_number: int,
-) -> None:
-    """Check that pred file report numbers are larger than in hist file.
+def _get_overlap_interval(
+    hist_chunks: list[Chunk],
+    pred_chunks: list[Chunk],
+) -> tuple[int, int] | None:
+    """Determine the overlapping interval between hist and pred.
+
+    The overlap is defined as:
+        [max(min_hist, min_pred), min(max_hist, max_pred)]
+
+    Returns:
+        tuple: (overlap_start, overlap_end) or None if no overlap.
+    """
+    hist_seqnums: list[int] = [
+        s for c in hist_chunks if (s := _get_seqnum(c)) is not None
+    ]
+    pred_seqnums: list[int] = [
+        s for c in pred_chunks if (s := _get_seqnum(c)) is not None
+    ]
+
+    if not hist_seqnums or not pred_seqnums:
+        return None
+
+    logger.info(f"Hist report steps: {hist_seqnums}")
+    logger.info(f"Pred report steps: {pred_seqnums}")
+
+    overlap_start = max(hist_seqnums[0], pred_seqnums[0])
+    overlap_end = min(hist_seqnums[-1], pred_seqnums[-1])
+
+    if overlap_start <= overlap_end:
+        return (overlap_start, overlap_end)
+    return None
+
+
+def _is_in_interval(seqnum: int | None, interval: tuple[int, int] | None) -> bool:
+    """Check if a seqnum falls within the overlap interval."""
+    if interval is None or seqnum is None:
+        return False
+    return interval[0] <= seqnum <= interval[1]
+
+
+def _split_by_seqnum(data: list[KWEntry]) -> list[Chunk]:
+    """Split UNRST keyword list into chunks, one per report step.
+
+    Each chunk starts with a SEQNUM keyword and contains all keywords
+    until the next SEQNUM (or end of data).
 
     Args:
-        args (argparse.Namespace): The Namespace object with the argument list.
-        max_report_number_hist (int): The largest report number in hist file.
-        current_report_number (int): The current restart report number in pred file.
-    """
+        data: List of (keyword, value) tuples as returned by
+            resfo.read().
 
-    if current_report_number <= max_report_number_hist:
-        logger.warning(
-            f"{args.UNRST2} file has a restart report number ({current_report_number})"
-            + f" which is smaller than largest report number in {args.UNRST1}"
-            + f" ({max_report_number_hist})"
-        )
-        logger.warning(
-            "Check that you have entered arguments in correct order and/or"
-            + " that the unrst files are compatible."
-        )
+    Returns:
+        List of chunks, where each chunk is a list of
+        (keyword, value) tuples.
+    """
+    chunks: list[Chunk] = []
+    current_chunk: Chunk = []
+    for kw, val in data:
+        if kw == "SEQNUM  " and current_chunk:
+            chunks.append(current_chunk)
+            current_chunk = []
+        current_chunk.append((kw, val))
+    if current_chunk:
+        chunks.append(current_chunk)
+    return chunks
+
+
+def _get_seqnum(chunk: Chunk) -> int | None:
+    """Extract the SEQNUM value from a chunk."""
+    for kw, val in chunk:
+        if kw == "SEQNUM  ":
+            return int(val[0])
+    return None
 
 
 def main() -> None:
@@ -80,30 +142,40 @@ def main() -> None:
     unrst_hist = resfo.read(args.UNRST1)
     unrst_pred = resfo.read(args.UNRST2)
 
-    max_first_seqnum: int = 1
-    max_first_solver_step: int = 1
-    max_first_report_step: int = 1
+    hist_chunks = _split_by_seqnum(unrst_hist)
+    pred_chunks = _split_by_seqnum(unrst_pred)
 
-    for kw, val in unrst_hist:
-        if kw == "SEQNUM  ":  # restart report number
-            assert isinstance(val, np.ndarray)
-            max_first_seqnum = max(max_first_seqnum, val[0])
-        if kw == "INTEHEAD":
-            assert isinstance(val, np.ndarray)
-            max_first_solver_step = max(max_first_solver_step, val[67])
-            max_first_report_step = max(max_first_report_step, val[68])
+    overlap_interval = _get_overlap_interval(hist_chunks, pred_chunks)
 
-    for kw, val in unrst_pred:
-        if kw == "SEQNUM  ":
-            assert isinstance(val, np.ndarray)
-            _check_report_number(args, max_first_seqnum, val[0])
-            val[0] += max_first_seqnum
-        if kw == "INTEHEAD":
-            assert isinstance(val, np.ndarray)
-            val[67] += max_first_solver_step
-            val[68] += max_first_report_step
+    if overlap_interval:
+        logger.info(
+            "Overlapping report step interval detected: "
+            f"SEQNUM {overlap_interval[0]} to {overlap_interval[1]}"
+        )
+        logger.info(f"Keeping {args.priority} data in overlapping interval")
+    else:
+        logger.info("No overlapping report steps detected.")
 
-    resfo.write(args.output, unrst_hist + unrst_pred)
+    if args.priority == "hist":
+        filtered_hist = hist_chunks
+        filtered_pred = [
+            c
+            for c in pred_chunks
+            if not _is_in_interval(_get_seqnum(c), overlap_interval)
+        ]
+    else:
+        filtered_hist = [
+            c
+            for c in hist_chunks
+            if not _is_in_interval(_get_seqnum(c), overlap_interval)
+        ]
+        filtered_pred = pred_chunks
+
+    merged = [item for chunk in filtered_hist for item in chunk] + [
+        item for chunk in filtered_pred for item in chunk
+    ]
+
+    resfo.write(args.output, merged)
     logger.info(f"Done. Merged file is written to {args.output}")
 
 
