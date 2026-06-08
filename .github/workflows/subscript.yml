@@ -1,5 +1,8 @@
 name: subscript
 
+permissions:
+  contents: write
+
 on:
   push:
     branches:
