@@ -1,7 +1,7 @@
 name: subscript
 
 permissions:
-  contents: write
+  contents: read
 
 on:
   push:
@@ -24,7 +24,7 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  subscript:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -70,7 +70,6 @@ jobs:
           sudo apt-get install libopm-simulators-bin
 
       - name: Install subscript with dependencies
-        if: ${{ always() }}
         run: |
           uv pip install ".[tests, docs]"
 
@@ -86,21 +85,45 @@ jobs:
         run: uv pip freeze
 
       - name: Run tests
-        if: ${{ always() }}
         run: pytest -n logical tests --mpl
 
       - name: Syntax check documentation
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: rstcheck -r docs
 
       - name: Build documentation
-        if: ${{ always() }}
+        if: ${{ !cancelled() }}
         run: sphinx-build -b html docs build/docs/html
 
+      - name: Upload documentation artifact
+        if: matrix.python-version == '3.12' && success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-html
+          path: build/docs/html
+
+  deploy-docs:
+    needs: test
+    if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout commit locally
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Download documentation artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docs-html
+          path: docs-html
+
       - name: Update GitHub pages
-        if: github.repository_owner == 'equinor' && github.ref == 'refs/heads/main' && matrix.python-version == '3.12'
         run: |
-          cp -R ./build/docs/html ../html
+          cp -R docs-html ../html
 
           git config --local user.email "subscript-github-action"
           git config --local user.name "subscript-github-action"
@@ -117,5 +140,5 @@ jobs:
             echo "No changes in documentation. Skip documentation deploy."
           else
             git commit -m "Update Github Pages"
-            git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+            git push origin gh-pages
           fi
