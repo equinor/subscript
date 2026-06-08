@@ -97,7 +97,7 @@ jobs:
 
       - name: Upload documentation artifact
         if: matrix.python-version == '3.12' && success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: docs-html
           path: build/docs/html
