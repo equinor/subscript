@@ -476,10 +476,10 @@ def resinsight_df2df(ri_dframe: pd.DataFrame) -> pd.DataFrame:
 
 def smrydictlist2df(smrylist: list[dict]) -> pd.DataFrame:
     """Parse a list structure (subpart of yaml syntax) of summary observations
-    into  dataframe format
+    into dataframe format
 
     Args:
-        blocklist (list): List of dictionaries with summary observations
+        smrylist (list): List of dictionaries with summary observations
 
     Returns:
         pd.DataFrame
