@@ -41,7 +41,7 @@ FILESTRUCTURE = [
 ]
 
 
-@pytest.fixture(name="datatree", scope="session", autouse=True)
+@pytest.fixture(name="datatree", scope="session")
 def fixture_datatree(tmp_path_factory):
     """Create a tmp folder structure for testing."""
     tmppath = tmp_path_factory.mktemp("data")
