@@ -3,6 +3,7 @@ import subprocess
 from pathlib import Path
 from types import SimpleNamespace
 
+import matplotlib
 import matplotlib.pyplot as plt
 import pytest
 from resdata.summary import Summary
@@ -10,6 +11,12 @@ from resdata.summary import Summary
 from subscript.summaryplot import summaryplot
 
 DATAFILE = Path(__file__).parent / "data/reek/eclipse/model/2_R001_REEK-0.DATA"
+
+MPL_BASELINE_DIR = (
+    "baseline"
+    if tuple(int(x) for x in matplotlib.__version__.split(".")[:2]) >= (3, 11)
+    else "baseline_legacy"
+)
 
 SCRIPTNAME = "summaryplot"
 
@@ -53,7 +60,7 @@ def test_summaryplotter(cmd_args, tmp_path, mocker, plot, monkeypatch):
         assert Path("summaryplotdump.pdf").exists()
 
 
-@pytest.mark.mpl_image_compare(tolerance=5)
+@pytest.mark.mpl_image_compare(tolerance=5, baseline_dir=MPL_BASELINE_DIR)
 @pytest.mark.parametrize(
     "cmd_args",
     [
