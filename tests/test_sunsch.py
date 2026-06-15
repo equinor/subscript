@@ -777,9 +777,11 @@ def test_weltarg_uda(tmp_path, monkeypatch):
     assert "WU_VALUE" in str(sch)
 
 
-def test_long_udq_lines(tmp_path):
+def test_long_udq_lines(tmp_path, monkeypatch):
     """UDQ statements must not be line-wrapped, there is special code in OPM to
     avoid that."""
+    monkeypatch.chdir(tmp_path)
+
     inputstr = """UDQ
 
 DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_05' + WWIR 'A_06' + WWIR 'A_07' + WWIR 'A_08' + WWIR 'A_09' + WWIR 'A_10'  + WWIR 'A_11' + WWIR 'A_12' + WWIR 'A_13' + WWIR 'A_14' + WWIR 'A_15'/
