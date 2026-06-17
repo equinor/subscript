@@ -2,7 +2,6 @@
 
 import argparse
 import datetime
-import logging
 import shutil
 import subprocess
 import tempfile
@@ -13,9 +12,7 @@ import numpy as np
 import pandas as pd
 from resdata.resfile import ResdataFile
 
-from subscript import __version__, getLogger
-
-logger = getLogger(__name__)
+from subscript import __version__
 
 DESCRIPTION = """
 Slice a subset of restart-dates from an E100 Restart file (UNRST)
@@ -178,25 +175,26 @@ def restartthinner(
     slicerstindices = sorted(set(slicerstindices))  # uniquify
 
     if not quiet:
-        logger.info("Selected restarts:")
-        logger.info("-----------------------")
+        print("Selected restarts:")
+        print("-----------------------")
         for idx, rstidx in enumerate(restart_indices):
             slicepresent = "X" if rstidx in slicerstindices else ""
-            logger.info(
-                "%4d  %s  %s",
-                rstidx,
-                datetime.date.strftime(restart_dates[idx], "%Y-%m-%d"),
-                slicepresent,
+            print(
+                "{rstidx:4d}  {date}  {present}".format(
+                    rstidx=rstidx,
+                    date=datetime.date.strftime(restart_dates[idx], "%Y-%m-%d"),
+                    present=slicepresent,
+                )
             )
-        logger.info("-----------------------")
+        print("-----------------------")
 
     if not dryrun:
         if keep:
             backupname = filename + ".orig"
-            logger.info("Backing up %s to %s", filename, backupname)
+            print(f"Backing up {filename} to {backupname}")
             shutil.copyfile(filename, backupname)
         rd_repacker(filename, slicerstindices, quiet)
-        logger.info("Written to %s", filename)
+        print(f"Written to {filename}")
 
 
 def get_parser() -> argparse.ArgumentParser:
@@ -250,8 +248,6 @@ def main() -> None:
         parser.error("Number of restarts must be a positive number")
     if args.UNRST.endswith(".DATA"):
         parser.error("Provide the UNRST file, not the DATA file")
-    if args.quiet:
-        logger.setLevel(logging.WARNING)
 
     restartthinner(args.UNRST, args.restarts, args.quiet, args.dryrun, args.keep)
 
