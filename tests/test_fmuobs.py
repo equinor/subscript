@@ -33,6 +33,7 @@ def fixture_readonly_testdata_dir(monkeypatch):
         ("ert-doc.csv", "csv"),
         ("fmu-ensemble-obs.yml", "yaml"),
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs", "ert"),
+        ("drogon_wbhp_rft_wct_gor_tracer_plt_local.obs", "ert"),
     ],
 )
 def test_autoparse_file(filename, expected_format, readonly_testdata_dir):
@@ -161,6 +162,7 @@ def test_roundtrip_ertobs(filename, readonly_testdata_dir):
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon_wbhp_rft_wct_gor_tracer_plt_local.obs"),
     ],
 )
 def test_roundtrip_yaml(filename, readonly_testdata_dir):
@@ -206,6 +208,7 @@ def test_roundtrip_yaml(filename, readonly_testdata_dir):
         ("ert-doc.csv"),
         ("fmu-ensemble-obs.yml"),
         ("drogon_wbhp_rft_wct_gor_tracer_4d.obs"),
+        ("drogon_wbhp_rft_wct_gor_tracer_plt_local.obs"),
     ],
 )
 def test_roundtrip_resinsight(filename, readonly_testdata_dir):
@@ -228,17 +231,71 @@ def test_roundtrip_resinsight(filename, readonly_testdata_dir):
 
     # LABEL is not part of the ResInsight format, and a made-up label
     # is obtained through the roundtrip (when importing back). Skip it
-    # when comparing.
+    # when comparing. ERROR_MODE is also not preserved in ResInsight format.
 
     pd.testing.assert_frame_equal(
         ri_roundtrip_dframe.sort_index(axis="columns").drop(
-            ["LABEL", "COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore"
+            ["LABEL", "COMMENT", "SUBCOMMENT", "ERROR_MODE"],
+            axis="columns",
+            errors="ignore",
         ),
         dframe.sort_index(axis="columns").drop(
-            ["LABEL", "COMMENT", "SUBCOMMENT"], axis="columns", errors="ignore"
+            ["LABEL", "COMMENT", "SUBCOMMENT", "ERROR_MODE"],
+            axis="columns",
+            errors="ignore",
         ),
         check_like=True,
     )
+
+
+def test_rft_observation_warning(readonly_testdata_dir, caplog):
+    """Test that RFT_OBSERVATION (unsupported class) is silently ignored with
+    a warning instead of raising an error."""
+    import logging
+
+    filename = "drogon_wbhp_rft_wct_gor_tracer_plt_local.obs"
+    with caplog.at_level(logging.WARNING):
+        format_, dframe = autoparse_file(filename)
+
+    assert format_ == "ert"
+    assert not dframe.empty
+    assert "RFT_OBSERVATION" in dframe["CLASS"].values
+
+    # No error should have been logged about unsupported classes
+    assert (
+        "error" not in caplog.text.lower() or "unsupported" not in caplog.text.lower()
+    )
+    # A warning should be emitted from validate_internal_dframe via main(),
+    # but autoparse_file does not call validate; check the class is parseable.
+    assert "SUMMARY_OBSERVATION" in dframe["CLASS"].values
+
+
+def test_rft_observation_warning_via_main(tmp_path, mocker, caplog, monkeypatch):
+    """Test that running main() on a file with RFT_OBSERVATION emits a warning
+    (not an error) and produces valid output for supported classes."""
+    import logging
+
+    monkeypatch.chdir(tmp_path)
+    mocker.patch(
+        "sys.argv",
+        [
+            "fmuobs",
+            "--includedir",
+            str(TESTDATA_DIR),
+            "--csv",
+            "output.csv",
+            str(TESTDATA_DIR / "drogon_wbhp_rft_wct_gor_tracer_plt_local.obs"),
+        ],
+    )
+    with caplog.at_level(logging.WARNING):
+        main()
+
+    assert Path("output.csv").exists()
+    # Should warn about unsupported class, not error
+    assert "RFT_OBSERVATION" in caplog.text
+    assert "Unsupported observation classes (will be ignored)" in caplog.text
+    # Dataframe is still valid (no error logged about invalidity)
+    assert "Observation dataframe is invalid" not in caplog.text
 
 
 @pytest.mark.integration
