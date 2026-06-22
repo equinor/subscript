@@ -1,4 +1,5 @@
 # import logging
+import copy
 import shutil
 import subprocess
 from pathlib import Path
@@ -32,14 +33,21 @@ CONFIG_DICT = {
     "nreal": 10,
     "iterations": [0, 3],
     "use_population_stdev": False,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_per_zone": {
+        "A": "ertbox_A",
+        "B": "ertbox_B",
+        "C": "ertbox_C",
+    },
+    "ertbox_default": "ERTBOX",
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+        3: "C",
+    },
     "geogrid_fields": {
-        "geogrid_name": "my_geogrid",
+        "geogrid_name": "geogrid",
         "use_zones": ["A", "B", "C"],
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-            3: "C",
-        },
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -72,25 +80,25 @@ CONFIG_DICT = {
             "B": ["P1"],
             "C": ["P2"],
         },
-        "ertbox_size": [5, 6, 5],
+    },
+    "temporary_ertbox_fields": {
+        "initial_field_relative_path": "rms/output/aps",
+        "parameter_name_per_zone": {
+            "A": ["A_GRF1", "A_GRF2"],
+            "B": ["B_GRF2"],
+        },
     },
 }
 
 
-def make_box_grid(dimensions, grid_name, result_path):
-    filename = result_path / Path(grid_name + ".roff")
-    filename_egrid = result_path / Path(grid_name.upper() + ".EGRID")
-
-    grid = xtgeo.create_box_grid(dimensions)
-    grid.name = grid_name.lower()
-    print(f"Grid name:  {grid.name}")
-    print(f"Grid dimensions: {grid.dimensions}")
-    print(f"Write grid to file:  {filename}")
-    grid.to_file(filename, fformat="roff")
-    grid.to_file(filename_egrid, fformat="egrid")
-
-
-def make_file_names(ensemble_path, iter_number, real_number, param_name, geogrid_name):
+def make_file_names_result_path(
+    ensemble_path: str | Path,
+    iter_number: int,
+    real_number: int,
+    param_name: str,
+    geogrid_name: str | None = None,
+):
+    # filedir for multizone geogrid with field parameters
     filedir = ensemble_path / Path("realization-" + str(real_number))
     if not filedir.exists():
         filedir.mkdir()
@@ -106,296 +114,326 @@ def make_file_names(ensemble_path, iter_number, real_number, param_name, geogrid
     filedir /= Path("grids")
     if not filedir.exists():
         filedir.mkdir()
-    filename = filedir / Path(f"{geogrid_name}--" + param_name + ".roff")
-    filename_active = filedir / Path(f"{geogrid_name}--active.roff")
-    filename_grid = filedir / Path(f"{geogrid_name}.roff")
-    return filename, filename_active, filename_grid
+    result_field_filename = filedir / Path(
+        f"{geogrid_name.strip()}--{param_name.strip()}.roff"
+    )
+    result_active_filename = filedir / Path(f"{geogrid_name.strip()}--active.roff")
+    result_grid_filename = filedir / Path(f"{geogrid_name.strip()}.roff")
+
+    return (
+        result_field_filename,
+        result_active_filename,
+        result_grid_filename,
+    )
 
 
-def make_ensemble_test_data(
-    config_dict,
-    facies_per_zone,
-    nx,
-    ny,
-    nz_ertbox,
-    ensemble_path,
-    print_info=False,
+def make_file_names_field_path(
+    ensemble_path: str | Path,
+    iter_number: int,
+    real_number: int,
+    param_name: str,
+    zone_name: str,
 ):
-    if print_info:
-        print("Start make test data")
+    # filedir for single zone ertbox grid per zone with field parameters
+    filedir = ensemble_path / Path("realization-" + str(real_number))
+    if not filedir.exists():
+        filedir.mkdir()
+    filedir /= Path("iter-" + str(iter_number))
+    if not filedir.exists():
+        filedir.mkdir()
 
-    iteration_list = [0, 3]
-    zone_code_names = config_dict["geogrid_fields"]["zone_code_names"]
-    geogrid_name = config_dict["geogrid_fields"]["geogrid_name"]
-    discrete_param_name_per_zone = config_dict["geogrid_fields"][
-        "discrete_property_param_per_zone"
-    ]
-    param_name_per_zone = config_dict["geogrid_fields"][
-        "continuous_property_param_per_zone"
-    ]
-    nreal = 10
-    vparam = 1.0
+    if iter_number == 0:
+        filedir_init = copy.copy(filedir)
+        filedir_init /= Path("rms")
+        if not filedir_init.exists():
+            filedir_init.mkdir()
+        filedir_init /= Path("output")
+        if not filedir_init.exists():
+            filedir_init.mkdir()
+        filedir_init /= Path("aps")
+        if not filedir_init.exists():
+            filedir_init.mkdir()
+
+        grf_field_filename = filedir_init / Path(f"{param_name.strip()}.roff")
+        grf_active_filename = filedir_init / Path(f"{zone_name.strip()}_active.roff")
+    else:
+        grf_field_filename = filedir / Path(f"{param_name.strip()}.roff")
+        grf_active_filename = filedir / Path(f"{zone_name.strip()}_active.roff")
+
+    return (
+        grf_field_filename,
+        grf_active_filename,
+    )
+
+
+def simulate_continuous_ensemble_test_data(
+    ensemble_path: str | Path,
+    nreal: int,
+    iteration_list: list[int],
+    geogrid_name: str | Path,
+    ertbox_size_per_zone: dict,
+    grid_increments: tuple[float],
+    param_names_per_zone: dict,
+    start_seed: int,
+    make_test_data_for_geogrid: bool = True,
+):
+
+    # Define the geogrid to have zones with size
+    # equal to the ertbox size for each zone
+    nz_geogrid = 0
+    for _, dims in ertbox_size_per_zone.items():
+        (nx, ny, nz_zone) = dims
+        nz_geogrid += nz_zone
+
+    variogram = sim.variogram("exponential", 25.0, 25.0, 1.0, 45.0, 0.0)
+    dx = grid_increments[0]
+    dy = grid_increments[1]
+    dz = grid_increments[2]
+
+    # List of all parameters found in all zones
+    param_list_all = []
+    param_values_dict = {}
+    for _, param_list_for_zone in param_names_per_zone.items():
+        for param_name in param_list_for_zone:
+            if param_name not in param_list_all:
+                param_list_all.append(param_name)
+                # Allocate space for the property
+                param_values_dict[param_name] = np.ma.masked_all(
+                    (nx, ny, nz_geogrid), dtype=np.float32
+                )
+
+    # Simulate the field parameters for all iterations,
+    # realizations, zones and parameters
     for iter_number in iteration_list:
-        for zone_name in zone_code_names.values():
-            param_name_list = []
-            if zone_name in param_name_per_zone:
-                param_name_list = param_name_per_zone[zone_name]
+        # Want to use same set of realizations for all iterations here
+        # to simplify tests where some realizations will be inactivated
+        # for ensemble with iter_number > 0 compared
+        # with ensemble with iter_number = 0
+        sim.seed(start_seed)
+        for real_number in range(nreal):
+            # Simulate gaussian random fields per continuous parameter
+            # and save to file under 'run path/share/results/grids
+            for param_name in param_list_all:
+                start_layer = 0
+                for zone_name, zone_dimensions in ertbox_size_per_zone.items():
+                    (nx, ny, nz_zone) = zone_dimensions
+
+                    # Initialize to 0 for values to non-existing parameters
+                    field_3d_zone = np.zeros((nx, ny, nz_zone), dtype=np.float32)
+
+                    if (zone_name in param_names_per_zone) and (
+                        param_name in param_names_per_zone[zone_name]
+                    ):
+                        gauss_vector = sim.simulate(
+                            variogram, nx, dx, ny, dy, nz_zone, dz
+                        )
+                        field_3d_zone = gauss_vector.reshape(
+                            (nx, ny, nz_zone), order="F"
+                        )
+                        if not make_test_data_for_geogrid:
+                            # Save test data for field parameters
+                            (grf_field_filename, grf_active_filename) = (
+                                make_file_names_field_path(
+                                    ensemble_path,
+                                    iter_number,
+                                    real_number,
+                                    param_name,
+                                    zone_name,
+                                )
+                            )
+
+                            xtgeo_param = xtgeo.GridProperty(
+                                ncol=nx,
+                                nrow=ny,
+                                nlay=nz_zone,
+                                discrete=False,
+                                values=field_3d_zone,
+                                name=param_name,
+                            )
+                            xtgeo_param.to_file(grf_field_filename, fformat="roff")
+
+                            active = np.ones((nx, ny, nz_zone), dtype=np.int32)
+                            xtgeo_active = xtgeo.GridProperty(
+                                ncol=nx,
+                                nrow=ny,
+                                nlay=nz_zone,
+                                discrete=False,
+                                values=active,
+                                name="active",
+                            )
+                            xtgeo_active.to_file(grf_active_filename, fformat="roff")
+
+                    if make_test_data_for_geogrid:
+                        # Add to geogrid multizone field parameter
+                        end_layer = start_layer + nz_zone
+                        param_values_dict[param_name][:, :, start_layer:end_layer] = (
+                            field_3d_zone
+                        )
+                        start_layer += nz_zone
+
+                if make_test_data_for_geogrid:
+                    # Write field parameter for multizone geogrid
+                    (
+                        result_field_filename,
+                        result_active_filename,
+                        result_grid_filename,
+                    ) = make_file_names_result_path(
+                        ensemble_path,
+                        iter_number,
+                        real_number,
+                        param_name,
+                        geogrid_name,
+                    )
+                    xtgeo_param = xtgeo.GridProperty(
+                        ncol=nx,
+                        nrow=ny,
+                        nlay=nz_geogrid,
+                        discrete=False,
+                        values=param_values_dict[param_name],
+                        name=param_name,
+                    )
+
+                    xtgeo_param.to_file(result_field_filename, fformat="roff")
+
+                    active = ~param_values_dict[param_name].mask
+                    xtgeo_active = xtgeo.GridProperty(
+                        ncol=nx,
+                        nrow=ny,
+                        nlay=nz_geogrid,
+                        discrete=False,
+                        values=active,
+                        name="active",
+                    )
+
+                    xtgeo_active.to_file(result_active_filename, fformat="roff")
+
+            if make_test_data_for_geogrid:
+                # Create multizone geogrid, one per realization
+                nz_geogrid = 0
+                zone_names = list(ertbox_size_per_zone.keys())
+                nx = ertbox_size_per_zone[zone_names[0]][0]
+                ny = ertbox_size_per_zone[zone_names[0]][1]
+                subgrid_dict = {}
+                for zone_name, dims in ertbox_size_per_zone.items():
+                    assert dims[0] == nx
+                    assert dims[1] == ny
+                    nz_geogrid += dims[2]
+                    subgrid_dict[zone_name] = dims[2]
+
+                xtgeo_geogrid = xtgeo.create_box_grid(
+                    (nx, ny, nz_geogrid), increment=grid_increments
+                )
+                set_subgrid_names(xtgeo_geogrid, new_subgrids=subgrid_dict)
+
+                # Write the geogrid to each realization
+                xtgeo_geogrid.to_file(result_grid_filename, fformat="roff")
+
+    return param_list_all
+
+
+def remove_some_realizations_from_ensemble(
+    ensemble_path: Path | str, iter_number: int, nreal: int, nreal_to_remove: int
+):
+    if nreal_to_remove > 0:
+        # Select randomly realizations to remove
+        # from ensembles for iter_number > 0
+        real_number_list = np.arange(nreal)
+        selected = np.random.choice(real_number_list, nreal_to_remove, replace=False)
+        if iter_number > 0:
+            for real_number in selected:
+                filedir = ensemble_path / Path("realization-" + str(real_number))
+                filedir /= Path("iter-" + str(iter_number))
+                filedir /= Path("share")
+                filedir /= Path("results")
+                filedir /= Path("grids")
+                try:
+                    shutil.rmtree(filedir)
+                except Exception as e:
+                    print(f"Error deleting directory {filedir}: {e}")
+
+
+def define_discrete_test_data(
+    ensemble_path: str | Path,
+    nreal: int,
+    iteration_list: list[int],
+    geogrid_name: str,
+    disc_param_name_per_zone: dict,
+    continuous_param_name: str,
+    facies_per_zone: dict[str, dict],
+):
+    for iter_number in iteration_list:
+        for real_number in range(nreal):
+            continuous_field_filename, _, result_grid_filename = (
+                make_file_names_result_path(
+                    ensemble_path,
+                    iter_number,
+                    real_number,
+                    continuous_param_name,
+                    geogrid_name,
+                )
+            )
+            # Read continuous parameter to use to create a discrete parameter
+            # by truncation
+            xtgeo_param = xtgeo.gridproperty_from_file(
+                continuous_field_filename, fformat="roff"
+            )
+            continuous_values = xtgeo_param.values
+
             disc_param_name_list = []
-            if zone_name in discrete_param_name_per_zone:
-                disc_param_name_list = discrete_param_name_per_zone[zone_name]
-            if len(param_name_list):
-                for n, param_name in enumerate(param_name_list):
-                    if print_info:
-                        print(
-                            f"Ensemble iteration: {iter_number} "
-                            f"Zone name: {zone_name} Param name:  {param_name}"
-                        )
-                    for real_number in range(nreal):
-                        values = np.ma.masked_all(
-                            (nx, ny, 3 * nz_ertbox), dtype=np.float32
-                        )
-                        filename, filename_active, filename_grid = make_file_names(
-                            ensemble_path,
-                            iter_number,
-                            real_number,
-                            param_name,
-                            geogrid_name,
-                        )
-                        values = assign_values_continuous_param(
-                            nz_ertbox,
-                            nreal,
-                            vparam * (n + 1),
-                            iter_number,
-                            len(iteration_list),
-                            real_number,
-                            values,
-                        )
-                        xtgeo_param = xtgeo.GridProperty(
-                            ncol=nx,
-                            nrow=ny,
-                            nlay=3 * nz_ertbox,
-                            discrete=False,
-                            values=values,
-                            name=param_name,
-                        )
-                        xtgeo_param.to_file(filename, fformat="roff")
+            for _, disc_param_names in disc_param_name_per_zone.items():
+                for param_name in disc_param_names:
+                    if param_name not in disc_param_name_list:
+                        disc_param_name_list.append(param_name)
 
-                        active = ~values.mask
-                        xtgeo_active = xtgeo.GridProperty(
-                            ncol=nx,
-                            nrow=ny,
-                            nlay=3 * nz_ertbox,
-                            discrete=False,
-                            values=active,
-                            name=param_name,
-                        )
-                        xtgeo_active.to_file(filename_active, fformat="roff")
-
-                        # The geogrid is here not realization dependent
-                        # but need to be saved for each realization anyway
-                        xtgeo_geogrid = xtgeo.create_box_grid((nx, ny, 3 * nz_ertbox))
-                        subgrid_dict = {
-                            "A": nz_ertbox,
-                            "B": nz_ertbox,
-                            "C": nz_ertbox,
-                        }
-
-                        xtgeo_geogrid.set_actnum(xtgeo_active)
-                        set_subgrid_names(xtgeo_geogrid, new_subgrids=subgrid_dict)
-                        xtgeo_geogrid.to_file(filename_grid, fformat="roff")
-
-            if len(disc_param_name_list):
-                for param_name in disc_param_name_list:
-                    if print_info:
-                        print(
-                            f"Ensemble iteration: {iter_number} "
-                            f"Zone name: {zone_name} Param name:  {param_name}"
-                        )
-                    for real_number in range(nreal):
-                        values = np.ma.masked_all(
-                            (nx, ny, 3 * nz_ertbox), dtype=np.uint8
-                        )
-                        filename, filename_active, filename_grid = make_file_names(
-                            ensemble_path,
-                            iter_number,
-                            real_number,
-                            param_name,
-                            geogrid_name,
-                        )
-
-                        values, code_names = assign_values_discrete_param(
-                            nz_ertbox,
-                            facies_per_zone,
-                            zone_code_names,
-                            real_number,
-                            values,
-                        )
-                        xtgeo_param = xtgeo.GridProperty(
-                            ncol=nx,
-                            nrow=ny,
-                            nlay=3 * nz_ertbox,
-                            discrete=True,
-                            values=values,
-                            codes=code_names,
-                            name=param_name,
-                        )
-                        xtgeo_param.to_file(filename, fformat="roff")
-
-                        active = ~values.mask
-                        xtgeo_active = xtgeo.GridProperty(
-                            ncol=nx,
-                            nrow=ny,
-                            nlay=3 * nz_ertbox,
-                            discrete=False,
-                            values=active,
-                            name=param_name,
-                        )
-                        xtgeo_active.to_file(filename_active, fformat="roff")
-                        # The geogrid is here not realization dependent
-                        # but need to be saved for each realization anyway
-                        xtgeo_geogrid = xtgeo.create_box_grid((nx, ny, 3 * nz_ertbox))
-                        subgrid_dict = {
-                            "A": nz_ertbox,
-                            "B": nz_ertbox,
-                            "C": nz_ertbox,
-                        }
-
-                        xtgeo_geogrid.set_actnum(xtgeo_active)
-                        set_subgrid_names(xtgeo_geogrid, new_subgrids=subgrid_dict)
-                        xtgeo_geogrid.to_file(filename_grid, fformat="roff")
-
-            if print_info:
-                print(
-                    "Testdata for ensemble for zone "
-                    f"{zone_name} for iteration {iter_number} completed."
+            # Make discrete parameters
+            for param_name in disc_param_name_list:
+                result_filename_facies, _, _ = make_file_names_result_path(
+                    ensemble_path,
+                    iter_number,
+                    real_number,
+                    param_name,
+                    geogrid_name,
                 )
-    print("Finished making testdata ensemble")
+                # Read multizone geogrid
+                xtgeo_grid = xtgeo.grid_from_file(result_grid_filename, fformat="roff")
+                dims = xtgeo_grid.dimensions
+
+                # Create facies parameter for multizone geogrid
+                values = np.zeros(dims, dtype=np.int32)
+                zone_names = list(facies_per_zone.keys())
+                facies_table = facies_per_zone[zone_names[0]]
+                facies_codes = list(facies_table.keys())
+                threshold1 = -0.5
+                threshold2 = 0.5
+                values[continuous_values < threshold1] = facies_codes[0]
+                values[
+                    (threshold1 <= continuous_values) & (continuous_values < threshold2)
+                ] = facies_codes[1]
+                values[continuous_values >= threshold2] = facies_codes[2]
+
+                xtgeo_facies_param = xtgeo.GridProperty(
+                    ncol=dims[0],
+                    nrow=dims[1],
+                    nlay=dims[2],
+                    name=param_name,
+                    discrete=True,
+                    codes=facies_table,
+                    values=values,
+                )
+
+                xtgeo_facies_param.to_file(result_filename_facies, fformat="roff")
 
 
-def assign_values_continuous_param(
-    nz, nreal, vparam, iter_number, niter, real_number, values
+def make_test_case_for_grids_and_fields(
+    tmp_path: Path,
+    config_dict: dict,
+    number_of_realizations_to_remove: int = 0,
+    start_seed: int = 123456789,
 ):
-    layer_values = np.ma.masked_all(3 * nz, dtype=np.float32)
-    for k in range(3 * nz):
-        if real_number < (nreal - 1):
-            if 0 <= k <= (nz - 2):
-                # Zone 1 Top conform (layer 0,..,nz-1)
-                # Bottom layer of zone is inactive for most realizations
-                layer_values[k] = (
-                    1.0
-                    * vparam
-                    * k
-                    * (real_number + 1)
-                    / nreal
-                    * (iter_number + 1)
-                    / niter
-                )
-            elif (2 * nz + 1) <= k <= (3 * nz - 1):
-                # Zone 3 Base conform  (layer nz,..,2*nz-1)
-                # Top layer of zone is inactive for most realizations
-                layer_values[k] = (
-                    3.0
-                    * vparam
-                    * k
-                    * (real_number + 1)
-                    / nreal
-                    * (iter_number + 1)
-                    / niter
-                )
-            elif nz <= k <= (2 * nz - 1):
-                # Zone 2 Proportional (layer nz,.. 2*nz-1)
-                # All layer of zone is active
-                layer_values[k] = (
-                    2.0
-                    * vparam
-                    * k
-                    * (real_number + 1)
-                    / nreal
-                    * (iter_number + 1)
-                    / niter
-                )
-        # For 1 realizations, fill all layers
-        elif 0 <= k <= (nz - 1):
-            # Zone 1 Top conform (layer 0,..,nz-1)
-            # Bottom layer of zone is active for some realizations
-            layer_values[k] = (
-                1.0 * vparam * k * (real_number + 1) / nreal * (iter_number + 1) / niter
-            )
-        elif (2 * nz) <= k <= (3 * nz - 1):
-            # Zone 3 Base conform  (layer nz,..,2*nz-1)
-            # Top layer of zone is active for some realizations
-            layer_values[k] = (
-                3.0 * vparam * k * (real_number + 1) / nreal * (iter_number + 1) / niter
-            )
-        elif nz <= k <= (2 * nz - 1):
-            # Zone 2 Proportional (layer nz,.. 2*nz-1)
-            # All layer of zone is active
-            layer_values[k] = (
-                2.0 * vparam * k * (real_number + 1) / nreal * (iter_number + 1) / niter
-            )
-    for k in range(3 * nz):
-        values[:, :, k] = layer_values[k]
-    return values
-
-
-def assign_values_discrete_param(
-    nz, facies_per_zone, zone_code_names, real_number, values
-):
-    # Test data made for nz = 5 and nreal = 10
-    nreal = 10
-    assert real_number < 10
-    assert nz * 3 == 15
-    facies_code_per_layer_per_realization = [
-        [1, 1, 3, 3, 2, 2, 1, 3, 1, 2],
-        [2, 3, 1, 1, 2, 1, 2, 3, 1, 1],
-        [2, 1, 2, 2, 2, 2, 1, 3, 3, 3],
-        [1, 1, 1, 3, 2, 1, 1, 3, 3, 3],
-        [3, 3, 1, 3, 2, 2, 1, 3, 1, 3],
-        [3, 3, 1, 3, 1, 2, 2, 3, 2, 1],
-        [3, 3, 3, 1, 2, 3, 1, 3, 1, 1],
-        [3, 3, 1, 3, 2, 2, 1, 3, 1, 1],
-        [2, 3, 1, 3, 1, 3, 3, 3, 1, 2],
-        [1, 3, 1, 1, 3, 2, 1, 3, 2, 3],
-        [2, 3, 1, 3, 3, 1, 3, 3, 1, 3],
-        [1, 1, 2, 3, 3, 1, 1, 3, 1, 2],
-        [3, 3, 2, 3, 2, 1, 1, 3, 1, 2],
-        [3, 3, 1, 3, 2, 2, 2, 3, 2, 1],
-        [3, 3, 1, 3, 2, 2, 1, 3, 1, 2],
-    ]
-
-    all_code_names = {}
-    for zone_name in zone_code_names.values():
-        code_names = facies_per_zone[zone_name]
-        for code, name in code_names.items():
-            if code not in all_code_names:
-                all_code_names[code] = name
-
-    for code in all_code_names:
-        assert code in {1, 2, 3}
-
-    for k in range(nz * 3):
-        if real_number < (nreal - 1):
-            if 0 <= k <= (nz - 2):
-                # Zone 1 Top conform (layer 0,..,nz-1)
-                # Bottom layer of zone is inactive for most realizations
-                values[:, :, k] = facies_code_per_layer_per_realization[k][real_number]
-            elif (2 * nz + 1) <= k <= (3 * nz - 1):
-                # Zone 3 Base conform  (layer nz,..,2*nz-1)
-                # Top layer of zone is inactive for most realizations
-                values[:, :, k] = facies_code_per_layer_per_realization[k][real_number]
-            elif nz <= k <= (2 * nz - 1):
-                # Zone 2 Proportional (layer nz,.. 2*nz-1)
-                # All layer of zone is active'
-                values[:, :, k] = facies_code_per_layer_per_realization[k][real_number]
-        else:
-            # For 1 realizations, fill all layers
-            values[:, :, k] = facies_code_per_layer_per_realization[k][real_number]
-
-    return values, all_code_names
-
-
-def make_test_case(tmp_path, config_dict):
-    """Makes a test data set based on the input config_dict"""
+    """
+    Makes a test data set based on the input config_dict
+    """
+    # Copy data directory tree
     tmp_testdata_path = tmp_path / TESTDATA
     shutil.copytree(DATADIR, tmp_testdata_path)
 
@@ -407,50 +445,136 @@ def make_test_case(tmp_path, config_dict):
     cfg_global = utils.yaml_load(glob_cfg_path)["global"]
     keyword = "FACIES_ZONE"
     facies_per_zone = cfg_global.get(keyword, None)
-    if facies_per_zone is None:
-        # Must set if in config file if not in global variables file
-        facies_per_zone = {
-            "A": {
-                1: "F1",
-                2: "F2",
-                3: "F3",
-            },
-            "B": {
-                1: "F1",
-                2: "F2",
-                3: "F3",
-            },
-            "C": {
-                1: "F1",
-                2: "F2",
-                3: "F3",
-            },
-        }
-    (nx, ny, nz) = config_dict["geogrid_fields"]["ertbox_size"]
+    (
+        use_geogrid_fields,
+        use_temporary_fields,
+        nreal,
+        iter_list,
+        _use_population_stdev,
+        relative_ertbox_path,
+        ertbox_per_zone,
+        ertbox_default,
+        _zone_code_names,
+        geo_zone_names_used,
+        _geo_zone_conformity,
+        geo_facies_per_zone,
+        geo_geogrid_name,
+        geo_param_name_dict,
+        geo_disc_param_name_dict,
+        __loader__field_init_path,
+        field_param_per_zone_dict,
+    ) = get_specifications(config_dict)
 
-    # Write file with ERTBOX grid for the purpose to import to visualize
-    # the test data in e.g. RMS. Saved in share directory at
-    # top of ensemble directory
-    make_box_grid((nx, ny, nz), "ERTBOX", result_path)
+    if geo_facies_per_zone:
+        facies_per_zone = geo_facies_per_zone
 
-    # Write file with geogrid for the purpose to import to visualize
-    # the test data in e.g. RMS". Geogrid for the test data has 3 zones,
-    # each with 5 layers. Saved in share directory at top of ensemble directory
-    make_box_grid((nx, ny, nz * 3), "Geogrid", result_path)
+    ertbox_config_path = ert_config_path / Path(relative_ertbox_path)
 
-    # Make ensemble of test data
-    make_ensemble_test_data(
-        config_dict, facies_per_zone, nx, ny, nz, ens_path, print_info=True
+    # Grid cell size
+    dx = 50.0
+    dy = 50.0
+    dz = 1.0
+    grid_increments = (dx, dy, dz)
+    ertbox_size_per_zone_dict = {"A": (5, 6, 10), "B": (5, 6, 5), "C": (5, 6, 15)}
+    ertbox_size_default = (5, 6, 5)
+
+    # Create ertbox grids
+    if ertbox_per_zone:
+        for zone_name in geo_zone_names_used:
+            dimensions = ertbox_size_per_zone_dict[zone_name]
+            grid = xtgeo.create_box_grid(dimensions, increment=grid_increments)
+            grid_name = config_dict["ertbox_per_zone"][zone_name]
+            filename_roff = ertbox_config_path / Path(grid_name + ".roff")
+            filename_egrid = ertbox_config_path / Path(grid_name + ".EGRID")
+            grid.to_file(filename_roff, fformat="roff")
+            grid.to_file(filename_egrid, fformat="egrid")
+
+    if ertbox_default:
+        dimensions = ertbox_size_default
+        grid = xtgeo.create_box_grid(dimensions, increment=grid_increments)
+        grid_name = config_dict["ertbox_default"]
+        filename_roff = ertbox_config_path / Path(grid_name + ".roff")
+        filename_egrid = ertbox_config_path / Path(grid_name + ".EGRID")
+        grid.to_file(filename_roff, fformat="roff")
+        grid.to_file(filename_egrid, fformat="egrid")
+
+    if use_geogrid_fields:
+        # Make geogrid_field test case
+        # Simulate realizations and save to directory where
+        # usually rms output realizations for geogrid is saved:
+        # ensemble_path/realizations-*/iter-*/share/results/grids
+
+        # Directory path to save ertbox grids under 'config path'
+        ertbox_config_path = Path(ert_config_path) / Path(relative_ertbox_path)
+
+        # Simulate realizations and save to directory where
+        # usually rms output realizations for geogrid is saved:
+        # ensemble_path/realizations-*/iter-*/share/results/grids
+        if geo_param_name_dict:
+            param_name_list = simulate_continuous_ensemble_test_data(
+                ens_path,
+                nreal,
+                iter_list,
+                geo_geogrid_name,
+                ertbox_size_per_zone_dict,
+                grid_increments,
+                geo_param_name_dict,
+                start_seed,
+                make_test_data_for_geogrid=True,
+            )
+
+        # Create discrete parameters for multizone geogrid
+        # Save to ensemble_path/realizations-*/iter-*/share/results/grids
+        if geo_disc_param_name_dict and geo_param_name_dict:
+            # Use param_name_list[0] simulated above as input
+            # to be truncated to get facies
+            define_discrete_test_data(
+                ens_path,
+                nreal,
+                iter_list,
+                geo_geogrid_name,
+                geo_disc_param_name_dict,
+                param_name_list[0],
+                facies_per_zone,
+            )
+
+    if use_temporary_fields:
+        # Create test data for field parameters
+        # where rms usually save initial field parameters in ertbox grids:
+        # ensemble_path/realizations-*/iter-*/rms/output/aps
+        simulate_continuous_ensemble_test_data(
+            ens_path,
+            nreal,
+            iter_list,
+            geo_geogrid_name,
+            ertbox_size_per_zone_dict,
+            grid_increments,
+            field_param_per_zone_dict,
+            start_seed,
+            make_test_data_for_geogrid=False,
+        )
+        remove_some_realizations_from_ensemble(
+            ens_path, iter_list[-1], nreal, number_of_realizations_to_remove
+        )
+
+    return (
+        facies_per_zone,
+        ens_path,
+        result_path,
+        ert_config_path,
+        ertbox_size_per_zone_dict,
     )
-    return facies_per_zone, ens_path, result_path, ert_config_path, (nx, ny, nz)
 
 
-def compare_with_referencedata(ens_path, result_path, print_check=False):
+def compare_field_stat_with_referencedata(
+    result_path, reference_file_list, compare_result_stat=True, print_check=False
+):
     lines = []
-    file_list = result_path / Path("referencedata/files.txt")
+    file_list = result_path / Path("referencedata2") / Path(reference_file_list)
     with open(file_list, encoding="utf-8") as file:
         lines = file.readlines()
     is_ok = []
+    nfiles = 34 if compare_result_stat else 12
 
     ncount = 0
     if print_check:
@@ -459,8 +583,15 @@ def compare_with_referencedata(ens_path, result_path, print_check=False):
         name = nameinput.strip()
         words = name.split("_")
         if words[0] in {"mean", "stdev", "prob"}:
-            fullfilename = result_path / Path("ertbox--" + name)
-            reference_filename = result_path / Path("referencedata") / Path(name)
+            if compare_result_stat:
+                fullfilename = result_path / Path("ertbox--" + name)
+                reference_filename = (
+                    result_path / Path("referencedata2") / Path("ertbox--" + name)
+                )
+            else:
+                fullfilename = result_path / Path(name)
+                reference_filename = result_path / Path("referencedata2") / Path(name)
+
             grid_property = xtgeo.gridproperty_from_file(fullfilename, fformat="roff")
             grid_property_reference = xtgeo.gridproperty_from_file(
                 reference_filename, fformat="roff"
@@ -478,41 +609,12 @@ def compare_with_referencedata(ens_path, result_path, print_check=False):
                     print(f"Not equal to reference for {fullfilename}")
                 is_ok.append(False)
     is_success = True
-    if ncount < 34:
+    if ncount < nfiles:
         is_success = False
     for i in range(ncount):
         if not is_ok[i]:
             is_success = False
     return is_success
-
-
-@pytest.mark.parametrize(
-    "config_dict",
-    [CONFIG_DICT],
-)
-def test_calc_statistics(
-    tmp_path,
-    config_dict,
-    ertbox_size=None,
-):
-    # Create testdata for an ensemble to be used
-    facies_per_zone, ens_path, result_path, ert_config_path, ertbox_size = (
-        make_test_case(tmp_path, config_dict)
-    )
-
-    # Run the calculations of mean, stdev, prob
-    print("Calculate statistics")
-    calc_stats(
-        config_dict,
-        ens_path,
-        facies_per_zone,
-        result_path,
-        ert_config_path,
-        ertbox_size,
-    )
-
-    # Check that the result is equal to reference data set
-    assert compare_with_referencedata(ens_path, result_path, print_check=True)
 
 
 @pytest.mark.parametrize(
@@ -703,14 +805,22 @@ def test_check_use_zones_errors(zone_code_names, zone_names, expected_error):
 CONFIG_DICT_REF = {
     "nreal": 10,
     "iterations": [0, 3],
+    "use_population_stdev": False,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_per_zone": {
+        "A": "ertbox_A",
+        "B": "ertbox_B",
+        "C": "ertbox_C",
+    },
+    "ertbox_default": "ERTBOX",
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+        3: "C",
+    },
     "geogrid_fields": {
-        "geogrid_name": "my_geogrid",
+        "geogrid_name": "geogrid",
         "use_zones": ["A", "B", "C"],
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-            3: "C",
-        },
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -743,20 +853,32 @@ CONFIG_DICT_REF = {
             "B": ["P1"],
             "C": ["P2"],
         },
-        "ertbox_size": [5, 6, 5],
     },
-    "use_population_stdev": False,
+    "temporary_ertbox_fields": {
+        "initial_field_relative_path": "rms/output/aps",
+        "parameter_name_per_zone": {
+            "A": ["A_GRF1", "A_GRF2"],
+            "B": ["B_GRF2"],
+        },
+    },
 }
 
 CONFIG_A = {
     "nreal": 10,
     "iterations": [0],
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_default": "ERTBOX",
+    "ertbox_per_zone": {
+        "A": "ertbox_A",
+        "B": "ertbox_B",
+        "C": "ertbox_C",
+    },
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+    },
     "geogrid_fields": {
         "geogrid_name": "geogrid",
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-        },
         "zone_conformity": {
             "A": "Base_conform",
             "B": "Top_conform",
@@ -780,19 +902,26 @@ CONFIG_A = {
             "A": ["P1", "P2"],
             "B": ["P1"],
         },
-        "ertbox_size": [50, 60, 50],
     },
 }
 
 CONFIG_A_REF = {
     "nreal": 10,
     "iterations": [0],
+    "use_population_stdev": False,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_default": "ERTBOX",
+    "ertbox_per_zone": {
+        "A": "ertbox_A",
+        "B": "ertbox_B",
+        "C": "ertbox_C",
+    },
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+    },
     "geogrid_fields": {
         "geogrid_name": "geogrid",
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-        },
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -816,23 +945,29 @@ CONFIG_A_REF = {
             "A": ["P1", "P2"],
             "B": ["P1"],
         },
-        "ertbox_size": [50, 60, 50],
         "use_zones": ["A", "B"],
     },
-    "use_population_stdev": False,
 }
 
 CONFIG_B = {
     "nreal": 10,
     "iterations": [0],
+    "use_population_stdev": True,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_default": "ERTBOX",
+    "ertbox_per_zone": {
+        "A": "ertbox_A",
+        "B": "ertbox_B",
+        "C": "ertbox_C",
+    },
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "D",
+    },
     "geogrid_fields": {
         "geogrid_name": "geogrid",
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-            3: "C",
-            4: "D",
-        },
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -866,20 +1001,27 @@ CONFIG_B = {
         },
         "ertbox_size": [10, 6, 15],
     },
-    "use_population_stdev": True,
 }
 
 CONFIG_B_REF = {
     "nreal": 10,
     "iterations": [0],
+    "use_population_stdev": True,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_default": "ERTBOX",
+    "ertbox_per_zone": {
+        "A": "ertbox_A",
+        "B": "ertbox_B",
+        "C": "ertbox_C",
+    },
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "D",
+    },
     "geogrid_fields": {
         "geogrid_name": "geogrid",
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-            3: "C",
-            4: "D",
-        },
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -914,19 +1056,22 @@ CONFIG_B_REF = {
         "ertbox_size": [10, 6, 15],
         "use_zones": ["B", "D"],
     },
-    "use_population_stdev": True,
 }
 
 CONFIG_C = {
     "nreal": 10,
     "iterations": [0],
+    "use_population_stdev": True,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_default": "ERTBOX",
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "D",
+    },
     "geogrid_fields": {
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-            3: "C",
-            4: "D",
-        },
+        "geogrid_name": "geogrid",
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -961,21 +1106,27 @@ CONFIG_C = {
             "B": ["facies3"],
             "C": ["facies1", "facies2"],
         },
-        "ertbox_size": [10, 6, 15],
+        "continuous_property_param_per_zone": {
+            "A": ["GRF1"],
+        },
     },
-    "use_population_stdev": True,
 }
 
 CONFIG_C_REF = {
     "nreal": 10,
     "iterations": [0],
+    "use_population_stdev": True,
+    "relative_path_ertbox_grids": "../../rms/output/aps",
+    "ertbox_default": "ERTBOX",
+    "zone_code_names": {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "D",
+    },
     "geogrid_fields": {
-        "zone_code_names": {
-            1: "A",
-            2: "B",
-            3: "C",
-            4: "D",
-        },
+        "geogrid_name": "geogrid",
+        "use_zones": ["A", "B", "C", "D"],
         "facies_per_zone": {
             "A": {
                 1: "F1",
@@ -1010,76 +1161,200 @@ CONFIG_C_REF = {
             "C": ["facies1", "facies2"],
             "B": ["facies3"],
         },
-        "property_param_per_zone": None,
-        "ertbox_size": [10, 6, 15],
-        "use_zones": ["A", "B", "C", "D"],
+        "continuous_property_param_per_zone": {
+            "A": ["GRF1"],
+        },
     },
-    "use_population_stdev": True,
 }
 
 
 @pytest.mark.parametrize(
-    "input_dict, reference_dict,ert_config_path",
+    "input_dict, reference_dict",
     [
-        (CONFIG_DICT, CONFIG_DICT_REF, ERT_CONFIG_PATH),
-        (CONFIG_A, CONFIG_A_REF, ERT_CONFIG_PATH),
-        (CONFIG_B, CONFIG_B_REF, ERT_CONFIG_PATH),
+        (CONFIG_DICT, CONFIG_DICT_REF),
+        (CONFIG_A, CONFIG_A_REF),
+        (CONFIG_B, CONFIG_B_REF),
+        (CONFIG_C, CONFIG_C_REF),
     ],
 )
 def test_get_specification(
-    input_dict, reference_dict, ert_config_path, ertbox_size=None
+    input_dict,
+    reference_dict,
 ):
     (
-        _use_geogrid_fields,
-        _use_temporary_fields,
-        ertbox_size,
+        use_geogrid_fields,
+        use_temporary_fields,
         nreal,
         iter_list,
         use_population_stdev,
-        zone_names,
-        zone_conformity,
+        relative_path_ertbox_grids,
+        ertbox_per_zone,
+        ertbox_default,
         zone_code_names,
-        facies_per_zone,
-        geogrid_name,
-        param_name_dict,
-        disc_param_name_dict,
-        _,
-        _,
+        geo_zone_names_used,
+        geo_zone_conformity,
+        geo_facies_per_zone,
+        geo_geogrid_name,
+        geo_param_name_dict,
+        geo_disc_param_name_dict,
+        field_init_path,
+        field_param_per_zone_dict,
     ) = get_specifications(
-        input_dict, ertbox_size, ert_config_path, use_facies_per_zone=True
+        input_dict,
     )
-    assert ertbox_size == reference_dict["geogrid_fields"]["ertbox_size"]
-    assert zone_names == reference_dict["geogrid_fields"]["use_zones"]
+
+    # Global keywords
     assert nreal == reference_dict["nreal"]
     assert iter_list == reference_dict["iterations"]
-    assert zone_conformity == reference_dict["geogrid_fields"]["zone_conformity"]
-    assert zone_code_names == reference_dict["geogrid_fields"]["zone_code_names"]
-    assert facies_per_zone == reference_dict["geogrid_fields"]["facies_per_zone"]
     assert use_population_stdev == reference_dict["use_population_stdev"]
-    assert (
-        param_name_dict
-        == reference_dict["geogrid_fields"]["continuous_property_param_per_zone"]
-    )
-    assert (
-        disc_param_name_dict
-        == reference_dict["geogrid_fields"]["discrete_property_param_per_zone"]
-    )
-    assert geogrid_name == reference_dict["geogrid_fields"]["geogrid_name"]
+    assert relative_path_ertbox_grids == reference_dict["relative_path_ertbox_grids"]
+    if "ertbox_per_zone" in reference_dict:
+        assert ertbox_per_zone == reference_dict["ertbox_per_zone"]
+    if "ertbox_default" in reference_dict:
+        assert ertbox_default == reference_dict["ertbox_default"]
+    assert zone_code_names == reference_dict["zone_code_names"]
+
+    if "geogrid_fields" in input_dict:
+        # Sub keywords for geogrid_fields
+        assert use_geogrid_fields
+        assert geo_geogrid_name == reference_dict["geogrid_fields"]["geogrid_name"]
+        if "use_zones" in reference_dict["geogrid_fields"]:
+            assert geo_zone_names_used == reference_dict["geogrid_fields"]["use_zones"]
+        if "facies_per_zone" in reference_dict["geogrid_fields"]:
+            assert (
+                geo_facies_per_zone
+                == reference_dict["geogrid_fields"]["facies_per_zone"]
+            )
+        assert (
+            geo_zone_conformity == reference_dict["geogrid_fields"]["zone_conformity"]
+        )
+        if "discrete_property_param_per_zone" in reference_dict["geogrid_fields"]:
+            assert (
+                geo_disc_param_name_dict
+                == reference_dict["geogrid_fields"]["discrete_property_param_per_zone"]
+            )
+        if "continuous_property_param_per_zone" in reference_dict["geogrid_fields"]:
+            assert (
+                geo_param_name_dict
+                == reference_dict["geogrid_fields"][
+                    "continuous_property_param_per_zone"
+                ]
+            )
+
+    # Sub keywords for temporary_ertbox_fields
+    if "temporary_ertbox_fields" in input_dict:
+        assert use_temporary_fields
+        assert (
+            field_init_path
+            == reference_dict["temporary_ertbox_fields"]["initial_field_relative_path"]
+        )
+        assert (
+            field_param_per_zone_dict
+            == reference_dict["temporary_ertbox_fields"]["parameter_name_per_zone"]
+        )
 
 
 @pytest.mark.parametrize(
-    "config_file, config_dict",
-    [(Path("config_example.yml"), CONFIG_DICT)],
+    "config_dict, nreal, nreal_lost",
+    [
+        (CONFIG_DICT, 10, 0),
+        (CONFIG_DICT, 10, 2),
+        (CONFIG_DICT, 10, 8),
+    ],
 )
-def test_main(tmp_path, config_file, config_dict, print_info=True):
-    # First make an ensemble to be used as testdata. This is based on the config_dict
-    _, ens_path, result_path, ert_config_path, _ = make_test_case(tmp_path, config_dict)
-    tmp_testdata_path = tmp_path / TESTDATA
-    config_path = tmp_testdata_path / Path(config_file)
-    ert_config_path = tmp_testdata_path / ERT_CONFIG_PATH
-    ens_path = tmp_testdata_path / ENSEMBLE
-    result_path = ens_path / RESULT_PATH
+def test_compare_mean_stdev_of_ensembles_version_2(
+    tmp_path, config_dict, nreal, nreal_lost
+):
+    field_name = "A_GRF1"
+    # simulate_ensembles(nreal, nx, ny, nz, nreal_lost, tmp_path, field_name)
+    assert (nreal - nreal_lost) >= 2
+    _facies_per_zone, ens_path, result_path, ert_config_path, _ = (
+        make_test_case_for_grids_and_fields(
+            tmp_path, config_dict, number_of_realizations_to_remove=nreal_lost
+        )
+    )
 
+    calc_temporary_field_stats(config_dict, ens_path, result_path, ert_config_path)
+    compare_ensemble_stats(result_path, field_name)
+
+
+def compare_ensemble_stats(result_path, field_name, tolerance=1e-8):
+    mean_file_name1 = Path(result_path) / Path("mean_" + field_name + "_0.roff")
+    mean_file_name2 = Path(result_path) / Path("mean_" + field_name + "_3.roff")
+    xtgeo_mean1_field = xtgeo.gridproperty_from_file(mean_file_name1, fformat="roff")
+    xtgeo_mean2_field = xtgeo.gridproperty_from_file(mean_file_name2, fformat="roff")
+    diff_values = np.abs(xtgeo_mean1_field.values - xtgeo_mean2_field.values)
+    assert np.all(diff_values < tolerance)
+
+    sdev_file_name1 = Path(result_path) / Path("stdev_" + field_name + "_0.roff")
+    sdev_file_name2 = Path(result_path) / Path("stdev_" + field_name + "_3.roff")
+    xtgeo_sdev1_field = xtgeo.gridproperty_from_file(sdev_file_name1, fformat="roff")
+    xtgeo_sdev2_field = xtgeo.gridproperty_from_file(sdev_file_name2, fformat="roff")
+    diff_values = np.abs(xtgeo_sdev1_field.values - xtgeo_sdev2_field.values)
+    assert np.all(diff_values < tolerance)
+
+
+@pytest.fixture
+def configuration():
+    return CONFIG_DICT
+
+
+@pytest.fixture
+def generated_test_data(tmp_path, configuration):
+    """Fixture to generate test data for geogrid fields."""
+    config_dict = configuration
+    return make_test_case_for_grids_and_fields(tmp_path, config_dict)
+
+
+def test_calc_geogrid_field_stats(generated_test_data, configuration):
+    # Run the calculations of mean, stdev, prob
+    print(
+        "\nCalculate statistics for geogrid parameters "
+        "but per zone in ertbox for the zone"
+    )
+
+    facies_per_zone, ens_path, result_path, ert_config_path, _ = generated_test_data
+    config_dict = configuration
+    calc_stats(config_dict, ens_path, facies_per_zone, result_path, ert_config_path)
+
+    # Check that the result is equal to reference data set
+    reference_file_list = "result_field_files.txt"
+    assert compare_field_stat_with_referencedata(
+        result_path, reference_file_list, compare_result_stat=True, print_check=True
+    )
+
+
+def test_calc_temporary_field_stats(generated_test_data, configuration):
+    # Create testdata for an ensemble to be used
+    print(
+        "\nMake test data for fields for ertbox grids:\n"
+        "      realization-*/iter-0/rms/output/aps/<field_name>.roff\n"
+        "      realization-*/iter-3/<field_name>.roff"
+    )
+    _, ens_path, result_path, ert_config_path, _ = generated_test_data
+    config_dict = configuration
+    # Run the calculations of mean, stdev, prob
+    print("Calculate statistics for temporary ertbox grid parameters")
+    calc_temporary_field_stats(config_dict, ens_path, result_path, ert_config_path)
+
+    # Check that the result is equal to reference data set
+    reference_file_list = "temporary_field_files.txt"
+    assert compare_field_stat_with_referencedata(
+        result_path, reference_file_list, compare_result_stat=False, print_check=True
+    )
+
+
+def test_main(generated_test_data):
+    (
+        _facies_per_zone,
+        ens_path,
+        result_path,
+        ert_config_path,
+        _ertbox_size_per_zone_dict,
+    ) = generated_test_data
+
+    tmp_testdata_path = ens_path.parent
+    config_path = tmp_testdata_path / Path("config_example.yml")
     rms_load_script = result_path / RMS_LOAD_SCRIPT_NAME
 
     # Run the main script as a subprocess
@@ -1100,126 +1375,17 @@ def test_main(tmp_path, config_file, config_dict, print_info=True):
         ],
         check=True,
     )
-    # For this test not to fail, the CONFIG_DICT and the specified
-    # config file in yaml format must define the same setup
-    assert compare_with_referencedata(ens_path, result_path, print_check=True)
 
-
-def simulate_ensembles(
-    nreal: int, nx: int, ny: int, nz: int, nreal_lost: int, result_dir: str
-) -> None:
-    sim.seed(123456)
-    variogram = sim.variogram("exponential", 100.0, 50.0, 5.0, 45.0, 0.0)
-    dx = 5.0
-    dy = 5.0
-    dz = 1.0
-    init_ens_field_3d = np.zeros((nx, ny, nz, nreal), dtype=np.float32)
-    final_ens_field_3d = np.zeros((nx, ny, nz, nreal - nreal_lost), dtype=np.float32)
-    for i in range(nreal):
-        gauss_vector = sim.simulate(variogram, nx, dx, ny, dy, nz, dz)
-        field_3d = gauss_vector.reshape((nx, ny, nz), order="F")
-        init_ens_field_3d[:, :, :, i] = field_3d
-        if i < (nreal - nreal_lost):
-            final_ens_field_3d[:, :, :, i] = field_3d
-    write_ensemble(init_ens_field_3d, final_ens_field_3d, result_dir)
-
-
-def write_ensemble(init_ens_field_3d, final_ens_field_3d, result_dir):
-    nx, ny, nz, nreal = init_ens_field_3d.shape
-    _, _, _, nreal_final = final_ens_field_3d.shape
-
-    init_real_defined = np.arange(nreal)
-    final_real_defined = np.arange(nreal_final)
-    for iter in [0, 1]:
-        if iter == 0:
-            for i in init_real_defined:
-                real_path = (
-                    Path(result_dir)
-                    / Path("realization-" + str(i))
-                    / Path("iter-" + str(iter))
-                )
-                real_path /= Path("rms/output/aps")
-                values = init_ens_field_3d[:, :, :, i]
-                name = "GRF"
-                xtgeo_param = xtgeo.GridProperty(
-                    ncol=nx,
-                    nrow=ny,
-                    nlay=nz,
-                    name=name,
-                    roxar_dtype=np.float32,
-                    values=values,
-                )
-                if not real_path.exists():
-                    real_path.mkdir(parents=True, exist_ok=True)
-                real_path /= Path("GRF.roff")
-                xtgeo_param.to_file(real_path, fformat="roff")
-        else:
-            for i in final_real_defined:
-                real_path = (
-                    Path(result_dir)
-                    / Path("realization-" + str(i))
-                    / Path("iter-" + str(iter))
-                )
-                values = final_ens_field_3d[:, :, :, i]
-                name = "GRF"
-                xtgeo_param = xtgeo.GridProperty(
-                    ncol=nx,
-                    nrow=ny,
-                    nlay=nz,
-                    name=name,
-                    roxar_dtype=np.float32,
-                    values=values,
-                )
-                if not real_path.exists():
-                    real_path.mkdir(parents=True, exist_ok=True)
-                real_path /= Path("GRF.roff")
-                xtgeo_param.to_file(real_path, fformat="roff")
-
-
-@pytest.mark.parametrize(
-    "nreal, nreal_lost",
-    [
-        (10, 0),
-        (10, 2),
-        (10, 8),  # Number of realizations must be at least 2
-    ],
-)
-def test_compare_mean_stdev_of_ensembles(tmp_path, nreal, nreal_lost):
-    nx = 5
-    ny = 5
-    nz = 2
-    field_name = "GRF"
-    simulate_ensembles(nreal, nx, ny, nz, nreal_lost, tmp_path)
-    ertbox_size = (nx, ny, nz)
-    input_dict = {
-        "nreal": nreal,
-        "iterations": [0, 1],
-        "use_population_stdev": False,
-        "temporary_ertbox_fields": {
-            "initial_relative_path": "rms/output/aps",
-            "parameter_names": [field_name],
-        },
-    }
-    ens_path = tmp_path
-    result_path = tmp_path
-    ert_config_path = None
-    calc_temporary_field_stats(
-        input_dict, ens_path, result_path, ert_config_path, ertbox_size
+    # Verify field statistics results
+    assert compare_field_stat_with_referencedata(
+        result_path,
+        "result_field_files.txt",
+        compare_result_stat=True,
+        print_check=True,
     )
-    compare_ensemble_stats(result_path, field_name)
-
-
-def compare_ensemble_stats(result_path, field_name, tolerance=1e-8):
-    mean_file_name1 = Path(result_path) / Path("mean_" + field_name + "_0.roff")
-    mean_file_name2 = Path(result_path) / Path("mean_" + field_name + "_1.roff")
-    xtgeo_mean1_field = xtgeo.gridproperty_from_file(mean_file_name1, fformat="roff")
-    xtgeo_mean2_field = xtgeo.gridproperty_from_file(mean_file_name2, fformat="roff")
-    diff_values = np.abs(xtgeo_mean1_field.values - xtgeo_mean2_field.values)
-    assert np.all(diff_values < tolerance)
-
-    sdev_file_name1 = Path(result_path) / Path("stdev_" + field_name + "_0.roff")
-    sdev_file_name2 = Path(result_path) / Path("stdev_" + field_name + "_1.roff")
-    xtgeo_sdev1_field = xtgeo.gridproperty_from_file(sdev_file_name1, fformat="roff")
-    xtgeo_sdev2_field = xtgeo.gridproperty_from_file(sdev_file_name2, fformat="roff")
-    diff_values = np.abs(xtgeo_sdev1_field.values - xtgeo_sdev2_field.values)
-    assert np.all(diff_values < tolerance)
+    assert compare_field_stat_with_referencedata(
+        result_path,
+        "temporary_field_files.txt",
+        compare_result_stat=False,
+        print_check=True,
+    )
