@@ -82,8 +82,8 @@
 <li class="toctree-l1"><a class="reference internal" href="pack_sim.html">PACK_SIM</a></li>
 <li class="toctree-l1"><a class="reference internal" href="params2csv.html">PARAMS2CSV</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">PRESENTVALUE</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#subscript.presentvalue.presentvalue-get_parser-positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#subscript.presentvalue.presentvalue-get_parser-named-arguments">Named Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#presentvalue-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#presentvalue-named-arguments">Named Arguments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example">Example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#economic-input">Economic input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#difference-profiles">Difference profiles</a></li>
@@ -134,7 +134,7 @@
 <p><p>Calculated present value of oil and gas streams from an Eclipse
 simulation. Optional yearly costs, and optional variation in prices.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">presentvalue</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">oilprice</span> <span class="n">OILPRICE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">gasprice</span> <span class="n">GASPRICE</span><span class="p">]</span>
+<div class="highlight-default notranslate" id="id0"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">presentvalue</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">oilprice</span> <span class="n">OILPRICE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">gasprice</span> <span class="n">GASPRICE</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">usdtonok</span> <span class="n">USDTONOK</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">discountrate</span> <span class="n">DISCOUNTRATE</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">discountto</span> <span class="n">DISCOUNTTO</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">writetoparams</span><span class="p">]</span>
                     <span class="p">[</span><span class="o">--</span><span class="n">paramname</span> <span class="n">PARAMNAME</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">oilvector</span> <span class="n">OILVECTOR</span><span class="p">]</span>
@@ -145,16 +145,16 @@ simulation. Optional yearly costs, and optional variation in prices.</p>
                     <span class="n">datafiles</span> <span class="p">[</span><span class="n">datafiles</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="subscript.presentvalue.presentvalue-get_parser-positional-arguments">
-<h2>Positional Arguments<a class="headerlink" href="#subscript.presentvalue.presentvalue-get_parser-positional-arguments" title="Link to this heading"></a></h2>
+<section id="presentvalue-positional-arguments">
+<span id="subscript.presentvalue.presentvalue-get_parser-positional-arguments"></span><h2>Positional Arguments<a class="headerlink" href="#presentvalue-positional-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>datafiles</kbd></dt>
 <dd><p>Input Eclipse DATA files</p>
 </dd>
 </dl>
 </section>
-<section id="subscript.presentvalue.presentvalue-get_parser-named-arguments">
-<h2>Named Arguments<a class="headerlink" href="#subscript.presentvalue.presentvalue-get_parser-named-arguments" title="Link to this heading"></a></h2>
+<section id="presentvalue-named-arguments">
+<span id="subscript.presentvalue.presentvalue-get_parser-named-arguments"></span><h2>Named Arguments<a class="headerlink" href="#presentvalue-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--oilprice</kbd></dt>
 <dd><p>Constant oil price in USD/bbl</p>

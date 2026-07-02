@@ -70,8 +70,8 @@
 <li class="toctree-l1"><a class="reference internal" href="csv_stack.html">CSV_STACK</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">ECLCOMPRESS</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#command-line">Command line</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subscript.eclcompress.eclcompress-get_parser-positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subscript.eclcompress.eclcompress-get_parser-named-arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eclcompress-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#eclcompress-named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ert-usage">ERT usage</a></li>
@@ -163,21 +163,21 @@ compressed versions.</p>
 If called with <code class="docutils literal notranslate"><span class="pre">&lt;FILES&gt;</span></code>, the argument provided must be a filepath to
 a text file containing a file list to compress.</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">eclcompress</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dryrun</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keeporiginal</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">files</span> <span class="n">FILES</span><span class="p">]</span>
+<div class="highlight-default notranslate" id="id0"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">eclcompress</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dryrun</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">keeporiginal</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">files</span> <span class="n">FILES</span><span class="p">]</span>
                    <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                    <span class="p">[</span><span class="n">grdeclfiles</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
-<section id="subscript.eclcompress.eclcompress-get_parser-positional-arguments">
-<h3>Positional Arguments<a class="headerlink" href="#subscript.eclcompress.eclcompress-get_parser-positional-arguments" title="Link to this heading"></a></h3>
+<section id="eclcompress-positional-arguments">
+<span id="subscript.eclcompress.eclcompress-get_parser-positional-arguments"></span><h3>Positional Arguments<a class="headerlink" href="#eclcompress-positional-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>grdeclfiles</kbd></dt>
 <dd><p>List of Eclipse grdecl files to compress, supporting wildcards. If no files are given, a default wildcard list will be used. Wildcards should be enclosed in quotes when called on the command line.</p>
 </dd>
 </dl>
 </section>
-<section id="subscript.eclcompress.eclcompress-get_parser-named-arguments">
-<h3>Named Arguments<a class="headerlink" href="#subscript.eclcompress.eclcompress-get_parser-named-arguments" title="Link to this heading"></a></h3>
+<section id="eclcompress-named-arguments">
+<span id="subscript.eclcompress.eclcompress-get_parser-named-arguments"></span><h3>Named Arguments<a class="headerlink" href="#eclcompress-named-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>--dryrun</kbd></dt>
 <dd><p>Dry run only. No files on disk will be modified, but compression statistics will be outputted.</p>

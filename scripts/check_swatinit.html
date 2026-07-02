@@ -69,8 +69,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#outputted-csv-file">Outputted CSV file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#example-plots">Example plots</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-syntax">Command line syntax</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#subscript.check_swatinit.check_swatinit-get_parser-positional-arguments">Positional Arguments</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#subscript.check_swatinit.check_swatinit-get_parser-named-arguments">Named Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check_swatinit-positional-arguments">Positional Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check_swatinit-named-arguments">Named Arguments</a></li>
 </ul>
 </li>
 </ul>
@@ -320,22 +320,22 @@ specific EQLNUM. Use the command line option <code class="docutils literal notra
 <h2>Command line syntax<a class="headerlink" href="#command-line-syntax" title="Link to this heading"></a></h2>
 <p><p>QC tool for SWATINIT vs SWAT in Eclipse runs</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">check_swatinit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplotfile</span> <span class="n">VOLPLOTFILE</span><span class="p">]</span>
+<div class="highlight-default notranslate" id="check_swatinit"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">check_swatinit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUTPUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">volplotfile</span> <span class="n">VOLPLOTFILE</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">plot</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">plotfile</span> <span class="n">PLOTFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">eqlnum</span> <span class="n">EQLNUM</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                       <span class="n">DATAFILE</span>
 </pre></div>
 </div>
-<section id="subscript.check_swatinit.check_swatinit-get_parser-positional-arguments">
-<h3>Positional Arguments<a class="headerlink" href="#subscript.check_swatinit.check_swatinit-get_parser-positional-arguments" title="Link to this heading"></a></h3>
+<section id="check_swatinit-positional-arguments">
+<span id="subscript.check_swatinit.check_swatinit-get_parser-positional-arguments"></span><h3>Positional Arguments<a class="headerlink" href="#check_swatinit-positional-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>DATAFILE</kbd></dt>
 <dd><p>Eclipse DATA-file for a finished run with restart data. It is also possible to provide a CSV file that has earlier been exported by this tool, which will trigger a rerun of the volumetric report and plotting.</p>
 </dd>
 </dl>
 </section>
-<section id="subscript.check_swatinit.check_swatinit-get_parser-named-arguments">
-<h3>Named Arguments<a class="headerlink" href="#subscript.check_swatinit.check_swatinit-get_parser-named-arguments" title="Link to this heading"></a></h3>
+<section id="check_swatinit-named-arguments">
+<span id="subscript.check_swatinit.check_swatinit-get_parser-named-arguments"></span><h3>Named Arguments<a class="headerlink" href="#check_swatinit-named-arguments" title="Link to this heading"></a></h3>
 <dl class="option-list">
 <dt><kbd>-o, --output</kbd></dt>
 <dd><p>Output filename for CSV that can be used for QC in other tools</p>
