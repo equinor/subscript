@@ -63,7 +63,7 @@ tests = [
     "pytest-xdist",
     "rstcheck",
     "rstcheck-core",
-    "ruff",
+    "ruff>=0.15.22",
     "types-Jinja2",
     "types-PyYAML",
     "types-python-dateutil",
@@ -203,20 +203,21 @@ select = [
 preview = true
 
 ignore = [
-    "C901",  # complex-structure
-    "PD013",  # pandas-use-of-dot-stack
-    "PLR0915",  # too-many-statements
-    "PLR0912",  # too-many-branches
-    "PLR2004",  # magic-value-comparison
-    "PLW2901",  # redefined-loop-name
-    "PLC2701", # import-private-name
-    "PLR0914", # too-many-locals
-    "PLR6301", # no-self-use
-    "PLR0904", # too-many-public-methods
-    "PLR1702", # too-many-nested-blocks
-    "RUF067",  # non empty init module
-    "RUF069",  # unreliable-floating-point-equality
-    "PLC1901",  # compare-to-empty-string
+    "complex-structure",
+    "pandas-use-of-dot-stack",
+    "too-many-statements",
+    "too-many-branches",
+    "magic-value-comparison",
+    "redefined-loop-name",
+    "import-private-name",
+    "too-many-locals",
+    "no-self-use",
+    "too-many-public-methods",
+    "too-many-nested-blocks",
+    "non-empty-init-module",
+    "float-equality-comparison",
+    "compare-to-empty-string",
+    "noqa-comments",
 ]
 
 [tool.ruff.lint.extend-per-file-ignores]
