@@ -245,10 +245,30 @@ def inspect_file(
         line_strip_no_comment = _remove_comments(True, line_strip).strip()
         line = _remove_comments(clear_comments, line)
 
-        if line.upper().startswith(("INCLUDE", "GDFILE", "IMPORT")):
+        toks = line.split()
+        is_pyaction = len(toks) > 0 and toks[0] == "PYACTION"
+
+        if line.upper().startswith(("INCLUDE", "GDFILE", "IMPORT")) or is_pyaction:
             # Include keyword found!
-            logger.info("%s%s", indent, "FOUND INCLUDE FILE ==>")
+            if is_pyaction:
+                logger.info("%s%s", indent, "FOUND PYACTION SCRIPT ==>")
+            else:
+                logger.info("%s%s", indent, "FOUND INCLUDE FILE ==>")
+
             new_data_file += line
+
+            # For PYACTION, handle the first record separately,
+            # before letting the common code handle the include
+            if is_pyaction:
+                while True:
+                    line = next(lines)
+                    line_strip = _normalize_line_endings(line).strip()
+                    line_strip = _remove_comments(clear_comments, line_strip)
+                    line_strip_no_comment = _remove_comments(True, line_strip).strip()
+                    line = _remove_comments(clear_comments, line)
+                    new_data_file += line
+                    if line_strip_no_comment.find("/") >= 0:
+                        break
 
             # In the INCLUDE or GDFILE keyword, find the include path and
             # ignore comments, continuing iterating the same file handle
@@ -294,10 +314,11 @@ def inspect_file(
                         include_filename = _expand_filename(
                             include_stripped, org_sim_loc
                         )
-                        if file_is_binary(include_filename):
+                        if file_is_binary(include_filename) or is_pyaction:
                             logger.info(
-                                "%sThe file %s seems to be binary; we'll simply copy "
-                                "this file and skip scanning its contents.",
+                                "%sThe file %s seems to be binary or a python file;"
+                                "we'll simply copy this file "
+                                "and skip scanning its contents.",
                                 indent,
                                 include_stripped,
                             )
