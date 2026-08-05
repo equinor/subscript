@@ -24,6 +24,8 @@ from numpy.ma import MaskedArray
 
 import subscript
 
+MAIN_KEYWORD = "field_stat"
+
 logger = subscript.getLogger(__name__)
 DESCRIPTION_FOR_ERT = """Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.
@@ -31,6 +33,14 @@ from field parameters using ERTBOX grid.
 
 DESCRIPTION = """Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.
+
+The script is relevant only if the FMU model uses field parameters and
+the user wants to check the prior and updated ensembles of the field
+parameters. Note that all field parameters that are updated using
+the ERT FIELD keyword in ERT config file, are temporarily stored in
+the help grid(s) often called 'ERTBOX' grids. There can be one common ERTBOX grid
+for all geomodel zones in the RMS project and in the ERT config file, or
+there can be one individual ERTBOX grid per zone.
 
 The script reads ensembles of realizations from scratch disk  from
 <RUN_PATH> directory::
@@ -79,9 +89,6 @@ specified folder for the ERTBOX grid, but default if not specified
 is 'share/grid_statistics' folder under the top level of the scratch
 directory for the ERT case. The default estimate of standard deviation
 is the sample standard deviation.
-
-
-
 
 .. math::
 
@@ -169,6 +176,18 @@ If this ERT workflow is run before the realizations are generated
 for all specified iterations, the script will not start calculating statistics,
 but return without doing anything.
 
+If the option is chosen to generate python script for RMS to load the result
+into RMS, (option -z for the command line when running field_statistics),
+the generated load script is used as a python job in RMS.
+It might be necessary to edit the path to location of the yml file for the
+field_statistics config file and to define your own 'label' for the
+ensemble in case you want to load multiple ensembles from different ERT runs
+in the same RMS project. Since all the field parameter statistics are calculated
+in the zones individual (or common) ERTBOX grid, the results will also be loaded
+into the zones individual (or common) ERTBOX grids. Therefore, they must exist in
+the RMS project before loading. One possibility is to load the results into the
+RMS project used as forward model in ERT since the ERTBOX grids already exists there.
+
 """
 
 
@@ -210,7 +229,7 @@ EPILOGUE = """
     # sub-keyword GRID for any zone, skip the keyword 'ertbox_per_zone'
     # and use only ertbox_default keyword.This means that all zones use the
     # same ertbox grid size.
-    # If some or all FIELD kewywords in ERT use the sub-keyword GRID,
+    # If some or all FIELD keywords in ERT use the sub-keyword GRID,
     # then specify 'ertbox_per_zone' keyword for all zones and use the
     # same ertbox grid for each zone as specified in ERT keyword FIELD.
     # If some of the FIELD keywords don't use sub-keyword GRID, it means
@@ -219,9 +238,9 @@ EPILOGUE = """
     # for those zones. In this way it is possible to define the ertbox grid
     # in the same ways here for field_statistics as was done in ERT config file.
     ertbox_per_zone:
-        "Valysar": "ertbox_Valysar"
-        "Therys":  "ertbox_Therys"
-        "Volon":   "ertbox_Volon"
+        "Valysar": "ertbox_valysar"
+        "Therys":  "ertbox_therys"
+        "Volon":   "ertbox_volon"
     ertbox_default: "ERTBOX"
 
     # Zone numbers with zone name dictionary
@@ -305,7 +324,7 @@ EPILOGUE = """
     temporary_ertbox_fields:
         # Relative path relative to ERT <RUN_PATH> for localisation of
         # initial ensemble of field parameters
-        initial_field_relative_path: "rms/output/aps"
+        initial_relative_path: "rms/output/aps"
 
         # Field parameter names as specified in ERT FIELD keywords
         # grouped by zone
@@ -368,7 +387,6 @@ if the final iteration exists in the ensemble directory before calculating field
 """  # noqa
 DEFAULT_RELATIVE_RESULT_PATH = "share/grid_statistics"
 GLOBAL_VARIABLES_FILE = "../../fmuconfig/output/global_variables.yml"
-# ERTBOX_GRID_PATH = "../../rms/output/aps"
 
 
 class ArgumentFileNotFound(Exception):
@@ -394,7 +412,7 @@ def field_stat(args):
 
     config_file = args.configfile
     config_dict = read_field_stat_config(config_file)
-    field_stat_dict = config_dict["field_stat"]
+    field_stat_dict = config_dict[MAIN_KEYWORD]
 
     # Path to FMU project models ert/model directory (ordinary CONFIG PATH in ERT)
     if not Path(args.ertconfigpath).exists():
@@ -652,37 +670,20 @@ def read_field_stat_config(config_file_name):
 
 
 def get_ertbox_size_per_zone(
-    field_stat_dict: dict,
-    ert_config_path: str | Path,
-):
-    """Read the size of the ertbox grids for each zone if specified. Use a default
-    ertbox grid if ertbox grid for some or all specified zones are not defined.
+    ertbox_path: str | Path,
+    zone_code_names: dict[int, str] | None,
+    ertbox_per_zone_dict: dict[str, str] | None,
+    ertbox_default: str | None,
+) -> dict[str, tuple[int, int, int]]:
+    """Read the size of the ertbox grids for each zone if specified.
+    Use a default ertbox grid if ertbox grid for some or all specified
+    zones are not defined.
     ertbox grid size define the size of the field parameters for the zones.
     Returns a dictionary with zone name as key and a tuple with the grid size
     for the ertbox grid for the zone.
     """
-    main_key = "field_stat"
-    key = "zone_code_names"
-    if key not in field_stat_dict:
-        raise KeyError(f"Missing keyword '{key}' under main keyword '{main_key}'")
-    zone_code_names = field_stat_dict["zone_code_names"]
+    assert zone_code_names
     zone_names = list(zone_code_names.values())
-
-    ertbox_per_zone_dict = None
-    ertbox_default = None
-    key1 = "ertbox_per_zone"
-    if key1 in field_stat_dict:
-        ertbox_per_zone_dict = field_stat_dict[key1]
-    key2 = "ertbox_default"
-    if key2 in field_stat_dict:
-        ertbox_default = field_stat_dict[key2]
-    if ertbox_per_zone_dict is None and ertbox_default is None:
-        raise ValueError(
-            f"The keyword '{key1}' and/or '{key2}' "
-            f"must be specified under main keyword '{main_key}'."
-        )
-    relative_path_ertbox_dir = field_stat_dict["relative_path_ertbox_grids"]
-    ertbox_path = Path(ert_config_path) / Path(relative_path_ertbox_dir)
 
     # If a zone does not have any specified ertbox grid
     # check that the default ertbox grid is defined and
@@ -1140,23 +1141,15 @@ def get_geogrid_field_specifications(
     facies_per_zone=None,
 ):
     (
-        _use_geogrid_fields,
-        _use_temporary_fields,
-        _nreal,
-        _iter_list,
-        _use_population_stdev,
-        _relative_path_ertbox_grids,
-        _ertbox_per_zone,
-        _ertbox_default,
-        _zone_code_names,
+        *_,
         geo_zone_names_used,
         geo_zone_conformity,
         geo_facies_per_zone,
         geo_geogrid_name,
         geo_param_name_dict,
         geo_disc_param_name_dict,
-        _field_init_path,
-        _field_param_per_zone_dict,
+        _,
+        _,
     ) = get_specifications(
         input_dict,
         use_facies_per_zone=use_facies_per_zone,
@@ -1174,21 +1167,7 @@ def get_geogrid_field_specifications(
 
 def get_temporary_field_specifications(input_dict: dict):
     (
-        _use_geogrid_fields,
-        _use_temporary_fields,
-        _nreal,
-        _iter_list,
-        _use_population_stdev,
-        _relative_path_ertbox_grids,
-        _ertbox_per_zone,
-        _ertbox_default,
-        _zone_code_names,
-        _geo_zone_names_used,
-        _geo_zone_conformity,
-        _geo_facies_per_zone,
-        _geo_geogrid_name,
-        _geo_param_name_dict,
-        _geo_disc_param_name_dict,
+        *_,
         field_init_path,
         field_param_per_zone_dict,
     ) = get_specifications(
@@ -1196,7 +1175,7 @@ def get_temporary_field_specifications(input_dict: dict):
     )
     key_temporary_fields = "temporary_ertbox_fields"
     if field_init_path is None:
-        key = "initial_field_relative_path"
+        key = "initial_relative_path"
         raise KeyError(
             f"Missing keyword '{key}' under keyword '{key_temporary_fields}'"
         )
@@ -1217,58 +1196,17 @@ def get_specifications(
     use_facies_per_zone=True,
     geo_facies_per_zone=None,
 ):
-    # Required keywords
-    key = "nreal"
-    if key in input_dict:
-        nreal = input_dict[key]
-    else:
-        raise KeyError(f"Missing keyword:  {key} specifying number of realizations")
-
-    key = "iterations"
-    if key in input_dict:
-        iter_list = input_dict[key]
-    else:
-        raise KeyError(
-            f"Missing keyword:  {key} specifying a list of iteration numbers "
-            " for ensembles from ERT ES-MDA"
-        )
-
-    key = "relative_path_ertbox_grids"
-    if key in input_dict:
-        relative_path_ertbox_grids = input_dict[key]
-    else:
-        raise KeyError(
-            f"Missing keyword:  {key} specifying path to "
-            "directory where ertbox grids are stored relative to ert config path}"
-        )
-
-    key = "ertbox_default"
-    ertbox_default = None
-    if key in input_dict:
-        ertbox_default = input_dict[key]
-
-    key = "ertbox_per_zone"
-    ertbox_per_zone = None
-    if key in input_dict:
-        ertbox_per_zone = input_dict[key]
-
-    if not ertbox_default and not ertbox_per_zone:
-        raise KeyError(
-            "Ertbox grid must be specified either as a common "
-            "grid for all zones or individual one per zone"
-        )
-
-    key = "zone_code_names"
-    if key in input_dict:
-        zone_code_names = input_dict[key]
-    else:
-        raise KeyError(f"Missing keyword:  {key} specifying zone codes and zone names.")
-
-    # Optional keywords
-    key = "use_population_stdev"
-    use_population_stdev = False
-    if key in input_dict:
-        use_population_stdev = input_dict[key]
+    # Common parameters
+    (
+        nreal,
+        iter_list,
+        use_population_stdev,
+        zone_code_names,
+        ertbox_per_zone_dict,
+        ertbox_default,
+        ertbox_size_dict,
+        relative_path_ertbox_grids,
+    ) = get_common_field_specifications(input_dict)
 
     use_geogrid_fields = False
     geo_geogrid_name = None
@@ -1289,7 +1227,7 @@ def get_specifications(
 
         # Default is to use all zones
         key = "use_zones"
-        geo_zone_names_used = copy.copy(list(zone_code_names.values()))
+        geo_zone_names_used = list(zone_code_names.values())
         if key in geogrid_fields_dict:
             zone_names_input = geogrid_fields_dict[key]
             if zone_names_input is not None and len(zone_names_input) > 0:
@@ -1342,7 +1280,7 @@ def get_specifications(
         use_temporary_fields = True
         temporary_ertbox_field = input_dict["temporary_ertbox_fields"]
 
-        key = "initial_field_relative_path"
+        key = "initial_relative_path"
         if key in temporary_ertbox_field:
             field_init_path = temporary_ertbox_field[key]
         else:
@@ -1372,8 +1310,9 @@ def get_specifications(
         iter_list,
         use_population_stdev,
         relative_path_ertbox_grids,
-        ertbox_per_zone,
+        ertbox_per_zone_dict,
         ertbox_default,
+        ertbox_size_dict,
         zone_code_names,
         geo_zone_names_used,
         geo_zone_conformity,
@@ -1431,21 +1370,6 @@ def copy_ertbox_grid_to_result_path(
                 raise OSError(f"Can not find ertbox grid file {ertbox_file}")
 
 
-# def copy_to_real0_dirs(
-#     field_stat: dict, result_path: Path | str, ens_path: Path | str
-# ) -> None:
-#     iteration_list = field_stat["iterations"]
-#     for iter in iteration_list:
-#         source_files = result_path / Path(f"ertbox--*_{iter}.roff")
-#         target_dir = ens_path / Path(f"realization-0/iter-{iter}/share/results/grids")
-#         print(f"Source_files:  {source_files}")
-#         print(f"Target dir: {target_dir}")
-#         for f in glob.glob(source_files.as_posix()):
-#             shutil.copy(f, target_dir.as_posix())
-#         source_file = result_path / Path("ertbox.roff")
-#         shutil.copy(source_file.as_posix(), target_dir.as_posix())
-
-
 def check_zone_conformity(
     zone_code_names: dict, zone_names_used: list[str], zone_conformity: dict
 ) -> None:
@@ -1485,6 +1409,12 @@ def check_disc_param_name_dict(
 ) -> None:
     if not disc_param_name_dict:
         return
+    if zone_code_names is None:
+        raise KeyError(
+            "Missing keyword:  'zone_code_names' specifying zone codes and "
+            f"zone names under {MAIN_KEYWORD}"
+        )
+
     for zone_name, prop_list in disc_param_name_dict.items():
         if zone_name not in list(zone_code_names.values()):
             raise ValueError(
@@ -1528,6 +1458,95 @@ def check_used_params(
             )
 
 
+def get_common_field_specifications(
+    input_dict: dict,
+    ert_config_path: str | Path | None = None,
+) -> tuple[
+    int, list, bool, dict, dict, str | None, dict[str, tuple[int, int, int]], str | Path
+]:
+    """Get specifications of parameters that are common to both main keywords,
+    'geogrid_fields', and 'temporary_ertbox_fields'.
+    """
+    key = "nreal"
+    nreal: int = 0
+    if key in input_dict:
+        nreal = input_dict[key]
+    else:
+        raise KeyError(
+            f"Missing keyword:  {key} specifying number of realizations "
+            f"under {MAIN_KEYWORD}"
+        )
+
+    key = "iterations"
+    iter_list: list = []
+    if key in input_dict:
+        iter_list = input_dict[key]
+    else:
+        raise KeyError(
+            f"Missing keyword:  {key} specifying a list of iteration numbers "
+            f" for ensembles from ERT ES-MDA under {MAIN_KEYWORD}"
+        )
+
+    key = "use_population_stdev"
+    use_population_stdev = False
+    if key in input_dict:
+        use_population_stdev = input_dict[key]
+
+    key = "relative_path_ertbox_grids"
+    relative_path_ertbox_grids: str | Path = "."
+    if key in input_dict:
+        relative_path_ertbox_grids = input_dict[key]
+    else:
+        raise KeyError(
+            f"Missing keyword:  {key} specifying path to "
+            "directory where ertbox grids are stored relative to ert config path "
+            f"under {MAIN_KEYWORD}"
+        )
+
+    key1 = "ertbox_default"
+    ertbox_default: str | None = None
+    if key1 in input_dict:
+        ertbox_default = input_dict[key1]
+
+    key2 = "ertbox_per_zone"
+    ertbox_per_zone_dict = {}
+    if key2 in input_dict:
+        ertbox_per_zone_dict = input_dict[key2]
+    if not ertbox_default and not ertbox_per_zone_dict:
+        raise KeyError(
+            f"The keyword '{key1}' and/or '{key2}' "
+            f"must be specified under {MAIN_KEYWORD}. "
+            "Ertbox grid must be specified either as a common "
+            "grid for all zones or individual one per zone"
+        )
+
+    key = "zone_code_names"
+    zone_code_names: dict = input_dict[key]
+    if key in input_dict:
+        zone_code_names = input_dict[key]
+
+    if ert_config_path:
+        ertbox_path = Path(ert_config_path) / Path(relative_path_ertbox_grids)
+
+        # Dimensions of ERTBOX grids
+        ertbox_size_dict = get_ertbox_size_per_zone(
+            ertbox_path, zone_code_names, ertbox_per_zone_dict, ertbox_default
+        )
+    else:
+        ertbox_size_dict = {}
+
+    return (
+        nreal,
+        iter_list,
+        use_population_stdev,
+        zone_code_names,
+        ertbox_per_zone_dict,
+        ertbox_default,
+        ertbox_size_dict,
+        relative_path_ertbox_grids,
+    )
+
+
 def calc_stats(
     input_dict: dict,
     ens_path: Path | str,
@@ -1536,25 +1555,27 @@ def calc_stats(
     ert_config_path: Path | str,
     copy_to_geogrid_realization: bool = False,
 ) -> None:
+    """Calculates mean, stdev of continuous field parameters saved for geomodel grid.
+    Calculates volume fractions (estimated facies probabilities)
+    for facies parameter saved for gemodel grid.
+    Read input for related to where to find the files and where to write the result.
+    """
 
     # Check if any need to continue to calculation
     if "geogrid_fields" not in input_dict:
         return
 
-    ertbox_size_dict = get_ertbox_size_per_zone(input_dict, ert_config_path)
-
-    nreal = input_dict["nreal"]
-    iter_list = input_dict["iterations"]
-    use_population_stdev = input_dict["use_population_stdev"]
-    zone_code_names = input_dict["zone_code_names"]
-    ertbox_per_zone_dict = None
-    ertbox_default = None
-    key = "ertbox_per_zone"
-    if key in input_dict:
-        ertbox_per_zone_dict = input_dict[key]
-    key = "ertbox_default"
-    if key in input_dict:
-        ertbox_default = input_dict[key]
+    #    ertbox_size_dict = get_ertbox_size_per_zone(input_dict, ert_config_path)
+    (
+        nreal,
+        iter_list,
+        use_population_stdev,
+        zone_code_names,
+        ertbox_per_zone_dict,
+        ertbox_default,
+        ertbox_size_dict,
+        _,
+    ) = get_common_field_specifications(input_dict, ert_config_path)
 
     (
         zone_names_used,
@@ -1801,31 +1822,35 @@ def calc_temporary_field_stats(
     result_path: str,
     ert_config_path: Path | str,
 ) -> None:
+    """Calculates mean, stdev of continuous fields used as temporary fields
+    in facies and petrophysical modelling.
+    Read input for related to where to find the files and where to write the result.
+    """
 
     # Check if any need to continue to calculation
     if "temporary_ertbox_fields" not in input_dict:
         return
-    nreal = input_dict["nreal"]
-    iter_list = input_dict["iterations"]
-    use_population_stdev = input_dict["use_population_stdev"]
-    ertbox_per_zone_dict: dict[str, str] | None = None
-    ertbox_default: Path | str | None = None
-    key = "ertbox_per_zone"
-    if key in input_dict:
-        ertbox_per_zone_dict = input_dict[key]
-    key = "ertbox_default"
-    if key in input_dict:
-        ertbox_default = input_dict[key]
 
-    ertbox_size_dict = get_ertbox_size_per_zone(input_dict, ert_config_path)
+    # Get common parameter settings
+    (
+        nreal,
+        iter_list,
+        use_population_stdev,
+        _,
+        ertbox_per_zone_dict,
+        ertbox_default,
+        ertbox_size_dict,
+        _,
+    ) = get_common_field_specifications(input_dict, ert_config_path)
+
     field_init_path, field_param_per_zone_dict = get_temporary_field_specifications(
         input_dict
     )
     assert field_init_path
     assert field_param_per_zone_dict
+
     # Get list of active realization (Must be active for all iterations in iter_list)
     active_real, _ = get_active_real(iter_list, ens_path, nreal)
-    # Import realizations of temporary field parameters
 
     calc_stats_for_temporary_parameters(
         field_param_per_zone_dict,
@@ -1912,7 +1937,7 @@ def calc_stat_for_one_temporary_parameter(
                 / Path(full_param_filename)
             )
             if not filepath.exists():
-                key = "initial_field_relative_path"
+                key = "initial_relative_path"
                 temporary_field_key = "temporary_ertbox_fields"
                 raise OSError(
                     f"The file path: {filepath} does not exists.\n"
@@ -2219,7 +2244,7 @@ def main():
         init_path = None
         parameter_name_per_zone = None
         temporary_ertbox_fields = field_stat[key_fields]
-        key = "initial_field_relative_path"
+        key = "initial_relative_path"
         if key in temporary_ertbox_fields:
             init_path = temporary_ertbox_fields[key]
         else:

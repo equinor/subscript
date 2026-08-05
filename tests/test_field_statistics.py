@@ -82,7 +82,7 @@ CONFIG_DICT = {
         },
     },
     "temporary_ertbox_fields": {
-        "initial_field_relative_path": "rms/output/aps",
+        "initial_relative_path": "rms/output/aps",
         "parameter_name_per_zone": {
             "A": ["A_GRF1", "A_GRF2"],
             "B": ["B_GRF2"],
@@ -454,6 +454,7 @@ def make_test_case_for_grids_and_fields(
         relative_ertbox_path,
         ertbox_per_zone,
         ertbox_default,
+        _ertbox_size,
         _zone_code_names,
         geo_zone_names_used,
         _geo_zone_conformity,
@@ -855,7 +856,7 @@ CONFIG_DICT_REF = {
         },
     },
     "temporary_ertbox_fields": {
-        "initial_field_relative_path": "rms/output/aps",
+        "initial_relative_path": "rms/output/aps",
         "parameter_name_per_zone": {
             "A": ["A_GRF1", "A_GRF2"],
             "B": ["B_GRF2"],
@@ -1190,6 +1191,7 @@ def test_get_specification(
         relative_path_ertbox_grids,
         ertbox_per_zone,
         ertbox_default,
+        _,
         zone_code_names,
         geo_zone_names_used,
         geo_zone_conformity,
@@ -1246,7 +1248,7 @@ def test_get_specification(
         assert use_temporary_fields
         assert (
             field_init_path
-            == reference_dict["temporary_ertbox_fields"]["initial_field_relative_path"]
+            == reference_dict["temporary_ertbox_fields"]["initial_relative_path"]
         )
         assert (
             field_param_per_zone_dict

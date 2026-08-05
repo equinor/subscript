@@ -47,7 +47,7 @@ field_stat:
             "C": ["P2"]
 
     temporary_ertbox_fields:
-        initial_field_relative_path: "rms/output/aps"
+        initial_relative_path: "rms/output/aps"
         parameter_name_per_zone: 
             "A": [ A_GRF1, A_GRF2 ]
             "B": [ B_GRF2 ]
