@@ -1,0 +1,13 @@
+ mean_B_GRF2_3.roff
+ stdev_B_GRF2_3.roff
+ mean_B_GRF2_0.roff
+ stdev_B_GRF2_0.roff
+ mean_A_GRF2_3.roff
+ stdev_A_GRF2_3.roff
+ mean_A_GRF2_0.roff
+ stdev_A_GRF2_0.roff
+ mean_A_GRF1_3.roff
+ stdev_A_GRF1_3.roff
+ mean_A_GRF1_0.roff
+ stdev_A_GRF1_0.roff
+ 
