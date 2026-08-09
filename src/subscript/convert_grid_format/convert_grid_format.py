@@ -15,8 +15,9 @@ from subscript import __version__
 APPNAME = "convert_grid_format (subscript)"
 
 # allowed CONVERSIONS and MODES:
-CONVERSIONS = ["ecl2roff"]
+CONVERSIONS = ["ecl2roff", "roff2ecl"]
 MODES = ["grid", "init", "restart"]
+ECL_FORMATS = {"grdecl", "bgrdecl", "egrid"}
 
 xtg = XTGeoDialog()
 
@@ -47,15 +48,29 @@ def get_parser() -> argparse.ArgumentParser:
         dest="mode",
         type=str,
         default="grid",
-        help=f"Mode: {MODES} (default grid)",
+        help=f"Mode: {MODES} (default grid). roff2ecl supports grid only.",
     )
 
     parser.add_argument(
-        "--file", dest="infile", type=str, help="Input file name (full name or root)"
+        "--file",
+        dest="infile",
+        type=str,
+        help="Input file name (full name or root)",
     )
 
     parser.add_argument(
         "--output", dest="outfile", type=str, help="Output file name (full name)"
+    )
+    parser.add_argument(
+        "--outformat",
+        dest="outformat",
+        type=str,
+        default="auto",
+        help=(
+            "Output Eclipse format for roff2ecl: "
+            f"{sorted(ECL_FORMATS)} or auto (infer from --output extension, "
+            "fallback to grdecl)"
+        ),
     )
 
     parser.add_argument(
@@ -181,6 +196,45 @@ def _convert_ecl2roff(
             raise SystemExit("Invalid grid extention")
 
 
+def _resolve_ecl_format(outfile: str, outformat: str) -> str:
+    format_name = outformat.lower()
+    if format_name != "auto":
+        if format_name not in ECL_FORMATS:
+            raise SystemExit(
+                f"Invalid outformat <{outformat}>. Allowed: {ECL_FORMATS} or auto"
+            )
+        return format_name
+
+    _name, ext = os.path.splitext(outfile)
+    ext_map = {".grdecl": "grdecl", ".bgrdecl": "bgrdecl", ".egrid": "egrid"}
+    inferred = ext_map.get(ext.lower())
+    if inferred:
+        return inferred
+
+    logger.info(
+        "outformat=auto could not infer format from extension <%s>; defaulting to "
+        "grdecl",
+        ext or "<none>",
+    )
+    return "grdecl"
+
+
+def _convert_roff2ecl(
+    filename: str,
+    mode: str,
+    outfile: str,
+    outformat: str,
+) -> None:
+    if not filename or not outfile:
+        raise SystemExit("STOP. Both --file and --output are required")
+    if mode != "grid":
+        raise SystemExit(f"STOP! Invalid mode for roff2ecl: <{mode}>")
+
+    ecl_format = _resolve_ecl_format(outfile, outformat)
+    grid = xtgeo.grid_from_file(filename, fformat="roff")
+    grid.to_file(outfile, fformat=ecl_format)
+
+
 def main(args: Sequence[str] | None = None) -> None:
     """Entry-point"""
 
@@ -196,14 +250,22 @@ def main(args: Sequence[str] | None = None) -> None:
         )
 
     xtg.say("Running conversion...")
-    _convert_ecl2roff(
-        parsed_args.infile,
-        parsed_args.mode,
-        parsed_args.outfile,
-        parsed_args.stdfmu,
-        parsed_args.propnames,
-        parsed_args.dates,
-    )
+    if parsed_args.conversion == "ecl2roff":
+        _convert_ecl2roff(
+            parsed_args.infile,
+            parsed_args.mode,
+            parsed_args.outfile,
+            parsed_args.stdfmu,
+            parsed_args.propnames,
+            parsed_args.dates,
+        )
+    else:
+        _convert_roff2ecl(
+            parsed_args.infile,
+            parsed_args.mode,
+            parsed_args.outfile,
+            parsed_args.outformat,
+        )
 
 
 if __name__ == "__main__":
