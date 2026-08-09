@@ -40,5 +40,5 @@ welltest_dpds             ✅   ✅                 ⛔️
 ========================  ===  =================  ============
 
 .. [*] ``convert_grid_format`` is the script that contains functionality
-   for the ``ECLGRID2ROFF``, ``ECLINIT2ROFF``, and ``ECLRST2ROFF`` forward
-   models.
+   for the ``ECLGRID2ROFF``, ``ECLINIT2ROFF``, ``ECLRST2ROFF``,
+   and ``ROFF2ECLGRID`` forward models.

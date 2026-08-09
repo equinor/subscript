@@ -420,6 +420,50 @@ basename relative to ``RUNPATH``.
         )
 
 
+class Roff2EclGrid(ForwardModelStepPlugin):
+    def __init__(self) -> None:
+        super().__init__(
+            name="ROFF2ECLGRID",
+            command=[
+                shutil.which("convert_grid_format"),
+                "--conversion",
+                "roff2ecl",
+                "--file",
+                "<INPUT>",
+                "--output",
+                "<OUTPUT>",
+                "--outformat",
+                "<OUTFORMAT>",
+                "--mode",
+                "grid",
+            ],
+            default_mapping={"<OUTFORMAT>": "auto"},
+        )
+
+    @staticmethod
+    def documentation() -> ForwardModelStepDocumentation | None:
+        return ForwardModelStepDocumentation(
+            description="""Convert a ROFF grid geometry file to Eclipse format.
+
+This forward model uses the script ``convert_grid_format`` from subscript.
+
+Supported output formats are ``grdecl``, ``bgrdecl`` and ``egrid``.
+Destination directory must exist.
+
+``<OUTFORMAT>`` is optional and defaults to ``auto`` (infer from output
+extension). If the extension is missing or not recognized, it defaults to
+``grdecl``.
+""",
+            category="utility.eclipse",
+            examples="""
+.. code-block:: console
+
+  FORWARD_MODEL ROFF2ECLGRID(<INPUT>=share/results/grids/reek.roff, \
+      <OUTPUT>=share/results/grids/reek.EGRID, <OUTFORMAT>=egrid)
+""",
+        )
+
+
 class GravSubsMaps(ForwardModelStepPlugin):
     def __init__(self) -> None:
         super().__init__(
@@ -861,6 +905,7 @@ def installable_forward_model_steps() -> list[type[ForwardModelStepPlugin]]:
         Eclgrid2Roff,
         Eclinit2Roff,
         Eclrst2Roff,
+        Roff2EclGrid,
         GravSubsMaps,
         GravSubsPoints,
         InterpRelperm,
