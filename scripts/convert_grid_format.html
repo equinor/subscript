@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CONVERT_GRID_FORMAT &mdash; subscript 1.15.3.dev12+gaf56c88f8 documentation</title>
+  <title>CONVERT_GRID_FORMAT &mdash; subscript 1.15.3.dev13+g363a18fb7 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=75d39928"></script>
+      <script src="../_static/documentation_options.js?v=2cee2864"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -135,11 +135,11 @@
 <span id="subscript.convert_grid_format.convert_grid_format-get_parser-named-arguments"></span><h2>Named Arguments<a class="headerlink" href="#convert_grid_format-named-arguments" title="Link to this heading"></a></h2>
 <dl class="option-list">
 <dt><kbd>--conversion</kbd></dt>
-<dd><p>Conversion method, select from [‘ecl2roff’] (default ecl2roff)</p>
+<dd><p>Conversion method, select from [‘ecl2roff’, ‘roff2ecl’] (default ecl2roff)</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">'ecl2roff'</span></code></p>
 </dd>
 <dt><kbd>--mode</kbd></dt>
-<dd><p>Mode: [‘grid’, ‘init’, ‘restart’] (default grid)</p>
+<dd><p>Mode: [‘grid’, ‘init’, ‘restart’] (default grid). roff2ecl supports grid only.</p>
 <p>Default: <code class="docutils literal notranslate"><span class="pre">'grid'</span></code></p>
 </dd>
 <dt><kbd>--file</kbd></dt>
@@ -147,6 +147,10 @@
 </dd>
 <dt><kbd>--output</kbd></dt>
 <dd><p>Output file name (full name)</p>
+</dd>
+<dt><kbd>--outformat</kbd></dt>
+<dd><p>Output Eclipse format for roff2ecl: [‘bgrdecl’, ‘egrid’, ‘grdecl’] or auto (infer from –output extension, fallback to grdecl)</p>
+<p>Default: <code class="docutils literal notranslate"><span class="pre">'auto'</span></code></p>
 </dd>
 <dt><kbd>--propnames</kbd></dt>
 <dd><p>List of propnames, separate either with spaces or colon</p>
