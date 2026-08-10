@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIELD_STATISTICS &mdash; subscript 1.15.3.dev13+g363a18fb7 documentation</title>
+  <title>FIELD_STATISTICS &mdash; subscript 1.15.3.dev14+gfb0e7bdb3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=2cee2864"></script>
+      <script src="../_static/documentation_options.js?v=145f6a3c"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -129,6 +129,13 @@
 <h1>FIELD_STATISTICS<a class="headerlink" href="#field-statistics" title="Link to this heading"></a></h1>
 <p><p>Calculate mean, stdev and estimated facies probabilities
 from field parameters using ERTBOX grid.</p>
+<p>The script is relevant only if the FMU model uses field parameters and
+the user wants to check the prior and updated ensembles of the field
+parameters. Note that all field parameters that are updated using
+the ERT FIELD keyword in ERT config file, are temporarily stored in
+the help grid(s) often called ‘ERTBOX’ grids. There can be one common ERTBOX grid
+for all geomodel zones in the RMS project and in the ERT config file, or
+there can be one individual ERTBOX grid per zone.</p>
 <p>The script reads ensembles of realizations from scratch disk  from
 &lt;RUN_PATH&gt; directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">share</span><span class="o">/</span><span class="n">results</span><span class="o">/</span><span class="n">grids</span><span class="o">/&lt;</span><span class="n">geogridname</span><span class="o">&gt;--&lt;</span><span class="n">propertyname</span><span class="o">&gt;.</span><span class="n">roff</span><span class="o">.</span>
@@ -163,10 +170,11 @@ all realizations) is:</p>
 orientation and grid resolution as the ERTBOX grid.</p></li>
 <li><p>The ERTBOX grid should be the same as used in ERT when field parameters
 are updated using the ERT keyword FIELD in the ERT configuration file.</p></li>
-<li><p>Any lateral variability from realization to realization or curved shaped
-lateral grid is ignored. Only the cell indices are used to identify
-grid cell field parameters from each realization. This means that
-mean, standard deviation and estimated facies probabilities are estimated
+<li><p>Any lateral variability of the geometry of the geogrid from realization
+to realization or curved shaped lateral grid is ignored.
+Only the cell indices are used to identify grid cell field parameters
+from each realization. This means that mean, standard deviation
+and estimated facies probabilities are estimated
 for each cell labeled with index (I,J,K) and not physical position (x,y,z).</p></li>
 </ul>
 </div></blockquote>
@@ -174,7 +182,7 @@ for each cell labeled with index (I,J,K) and not physical position (x,y,z).</p><
 specified folder for the ERTBOX grid, but default if not specified
 is ‘share/grid_statistics’ folder under the top level of the scratch
 directory for the ERT case. The default estimate of standard deviation
-is the sample standard deviation</p>
+is the sample standard deviation.</p>
 <div class="math notranslate nohighlight">
 \[\text{variance} = \frac{\sum (x_i - \bar{x})^2}{N-1}\]</div>
 <p>and number of realizations must be at least 2. Optionally, the population
@@ -184,9 +192,23 @@ standard deviation</p>
 <p>can be specified.</p>
 <p>For grid cells where number of realizations are less than 2,
 the standard deviation parameter calculated will be set to 0.</p>
-<p>The script will read info about ERTBOX grid size from the FMU project
-specified (The &lt;CONFIG_PATH&gt;) from the location:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rms</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">aps</span><span class="o">/</span><span class="n">ERTBOX</span><span class="o">.</span><span class="n">roff</span>
+<p>The ERTBOX grid can now also be individual per geological zone. This means that
+the user can define one ERTBOX grid per zone having the same lateral number of
+grid cells as for the geomodel grid and number of layers that are at least as
+large as the number of layers in the zone (for all realizations).</p>
+<p>The advantage of using individual ERTBOX grid per geomodel grid zone is to
+reduce unwanted disk space, memory and runtime when running on a case with
+multiple zones in the geomodel where the size of the different zones in
+number of grid cells is varying a lot. Another possibility is that it
+is now possible to split a geogrid with multiple zones into single zone grids
+and define different grid resolutions not only vertically but also laterally
+if that is needed to represent the geology with different resolutions for
+different zones in the geomodel workflow. The upscaling can then be applied
+to get the properties into a simulation grid from each of the single zone
+geomodel grids.</p>
+<p>The script will read info about ERTBOX grid size for each individual grid
+from the FMU project specified (The &lt;CONFIG_PATH&gt;) from the location:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rms</span><span class="o">/</span><span class="n">output</span><span class="o">/</span><span class="n">aps</span>
 </pre></div>
 </div>
 <p>The script assumes that the keyword FACIES_ZONE keyword is defined
@@ -232,6 +254,17 @@ due to structural uncertainty.</p>
 <p>If this ERT workflow is run before the realizations are generated
 for all specified iterations, the script will not start calculating statistics,
 but return without doing anything.</p>
+<p>If the option is chosen to generate python script for RMS to load the result
+into RMS, (option -z for the command line when running field_statistics),
+the generated load script is used as a python job in RMS.
+It might be necessary to edit the path to location of the yml file for the
+field_statistics config file and to define your own ‘label’ for the
+ensemble in case you want to load multiple ensembles from different ERT runs
+in the same RMS project. Since all the field parameter statistics are calculated
+in the zones individual (or common) ERTBOX grid, the results will also be loaded
+into the zones individual (or common) ERTBOX grids. Therefore, they must exist in
+the RMS project before loading. One possibility is to load the results into the
+RMS project used as forward model in ERT since the ERTBOX grids already exists there.</p>
 </p>
 <div class="highlight-default notranslate" id="field_statistics"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">field_statistics</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CONFIGFILE</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">ERTCONFIGPATH</span><span class="p">]</span> <span class="o">-</span><span class="n">e</span> <span class="n">ENSEMBLEPATH</span>
                         <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="n">RESULTPATH</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">z</span> <span class="n">GENERATE_RMS_LOAD_SCRIPT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">g</span><span class="p">]</span>
@@ -287,6 +320,42 @@ but return without doing anything.</p>
 <span class="w">  </span><span class="c1"># population standard deviation ( normalize by N) is used.</span>
 <span class="w">  </span><span class="nt">use_population_stdev</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span>
 
+<span class="w">  </span><span class="c1"># Specify path to directory where the ertbox grids are stored</span>
+<span class="w">  </span><span class="c1"># relative to config path (ert/model)</span>
+<span class="w">  </span><span class="nt">relative_path_ertbox_grids</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../../rms/output/aps&quot;</span>
+
+<span class="w">  </span><span class="c1"># Specify ertbox grids per zone and/or a default global ertbox grid.</span>
+<span class="w">  </span><span class="c1"># The ertbox names are the same as the filenames except for the suffix.</span>
+<span class="w">  </span><span class="c1"># The specified default ertbox grid is only used for zones where</span>
+<span class="w">  </span><span class="c1"># individual ertbox grid is not specified. The default ertbox grid name</span>
+<span class="w">  </span><span class="c1"># must be the same as the ertbox grid specified in the global GRID keyword</span>
+<span class="w">  </span><span class="c1"># in ERT.</span>
+<span class="w">  </span><span class="c1"># Note that specification of &#39;ertbox_per_zone&#39; must be consistent with</span>
+<span class="w">  </span><span class="c1"># the specification of the FIELD keyword in ERT.</span>
+<span class="w">  </span><span class="c1"># If the FIELD keyword in ERT config file does not use the</span>
+<span class="w">  </span><span class="c1"># sub-keyword GRID for any zone, skip the keyword &#39;ertbox_per_zone&#39;</span>
+<span class="w">  </span><span class="c1"># and use only ertbox_default keyword.This means that all zones use the</span>
+<span class="w">  </span><span class="c1"># same ertbox grid size.</span>
+<span class="w">  </span><span class="c1"># If some or all FIELD keywords in ERT use the sub-keyword GRID,</span>
+<span class="w">  </span><span class="c1"># then specify &#39;ertbox_per_zone&#39; keyword for all zones and use the</span>
+<span class="w">  </span><span class="c1"># same ertbox grid for each zone as specified in ERT keyword FIELD.</span>
+<span class="w">  </span><span class="c1"># If some of the FIELD keywords don&#39;t use sub-keyword GRID, it means</span>
+<span class="w">  </span><span class="c1"># that the ertbox grid specified by the global GRID keyword in ERT</span>
+<span class="w">  </span><span class="c1"># is used. In this case, specify the name of the default ertbox grid</span>
+<span class="w">  </span><span class="c1"># for those zones. In this way it is possible to define the ertbox grid</span>
+<span class="w">  </span><span class="c1"># in the same ways here for field_statistics as was done in ERT config file.</span>
+<span class="w">  </span><span class="nt">ertbox_per_zone</span><span class="p">:</span>
+<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;ertbox_valysar&quot;</span>
+<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="s">&quot;ertbox_therys&quot;</span>
+<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="s">&quot;ertbox_volon&quot;</span>
+<span class="w">  </span><span class="nt">ertbox_default</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ERTBOX&quot;</span>
+
+<span class="w">  </span><span class="c1"># Zone numbers with zone name dictionary</span>
+<span class="w">  </span><span class="nt">zone_code_names</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
+<span class="w">      </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
+<span class="w">      </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
+
 <span class="w">  </span><span class="c1"># Specify which geogrid fields to use</span>
 <span class="w">  </span><span class="c1"># Geogrid fields are typically found in:</span>
 <span class="w">  </span><span class="c1"># &lt;RUN_PATH&gt;/share/results/grids/&lt;geogridname&gt;--&lt;property-name&gt;.roff</span>
@@ -301,11 +370,6 @@ but return without doing anything.</p>
 <span class="w">      </span><span class="c1"># Require at least one zone to be selected.</span>
 <span class="w">      </span><span class="nt">use_zones</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="w">      </span><span class="c1"># Zone numbers with zone name dictionary</span>
-<span class="w">      </span><span class="nt">zone_code_names</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
-<span class="w">          </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
-<span class="w">          </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
 
 <span class="w">      </span><span class="c1"># Specify facies per zone either here or in global variables file.</span>
 <span class="w">      </span><span class="nt">facies_per_zone</span><span class="p">:</span>
@@ -360,10 +424,6 @@ but return without doing anything.</p>
 <span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
 
-<span class="w">      </span><span class="c1"># Size of ertbox grid for (nx, ny, nz)</span>
-<span class="w">      </span><span class="c1"># Optional, but required if the ERTBOX.EGRID is not found under</span>
-<span class="w">      </span><span class="c1"># ERT model under &lt;CONFIG_PATH&gt;/../../rms/output/aps</span>
-<span class="w">      </span><span class="nt">ertbox_size</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">92</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">146</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">66</span><span class="p p-Indicator">]</span>
 
 <span class="w">  </span><span class="c1"># Specify which temporary field parameters (in ertbox) to use</span>
 <span class="w">  </span><span class="c1"># to calculate mean and stdev</span>
@@ -374,31 +434,11 @@ but return without doing anything.</p>
 <span class="w">      </span><span class="nt">initial_relative_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rms/output/aps&quot;</span>
 
 <span class="w">      </span><span class="c1"># Field parameter names as specified in ERT FIELD keywords</span>
-<span class="w">      </span><span class="nt">parameter_names</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span>
-<span class="w">          </span><span class="nv">Volon_Channel_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Volon_Channel_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Therys_Uppershoreface_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Therys_Lowershoreface_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Therys_Offshore_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Therys_Uppershoreface_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Therys_Lowershoreface_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Therys_Offshore_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Valysar_Crevasse_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Valysar_Channel_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Valysar_Floodplain_KLOGH</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Valysar_Crevasse_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Valysar_Channel_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">Valysar_Floodplain_PHIT</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Volon_GRF3</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Volon_GRF2</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Volon_GRF1</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Therys_GRF3</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Therys_GRF2</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Therys_GRF1</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Valysar_GRF3</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Valysar_GRF2</span><span class="p p-Indicator">,</span>
-<span class="w">          </span><span class="nv">aps_Valysar_GRF1</span><span class="p p-Indicator">,</span>
-<span class="w">      </span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="c1"># grouped by zone</span>
+<span class="w">      </span><span class="nt">parameter_name_per_zone</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">Volon</span><span class="p">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">aps_Volon_GRF1</span><span class="p p-Indicator">,</span><span class="w">   </span><span class="nv">aps_Volon_GRF2</span><span class="p p-Indicator">,</span><span class="w">   </span><span class="nv">aps_Volon_GRF3</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">Therys</span><span class="p">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">aps_Therys_GRF1</span><span class="p p-Indicator">,</span><span class="w">  </span><span class="nv">aps_Therys_GRF2</span><span class="p p-Indicator">,</span><span class="w">  </span><span class="nv">aps_Therys_GRF3</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="nt">Valysar</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="w"> </span><span class="nv">aps_Valysar_GRF1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">aps_Valysar_GRF2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">aps_Valysar_GRF3</span><span class="p p-Indicator">]</span>
 </pre></div>
 </div>
 </p>

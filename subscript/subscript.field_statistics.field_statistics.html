@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.field_statistics.field_statistics &mdash; subscript 1.15.3.dev13+g363a18fb7 documentation</title>
+  <title>subscript.field_statistics.field_statistics &mdash; subscript 1.15.3.dev14+gfb0e7bdb3 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=2cee2864"></script>
+      <script src="../_static/documentation_options.js?v=145f6a3c"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -204,6 +204,33 @@ line.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.calc_stats">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">calc_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ens_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">facies_per_zone</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ert_config_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy_to_geogrid_realization</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.calc_stats" title="Link to this definition"></a></dt>
+<dd><p>Calculates mean, stdev of continuous field parameters saved for geomodel grid.
+Calculates volume fractions (estimated facies probabilities)
+for facies parameter saved for gemodel grid.
+Read input for related to where to find the files and where to write the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.calc_temporary_field_stats">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">calc_temporary_field_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ens_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ert_config_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.calc_temporary_field_stats" title="Link to this definition"></a></dt>
+<dd><p>Calculates mean, stdev of continuous fields used as temporary fields
+in facies and petrophysical modelling.
+Read input for related to where to find the files and where to write the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.check_if_iterations_exist">
 <span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">check_if_iterations_exist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ens_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.check_if_iterations_exist" title="Link to this definition"></a></dt>
 <dd><p>Get specified interations from specifications
@@ -214,6 +241,39 @@ and check that the iteration exist in the ensemble.</p>
 <dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.get_active_real">
 <span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">get_active_real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iter_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ens_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nreal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">geogrid_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.get_active_real" title="Link to this definition"></a></dt>
 <dd><p>Get a list of active realizations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.get_common_field_specifications">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">get_common_field_specifications</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ert_config_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.get_common_field_specifications" title="Link to this definition"></a></dt>
+<dd><p>Get specifications of parameters that are common to both main keywords,
+‘geogrid_fields’, and ‘temporary_ertbox_fields’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code> | <code class="xref py py-class docutils literal notranslate"><span class="pre">Path</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.field_statistics.field_statistics.get_ertbox_size_per_zone">
+<span class="sig-prename descclassname"><span class="pre">subscript.field_statistics.field_statistics.</span></span><span class="sig-name descname"><span class="pre">get_ertbox_size_per_zone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ertbox_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zone_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ertbox_per_zone_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ertbox_default</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.field_statistics.field_statistics.get_ertbox_size_per_zone" title="Link to this definition"></a></dt>
+<dd><p>Read the size of the ertbox grids for each zone if specified.
+Use a default ertbox grid if ertbox grid for some or all specified
+zones are not defined.
+ertbox grid size define the size of the field parameters for the zones.
+Returns a dictionary with zone name as key and a tuple with the grid size
+for the ertbox grid for the zone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</span></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
