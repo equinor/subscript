@@ -166,8 +166,10 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
         failed = True
     non_supported_classes = set(obs_df["CLASS"]) - set(CLASS_SHORTNAME.keys())
     if non_supported_classes:
-        logger.error("Unsupported observation classes: %s", non_supported_classes)
-        failed = True
+        logger.warning(
+            "Unsupported observation classes (will be ignored): %s",
+            non_supported_classes,
+        )
 
     index = {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(set(obs_df.columns))
     repeated_rows = obs_df[obs_df.set_index(list(index)).index.duplicated(keep=False)]
