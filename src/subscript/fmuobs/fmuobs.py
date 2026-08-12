@@ -166,7 +166,7 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
         failed = True
     non_supported_classes = set(obs_df["CLASS"]) - set(CLASS_SHORTNAME.keys())
     if non_supported_classes:
-        logger.error("Unsupported observation classes: %s", non_supported_classes)
+        logger.warning("Unsupported observation classes: %s", non_supported_classes)
         failed = True
 
     index = {"CLASS", "LABEL", "OBS", "SEGMENT"}.intersection(set(obs_df.columns))
@@ -342,7 +342,7 @@ def fmuobs(
         dframe = compute_date_from_days(dframe, starttime=starttime)
 
     if not validate_internal_dframe(dframe):
-        logger.error("Observation dataframe is invalid!")
+        logger.warning("Observation dataframe is invalid or has invalid data.")
 
     # Trigger warning if user specify ERROR_MODE != ABS
     # in BLOCK_OBSERVATION and SUMMARY_OBSERVATION
