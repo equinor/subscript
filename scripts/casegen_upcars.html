@@ -150,7 +150,7 @@ hull) and throws. The input file is in yaml format.</p>
 <p class="admonition-title">Example of configuration file</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># UpCaRs Case Generator Configuration File</span>
 <span class="nt">General</span><span class="p">:</span>
-<span class="c1"># Path to Eclipse template file (&#39;--et&#39;,&#39;--ET&#39;,&#39;--eclTemplate&#39;)</span>
+<span class="c1"># Path to Eclipse template file ('--et','--ET','--eclTemplate')</span>
 <span class="nt">TemplateFile </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">upcars_eclipse_ref_ss.tmpl</span>
 <span class="c1"># BaseName of generated simulation files</span>
 <span class="c1">#BaseName : AHM_&lt;nCells&gt;_LXY_&lt;lx&gt;_X_&lt;ly&gt;_M_GXY_&lt;geometryFacX&gt;_&lt;geometryFacY&gt;</span>
@@ -158,19 +158,19 @@ hull) and throws. The input file is in yaml format.</p>
 <span class="nt">Seed </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12345</span>
 
 <span class="nt">Geometry</span><span class="p">:</span>
-<span class="c1"># Number of matrix/main element grid cells, x-direction (&#39;--nMatrixX&#39;,&#39;--NMATRIXX&#39;,&#39;--nMatrixX&#39;)</span>
+<span class="c1"># Number of matrix/main element grid cells, x-direction ('--nMatrixX','--NMATRIXX','--nMatrixX')</span>
 <span class="nt">CellMatrixX </span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">25</span><span class="p p-Indicator">,</span><span class="nv">25</span><span class="p p-Indicator">]</span>
 
-<span class="c1"># Increment in x-direction (&#39;--dx&#39;,&#39;--DX&#39;,&#39;--incX&#39;)</span>
+<span class="c1"># Increment in x-direction ('--dx','--DX','--incX')</span>
 <span class="nt">dx </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.08</span>
 
-<span class="c1"># Number of matrix/main element grid cells, y-direction (&#39;--nMatrixY&#39;,&#39;--NMATRIXY&#39;,&#39;--nMatrixY&#39;)</span>
+<span class="c1"># Number of matrix/main element grid cells, y-direction ('--nMatrixY','--NMATRIXY','--nMatrixY')</span>
 <span class="nt">CellMatrixY </span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">25</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">25</span><span class="p p-Indicator">]</span>
 
-<span class="c1"># Increment in y-direction (&#39;--dy&#39;,&#39;--DY&#39;,&#39;--incY&#39;)</span>
+<span class="c1"># Increment in y-direction ('--dy','--DY','--incY')</span>
 <span class="nt">dy </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.08</span>
 
-<span class="c1"># Top point of the model (&#39;--top&#39;)</span>
+<span class="c1"># Top point of the model ('--top')</span>
 <span class="nt">top </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1500.0</span>
 
 <span class="c1"># Parameters  describing the shape of model</span>
@@ -179,47 +179,47 @@ hull) and throws. The input file is in yaml format.</p>
 <span class="c1">#    For slab, set radius_z to 0</span>
 <span class="c1">#    For hull, set either radius_x or radius_y to very high number e.g. 1E999</span>
 
-<span class="c1"># Curvature radius in x-direction for dome/hull shape (&#39;--radiusX&#39;)</span>
+<span class="c1"># Curvature radius in x-direction for dome/hull shape ('--radiusX')</span>
 <span class="nt">radius_x </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000.0</span>
-<span class="c1"># Curvature radius in y-direction for dome/hull shape (&#39;--radiusY&#39;)</span>
+<span class="c1"># Curvature radius in y-direction for dome/hull shape ('--radiusY')</span>
 <span class="nt">radius_y </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9000.0</span>
-<span class="c1"># Curvature radius in z-direction for home/hull shape, set to zero for slab (&#39;--radiusZ&#39;)</span>
+<span class="c1"># Curvature radius in z-direction for home/hull shape, set to zero for slab ('--radiusZ')</span>
 <span class="nt">radius_z </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="c1"># Tilting angle in degree (relative to x-axis) (&#39;--tilt&#39;)</span>
+<span class="c1"># Tilting angle in degree (relative to x-axis) ('--tilt')</span>
 <span class="nt">tilt </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="c1"># Location of dome/hull top point, fraction to length of the model in X-direction (&#39;--centroidX&#39;, &#39;--centroid_x&#39;)</span>
+<span class="c1"># Location of dome/hull top point, fraction to length of the model in X-direction ('--centroidX', '--centroid_x')</span>
 <span class="nt">centroid_x </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
-<span class="c1"># Location of dome/hull top point, fraction to length of the model in Y-direction (&#39;--centroidY&#39;, &#39;--centroid_y&#39;)</span>
+<span class="c1"># Location of dome/hull top point, fraction to length of the model in Y-direction ('--centroidY', '--centroid_y')</span>
 <span class="nt">centroid_y </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.5</span>
 
 <span class="nt">Layers</span><span class="p">:</span>
 <span class="nt">Background Matrix</span><span class="p">:</span>
-<span class="w">   </span><span class="nt">NZ </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w">                   </span><span class="c1"># Total number of cells in z-direction, including heterogeneous layers (&#39;--matrix_nz)</span>
-<span class="w">   </span><span class="nt">dz </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span><span class="w">                 </span><span class="c1"># Cell size in z-direction, only applied to background matrix (&#39;--matrix_dz&#39;)</span>
-<span class="w">   </span><span class="nt">Porosity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.09</span><span class="w">            </span><span class="c1"># background matrix porosity (&#39;--matrix_poro&#39;)</span>
-<span class="w">   </span><span class="nt">Permeability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span><span class="w">         </span><span class="c1"># background matrix permeability (&#39;--matrix_perm&#39;)</span>
-<span class="w">   </span><span class="nt">MULTX</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># background MULTX (&#39;--matrix_multx&#39;)</span>
-<span class="w">   </span><span class="nt">MULTY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># background MULTY (&#39;--matrix_multy&#39;)</span>
-<span class="w">   </span><span class="nt">MULTPV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">               </span><span class="c1"># background MULTPV (&#39;--matrix_multpv&#39;)</span>
-<span class="w">   </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                 </span><span class="c1"># background FIPNUM (&#39;--matrix_fipnum&#39;)</span>
-<span class="w">   </span><span class="nt">SATNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                 </span><span class="c1"># background SATNUM (&#39;--matrix_satnum&#39;)</span>
-<span class="w">   </span><span class="nt">SWATINIT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w">             </span><span class="c1"># background SWATINIT (&#39;--matrix_swatinit&#39;)</span>
+<span class="w">   </span><span class="nt">NZ </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">50</span><span class="w">                   </span><span class="c1"># Total number of cells in z-direction, including heterogeneous layers ('--matrix_nz)</span>
+<span class="w">   </span><span class="nt">dz </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.02</span><span class="w">                 </span><span class="c1"># Cell size in z-direction, only applied to background matrix ('--matrix_dz')</span>
+<span class="w">   </span><span class="nt">Porosity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.09</span><span class="w">            </span><span class="c1"># background matrix porosity ('--matrix_poro')</span>
+<span class="w">   </span><span class="nt">Permeability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5.0</span><span class="w">         </span><span class="c1"># background matrix permeability ('--matrix_perm')</span>
+<span class="w">   </span><span class="nt">MULTX</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># background MULTX ('--matrix_multx')</span>
+<span class="w">   </span><span class="nt">MULTY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># background MULTY ('--matrix_multy')</span>
+<span class="w">   </span><span class="nt">MULTPV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">               </span><span class="c1"># background MULTPV ('--matrix_multpv')</span>
+<span class="w">   </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                 </span><span class="c1"># background FIPNUM ('--matrix_fipnum')</span>
+<span class="w">   </span><span class="nt">SATNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                 </span><span class="c1"># background SATNUM ('--matrix_satnum')</span>
+<span class="w">   </span><span class="nt">SWATINIT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w">             </span><span class="c1"># background SWATINIT ('--matrix_swatinit')</span>
 <span class="nt">Streaks</span><span class="p">:</span>
-<span class="w">   </span><span class="nt">k</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">25</span><span class="p p-Indicator">]</span><span class="w">                   </span><span class="c1"># Streak start index (&#39;--streak_k&#39;)</span>
-<span class="w">   </span><span class="nt">NZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                     </span><span class="c1"># Streak NZ, can be constant for all streaks or specified for each streak (&#39;--streak_nz&#39;)</span>
-<span class="w">   </span><span class="nt">dz</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span><span class="w">                  </span><span class="c1"># Streak dz, can be constant for all streaks or specified for each streak (&#39;--streak_dz&#39;)</span>
-<span class="w">   </span><span class="nt">Porosity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">             </span><span class="c1"># Streak porosity, can be constant for all streaks or specified for each streak (&#39;--streak_poro&#39;)</span>
-<span class="w">   </span><span class="nt">Permeability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500.0</span><span class="w">       </span><span class="c1"># Streak permeability, can be constant for all streaks or specified for each streak (&#39;-streak_perm&#39;)</span>
-<span class="w">   </span><span class="nt">MULTX</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># Streak MULTX, can be constant for all streaks or specified for each streak (&#39;--streak_multx&#39;)</span>
-<span class="w">   </span><span class="nt">MULTY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># Streak MULTY, can be constant for all streaks or specified for each streak (&#39;--streak_multy&#39;)</span>
-<span class="w">   </span><span class="nt">MULTPV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">               </span><span class="c1"># Streak MULTPV, can be constant for all streaks or specified for each streak (&#39;--streak_multpv&#39;)</span>
-<span class="w">   </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">                 </span><span class="c1"># Streak FIPNUM, can be constant for all streaks or specified for each streak (&#39;--streak_fipnum&#39;)</span>
-<span class="w">   </span><span class="nt">SATNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                 </span><span class="c1"># Streak SATNUM, can be constant for all streaks or specified for each streak (&#39;--streak_satnum&#39;)</span>
-<span class="w">   </span><span class="nt">SWATINIT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w">             </span><span class="c1"># Streak SWATINIT, can be constant for all streaks or specified for each streak (&#39;--streak_swatinit&#39;)</span>
+<span class="w">   </span><span class="nt">k</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">25</span><span class="p p-Indicator">]</span><span class="w">                   </span><span class="c1"># Streak start index ('--streak_k')</span>
+<span class="w">   </span><span class="nt">NZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w">                     </span><span class="c1"># Streak NZ, can be constant for all streaks or specified for each streak ('--streak_nz')</span>
+<span class="w">   </span><span class="nt">dz</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span><span class="w">                  </span><span class="c1"># Streak dz, can be constant for all streaks or specified for each streak ('--streak_dz')</span>
+<span class="w">   </span><span class="nt">Porosity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span><span class="w">             </span><span class="c1"># Streak porosity, can be constant for all streaks or specified for each streak ('--streak_poro')</span>
+<span class="w">   </span><span class="nt">Permeability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">500.0</span><span class="w">       </span><span class="c1"># Streak permeability, can be constant for all streaks or specified for each streak ('-streak_perm')</span>
+<span class="w">   </span><span class="nt">MULTX</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># Streak MULTX, can be constant for all streaks or specified for each streak ('--streak_multx')</span>
+<span class="w">   </span><span class="nt">MULTY</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">                </span><span class="c1"># Streak MULTY, can be constant for all streaks or specified for each streak ('--streak_multy')</span>
+<span class="w">   </span><span class="nt">MULTPV</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span><span class="w">               </span><span class="c1"># Streak MULTPV, can be constant for all streaks or specified for each streak ('--streak_multpv')</span>
+<span class="w">   </span><span class="nt">FIPNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span><span class="w">                 </span><span class="c1"># Streak FIPNUM, can be constant for all streaks or specified for each streak ('--streak_fipnum')</span>
+<span class="w">   </span><span class="nt">SATNUM</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span><span class="w">                 </span><span class="c1"># Streak SATNUM, can be constant for all streaks or specified for each streak ('--streak_satnum')</span>
+<span class="w">   </span><span class="nt">SWATINIT</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.2</span><span class="w">             </span><span class="c1"># Streak SWATINIT, can be constant for all streaks or specified for each streak ('--streak_swatinit')</span>
 <span class="w">   </span><span class="nt">BoundingBox</span><span class="p">:</span><span class="w">  </span><span class="c1"># Streak bounding box [i1, i2, j1, j2], can be single box for all streaks or specified for each streak</span>
 
 <span class="nt">Throws</span><span class="p">:</span>
-<span class="c1"># Define throws, can be left empty. Use &#39;--throw&#39; to specify the list of throws and &#39;--no_throw&#39; to remove all specified throws</span>
+<span class="c1"># Define throws, can be left empty. Use '--throw' to specify the list of throws and '--no_throw' to remove all specified throws</span>
 <span class="c1"># Start_region_in_x-_direction</span>
 <span class="nt">i1 </span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 <span class="c1"># End_region_in_x-_direction</span>
@@ -232,142 +232,142 @@ hull) and throws. The input file is in yaml format.</p>
 <span class="nt">dz </span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 
 <span class="nt">Fracture</span><span class="p">:</span>
-<span class="c1"># Flag to remove fracture at boundary (&#39;--noBoundaryFracture&#39;, &#39;--BoundaryFracture&#39;)</span>
+<span class="c1"># Flag to remove fracture at boundary ('--noBoundaryFracture', '--BoundaryFracture')</span>
 <span class="nt">NoBoundaryFracture </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">No</span>
-<span class="c1"># Fracture thickness (&#39;--ft&#39;,&#39;--FT&#39;,&#39;--fractureThickness&#39;)</span>
+<span class="c1"># Fracture thickness ('--ft','--FT','--fractureThickness')</span>
 <span class="nt">FractureThickness </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.05</span>
-<span class="c1"># Number of cells in fracture (&#39;--ndz&#39;,&#39;--NDZ&#39;,&#39;--cellsDamageZone&#39;)</span>
+<span class="c1"># Number of cells in fracture ('--ndz','--NDZ','--cellsDamageZone')</span>
 <span class="nt">FractureCells  </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
 <span class="c1"># Properties for fracture along x-axis</span>
 <span class="nt">FractureX</span><span class="p">:</span>
-<span class="w">   </span><span class="c1"># Length of the fracture in fraction of model lx (&#39;--fLengthX&#39;, &#39;--FLENGTHX&#39;, &#39;--flengthx&#39;)</span>
+<span class="w">   </span><span class="c1"># Length of the fracture in fraction of model lx ('--fLengthX', '--FLENGTHX', '--flengthx')</span>
 <span class="w">   </span><span class="nt">Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">   </span><span class="c1"># Offset of the fracture in fraction of model lx, will be adjusted to honor length (&#39;--fOffsetX&#39;, &#39;--FOFFSETX&#39;, &#39;--foffsetx&#39;)</span>
+<span class="w">   </span><span class="c1"># Offset of the fracture in fraction of model lx, will be adjusted to honor length ('--fOffsetX', '--FOFFSETX', '--foffsetx')</span>
 <span class="w">   </span><span class="nt">Offset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">   </span><span class="c1"># Height of the fracture in fraction of model lz (&#39;--fHeightX&#39;, &#39;--FHEIGHTX&#39;, &#39;--fheightx&#39;)</span>
+<span class="w">   </span><span class="c1"># Height of the fracture in fraction of model lz ('--fHeightX', '--FHEIGHTX', '--fheightx')</span>
 <span class="w">   </span><span class="nt">Height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">   </span><span class="c1"># Z-offset of the fracture in fraction of model lz, will be adjusted to honor height (&#39;--fVertOffsetX&#39;, &#39;--FVERTOFFSETX&#39;, &#39;--fvertoffsetx&#39;)</span>
+<span class="w">   </span><span class="c1"># Z-offset of the fracture in fraction of model lz, will be adjusted to honor height ('--fVertOffsetX', '--FVERTOFFSETX', '--fvertoffsetx')</span>
 <span class="w">   </span><span class="nt">ZOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">   </span><span class="c1"># Fracture permeability for x-direction faults, can be a single value or list of values (&#39;--fracPermX&#39;, &#39;--FRACPERMX&#39;, &#39;--fracpermx&#39;)</span>
+<span class="w">   </span><span class="c1"># Fracture permeability for x-direction faults, can be a single value or list of values ('--fracPermX', '--FRACPERMX', '--fracpermx')</span>
 <span class="w">   </span><span class="nt">Permeability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">780.0</span>
 
 <span class="nt">FractureY</span><span class="p">:</span>
-<span class="w">   </span><span class="c1"># Length of the fracture in fraction of model ly (&#39;--fLengthY&#39;, &#39;--FLENGTHY&#39;, &#39;--flengthy&#39;)</span>
+<span class="w">   </span><span class="c1"># Length of the fracture in fraction of model ly ('--fLengthY', '--FLENGTHY', '--flengthy')</span>
 <span class="w">   </span><span class="nt">Length</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">   </span><span class="c1"># Offset of the fracture in fraction of model ly, will be adjusted to honor length (&#39;--fOffsetY&#39;, &#39;--FOFFSETY&#39;, &#39;--foffsety&#39;)</span>
+<span class="w">   </span><span class="c1"># Offset of the fracture in fraction of model ly, will be adjusted to honor length ('--fOffsetY', '--FOFFSETY', '--foffsety')</span>
 <span class="w">   </span><span class="nt">Offset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">   </span><span class="c1"># Height of the fracture in fraction of model lz (&#39;--fHeightY&#39;, &#39;--FHEIGHTY&#39;, &#39;--fheighty&#39;)</span>
+<span class="w">   </span><span class="c1"># Height of the fracture in fraction of model lz ('--fHeightY', '--FHEIGHTY', '--fheighty')</span>
 <span class="w">   </span><span class="nt">Height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="w">   </span><span class="c1"># Z-offset of the fracture in fraction of model lz, will be adjusted to honor height (&#39;--fVertOffsetY&#39;, &#39;--FVERTOFFSETY&#39;, &#39;--fvertoffsety&#39;)</span>
+<span class="w">   </span><span class="c1"># Z-offset of the fracture in fraction of model lz, will be adjusted to honor height ('--fVertOffsetY', '--FVERTOFFSETY', '--fvertoffsety')</span>
 <span class="w">   </span><span class="nt">ZOffset</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="w">   </span><span class="c1"># Fracture permeability for y-direction faults, can be a single value or list of values (&#39;--fracPermY&#39;, &#39;--FRACPERMY&#39;, &#39;--fracpermy&#39;)</span>
+<span class="w">   </span><span class="c1"># Fracture permeability for y-direction faults, can be a single value or list of values ('--fracPermY', '--FRACPERMY', '--fracpermy')</span>
 <span class="w">   </span><span class="nt">Permeability</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">780.0</span>
 
-<span class="c1"># Fracture porosity (&#39;--porf&#39;,&#39;--PORF&#39;,&#39;--poroFracture&#39;)</span>
+<span class="c1"># Fracture porosity ('--porf','--PORF','--poroFracture')</span>
 <span class="nt">Porosity </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="c1"># Fracture transmissibility multiplier in x- direction (&#39;--multx&#39;,&#39;--MULTX&#39;,&#39;--multx&#39;)</span>
+<span class="c1"># Fracture transmissibility multiplier in x- direction ('--multx','--MULTX','--multx')</span>
 <span class="nt">MULTX </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Fracture transmissibility multiplier in y- direction (&#39;--multy&#39;,&#39;--MULTY&#39;,&#39;--multy&#39;)</span>
+<span class="c1"># Fracture transmissibility multiplier in y- direction ('--multy','--MULTY','--multy')</span>
 <span class="nt">MULTY </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Fracture pore volume multiplier (&#39;--pvDamage&#39;,&#39;--PVDAMAGE&#39;,&#39;--pvDamage&#39;)</span>
+<span class="c1"># Fracture pore volume multiplier ('--pvDamage','--PVDAMAGE','--pvDamage')</span>
 <span class="nt">MULTPV </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Fracture FIPNUM (&#39;--fipnumf&#39;,&#39;--FIPNUMF&#39;,&#39;--fipnumF&#39;)</span>
+<span class="c1"># Fracture FIPNUM ('--fipnumf','--FIPNUMF','--fipnumF')</span>
 <span class="nt">FIPNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="c1"># Fracture SATNUM (&#39;--satnumf&#39;,&#39;--SATNUMF&#39;,&#39;--satnumF&#39;)</span>
+<span class="c1"># Fracture SATNUM ('--satnumf','--SATNUMF','--satnumF')</span>
 <span class="nt">SATNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="c1"># Fracture SWATINIT (&#39;--swatinitf&#39;, &#39;--SWATINITF&#39;, &#39;--swatinitF&#39;)</span>
+<span class="c1"># Fracture SWATINIT ('--swatinitf', '--SWATINITF', '--swatinitF')</span>
 <span class="nt">SWATINIT </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 
 <span class="nt">Near Fracture Vug</span><span class="p">:</span>
 <span class="c1"># Specify how many cells between fracture and vugs, put 0 to allow connection between fracture and vugs</span>
 <span class="nt">Distance_to_fracture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="c1"># Fraction of vugs to matrix, between 0 and 1 (&#39;--vug1volume&#39;, &#39;--VUG1VOLUME&#39;, &#39;--vug1Volume&#39;)</span>
+<span class="c1"># Fraction of vugs to matrix, between 0 and 1 ('--vug1volume', '--VUG1VOLUME', '--vug1Volume')</span>
 <span class="nt">Fraction </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="c1"># Spreading factor for near fracture vug. Small value will make vug concentrated near fracture (&#39;--vug1Spread&#39;, &#39;--VUG1SPREAD&#39;,&#39;--vug1_spread&#39;)</span>
+<span class="c1"># Spreading factor for near fracture vug. Small value will make vug concentrated near fracture ('--vug1Spread', '--VUG1SPREAD','--vug1_spread')</span>
 <span class="nt">SpreadingFactor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
-<span class="c1"># Vug porosity interval, uniformly distributed (&#39;--vug1Poro&#39;,&#39;--VUG1PORO&#39;,&#39;--vug1Poro&#39;)</span>
+<span class="c1"># Vug porosity interval, uniformly distributed ('--vug1Poro','--VUG1PORO','--vug1Poro')</span>
 <span class="nt">Porosity </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="c1"># Vug permeability interval, uniformly distributed (&#39;--vug1Perm&#39;,&#39;--VUG1PERM&#39;,&#39;--vug1Perm&#39;)</span>
+<span class="c1"># Vug permeability interval, uniformly distributed ('--vug1Perm','--VUG1PERM','--vug1Perm')</span>
 <span class="nt">Permeability </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
-<span class="c1"># Vugs transmissibility multiplier in x- direction (&#39;--vug1MULTX&#39;, &#39;--vug1multx&#39;)</span>
+<span class="c1"># Vugs transmissibility multiplier in x- direction ('--vug1MULTX', '--vug1multx')</span>
 <span class="nt">MULTX </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Vugs transmissibility multiplier in y- direction (&#39;--vug1MULTY&#39;, &#39;--vug1multy&#39;)</span>
+<span class="c1"># Vugs transmissibility multiplier in y- direction ('--vug1MULTY', '--vug1multy')</span>
 <span class="nt">MULTY </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Vugs pore volume multiplier (&#39;--vug1MULTPV&#39;, &#39;--vug1multpv&#39;)</span>
+<span class="c1"># Vugs pore volume multiplier ('--vug1MULTPV', '--vug1multpv')</span>
 <span class="nt">MULTPV </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Vugs FIPNUM (&#39;--vug1FIPNUM&#39;, &#39;--vug1fipnum&#39;)</span>
+<span class="c1"># Vugs FIPNUM ('--vug1FIPNUM', '--vug1fipnum')</span>
 <span class="nt">FIPNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
-<span class="c1"># Vugs SATNUM (&#39;--vug1SATNUM&#39;, &#39;--vug1satnum&#39;)</span>
+<span class="c1"># Vugs SATNUM ('--vug1SATNUM', '--vug1satnum')</span>
 <span class="nt">SATNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="c1"># Vugs initial water saturation (&#39;--vug1SWATINIT&#39;, &#39;--vug1swatinit&#39;)</span>
+<span class="c1"># Vugs initial water saturation ('--vug1SWATINIT', '--vug1swatinit')</span>
 <span class="nt">SWATINIT </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 
 <span class="nt">Random Vug</span><span class="p">:</span>
-<span class="c1"># Fraction of vugs to matrix, between 0 and 1  (&#39;--vug2Volume&#39;, &#39;--VUG2VOLUME&#39;, &#39;--vug2Volume&#39;)</span>
+<span class="c1"># Fraction of vugs to matrix, between 0 and 1  ('--vug2Volume', '--VUG2VOLUME', '--vug2Volume')</span>
 <span class="nt">Fraction </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="c1"># Vug porosity interval, uniformly distributed (&#39;--vug2Poro&#39;,&#39;--VUG2PORO&#39;,&#39;--vug2Poro&#39;)</span>
+<span class="c1"># Vug porosity interval, uniformly distributed ('--vug2Poro','--VUG2PORO','--vug2Poro')</span>
 <span class="nt">Porosity </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="c1"># Vug permeability interval, uniformly distributed (&#39;--vug2Perm&#39;,&#39;--VUG2PERM&#39;,&#39;--vug2Perm&#39;)</span>
+<span class="c1"># Vug permeability interval, uniformly distributed ('--vug2Perm','--VUG2PERM','--vug2Perm')</span>
 <span class="nt">Permeability </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000.0</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000.0</span>
-<span class="c1"># Vugs transmissibility multiplier in x- direction (&#39;--vug2MULTX&#39;, &#39;--vug2multx&#39;)</span>
+<span class="c1"># Vugs transmissibility multiplier in x- direction ('--vug2MULTX', '--vug2multx')</span>
 <span class="nt">MULTX </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="c1"># Vugs transmissibility multiplier in y- direction (&#39;--vug2MULTY&#39;, &#39;--vug2multy&#39;)</span>
+<span class="c1"># Vugs transmissibility multiplier in y- direction ('--vug2MULTY', '--vug2multy')</span>
 <span class="nt">MULTY </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="c1"># Vugs pore volume multiplier (&#39;--vug2MULTPV&#39;, &#39;--vug2multpv&#39;)</span>
+<span class="c1"># Vugs pore volume multiplier ('--vug2MULTPV', '--vug2multpv')</span>
 <span class="nt">MULTPV </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
-<span class="c1"># Vugs FIPNUM (&#39;--vug2FIPNUM&#39;, &#39;--vug2fipnum&#39;)</span>
+<span class="c1"># Vugs FIPNUM ('--vug2FIPNUM', '--vug2fipnum')</span>
 <span class="nt">FIPNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="c1"># Vugs SATNUM (&#39;--vug2SATNUM&#39;, &#39;--vug2satnum&#39;)</span>
+<span class="c1"># Vugs SATNUM ('--vug2SATNUM', '--vug2satnum')</span>
 <span class="nt">SATNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="c1"># Vugs initial water saturation.(&#39;--vug2SWATINIT&#39;, &#39;--vug2swatinit&#39;)</span>
+<span class="c1"># Vugs initial water saturation.('--vug2SWATINIT', '--vug2swatinit')</span>
 <span class="nt">SWATINIT </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
 
 <span class="nt">Near Streak Vug</span><span class="p">:</span>
 <span class="c1"># Specify how many cells between streak and vug, put 0 to allow connection between streak and vugs</span>
 <span class="nt">Distance_to_streak</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Fraction of vugs to matrix, between 0 and 1 (&#39;--vug3volume&#39;, &#39;--VUG3VOLUME&#39;, &#39;--vug3Volume&#39;)</span>
+<span class="c1"># Fraction of vugs to matrix, between 0 and 1 ('--vug3volume', '--VUG3VOLUME', '--vug3Volume')</span>
 <span class="nt">Fraction </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
-<span class="c1"># Spreading factor for near fracture vug. Small value will make vug concentrated near fracture (&#39;--vug3Spread&#39;, &#39;--VUG3SPREAD&#39;,&#39;--vug3_spread&#39;)</span>
+<span class="c1"># Spreading factor for near fracture vug. Small value will make vug concentrated near fracture ('--vug3Spread', '--VUG3SPREAD','--vug3_spread')</span>
 <span class="nt">SpreadingFactor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.0</span>
-<span class="c1"># Vug porosity interval, uniformly distributed (&#39;--vug3Poro&#39;,&#39;--VUG3PORO&#39;,&#39;--vug3Poro&#39;)</span>
+<span class="c1"># Vug porosity interval, uniformly distributed ('--vug3Poro','--VUG3PORO','--vug3Poro')</span>
 <span class="nt">Porosity </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.1</span>
-<span class="c1"># Vug permeability interval, uniformly distributed (&#39;--vug3Perm&#39;,&#39;--VUG3PERM&#39;,&#39;--vug3Perm&#39;)</span>
+<span class="c1"># Vug permeability interval, uniformly distributed ('--vug3Perm','--VUG3PERM','--vug3Perm')</span>
 <span class="nt">Permeability </span><span class="p">:</span>
 <span class="w">   </span><span class="nt">Min </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="w">   </span><span class="nt">Max </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
-<span class="c1"># Vugs transmissibility multiplier in x- direction (&#39;--vug3MULTX&#39;, &#39;--vug3multx&#39;)</span>
+<span class="c1"># Vugs transmissibility multiplier in x- direction ('--vug3MULTX', '--vug3multx')</span>
 <span class="nt">MULTX </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Vugs transmissibility multiplier in y- direction (&#39;--vug3MULTY&#39;, &#39;--vug3multy&#39;)</span>
+<span class="c1"># Vugs transmissibility multiplier in y- direction ('--vug3MULTY', '--vug3multy')</span>
 <span class="nt">MULTY </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Vugs pore volume multiplier (&#39;--vug3MULTPV&#39;, &#39;--vug3multpv&#39;)</span>
+<span class="c1"># Vugs pore volume multiplier ('--vug3MULTPV', '--vug3multpv')</span>
 <span class="nt">MULTPV </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
-<span class="c1"># Vugs FIPNUM (&#39;--vug3FIPNUM&#39;, &#39;--vug3fipnum&#39;)</span>
+<span class="c1"># Vugs FIPNUM ('--vug3FIPNUM', '--vug3fipnum')</span>
 <span class="nt">FIPNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
-<span class="c1"># Vugs SATNUM (&#39;--vug3SATNUM&#39;, &#39;--vug3satnum&#39;)</span>
+<span class="c1"># Vugs SATNUM ('--vug3SATNUM', '--vug3satnum')</span>
 <span class="nt">SATNUM </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<span class="c1"># Vugs initial water saturation (&#39;--vug3SWATINIT&#39;, &#39;--vug3swatinit&#39;)</span>
+<span class="c1"># Vugs initial water saturation ('--vug3SWATINIT', '--vug3swatinit')</span>
 <span class="nt">SWATINIT </span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.0</span>
 
 <span class="nt">Variables</span><span class="p">:</span>
 <span class="c1"># Optional variables that can be used as expression in template file</span>
-<span class="c1"># Can be added/changed in command line using (&#39;--var&#39;, &#39;--VAR&#39;, &#39;--Var&#39;)</span>
+<span class="c1"># Can be added/changed in command line using ('--var', '--VAR', '--Var')</span>
 <span class="c1"># for example --var nx_prod 2</span>
 
 <span class="c1"># Number of perforated blocks for production well in x-direction</span>
@@ -416,35 +416,35 @@ More information can be found in <a class="reference external" href="https://wik
                       <span class="p">[</span><span class="o">--</span><span class="n">streak_fipnum</span> <span class="n">STREAK_FIPNUM</span> <span class="p">[</span><span class="n">STREAK_FIPNUM</span> <span class="o">...</span><span class="p">]]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">streak_satnum</span> <span class="n">STREAK_SATNUM</span> <span class="p">[</span><span class="n">STREAK_SATNUM</span> <span class="o">...</span><span class="p">]]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">streak_swatinit</span> <span class="n">STREAK_SWATINIT</span> <span class="p">[</span><span class="n">STREAK_SWATINIT</span> <span class="o">...</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">streak_box</span> <span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="s1">&#39;j1&#39;</span><span class="p">,</span> <span class="s1">&#39;j2&#39;</span><span class="p">]</span>
-                      <span class="p">[[</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="s1">&#39;j1&#39;</span><span class="p">,</span> <span class="s1">&#39;j2&#39;</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">throw</span> <span class="p">[</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="s1">&#39;j1&#39;</span><span class="p">,</span> <span class="s1">&#39;j2&#39;</span><span class="p">,</span> <span class="s1">&#39;shift&#39;</span><span class="p">]</span>
-                      <span class="p">[[</span><span class="s1">&#39;i1&#39;</span><span class="p">,</span> <span class="s1">&#39;i2&#39;</span><span class="p">,</span> <span class="s1">&#39;j1&#39;</span><span class="p">,</span> <span class="s1">&#39;j2&#39;</span><span class="p">,</span> <span class="s1">&#39;shift&#39;</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">no_throw</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">streak_box</span> <span class="p">[</span><span class="s1">'i1'</span><span class="p">,</span> <span class="s1">'i2'</span><span class="p">,</span> <span class="s1">'j1'</span><span class="p">,</span> <span class="s1">'j2'</span><span class="p">]</span>
+                      <span class="p">[[</span><span class="s1">'i1'</span><span class="p">,</span> <span class="s1">'i2'</span><span class="p">,</span> <span class="s1">'j1'</span><span class="p">,</span> <span class="s1">'j2'</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">throw</span> <span class="p">[</span><span class="s1">'i1'</span><span class="p">,</span> <span class="s1">'i2'</span><span class="p">,</span> <span class="s1">'j1'</span><span class="p">,</span> <span class="s1">'j2'</span><span class="p">,</span> <span class="s1">'shift'</span><span class="p">]</span>
+                      <span class="p">[[</span><span class="s1">'i1'</span><span class="p">,</span> <span class="s1">'i2'</span><span class="p">,</span> <span class="s1">'j1'</span><span class="p">,</span> <span class="s1">'j2'</span><span class="p">,</span> <span class="s1">'shift'</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">no_throw</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">debug_model</span> <span class="n">DEBUG_MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">seed</span> <span class="n">SEED</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">et</span> <span class="n">ECLIPSE_TEMPLATE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">base</span> <span class="n">BASE_NAME</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">nMatrixX</span> <span class="n">CELL_MATRIX_X</span> <span class="p">[</span><span class="n">CELL_MATRIX_X</span> <span class="o">...</span><span class="p">]]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">nMatrixY</span> <span class="n">CELL_MATRIX_Y</span> <span class="p">[</span><span class="n">CELL_MATRIX_Y</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">dx</span> <span class="n">DX</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">dy</span> <span class="n">DY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">distanceVug1ToFracture</span> <span class="n">VUG1_DISTANCE_TO_FRACTURE</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug1Volume</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug1Spread</span> <span class="n">VUG1_SPREAD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1Poro</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span>
-                      <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1perm</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span>
-                      <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1MULTX</span> <span class="n">VUG1_MULTX</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug1Volume</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug1Spread</span> <span class="n">VUG1_SPREAD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1Poro</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span>
+                      <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1perm</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span>
+                      <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1MULTX</span> <span class="n">VUG1_MULTX</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug1MULTY</span> <span class="n">VUG1_MULTY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1MULTPV</span> <span class="n">VUG1_MULTPV</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug1SWATINIT</span> <span class="n">VUG1_SWATINIT</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug1FIPNUM</span> <span class="n">VUG1_FIPNUM</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug1SATNUM</span> <span class="n">VUG1_SATNUM</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug2Volume</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug2Poro</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug2Perm</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug2Volume</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug2Poro</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug2Perm</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug2MULTX</span> <span class="n">VUG2_MULTX</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug2MULTY</span> <span class="n">VUG2_MULTY</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug2MULTPV</span> <span class="n">VUG2_MULTPV</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug2SWATINIT</span> <span class="n">VUG2_SWATINIT</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug2FIPNUM</span> <span class="n">VUG2_FIPNUM</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug2SATNUM</span> <span class="n">VUG2_SATNUM</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">distanceVug3ToStreak</span> <span class="n">VUG3_DISTANCE_TO_STREAK</span><span class="p">]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug3Volume</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">vug3Spread</span> <span class="n">VUG3_SPREAD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3Poro</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span>
-                      <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3perm</span> <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]</span>
-                      <span class="p">[</span><span class="s1">&#39;Min&#39;</span><span class="p">,</span> <span class="s1">&#39;Max&#39;</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3MULTX</span> <span class="n">VUG3_MULTX</span><span class="p">]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug3Volume</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">vug3Spread</span> <span class="n">VUG3_SPREAD</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3Poro</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span>
+                      <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3perm</span> <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]</span>
+                      <span class="p">[</span><span class="s1">'Min'</span><span class="p">,</span> <span class="s1">'Max'</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3MULTX</span> <span class="n">VUG3_MULTX</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug3MULTY</span> <span class="n">VUG3_MULTY</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3MULTPV</span> <span class="n">VUG3_MULTPV</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug3SWATINIT</span> <span class="n">VUG3_SWATINIT</span><span class="p">]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">vug3FIPNUM</span> <span class="n">VUG3_FIPNUM</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">vug3SATNUM</span> <span class="n">VUG3_SATNUM</span><span class="p">]</span>
@@ -464,7 +464,7 @@ More information can be found in <a class="reference external" href="https://wik
                       <span class="p">[</span><span class="o">--</span><span class="n">fHeightY</span> <span class="n">FRACTURE_HEIGHT_Y</span> <span class="p">[</span><span class="n">FRACTURE_HEIGHT_Y</span> <span class="o">...</span><span class="p">]]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">fVertOffsetY</span> <span class="n">FRACTURE_ZOFFSET_Y</span> <span class="p">[</span><span class="n">FRACTURE_ZOFFSET_Y</span> <span class="o">...</span><span class="p">]]</span>
                       <span class="p">[</span><span class="o">--</span><span class="n">fracPermY</span> <span class="n">FRACTURE_PERM_Y</span> <span class="p">[</span><span class="n">FRACTURE_PERM_Y</span> <span class="o">...</span><span class="p">]]</span>
-                      <span class="p">[</span><span class="o">--</span><span class="n">var</span> <span class="p">[</span><span class="s1">&#39;Variable&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]</span> <span class="p">[</span><span class="s1">&#39;Variable&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">]]</span>
+                      <span class="p">[</span><span class="o">--</span><span class="n">var</span> <span class="p">[</span><span class="s1">'Variable'</span><span class="p">,</span> <span class="s1">'Value'</span><span class="p">]</span> <span class="p">[</span><span class="s1">'Variable'</span><span class="p">,</span> <span class="s1">'Value'</span><span class="p">]]</span>
                       <span class="n">config_file</span>
 </pre></div>
 </div>

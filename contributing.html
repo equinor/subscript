@@ -152,12 +152,12 @@ should use <code class="docutils literal notranslate"><span class="pre">komodoen
 <a class="reference external" href="https://fmu-docs.equinor.com/docs/komodo/equinor_komodo_usage.html">here</a>
 (internal). Otherwise, set up a normal virtual environment.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python3 -m venv venv-subscript</span>
-<span class="go">source venv-subscript/bin/activate  # append &quot;.csh&quot; if c-shell</span>
+<span class="go">source venv-subscript/bin/activate  # append ".csh" if c-shell</span>
 </pre></div>
 </div>
 <p>and then upgrade and install the dependencies with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install -U pip</span>
-<span class="go">pip install -e &quot;.[tests,docs]&quot;</span>
+<span class="go">pip install -e ".[tests,docs]"</span>
 </pre></div>
 </div>
 <p>to install subscript in “edit”-mode together will all the dependencies for
@@ -172,7 +172,7 @@ you can invoke the test run in the following manner. This will include
 running tests that rely upon a black oil simulation.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>running<span class="w"> </span>on<span class="w"> </span>redhat<span class="w"> </span><span class="m">8</span>
 <span class="go">source /prog/res/ecl/script/eclrun.cshrc  # Use eclrun.bash if using the bash shell</span>
-<span class="go">pytest -n auto --flow-simulator=&quot;/project/res/x86_64_RH_8/bin/flowdaily&quot; --eclipse-simulator=&quot;eclrun&quot;</span>
+<span class="go">pytest -n auto --flow-simulator="/project/res/x86_64_RH_8/bin/flowdaily" --eclipse-simulator="eclrun"</span>
 </pre></div>
 </div>
 </section>

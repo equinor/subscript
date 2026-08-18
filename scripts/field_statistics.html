@@ -322,7 +322,7 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 
 <span class="w">  </span><span class="c1"># Specify path to directory where the ertbox grids are stored</span>
 <span class="w">  </span><span class="c1"># relative to config path (ert/model)</span>
-<span class="w">  </span><span class="nt">relative_path_ertbox_grids</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;../../rms/output/aps&quot;</span>
+<span class="w">  </span><span class="nt">relative_path_ertbox_grids</span><span class="p">:</span><span class="w"> </span><span class="s">"../../rms/output/aps"</span>
 
 <span class="w">  </span><span class="c1"># Specify ertbox grids per zone and/or a default global ertbox grid.</span>
 <span class="w">  </span><span class="c1"># The ertbox names are the same as the filenames except for the suffix.</span>
@@ -330,31 +330,31 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 <span class="w">  </span><span class="c1"># individual ertbox grid is not specified. The default ertbox grid name</span>
 <span class="w">  </span><span class="c1"># must be the same as the ertbox grid specified in the global GRID keyword</span>
 <span class="w">  </span><span class="c1"># in ERT.</span>
-<span class="w">  </span><span class="c1"># Note that specification of &#39;ertbox_per_zone&#39; must be consistent with</span>
+<span class="w">  </span><span class="c1"># Note that specification of 'ertbox_per_zone' must be consistent with</span>
 <span class="w">  </span><span class="c1"># the specification of the FIELD keyword in ERT.</span>
 <span class="w">  </span><span class="c1"># If the FIELD keyword in ERT config file does not use the</span>
-<span class="w">  </span><span class="c1"># sub-keyword GRID for any zone, skip the keyword &#39;ertbox_per_zone&#39;</span>
+<span class="w">  </span><span class="c1"># sub-keyword GRID for any zone, skip the keyword 'ertbox_per_zone'</span>
 <span class="w">  </span><span class="c1"># and use only ertbox_default keyword.This means that all zones use the</span>
 <span class="w">  </span><span class="c1"># same ertbox grid size.</span>
 <span class="w">  </span><span class="c1"># If some or all FIELD keywords in ERT use the sub-keyword GRID,</span>
-<span class="w">  </span><span class="c1"># then specify &#39;ertbox_per_zone&#39; keyword for all zones and use the</span>
+<span class="w">  </span><span class="c1"># then specify 'ertbox_per_zone' keyword for all zones and use the</span>
 <span class="w">  </span><span class="c1"># same ertbox grid for each zone as specified in ERT keyword FIELD.</span>
-<span class="w">  </span><span class="c1"># If some of the FIELD keywords don&#39;t use sub-keyword GRID, it means</span>
+<span class="w">  </span><span class="c1"># If some of the FIELD keywords don't use sub-keyword GRID, it means</span>
 <span class="w">  </span><span class="c1"># that the ertbox grid specified by the global GRID keyword in ERT</span>
 <span class="w">  </span><span class="c1"># is used. In this case, specify the name of the default ertbox grid</span>
 <span class="w">  </span><span class="c1"># for those zones. In this way it is possible to define the ertbox grid</span>
 <span class="w">  </span><span class="c1"># in the same ways here for field_statistics as was done in ERT config file.</span>
 <span class="w">  </span><span class="nt">ertbox_per_zone</span><span class="p">:</span>
-<span class="w">      </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;ertbox_valysar&quot;</span>
-<span class="w">      </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="s">&quot;ertbox_therys&quot;</span>
-<span class="w">      </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="s">&quot;ertbox_volon&quot;</span>
-<span class="w">  </span><span class="nt">ertbox_default</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ERTBOX&quot;</span>
+<span class="w">      </span><span class="s">"Valysar"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">"ertbox_valysar"</span>
+<span class="w">      </span><span class="s">"Therys"</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="s">"ertbox_therys"</span>
+<span class="w">      </span><span class="s">"Volon"</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="s">"ertbox_volon"</span>
+<span class="w">  </span><span class="nt">ertbox_default</span><span class="p">:</span><span class="w"> </span><span class="s">"ERTBOX"</span>
 
 <span class="w">  </span><span class="c1"># Zone numbers with zone name dictionary</span>
 <span class="w">  </span><span class="nt">zone_code_names</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Valysar&quot;</span>
-<span class="w">      </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span>
-<span class="w">      </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span>
+<span class="w">      </span><span class="nt">1</span><span class="p">:</span><span class="w"> </span><span class="s">"Valysar"</span>
+<span class="w">      </span><span class="nt">2</span><span class="p">:</span><span class="w"> </span><span class="s">"Therys"</span>
+<span class="w">      </span><span class="nt">3</span><span class="p">:</span><span class="w"> </span><span class="s">"Volon"</span>
 
 <span class="w">  </span><span class="c1"># Specify which geogrid fields to use</span>
 <span class="w">  </span><span class="c1"># Geogrid fields are typically found in:</span>
@@ -363,12 +363,12 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 <span class="w">  </span><span class="nt">geogrid_fields</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># Prefix (name of geogrid) to be used for field parameters related to the</span>
 <span class="w">      </span><span class="c1"># geogrid.</span>
-<span class="w">      </span><span class="nt">geogrid_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;geogrid&quot;</span>
+<span class="w">      </span><span class="nt">geogrid_name</span><span class="p">:</span><span class="w"> </span><span class="s">"geogrid"</span>
 
 <span class="w">      </span><span class="c1"># Selected set of zone names to use in calculations of statistics.</span>
 <span class="w">      </span><span class="c1"># Must be one or more of the defined zones.</span>
 <span class="w">      </span><span class="c1"># Require at least one zone to be selected.</span>
-<span class="w">      </span><span class="nt">use_zones</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">use_zones</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"Valysar"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"Therys"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"Volon"</span><span class="p p-Indicator">]</span>
 
 
 <span class="w">      </span><span class="c1"># Specify facies per zone either here or in global variables file.</span>
@@ -396,9 +396,9 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 <span class="w">      </span><span class="c1"># Top or base conform means that grid cell thickness is specified.</span>
 <span class="w">      </span><span class="c1"># Required (but only for zones you want to use)</span>
 <span class="w">      </span><span class="nt">zone_conformity</span><span class="p">:</span>
-<span class="w">          </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
-<span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Top_conform&quot;</span>
-<span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;Proportional&quot;</span>
+<span class="w">          </span><span class="s">"Valysar"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">"Proportional"</span>
+<span class="w">          </span><span class="s">"Therys"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">"Top_conform"</span>
+<span class="w">          </span><span class="s">"Volon"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">"Proportional"</span>
 
 <span class="w">      </span><span class="c1"># For each zone specify which discrete parameter to use to calculate</span>
 <span class="w">      </span><span class="c1"># facies probability estimates.</span>
@@ -406,11 +406,11 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 <span class="w">      </span><span class="c1"># share/results/grids/&lt;geogridname&gt;--&lt;name&gt;.roff</span>
 <span class="w">      </span><span class="c1"># files that are of discrete type.</span>
 <span class="w">      </span><span class="c1"># This key can be omitted or some of the lines specifying parameters</span>
-<span class="w">      </span><span class="c1"># for a zone if you don&#39;t want to use it.</span>
+<span class="w">      </span><span class="c1"># for a zone if you don't want to use it.</span>
 <span class="w">      </span><span class="nt">discrete_property_param_per_zone</span><span class="p">:</span>
-<span class="w">          </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;facies&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">"Valysar"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"facies"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">"Therys"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"facies"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">"Volon"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"facies"</span><span class="p p-Indicator">]</span>
 
 <span class="w">      </span><span class="c1"># For each zone specify which continuous parameter to use to</span>
 <span class="w">      </span><span class="c1"># calculate estimate of mean and stdev over ensemble.</span>
@@ -418,11 +418,11 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 <span class="w">      </span><span class="c1">#  share/results/grids/&lt;geogridname&gt;--&lt;name&gt;.roff</span>
 <span class="w">      </span><span class="c1"># files that are of continuous type</span>
 <span class="w">      </span><span class="c1"># This key can be omitted or some of the lines specifying</span>
-<span class="w">      </span><span class="c1"># parameters for a zone if you don&#39;t want to use it.</span>
+<span class="w">      </span><span class="c1"># parameters for a zone if you don't want to use it.</span>
 <span class="w">      </span><span class="nt">continuous_property_param_per_zone</span><span class="p">:</span>
-<span class="w">          </span><span class="s">&quot;Valysar&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="s">&quot;Therys&quot;</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
-<span class="w">          </span><span class="s">&quot;Volon&quot;</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="s">&quot;phit&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;klogh&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">"Valysar"</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"phit"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"klogh"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">"Therys"</span><span class="p p-Indicator">:</span><span class="w">  </span><span class="p p-Indicator">[</span><span class="s">"phit"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"klogh"</span><span class="p p-Indicator">]</span>
+<span class="w">          </span><span class="s">"Volon"</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="p p-Indicator">[</span><span class="s">"phit"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"klogh"</span><span class="p p-Indicator">]</span>
 
 
 <span class="w">  </span><span class="c1"># Specify which temporary field parameters (in ertbox) to use</span>
@@ -431,7 +431,7 @@ RMS project used as forward model in ERT since the ERTBOX grids already exists t
 <span class="w">  </span><span class="nt">temporary_ertbox_fields</span><span class="p">:</span>
 <span class="w">      </span><span class="c1"># Relative path relative to ERT &lt;RUN_PATH&gt; for localisation of</span>
 <span class="w">      </span><span class="c1"># initial ensemble of field parameters</span>
-<span class="w">      </span><span class="nt">initial_relative_path</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;rms/output/aps&quot;</span>
+<span class="w">      </span><span class="nt">initial_relative_path</span><span class="p">:</span><span class="w"> </span><span class="s">"rms/output/aps"</span>
 
 <span class="w">      </span><span class="c1"># Field parameter names as specified in ERT FIELD keywords</span>
 <span class="w">      </span><span class="c1"># grouped by zone</span>

@@ -331,8 +331,8 @@ as a list of dicts.</p>
 </pre></div>
 </div>
 <p>will be returned as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span><span class="s1">&#39;OBS&#39;</span><span class="p">:</span> <span class="s1">&#39;P1&#39;</span><span class="p">,</span> <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s1">&#39;PRESSURE&#39;</span><span class="p">,</span> <span class="s1">&#39;I=1&#39;</span><span class="p">},</span>
-  <span class="p">{</span><span class="s1">&#39;OBS&#39;</span><span class="p">:</span> <span class="s1">&#39;P2&#39;</span><span class="p">,</span> <span class="s1">&#39;FIELD&#39;</span><span class="p">:</span> <span class="s1">&#39;PRESSURE&#39;</span><span class="p">,</span> <span class="s1">&#39;I=3&#39;</span><span class="p">}]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span><span class="s1">'OBS'</span><span class="p">:</span> <span class="s1">'P1'</span><span class="p">,</span> <span class="s1">'FIELD'</span><span class="p">:</span> <span class="s1">'PRESSURE'</span><span class="p">,</span> <span class="s1">'I=1'</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">'OBS'</span><span class="p">:</span> <span class="s1">'P2'</span><span class="p">,</span> <span class="s1">'FIELD'</span><span class="p">:</span> <span class="s1">'PRESSURE'</span><span class="p">,</span> <span class="s1">'I=3'</span><span class="p">}]</span>
 </pre></div>
 </div>
 <p>If there are overlapping key-names at each nesting level, the
@@ -345,8 +345,8 @@ segment in addition:</p>
 </pre></div>
 </div>
 <p>gives two elements:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span><span class="s1">&#39;SEGMENT&#39;</span><span class="p">:</span> <span class="s1">&#39;DEFAULT&#39;</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
-  <span class="p">{</span><span class="s1">&#39;SEGMENT&#39;</span><span class="p">:</span> <span class="s1">&#39;S1&#39;</span><span class="p">,</span>  <span class="s1">&#39;START&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;END&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;ERROR&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span> <span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="p">{</span><span class="s1">'SEGMENT'</span><span class="p">:</span> <span class="s1">'DEFAULT'</span><span class="p">,</span> <span class="s1">'ERROR'</span><span class="p">:</span> <span class="mi">10</span><span class="p">},</span>
+  <span class="p">{</span><span class="s1">'SEGMENT'</span><span class="p">:</span> <span class="s1">'S1'</span><span class="p">,</span>  <span class="s1">'START'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'END'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'ERROR'</span><span class="p">:</span> <span class="mi">5</span><span class="p">}</span> <span class="p">]</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -501,11 +501,11 @@ being enclosed in f.ex. curly braces.</p>
 </dd>
 </dl>
 <p>with a masked string like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">&quot;foo XXXXXXXXXXX; hei hopp;&quot;</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="s2">"foo XXXXXXXXXXX; hei hopp;"</span>
 </pre></div>
 </div>
 <p>results in two components:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">&quot;foo { bar; com}&quot;</span><span class="p">,</span> <span class="s2">&quot;hei hopp&quot;</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span><span class="s2">"foo { bar; com}"</span><span class="p">,</span> <span class="s2">"hei hopp"</span><span class="p">]</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
