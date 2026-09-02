@@ -145,6 +145,7 @@ class CreateDateFiles(ForwardModelStepPlugin):
   FORWARD_MODEL CREATE_DATE_FILES(<GLOBVARFILE>=\
             "fmuconfig/output/global_variables.yml",\
             <SINGLEDATES>="SEISMIC_HIST_DATES", <DIFFDATES>="SEISMIC_DIFF_DATES")
+
 """,
         )
 
@@ -459,6 +460,7 @@ extension). If the extension is missing or not recognized, it defaults to
 
   FORWARD_MODEL ROFF2ECLGRID(<INPUT>=share/results/grids/reek.roff, \
       <OUTPUT>=share/results/grids/reek.EGRID, <OUTFORMAT>=egrid)
+
 """,
         )
 
@@ -820,6 +822,7 @@ class Sunsch(ForwardModelStepPlugin):
 .. code-block:: console
 
   FORWARD_MODEL SUNSCH(<config>=sunsch_config.yml)
+
 """,
         )
 

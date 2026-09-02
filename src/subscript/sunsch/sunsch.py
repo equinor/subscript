@@ -41,6 +41,7 @@ EXAMPLES = """
 .. code-block:: console
 
   FORWARD_MODEL SUNSCH(<config>=sunsch_config.yml)
+
 """
 
 
