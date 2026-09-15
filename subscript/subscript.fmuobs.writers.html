@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.fmuobs.writers &mdash; subscript 1.16.1.dev2+g2f61ca1ed documentation</title>
+  <title>subscript.fmuobs.writers &mdash; subscript 1.16.1.dev3+g2579f6d12 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=a220155f"></script>
+      <script src="../_static/documentation_options.js?v=589e978a"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -193,7 +193,8 @@ for block observations in dataframe representation</p>
 <dt class="sig sig-object py" id="subscript.fmuobs.writers.convert_dframe_date_to_str">
 <span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.writers.</span></span><span class="sig-name descname"><span class="pre">convert_dframe_date_to_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dframe</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.writers.convert_dframe_date_to_str" title="Link to this definition"></a></dt>
 <dd><p>Convert the DATE column in a dataframe to a string.
-Replace “NaT” (Not-a-Time) with np.nan after conversion</p>
+Replace string representations of missing values “NaT” (Not-a-Time), “NaN” and “nan”
+with np.nan after conversion</p>
 <p>Returns a copy of the dataframe if something is modified</p>
 <p>Returns the input if DATE is not found in the input frame.</p>
 <dl class="field-list simple">
