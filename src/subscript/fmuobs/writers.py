@@ -279,7 +279,8 @@ def summary_df2obsdict(smry_df: pd.DataFrame) -> list[dict]:
 
 def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     """Convert the DATE column in a dataframe to a string.
-    Replace "NaT" (Not-a-Time) with np.nan after conversion
+    Replace string representations of missing values "NaT" (Not-a-Time), "NaN" and "nan"
+    with np.nan after conversion
 
     Returns a copy of the dataframe if something is modified
 
@@ -291,11 +292,11 @@ def convert_dframe_date_to_str(dframe: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: DATE as a string type
     """
+    na_strings = ["NaT", "NaN", "nan"]
     if "DATE" in dframe:
         dframe = dframe.copy()
-        dframe["DATE"] = (
-            dframe["DATE"].astype(str).replace(["NaT", "NaN", "nan"], np.nan)
-        )
+        date_str = dframe["DATE"].astype(str)
+        dframe["DATE"] = date_str.mask(date_str.isin(na_strings), np.nan)
 
     return dframe
 
