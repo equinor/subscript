@@ -521,7 +521,15 @@ def test_block_df2obsdict(obs_df, expected_dict):
             pd.DataFrame([{"DATE": datetime.date(2020, 1, 1)}, {"DATE": np.nan}]),
             pd.DataFrame([{"DATE": "2020-01-01"}, {"DATE": np.nan}]),
         ),
+        # Explicitly cover every string marker in na_strings -> np.nan
+        (pd.DataFrame([{"DATE": "NaT"}]), pd.DataFrame([{"DATE": np.nan}])),
+        (pd.DataFrame([{"DATE": "NaN"}]), pd.DataFrame([{"DATE": np.nan}])),
         (pd.DataFrame([{"DATE": "nan"}]), pd.DataFrame([{"DATE": np.nan}])),
+        # Ensure valid dates are untouched while markers become np.nan
+        (
+            pd.DataFrame([{"DATE": "2020-01-01"}, {"DATE": "NaN"}]),
+            pd.DataFrame([{"DATE": "2020-01-01"}, {"DATE": np.nan}]),
+        ),
     ],
 )
 def test_convert_dframe_date_to_str(dframe, expected_dframe):
