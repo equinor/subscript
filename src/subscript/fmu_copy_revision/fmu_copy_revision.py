@@ -231,6 +231,27 @@ cd $PWD
 """
 
 
+def _get_size(path: str) -> int:
+    disksum = 0
+    for filesystemobject in Path(path).rglob("*"):
+        try:
+            if not filesystemobject.is_symlink():
+                disksum += filesystemobject.stat().st_size
+        except PermissionError:
+            logger.warning(
+                "Could not get size of %s, Permission denied", filesystemobject
+            )
+    return disksum
+
+
+def _filesize(size: float) -> str:
+    for unit in ("B", "K", "M", "G"):
+        if size < 1024:
+            break
+        size /= 1024
+    return f"{size:.1f} {unit}"
+
+
 def get_parser() -> argparse.ArgumentParser:
     """Setup parser."""
 
@@ -479,25 +500,6 @@ class CopyFMU:
         print(f"  Estimate size of current revision <{self.source}> ...")
 
         freekbytes = free // 1024
-
-        def _get_size(path: str) -> int:
-            disksum = 0
-            for filesystemobject in Path(path).rglob("*"):
-                try:
-                    if not filesystemobject.is_symlink():
-                        disksum += filesystemobject.stat().st_size
-                except PermissionError:
-                    logger.warning(
-                        "Could not get size of %s, Permission denied", filesystemobject
-                    )
-            return disksum
-
-        def _filesize(size: float) -> str:
-            for unit in ("B", "K", "M", "G"):  # noqa: B007
-                if size < 1024:
-                    break
-                size /= 1024
-            return f"{size:.1f} {unit}"
 
         fsize = _get_size(self.source)
         print(f"\n  Size of existing revision is: {_filesize(fsize)}\n")
