@@ -417,3 +417,39 @@ def test_profiles_empty_directory_is_copied(datatree, profile, expected, monkeyp
     subprocess.run(["fmu_copy_revision"], check=True, input=user_input)
     empty_dir = Path(target) / "empty"
     assert empty_dir.is_dir() is expected
+
+
+@pytest.mark.parametrize(
+    "estimated_size, printed_estimated_size",
+    [
+        (2, "2.0 B"),
+        (2 * 2**10, "2.0 K"),
+        (2 * 2**20, "2.0 M"),
+        (2 * 2**30, "2.0 G"),
+        (2 * 2**40, "2048.0 G"),
+    ],
+)
+def test_that_check_disk_space_prints_correct_estimated_size(
+    datatree, monkeypatch, capsys, estimated_size, printed_estimated_size
+):
+    monkeypatch.chdir(datatree)
+    monkeypatch.setattr(time, "sleep", lambda _: None)
+    free_space = estimated_size
+    used_space = 4 * 2**30
+    total_space = free_space + used_space
+    monkeypatch.setattr(
+        fcr.shutil,
+        "disk_usage",
+        lambda _: (total_space, used_space, free_space),
+    )
+
+    monkeypatch.setattr(fcr, "_get_size", lambda _path: estimated_size)
+
+    runner = fcr.CopyFMU()
+    runner.do_parse_args("")
+    runner.source = "20.1.1"
+
+    runner.check_disk_space()
+
+    out, _ = capsys.readouterr()
+    assert f"Size of existing revision is: {printed_estimated_size}" in out

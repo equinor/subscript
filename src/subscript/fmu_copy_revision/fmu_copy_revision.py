@@ -246,7 +246,7 @@ def _get_size(path: str) -> int:
 
 def _filesize(size: float) -> str:
     for unit in ("B", "K", "M", "G"):
-        if size < 1024:
+        if size < 1024 or unit == "G":
             break
         size /= 1024
     return f"{size:.1f} {unit}"
