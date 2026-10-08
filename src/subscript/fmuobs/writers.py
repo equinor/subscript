@@ -130,7 +130,7 @@ def dfhistory2ertobs(obs_df: pd.DataFrame) -> str:
         if "SEGMENT" not in history_df:
             history_df["SEGMENT"] = "DEFAULT"
         else:
-            history_df["SEGMENT"] = history_obs_df["SEGMENT"].fillna(value="DEFAULT")
+            history_df["SEGMENT"] = history_df["SEGMENT"].fillna(value="DEFAULT")
         ertobs_str += "HISTORY_OBSERVATION " + str(histlabel) + " \n"
         ertobs_str += "{\n"
         # Write statements for the implicit DEFAULT segment.
