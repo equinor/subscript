@@ -293,6 +293,28 @@ def main() -> None:
     )
 
 
+def configure_logging(verbose: bool = False, debug: bool = False) -> None:
+    """Configure log levels for fmuobs and its submodules.
+
+    The ERT workflow hook captures log output from the Python process, so we
+    must explicitly control the package logger levels here to avoid leaking
+    INFO/DEBUG output in default runs.
+    """
+    loglevel = logging.WARNING
+    if verbose:
+        loglevel = logging.INFO
+    if debug:
+        loglevel = logging.DEBUG
+
+    for name in (
+        "subscript.fmuobs",
+        "subscript.fmuobs.parsers",
+        "subscript.fmuobs.writers",
+        "subscript.fmuobs.util",
+    ):
+        logging.getLogger(name).setLevel(loglevel)
+
+
 def fmuobs(
     inputfile: str,
     ertobs: str | None = None,
@@ -305,16 +327,9 @@ def fmuobs(
     includedir: str | None = None,
 ) -> None:
     """Alternative to main() with named arguments"""
-    if verbose or debug:
-        if __MAGIC_STDOUT__ in {csv, yml, ertobs}:
-            raise SystemExit("Don't use verbose/debug when writing to stdout")
-        loglevel = logging.INFO
-        if debug:
-            loglevel = logging.DEBUG
-        logger.setLevel(loglevel)
-        getLogger("subscript.fmuobs.parsers").setLevel(loglevel)
-        getLogger("subscript.fmuobs.writers").setLevel(loglevel)
-        getLogger("subscript.fmuobs.util").setLevel(loglevel)
+    if (verbose or debug) and __MAGIC_STDOUT__ in {csv, yml, ertobs}:
+        raise SystemExit("Don't use verbose/debug when writing to stdout")
+    configure_logging(verbose=verbose, debug=debug)
 
     (filetype, dframe) = autoparse_file(inputfile)
 

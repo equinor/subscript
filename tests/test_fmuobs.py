@@ -2,6 +2,7 @@
 other formats, and test the ERT hook"""
 
 import io
+import logging
 import subprocess
 from pathlib import Path
 
@@ -9,7 +10,7 @@ import pandas as pd
 import pytest
 import yaml
 
-from subscript.fmuobs.fmuobs import autoparse_file, main
+from subscript.fmuobs.fmuobs import autoparse_file, fmuobs, main
 from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
@@ -302,8 +303,7 @@ def test_commandline(tmp_path, verbose, mocker, caplog, monkeypatch):
     """Test the executable versus on the ERT doc observation data
     and compare to precomputed CSV and YML.
 
-    When code changes, updates to the CSV and YML might
-    be necessary.
+    When code changes, updates to the CSV and YML might be necessary.
     """
     monkeypatch.chdir(tmp_path)
     mocker.patch(
@@ -312,7 +312,6 @@ def test_commandline(tmp_path, verbose, mocker, caplog, monkeypatch):
             filter(
                 None,
                 [
-                    # [
                     "fmuobs",
                     "--includedir",
                     str(TESTDATA_DIR),
@@ -385,8 +384,16 @@ def test_commandline(tmp_path, verbose, mocker, caplog, monkeypatch):
     )
 
 
+def _has_log(output: str, level: str, logger_name: str, text: str) -> bool:
+    """True if some ERT log line has this logger, level and message text"""
+    return any(
+        f" - {logger_name} - " in line and f" - {level} - " in line and text in line
+        for line in output.splitlines()
+    )
+
+
 @pytest.mark.integration
-@pytest.mark.parametrize("verbose", ["", '"--verbose"', '"--debug"'])
+@pytest.mark.parametrize("verbose", ["", "--verbose", "--debug"])
 def test_ert_workflow_hook(verbose, tmp_path, monkeypatch):
     """Mock an ERT config with FMUOBS as a workflow and run it"""
     obs_file = TESTDATA_DIR / "ert-doc.obs"
@@ -394,14 +401,13 @@ def test_ert_workflow_hook(verbose, tmp_path, monkeypatch):
 
     Path("FOO.DATA").write_text("--Empty", encoding="utf8")
 
+    # ERT treats "--" as a comment, so options must be quoted in the workflow
+    quoted_verbose = f'"{verbose}"' if verbose else ""
+
     Path("wf_fmuobs").write_text(
-        "FMUOBS "
-        + verbose
-        + " "
-        + str(obs_file)
-        + ' "--yaml" ert-obs.yml "--resinsight" ri-obs.csv "--includedir" '
-        + str(TESTDATA_DIR)
-        + "\n",
+        f"FMUOBS {quoted_verbose} {obs_file} "
+        '"--yaml" ert-obs.yml "--resinsight" ri-obs.csv '
+        f'"--includedir" {TESTDATA_DIR}\n',
         encoding="utf8",
     )
 
@@ -424,18 +430,43 @@ def test_ert_workflow_hook(verbose, tmp_path, monkeypatch):
 
     # Verify that we can control whether INFO messages from fmuobs through ERT
     # is emitted.
-    log_file = next(Path("logs").glob("ert-log*txt"))
-    ert_output = log_file.read_text(encoding="utf-8")
+    logs = list(Path("logs").glob("ert-log*txt"))
+    assert logs, "No ERT log file found"
+    ert_output = logs[0].read_text(encoding="utf-8")
 
-    # This is slightly tricky, as ERT has its own logging handler which is able
-    # to pick up the log messages, but whose level cannot be controlled by
-    # the fmuobs.py file. Thus, we test on the exact subscript logger format:
+    parsers = "subscript.fmuobs.parsers"
+    # Positive control: the log file must contain fmuobs messages at WARNING
+    # level, which are emitted in every mode. Otherwise the absence checks
+    # below could pass on an empty or wrong file.
+    assert _has_log(ert_output, "WARNING", "subscript.fmuobs.writers", "missing DATE")
+
     if verbose == "--verbose":
-        assert "INFO:subscript.fmuobs.parsers:Injecting include file" in ert_output
+        assert _has_log(ert_output, "INFO", parsers, "Injecting include file")
+        assert not _has_log(ert_output, "DEBUG", parsers, "Parsing observation")
     elif verbose == "--debug":
-        assert (
-            "DEBUG:subscript.fmuobs.parsers:"
-            "Parsing observation SUMMARY_OBSERVATION SEP_TEST_2005" in ert_output
+        assert _has_log(ert_output, "INFO", parsers, "Injecting include file")
+        assert _has_log(
+            ert_output,
+            "DEBUG",
+            parsers,
+            "Parsing observation SUMMARY_OBSERVATION SEP_TEST_2005",
         )
     else:
-        assert "INFO:subscript.fmuobs.parsers:Injecting include file" not in ert_output
+        assert not _has_log(ert_output, "INFO", parsers, "Injecting include file")
+        assert not _has_log(ert_output, "DEBUG", parsers, "Parsing observation")
+
+
+def test_stdout_guard_does_not_change_log_levels(tmp_path, monkeypatch):
+    """A rejected verbose+stdout call must not alter logger levels"""
+    monkeypatch.chdir(tmp_path)
+    logger = logging.getLogger("subscript.fmuobs")
+    logger.setLevel(logging.WARNING)
+
+    with pytest.raises(SystemExit):
+        fmuobs(
+            str(TESTDATA_DIR / "ert-doc.obs"),
+            csv="-",
+            verbose=True,
+        )
+
+    assert logger.level == logging.WARNING
