@@ -9,6 +9,7 @@ import pandas as pd
 
 from subscript import getLogger
 from subscript.fmuobs.util import (
+    CLASS_SHORTNAME,
     ERT_ALT_DATE_FORMAT,
     ERT_DATE_FORMAT,
     ERT_ISO_DATE_FORMAT,
@@ -16,6 +17,9 @@ from subscript.fmuobs.util import (
 )
 
 logger = getLogger(__name__)
+
+# Label-less nested blocks that are dropped (with a warning) when parsing
+IGNORED_SUBUNITS = {"LOCALIZATION"}
 
 # Regular expressions for matching ERT observation files.
 # Note that lower-case is supported by the regexp's, but might not be supported
@@ -27,7 +31,7 @@ _OBS_LABEL = r"([A-Za-z0-9_\-]+)"
 _SEMICOLON = _WHITESPACE + ";" + _WHITESPACE
 
 # This avoids nested {}, and avoids capturing trailing ; in matched group
-_OPTIONAL_CURLY_SUBGROUP = r"(\{[A-Za-z=0-9\+\.,_;/\s]*\})?" + _SEMICOLON
+_OPTIONAL_CURLY_SUBGROUP = r"(\{[A-Za-z=0-9\+\-\.,_;/\s]*\})?" + _SEMICOLON
 
 OBS_ARGS_RE = re.compile(
     _WHITESPACE
@@ -102,6 +106,24 @@ def mask_curly_braces(string: str, mask_char: str = "X") -> str:
         if match:
             string = string.replace(match, mask_char * len(match))
     return string
+
+
+def mask_nested_curly_braces(string: str, mask_char: str = "X") -> str:
+    """Mask all characters inside curly braces (at any nesting depth), leaving
+    the outermost braces themselves unmasked in the output length-preserving
+    string, so that only top-level separators remain visible."""
+    depth = 0
+    masked = []
+    for char in string:
+        if char == "{":
+            depth += 1
+        if depth > 0 and not (char == "{" and depth == 1):
+            masked.append(mask_char)
+        else:
+            masked.append(char)
+        if char == "}":
+            depth = max(depth - 1, 0)
+    return "".join(masked)
 
 
 def split_by_sep_in_masked_string(
@@ -348,6 +370,12 @@ def flatten_observation_unit(
     ]
     if not subunit_keys:
         return [obsunit]
+    for ignored in [key for key in subunit_keys if key in IGNORED_SUBUNITS]:
+        logger.debug("Ignoring unsupported %s block in observation", ignored)
+        obsunit = {key: val for key, val in obsunit.items() if key != ignored}
+        subunit_keys.remove(ignored)
+    if not subunit_keys:
+        return [obsunit]
     keyvalue_keys = set(obsunit.keys()) - set(subunit_keys)
     keyvalues = {key: obsunit[key] for key in keyvalue_keys}
     obs_subunits = []
@@ -370,6 +398,27 @@ def flatten_observation_unit(
     return obs_subunits
 
 
+def split_ertobs_units(input_str: str, cwd: str = ".") -> list[list[str]]:
+    """Split a string with ERT observations into its top-level observation
+    units, each as a list of whitespace-separated tokens (keyword, label and
+    the curly-brace arguments). Include statements are expanded and comments
+    removed first.
+
+    Args:
+        input_str: String in ERT observation syntax.
+        cwd: Path used when resolving include statements.
+    """
+    ertobs_str = expand_includes(filter_comments(input_str), cwd=cwd)
+
+    # Helper string for splitting correctly on semicolons, braces nested
+    # to any depth are masked
+    masked_string = mask_nested_curly_braces(ertobs_str)
+    return [
+        unit_str.replace("{", " {").split()
+        for unit_str in split_by_sep_in_masked_string(ertobs_str, masked_string)
+    ]
+
+
 def ertobs2df(
     input_str: str, cwd: str = ".", starttime: str | None = None
 ) -> pd.DataFrame:
@@ -389,28 +438,35 @@ def ertobs2df(
     Returns:
         pd.DataFrame. The DATE column is always of type datetime64
     """
-    ertobs_str = expand_includes(filter_comments(input_str), cwd=cwd)
-
-    # Helper string for splitting correctly on semicolons
-    masked_string = mask_curly_braces(ertobs_str)
     obs_list = []
-    for observation_unit_str in split_by_sep_in_masked_string(
-        ertobs_str, masked_string
-    ):
-        obs_unit_split = observation_unit_str.replace("{", " {").split()
+    skipped_keywords: list[str] = []
+    for obs_unit_split in split_ertobs_units(input_str, cwd=cwd):
+        if obs_unit_split and obs_unit_split[0] not in CLASS_SHORTNAME:
+            if obs_unit_split[0] not in skipped_keywords:
+                skipped_keywords.append(obs_unit_split[0])
+                logger.warning(
+                    "Unsupported ERT observation keyword %s is skipped",
+                    obs_unit_split[0],
+                )
+            continue
         # Two or three components depending on observation type.
         if len(obs_unit_split) < 2:
-            print(observation_unit_str)
-            print(obs_unit_split)
             raise ValueError
         obs_unit = {"CLASS": obs_unit_split[0], "LABEL": obs_unit_split[1]}
         logger.debug("Parsing observation %s %s", obs_unit["CLASS"], obs_unit["LABEL"])
         if len(obs_unit_split) > 2:
             obs_args = " ".join(obs_unit_split[2:])
             logger.debug("Subunit data: %s", obs_args)
-            for obs_subunit in flatten_observation_unit(
-                parse_observation_unit(obs_args)
-            ):
+            parsed_unit = parse_observation_unit(obs_args)
+            for ignored in IGNORED_SUBUNITS.intersection(parsed_unit):
+                if ignored not in skipped_keywords:
+                    skipped_keywords.append(ignored)
+                    logger.warning(
+                        "Unsupported %s blocks in observations are ignored, "
+                        "they are not exported",
+                        ignored,
+                    )
+            for obs_subunit in flatten_observation_unit(parsed_unit):
                 obs_list.append({**obs_unit, **obs_subunit})
         else:
             obs_list.append(obs_unit)

@@ -11,6 +11,14 @@ CLASS_SHORTNAME = {
 }
 
 
+# Valid ERT observation keywords that fmuobs does not (yet) support
+KNOWN_UNSUPPORTED_KEYWORDS = {
+    "BREAKTHROUGH_OBSERVATION",
+    "RFT_OBSERVATION",
+    "SEISMIC_OBSERVATION",
+    "SUMMARY",
+}
+
 ERT_DATE_FORMAT = "%d/%m/%Y"
 ERT_ISO_DATE_FORMAT = "%Y-%m-%d"
 ERT_ALT_DATE_FORMAT = "%d.%m.%Y"  # Not found in doc, but supported by ERT

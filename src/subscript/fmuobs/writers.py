@@ -402,6 +402,8 @@ def df2resinsight_df(obs_df: pd.DataFrame) -> pd.DataFrame:
 
     ri_column_names = ["DATE", "VECTOR", "VALUE", "ERROR"]
     ri_dframe = obs_df.copy()
+    if "CLASS" not in ri_dframe:
+        return pd.DataFrame(columns=ri_column_names)
 
     # Only SUMMARY_OBSERVATION is supported:
     ri_dframe = ri_dframe[ri_dframe["CLASS"] == "SUMMARY_OBSERVATION"].rename(
