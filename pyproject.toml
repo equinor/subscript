@@ -5,9 +5,6 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools_scm]
-version_file = "src/subscript/version.py"
-
 [project]
 name = "subscript"
 description = "Equinor's collection of subsurface reservoir modelling scripts"
@@ -128,6 +125,10 @@ FmuObs = "subscript.fmuobs.fmuobs"
 Params2Csv = "subscript.params2csv.params2csv"
 FieldStatistics = "subscript.field_statistics.field_statistics"
 
+
+[tool.setuptools_scm]
+version_file = "src/subscript/version.py"
+
 [tool.setuptools]
 script-files = [
     "src/subscript/legacy/duf",
@@ -232,3 +233,4 @@ combine-as-imports = true
 
 [tool.ruff.lint.pylint]
 max-args = 35
+max-returns = 7

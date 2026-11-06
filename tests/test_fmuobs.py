@@ -10,7 +10,12 @@ import pandas as pd
 import pytest
 import yaml
 
-from subscript.fmuobs.fmuobs import autoparse_file, fmuobs, main
+from subscript.fmuobs.fmuobs import (
+    autoparse_file,
+    fmuobs,
+    main,
+    validate_internal_dframe,
+)
 from subscript.fmuobs.parsers import ertobs2df, obsdict2df, resinsight_df2df
 from subscript.fmuobs.writers import df2ertobs, df2obsdict, df2resinsight_df
 
@@ -470,3 +475,74 @@ def test_stdout_guard_does_not_change_log_levels(tmp_path, monkeypatch):
         )
 
     assert logger.level == logging.WARNING
+
+
+def test_unsupported_keywords_are_skipped_with_warning(tmp_path, monkeypatch, caplog):
+    """Unsupported keywords and LOCALIZATION blocks must not break parsing"""
+    monkeypatch.chdir(tmp_path)
+    fmuobs(
+        str(TESTDATA_DIR / "mixed_supported_unsupported.obs"),
+        csv="out.csv",
+        yml="out.yml",
+        resinsight="ri.csv",
+        ertobs="out.obs",
+    )
+    dframe = pd.read_csv("out.csv")
+    assert set(dframe["CLASS"]) == {"SUMMARY_OBSERVATION", "GENERAL_OBSERVATION"}
+    assert "LOCALIZATION" not in dframe.columns
+    assert "BREAKTHROUGH_OBSERVATION is skipped" in caplog.text
+    assert "RFT_OBSERVATION is skipped" in caplog.text
+    assert "SEISMIC_OBSERVATION is skipped" in caplog.text
+    assert caplog.text.count("LOCALIZATION blocks in observations are ignored") == 1
+    assert len(pd.read_csv("ri.csv", sep=";")) == 1
+
+
+def test_only_unsupported_keywords(tmp_path, monkeypatch, caplog):
+    """No crash (and no error) when nothing supported is found"""
+    monkeypatch.chdir(tmp_path)
+    fmuobs(
+        str(TESTDATA_DIR / "only_unsupported.obs"),
+        csv="out.csv",
+        yml="out.yml",
+        resinsight="ri.csv",
+        ertobs="out.obs",
+    )
+    assert "No supported observations found" in caplog.text
+    assert not [rec for rec in caplog.records if rec.levelno >= logging.ERROR]
+
+
+def test_summary_block_with_nested_localization(tmp_path, monkeypatch, caplog):
+    monkeypatch.chdir(tmp_path)
+    fmuobs(str(TESTDATA_DIR / "summary_block.obs"), csv="out.csv")
+    assert "keyword SUMMARY is skipped" in caplog.text
+    assert "keyword WELL" not in caplog.text
+    assert "keyword }" not in caplog.text
+
+
+@pytest.mark.parametrize("columns", [{"A": [1]}, {"CLASS": ["X"]}, {"LABEL": ["X"]}])
+def test_validate_internal_dframe_missing_columns(columns, caplog):
+    assert not validate_internal_dframe(pd.DataFrame(columns))
+    assert "is not in dataframe" in caplog.text
+
+
+def test_only_unsupported_keywords_in_include(tmp_path, monkeypatch, caplog):
+    """Unsupported keywords inside a resolvable include file are detected"""
+    monkeypatch.chdir(tmp_path)
+    Path("child.obs").write_text(
+        (TESTDATA_DIR / "only_unsupported.obs").read_text(encoding="utf8"),
+        encoding="utf8",
+    )
+    Path("root.obs").write_text("include child.obs;\n", encoding="utf8")
+    filetype, dframe = autoparse_file("root.obs")
+    assert filetype == "ert"
+    assert dframe.empty
+    assert "No supported observations found" in caplog.text
+    assert not [rec for rec in caplog.records if rec.levelno >= logging.ERROR]
+
+
+def test_unsupported_keyword_as_label_is_not_unsupported_file(tmp_path, monkeypatch):
+    """Only top-level keywords count, not labels that happen to match"""
+    monkeypatch.chdir(tmp_path)
+    Path("in.obs").write_text("SMRY_OBSERVATION SUMMARY {VALUE=1;};\n", encoding="utf8")
+    filetype, _ = autoparse_file("in.obs")
+    assert filetype is None

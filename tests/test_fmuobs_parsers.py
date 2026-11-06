@@ -905,3 +905,13 @@ def test_obsdict2df(obsdict, expected_df):
         expected_df.sort_index(axis=1),
         check_dtype=False,
     )
+
+
+def test_localization_with_scientific_notation_value(caplog):
+    """LOCALIZATION blocks are ignored also with exponent values (contains "-")"""
+    dframe = ertobs2df(
+        "SUMMARY_OBSERVATION A {VALUE = 1; ERROR = 1; DATE = 2019-08-01; KEY = WOPR;"
+        " LOCALIZATION { EAST = 462588.52; NORTH = 5934080.96; RADIUS = 1e-3;}; };"
+    )
+    assert not {"EAST", "NORTH", "RADIUS"} & set(dframe.columns)
+    assert "LOCALIZATION blocks in observations are ignored" in caplog.text

@@ -15,11 +15,15 @@ import yaml
 
 from subscript import __version__, getLogger
 from subscript.fmuobs.parsers import (
+    INCLUDE_RE,
     compute_date_from_days,
     ertobs2df,
+    filter_comments,
     obsdict2df,
     resinsight_df2df,
+    split_ertobs_units,
 )
+from subscript.fmuobs.util import KNOWN_UNSUPPORTED_KEYWORDS
 from subscript.fmuobs.writers import (
     CLASS_SHORTNAME,
     df2ertobs,
@@ -158,12 +162,12 @@ def validate_internal_dframe(obs_df: pd.DataFrame) -> bool:
     if obs_df.empty:
         logger.warning("Observation dataframe empty")
         return True
-    if "CLASS" not in obs_df:
-        logger.error("CLASS is not in dataframe - not valid")
-        failed = True
-    if "LABEL" not in obs_df:
-        logger.error("LABEL is not in dataframe - not valid")
-        failed = True
+    for required_column in ["CLASS", "LABEL"]:
+        if required_column not in obs_df:
+            logger.error("%s is not in dataframe - not valid", required_column)
+            failed = True
+    if failed:
+        return False
     non_supported_classes = set(obs_df["CLASS"]) - set(CLASS_SHORTNAME.keys())
     if non_supported_classes:
         logger.warning("Unsupported observation classes: %s", non_supported_classes)
@@ -262,6 +266,19 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
             return ("ert", pd.DataFrame())
         except ValueError:
             ert_dframe = None
+        if (
+            ert_dframe is not None
+            and ert_dframe.empty
+            and KNOWN_UNSUPPORTED_KEYWORDS.intersection(
+                units[0] for units in split_ertobs_units(content) if units
+            )
+        ):
+            logger.warning(
+                "No supported observations found in %s, "
+                "check for unsupported ERT observation keywords",
+                filename,
+            )
+            return ("ert", pd.DataFrame())
         if ert_dframe is not None and (
             {"CLASS", "LABEL"}.issubset(ert_dframe.columns)
             and not ert_dframe.empty
@@ -271,7 +288,10 @@ def autoparse_file(filename: str) -> tuple[str | None, pd.DataFrame]:
             return ("ert", ert_dframe)
 
     logger.error(
-        "Unable to parse %s as any supported observation file format", filename
+        "Unable to parse %s as any supported observation file format. "
+        "If it is an ERT observation file, it may use keywords "
+        "not supported by fmuobs.",
+        filename,
     )
     return (None, pd.DataFrame())
 
@@ -335,8 +355,12 @@ def fmuobs(
 
     # For ERT files, there is the problem of include-file-path. If not-found
     # include filepaths are present, the filetype is ert, but dframe is empty.
-    if filetype == "ert" and dframe.empty:
-        input_str = Path(inputfile).read_text(encoding="utf8")
+    input_str = Path(inputfile).read_text(encoding="utf8") if filetype == "ert" else ""
+    if (
+        filetype == "ert"
+        and dframe.empty
+        and INCLUDE_RE.search(filter_comments(input_str))
+    ):
         if not includedir:
             # Try and error for the location of include files, first in current
             # dir, then in the directory of the input file. The proper default

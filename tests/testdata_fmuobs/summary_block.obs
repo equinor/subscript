@@ -1,0 +1,17 @@
+SUMMARY {
+  VALUES = summary_observations.csv;
+  WELL A1 {
+    LOCALIZATION {
+      EAST = 462588.52;
+      NORTH = 5934080.96;
+      RADIUS = 1000.0;
+    };
+  };
+  WELL A2 {
+    LOCALIZATION {
+      EAST = 460994.9;
+      NORTH = 5933813.29;
+      RADIUS = 1000.0;
+    };
+  };
+};
