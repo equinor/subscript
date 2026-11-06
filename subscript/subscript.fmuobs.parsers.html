@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>subscript.fmuobs.parsers &mdash; subscript 1.16.3.dev1+g5ae106470 documentation</title>
+  <title>subscript.fmuobs.parsers &mdash; subscript 1.16.3.dev2+g233cbd1a9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -16,7 +16,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=2d71df69"></script>
+      <script src="../_static/documentation_options.js?v=bc918b18"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -177,7 +177,7 @@ equivalent DataFrame representation</p>
 
 <dl class="py data">
 <dt class="sig sig-object py" id="subscript.fmuobs.parsers.OBS_ARGS_RE">
-<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">OBS_ARGS_RE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('[\\s]*([\\nA-Za-z:/=_\\+\\-\\.,0-9\\s]*)[\\s]*(\\{[A-Za-z=0-9\\+\\.,_;/\\s]*\\})?[\\s]*;[\\s]*')</span></em><a class="headerlink" href="#subscript.fmuobs.parsers.OBS_ARGS_RE" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">OBS_ARGS_RE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">re.compile('[\\s]*([\\nA-Za-z:/=_\\+\\-\\.,0-9\\s]*)[\\s]*(\\{[A-Za-z=0-9\\+\\-\\.,_;/\\s]*\\})?[\\s]*;[\\s]*')</span></em><a class="headerlink" href="#subscript.fmuobs.parsers.OBS_ARGS_RE" title="Link to this definition"></a></dt>
 <dd><p>Regular expression for splitting observation arguments into a
 key-values element, and a curly-braces element. The curly braces
 can not be nested.</p>
@@ -380,6 +380,19 @@ unmasked string by the semicolon position in the masked string.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="subscript.fmuobs.parsers.mask_nested_curly_braces">
+<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">mask_nested_curly_braces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_char</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'X'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.parsers.mask_nested_curly_braces" title="Link to this definition"></a></dt>
+<dd><p>Mask all characters inside curly braces (at any nesting depth), leaving
+the outermost braces themselves unmasked in the output length-preserving
+string, so that only top-level separators remain visible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="subscript.fmuobs.parsers.obsdict2df">
 <span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">obsdict2df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obsdict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.parsers.obsdict2df" title="Link to this definition"></a></dt>
 <dd><p>Convert an observation dictionary (with YAML file format structure)
@@ -523,6 +536,26 @@ character is not included</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="subscript.fmuobs.parsers.split_ertobs_units">
+<span class="sig-prename descclassname"><span class="pre">subscript.fmuobs.parsers.</span></span><span class="sig-name descname"><span class="pre">split_ertobs_units</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cwd</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#subscript.fmuobs.parsers.split_ertobs_units" title="Link to this definition"></a></dt>
+<dd><p>Split a string with ERT observations into its top-level observation
+units, each as a list of whitespace-separated tokens (keyword, label and
+the curly-brace arguments). Include statements are expanded and comments
+removed first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_str</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – String in ERT observation syntax.</p></li>
+<li><p><strong>cwd</strong> (<span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>) – Path used when resolving include statements.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]]</span></p>
 </dd>
 </dl>
 </dd></dl>
