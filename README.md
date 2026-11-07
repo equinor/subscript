@@ -5,6 +5,8 @@
 ![Python Version](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)
 [![License: GPL v3](https://img.shields.io/github/license/equinor/subscript)](https://www.gnu.org/licenses/gpl-3.0)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
+[![Publish to PyPI](https://github.com/equinor/subscript/actions/workflows/publish.yml/badge.svg)](https://github.com/equinor/subscript/actions/workflows/publish.yml)
+[![PyPI version](https://img.shields.io/pypi/v/subscript.svg)](https://pypi.org/project/subscript/)
 
 **subscript** is Equinor's collection of scripts used for subsurface reservoir modelling.
 
