@@ -4,6 +4,7 @@ other formats, and test the ERT hook"""
 import io
 import logging
 import subprocess
+import sys
 from pathlib import Path
 
 import pandas as pd
@@ -546,3 +547,28 @@ def test_unsupported_keyword_as_label_is_not_unsupported_file(tmp_path, monkeypa
     Path("in.obs").write_text("SMRY_OBSERVATION SUMMARY {VALUE=1;};\n", encoding="utf8")
     filetype, _ = autoparse_file("in.obs")
     assert filetype is None
+
+
+def test_submodule_warning_printed_once(tmp_path):
+    """Messages from submodule loggers must not be printed by two handlers.
+
+    caplog cannot detect this as it captures once at the root logger, so the
+    actual stdout of a separate process is counted."""
+    (tmp_path / "in.obs").write_text(
+        "RFT_OBSERVATION rft_obs { CSV=a.csv; PROPERTY=PRESSURE; };\n"
+        "SUMMARY_OBSERVATION A {VALUE=1; ERROR=1; DATE=2019-08-01; KEY=WOPR;};\n",
+        encoding="utf8",
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; from subscript.fmuobs.fmuobs import main; "
+            "sys.argv = ['fmuobs', 'in.obs', '--csv', 'o.csv']; main()",
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    assert result.stdout.count("keyword RFT_OBSERVATION is skipped") == 1
