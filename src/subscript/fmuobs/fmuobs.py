@@ -326,13 +326,17 @@ def configure_logging(verbose: bool = False, debug: bool = False) -> None:
     if debug:
         loglevel = logging.DEBUG
 
+    logging.getLogger("subscript.fmuobs").setLevel(loglevel)
     for name in (
-        "subscript.fmuobs",
         "subscript.fmuobs.parsers",
         "subscript.fmuobs.writers",
         "subscript.fmuobs.util",
     ):
-        logging.getLogger(name).setLevel(loglevel)
+        submodule_logger = logging.getLogger(name)
+        submodule_logger.setLevel(loglevel)
+        # Records propagate to the handlers of "subscript.fmuobs", so own
+        # handlers would print every message twice.
+        submodule_logger.handlers.clear()
 
 
 def fmuobs(
