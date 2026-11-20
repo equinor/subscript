@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from resdata.grid import Grid
@@ -22,7 +22,7 @@ class Fluxfile:
         @flux
         """
         self.grid = grid
-        self.flux = flux
+        self.flux: Any = flux
         self.number_flux_cells = int(len(flux[6]) / 3)
         self.xyz_list: list[tuple[float, float, float]] = []
         self.index_list: list[int] = []
@@ -165,9 +165,9 @@ def write_new_fluxfile_from_rst(
     """
 
     # Importing elements
-    flux_fine = dest_flux.get_flux()
+    flux_fine: Any = dest_flux.get_flux()
 
-    if source_grid.getNumLGR() > 0:
+    if source_grid.get_num_lgr() > 0:
         print(" ")
         print("***************************************")
         print("WARNING: LGR present in native grid.")
@@ -187,13 +187,14 @@ def write_new_fluxfile_from_rst(
     # Manipulating existing blocks in the fine grid
     # Importing data from the coarse grid
 
-    prev_date = source_restart.dates[0]
+    restart_dates = source_restart.dates or []
+    prev_date = restart_dates[0]
     prev_days_flux = flux_fine.iget_named_kw("DTIME", 0)[0]
 
-    for index, _ in enumerate(source_restart.report_dates):
-        i_coarse_grid = index * (source_grid.getNumLGR() + 1)
+    for index, _ in enumerate(source_restart.report_dates or []):
+        i_coarse_grid = index * (source_grid.get_num_lgr() + 1)
 
-        current_date = source_restart.dates[index]
+        current_date = restart_dates[index]
         delta_time = current_date - prev_date
         delta_days = delta_time.days
         prev_date = current_date

@@ -111,12 +111,13 @@ class Fluxnum:
         Needs NNC data from EGRID file.
         """
 
-        if egrid_file[11].header[0] == "NNC1":
-            nnc1_list = egrid_file[11]
+        egrid: Any = egrid_file
+        if egrid[11].header[0] == "NNC1":
+            nnc1_list = egrid[11]
         else:
             raise ValueError("NNC info not included in EGRID ...")
-        if egrid_file[12].header[0] == "NNC2":
-            nnc2_list = egrid_file[12]
+        if egrid[12].header[0] == "NNC2":
+            nnc2_list = egrid[12]
         else:
             raise ValueError("NNC info not included in EGRID ...")
 

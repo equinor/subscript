@@ -5,6 +5,7 @@ import datetime
 import shutil
 import subprocess
 import tempfile
+from collections.abc import Sequence
 from contextlib import chdir
 from pathlib import Path
 
@@ -45,8 +46,8 @@ def find_resdata_app(toolname: str) -> str:
 
 
 def date_slicer(
-    slicedates: list[pd.Timestamp],
-    restartdates: list[datetime.datetime],
+    slicedates: Sequence[datetime.datetime],
+    restartdates: Sequence[datetime.datetime],
     restartindices: list[int],
 ) -> list[int]:
     """Make a list of report indices that match the input slicedates."""
@@ -161,7 +162,7 @@ def restartthinner(
     ]
 
     if numberofslices > 1:
-        slicedates = pd.DatetimeIndex(
+        slicedates: Sequence[datetime.datetime] = pd.DatetimeIndex(
             np.linspace(
                 pd.Timestamp(restart_dates[0]).value,
                 pd.Timestamp(restart_dates[-1]).value,

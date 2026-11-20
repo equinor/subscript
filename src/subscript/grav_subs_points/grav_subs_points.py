@@ -295,7 +295,7 @@ def main_gravpoints(
     restart_index: dict[DateString, int] = {}
 
     # From restart datetime format to YYYYMMDD as key
-    for i, restart_date in enumerate(rest.dates):
+    for i, restart_date in enumerate(rest.dates or []):
         restart_index[restart_date.strftime("%Y%m%d")] = i
 
     diffdates: list[tuple[DateString, DateString]] = []
