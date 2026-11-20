@@ -187,7 +187,9 @@ def write_new_fluxfile_from_rst(
     # Manipulating existing blocks in the fine grid
     # Importing data from the coarse grid
 
-    restart_dates = source_restart.dates or []
+    restart_dates = source_restart.dates
+    if not restart_dates:
+        raise ValueError("Source restart file contains no restart dates")
     prev_date = restart_dates[0]
     prev_days_flux = flux_fine.iget_named_kw("DTIME", 0)[0]
 
