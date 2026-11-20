@@ -2,7 +2,6 @@ import argparse
 import datetime
 import os
 
-import cwrap
 from resdata.grid import Grid
 from resdata.resfile import FortIO, ResdataFile
 
@@ -150,7 +149,7 @@ def sector_to_fluxnum(args: argparse.Namespace) -> None:
 
     fluxnum_filename = f"FLUXNUM_FIPNUM_{args.fipnum}_{now.microsecond:d}.grdecl"
 
-    with cwrap.open(fluxnum_filename, "w") as file_handle:
+    with open(fluxnum_filename, "w", encoding="utf8") as file_handle:
         fluxnum_new_kw.write_grdecl(file_handle)
 
     print("Writing DUMPFLUX DATA-file ...")

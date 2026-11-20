@@ -559,7 +559,7 @@ def summaryplotter(
 
 def split_vectorsdatafiles(
     vectorsdatafiles: list[str],
-) -> tuple[list[str], list[str], list[str], list[str]]:
+) -> tuple[list[Summary], list[str], list[str], list[str]]:
     """
     Takes a list of strings and determines which of the arguments are Eclipse runs
     (by attempting to construct an Summary object), and which are summary
@@ -572,7 +572,7 @@ def split_vectorsdatafiles(
         tuple: 4-tuple of lists, with Summary-filenames, datafilename-strings,
         vector-strings, parameterfilename-strings
     """
-    summaryfiles = []  # Summary instances corresponding to datafiles
+    summaryfiles: list[Summary] = []  # Summary instances corresponding to datafiles
     datafiles = []  # strings
     vectors = []  # strings
     parameterfiles = []  # strings

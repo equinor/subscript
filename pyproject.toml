@@ -154,7 +154,6 @@ module = [
     "ert",
     "grid3d_maps.*",
     "fmu.tools.*",
-    "cwrap",
     "grpc"
 ]
 ignore_missing_imports = true
