@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import sys
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from resdata.grid import Grid
@@ -22,13 +22,13 @@ class Fluxfile:
         @flux
         """
         self.grid = grid
-        self.flux: Any = flux
-        self.number_flux_cells = int(len(flux[6]) / 3)
+        self.flux = flux
+        self.number_flux_cells = int(len(flux.iget_kw(6)) / 3)
         self.xyz_list: list[tuple[float, float, float]] = []
         self.index_list: list[int] = []
 
     def set_index_list(self) -> None:
-        self.index_list = list(self.flux[6][0 : self.number_flux_cells])
+        self.index_list = list(self.flux.iget_kw(6)[0 : self.number_flux_cells])
 
     def reset_index_list(self) -> None:
         self.index_list = []
@@ -37,7 +37,7 @@ class Fluxfile:
         return self.index_list
 
     def set_xyz_list(self) -> None:
-        for index in self.flux[6][0 : self.number_flux_cells]:
+        for index in self.flux.iget_kw(6)[0 : self.number_flux_cells]:
             self.xyz_list.append(self.grid.get_xyz(global_index=index - 1))
 
     def reset_xyz_list(self) -> None:
@@ -165,7 +165,7 @@ def write_new_fluxfile_from_rst(
     """
 
     # Importing elements
-    flux_fine: Any = dest_flux.get_flux()
+    flux_fine = dest_flux.get_flux()
 
     if source_grid.get_num_lgr() > 0:
         print(" ")
@@ -179,7 +179,7 @@ def write_new_fluxfile_from_rst(
     n_common_elements = 7
 
     for index in range(n_common_elements):
-        kw_temp = flux_fine[index].deep_copy()
+        kw_temp = flux_fine.iget_kw(index).deep_copy()
         kw_temp.fwrite(fortio)  # Writes to file succesivly
 
     block_size = len(flux_fine) - n_common_elements
@@ -202,19 +202,20 @@ def write_new_fluxfile_from_rst(
         prev_date = current_date
 
         for j_idx in range(n_common_elements, n_common_elements + block_size):
+            kw_fine = flux_fine.iget_kw(j_idx)
             # Not related to grid cells
             kw_temp = None
-            if flux_fine[j_idx].header[0] == "ITIME":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            if kw_fine.header[0] == "ITIME":
+                kw_temp = kw_fine.deep_copy()
                 kw_temp[0] = 1
 
-            elif flux_fine[j_idx].header[0] == "DTIME":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "DTIME":
+                kw_temp = kw_fine.deep_copy()
                 kw_temp[0] = prev_days_flux
                 kw_temp[1] = prev_days_flux + delta_days
                 prev_days_flux += delta_days
 
-            elif flux_fine[j_idx].header[0] in {
+            elif kw_fine.header[0] in {
                 "WELLNAME",
                 "WELLFLOW",
                 "PMER",
@@ -223,10 +224,10 @@ def write_new_fluxfile_from_rst(
                 "PADS",
                 "",  # OBS!
             }:
-                kw_temp = flux_fine[j_idx].deep_copy()
+                kw_temp = kw_fine.deep_copy()
 
-            elif flux_fine[j_idx].header[0] == "POIL":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "POIL":
+                kw_temp = kw_fine.deep_copy()
                 kw_source = source_restart.iget_named_kw("PRESSURE", i_coarse_grid)
 
                 if len(kw_source) != source_grid.get_num_active():
@@ -239,31 +240,31 @@ def write_new_fluxfile_from_rst(
 
                 # Maps property data from coarse to fine grid.
                 # Related to grid cells.
-                for k_idx in range(flux_fine[j_idx].header[1]):
+                for k_idx in range(kw_fine.header[1]):
                     kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j_idx].header[0] == "SWAT":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "SWAT":
+                kw_temp = kw_fine.deep_copy()
                 kw_source = source_restart.iget_named_kw("SWAT", i_coarse_grid)
 
-                for k_idx in range(flux_fine[j_idx].header[1]):
+                for k_idx in range(kw_fine.header[1]):
                     kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j_idx].header[0] == "SGAS":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "SGAS":
+                kw_temp = kw_fine.deep_copy()
                 kw_source = source_restart.iget_named_kw("SGAS", i_coarse_grid)
 
-                for k_idx in range(flux_fine[j_idx].header[1]):
+                for k_idx in range(kw_fine.header[1]):
                     kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j_idx].header[0] == "SOIL":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "SOIL":
+                kw_temp = kw_fine.deep_copy()
 
                 if source_restart.has_kw("SGAS"):
                     kw_source1 = source_restart.iget_named_kw("SGAS", i_coarse_grid)
                     kw_source2 = source_restart.iget_named_kw("SWAT", i_coarse_grid)
 
-                    for k_idx in range(flux_fine[j_idx].header[1]):
+                    for k_idx in range(kw_fine.header[1]):
                         kw_temp[k_idx] = (
                             1 - kw_source1[mapping[k_idx]] - kw_source2[mapping[k_idx]]
                         )
@@ -271,25 +272,25 @@ def write_new_fluxfile_from_rst(
                 else:
                     kw_source2 = source_restart.iget_named_kw("SWAT", i_coarse_grid)
 
-                    for k_idx in range(flux_fine[j_idx].header[1]):
+                    for k_idx in range(kw_fine.header[1]):
                         kw_temp[k_idx] = 1 - kw_source2[mapping[k_idx]]
 
-            elif flux_fine[j_idx].header[0] == "RS":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "RS":
+                kw_temp = kw_fine.deep_copy()
 
                 if source_restart.has_kw("RS"):
                     kw_source = source_restart.iget_named_kw("RS", i_coarse_grid)
 
-                    for k_idx in range(flux_fine[j_idx].header[1]):
+                    for k_idx in range(kw_fine.header[1]):
                         kw_temp[k_idx] = kw_source[mapping[k_idx]]
 
-            elif flux_fine[j_idx].header[0] == "OILAPI":
-                kw_temp = flux_fine[j_idx].deep_copy()
+            elif kw_fine.header[0] == "OILAPI":
+                kw_temp = kw_fine.deep_copy()
 
                 if source_restart.has_kw("OILAPI"):
                     kw_source = source_restart.iget_named_kw("OILAPI", i_coarse_grid)
 
-                    for k_idx in range(flux_fine[j_idx].header[1]):
+                    for k_idx in range(kw_fine.header[1]):
                         kw_temp[k_idx] = kw_source[mapping[k_idx]]
             if kw_temp is not None:
                 kw_temp.fwrite(fortio)
