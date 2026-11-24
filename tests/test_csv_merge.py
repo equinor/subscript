@@ -232,6 +232,26 @@ def test_empty_files(tmp_path, monkeypatch):
     )
 
 
+def test_no_input_files(tmp_path, monkeypatch, caplog):
+    """No existing input files must give NoDataError, not a pandas crash"""
+    monkeypatch.chdir(tmp_path)
+    assert csv_merge.merge_csvfiles([], tags=None).empty
+    with pytest.raises(csv_merge.NoDataError):
+        csv_merge.csv_merge_main(["nonexistent.csv"], "out.csv")
+    assert "nonexistent.csv does not exist" in caplog.text
+    assert "None of the input files exist" in caplog.text
+
+
+def test_only_empty_files(tmp_path, monkeypatch, caplog):
+    """Existing but empty files give a different message than missing files"""
+    monkeypatch.chdir(tmp_path)
+    Path("empty.csv").write_text("", encoding="utf-8")
+    with pytest.raises(csv_merge.NoDataError):
+        csv_merge.csv_merge_main(["empty.csv"], "out.csv")
+    assert "Input files contained no data" in caplog.text
+    assert "None of the input files exist" not in caplog.text
+
+
 @pytest.mark.integration
 def test_ert_hook(tmp_path, monkeypatch):
     """Mock an ERT run that calls csv_merge as a workflow foo.csv in two
