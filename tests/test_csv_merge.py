@@ -242,6 +242,16 @@ def test_no_input_files(tmp_path, monkeypatch, caplog):
     assert "None of the input files exist" in caplog.text
 
 
+def test_missing_file_warning_not_in_stdout_csv(tmp_path, monkeypatch, capsys):
+    """Warnings about missing files must not end up in CSV written to stdout"""
+    monkeypatch.chdir(tmp_path)
+    pd.DataFrame([{"FOO": 1.0}]).to_csv("good.csv", index=False)
+    csv_merge.csv_merge_main(["good.csv", "missing.csv"], "-")
+    captured = capsys.readouterr()
+    assert captured.out == "FOO\n1.0\n"
+    assert "missing.csv does not exist" in captured.err
+
+
 def test_only_empty_files(tmp_path, monkeypatch, caplog):
     """Existing but empty files give a different message than missing files"""
     monkeypatch.chdir(tmp_path)

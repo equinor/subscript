@@ -281,7 +281,11 @@ def csv_merge_main(
     and from an ERT workflow"""
     existing_csvfiles = list(filter(os.path.exists, csvfiles))
     for missing in sorted(set(csvfiles) - set(existing_csvfiles)):
-        logger.warning("Input file %s does not exist, ignored", missing)
+        if output in {"-", "stdout"}:
+            # The logger writes warnings to stdout, which would corrupt the CSV
+            print(f"Input file {missing} does not exist, ignored", file=sys.stderr)
+        else:
+            logger.warning("Input file %s does not exist, ignored", missing)
     csvfiles = existing_csvfiles
     if not csvfiles:
         logger.error("None of the input files exist")
