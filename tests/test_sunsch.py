@@ -1,4 +1,5 @@
 import datetime
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -778,8 +779,9 @@ def test_weltarg_uda(tmp_path, monkeypatch):
 
 
 def test_long_udq_lines(tmp_path, monkeypatch):
-    """UDQ statements must not be line-wrapped, there is special code in OPM to
-    avoid that."""
+    """Long UDQ statements must keep their content intact. Depending on the OPM
+    version they are either kept on one line or wrapped (with a trailing operator),
+    so only whitespace-normalized content is compared."""
     monkeypatch.chdir(tmp_path)
 
     inputstr = """UDQ
@@ -798,8 +800,9 @@ DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_
     sch = sunsch.process_sch_config(sunschconf)
     schstr = str(sch)
 
-    # the DEFINE line must be on its own line, so line count should be 9:
-    assert len(schstr.split("\n")) == 9
+    define_line = inputstr.split("\n")[2].rstrip("/")
+    expected = " ".join(define_line.split()).replace("FU_PWRI1", "'FU_PWRI1'") + " /"
+    assert expected in " ".join(schstr.split())
 
     # Ensure unwanted space in front of well-names does not occur:
     assert "' A" not in schstr
@@ -813,7 +816,8 @@ DEFINE FU_PWRI1 WWIR 'A_01' i WWIR 'A_02' + WWIR 'A_03' + WWIR 'A_04' + WWIR 'A_
         ],
     }
     schstr_noquotes = str(sunsch.process_sch_config(sunschconf))
-    assert len(schstr_noquotes.split("\n")) == 9
+    expected_noquotes = re.sub(r"'(A_\d+)'", r"\1", expected)
+    assert expected_noquotes in " ".join(schstr_noquotes.split())
     assert "' A" not in schstr_noquotes
 
 
