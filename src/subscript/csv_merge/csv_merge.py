@@ -305,6 +305,10 @@ def csv_merge_main(
 
     merged_df = merge_csvfiles(csvfiles, tags, memoryconservative=memoryconservative)
 
+    if merged_df.empty:
+        logger.error("Input files contained no data")
+        raise NoDataError
+
     if dropconstantcolumns:
         columnstodelete = []
         for col in merged_df.columns:
@@ -314,7 +318,7 @@ def csv_merge_main(
         merged_df = merged_df.drop(columnstodelete, axis=1)
 
     if merged_df.empty:
-        logger.error("Input files contained no data")
+        logger.error("No data left after dropping constant columns")
         raise NoDataError
 
     logger.info("Final column list: %s", merged_df.columns)

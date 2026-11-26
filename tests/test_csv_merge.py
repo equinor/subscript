@@ -252,6 +252,16 @@ def test_missing_file_warning_not_in_stdout_csv(tmp_path, monkeypatch, capsys):
     assert "missing.csv does not exist" in captured.err
 
 
+def test_all_columns_constant_dropped(tmp_path, monkeypatch, caplog):
+    """Nonempty input must not be reported as empty when all columns are dropped"""
+    monkeypatch.chdir(tmp_path)
+    pd.DataFrame([{"FOO": 1.0}]).to_csv("good.csv", index=False)
+    with pytest.raises(csv_merge.NoDataError):
+        csv_merge.csv_merge_main(["good.csv"], "out.csv", dropconstantcolumns=True)
+    assert "No data left after dropping constant columns" in caplog.text
+    assert "Input files contained no data" not in caplog.text
+
+
 def test_only_empty_files(tmp_path, monkeypatch, caplog):
     """Existing but empty files give a different message than missing files"""
     monkeypatch.chdir(tmp_path)
