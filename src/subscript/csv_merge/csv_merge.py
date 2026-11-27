@@ -224,7 +224,11 @@ def merge_csvfiles(
                 else:
                     logger.warning("Could not use tag %s, insufficient length", tag)
         logger.info("Merging %d files..", loaded_files)
-        merged_df = pd.concat(dfs, axis=0, ignore_index=True, sort=False)
+        merged_df = (
+            pd.concat(dfs, axis=0, ignore_index=True, sort=False)
+            if dfs
+            else pd.DataFrame()
+        )
     return merged_df
 
 
@@ -275,7 +279,17 @@ def csv_merge_main(
 ) -> None:
     """A "main" function that can be used both from the command line,
     and from an ERT workflow"""
-    csvfiles = list(filter(os.path.exists, csvfiles))
+    existing_csvfiles = list(filter(os.path.exists, csvfiles))
+    for missing in sorted(set(csvfiles) - set(existing_csvfiles)):
+        if output in {"-", "stdout"}:
+            # The logger writes warnings to stdout, which would corrupt the CSV
+            print(f"Input file {missing} does not exist, ignored", file=sys.stderr)
+        else:
+            logger.warning("Input file %s does not exist, ignored", missing)
+    csvfiles = existing_csvfiles
+    if not csvfiles:
+        logger.error("None of the input files exist")
+        raise NoDataError
 
     tags = {}
     tags["REAL"] = taglist(csvfiles, REAL_REGEXP)
@@ -291,6 +305,10 @@ def csv_merge_main(
 
     merged_df = merge_csvfiles(csvfiles, tags, memoryconservative=memoryconservative)
 
+    if merged_df.empty:
+        logger.error("Input files contained no data")
+        raise NoDataError
+
     if dropconstantcolumns:
         columnstodelete = []
         for col in merged_df.columns:
@@ -300,7 +318,7 @@ def csv_merge_main(
         merged_df = merged_df.drop(columnstodelete, axis=1)
 
     if merged_df.empty:
-        logger.error("No data to output")
+        logger.error("No data left after dropping constant columns")
         raise NoDataError
 
     logger.info("Final column list: %s", merged_df.columns)
